@@ -47,11 +47,13 @@ public class CountrySelectActivity extends AppCompatActivity {
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
         ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
         binding.searchView.clearFocus();
+
         closeButton.setOnClickListener(view -> {
             binding.searchView.clearFocus();
             searchEditText.setText("");
             binding.searchView.setQuery("", false);
         });
+//        Test
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         binding.rvCountryList.setLayoutManager(mLayoutManager);
         binding.rvCountryList.setItemAnimator(new DefaultItemAnimator());
@@ -70,7 +72,7 @@ public class CountrySelectActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<CountryListModel> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(),t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
