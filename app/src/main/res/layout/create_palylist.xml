@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:gravity="center"
+    android:background="@color/dark_blue_gray"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="@dimen/_28sdp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/_24sdp"
+            android:layout_marginTop="@dimen/_33sdp"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:text="@string/give_playlist_name"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_17sdp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/_24sdp"
+            android:layout_marginTop="@dimen/_18sdp"
+            android:fontFamily="@font/montserrat_medium"
+            android:gravity="center"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18sdp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_32sdp"
+            android:layout_marginBottom="@dimen/_26sdp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/tvconfirm"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_42sdp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:background="@drawable/rounded_white_corner">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Create"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sdp" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvGoBack"
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center"
+                android:text="@string/Cancel"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sdp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

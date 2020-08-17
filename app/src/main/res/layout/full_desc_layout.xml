@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="@dimen/_28sdp"
+    app:cardCornerRadius="@dimen/_11sdp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_24sdp"
+                android:layout_marginTop="@dimen/_33sdp"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="start"
+                android:text="@string/Description"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_17sdp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_24sdp"
+                android:layout_marginTop="@dimen/_18sdp"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="start"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:text="This home program is designed to support your Emotional Empowerment Program and help you maintain the new habits of positive thinking bias, working with your emotions and moods at night. Stop overthinking, be tuned to opportunity through the power of positive thinking to get more out of life, be this more enjoyment, more love, more money, connections and meaning."
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14sdp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_28sdp"
+                android:layout_marginBottom="@dimen/_26sdp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/tvClose"
+                    android:layout_width="120dp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/outer_round_cornor">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Close"
+                        android:textAllCaps="true"
+                        android:textColor="@color/dark_blue_gray"
+                        android:textSize="@dimen/_14sdp" />
+
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

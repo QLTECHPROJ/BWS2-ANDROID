@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="3.6dp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:layout_marginHorizontal="@dimen/_8sdp"
+        app:cardCornerRadius="@dimen/_4sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:id="@+id/llViewReceipt"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:orientation="vertical"
+                android:paddingVertical="@dimen/_16sdp"
+                android:paddingLeft="@dimen/_16sdp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Invoice #26481"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_12sdp" />
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_20sdp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/_16sdp"
+                        android:layout_height="@dimen/_16sdp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_calendar_icon" />
+
+                    <TextView
+                        android:id="@+id/tvDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_6sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="center"
+                        android:text="14 November, 2019"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_13sdp" />
+
+                    <ImageView
+                        android:layout_width="@dimen/_35sdp"
+                        android:layout_height="@dimen/_35sdp"
+                        android:layout_marginLeft="@dimen/_6sdp"
+                        android:padding="@dimen/_8sdp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_payment_cash_icon" />
+
+                    <TextView
+                        android:id="@+id/tvDoller"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_6sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="center"
+                        android:text="$ 29.99"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_13sdp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llDownloads"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:gravity="center">
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_download_icon" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</layout>

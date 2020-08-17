@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".MembershipModule.Activities.CheckoutGetCodeActivity">
+
+        <RelativeLayout
+            android:id="@+id/rlLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_56sdp">
+
+            <LinearLayout
+                android:id="@+id/llBack"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_left_arrow_icon"
+                    app:tint="@color/black" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:text="@string/Checkout"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/rlLayout"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.45"
+                android:gravity="center">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/ivRestaurantImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:padding="@dimen/_8sdp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/ic_checkout_logo"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.55"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cvBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        app:cardCornerRadius="@dimen/_8sdp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/light_white"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:id="@+id/rlCountrySelect"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingVertical="@dimen/_5sdp">
+
+                                <TextView
+                                    android:id="@+id/tvCountry"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:paddingLeft="@dimen/_16sdp"
+                                    android:text="Australia"
+                                    android:textColor="@color/dark_blue_gray"
+                                    android:textSize="@dimen/_16sdp" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/_35sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@drawable/right_arrow"
+                                    app:tint="@color/dark_blue_gray" />
+
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#E47E7E7E" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:id="@+id/tvCountryCode"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.18"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:paddingVertical="@dimen/_11sdp"
+                                    android:paddingLeft="@dimen/_16sdp"
+                                    android:text="+61"
+                                    android:textColor="@color/dark_blue_gray"
+                                    android:textSize="@dimen/_16sdp" />
+
+                                <View
+                                    android:layout_width="1dp"
+                                    android:layout_height="match_parent"
+                                    android:background="#E47E7E7E" />
+
+                                <EditText
+                                    android:id="@+id/edtNumber"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toRightOf="@id/tvCountryCode"
+                                    android:layout_weight="0.82"
+                                    android:background="@null"
+                                    android:inputType="number"
+                                    android:textCursorDrawable="@null"
+                                    android:backgroundTint="@color/dim_light_gray"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:hint="@string/phone_number"
+                                    android:paddingVertical="@dimen/_11sdp"
+                                    android:paddingHorizontal="@dimen/_16sdp"
+                                    android:textColor="@color/dark_blue_gray"
+                                    android:textSize="@dimen/_16sdp" />
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/tvSendCodeText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/cvBox"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:fontFamily="@font/montserrat_light"
+                        android:gravity="center"
+                        android:text="@string/send_code_text"
+                        android:textColor="@color/dark_blue_gray"
+                        android:textSize="@dimen/_13sdp" />
+
+
+                    <Button
+                        android:id="@+id/btnSendCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginHorizontal="@dimen/_30sdp"
+                        android:layout_marginBottom="@dimen/_24sdp"
+                        android:background="@drawable/extra_round_cornor"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:paddingHorizontal="@dimen/_55sdp"
+                        android:paddingVertical="@dimen/_4sdp"
+                        android:text="@string/get_the_code"
+                        android:textColor="@color/white" />
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

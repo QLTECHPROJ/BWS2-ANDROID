@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="56dp"
+        android:background="@color/white"
+        tools:context=".DashboardModule.Search.SearchFragment">
+
+        <RelativeLayout
+            android:id="@+id/rlSearch"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_48sdp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_weight="2"
+            android:background="@drawable/rounded_extra_gray_corner">
+
+            <ImageView
+                android:id="@+id/button1"
+                android:layout_width="@dimen/_16sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/_14sdp"
+                android:src="@drawable/ic_search_icon"
+                app:tint="@color/dark_blue_gray" />
+
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/button1"
+                android:focusable="true"
+                android:iconifiedByDefault="false"
+                android:singleLine="true"
+                android:theme="@style/WallSearchView"
+                app:queryBackground="@null"
+                app:queryHint="Search for audio, playlist..."
+                app:searchHintIcon="@null"
+                app:searchIcon="@null" />
+
+        </RelativeLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/rlSearch"
+            android:overScrollMode="never"
+            android:paddingBottom="@dimen/_60sdp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rlSearch"
+                android:layout_marginBottom="@dimen/_18sdp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_24sdp"
+                    android:layout_marginRight="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="start"
+                    android:text="@string/Suggested_Audios"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvDownloadsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:overScrollMode="never"
+                    android:paddingTop="@dimen/_8sdp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginRight="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="start"
+                    android:text="@string/Suggested_Playlist"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:gravity="center_horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/_16sdp"
+                            android:layout_marginRight="@dimen/_9sdp">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_playlist_image" />
+
+                            <TextView
+                                android:id="@+id/tvTitleOne"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/gradient"
+                                android:fontFamily="@font/montserrat_semi_bold"
+                                android:gravity="left"
+                                android:maxLines="2"
+                                android:paddingLeft="@dimen/_13sdp"
+                                android:paddingTop="@dimen/_8sdp"
+                                android:paddingRight="@dimen/_13sdp"
+                                android:paddingBottom="@dimen/_8sdp"
+                                android:text="Executive Performance"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_14sdp" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:gravity="center_horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/_9sdp"
+                            android:layout_marginRight="@dimen/_16sdp">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_playlist_image" />
+
+                            <TextView
+                                android:id="@+id/tvTitleTwo"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/gradient"
+                                android:fontFamily="@font/montserrat_semi_bold"
+                                android:gravity="left"
+                                android:maxLines="2"
+                                android:paddingLeft="@dimen/_13sdp"
+                                android:paddingTop="@dimen/_8sdp"
+                                android:paddingRight="@dimen/_13sdp"
+                                android:paddingBottom="@dimen/_8sdp"
+                                android:text="Peaceful Sleeping"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_14sdp" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/flProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/dim_light_gray"
+                app:layout_constraintBottom_toTopOf="@id/llPlaSong"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <ProgressBar
+                    android:id="@+id/pbLevelStatus"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_4sdp"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center|center_vertical|bottom"
+                    android:indeterminate="false"
+                    android:progress="60"
+                    android:progressDrawable="@drawable/curved_progress_bar"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/llPlaSong"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_64sdp"
+                android:background="#DDDDDD"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@id/nav_view">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1">
+
+                    <ImageView
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/_13sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:layout_weight="0.13"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/square_logo" />
+
+                    <LinearLayout
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/_13sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:layout_weight="0.7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:maxLines="1"
+                            android:text="Love Thy Self"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_17sdp" />
+
+                        <TextView
+                            android:id="@+id/tvSubTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:maxLines="2"
+                            android:text="Play the Love Thy Self every night on a low volume."
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_10sdp" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/ivStatus"
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/_13sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:layout_weight="0.13"
+                        android:padding="@dimen/_13sdp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_all_pause_icon" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

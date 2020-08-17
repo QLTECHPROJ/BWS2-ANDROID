@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_marginHorizontal="@dimen/_6sdp"
+        android:background="@drawable/tag_background"
+        app:cardCornerRadius="@dimen/_6sdp">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="left"
+            android:paddingHorizontal="@dimen/_13sdp"
+            android:paddingVertical="@dimen/_8sdp"
+            android:textColor="@color/dark_blue_gray"
+            android:textSize="@dimen/_12sdp" />
+
+    </LinearLayout>
+</layout>

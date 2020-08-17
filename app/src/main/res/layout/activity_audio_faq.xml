@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_white"
+        tools:context=".FaqModule.Activities.AudioFaqActivity">
+
+        <RelativeLayout
+            android:id="@+id/rlLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_56sdp">
+
+            <LinearLayout
+                android:id="@+id/llBack"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_left_arrow_icon"
+                    app:tint="@color/black" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:text="@string/Audio"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

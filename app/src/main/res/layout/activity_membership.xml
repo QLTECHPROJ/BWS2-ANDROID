@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".MembershipModule.Activities.MembershipActivity">
+
+        <RelativeLayout
+            android:id="@+id/rlLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_56sdp">
+
+            <LinearLayout
+                android:id="@+id/llBack"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_left_arrow_icon"
+                    app:tint="@color/black" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:text="@string/Membership"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+        </RelativeLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rlLayout"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/ivRestaurantImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="center"
+                        android:text="Unlock your emotional potential from The Comfort of Your Home"
+                        android:textColor="@color/dark_blue_gray"
+                        android:textSize="@dimen/_16sdp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_14sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="center"
+                        android:lineSpacingExtra="@dimen/_4sdp"
+                        android:text="Develop yourself in the comfort of your home while you sleep. Gain access to over 65 audio programs helping you to live inspired and improve your mental wellbeing. Become a member today and enjoy the benefits free for one month."
+                        android:textColor="@color/dark_blue_gray"
+                        android:textSize="@dimen/_12sdp" />
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_4sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginBottom="@dimen/_6sdp"
+                        android:elevation="3.6dp"
+                        app:cardCornerRadius="@dimen/_8sdp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/top_round_blue_cornor"
+                                android:orientation="vertical"
+                                android:paddingLeft="@dimen/_16sdp"
+                                android:paddingTop="@dimen/_16sdp"
+                                android:paddingRight="@dimen/_16sdp"
+                                android:paddingBottom="@dimen/_16sdp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:weightSum="1">
+
+                                    <TextView
+                                        android:layout_width="@dimen/_0sdp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.5"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:text="Monthly"
+                                        android:textColor="@color/white" />
+
+                                    <LinearLayout
+                                        android:layout_width="@dimen/_0sdp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.5"
+                                        android:gravity="right">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:background="@drawable/dark_blue_background"
+                                            android:fontFamily="@font/montserrat_medium"
+                                            android:gravity="right"
+                                            android:paddingHorizontal="@dimen/_10sdp"
+                                            android:paddingVertical="@dimen/_2sdp"
+                                            android:text="Recommended"
+                                            android:textAllCaps="true"
+                                            android:textColor="@color/white"
+                                            android:textSize="@dimen/_12sdp" />
+
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/montserrat_semi_bold"
+                                        android:text="$29.99"
+                                        android:textColor="@color/white"
+                                        android:textSize="@dimen/_18sdp" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="@dimen/_6sdp"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:text="Per Month"
+                                        android:textColor="@color/white"
+                                        android:textSize="@dimen/_15sdp" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/_16sdp"
+                                android:layout_marginTop="@dimen/_16sdp"
+                                android:gravity="center_vertical">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_40sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:padding="@dimen/_12sdp"
+                                    android:src="@drawable/ic_orange_check_icon" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/_13sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:gravity="left"
+                                    android:text="Access 65+ Audio Programs"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_15sdp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/_16sdp"
+                                android:gravity="center_vertical">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_40sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:padding="@dimen/_12sdp"
+                                    android:src="@drawable/ic_orange_check_icon" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/_13sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:gravity="start"
+                                    android:text="30 Day Free Trial"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_15sdp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/_16sdp"
+                                android:gravity="center_vertical">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_40sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:padding="@dimen/_12sdp"
+                                    android:src="@drawable/ic_orange_check_icon" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/_13sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:gravity="start"
+                                    android:text="Email Support"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_15sdp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/_16sdp"
+                                android:gravity="center_vertical">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_40sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:padding="@dimen/_12sdp"
+                                    android:src="@drawable/ic_orange_check_icon" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/_13sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:gravity="start"
+                                    android:text="24/7 Available"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_15sdp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_18sdp"
+                        android:background="@drawable/rounded_light_gray"
+                        android:orientation="vertical"
+                        android:paddingLeft="@dimen/_16sdp"
+                        android:paddingBottom="@dimen/_16sdp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_16sdp"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:text="Six Monthly"
+                            android:textColor="@color/dark_blue_gray"
+                            android:textSize="@dimen/_16sdp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_8sdp"
+                                android:fontFamily="@font/montserrat_semi_bold"
+                                android:text="$150"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_20sdp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_8sdp"
+                                android:layout_marginTop="@dimen/_6sdp"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="Bi-Annual (Save $30)"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_16sdp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_18sdp"
+                        android:background="@drawable/rounded_light_gray"
+                        android:orientation="vertical"
+                        android:paddingLeft="@dimen/_16sdp"
+                        android:paddingBottom="@dimen/_16sdp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_16sdp"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:text="Yearly"
+                            android:textColor="@color/dark_blue_gray"
+                            android:textSize="@dimen/_16sdp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_8sdp"
+                                android:fontFamily="@font/montserrat_semi_bold"
+                                android:text="$250"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_20sdp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_8sdp"
+                                android:layout_marginTop="@dimen/_6sdp"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="Yearly (Save $110)"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_16sdp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnFreeJoin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/_35sdp"
+                        android:background="@drawable/extra_round_cornor"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:paddingHorizontal="@dimen/_55sdp"
+                        android:paddingVertical="@dimen/_4sdp"
+                        android:text="@string/month_free"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_13sdp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="center"
+                        android:text="Access More Than 65 Audio Programs."
+                        android:textColor="@color/dark_blue_gray"
+                        android:textSize="@dimen/_20sdp" />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:overScrollMode="never" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_16sdp"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:gravity="start"
+                        android:text="Frequently Asked Questions"
+                        android:textColor="@color/light_black"
+                        android:textSize="@dimen/_17sdp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_6sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:elevation="3.6dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/_14sdp"
+                            android:paddingVertical="@dimen/_8sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.83"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_regular"
+                                    android:gravity="center_vertical"
+                                    android:text="How long does the Membership last?"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_13sdp" />
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.17">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_40sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:layout_alignParentRight="true"
+                                    android:src="@drawable/right_arrow" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_6sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:elevation="3.6dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/_14sdp"
+                            android:paddingVertical="@dimen/_8sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.83"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_regular"
+                                    android:gravity="center_vertical"
+                                    android:text="Is there a free trial?"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_13sdp" />
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.17">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_40sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:layout_alignParentRight="true"
+                                    android:src="@drawable/right_arrow" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_6sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:elevation="3.6dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/_14sdp"
+                            android:paddingVertical="@dimen/_8sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.83"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_regular"
+                                    android:gravity="center_vertical"
+                                    android:text="Yes. Every plan comes with a 30-day free trial option"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_13sdp" />
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.17">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_40sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:layout_alignParentRight="true"
+                                    android:src="@drawable/right_arrow" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_6sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:elevation="3.6dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/_14sdp"
+                            android:paddingVertical="@dimen/_8sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.83"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_regular"
+                                    android:gravity="center_vertical"
+                                    android:text="How can I cancel if I need to?"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_13sdp" />
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.17">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_40sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:layout_alignParentRight="true"
+                                    android:src="@drawable/right_arrow" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_6sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:elevation="3.6dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/_14sdp"
+                            android:paddingVertical="@dimen/_8sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.83"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_regular"
+                                    android:gravity="center_vertical"
+                                    android:text="How do I purchase a subscription?"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_13sdp" />
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.17">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_40sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:layout_alignParentRight="true"
+                                    android:src="@drawable/right_arrow" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_6sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:elevation="3.6dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/_14sdp"
+                            android:paddingVertical="@dimen/_8sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.83"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_regular"
+                                    android:gravity="center_vertical"
+                                    android:text="What are the benefits of signing up for the Membership Program"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_13sdp" />
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.17">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_40sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:layout_alignParentRight="true"
+                                    android:src="@drawable/right_arrow" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_6sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:elevation="3.6dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/_14sdp"
+                            android:paddingVertical="@dimen/_8sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.83"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_regular"
+                                    android:gravity="center_vertical"
+                                    android:text="Will my subscription get auto-renewed?"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_13sdp" />
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.17">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_40sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:layout_alignParentRight="true"
+                                    android:src="@drawable/right_arrow" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_6sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:elevation="3.6dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/_14sdp"
+                            android:paddingVertical="@dimen/_8sdp"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.83"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_regular"
+                                    android:gravity="center_vertical"
+                                    android:text="What's the best way to use the Membership? Where do I start?"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_14sdp" />
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.17">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_40sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:layout_alignParentRight="true"
+                                    android:src="@drawable/right_arrow" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_31sdp"
+                        android:layout_marginBottom="@dimen/_26sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="center"
+                        android:text="By clicking on Register or Sign up you agree to our T&amp;Cs, Privacy Policy &amp; Disclaimer"
+                        android:textColor="@color/dark_blue_gray"
+                        android:textSize="@dimen/_12sdp" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </RelativeLayout>
+</layout>

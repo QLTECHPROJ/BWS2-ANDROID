@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:id="@+id/rlLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_56sdp">
+
+            <LinearLayout
+                android:id="@+id/llBack"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_left_arrow_icon" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:gravity="center"
+                android:text="@string/Add_New_Card"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@id/rlLayout">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginRight="@dimen/_16sdp"
+                android:background="@drawable/light_gray_round_cornors"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.1">
+
+                    <ImageView
+                        android:layout_width="@dimen/_17sdp"
+                        android:layout_height="@dimen/_16sdp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/_16sdp"
+                        android:src="@drawable/ic_add_card_icon"
+                        app:tint="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.9">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tlNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_toRightOf="@+id/ivFname"
+                        android:focusableInTouchMode="true"
+                        app:errorEnabled="true"
+                        app:errorTextAppearance="@style/ErrorText">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_38sdp"
+                            android:background="@null"
+                            android:backgroundTint="@color/black"
+                            android:cursorVisible="true"
+                            android:inputType="textMultiLine|number"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:hint="@string/Card_Number"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_13sdp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_30sdp"
+                android:layout_marginRight="@dimen/_16sdp"
+                android:background="@drawable/light_gray_round_cornors"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.1">
+
+                    <ImageView
+                        android:id="@+id/ivUser"
+                        android:layout_width="@dimen/_18sdp"
+                        android:layout_height="@dimen/_16sdp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/_16sdp"
+                        android:src="@drawable/ic_user_icon"
+                        app:tint="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.9">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tlName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_toRightOf="@+id/ivFname"
+                        android:focusableInTouchMode="true"
+                        app:errorEnabled="true"
+                        app:errorTextAppearance="@style/ErrorText">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etName"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_38sdp"
+                            android:background="@null"
+                            android:backgroundTint="@color/black"
+                            android:cursorVisible="true"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:hint="@string/Card_Holder_Name"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_13sdp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:layout_marginRight="@dimen/_16sdp"
+                    android:layout_weight="0.60"
+                    android:background="@drawable/light_gray_round_cornors"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.1">
+
+                            <ImageView
+                                android:layout_width="@dimen/_18sdp"
+                                android:layout_height="@dimen/_16sdp"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="@dimen/_14sdp"
+                                android:src="@drawable/ic_calendar_icon"
+                                app:tint="@color/black" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:layout_weight="0.9">
+
+
+                            <TextView
+                                android:id="@+id/textMonth"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:gravity="left"
+                                android:hint="mm / yyyy"
+                                android:textAllCaps="false"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_13sdp" />
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:layout_marginRight="@dimen/_16sdp"
+                    android:layout_weight="0.40"
+                    android:background="@drawable/light_gray_round_cornors"
+                    android:weightSum="1">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.1">
+
+                        <ImageView
+                            android:layout_width="@dimen/_18sdp"
+                            android:layout_height="@dimen/_16sdp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="@dimen/_14sdp"
+                            android:src="@drawable/ic_credit_card_icon"
+                            app:tint="@color/black" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.9">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tlCvv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
+                            android:layout_toRightOf="@+id/ivFname"
+                            android:focusableInTouchMode="true"
+                            app:errorEnabled="true"
+                            app:errorTextAppearance="@style/ErrorText">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etCvv"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_38sdp"
+                                android:background="@null"
+                                android:backgroundTint="@color/black"
+                                android:cursorVisible="true"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:hint="@string/Cvv"
+                                android:inputType="number"
+                                android:maxLength="4"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textCursorDrawable="@null"
+                                android:textSize="@dimen/_13sdp" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="@dimen/_33sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:background="@drawable/extra_round_cornor"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingVertical="@dimen/_2sdp"
+            android:text="@string/Save"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+</layout>

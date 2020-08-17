@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/_85sdp"
+                android:overScrollMode="never">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvTilte"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:gravity="start"
+                        android:text="Emotional empowerment program session 1"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_16sdp" />
+
+                    <TextView
+                        android:id="@+id/tvSubTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvTilte"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_16sdp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="start"
+                        android:lineSpacingExtra="@dimen/_4sdp"
+                        android:text="Please complete the brain wellness spa treatment booklet. The completion of this booklet will give your facilitator an indication of where your brain is at. Depending on the answers you provide, we can explain to you why your brain is behaving in a certain way."
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_15sdp" />
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <Button
+                android:id="@+id/btnComplete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="@dimen/_55sdp"
+                android:layout_marginBottom="@dimen/_18sdp"
+                android:background="@drawable/extra_round_cornor"
+                android:fontFamily="@font/montserrat_medium"
+                android:paddingVertical="@dimen/_2sdp"
+                android:text="@string/Complete_the_Booklet"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+    </FrameLayout>
+</layout>

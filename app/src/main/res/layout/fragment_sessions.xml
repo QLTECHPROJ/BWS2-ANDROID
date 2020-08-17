@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/flSession"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".DashboardModule.Appointment.SessionsFragment">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_200sdp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/session_bg" />
+
+                    <RelativeLayout
+                        android:id="@+id/rlLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_56sdp"
+                        android:layout_marginTop="@dimen/_33sdp">
+
+                        <LinearLayout
+                            android:id="@+id/llBack"
+                            android:layout_width="42dp"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_left_arrow_icon"
+                                app:tint="@color/white" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:layout_marginBottom="@dimen/_16sdp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="start"
+                        android:maxLines="2"
+                        android:text="Emotional empowerment program"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_22sdp" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginRight="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="start"
+                    android:text="@string/Session"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvSessionList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_18sdp"
+                    android:overScrollMode="never" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
+</layout>

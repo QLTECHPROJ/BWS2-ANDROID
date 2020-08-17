@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".DashboardModule.Account.AccountFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/_14sdp"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:id="@+id/llUserProfile"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:layout_weight="0.3"
+                android:paddingBottom="@dimen/_16sdp"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_weight="0.20">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/civProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="@dimen/_4sdp"
+                        android:src="@color/colorAccent" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/_12sdp"
+                    android:layout_weight="0.65"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:gravity="left"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_20sdp" />
+
+                    <TextView
+                        android:id="@+id/tvViewProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="left"
+                        android:text="@string/view_profile"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_13sdp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.15"
+                    android:gravity="center_vertical|right">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_back_black_icon" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.42"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/llDownloads"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/_66sdp"
+                        android:layout_height="@dimen/_62sdp"
+                        android:padding="@dimen/_20sdp"
+                        android:src="@drawable/ic_download_icon" />
+
+                    <TextView
+                        android:id="@+id/tvDownloads"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:gravity="left"
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:text="@string/downloads"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_16sdp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llInvoices"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+
+                    <ImageView
+                        android:layout_width="@dimen/_66sdp"
+                        android:layout_height="@dimen/_62sdp"
+                        android:padding="@dimen/_20sdp"
+                        android:src="@drawable/ic_invoice_icon" />
+
+                    <TextView
+                        android:id="@+id/tvInvoices"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:gravity="left"
+                        android:text="@string/invoices"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_16sdp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llBillingOrder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+
+                    <ImageView
+                        android:layout_width="@dimen/_66sdp"
+                        android:layout_height="@dimen/_62sdp"
+                        android:padding="@dimen/_21sdp"
+                        android:src="@drawable/ic_payment_icon" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvBillingAndOrder"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_semi_bold"
+                            android:gravity="left"
+                            android:layout_marginLeft="@dimen/_20sdp"
+                            android:text="@string/billing_and_order"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_16sdp" />
+
+                        <TextView
+                            android:id="@+id/tvCrtPlan"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:gravity="left"
+                            android:layout_marginLeft="@dimen/_20sdp"
+                            android:text="Current plan: $29.99 / month"
+                            android:textColor="@color/light_gray"
+                            android:textSize="@dimen/_13sdp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llReminder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+
+                    <ImageView
+                        android:layout_width="@dimen/_66sdp"
+                        android:layout_height="@dimen/_62sdp"
+                        android:padding="@dimen/_4sdp"
+                        android:src="@drawable/ic_clock_icon" />
+
+                    <TextView
+                        android:id="@+id/tvReminder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:gravity="left"
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:text="@string/reminder"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_16sdp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llResource"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/_66sdp"
+                        android:layout_height="@dimen/_62sdp"
+                        android:padding="@dimen/_4sdp"
+                        android:src="@drawable/ic_resource_icon" />
+
+                    <TextView
+                        android:id="@+id/tvResource"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:gravity="left"
+                        android:text="@string/Resource"
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_16sdp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llFaq"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+
+                    <ImageView
+                        android:layout_width="@dimen/_66sdp"
+                        android:layout_height="@dimen/_62sdp"
+                        android:padding="@dimen/_20sdp"
+                        android:src="@drawable/ic_faq_icon" />
+
+                    <TextView
+                        android:id="@+id/tvFaq"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:gravity="left"
+                        android:text="@string/faq"
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_16sdp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+
+                    <ImageView
+                        android:layout_width="@dimen/_66sdp"
+                        android:layout_height="@dimen/_62sdp"
+                        android:padding="@dimen/_22sdp"
+                        android:src="@drawable/ic_logout_icon" />
+
+                    <TextView
+                        android:id="@+id/tvLogout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:gravity="left"
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:text="@string/logout"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_16sdp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvVersion"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="@dimen/_18sdp"
+                android:layout_weight="0.35"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center_horizontal|top"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14sdp" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+</layout>

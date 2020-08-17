@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:layout_marginVertical="@dimen/_10sdp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/_8sdp"
+            android:layout_weight="0.18">
+
+            <ImageView
+                android:id="@+id/ivRestaurantImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="0.43">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="left"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="Motivation Program"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14sdp" />
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="left"
+                android:text="12:37"
+                android:textColor="@color/extra_light_gray"
+                android:textSize="@dimen/_14sdp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone"
+            android:padding="@dimen/_8sdp"
+            android:layout_weight="0.13">
+
+            <ImageView
+                android:id="@+id/ivMore"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:padding="@dimen/_8sdp"
+                android:src="@drawable/ic_menu_icon"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/_8sdp"
+            android:layout_weight="0.13">
+
+            <ImageView
+                android:id="@+id/ivDownloads"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:padding="@dimen/_8sdp"
+                android:src="@drawable/ic_download_icon"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/_8sdp"
+            android:layout_weight="0.13">
+
+            <ImageView
+                android:id="@+id/ivRemove"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:padding="@dimen/_8sdp"
+                android:src="@drawable/remove_icon"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/_8sdp"
+            android:layout_weight="0.13">
+
+            <ImageView
+                android:id="@+id/ivSort"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:padding="@dimen/_8sdp"
+                android:src="@drawable/ic_sort_icon"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llMainLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingRight="@dimen/_10sdp"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginBottom="@dimen/_2sdp"
+                android:layout_weight="0.85">
+
+                <RelativeLayout
+                    android:id="@+id/rlBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/layout_bg"/>
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ivRestaurantImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/square_logo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="8dp"
+                android:paddingRight="@dimen/_2sdp"
+                android:paddingLeft="@dimen/_2sdp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="0.15"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_weight="0.7"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13sdp" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

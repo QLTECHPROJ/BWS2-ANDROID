@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/dialog_background"
+        tools:context=".InvoiceModule.Fragments.InvoiceReceiptFragment">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:id="@+id/llReceipt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/ivLogo"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:src="@drawable/dark_logo" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="left"
+                        android:text="@string/View_order_details"
+                        android:textColor="@color/light_black"
+                        android:textSize="@dimen/_14sdp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_13sdp"
+                        android:background="@drawable/rounded_black_corner_square"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_13sdp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="1">
+
+                            <TextView
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="Order Date:"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_12sdp" />
+
+                            <TextView
+                                android:id="@+id/tvDate"
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.6"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="14 November, 2019"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_12sdp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:weightSum="1">
+
+                            <TextView
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="Order #:"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_12sdp" />
+
+                            <TextView
+                                android:id="@+id/tvOrderId"
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.6"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="26481"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_12sdp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:weightSum="1">
+
+                            <TextView
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="Order Total:"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_12sdp" />
+
+                            <TextView
+                                android:id="@+id/tvTotal"
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.6"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="$233.00 (1 item)"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_12sdp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_13sdp"
+                        android:background="@drawable/rounded_black_corner_square"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_13sdp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.68"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvTitle"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:text="Emotional Empowerment Program"
+                                    android:textColor="@color/light_black"
+                                    android:textSize="@dimen/_14sdp" />
+
+                                <TextView
+                                    android:id="@+id/tvQty"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_4sdp"
+                                    android:fontFamily="@font/montserrat_regular"
+                                    android:text="Qty: 1"
+                                    android:textColor="@color/light_black"
+                                    android:textSize="@dimen/_12sdp" />
+
+                                <TextView
+                                    android:id="@+id/tvSession"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_4sdp"
+                                    android:fontFamily="@font/montserrat_regular"
+                                    android:text="Session: 12"
+                                    android:textColor="@color/light_black"
+                                    android:textSize="@dimen/_12sdp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.32">
+
+                                <TextView
+                                    android:id="@+id/tvOrderDate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:gravity="right"
+                                    android:text="$220.00"
+                                    android:textColor="@color/light_black"
+                                    android:textSize="@dimen/_12sdp" />
+
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_16sdp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="left"
+                        android:text="@string/Payment_information"
+                        android:textColor="@color/light_black"
+                        android:textSize="@dimen/_14sdp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_13sdp"
+                        android:background="@drawable/rounded_black_corner_square"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="left"
+                            android:paddingHorizontal="@dimen/_13sdp"
+                            android:paddingTop="@dimen/_13sdp"
+                            android:text="Payment Method:"
+                            android:textColor="@color/light_black"
+                            android:textSize="@dimen/_16sdp" />
+
+                        <TextView
+                            android:id="@+id/tvPaymentDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingHorizontal="@dimen/_13sdp"
+                            android:paddingBottom="@dimen/_13sdp"
+                            android:text="Visa ending **** 4242 \njsmith@email.com"
+                            android:textColor="@color/light_black"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_1sdp"
+                            android:background="#EEEEEE" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="left"
+                            android:paddingHorizontal="@dimen/_13sdp"
+                            android:text="From"
+                            android:textColor="@color/light_black"
+                            android:textSize="@dimen/_20sdp" />
+
+                        <TextView
+                            android:id="@+id/tvFromAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingHorizontal="@dimen/_13sdp"
+                            android:paddingBottom="@dimen/_13sdp"
+                            android:text="Brain Wellness Spa Stirling, \nUnit 15, first floor 51 Cedric \nStreet, Stirling, WA 6021, \nAustralia"
+                            android:textColor="@color/light_black"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_13sdp"
+                        android:background="@drawable/rounded_black_corner_square"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_13sdp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="left"
+                            android:text="Billed to"
+                            android:textColor="@color/light_black"
+                            android:textSize="@dimen/_20sdp" />
+
+                        <TextView
+                            android:id="@+id/tvBilledTo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="John Smith \n1234 Main \nApt. 4B, \nSpringfield, ST 5432"
+                            android:textColor="@color/light_black"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_16sdp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="left"
+                        android:text="@string/Order_summary"
+                        android:textColor="@color/light_black"
+                        android:textSize="@dimen/_14sdp" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_13sdp"
+                        android:layout_marginBottom="@dimen/_22sdp"
+                        android:background="@drawable/rounded_black_corner_square"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_13sdp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="1">
+
+                            <TextView
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:text="Items:"
+                                android:textColor="@color/light_black"
+                                android:textSize="@dimen/_12sdp" />
+
+                            <TextView
+                                android:id="@+id/tvItems"
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.6"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:gravity="right"
+                                android:text="$220.00"
+                                android:textColor="@color/light_black"
+                                android:textSize="@dimen/_12sdp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:weightSum="1">
+
+                            <TextView
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:text="GST:"
+                                android:textColor="@color/light_black"
+                                android:textSize="@dimen/_12sdp" />
+
+                            <TextView
+                                android:id="@+id/tvGst"
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.6"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:gravity="right"
+                                android:text="$13.00"
+                                android:textColor="@color/light_black"
+                                android:textSize="@dimen/_12sdp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:weightSum="1">
+
+                            <TextView
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:text="Order Total:"
+                                android:textColor="@color/light_black"
+                                android:textSize="@dimen/_13sdp" />
+
+                            <TextView
+                                android:id="@+id/tvOrderTotal"
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.6"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:gravity="right"
+                                android:text="$233.00"
+                                android:textColor="@color/light_black"
+                                android:textSize="@dimen/_13sdp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </RelativeLayout>
+
+</layout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="white">#FFFFFF</color>
+    <color name="dark_blue_gray">#2A3042</color>
+    <color name="extra_light_gray">#838383</color>
+    <color name="discalimer_gray">#EEEEEE</color>
+    <color name="light_gray">#999999</color>
+    <color name="gray">#666666</color>
+    <color name="blue">#005BAA</color>
+    <color name="black">#000000</color>
+    <color name="light_black">#313131</color>
+    <color name="dark_blue">#0468b0</color>
+    <color name="light_white">#F9F9F9</color>
+    <color name="red">#F44336</color>
+    <color name="desc">#080808</color>
+    <color name="blue_transparent">#CC2A3042</color>
+    <color name="extra_light_blue">#A6B0CF</color>
+    <color name="transparent_white">#0000000F</color>
+    <color name="dim_light_gray">#dddddd</color>
+    <color name="seek_bar_background">#ababab</color>
+    <color name="seek_bar_secondary_progress">#3399CC</color>
+    <color name="yellow">#FFC00F</color>
+    <color name="green">#28A745</color>
+    <color name="gray_subtitle">#7E7E7E</color>
+
+    <color name="shadow">#555555</color>
+    <color name="title">#777777</color>
+</resources>
