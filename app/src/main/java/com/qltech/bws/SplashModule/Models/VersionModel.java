@@ -1,4 +1,4 @@
-package com.qltech.bws.SplashModule.Activities.Models;
+package com.qltech.bws.SplashModule.Models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

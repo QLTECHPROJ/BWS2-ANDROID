@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_audio">
+
+    <fragment
+        android:id="@+id/navigation_audio"
+        android:name="com.qltech.bws.DashboardModule.Audio.AudioFragment"
+        android:label="@string/title_audio"
+        tools:layout="@layout/fragment_audio" />
+
+    <fragment
+        android:id="@+id/navigation_playlist"
+        android:name="com.qltech.bws.DashboardModule.Playlist.PlaylistFragment"
+        android:label="@string/title_playlist"
+        tools:layout="@layout/fragment_playlist" />
+
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.qltech.bws.DashboardModule.Search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/navigation_appointment"
+        android:name="com.qltech.bws.DashboardModule.Appointment.AppointmentFragment"
+        android:label="@string/title_appointment"
+        tools:layout="@layout/fragment_appointment" />
+    <fragment
+        android:id="@+id/navigation_account"
+        android:name="com.qltech.bws.DashboardModule.Account.AccountFragment"
+        android:label="@string/title_account"
+        tools:layout="@layout/fragment_account" />
+</navigation>

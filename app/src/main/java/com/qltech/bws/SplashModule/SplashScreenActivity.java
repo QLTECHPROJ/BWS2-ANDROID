@@ -1,4 +1,4 @@
-package com.qltech.bws.SplashModule.Activities;
+package com.qltech.bws.SplashModule;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -15,12 +15,12 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BuildConfig;
 import com.qltech.bws.LoginModule.Activities.LoginActivity;
 import com.qltech.bws.R;
-import com.qltech.bws.SplashModule.Activities.Models.VersionModel;
+import com.qltech.bws.SplashModule.Models.VersionModel;
 import com.qltech.bws.Utility.APIClient;
-import com.qltech.bws.Utility.AppUtils;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivitySplashScreenBinding;
 
@@ -54,7 +54,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         String appURI = "";
         int ver_code = BuildConfig.VERSION_CODE;
 
-        if (AppUtils.isNetworkConnected(context)) {
+        if (BWSApplication.isNetworkConnected(context)) {
             Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(String.valueOf(ver_code), CONSTANTS.FLAG_ONE);
             listCall.enqueue(new Callback<VersionModel>() {
                 @Override

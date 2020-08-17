@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.LoginModule.Adapters.CountrySelectAdapter;
 import com.qltech.bws.LoginModule.Models.CountryListModel;
 import com.qltech.bws.R;
@@ -55,7 +56,7 @@ public class CountrySelectActivity extends AppCompatActivity {
         binding.rvCountryList.setLayoutManager(mLayoutManager);
         binding.rvCountryList.setItemAnimator(new DefaultItemAnimator());
 
-        if (AppUtils.isNetworkConnected(this)) {
+        if (BWSApplication.isNetworkConnected(this)) {
             Call<CountryListModel> listCall = APIClient.getClient().getCountryLists();
             listCall.enqueue(new Callback<CountryListModel>() {
                 @Override
@@ -69,7 +70,7 @@ public class CountrySelectActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<CountryListModel> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {

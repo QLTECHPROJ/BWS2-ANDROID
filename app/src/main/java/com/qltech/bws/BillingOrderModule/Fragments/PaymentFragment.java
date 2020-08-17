@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.qltech.bws.AddPaymentModule.Activities.AddPaymentActivity;
+import com.qltech.bws.AddPayment.AddPaymentActivity;
 import com.qltech.bws.BillingOrderModule.Adapters.AllCardAdapter;
 import com.qltech.bws.BillingOrderModule.Models.AllCardModel;
 import com.qltech.bws.R;

@@ -1,4 +1,4 @@
-package com.qltech.bws.ReminderModule.Activities;
+package com.qltech.bws.ReminderModule;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TimePicker;
 
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.ActivityReminderBinding;

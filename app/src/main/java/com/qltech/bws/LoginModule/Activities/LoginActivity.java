@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.MembershipModule.Activities.MembershipActivity;
 import com.qltech.bws.OtpModule.Activities.OtpActivity;
@@ -64,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
             binding.txtError.setVisibility(View.VISIBLE);
             binding.txtError.setText(getString(R.string.not_valid_number));
         } else {
-            if (AppUtils.isNetworkConnected(LoginActivity.this)) {
+            if (BWSApplication.isNetworkConnected(LoginActivity.this)) {
                 Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(binding.edtNumber.toString(),61, CONSTANTS.FLAG_ONE,CONSTANTS.FLAG_ZERO,"sdsdsdsd");
                 listCall.enqueue(new Callback<LoginModel>() {
                     @Override

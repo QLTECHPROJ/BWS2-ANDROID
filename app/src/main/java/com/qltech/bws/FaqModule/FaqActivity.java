@@ -1,4 +1,4 @@
-package com.qltech.bws.FaqModule.Activities;
+package com.qltech.bws.FaqModule;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;

@@ -8,8 +8,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
+import static com.qltech.bws.BWSApplication.securityKey;
 import static com.qltech.bws.Utility.AppUtils.BASE_URL;
-import static com.qltech.bws.Utility.AppUtils.securityKey;
 import static com.qltech.bws.BWSApplication.getContext;
 
 public class APIClient {

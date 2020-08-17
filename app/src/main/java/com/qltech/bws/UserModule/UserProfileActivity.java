@@ -1,4 +1,4 @@
-package com.qltech.bws.UserModule.Activities;
+package com.qltech.bws.UserModule;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
