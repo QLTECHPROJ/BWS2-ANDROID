@@ -17,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.qltech.bws.DashboardModule.Playlist.Activities.AddQueueActivity;
-import com.qltech.bws.DashboardModule.Playlist.Activities.ViewQueueActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;

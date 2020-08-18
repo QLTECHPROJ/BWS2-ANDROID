@@ -12,7 +12,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.qltech.bws.DashboardModule.Activities.PlayWellnessActivity;
-import com.qltech.bws.DashboardModule.Models.RecentlyPlayedModel;
+import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -21,10 +21,10 @@ import com.qltech.bws.databinding.SmallBoxLayoutBinding;
 import java.util.List;
 
 public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder> {
-    private List<RecentlyPlayedModel> listModelList;
+    private List<MainAudioModel> listModelList;
     Context ctx;
 
-    public RecentlyPlayedAdapter(List<RecentlyPlayedModel> listModelList, Context ctx) {
+    public RecentlyPlayedAdapter(List<MainAudioModel> listModelList, Context ctx) {
         this.listModelList = listModelList;
         this.ctx = ctx;
     }
@@ -39,7 +39,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        RecentlyPlayedModel listModel = listModelList.get(position);
+        MainAudioModel listModel = listModelList.get(position);
 
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 10,
                 1, 1, 0.28f, 10);

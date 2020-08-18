@@ -1,4 +1,4 @@
-package com.qltech.bws.DashboardModule.Playlist.Activities;
+package com.qltech.bws.DashboardModule.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -15,7 +15,6 @@ import com.qltech.bws.DashboardModule.Models.SerachListModel;
 import com.qltech.bws.DashboardModule.Models.SuggestedModel;
 import com.qltech.bws.DashboardModule.Playlist.Adapters.SerachListAdpater;
 import com.qltech.bws.DashboardModule.Playlist.Adapters.SuggestedAdpater;
-import com.qltech.bws.DownloadModule.Models.AudioListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.ActivityAddAudioBinding;
 

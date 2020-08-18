@@ -1,4 +1,4 @@
-package com.qltech.bws.DashboardModule.Playlist.Activities;
+package com.qltech.bws.DashboardModule.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;

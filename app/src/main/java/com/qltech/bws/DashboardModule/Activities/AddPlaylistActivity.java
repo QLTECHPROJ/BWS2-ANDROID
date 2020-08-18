@@ -1,4 +1,4 @@
-package com.qltech.bws.DashboardModule.Playlist.Activities;
+package com.qltech.bws.DashboardModule.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

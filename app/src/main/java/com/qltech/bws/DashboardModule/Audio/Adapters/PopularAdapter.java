@@ -12,7 +12,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.qltech.bws.DashboardModule.Activities.PlayWellnessActivity;
-import com.qltech.bws.DashboardModule.Models.PopularModel;
+import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -21,10 +21,10 @@ import com.qltech.bws.databinding.SmallBoxLayoutBinding;
 import java.util.List;
 
 public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.MyViewHolder> {
-    private List<PopularModel> listModelList;
+    private List<MainAudioModel> listModelList;
     Context ctx;
 
-    public PopularAdapter(List<PopularModel> listModelList,Context ctx) {
+    public PopularAdapter(List<MainAudioModel> listModelList,Context ctx) {
         this.listModelList = listModelList;
         this.ctx = ctx;
     }
@@ -39,8 +39,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        PopularModel listModel = listModelList.get(position);
-
+        MainAudioModel listModel = listModelList.get(position);
 
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 10,
                 1, 1, 0.28f, 10);

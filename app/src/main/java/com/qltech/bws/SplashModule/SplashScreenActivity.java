@@ -52,19 +52,19 @@ public class SplashScreenActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-//        if (UserID.equalsIgnoreCase("")) {
+        if (UserID.equalsIgnoreCase("")) {
             new Handler().postDelayed(() -> {
                 Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
             }, 2 * 1000);
-        /*} else {
+        } else {
             new Handler().postDelayed(() -> {
                 Intent i = new Intent(SplashScreenActivity.this, DashboardActivity.class);
                 startActivity(i);
                 finish();
             }, 2 * 1000);
-        }*/
+        }
     }
 
     public static void getLatasteUpdate(Context context) {

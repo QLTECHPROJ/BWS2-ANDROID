@@ -12,7 +12,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.qltech.bws.DashboardModule.Activities.PlayWellnessActivity;
-import com.qltech.bws.DashboardModule.Models.RecommendedModel;
+import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -21,10 +21,10 @@ import com.qltech.bws.databinding.BigBoxLayoutBinding;
 import java.util.List;
 
 public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.MyViewHolder> {
-    private List<RecommendedModel> listModelList;
+    private List<MainAudioModel> listModelList;
     Context ctx;
 
-    public RecommendedAdapter(List<RecommendedModel> listModelList, Context ctx) {
+    public RecommendedAdapter(List<MainAudioModel> listModelList, Context ctx) {
         this.listModelList = listModelList;
         this.ctx = ctx;
     }
@@ -39,7 +39,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        RecommendedModel listModel = listModelList.get(position);
+        MainAudioModel listModel = listModelList.get(position);
         holder.binding.tvTitle.setText(listModel.getTitle());
 
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 20,

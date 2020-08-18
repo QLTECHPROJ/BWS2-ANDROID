@@ -1,9 +1,9 @@
 package com.qltech.bws.DashboardModule.Models;
 
-public class InspiredModel {
+public class MainAudioModel {
     String title;
 
-    public InspiredModel(String title) {
+    public MainAudioModel(String title) {
         this.title = title;
     }
 

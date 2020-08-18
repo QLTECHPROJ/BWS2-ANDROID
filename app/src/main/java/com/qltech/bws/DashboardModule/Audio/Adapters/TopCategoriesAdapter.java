@@ -13,7 +13,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.qltech.bws.DashboardModule.Activities.PlayWellnessActivity;
-import com.qltech.bws.DashboardModule.Models.TopCategoriesModel;
+import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -22,10 +22,10 @@ import com.qltech.bws.databinding.RoundBoxLayoutBinding;
 import java.util.List;
 
 public class TopCategoriesAdapter  extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
-    private List<TopCategoriesModel> listModelList;
+    private List<MainAudioModel> listModelList;
     Context ctx;
 
-    public TopCategoriesAdapter(List<TopCategoriesModel> listModelList,Context ctx) {
+    public TopCategoriesAdapter(List<MainAudioModel> listModelList, Context ctx) {
         this.listModelList = listModelList;
         this.ctx = ctx;
     }
@@ -40,7 +40,7 @@ public class TopCategoriesAdapter  extends RecyclerView.Adapter<TopCategoriesAda
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        TopCategoriesModel listModel = listModelList.get(position);
+        MainAudioModel listModel = listModelList.get(position);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         WindowManager windowmanager = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);

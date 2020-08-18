@@ -19,10 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.qltech.bws.BillingOrderModule.Activities.CancelMembershipActivity;
-import com.qltech.bws.DashboardModule.Appointment.SessionsFragment;
-import com.qltech.bws.DashboardModule.Playlist.Activities.AddAudioActivity;
-import com.qltech.bws.LoginModule.Activities.LoginActivity;
+import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.FragmentPlaylistBinding;
 

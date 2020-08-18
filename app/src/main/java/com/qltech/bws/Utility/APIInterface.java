@@ -1,6 +1,7 @@
 package com.qltech.bws.Utility;
 
 import com.qltech.bws.DashboardModule.Models.DirectionModel;
+import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.LoginModule.Models.CountryListModel;
 import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.LoginModule.Models.OtpModel;
@@ -41,6 +42,11 @@ public interface APIInterface {
 /* TODO CountryActivity */
     @GET("countrylist")
     Call<CountryListModel> getCountryLists();
+
+/* TODO AudioFragment */
+    @POST("homeaudioscreen")
+    @FormUrlEncoded
+    Call<MainAudioModel> getMainAudioLists(@Field("UserID") String userID);
 
 /* TODO AddQueueActivity */
     @POST("audiodetail")

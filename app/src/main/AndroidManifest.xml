@@ -30,27 +30,27 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Playlist.Activities.MyPlaylistActivity"
+            android:name=".DashboardModule.Activities.MyPlaylistActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Playlist.Activities.AddPlaylistActivity"
+            android:name=".DashboardModule.Activities.AddPlaylistActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Playlist.Activities.AddAudioActivity"
+            android:name=".DashboardModule.Activities.AddAudioActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Playlist.Activities.ViewQueueActivity"
+            android:name=".DashboardModule.Activities.ViewQueueActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Playlist.Activities.AddQueueActivity"
+            android:name=".DashboardModule.Activities.AddQueueActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />

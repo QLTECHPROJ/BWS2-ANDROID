@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.qltech.bws.DashboardModule.Playlist.Activities.MyPlaylistActivity;
+import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
 import com.qltech.bws.DashboardModule.Adapters.SuggestionAudiosAdpater;
 import com.qltech.bws.DashboardModule.Audio.PlayListsModel;
 import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
