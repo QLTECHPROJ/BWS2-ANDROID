@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.qltech.bws.DashboardModule.Activities.DashboardActivity;
-import com.qltech.bws.OtpModule.Activities.OtpActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.ActivityCheckoutOtpBinding;
 

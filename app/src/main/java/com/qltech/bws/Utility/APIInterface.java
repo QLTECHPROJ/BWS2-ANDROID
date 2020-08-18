@@ -11,12 +11,12 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface APIInterface {
-
+/*TODO App Version*/
     @POST("appversion")
     @FormUrlEncoded
     Call<VersionModel> getVersionDatas(@Path("Version") String version,
                                        @Path("AppType") String appType);
-
+/* TODO LoginActivtiy */
     @POST("sendotp")
     @FormUrlEncoded
     Call<LoginModel> getLoginDatas(@Path("MobileNo") String mobileNo,
@@ -24,7 +24,6 @@ public interface APIInterface {
                                    @Path("DeviceType") String deviceType,
                                    @Path("Resend") String resend,
                                    @Path("key") String key);
-
 
     @GET("countrylist")
     Call<CountryListModel> getCountryLists();

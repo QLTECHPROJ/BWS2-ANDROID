@@ -1,4 +1,4 @@
-package com.qltech.bws.OtpModule.Activities;
+package com.qltech.bws.OtpModule;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;

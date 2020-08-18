@@ -13,10 +13,9 @@ import android.widget.Toast;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.MembershipModule.Activities.MembershipActivity;
-import com.qltech.bws.OtpModule.Activities.OtpActivity;
+import com.qltech.bws.OtpModule.OtpActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
-import com.qltech.bws.Utility.AppUtils;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityLoginBinding;
 
