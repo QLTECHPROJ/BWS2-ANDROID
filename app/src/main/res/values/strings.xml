@@ -127,4 +127,6 @@
     <string name="no_server_found">You are not currently connected to internet. Please try again.!</string>
     <string name="not_valid_number">Please enter a valid mobile number</string>
     <string name="no_add_digits">Wait a sec! We need to exchange digits to get started</string>
+    <string name="Australia">Australia</string>
+    <string name="code">61</string>
 </resources>

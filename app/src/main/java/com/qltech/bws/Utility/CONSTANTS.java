@@ -27,4 +27,14 @@ public class CONSTANTS {
     public static final String SERVER_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String TWENTY_FOUR_HH_MM_FORMAT = "HH:mm";
 
+    public static String Name = "Name";
+    public static String Code = "Code";
+    public static String MobileNo = "MobileNo";
+
+
+    public static final String PREF_KEY_LOGIN = "Login";
+    public static final String PREF_KEY_UserID = "UserID";
+    public static final String PREF_KEY_MobileNo = "MobileNo";
+
+    public static final String Token = "Token";
 }

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/dark_blue_gray"
-        android:paddingLeft="@dimen/_20sdp"
-        android:paddingRight="@dimen/_20sdp">
+        android:background="@color/dark_blue_gray">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:paddingLeft="@dimen/_20sdp"
+            android:paddingRight="@dimen/_20sdp"
             android:weightSum="2">
 
             <LinearLayout
@@ -84,7 +84,6 @@
                                 android:layout_centerVertical="true"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:paddingLeft="@dimen/_16sdp"
-                                android:text="Australia"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_16sdp" />
 
@@ -116,7 +115,6 @@
                                 android:fontFamily="@font/montserrat_medium"
                                 android:paddingVertical="@dimen/_11sdp"
                                 android:paddingLeft="@dimen/_16sdp"
-                                android:text="+61"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_16sdp" />
 
@@ -137,7 +135,7 @@
                                     android:layout_height="wrap_content"
                                     android:background="@null"
                                     android:inputType="number"
-                                    android:maxLength="8"
+                                    android:maxLength="9"
                                     android:textCursorDrawable="@null"
                                     android:backgroundTint="@color/dim_light_gray"
                                     android:fontFamily="@font/montserrat_medium"
@@ -229,5 +227,23 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/ImgV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:padding="80dp"
+            android:scaleType="centerInside"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/progressBarHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:animateLayoutChanges="true"
+            android:background="#C0000000"
+            android:visibility="gone" />
+    </RelativeLayout>
 </layout>

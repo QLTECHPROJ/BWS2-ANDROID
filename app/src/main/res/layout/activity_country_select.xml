@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -24,9 +24,6 @@
             app:contentInsetLeft="@dimen/_0sdp"
             app:contentInsetRight="@dimen/_0sdp"
             app:contentInsetStart="@dimen/_0sdp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -68,11 +65,11 @@
             android:id="@+id/cvSearch"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_48sdp"
+            android:layout_below="@id/toolbar"
             android:layout_marginLeft="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_16sdp"
             android:layout_marginRight="@dimen/_16sdp"
-            app:cardCornerRadius="@dimen/_22sdp"
-            app:layout_constraintTop_toBottomOf="@id/toolbar">
+            app:cardCornerRadius="@dimen/_22sdp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -116,7 +113,37 @@
             android:layout_marginTop="@dimen/_20sdp"
             android:layout_marginRight="@dimen/_16sdp"
             android:overScrollMode="never"
-            app:layout_constraintTop_toBottomOf="@id/cvSearch" />
+            android:layout_below="@id/cvSearch" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tvFound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:text="No Result Found"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16sdp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/ImgV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:padding="80dp"
+            android:scaleType="centerInside"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/progressBarHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:animateLayoutChanges="true"
+            android:background="#C0000000"
+            android:visibility="gone" />
+    </RelativeLayout>
 </layout>

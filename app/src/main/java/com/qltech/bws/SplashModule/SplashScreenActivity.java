@@ -7,9 +7,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -17,10 +19,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BuildConfig;
+import com.qltech.bws.DashboardModule.Activities.DashboardActivity;
 import com.qltech.bws.LoginModule.Activities.LoginActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.SplashModule.Models.VersionModel;
 import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.AppSignatureHashHelper;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivitySplashScreenBinding;
 
@@ -30,6 +34,7 @@ import retrofit2.Response;
 
 public class SplashScreenActivity extends AppCompatActivity {
     ActivitySplashScreenBinding binding;
+    public static String key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,23 +44,34 @@ public class SplashScreenActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash_screen);
 
+        AppSignatureHashHelper appSignatureHashHelper = new AppSignatureHashHelper(this);
+        key = appSignatureHashHelper.getAppSignatures().get(0);
         Glide.with(SplashScreenActivity.this).load(R.drawable.splash).asGif().into(binding.ivBackground);
+        getLatasteUpdate(SplashScreenActivity.this);
 
-//        getLatasteUpdate(SplashScreenActivity.this);
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        new Handler().postDelayed(() -> {
-            Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
-            startActivity(i);
-            finish();
-        }, 2 * 1000);
+//        if (UserID.equalsIgnoreCase("")) {
+            new Handler().postDelayed(() -> {
+                Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }, 2 * 1000);
+        /*} else {
+            new Handler().postDelayed(() -> {
+                Intent i = new Intent(SplashScreenActivity.this, DashboardActivity.class);
+                startActivity(i);
+                finish();
+            }, 2 * 1000);
+        }*/
     }
 
     public static void getLatasteUpdate(Context context) {
         String appURI = "";
-        int ver_code = BuildConfig.VERSION_CODE;
 
         if (BWSApplication.isNetworkConnected(context)) {
-            Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(String.valueOf(ver_code), CONSTANTS.FLAG_ONE);
+            Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(BuildConfig.VERSION_NAME, CONSTANTS.FLAG_ONE);
             listCall.enqueue(new Callback<VersionModel>() {
                 @Override
                 public void onResponse(Call<VersionModel> call, Response<VersionModel> response) {
@@ -97,7 +113,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<VersionModel> call, Throwable t) {
-                    Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {

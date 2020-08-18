@@ -17,10 +17,10 @@ import com.qltech.bws.databinding.QueueListLayoutBinding;
 import java.util.List;
 
 public class DirectionAdapter extends RecyclerView.Adapter<DirectionAdapter.MyViewHolder> {
-    private List<DirectionModel> listModelList;
+    private List<DirectionModel.ResponseData> listModelList;
     Context ctx;
 
-    public DirectionAdapter(List<DirectionModel> listModelList, Context ctx) {
+    public DirectionAdapter(List<DirectionModel.ResponseData> listModelList, Context ctx) {
         this.listModelList = listModelList;
         this.ctx = ctx;
     }
@@ -35,8 +35,8 @@ public class DirectionAdapter extends RecyclerView.Adapter<DirectionAdapter.MyVi
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        DirectionModel listModel = listModelList.get(position);
-        holder.binding.tvTitle.setText(listModel.getTitle());
+        DirectionModel.ResponseData listModel = listModelList.get(position);
+//        holder.binding.tvTitle.setText(listModel.getTitle());
     }
 
     @Override
