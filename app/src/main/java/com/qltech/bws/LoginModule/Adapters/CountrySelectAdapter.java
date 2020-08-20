@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.qltech.bws.LoginModule.Activities.LoginActivity;
 import com.qltech.bws.LoginModule.Models.CountryListModel;
+import com.qltech.bws.MembershipModule.Activities.CheckoutGetCodeActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.CountryLayoutBinding;
 
@@ -25,15 +26,17 @@ public class CountrySelectAdapter extends RecyclerView.Adapter<CountrySelectAdap
     private List<CountryListModel.ResponseData> modelList;
     private List<CountryListModel.ResponseData> listFilterData;
     Context ctx;
+    String Check;
     RecyclerView rvCountryList;
     TextView tvFound;
 
-    public CountrySelectAdapter(List<CountryListModel.ResponseData> modelList, Context ctx, RecyclerView rvCountryList, TextView tvFound) {
+    public CountrySelectAdapter(List<CountryListModel.ResponseData> modelList, Context ctx, RecyclerView rvCountryList, TextView tvFound, String Check) {
         this.modelList = modelList;
         this.listFilterData = modelList;
         this.ctx = ctx;
         this.rvCountryList = rvCountryList;
         this.tvFound = tvFound;
+        this.Check = Check;
     }
 
     @NonNull
@@ -52,10 +55,18 @@ public class CountrySelectAdapter extends RecyclerView.Adapter<CountrySelectAdap
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ctx, LoginActivity.class);
-                i.putExtra("Name",modelList.get(position).getName());
-                i.putExtra("Code",modelList.get(position).getCode());
-                ctx.startActivity(i);
+                if (Check.equalsIgnoreCase("0")){
+                    Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+                    i.putExtra("Name",modelList.get(position).getName());
+                    i.putExtra("Code",modelList.get(position).getCode());
+                    ctx.startActivity(i);
+                }else if (Check.equalsIgnoreCase("1")){
+                    Intent i = new Intent(ctx, LoginActivity.class);
+                    i.putExtra("Name",modelList.get(position).getName());
+                    i.putExtra("Code",modelList.get(position).getCode());
+                    ctx.startActivity(i);
+                }
+
             }
         });
     }

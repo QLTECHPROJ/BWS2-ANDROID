@@ -7,28 +7,49 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
 import com.qltech.bws.DownloadModule.Fragments.AudioDownloadsFragment;
 import com.qltech.bws.DownloadModule.Fragments.PlaylistsDownlaodsFragment;
 import com.qltech.bws.DownloadModule.Models.DownloadsHistoryModel;
 import com.qltech.bws.InvoiceModule.Fragments.AppointmentInvoiceFragment;
 import com.qltech.bws.InvoiceModule.Fragments.MembershipInvoiceFragment;
+import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
+import com.qltech.bws.LoginModule.Activities.CountrySelectActivity;
+import com.qltech.bws.LoginModule.Adapters.CountrySelectAdapter;
+import com.qltech.bws.LoginModule.Models.CountryListModel;
 import com.qltech.bws.R;
+import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityInvoiceBinding;
 
+import java.util.ArrayList;
+
+import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class InvoiceActivity extends AppCompatActivity {
-
     ActivityInvoiceBinding binding;
+    ArrayList<InvoiceListModel.Appointment> appointmentList;
+    ArrayList<InvoiceListModel.MemberShip> memberShipList;
+    String UserID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_invoice);
+        Glide.with(InvoiceActivity.this).load(R.drawable.loading).asGif().into(binding.ImgV);
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,37 +57,65 @@ public class InvoiceActivity extends AppCompatActivity {
                 finish();
             }
         });
-        binding.viewPager.setOffscreenPageLimit(2);
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Membership"));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Appointment"));
-        binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), this, binding.tabLayout.getTabCount());
-        binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
-
-        binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                binding.viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        prepareData();
     }
-    public class TabAdapter extends FragmentStatePagerAdapter {
 
+    void prepareData() {
+        showProgressBar();
+        if (BWSApplication.isNetworkConnected(this)) {
+            Call<InvoiceListModel> listCall = APIClient.getClient().getInvoicelistPlaylis(UserID);
+            listCall.enqueue(new Callback<InvoiceListModel>() {
+                @Override
+                public void onResponse(Call<InvoiceListModel> call, Response<InvoiceListModel> response) {
+                    if (response.isSuccessful()) {
+                        hideProgressBar();
+                        InvoiceListModel listModel = response.body();
+                        appointmentList = new ArrayList<>();
+                        memberShipList = new ArrayList<>();
+                        appointmentList = listModel.getResponseData().getAppointment();
+                        memberShipList = listModel.getResponseData().getMemberShip();
+                        binding.viewPager.setOffscreenPageLimit(2);
+                        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Membership"));
+                        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Appointment"));
+                        binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+                        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), InvoiceActivity.this, binding.tabLayout.getTabCount());
+                        binding.viewPager.setAdapter(adapter);
+                        binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
+
+                        binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                            @Override
+                            public void onTabSelected(TabLayout.Tab tab) {
+                                binding.viewPager.setCurrentItem(tab.getPosition());
+                            }
+
+                            @Override
+                            public void onTabUnselected(TabLayout.Tab tab) {
+
+                            }
+
+                            @Override
+                            public void onTabReselected(TabLayout.Tab tab) {
+
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<InvoiceListModel> call, Throwable t) {
+                }
+            });
+        } else {
+            Toast.makeText(this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public class TabAdapter extends FragmentStatePagerAdapter {
         int totalTabs;
         private Context myContext;
-        Callback<DownloadsHistoryModel> downloadsHistoryModelCallback;
+        Callback<InvoiceListModel> modelCallback;
 
         public TabAdapter(FragmentManager fm, Context myContext, int totalTabs) {
             super(fm);
@@ -74,9 +123,9 @@ public class InvoiceActivity extends AppCompatActivity {
             this.totalTabs = totalTabs;
         }
 
-        public TabAdapter(FragmentManager fm, Callback<DownloadsHistoryModel> transactionHistoryModelCallback, int totalTabs) {
+        public TabAdapter(FragmentManager fm, Callback<InvoiceListModel> callback, int totalTabs) {
             super(fm);
-            this.downloadsHistoryModelCallback = transactionHistoryModelCallback;
+            this.modelCallback = callback;
             this.totalTabs = totalTabs;
         }
 
@@ -84,13 +133,15 @@ public class InvoiceActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    MembershipInvoiceFragment membershipInvoiceFragment = new MembershipInvoiceFragment();
                     Bundle bundle = new Bundle();
+                    MembershipInvoiceFragment membershipInvoiceFragment = new MembershipInvoiceFragment();
+                    bundle.putParcelableArrayList("membershipInvoiceFragment", memberShipList);
                     membershipInvoiceFragment.setArguments(bundle);
                     return membershipInvoiceFragment;
                 case 1:
-                    AppointmentInvoiceFragment appointmentInvoiceFragment = new AppointmentInvoiceFragment();
                     bundle = new Bundle();
+                    AppointmentInvoiceFragment appointmentInvoiceFragment = new AppointmentInvoiceFragment();
+                    bundle.putParcelableArrayList("appointmentInvoiceFragment", appointmentList);
                     appointmentInvoiceFragment.setArguments(bundle);
                     return appointmentInvoiceFragment;
                 default:
@@ -104,4 +155,16 @@ public class InvoiceActivity extends AppCompatActivity {
         }
     }
 
+    private void hideProgressBar() {
+        binding.progressBarHolder.setVisibility(View.GONE);
+        binding.ImgV.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void showProgressBar() {
+        binding.progressBarHolder.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        binding.ImgV.setVisibility(View.VISIBLE);
+        binding.ImgV.invalidate();
+    }
 }

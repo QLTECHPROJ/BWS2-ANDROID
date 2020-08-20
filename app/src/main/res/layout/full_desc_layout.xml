@@ -34,6 +34,7 @@
                 android:textSize="@dimen/_17sdp" />
 
             <TextView
+                android:id="@+id/tvDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_24sdp"
@@ -41,7 +42,6 @@
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="This home program is designed to support your Emotional Empowerment Program and help you maintain the new habits of positive thinking bias, working with your emotions and moods at night. Stop overthinking, be tuned to opportunity through the power of positive thinking to get more out of life, be this more enjoyment, more love, more money, connections and meaning."
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp" />
 

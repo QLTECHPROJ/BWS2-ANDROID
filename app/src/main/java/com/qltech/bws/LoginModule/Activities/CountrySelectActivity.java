@@ -22,6 +22,7 @@ import com.qltech.bws.LoginModule.Models.CountryListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.AppUtils;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityCountrySelectBinding;
 
 import retrofit2.Call;
@@ -29,7 +30,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CountrySelectActivity extends AppCompatActivity {
-
+    String Check;
     ActivityCountrySelectBinding binding;
     CountrySelectAdapter adapter;
 
@@ -38,6 +39,9 @@ public class CountrySelectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_country_select);
 
+        if (getIntent().getExtras() != null) {
+            Check = getIntent().getStringExtra(CONSTANTS.Check);
+        }
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,7 +75,7 @@ public class CountrySelectActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String search) {
                 try {
                     adapter.getFilter().filter(search);
-                    Log.e("searchsearch",""+search);
+                    Log.e("searchsearch", "" + search);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -92,7 +96,7 @@ public class CountrySelectActivity extends AppCompatActivity {
                         hideProgressBar();
                         CountryListModel listModel = response.body();
                         if (listModel != null) {
-                            adapter = new CountrySelectAdapter(listModel.getResponseData(), CountrySelectActivity.this, binding.rvCountryList,binding.tvFound);
+                            adapter = new CountrySelectAdapter(listModel.getResponseData(), CountrySelectActivity.this, binding.rvCountryList, binding.tvFound, Check);
                         }
                         binding.rvCountryList.setAdapter(adapter);
                     }

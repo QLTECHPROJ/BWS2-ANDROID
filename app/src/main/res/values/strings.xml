@@ -129,4 +129,22 @@
     <string name="no_add_digits">Wait a sec! We need to exchange digits to get started</string>
     <string name="Australia">Australia</string>
     <string name="code">61</string>
+    <string name="my_download">MyDownload</string>
+    <string name="my_like">MyLike</string>
+    <string name="recently_played">Recently Played</string>
+    <string name="recommended">Recommended</string>
+    <string name="get_inspired">Get Inspired</string>
+    <string name="popular">Popular</string>
+    <string name="top_categories">Top Categories</string>
+    <string name="Rename">Rename</string>
+    <string name="notvalid_number">It seems your mobile number not exist in our system.</string>
+    <string name="valid_name">Please enter name</string>
+    <string name="takePhoto">Take photo</string>
+    <string name="chooseFromGallary">Choose from gallery</string>
+    <string name="cancel">Cancel</string>
+    <string name="addPhoto">Add photo!</string>
+    <string name="removeProfilePicture">Remove profile picture</string>
+    <string name="your_created">Your Created</string>
+    <string name="MyDownloads">MyDownloads</string>
+    <string name="populars">Popular</string>
 </resources>

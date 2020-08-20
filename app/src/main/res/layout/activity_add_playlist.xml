@@ -9,59 +9,80 @@
         android:background="@color/dark_blue_gray"
         tools:context=".DashboardModule.Activities.AddPlaylistActivity">
 
-        <RelativeLayout
-            android:id="@+id/rlLayout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_56sdp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/llBack"
-                android:layout_width="42dp"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:gravity="center">
+            <RelativeLayout
+                android:id="@+id/rlLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_56sdp">
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/llBack"
+                    android:layout_width="42dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_left_arrow_icon"
+                        app:tint="@color/white" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_left_arrow_icon"
-                    app:tint="@color/white" />
+                    android:layout_centerVertical="true"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center"
+                    android:text="@string/Add_to_Playlist"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_15sdp" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
-            <TextView
+            <Button
+                android:id="@+id/btnAddPlatLists"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="@drawable/ic_white_btn"
+                android:fontFamily="@font/montserrat_medium"
+                android:text="@string/New_PLaylist"
+                android:textColor="@color/black" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPlayLists"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:fontFamily="@font/montserrat_bold"
-                android:gravity="center"
-                android:text="@string/Add_to_Playlist"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_15sdp" />
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_16sdp"
+                android:overScrollMode="never"
+                tools:listitem="@layout/add_play_list_layout" />
+        </LinearLayout>
 
-        </RelativeLayout>
-
-
-        <Button
-            android:id="@+id/btnAddPlatLists"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/rlLayout"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:background="@drawable/ic_white_btn"
-            android:fontFamily="@font/montserrat_medium"
-            android:text="@string/New_PLaylist"
-            android:textColor="@color/black" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPlayLists"
+        <ImageView
+            android:id="@+id/ImgV"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/btnAddPlatLists"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_16sdp"
-            android:overScrollMode="never"
-            tools:listitem="@layout/add_play_list_layout" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:padding="80dp"
+            android:scaleType="centerInside"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/progressBarHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:animateLayoutChanges="true"
+            android:background="#C0000000"
+            android:visibility="gone" />
     </RelativeLayout>
 </layout>

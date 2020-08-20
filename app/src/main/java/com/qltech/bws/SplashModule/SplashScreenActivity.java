@@ -3,12 +3,18 @@ package com.qltech.bws.SplashModule;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -27,6 +33,8 @@ import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.AppSignatureHashHelper;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivitySplashScreenBinding;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,6 +73,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                 finish();
             }, 2 * 1000);
         }
+
+
     }
 
     public static void getLatasteUpdate(Context context) {
@@ -77,37 +87,36 @@ public class SplashScreenActivity extends AppCompatActivity {
                 public void onResponse(Call<VersionModel> call, Response<VersionModel> response) {
                     if (response.isSuccessful()) {
                         VersionModel versionModel = response.body();
-                        if (versionModel.getResponseCode().equalsIgnoreCase(context.getString(R.string.ResponseCodesuccess))) {
-                            if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                builder.setTitle("New Version");
-                                builder.setCancelable(false);
-                                builder.setMessage("There is a newer version available for download! Please update the app by visiting the Play Store")
-                                        .setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI)));
-                                                dialog.cancel();
-                                            }
-                                        })
-                                        .setNegativeButton("Later", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                builder.create().show();
-                            } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("1")) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                builder.setTitle("New Version");
-                                builder.setCancelable(false);
-                                builder.setMessage("There is a newer version available for download! Please update the app by visiting the Play Store")
-                                        .setCancelable(false)
-                                        .setPositiveButton("Update", (dialog, id) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI))));
-                                builder.create().show();
-                                AlertDialog alertDialog = null;
-                                alertDialog.setCanceledOnTouchOutside(false);
-                            } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("")) {
-                            }
+                        if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("New Version");
+                            builder.setCancelable(false);
+                            builder.setMessage("There is a newer version available for download! Please update the app by visiting the Play Store")
+                                    .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI)));
+                                            dialog.cancel();
+                                        }
+                                    })
+                                    .setNegativeButton("Later", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            builder.create().show();
+                        } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("1")) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("New Version");
+                            builder.setCancelable(false);
+                            builder.setMessage("There is a newer version available for download! Please update the app by visiting the Play Store")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Update", (dialog, id) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI))));
+                            builder.create().show();
+                            AlertDialog alertDialog = null;
+                            alertDialog.setCanceledOnTouchOutside(false);
+                        } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("")) {
                         }
+
                     }
                 }
 

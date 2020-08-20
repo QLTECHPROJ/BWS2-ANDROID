@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Activities.PlayWellnessActivity;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.R;
@@ -21,10 +23,10 @@ import com.qltech.bws.databinding.SmallBoxLayoutBinding;
 import java.util.List;
 
 public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.MyViewHolder> {
-    private List<MainAudioModel> listModelList;
+    private List<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
 
-    public PopularAdapter(List<MainAudioModel> listModelList,Context ctx) {
+    public PopularAdapter(List<MainAudioModel.ResponseData.Detail> listModelList,Context ctx) {
         this.listModelList = listModelList;
         this.ctx = ctx;
     }
@@ -39,16 +41,15 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        MainAudioModel listModel = listModelList.get(position);
-
+        holder.binding.tvTitle.setText(listModelList.get(position).getName());
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 10,
                 1, 1, 0.28f, 10);
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        holder.binding.ivRestaurantImage.setImageResource(R.drawable.square_logo);
+        Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.1f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-        holder.binding.tvTitle.setText(listModel.getTitle());
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

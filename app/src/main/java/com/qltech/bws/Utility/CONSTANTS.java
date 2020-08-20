@@ -27,10 +27,21 @@ public class CONSTANTS {
     public static final String SERVER_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String TWENTY_FOUR_HH_MM_FORMAT = "HH:mm";
 
+    public static String Check = "Check";
     public static String Name = "Name";
+    public static String Like = "Like";
+    public static String Download = "Download";
     public static String Code = "Code";
     public static String MobileNo = "MobileNo";
+    public static String ID = "ID";
+    public static String AudioFile = "AudioFile";
+    public static String ImageFile = "ImageFile";
+    public static String AudioDirection = "AudioDirection";
+    public static String Audiomastercat = "Audiomastercat";
+    public static String AudioSubCategory = "AudioSubCategory";
 
+    //multipart tag for file upload
+    public static final String MULTIPART_FORMAT = "multipart/form-data";
 
     public static final String PREF_KEY_LOGIN = "Login";
     public static final String PREF_KEY_UserID = "UserID";

@@ -33,7 +33,6 @@
                     android:id="@+id/ivRestaurantImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/square_logo"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center"/>
 

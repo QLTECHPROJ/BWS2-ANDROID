@@ -16,7 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.qltech.bws.InvoiceModule.Models.MembershipModel;
+import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.FragmentInvoiceBinding;
 import com.qltech.bws.databinding.InvoiceListLayoutBinding;
@@ -26,7 +26,7 @@ import java.util.List;
 
 public class MembershipInvoiceFragment extends Fragment {
     FragmentInvoiceBinding binding;
-    List<MembershipModel> listModelList = new ArrayList<>();
+    ArrayList<InvoiceListModel.MemberShip> memberShipList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,53 +34,41 @@ public class MembershipInvoiceFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invoice, container, false);
         View view = binding.getRoot();
 
-        MembershipInvoiceAdapter adapter = new MembershipInvoiceAdapter(listModelList, getActivity());
+        if (getArguments() != null) {
+            memberShipList = getArguments().getParcelableArrayList("membershipInvoiceFragment");
+        }
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvAIList.setLayoutManager(mLayoutManager);
         binding.rvAIList.setItemAnimator(new DefaultItemAnimator());
-        binding.rvAIList.setAdapter(adapter);
 
-        prepareMembershipData();
+        if (memberShipList.size() != 0) {
+            getDataList(memberShipList);
+            binding.llError.setVisibility(View.GONE);
+            binding.rvAIList.setVisibility(View.VISIBLE);
+        } else {
+            binding.llError.setVisibility(View.VISIBLE);
+            binding.rvAIList.setVisibility(View.GONE);
+
+        }
         return view;
     }
-    private void prepareMembershipData() {
-        MembershipModel list = new MembershipModel("Monthly subscription");
-        listModelList.add(list);
-        list = new MembershipModel("INITIAL CONSULTATION AND TREATMENT");
-        listModelList.add(list);
-        list = new MembershipModel("NEW STANDARD SESSION");
-        listModelList.add(list);
-        list = new MembershipModel("Monthly subscription");
-        listModelList.add(list);
-        list = new MembershipModel("INITIAL CONSULTATION AND TREATMENT");
-        listModelList.add(list);
-        list = new MembershipModel("NEW STANDARD SESSION");
-        listModelList.add(list);
-        list = new MembershipModel("Monthly subscription");
-        listModelList.add(list);
-        list = new MembershipModel("INITIAL CONSULTATION AND TREATMENT");
-        listModelList.add(list);
-        list = new MembershipModel("NEW STANDARD SESSION");
-        listModelList.add(list);
-        list = new MembershipModel("Monthly subscription");
-        listModelList.add(list);
-        list = new MembershipModel("INITIAL CONSULTATION AND TREATMENT");
-        listModelList.add(list);
-        list = new MembershipModel("NEW STANDARD SESSION");
-        listModelList.add(list);
-        list = new MembershipModel("Monthly subscription");
-        listModelList.add(list);
-        list = new MembershipModel("INITIAL CONSULTATION AND TREATMENT");
-        listModelList.add(list);
-        list = new MembershipModel("NEW STANDARD SESSION");
-        listModelList.add(list);
+
+    private void getDataList(ArrayList<InvoiceListModel.MemberShip> historyList) {
+        if (historyList.size() == 0) {
+            binding.tvFound.setVisibility(View.VISIBLE);
+        } else {
+            binding.llError.setVisibility(View.GONE);
+            MembershipInvoiceAdapter adapter = new MembershipInvoiceAdapter(historyList, getActivity());
+            binding.rvAIList.setAdapter(adapter);
+        }
     }
 
     public class MembershipInvoiceAdapter  extends RecyclerView.Adapter<MembershipInvoiceAdapter.MyViewHolder> {
-        private List<MembershipModel> listModelList;
+        private List<InvoiceListModel.MemberShip> listModelList;
         Context ctx;
 
-        public MembershipInvoiceAdapter(List<MembershipModel> listModelList, Context ctx) {
+        public MembershipInvoiceAdapter(List<InvoiceListModel.MemberShip> listModelList, Context ctx) {
             this.listModelList = listModelList;
             this.ctx = ctx;
         }
@@ -95,15 +83,17 @@ public class MembershipInvoiceFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            MembershipModel listModel = listModelList.get(position);
-            holder.binding.tvTitle.setText(listModel.getTitle());
-
+            holder.binding.tvInvoiceID.setText("Invoice #"+listModelList.get(position).getInvoiceId());
+            holder.binding.tvTitle.setText(listModelList.get(position).getName());
+            holder.binding.tvDate.setText(listModelList.get(position).getDate());
+            holder.binding.tvDoller.setText("$"+listModelList.get(position).getAmount());
             holder.binding.llViewReceipt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    DialogFragment receiptFragment = new InvoiceReceiptFragment();
+                    InvoiceReceiptFragment receiptFragment = new InvoiceReceiptFragment();
                     receiptFragment.setCancelable(true);
+                    receiptFragment.setValues(listModelList.get(position).getInvoiceId());
                     receiptFragment.show(fragmentManager,"receipt");
                 }
             });
@@ -123,7 +113,5 @@ public class MembershipInvoiceFragment extends Fragment {
                 this.binding = binding;
             }
         }
-
     }
-
 }

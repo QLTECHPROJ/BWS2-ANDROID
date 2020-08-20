@@ -9,7 +9,10 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DownloadModule.Models.AudioListModel;
+import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -18,10 +21,10 @@ import com.qltech.bws.databinding.DownloadsLayoutBinding;
 import java.util.List;
 
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
-    private List<AudioListModel> listModelList;
+    private List<DownloadlistModel.Audio> listModelList;
     FragmentActivity ctx;
 
-    public AudioDownlaodsAdapter(List<AudioListModel> listModelList, FragmentActivity ctx) {
+    public AudioDownlaodsAdapter(List<DownloadlistModel.Audio> listModelList, FragmentActivity ctx) {
         this.listModelList = listModelList;
         this.ctx = ctx;
     }
@@ -36,16 +39,16 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        AudioListModel listModel = listModelList.get(position);
-        holder.binding.tvTitle.setText(listModel.getTitle());
-        holder.binding.tvTime.setText(listModel.getSubTitle());
+        holder.binding.tvTitle.setText(listModelList.get(position).getName());
+        holder.binding.tvTime.setText(listModelList.get(position).getAudioDuration());
 
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.12f, 0);
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        holder.binding.ivRestaurantImage.setImageResource(R.drawable.square_logo);
+        Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.1f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
     }
 
     @Override

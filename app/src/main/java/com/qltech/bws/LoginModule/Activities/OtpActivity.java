@@ -77,7 +77,7 @@ public class OtpActivity extends AppCompatActivity {
         binding.btnSendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE);
+                SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE);
                 String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
                 if (TextUtils.isEmpty(fcm_id)) {
                     FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, new OnSuccessListener<InstanceIdResult>() {
@@ -92,7 +92,7 @@ public class OtpActivity extends AppCompatActivity {
                         }
                     });
                     fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
-                }*/
+                }
                 if (binding.edtOTP1.getText().toString().equalsIgnoreCase("") ||
                         binding.edtOTP2.getText().toString().equalsIgnoreCase("") ||
                         binding.edtOTP3.getText().toString().equalsIgnoreCase("") ||
@@ -105,7 +105,7 @@ public class OtpActivity extends AppCompatActivity {
                                  binding.edtOTP1.getText().toString() + "" +
                                 binding.edtOTP2.getText().toString() + "" +
                                 binding.edtOTP3.getText().toString() + "" +
-                                binding.edtOTP4.getText().toString(), "" ,CONSTANTS.FLAG_ONE,
+                                binding.edtOTP4.getText().toString(), fcm_id ,CONSTANTS.FLAG_ONE,
                                 Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), MobileNo);
                         listCall.enqueue(new Callback<OtpModel>() {
                             @Override

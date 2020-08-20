@@ -2,11 +2,13 @@ package com.qltech.bws.DashboardModule.Playlist;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,15 +16,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
 import com.qltech.bws.DashboardModule.Adapters.SuggestionAudiosAdpater;
 import com.qltech.bws.DashboardModule.Audio.PlayListsModel;
+import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentMyPlaylistsBinding;
 import com.qltech.bws.databinding.MyPlaylistLayoutBinding;
@@ -30,8 +38,13 @@ import com.qltech.bws.databinding.MyPlaylistLayoutBinding;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
+    String UserID;
     List<SuggestionAudiosModel> listModelList = new ArrayList<>();
     List<PlayListsModel> playLists = new ArrayList<>();
 
@@ -40,6 +53,10 @@ public class MyPlaylistsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
         View view = binding.getRoot();
+
+        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
         binding.searchView.onActionViewExpanded();
         EditText searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
@@ -59,7 +76,7 @@ public class MyPlaylistsFragment extends Fragment {
         binding.rvSuggestedList.setItemAnimator(new DefaultItemAnimator());
         binding.rvSuggestedList.setAdapter(suggestionAudiosAdpater);
 
-        PlayListsAdpater playListsAdpater = new PlayListsAdpater(playLists, getActivity());
+        PlayListsAdpater playListsAdpater = new PlayListsAdpater(playLists, getActivity(), UserID);
         RecyclerView.LayoutManager playLists = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPlayLists.setLayoutManager(playLists);
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
@@ -89,6 +106,19 @@ public class MyPlaylistsFragment extends Fragment {
         listModelList.add(list);
         list = new SuggestionAudiosModel("Self-Discipline Program", R.drawable.add_icon);
         listModelList.add(list);
+    }
+
+    private void hideProgressBar() {
+        binding.progressBarHolder.setVisibility(View.GONE);
+        binding.ImgV.setVisibility(View.GONE);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void showProgressBar() {
+        binding.progressBarHolder.setVisibility(View.VISIBLE);
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        binding.ImgV.setVisibility(View.VISIBLE);
+        binding.ImgV.invalidate();
     }
 
     private void preparePlayLists() {
@@ -121,10 +151,12 @@ public class MyPlaylistsFragment extends Fragment {
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> {
         private List<PlayListsModel> listModelList;
         Context ctx;
+        String UserID;
 
-        public PlayListsAdpater(List<PlayListsModel> listModelList, Context ctx) {
+        public PlayListsAdpater(List<PlayListsModel> listModelList, Context ctx, String UserID) {
             this.listModelList = listModelList;
             this.ctx = ctx;
+            this.UserID = UserID;
         }
 
         @NonNull
@@ -140,13 +172,37 @@ public class MyPlaylistsFragment extends Fragment {
             PlayListsModel listModel = listModelList.get(position);
             holder.binding.tvTitle.setText(listModel.getTitle());
 
-
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.ivRestaurantImage.setImageResource(R.drawable.square_logo);
+
+            holder.binding.llRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                   /* if (BWSApplication.isNetworkConnected(getActivity())) {
+                        Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistID);
+                        listCall.enqueue(new Callback<SucessModel>() {
+                            @Override
+                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                if (response.isSuccessful()) {
+                                    SucessModel listModel = response.body();
+
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SucessModel> call, Throwable t) {
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    }*/
+                }
+            });
         }
 
         @Override

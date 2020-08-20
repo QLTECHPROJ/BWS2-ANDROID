@@ -7,7 +7,6 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-
         <RelativeLayout
             android:id="@+id/rlMainLayout"
             android:layout_width="match_parent"
@@ -53,8 +52,10 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/rlImageUpload"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/_20sdp">
 
                     <de.hdodenhof.circleimageview.CircleImageView
@@ -170,7 +171,6 @@
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/_6sdp"
                             android:layout_marginTop="@dimen/_8sdp"
-                            android:layout_toEndOf="@+id/ivFname"
                             android:focusableInTouchMode="true"
                             app:errorEnabled="true"
                             app:errorTextAppearance="@style/ErrorText">
@@ -244,6 +244,7 @@
                                 android:hint="@string/Mobile_Number"
                                 android:inputType="number"
                                 android:maxLines="1"
+                                android:maxLength="9"
                                 android:singleLine="true"
                                 android:textCursorDrawable="@null"
                                 android:textSize="@dimen/_16sdp" />
@@ -253,6 +254,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/llEmailApply"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_16sdp"
@@ -341,6 +343,24 @@
             android:paddingVertical="@dimen/_4sdp"
             android:text="Save"
             android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/ImgV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:padding="80dp"
+            android:scaleType="centerInside"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/progressBarHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.4"
+            android:animateLayoutChanges="true"
+            android:background="#C0000000"
+            android:visibility="gone" />
 
     </RelativeLayout>
 </layout>

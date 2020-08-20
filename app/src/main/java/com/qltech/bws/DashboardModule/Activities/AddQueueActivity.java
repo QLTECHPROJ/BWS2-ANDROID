@@ -4,13 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -21,10 +25,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.DirectionModel;
+import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.Utility.MySpannable;
 import com.qltech.bws.databinding.ActivityQueueBinding;
@@ -35,7 +44,8 @@ import retrofit2.Response;
 
 public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
-    String play;
+    String play, UserID, PlaylistId, AudioId;
+    Context ctx;
 
     public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
         if (tv.getTag() == null) {
@@ -94,22 +104,14 @@ public class AddQueueActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_queue);
+        ctx = AddQueueActivity.this;
+        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-        prepareData();
-
-        MeasureRatio measureRatio = BWSApplication.measureRatio(AddQueueActivity.this, 40,
-                1, 1, 0.6f, 40);
-        binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        binding.ivRestaurantImage.setImageResource(R.drawable.square_logo);
+        if (getIntent().getExtras() != null) {
+            AudioId = getIntent().getStringExtra(CONSTANTS.ID);
+        }
 
         if (getIntent().hasExtra("play")) {
             play = getIntent().getStringExtra("play");
@@ -121,99 +123,198 @@ public class AddQueueActivity extends AppCompatActivity {
         } else {
             binding.llOptions.setVisibility(View.GONE);
         }
+        prepareData();
 
+        binding.llBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        binding.llLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    showProgressBar();
+                    Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(AudioId, UserID);
+                    listCall.enqueue(new Callback<AudioLikeModel>() {
+                        @Override
+                        public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
+                            if (response.isSuccessful()) {
+                                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                                hideProgressBar();
+                                AudioLikeModel model = response.body();
+                                if (model.getResponseData().getFlag().equalsIgnoreCase("0")){
+                                    binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                                }else if (model.getResponseData().getFlag().equalsIgnoreCase("1")){
+                                    binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                                }
+                                Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<AudioLikeModel> call, Throwable t) {
+                        }
+                    });
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        binding.llDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    showProgressBar();
+                    Call<SucessModel> listCall = null;
+                    if (AudioId.equalsIgnoreCase("")/* && !PlaylistId.equalsIgnoreCase("")*/) {
+                        listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistId);
+                    } else if (!AudioId.equalsIgnoreCase("")/* && PlaylistId.equalsIgnoreCase("")*/) {
+                        listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, "");
+                    }
+                    listCall.enqueue(new Callback<SucessModel>() {
+                        @Override
+                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                            if (response.isSuccessful()) {
+                                hideProgressBar();
+                                SucessModel model = response.body();
+                                Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<SucessModel> call, Throwable t) {
+                        }
+                    });
+
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void prepareData() {
-        if (BWSApplication.isNetworkConnected(AddQueueActivity.this)) {
+        if (BWSApplication.isNetworkConnected(ctx)) {
             showProgressBar();
-            Call<DirectionModel> listCall = APIClient.getClient().getAudioDetailLists("12");
+            Call<DirectionModel> listCall = APIClient.getClient().getAudioDetailLists(AudioId);
             listCall.enqueue(new Callback<DirectionModel>() {
                 @Override
                 public void onResponse(Call<DirectionModel> call, Response<DirectionModel> response) {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         DirectionModel directionModel = response.body();
-                        if (directionModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            binding.tvName.setText(directionModel.getResponseData().getName());
-                            binding.tvDesc.setText(directionModel.getResponseData().getAudioDescription());
-                            binding.tvDuration.setText(directionModel.getResponseData().getAudioDuration());
-                            binding.llAddPlaylist.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent i = new Intent(AddQueueActivity.this, AddPlaylistActivity.class);
-                                    startActivity(i);
-                                }
-                            });
+                        binding.tvName.setText(directionModel.getResponseData().get(0).getName());
+                        binding.tvDesc.setText(directionModel.getResponseData().get(0).getAudioSubCategory());
+                        binding.tvDuration.setText(directionModel.getResponseData().get(0).getAudioDuration());
+                        binding.tvSubDire.setText(directionModel.getResponseData().get(0).getAudioDirection());
 
-                            binding.llViewQueue.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent i = new Intent(AddQueueActivity.this, ViewQueueActivity.class);
-                                    startActivity(i);
-                                }
-                            });
+                        if (directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")){
+                            binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                        }else if (!directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("0")) {
+                            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                        }
 
-                            String text = "This home program is designed to support your Emotional Empowerment Program and help you maintain the new habits of positive thinking bias, working with your emotions and ";
+                        if (directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("1")){
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                            binding.ivDownloads.setAlpha(255);
+                            binding.llDownload.setClickable(false);
+                            binding.llDownload.setEnabled(false);
+                        }else if (!directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("")) {
+                            binding.llDownload.setClickable(true);
+                            binding.llDownload.setEnabled(true);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                        }
 
-                            binding.tvSubDec.setText(directionModel.getResponseData().getAudioDescription());
+                        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 40,
+                                1, 1, 0.6f, 40);
+                        binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+                        binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+                        binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                        Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile()).thumbnail(0.1f)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
-                            binding.tvSubDec.post(() -> {
-                                int lineCount = binding.tvSubDec.getLineCount();
-                                if (lineCount < 3 || lineCount == 3) {
+                        binding.tvSubDec.setText(directionModel.getResponseData().get(0).getAudioDescription());
+                        binding.tvSubDec.post(() -> {
+                            int lineCount = binding.tvSubDec.getLineCount();
+                            if (lineCount < 3 || lineCount == 3) {
 
-                                } else {
-                                    makeTextViewResizable(binding.tvSubDec, 3, "Read More...", true);
-                                    binding.tvSubDec.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            final Dialog dialog = new Dialog(AddQueueActivity.this);
-                                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                            dialog.setContentView(R.layout.full_desc_layout);
-                                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                                            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            } else {
+                                makeTextViewResizable(binding.tvSubDec, 3, "Read More...", true);
+                                binding.tvSubDec.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        final Dialog dialog = new Dialog(ctx);
+                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        dialog.setContentView(R.layout.full_desc_layout);
+                                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                                        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                        final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
+                                        final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
+                                        tvDesc.setText(directionModel.getResponseData().get(0).getAudioDescription());
 
-                                            final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
+                                        tvClose.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialog.dismiss();
+                                            }
+                                        });
 
-                                            tvClose.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    dialog.dismiss();
-                                                }
-                                            });
+                                        dialog.show();
+                                        dialog.setCancelable(false);
+                                    }
+                                });
+                            }
+                        });
 
-                                            dialog.show();
-                                            dialog.setCancelable(false);
-                                        }
-                                    });
-                                }
-                            });
+                        binding.llAddPlaylist.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                                startActivity(i);
+                            }
+                        });
 
-                           /* DirectionAdapter directionAdapter = new DirectionAdapter(listModelList, AddQueueActivity.this);
-                            RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(AddQueueActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                        binding.llViewQueue.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent i = new Intent(ctx, ViewQueueActivity.class);
+                                startActivity(i);
+                            }
+                        });
+
+                           /* DirectionAdapter directionAdapter = new DirectionAdapter(listModelList, ctx);
+                            RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
                             binding.rvDirlist.setLayoutManager(recentlyPlayed);
                             binding.rvDirlist.setItemAnimator(new DefaultItemAnimator());
                             binding.rvDirlist.setAdapter(directionAdapter);*/
 
-                            binding.llAddQueue.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    finish();
-                                }
-                            });
-                        } else {
-                        }
+                        binding.llAddQueue.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                finish();
+                            }
+                        });
+                    } else {
                     }
+
                 }
 
                 @Override
                 public void onFailure(Call<DirectionModel> call, Throwable t) {
+                    Toast.makeText(ctx, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("getMessagegetMessage", "" + t.getMessage());
                 }
             });
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
         }
     }
+
     private void hideProgressBar() {
         binding.progressBarHolder.setVisibility(View.GONE);
         binding.ImgV.setVisibility(View.GONE);

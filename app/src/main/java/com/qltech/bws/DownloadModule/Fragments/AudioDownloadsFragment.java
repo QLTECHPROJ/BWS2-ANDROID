@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 
 import com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter;
 import com.qltech.bws.DownloadModule.Models.AudioListModel;
+import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
+import com.qltech.bws.InvoiceModule.Fragments.MembershipInvoiceFragment;
+import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.FragmentDownloadsBinding;
 
@@ -22,56 +25,41 @@ import java.util.List;
 
 public class AudioDownloadsFragment extends Fragment {
     FragmentDownloadsBinding binding;
-    List<AudioListModel> listModelList = new ArrayList<>();
+    ArrayList<DownloadlistModel.Audio> audioList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_downloads, container, false);
         View view = binding.getRoot();
-        AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(listModelList, getActivity());
+
+        if (getArguments() != null) {
+            audioList = getArguments().getParcelableArrayList("audioDownloadsFragment");
+        }
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
-        binding.rvDownloadsList.setAdapter(adapter);
 
-        prepareAudioData();
+        if (audioList.size() != 0) {
+            getDataList(audioList);
+            binding.llError.setVisibility(View.GONE);
+            binding.rvDownloadsList.setVisibility(View.VISIBLE);
+        } else {
+            binding.llError.setVisibility(View.VISIBLE);
+            binding.rvDownloadsList.setVisibility(View.GONE);
+
+        }
+
         return view;
     }
-
-    private void prepareAudioData() {
-        AudioListModel list = new AudioListModel("Motivation Program", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("Self-Discipline Program", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("Love Thy Self", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("I Can Attitude and Mind...", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("Motivation Program", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("Self-Discipline Program", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("Love Thy Self", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("I Can Attitude and Mind...", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("Motivation Program", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("Self-Discipline Program", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("Love Thy Self", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("I Can Attitude and Mind...", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("Motivation Program", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("Self-Discipline Program", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("Love Thy Self", "12:37");
-        listModelList.add(list);
-        list = new AudioListModel("I Can Attitude and Mind...", "12:37");
-        listModelList.add(list);
+    private void getDataList(ArrayList<DownloadlistModel.Audio> historyList) {
+        if (historyList.size() == 0) {
+            binding.tvFound.setVisibility(View.VISIBLE);
+        } else {
+            binding.llError.setVisibility(View.GONE);
+            AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(historyList, getActivity());
+            binding.rvDownloadsList.setAdapter(adapter);
+        }
     }
-
 }

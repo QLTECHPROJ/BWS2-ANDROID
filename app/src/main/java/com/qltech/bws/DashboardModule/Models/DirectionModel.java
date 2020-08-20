@@ -8,7 +8,7 @@ import java.util.List;
 public class DirectionModel {
     @SerializedName("ResponseData")
     @Expose
-    private ResponseData responseData = null;
+    private List<ResponseData> responseData = null;
     @SerializedName("ResponseCode")
     @Expose
     private String responseCode;
@@ -19,11 +19,11 @@ public class DirectionModel {
     @Expose
     private String responseStatus;
 
-    public ResponseData getResponseData() {
+    public List<ResponseData> getResponseData() {
         return responseData;
     }
 
-    public void setResponseData(ResponseData responseData) {
+    public void setResponseData(List<ResponseData> responseData) {
         this.responseData = responseData;
     }
 
@@ -58,6 +58,12 @@ public class DirectionModel {
         @SerializedName("Name")
         @Expose
         private String name;
+        @SerializedName("Like")
+        @Expose
+        private String like;
+        @SerializedName("Download")
+        @Expose
+        private String download;
         @SerializedName("AudioFile")
         @Expose
         private String audioFile;
@@ -70,6 +76,9 @@ public class DirectionModel {
         @SerializedName("AudioDescription")
         @Expose
         private String audioDescription;
+        @SerializedName("AudioDirection")
+        @Expose
+        private String audioDirection;
         @SerializedName("Audiomastercat")
         @Expose
         private String audiomastercat;
@@ -93,6 +102,22 @@ public class DirectionModel {
             this.name = name;
         }
 
+        public String getLike() {
+            return like;
+        }
+
+        public void setLike(String like) {
+            this.like = like;
+        }
+
+        public String getDownload() {
+            return download;
+        }
+
+        public void setDownload(String download) {
+            this.download = download;
+        }
+
         public String getAudioFile() {
             return audioFile;
         }
@@ -107,6 +132,22 @@ public class DirectionModel {
 
         public void setImageFile(String imageFile) {
             this.imageFile = imageFile;
+        }
+
+        public String getiD() {
+            return iD;
+        }
+
+        public void setiD(String iD) {
+            this.iD = iD;
+        }
+
+        public String getAudioDirection() {
+            return audioDirection;
+        }
+
+        public void setAudioDirection(String audioDirection) {
+            this.audioDirection = audioDirection;
         }
 
         public String getAudioDuration() {

@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Activities.PlayWellnessActivity;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.R;
@@ -22,10 +24,10 @@ import com.qltech.bws.databinding.RoundBoxLayoutBinding;
 import java.util.List;
 
 public class TopCategoriesAdapter  extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
-    private List<MainAudioModel> listModelList;
+    private List<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
 
-    public TopCategoriesAdapter(List<MainAudioModel> listModelList, Context ctx) {
+    public TopCategoriesAdapter(List<MainAudioModel.ResponseData.Detail> listModelList, Context ctx) {
         this.listModelList = listModelList;
         this.ctx = ctx;
     }
@@ -40,7 +42,7 @@ public class TopCategoriesAdapter  extends RecyclerView.Adapter<TopCategoriesAda
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        MainAudioModel listModel = listModelList.get(position);
+        holder.binding.tvTitle.setText(listModelList.get(position).getName());
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         WindowManager windowmanager = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
@@ -53,14 +55,21 @@ public class TopCategoriesAdapter  extends RecyclerView.Adapter<TopCategoriesAda
                 1, 1, prop, 36);
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-//        holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-
-
-        holder.binding.tvTitle.setText(listModel.getTitle());
+        Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.1f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                i.putExtra("ID",listModelList.get(position).getID());
+                i.putExtra("Name",listModelList.get(position).getName());
+                i.putExtra("AudioFile",listModelList.get(position).getAudioFile());
+                i.putExtra("ImageFile",listModelList.get(position).getImageFile());
+                i.putExtra("AudioDirection",listModelList.get(position).getAudioDirection());
+                i.putExtra("Audiomastercat",listModelList.get(position).getAudiomastercat());
+                i.putExtra("AudioSubCategory",listModelList.get(position).getAudioSubCategory());
+                i.putExtra("Like",listModelList.get(position).getLike());
+                i.putExtra("Download",listModelList.get(position).getDownload());
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
             }

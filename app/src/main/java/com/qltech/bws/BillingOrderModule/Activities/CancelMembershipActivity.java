@@ -3,12 +3,14 @@ package com.qltech.bws.BillingOrderModule.Activities;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,20 +19,32 @@ import android.widget.Toast;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.qltech.bws.BWSApplication;
+import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
+import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.R;
+import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.AppUtils;
 import com.qltech.bws.databinding.ActivityCancelMembershipBinding;
+
+import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CancelMembershipActivity extends YouTubeBaseActivity implements
         YouTubePlayer.OnInitializedListener {
     ActivityCancelMembershipBinding binding;
-    MediaController mediaControls;
+    Context ctx;
     private static final int RECOVERY_DIALOG_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cancel_membership);
+
+        ctx = CancelMembershipActivity.this;
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,7 +55,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
         binding.youtubeView.initialize(AppUtils.DEVELOPER_KEY, this);
 
-    /*    MeasureRatio measureRatio = BWSApplication.measureRatio(CancelMembershipActivity.this, 29,
+    /*    MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 29,
                 5, 3, 1.1f, 29);
         binding.youtubeView.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.youtubeView.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());*/
@@ -56,54 +70,14 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
             }
         });*/
 
-/*       binding.rlPlay.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               binding.rlPlay.setVisibility(View.GONE);
-               binding.videoView.setVisibility(View.VISIBLE);
-               MediaController mediaController= new MediaController(CancelMembershipActivity.this);
-               mediaController.setAnchorView(binding.videoView);
-
-               if (mediaControls == null) {
-                   mediaControls = new MediaController(CancelMembershipActivity.this);
-                   mediaControls.setAnchorView(binding.videoView);
-               }
-               binding.videoView.setMediaController(null);
-               binding.videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.bg_video));
-               binding.videoView.start();
-
-               binding.videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                   @Override
-                   public void onCompletion(MediaPlayer mp) {
-                       binding.rlPlay.setVisibility(View.VISIBLE);
-                       binding.videoView.setVisibility(View.GONE);
-                   }
-               });
-
-               binding.videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                   @Override
-                   public boolean onError(MediaPlayer mp, int what, int extra) {
-                       Toast.makeText(getApplicationContext(), "Oops An Error Occur While Playing Video...!!!", Toast.LENGTH_LONG).show();
-                       return false;
-                   }
-               });
-           }
-       });*/
-/* binding.rlPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://www.youtube.com/watch?v=inpok4MKVLM"));
-                try {
-                    CancelMembershipActivity.this.startActivity(webIntent);
-                } catch (ActivityNotFoundException ex) {
-                }
-            }
-        });*/
         binding.btnCancelSubscrible.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog dialog = new Dialog(CancelMembershipActivity.this);
+             /*   if(responseReasonList.get(mSelectedItem).getCancelID().equalsIgnoreCase("5") &&
+                        edtCancelBox.getText().toString().equalsIgnoreCase("")){
+                    Toast.makeText(ctx, "Please enter reason", Toast.LENGTH_SHORT).show();
+                }*/
+                final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.cancel_membership);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
@@ -115,23 +89,52 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
-                    }
-                });
+                       /* if (BWSApplication.isNetworkConnected(ctx)) {
+                            Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, CancelReason);
+                            listCall.enqueue(new Callback<CancelPlanModel>() {
+                                @Override
+                                public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
+                                    showProgressBar();
+                                }
 
-                tvGoBack.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
+                                @Override
+                                public void onFailure(Call<CancelPlanModel> call, Throwable t) {
+
+                                }
+                            });
+
+                            tvGoBack.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            dialog.show();
+                            dialog.setCancelable(false);
+                        }*/
                     }
                 });
-                dialog.show();
-                dialog.setCancelable(false);
             }
         });
     }
 
+    private void hideProgressBar() {
+        binding.progressBarHolder.setVisibility(View.GONE);
+        binding.ImgV.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void showProgressBar() {
+        binding.progressBarHolder.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        binding.ImgV.setVisibility(View.VISIBLE);
+        binding.ImgV.invalidate();
+    }
+
     @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer
+            player,
+                                        boolean wasRestored) {
         if (!wasRestored) {
             player.loadVideo(AppUtils.YOUTUBE_VIDEO_CODE);
             player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
@@ -142,7 +145,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     }
 
     @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult errorReason) {
+    public void onInitializationFailure(YouTubePlayer.Provider
+                                                provider, YouTubeInitializationResult errorReason) {
         if (errorReason.isUserRecoverableError()) {
             errorReason.getErrorDialog(this, RECOVERY_DIALOG_REQUEST).show();
         } else {
@@ -158,6 +162,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
             getYouTubePlayerProvider().initialize(AppUtils.DEVELOPER_KEY, this);
         }
     }
+
     private YouTubePlayer.Provider getYouTubePlayerProvider() {
         return binding.youtubeView;
     }

@@ -27,13 +27,15 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
-    String Name="", Code="";
+    String Name = "", Code = "";
+    Context ctx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 
+        ctx = LoginActivity.this;
         if (getIntent().getExtras() != null) {
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
@@ -50,7 +52,8 @@ public class LoginActivity extends AppCompatActivity {
         Glide.with(getApplicationContext()).load(R.drawable.loading).asGif().into(binding.ImgV);
 
         binding.rlCountrySelect.setOnClickListener(view -> {
-            Intent i = new Intent(LoginActivity.this, CountrySelectActivity.class);
+            Intent i = new Intent(ctx, CountrySelectActivity.class);
+            i.putExtra("Check","1");
             startActivity(i);
         });
 
@@ -64,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.tvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(LoginActivity.this, MembershipActivity.class);
+                Intent i = new Intent(ctx, MembershipActivity.class);
                 startActivity(i);
             }
         });
@@ -84,28 +87,31 @@ public class LoginActivity extends AppCompatActivity {
             binding.txtError.setText(getString(R.string.not_valid_number));
         } else {
             binding.txtError.setVisibility(View.GONE);
-            if (BWSApplication.isNetworkConnected(LoginActivity.this)) {
+            if (BWSApplication.isNetworkConnected(ctx)) {
                 showProgressBar();
                 Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(binding.edtNumber.getText().toString(), binding.tvCountryCode.getText().toString(), CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
                 listCall.enqueue(new Callback<LoginModel>() {
                     @Override
                     public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
+                        hideProgressBar();
+                        binding.txtError.setVisibility(View.GONE);
                         if (response.isSuccessful()) {
-                            hideProgressBar();
                             LoginModel loginModel = response.body();
-                            if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                Intent i = new Intent(LoginActivity.this, OtpActivity.class);
-                                i.putExtra("MobileNo",binding.edtNumber.getText().toString());
-                                i.putExtra("Name",binding.tvCountry.getText().toString());
-                                i.putExtra("Code",binding.tvCountryCode.getText().toString());
-                                startActivity(i);
-                            } else {
-                            }
+                            Intent i = new Intent(ctx, OtpActivity.class);
+                            i.putExtra("MobileNo", binding.edtNumber.getText().toString());
+                            i.putExtra("Name", binding.tvCountry.getText().toString());
+                            i.putExtra("Code", binding.tvCountryCode.getText().toString());
+                            startActivity(i);
+                        }else {
+                            Toast.makeText(ctx, response.message(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<LoginModel> call, Throwable t) {
+                        hideProgressBar();
+                        binding.txtError.setVisibility(View.VISIBLE);
+                        binding.txtError.setText(getString(R.string.notvalid_number));
                     }
                 });
             } else {
@@ -113,6 +119,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
     private void hideProgressBar() {
         binding.progressBarHolder.setVisibility(View.GONE);
         binding.ImgV.setVisibility(View.GONE);

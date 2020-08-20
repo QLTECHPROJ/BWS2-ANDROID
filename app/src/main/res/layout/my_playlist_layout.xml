@@ -92,6 +92,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/llRemove"
             android:layout_width="@dimen/_0sdp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
