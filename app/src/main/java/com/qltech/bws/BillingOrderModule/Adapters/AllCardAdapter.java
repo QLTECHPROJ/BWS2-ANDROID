@@ -1,5 +1,6 @@
 package com.qltech.bws.BillingOrderModule.Adapters;
 
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,23 +30,29 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHolder> {
     private List<CardListModel.ResponseData> listModelList;
     FragmentActivity activity;
     String card_id, userId;
     ImageView ImgV;
     FrameLayout progressBarHolder;
-
-    public AllCardAdapter(List<CardListModel.ResponseData> listModelList, FragmentActivity activity, String userId, ImageView ImgV, FrameLayout progressBarHolder) {
+    RecyclerView rvCardList;
+    AllCardAdapter adapter;
+    public AllCardAdapter(List<CardListModel.ResponseData> listModelList, FragmentActivity activity, String userId, ImageView ImgV, FrameLayout progressBarHolder, RecyclerView rvCardList) {
         this.listModelList = listModelList;
         this.activity = activity;
         this.userId = userId;
         this.ImgV = ImgV;
         this.progressBarHolder = progressBarHolder;
+        this.rvCardList = rvCardList;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Glide.with(activity).load(R.drawable.loading).asGif().into(ImgV);
+
         CardsListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
                 , R.layout.cards_list_layout, parent, false);
         return new MyViewHolder(v);
@@ -62,6 +69,10 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
         if (listModel.get_default().equalsIgnoreCase(CONSTANTS.FLAG_ONE)) {
             holder.binding.ivCheck.setImageResource(R.drawable.ic_checked_icon);
             card_id = listModel.getCustomer();
+            SharedPreferences shared = activity.getSharedPreferences(CONSTANTS.PREF_KEY_CardID, MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(CONSTANTS.PREF_KEY_CardID, card_id);
+            editor.commit();
         } else {
             holder.binding.ivCheck.setImageResource(R.drawable.ic_unchecked_icon);
         }
@@ -73,8 +84,8 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                 listCall.enqueue(new Callback<CardModel>() {
                     @Override
                     public void onResponse(Call<CardModel> call, Response<CardModel> response) {
+                        hideProgressBar();
                         if (response.isSuccessful()) {
-                            hideProgressBar();
                             CardModel cardModel = response.body();
                             if (cardModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
                                 getCardList();
@@ -104,8 +115,8 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                 listCall.enqueue(new Callback<CardModel>() {
                     @Override
                     public void onResponse(Call<CardModel> call, Response<CardModel> response) {
+                        hideProgressBar();
                         if (response.isSuccessful()) {
-                            hideProgressBar();
                             CardModel cardModel = response.body();
                             if (cardModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
                                 getCardList();
@@ -142,7 +153,6 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
     }
 
     private void showProgressBar() {
-        Glide.with(activity).load(R.drawable.loading).asGif().into(ImgV);
         progressBarHolder.setVisibility(View.VISIBLE);
         activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         ImgV.setVisibility(View.VISIBLE);
@@ -175,8 +185,14 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                         hideProgressBar();
                         CardListModel cardListModel = response.body();
                         if (cardListModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
-                            listModelList = cardListModel.getResponseData();
-                            notifyDataSetChanged();
+                            if (cardListModel.getResponseData().size() == 0) {
+                                rvCardList.setAdapter(null);
+                                rvCardList.setVisibility(View.GONE);
+                            } else {
+                                rvCardList.setVisibility(View.VISIBLE);
+                                adapter = new AllCardAdapter(cardListModel.getResponseData(),activity, userId, ImgV, progressBarHolder,rvCardList);
+                                rvCardList.setAdapter(adapter);
+                            }
 
                         } else {
                         }

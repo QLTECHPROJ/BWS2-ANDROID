@@ -174,15 +174,15 @@ public class AddPaymentActivity extends AppCompatActivity {
                                 listCall.enqueue(new Callback<CardModel>() {
                                     @Override
                                     public void onResponse(Call<CardModel> call, Response<CardModel> response) {
+                                        hideProgressBar();
                                         if (response.isSuccessful()) {
-                                            hideProgressBar();
                                             CardModel cardModel = response.body();
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                 InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                                 keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
                                                 if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                     Intent i = new Intent(activity, BillingOrderActivity.class);
-                                                    i.putExtra("payment","1");
+                                                    i.putExtra("payment",1);
                                                     startActivity(i);
                                                     finish();
                                                      Toast.makeText(getApplicationContext(), cardModel.getResponseMessage(), Toast.LENGTH_LONG).show();

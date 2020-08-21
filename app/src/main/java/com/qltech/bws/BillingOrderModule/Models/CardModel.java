@@ -8,7 +8,7 @@ import java.util.List;
 public class CardModel {
         @SerializedName("ResponseData")
         @Expose
-        private ResponseData responseData = null;
+        private List<ResponseData> responseData;
         @SerializedName("ResponseCode")
         @Expose
         private String responseCode;
@@ -19,11 +19,11 @@ public class CardModel {
         @Expose
         private String responseStatus;
 
-        public ResponseData getResponseData() {
+        public List<ResponseData> getResponseData() {
             return responseData;
         }
 
-        public void setResponseData(ResponseData responseData) {
+        public void setResponseData(List<ResponseData> responseData) {
             this.responseData = responseData;
         }
 

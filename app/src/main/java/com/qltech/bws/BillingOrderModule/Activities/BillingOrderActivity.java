@@ -48,17 +48,20 @@ public class BillingOrderActivity extends AppCompatActivity {
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
 
+        if (payment != 0) {
+            binding.viewPager.setCurrentItem(1);
+        } else {
+            binding.viewPager.setCurrentItem(0);
+        }
         if (getIntent().hasExtra("payment")) {
             payment = getIntent().getIntExtra("payment", 0);
         }
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (payment != 0) {
-                    binding.viewPager.setCurrentItem(payment);
-                } else {
-                    binding.viewPager.setCurrentItem(tab.getPosition());
-                }
+
+                binding.viewPager.setCurrentItem(tab.getPosition());
+
             }
 
             @Override

@@ -82,7 +82,7 @@ public class PaymentFragment extends Fragment {
                                 binding.rvCardList.setVisibility(View.GONE);
                             } else {
                                 binding.rvCardList.setVisibility(View.VISIBLE);
-                                adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.ImgV, binding.progressBarHolder);
+                                adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.ImgV, binding.progressBarHolder,binding.rvCardList);
                                 binding.rvCardList.setAdapter(adapter);
                             }
 

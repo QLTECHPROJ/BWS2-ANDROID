@@ -99,10 +99,10 @@ public class OtpActivity extends AppCompatActivity {
                 } else {
                     if (BWSApplication.isNetworkConnected(OtpActivity.this)) {
                         Call<OtpModel> listCall = APIClient.getClient().getAuthOtps(
-                                 binding.edtOTP1.getText().toString() + "" +
-                                binding.edtOTP2.getText().toString() + "" +
-                                binding.edtOTP3.getText().toString() + "" +
-                                binding.edtOTP4.getText().toString(), "" ,CONSTANTS.FLAG_ONE,
+                                binding.edtOTP1.getText().toString() + "" +
+                                        binding.edtOTP2.getText().toString() + "" +
+                                        binding.edtOTP3.getText().toString() + "" +
+                                        binding.edtOTP4.getText().toString(), "", CONSTANTS.FLAG_ONE,
                                 Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), MobileNo, CONSTANTS.FLAG_ZERO);
                         listCall.enqueue(new Callback<OtpModel>() {
                             @Override
@@ -112,10 +112,8 @@ public class OtpActivity extends AppCompatActivity {
                                     OtpModel otpModel = response.body();
                                     SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
                                     SharedPreferences.Editor editor = shared.edit();
-                                    String UserID = otpModel.getResponseData().getUserID();
-                                    editor.putString(CONSTANTS.PREF_KEY_UserID, UserID);
-                                    String Phone = otpModel.getResponseData().getPhoneNumber();
-                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo, Phone);
+                                    editor.putString(CONSTANTS.PREF_KEY_UserID, otpModel.getResponseData().getUserID());
+                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo, otpModel.getResponseData().getPhoneNumber());
                                     editor.commit();
                                     Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
                                     startActivity(i);
