@@ -13,6 +13,7 @@ import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
 import com.qltech.bws.LoginModule.Models.CountryListModel;
 import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.LoginModule.Models.OtpModel;
+import com.qltech.bws.ResourceModule.Models.ResourceListModel;
 import com.qltech.bws.SplashModule.Models.VersionModel;
 import com.qltech.bws.UserModule.Models.AddProfileModel;
 import com.qltech.bws.UserModule.Models.ProfileUpdateModel;
@@ -20,6 +21,7 @@ import com.qltech.bws.UserModule.Models.ProfileViewModel;
 import com.qltech.bws.UserModule.Models.RemoveProfileModel;
 
 import java.io.File;
+import java.util.List;
 
 import retrofit.http.Part;
 import retrofit.mime.TypedFile;
@@ -53,7 +55,8 @@ public interface APIInterface {
                                @Field("Token") String token,
                                @Field("DeviceType") String deviceType,
                                @Field("DeviceID") String deviceID,
-                               @Field("MobileNo") String mobileNo);
+                               @Field("MobileNo") String mobileNo,
+                               @Field("SignupFlag") String signupFlag);
 
     /* TODO CountryActivity */
     @GET("countrylist")
@@ -148,12 +151,19 @@ public interface APIInterface {
     /* TODO InvoiceActivity */
     @POST("invoicelist")
     @FormUrlEncoded
-    Call<InvoiceListModel> getInvoicelistPlaylis(@Field("UserID") String userID);
+    Call<InvoiceListModel> getInvoicelistPlaylist(@Field("UserID") String userID);
 
     /* TODO DownloadsActivity */
     @POST("downloadlist")
     @FormUrlEncoded
-    Call<DownloadlistModel> getDownloadlistPlaylis(@Field("UserID") String userID);
+    Call<DownloadlistModel> getDownloadlistPlaylist(@Field("UserID") String userID);
+
+    /* TODO ResourceActivity */
+    @POST("resourcelist")
+    @FormUrlEncoded
+    Call<ResourceListModel> getResourcLists(@Field("UserID") String userID,
+                                                  @Field("ResourceTypeId") String resourceTypeId,
+                                                  @Field("Category") String category);
 
     /* TODO AppointmentInvoiceFragment & MembershipInvoiceFragment */
     @POST("invoicedownloaddetail")

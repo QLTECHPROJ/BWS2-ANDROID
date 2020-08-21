@@ -35,10 +35,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_6sdp"
                 android:fontFamily="@font/montserrat_medium"
-                android:gravity="left"
+                android:gravity="start"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="Motivation Program"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp" />
 
@@ -48,8 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_6sdp"
                 android:fontFamily="@font/montserrat_medium"
-                android:gravity="left"
-                android:text="12:37"
+                android:gravity="start"
                 android:textColor="@color/extra_light_gray"
                 android:textSize="@dimen/_14sdp" />
 

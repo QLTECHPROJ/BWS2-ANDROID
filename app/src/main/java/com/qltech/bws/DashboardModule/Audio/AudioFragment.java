@@ -218,6 +218,12 @@ public class AudioFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareData();
+    }
+
     private void hideProgressBar() {
         binding.progressBarHolder.setVisibility(View.GONE);
         binding.ImgV.setVisibility(View.GONE);

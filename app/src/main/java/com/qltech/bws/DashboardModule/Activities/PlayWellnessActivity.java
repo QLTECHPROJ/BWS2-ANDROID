@@ -33,6 +33,10 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityPlayWellnessBinding;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -174,6 +178,20 @@ public class PlayWellnessActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        /*URL url = null;
+        try {
+            url = new URL(AudioFile);
+            URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+            String encodedUrl = uri.toASCIIString();
+            mPlayer.setDataSource(PlayWellnessActivity.this, Uri.parse(encodedUrl));
+            mPlayer.prepare();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
 
         binding.simpleSeekbar.setClickable(false);
         MeasureRatio measureRatio = BWSApplication.measureRatio(PlayWellnessActivity.this, 0,

@@ -6,14 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,25 +30,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 
-import com.qltech.bws.DashboardModule.Audio.Adapters.InspiredAdapter;
-import com.qltech.bws.DashboardModule.Audio.Adapters.MyDownloadsAdapter;
-import com.qltech.bws.DashboardModule.Audio.Adapters.RecentlyPlayedAdapter;
-import com.qltech.bws.DashboardModule.Audio.Adapters.RecommendedAdapter;
-import com.qltech.bws.DashboardModule.Audio.Adapters.TopCategoriesAdapter;
-import com.qltech.bws.DashboardModule.Audio.AudioFragment;
-import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.Models.MainPlayModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
-import com.qltech.bws.DashboardModule.Playlist.Adapters.PlaylistAdapter;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentPlaylistBinding;
 import com.qltech.bws.databinding.MainAudioLayoutBinding;
+import com.qltech.bws.databinding.PlaylistCustomLayoutBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -178,10 +172,10 @@ public class PlaylistFragment extends Fragment {
     }
 
     public class MainPlayListAdapter extends RecyclerView.Adapter<MainPlayListAdapter.MyViewHolder>  {
-        private List<MainPlayModel.ResponseData> listModelList;
+        private ArrayList<MainPlayModel.ResponseData> listModelList;
         Context ctx;
 
-        public MainPlayListAdapter(List<MainPlayModel.ResponseData> listModelList, Context ctx) {
+        public MainPlayListAdapter(ArrayList<MainPlayModel.ResponseData> listModelList, Context ctx) {
             this.listModelList = listModelList;
             this.ctx = ctx;
         }
@@ -252,6 +246,74 @@ public class PlaylistFragment extends Fragment {
             MainAudioLayoutBinding binding;
 
             public MyViewHolder(MainAudioLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+    }
+
+    public class PlaylistAdapter  extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>  {
+        private ArrayList<MainPlayModel.ResponseData.Detail> listModelList;
+        Context ctx;
+
+        public PlaylistAdapter(ArrayList<MainPlayModel.ResponseData.Detail> listModelList, Context ctx) {
+            this.listModelList = listModelList;
+            this.ctx = ctx;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            PlaylistCustomLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.playlist_custom_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                    1, 1, 0.4f, 0);
+            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+
+            holder.binding.tvPlaylistName.setText(listModelList.get(position).getLibraryName());
+            Glide.with(ctx).load(listModelList.get(position).getLibraryImage()).thumbnail(0.1f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+
+            holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle bundle = new Bundle();
+                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    bundle.putString("LibraryID", listModelList.get(position).getLibraryID());
+                    bundle.putString("LibraryName", listModelList.get(position).getLibraryName());
+                    bundle.putString("LibraryImage", listModelList.get(position).getLibraryImage());
+                    bundle.putString("TotalAudio", listModelList.get(position).getTotalAudio());
+                    bundle.putParcelableArrayList("Audiolist", listModelList.get(position).getAudiolist());
+                    myPlaylistsFragment.setArguments(bundle);
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.rlPlaylist, myPlaylistsFragment).
+                            addToBackStack("MyPlaylistsFragment")
+                            .commit();
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            if (2 > listModelList.size()) {
+                return listModelList.size();
+            } else {
+                return 2;
+            }
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            PlaylistCustomLayoutBinding binding;
+
+            public MyViewHolder(PlaylistCustomLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
             }

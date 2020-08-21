@@ -147,4 +147,9 @@
     <string name="your_created">Your Created</string>
     <string name="MyDownloads">MyDownloads</string>
     <string name="populars">Popular</string>
+    <string name="Audio_Book">Audio Book</string>
+    <string name="Podcasts">Podcasts</string>
+    <string name="Apps">Apps</string>
+    <string name="Website">Website</string>
+    <string name="Documentaries">Documentaries</string>
 </resources>

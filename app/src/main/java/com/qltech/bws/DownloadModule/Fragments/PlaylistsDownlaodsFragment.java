@@ -25,6 +25,7 @@ import java.util.List;
 public class PlaylistsDownlaodsFragment extends Fragment {
     FragmentDownloadsBinding binding;
     ArrayList<DownloadlistModel.Playlist> playlistList;
+    String UserID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +34,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         View view = binding.getRoot();
 
         if (getArguments() != null) {
+            UserID = getArguments().getString("UserID");
             playlistList = getArguments().getParcelableArrayList("playlistsDownlaodsFragment");
         }
 
@@ -41,7 +43,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
 
         if (playlistList.size() != 0) {
-            getDataList(playlistList);
+            getDataList(playlistList, UserID);
             binding.llError.setVisibility(View.GONE);
             binding.rvDownloadsList.setVisibility(View.VISIBLE);
         } else {
@@ -51,12 +53,12 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         return view;
     }
 
-    private void getDataList(ArrayList<DownloadlistModel.Playlist> historyList) {
+    private void getDataList(ArrayList<DownloadlistModel.Playlist> historyList,String UserID) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
         } else {
             binding.llError.setVisibility(View.GONE);
-            PlaylistsDownloadsAdapter adapter = new PlaylistsDownloadsAdapter(historyList, getActivity());
+            PlaylistsDownloadsAdapter adapter = new PlaylistsDownloadsAdapter(historyList, getActivity(), UserID);
             binding.rvDownloadsList.setAdapter(adapter);
         }
     }

@@ -14,22 +14,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.R;
 import com.qltech.bws.ResourceModule.Activities.ResourceDetailsActivity;
-import com.qltech.bws.ResourceModule.Models.DocumentariesModel;
-import com.qltech.bws.ResourceModule.Models.PodcastsModel;
+import com.qltech.bws.ResourceModule.Models.ResourceListModel;
+import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.DocumentariesListLayoutBinding;
 import com.qltech.bws.databinding.FragmentDocumentariesBinding;
-import com.qltech.bws.databinding.PodcastsListLayoutBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class DocumentariesFragment extends Fragment {
     FragmentDocumentariesBinding binding;
-    String documentaries;
-    List<DocumentariesModel> listModelList = new ArrayList<>();
+    String documentaries, UserID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,43 +49,44 @@ public class DocumentariesFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             documentaries = bundle.getString("documentaries");
+            UserID = bundle.getString("UserID");
         }
 
-        DocumentariesAdapter adapter = new DocumentariesAdapter(listModelList, getActivity(), documentaries);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDocumentariesList.setLayoutManager(mLayoutManager);
         binding.rvDocumentariesList.setItemAnimator(new DefaultItemAnimator());
-        binding.rvDocumentariesList.setAdapter(adapter);
-        prepareDocumentariesData();
-
+        prepareData();
         return view;
     }
 
-    private void prepareDocumentariesData() {
-        DocumentariesModel list = new DocumentariesModel("I Am", "2010");
-        listModelList.add(list);
-        list = new DocumentariesModel("Kumare", "2011");
-        listModelList.add(list);
-        list = new DocumentariesModel("I Am", "2010");
-        listModelList.add(list);
-        list = new DocumentariesModel("Kumare", "2011");
-        listModelList.add(list);
-        list = new DocumentariesModel("I Am", "2010");
-        listModelList.add(list);
-        list = new DocumentariesModel("Kumare", "2011");
-        listModelList.add(list);
-        list = new DocumentariesModel("I Am", "2010");
-        listModelList.add(list);
-        list = new DocumentariesModel("Kumare", "2011");
-        listModelList.add(list);
+    void prepareData() {
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_TWO,"");
+            listCall.enqueue(new Callback<ResourceListModel>() {
+                @Override
+                public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
+                    if (response.isSuccessful()) {
+                        ResourceListModel listModel = response.body();
+                        DocumentariesAdapter adapter = new DocumentariesAdapter(listModel.getResponseData(), getActivity(), documentaries);
+                        binding.rvDocumentariesList.setAdapter(adapter);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                }
+            });
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public class DocumentariesAdapter extends RecyclerView.Adapter<DocumentariesAdapter.MyViewHolder> {
-        private List<DocumentariesModel> listModelList;
+        private List<ResourceListModel.ResponseData> listModelList;
         Context ctx;
         String documentaries;
 
-        public DocumentariesAdapter(List<DocumentariesModel> listModelList, Context ctx, String documentaries) {
+        public DocumentariesAdapter(List<ResourceListModel.ResponseData> listModelList, Context ctx, String documentaries) {
             this.listModelList = listModelList;
             this.ctx = ctx;
             this.documentaries = documentaries;
@@ -92,14 +102,25 @@ public class DocumentariesFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            DocumentariesModel listModel = listModelList.get(position);
-            holder.binding.tvTitle.setText(listModel.getTitle());
-            holder.binding.tvCreator.setText(listModel.getSubTitle());
+            holder.binding.tvTitle.setText(listModelList.get(position).getTitle());
+            holder.binding.tvCreator.setText(listModelList.get(position).getAuthor());
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                    1, 1, 0.4f, 0);
+            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+            Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.1f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
                     i.putExtra("documentaries", documentaries);
+                    i.putExtra("title",listModelList.get(position).getTitle());
+                    i.putExtra("linkOne",listModelList.get(position).getResourceLink1());
+                    i.putExtra("linkTwo",listModelList.get(position).getResourceLink2());
+                    i.putExtra("image",listModelList.get(position).getImage());
+                    i.putExtra("description",listModelList.get(position).getDescription());
                     startActivity(i);
                 }
             });

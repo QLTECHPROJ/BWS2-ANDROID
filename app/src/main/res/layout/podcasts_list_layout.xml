@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.cardview.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_height="wrap_content"
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        app:cardCornerRadius="@dimen/_6sdp"
-        app:cardElevation="3.6dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_4sdp"
-        android:layout_marginVertical="@dimen/_8sdp">
+        android:layout_marginVertical="@dimen/_8sdp"
+        app:cardCornerRadius="@dimen/_6sdp"
+        app:cardElevation="3.6dp">
 
         <LinearLayout
             android:id="@+id/rlMainLayout"
@@ -25,11 +24,18 @@
                 android:gravity="center"
                 android:padding="@dimen/_8sdp">
 
-                <ImageView
-                    android:layout_width="@dimen/_46sdp"
-                    android:layout_height="@dimen/_46sdp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/square_logo" />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="@dimen/_10sdp">
+
+                    <ImageView
+                        android:id="@+id/ivRestaurantImage"
+                        android:layout_width="@dimen/_46sdp"
+                        android:layout_height="@dimen/_46sdp"
+                        android:scaleType="fitXY" />
+
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
@@ -44,10 +50,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
+                    android:ellipsize="end"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="start"
                     android:maxLines="1"
-                    android:ellipsize="end"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp" />
 
@@ -56,10 +62,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
+                    android:ellipsize="end"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="start"
                     android:maxLines="1"
-                    android:ellipsize="end"
                     android:textColor="@color/extra_light_gray"
                     android:textSize="@dimen/_13sdp" />
 

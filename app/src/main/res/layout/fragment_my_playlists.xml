@@ -128,24 +128,24 @@
                                 android:textSize="@dimen/_15sdp" />
 
                             <TextView
+                                android:id="@+id/tvLibraryName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="@dimen/_16sdp"
                                 android:layout_marginTop="@dimen/_6sdp"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
-                                android:text="My Playlist"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_22sdp" />
 
                             <TextView
+                                android:id="@+id/tvLibraryDetail"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="@dimen/_16sdp"
                                 android:layout_marginTop="@dimen/_6sdp"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:gravity="start"
-                                android:text="0 Audio | 0h 0m"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_15sdp" />
 

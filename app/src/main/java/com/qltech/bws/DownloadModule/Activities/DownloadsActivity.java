@@ -11,6 +11,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -57,10 +59,11 @@ public class DownloadsActivity extends AppCompatActivity {
         });
         prepareData();
     }
-    void prepareData() {
+
+    public void prepareData() {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(this)) {
-            Call<DownloadlistModel> listCall = APIClient.getClient().getDownloadlistPlaylis(UserID);
+            Call<DownloadlistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID);
             listCall.enqueue(new Callback<DownloadlistModel>() {
                 @Override
                 public void onResponse(Call<DownloadlistModel> call, Response<DownloadlistModel> response) {
@@ -76,7 +79,8 @@ public class DownloadsActivity extends AppCompatActivity {
                         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Playlists"));
                         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-                        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), ctx, binding.tabLayout.getTabCount());
+                        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), ctx, binding.tabLayout.getTabCount(),
+                                UserID, binding.progressBarHolder, binding.ImgV);
                         binding.viewPager.setAdapter(adapter);
                         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
 
@@ -110,15 +114,20 @@ public class DownloadsActivity extends AppCompatActivity {
 
 
     public class TabAdapter extends FragmentStatePagerAdapter {
-
         int totalTabs;
         private Context myContext;
         Callback<DownloadsHistoryModel> downloadsHistoryModelCallback;
+        String UserID;
+        FrameLayout progressBarHolder;
+        ImageView ImgV;
 
-        public TabAdapter(FragmentManager fm, Context myContext, int totalTabs) {
+        public TabAdapter(FragmentManager fm, Context myContext, int totalTabs, String UserID, FrameLayout progressBarHolder, ImageView ImgV) {
             super(fm);
             this.myContext = myContext;
             this.totalTabs = totalTabs;
+            this.UserID = UserID;
+            this.progressBarHolder = progressBarHolder;
+            this.ImgV = ImgV;
         }
 
         public TabAdapter(FragmentManager fm, Callback<DownloadsHistoryModel> transactionHistoryModelCallback, int totalTabs) {
@@ -133,12 +142,14 @@ public class DownloadsActivity extends AppCompatActivity {
                 case 0:
                     Bundle bundle = new Bundle();
                     AudioDownloadsFragment audioDownloadsFragment = new AudioDownloadsFragment();
+                    bundle.putString("UserID",UserID);
                     bundle.putParcelableArrayList("audioDownloadsFragment", audioList);
                     audioDownloadsFragment.setArguments(bundle);
                     return audioDownloadsFragment;
                 case 1:
                     bundle = new Bundle();
                     PlaylistsDownlaodsFragment playlistsDownlaodsFragment = new PlaylistsDownlaodsFragment();
+                    bundle.putString("UserID",UserID);
                     bundle.putParcelableArrayList("playlistsDownlaodsFragment", playlistList);
                     playlistsDownlaodsFragment.setArguments(bundle);
                     return playlistsDownlaodsFragment;
@@ -153,13 +164,13 @@ public class DownloadsActivity extends AppCompatActivity {
         }
     }
 
-    private void hideProgressBar() {
+    public void hideProgressBar() {
         binding.progressBarHolder.setVisibility(View.GONE);
         binding.ImgV.setVisibility(View.GONE);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
-    private void showProgressBar() {
+    public void showProgressBar() {
         binding.progressBarHolder.setVisibility(View.VISIBLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         binding.ImgV.setVisibility(View.VISIBLE);

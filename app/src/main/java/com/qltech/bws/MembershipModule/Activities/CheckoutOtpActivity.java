@@ -6,8 +6,11 @@ import androidx.databinding.DataBindingUtil;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,8 +22,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.DashboardModule.Activities.DashboardActivity;
 import com.qltech.bws.LoginModule.Activities.OtpActivity;
 import com.qltech.bws.LoginModule.Models.LoginModel;
+import com.qltech.bws.LoginModule.Models.OtpModel;
 import com.qltech.bws.R;
 import com.qltech.bws.SplashModule.SplashScreenActivity;
 import com.qltech.bws.Utility.APIClient;
@@ -77,8 +82,63 @@ public class CheckoutOtpActivity extends AppCompatActivity {
         binding.btnSendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
-                startActivity(i);
+                SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE);
+                String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+                if (TextUtils.isEmpty(fcm_id)) {
+                   /* FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, new OnSuccessListener<InstanceIdResult>() {
+                        @Override
+                        public void onSuccess(InstanceIdResult instanceIdResult) {
+                            String newToken = instanceIdResult.getToken();
+                            Log.e("newToken", newToken);
+                            SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit();
+                            editor.putString(CONSTANTS.Token, newToken); //Friend
+                            editor.apply();
+                            editor.commit();
+                        }
+                    });
+                    fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");*/
+                }
+                if (binding.edtOTP1.getText().toString().equalsIgnoreCase("") ||
+                        binding.edtOTP2.getText().toString().equalsIgnoreCase("") ||
+                        binding.edtOTP3.getText().toString().equalsIgnoreCase("") ||
+                        binding.edtOTP4.getText().toString().equalsIgnoreCase("")) {
+                    binding.txtError.setText("Wait a sec! We need to exchange digits to get started");
+                    binding.txtError.setVisibility(View.VISIBLE);
+                } else {
+                    if (BWSApplication.isNetworkConnected(CheckoutOtpActivity.this)) {
+                        Call<OtpModel> listCall = APIClient.getClient().getAuthOtps(
+                                binding.edtOTP1.getText().toString() + "" +
+                                        binding.edtOTP2.getText().toString() + "" +
+                                        binding.edtOTP3.getText().toString() + "" +
+                                        binding.edtOTP4.getText().toString(), "", CONSTANTS.FLAG_ONE,
+                                Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), MobileNo, CONSTANTS.FLAG_ONE);
+                        listCall.enqueue(new Callback<OtpModel>() {
+                            @Override
+                            public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
+                                if (response.isSuccessful()) {
+                                    hideProgressBar();
+                                    OtpModel otpModel = response.body();
+                                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = shared.edit();
+                                    String UserID = otpModel.getResponseData().getUserID();
+                                    editor.putString(CONSTANTS.PREF_KEY_UserID, UserID);
+                                    String Phone = otpModel.getResponseData().getPhoneNumber();
+                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo, Phone);
+                                    editor.commit();
+                                    Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
+                                    startActivity(i);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<OtpModel> call, Throwable t) {
+                            }
+                        });
+                    } else {
+                        Toast.makeText(CheckoutOtpActivity.this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
             }
         });
         binding.llResendSms.setOnClickListener(new View.OnClickListener() {

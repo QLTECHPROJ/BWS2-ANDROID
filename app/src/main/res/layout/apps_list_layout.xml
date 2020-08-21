@@ -25,8 +25,7 @@
                     android:id="@+id/ivRestaurantImage"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_160sdp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/square_logo" />
+                    android:scaleType="fitXY"/>
 
             </LinearLayout>
 

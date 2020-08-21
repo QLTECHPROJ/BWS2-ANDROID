@@ -14,22 +14,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.R;
 import com.qltech.bws.ResourceModule.Activities.ResourceDetailsActivity;
-import com.qltech.bws.ResourceModule.Models.AppsModel;
-import com.qltech.bws.ResourceModule.Models.AudioBooksModel;
+import com.qltech.bws.ResourceModule.Models.ResourceListModel;
+import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.AppsListLayoutBinding;
-import com.qltech.bws.databinding.AudioBooksLayoutBinding;
 import com.qltech.bws.databinding.FragmentAppsBinding;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AppsFragment extends Fragment {
     FragmentAppsBinding binding;
-    String apps;
-    List<AppsModel> listModelList = new ArrayList<>();
+    String apps, UserID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,50 +45,43 @@ public class AppsFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             apps = bundle.getString("apps");
+            UserID = bundle.getString("UserID");
         }
-        AppsAdapter adapter = new AppsAdapter(listModelList, getActivity(), apps);
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvAppsList.setLayoutManager(manager);
         binding.rvAppsList.setItemAnimator(new DefaultItemAnimator());
-        binding.rvAppsList.setAdapter(adapter);
-        prepareAppListsData();
-
+        prepareData();
         return view;
     }
 
-    private void prepareAppListsData() {
-        AppsModel list = new AppsModel("Headspace");
-        listModelList.add(list);
-        list = new AppsModel("Calm");
-        listModelList.add(list);
-        list = new AppsModel("BeyondNow / BeyondBlue");
-        listModelList.add(list);
-        list = new AppsModel("notOK");
-        listModelList.add(list);
-        list = new AppsModel("What's Up");
-        listModelList.add(list);
-        list = new AppsModel("MoodKit");
-        listModelList.add(list);
-        list = new AppsModel("Headspace");
-        listModelList.add(list);
-        list = new AppsModel("Calm");
-        listModelList.add(list);
-        list = new AppsModel("BeyondNow / BeyondBlue");
-        listModelList.add(list);
-        list = new AppsModel("notOK");
-        listModelList.add(list);
-        list = new AppsModel("What's Up");
-        listModelList.add(list);
-        list = new AppsModel("MoodKit");
-        listModelList.add(list);
+    void prepareData() {
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_FIVE,"");
+            listCall.enqueue(new Callback<ResourceListModel>() {
+                @Override
+                public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
+                    if (response.isSuccessful()) {
+                        ResourceListModel listModel = response.body();
+                        AppsAdapter adapter = new AppsAdapter(listModel.getResponseData(), getActivity(), apps);
+                        binding.rvAppsList.setAdapter(adapter);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                }
+            });
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.MyViewHolder> {
-        private List<AppsModel> listModelList;
+        List<ResourceListModel.ResponseData> listModelList;
         Context ctx;
         String apps;
 
-        public AppsAdapter(List<AppsModel> listModelList, Context ctx, String apps) {
+        public AppsAdapter(List<ResourceListModel.ResponseData> listModelList, Context ctx, String apps) {
             this.listModelList = listModelList;
             this.ctx = ctx;
             this.apps = apps;
@@ -98,13 +97,19 @@ public class AppsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            AppsModel listModel = listModelList.get(position);
-            holder.binding.tvTitle.setText(listModel.getTitle());
+            holder.binding.tvTitle.setText(listModelList.get(position).getTitle());
+            Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.1f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
                     i.putExtra("apps",apps);
+                    i.putExtra("title",listModelList.get(position).getTitle());
+                    i.putExtra("linkOne",listModelList.get(position).getResourceLink1());
+                    i.putExtra("linkTwo",listModelList.get(position).getResourceLink2());
+                    i.putExtra("image",listModelList.get(position).getImage());
+                    i.putExtra("description",listModelList.get(position).getDescription());
                     startActivity(i);
                 }
             });

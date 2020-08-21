@@ -103,7 +103,7 @@ public class OtpActivity extends AppCompatActivity {
                                 binding.edtOTP2.getText().toString() + "" +
                                 binding.edtOTP3.getText().toString() + "" +
                                 binding.edtOTP4.getText().toString(), "" ,CONSTANTS.FLAG_ONE,
-                                Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), MobileNo);
+                                Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), MobileNo, CONSTANTS.FLAG_ZERO);
                         listCall.enqueue(new Callback<OtpModel>() {
                             @Override
                             public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {

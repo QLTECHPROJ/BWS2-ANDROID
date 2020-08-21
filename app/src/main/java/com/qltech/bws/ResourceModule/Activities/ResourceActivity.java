@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -19,8 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
+import com.qltech.bws.BWSApplication;
+import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
+import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.DownloadModule.Models.DownloadsHistoryModel;
 import com.qltech.bws.R;
 import com.qltech.bws.ResourceModule.Adapters.ResourceFilterAdapter;
@@ -30,16 +35,22 @@ import com.qltech.bws.ResourceModule.Fragments.DocumentariesFragment;
 import com.qltech.bws.ResourceModule.Fragments.PodcastsFragment;
 import com.qltech.bws.ResourceModule.Fragments.WebsiteFragment;
 import com.qltech.bws.ResourceModule.Models.ResourceFilterModel;
+import com.qltech.bws.ResourceModule.Models.ResourceListModel;
+import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityResourceBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ResourceActivity extends AppCompatActivity {
     ActivityResourceBinding binding;
     List<ResourceFilterModel> listModelList = new ArrayList<>();
+    String UserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +63,9 @@ public class ResourceActivity extends AppCompatActivity {
                 finish();
             }
         });
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+
         binding.viewPager.setOffscreenPageLimit(5);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio Books"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Podcasts"));
@@ -144,30 +158,35 @@ public class ResourceActivity extends AppCompatActivity {
                     AudioBooksFragment audioBooksFragment = new AudioBooksFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("audio_books", "audio_books");
+                    bundle.putString("UserID", UserID);
                     audioBooksFragment.setArguments(bundle);
                     return audioBooksFragment;
                 case 1:
                     PodcastsFragment podcastsFragment = new PodcastsFragment();
                     bundle = new Bundle();
                     bundle.putString("podcasts", "podcasts");
+                    bundle.putString("UserID", UserID);
                     podcastsFragment.setArguments(bundle);
                     return podcastsFragment;
                 case 2:
                     AppsFragment appsFragment = new AppsFragment();
                     bundle = new Bundle();
                     bundle.putString("apps", "apps");
+                    bundle.putString("UserID", UserID);
                     appsFragment.setArguments(bundle);
                     return appsFragment;
                 case 3:
                     WebsiteFragment websiteFragment = new WebsiteFragment();
                     bundle = new Bundle();
                     bundle.putString("website", "website");
+                    bundle.putString("UserID", UserID);
                     websiteFragment.setArguments(bundle);
                     return websiteFragment;
                 case 4:
                     DocumentariesFragment documentariesFragment = new DocumentariesFragment();
                     bundle = new Bundle();
                     bundle.putString("documentaries", "documentaries");
+                    bundle.putString("UserID", UserID);
                     documentariesFragment.setArguments(bundle);
                     return documentariesFragment;
                 default:

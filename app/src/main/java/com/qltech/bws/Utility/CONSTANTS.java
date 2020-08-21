@@ -34,6 +34,12 @@ public class CONSTANTS {
     public static String Code = "Code";
     public static String MobileNo = "MobileNo";
     public static String ID = "ID";
+    public static String title = "title";
+    public static String author = "author";
+    public static String linkOne = "linkOne";
+    public static String linkTwo = "linkTwo";
+    public static String image = "image";
+    public static String description = "description";
     public static String AudioFile = "AudioFile";
     public static String ImageFile = "ImageFile";
     public static String AudioDirection = "AudioDirection";

@@ -8,11 +8,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +22,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
 import com.qltech.bws.DashboardModule.Adapters.SuggestionAudiosAdpater;
-import com.qltech.bws.DashboardModule.Audio.PlayListsModel;
+import com.qltech.bws.DashboardModule.Models.MainPlayModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
 import com.qltech.bws.R;
@@ -45,8 +46,9 @@ import retrofit2.Response;
 public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
     String UserID;
+    String LibraryID, LibraryName, LibraryImage, TotalAudio;
+    ArrayList<MainPlayModel.ResponseData.Detail.Audiolist> Audiolist;
     List<SuggestionAudiosModel> listModelList = new ArrayList<>();
-    List<PlayListsModel> playLists = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,10 +56,19 @@ public class MyPlaylistsFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
         View view = binding.getRoot();
 
+        if (getArguments() != null) {
+            LibraryID = getArguments().getString("LibraryID");
+            LibraryName = getArguments().getString("LibraryName");
+            LibraryImage = getArguments().getString("LibraryImage");
+            TotalAudio = getArguments().getString("TotalAudio");
+            Audiolist = getArguments().getParcelableArrayList("Audiolist");
+        }
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
+        binding.tvLibraryName.setText(LibraryName);
+        binding.tvLibraryDetail.setText(TotalAudio + "Audio | 0h 0m");
         binding.searchView.onActionViewExpanded();
         EditText searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.gray));
@@ -76,7 +87,7 @@ public class MyPlaylistsFragment extends Fragment {
         binding.rvSuggestedList.setItemAnimator(new DefaultItemAnimator());
         binding.rvSuggestedList.setAdapter(suggestionAudiosAdpater);
 
-        PlayListsAdpater playListsAdpater = new PlayListsAdpater(playLists, getActivity(), UserID);
+        PlayListsAdpater playListsAdpater = new PlayListsAdpater(Audiolist, getActivity(), UserID);
         RecyclerView.LayoutManager playLists = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPlayLists.setLayoutManager(playLists);
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
@@ -97,7 +108,6 @@ public class MyPlaylistsFragment extends Fragment {
             }
         });
         prepareSuggestionAudioData();
-        preparePlayLists();
         return view;
     }
 
@@ -121,39 +131,12 @@ public class MyPlaylistsFragment extends Fragment {
         binding.ImgV.invalidate();
     }
 
-    private void preparePlayLists() {
-        PlayListsModel list = new PlayListsModel("Home Maintenance");
-        playLists.add(list);
-        list = new PlayListsModel("Powerful and loving self...");
-        playLists.add(list);
-        list = new PlayListsModel("Focus Fixer Program");
-        playLists.add(list);
-        list = new PlayListsModel("Motivation Program");
-        playLists.add(list);
-        list = new PlayListsModel("Self-Discipline Program");
-        playLists.add(list);
-        list = new PlayListsModel("Love Thy Self.");
-        playLists.add(list);
-        list = new PlayListsModel("I Can Attitude and Mind...");
-        playLists.add(list);
-        list = new PlayListsModel("Passion Program");
-        playLists.add(list);
-        list = new PlayListsModel("Self-Discipline Program");
-        playLists.add(list);
-        list = new PlayListsModel("Love Thy Self.");
-        playLists.add(list);
-        list = new PlayListsModel("I Can Attitude and Mind...");
-        playLists.add(list);
-        list = new PlayListsModel("Passion Program");
-        playLists.add(list);
-    }
-
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> {
-        private List<PlayListsModel> listModelList;
+        private ArrayList<MainPlayModel.ResponseData.Detail.Audiolist> listModelList;
         Context ctx;
         String UserID;
 
-        public PlayListsAdpater(List<PlayListsModel> listModelList, Context ctx, String UserID) {
+        public PlayListsAdpater(ArrayList<MainPlayModel.ResponseData.Detail.Audiolist> listModelList, Context ctx, String UserID) {
             this.listModelList = listModelList;
             this.ctx = ctx;
             this.UserID = UserID;
@@ -169,27 +152,30 @@ public class MyPlaylistsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            PlayListsModel listModel = listModelList.get(position);
-            holder.binding.tvTitle.setText(listModel.getTitle());
+            holder.binding.tvTitle.setText(listModelList.get(position).getAudioName());
+            holder.binding.tvTime.setText(listModelList.get(position).getAudioDuration());
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            holder.binding.ivRestaurantImage.setImageResource(R.drawable.square_logo);
+            Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.1f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.llRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   /* if (BWSApplication.isNetworkConnected(getActivity())) {
-                        Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistID);
+                    showProgressBar();
+                    if (BWSApplication.isNetworkConnected(getActivity())) {
+                        Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, LibraryID, "");
                         listCall.enqueue(new Callback<SucessModel>() {
                             @Override
                             public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                                 if (response.isSuccessful()) {
+                                    hideProgressBar();
                                     SucessModel listModel = response.body();
-
+                                    Toast.makeText(getActivity(), listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
 
                                 }
                             }
@@ -200,7 +186,7 @@ public class MyPlaylistsFragment extends Fragment {
                         });
                     } else {
                         Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
-                    }*/
+                    }
                 }
             });
         }

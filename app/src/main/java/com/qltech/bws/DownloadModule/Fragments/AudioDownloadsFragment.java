@@ -26,6 +26,7 @@ import java.util.List;
 public class AudioDownloadsFragment extends Fragment {
     FragmentDownloadsBinding binding;
     ArrayList<DownloadlistModel.Audio> audioList;
+    String UserID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,6 +35,7 @@ public class AudioDownloadsFragment extends Fragment {
         View view = binding.getRoot();
 
         if (getArguments() != null) {
+            UserID = getArguments().getString("UserID");
             audioList = getArguments().getParcelableArrayList("audioDownloadsFragment");
         }
 
@@ -42,7 +44,7 @@ public class AudioDownloadsFragment extends Fragment {
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
 
         if (audioList.size() != 0) {
-            getDataList(audioList);
+            getDataList(audioList, UserID);
             binding.llError.setVisibility(View.GONE);
             binding.rvDownloadsList.setVisibility(View.VISIBLE);
         } else {
@@ -53,12 +55,12 @@ public class AudioDownloadsFragment extends Fragment {
 
         return view;
     }
-    private void getDataList(ArrayList<DownloadlistModel.Audio> historyList) {
+    private void getDataList(ArrayList<DownloadlistModel.Audio> historyList, String UserID) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
         } else {
             binding.llError.setVisibility(View.GONE);
-            AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(historyList, getActivity());
+            AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(historyList, getActivity(), UserID);
             binding.rvDownloadsList.setAdapter(adapter);
         }
     }

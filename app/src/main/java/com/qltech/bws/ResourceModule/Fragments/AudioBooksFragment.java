@@ -14,11 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.R;
 import com.qltech.bws.ResourceModule.Activities.ResourceDetailsActivity;
-import com.qltech.bws.ResourceModule.Models.AudioBooksModel;
-import com.qltech.bws.ResourceModule.Models.ListItem;
+import com.qltech.bws.ResourceModule.Models.ResourceListModel;
+import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.AudioBooksLayoutBinding;
 import com.qltech.bws.databinding.BannerImageBinding;
 import com.qltech.bws.databinding.FragmentAudioBooksBinding;
@@ -26,11 +31,13 @@ import com.qltech.bws.databinding.FragmentAudioBooksBinding;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AudioBooksFragment extends Fragment {
     FragmentAudioBooksBinding binding;
-    String audio_books;
-    List<AudioBooksModel> listModelList = new ArrayList<>();
-    List<ListItem> consolidatedList = new ArrayList<>();
+    String audio_books, UserID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,59 +48,47 @@ public class AudioBooksFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             audio_books = bundle.getString("audio_books");
+            UserID = bundle.getString("UserID");
         }
 
-        AudioBooksAdapter adapter = new AudioBooksAdapter(listModelList, getActivity(), audio_books);
+
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvAudioBooksList.setLayoutManager(manager);
         binding.rvAudioBooksList.setItemAnimator(new DefaultItemAnimator());
-        binding.rvAudioBooksList.setAdapter(adapter);
-        prepareAudioBooksData();
+
+        prepareData();
         return view;
     }
 
-    private void prepareAudioBooksData() {
-        AudioBooksModel list = new AudioBooksModel("Happiness Is A Choice", "Barry Neil Kaufman");
-        listModelList.add(list);
-        list = new AudioBooksModel("Man's Search For Meaning", "Victor E Frankl");
-        listModelList.add(list);
-        list = new AudioBooksModel("Mindset", "Barry Neil Kaufman");
-        listModelList.add(list);
-        list = new AudioBooksModel("Awaken The Giant Within", "Barry Neil Kaufman");
-        listModelList.add(list);
-        list = new AudioBooksModel("Happiness Is A Choice", "Barry Neil Kaufman");
-        listModelList.add(list);
-        list = new AudioBooksModel("Man's Search For Meaning", "Victor E Frankl");
-        listModelList.add(list);
-        list = new AudioBooksModel("Mindset", "Barry Neil Kaufman");
-        listModelList.add(list);
-        list = new AudioBooksModel("Awaken The Giant Within", "Barry Neil Kaufman");
-        listModelList.add(list);
-        list = new AudioBooksModel("Happiness Is A Choice", "Barry Neil Kaufman");
-        listModelList.add(list);
-        list = new AudioBooksModel("Man's Search For Meaning", "Victor E Frankl");
-        listModelList.add(list);
-        list = new AudioBooksModel("Mindset", "Barry Neil Kaufman");
-        listModelList.add(list);
-        list = new AudioBooksModel("Awaken The Giant Within", "Barry Neil Kaufman");
-        listModelList.add(list);
-        list = new AudioBooksModel("Happiness Is A Choice", "Barry Neil Kaufman");
-        listModelList.add(list);
-        list = new AudioBooksModel("Man's Search For Meaning", "Victor E Frankl");
-        listModelList.add(list);
-        list = new AudioBooksModel("Mindset", "Barry Neil Kaufman");
-        listModelList.add(list);
-        list = new AudioBooksModel("Awaken The Giant Within", "Barry Neil Kaufman");
-        listModelList.add(list);
+    void prepareData() {
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_ONE,"");
+            listCall.enqueue(new Callback<ResourceListModel>() {
+                @Override
+                public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
+                    if (response.isSuccessful()) {
+                        ResourceListModel listModel = response.body();
+                        AudioBooksAdapter adapter = new AudioBooksAdapter(listModel.getResponseData(), getActivity(), audio_books);
+                        binding.rvAudioBooksList.setAdapter(adapter);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                }
+            });
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public class AudioBooksAdapter extends RecyclerView.Adapter<AudioBooksAdapter.MyViewHolder> {
-        List<AudioBooksModel> consolidatedList;
+        List<ResourceListModel.ResponseData> listModelList;
         Context ctx;
         String audio_books;
 
-        public AudioBooksAdapter(List<AudioBooksModel> consolidatedList, Context ctx, String audio_books) {
-            this.consolidatedList = consolidatedList;
+        public AudioBooksAdapter(List<ResourceListModel.ResponseData> listModelList, Context ctx, String audio_books) {
+            this.listModelList = listModelList;
             this.ctx = ctx;
             this.audio_books = audio_books;
         }
@@ -142,14 +137,21 @@ public class AudioBooksFragment extends Fragment {
                 case ListItem.TYPE_BANNER:
                     break;
             }*/
-            AudioBooksModel listModel = listModelList.get(position);
-            holder.binding.tvTitle.setText(listModel.getTitle());
-            holder.binding.tvCreator.setText(listModel.getSubTitle());
+            holder.binding.tvTitle.setText(listModelList.get(position).getTitle());
+            holder.binding.tvCreator.setText(listModelList.get(position).getAuthor());
+            Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.1f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
                     i.putExtra("audio_books",audio_books);
+                    i.putExtra("title",listModelList.get(position).getTitle());
+                    i.putExtra("author",listModelList.get(position).getAuthor());
+                    i.putExtra("linkOne",listModelList.get(position).getResourceLink1());
+                    i.putExtra("linkTwo",listModelList.get(position).getResourceLink2());
+                    i.putExtra("image",listModelList.get(position).getImage());
+                    i.putExtra("description",listModelList.get(position).getDescription());
                     startActivity(i);
                 }
             });
@@ -163,7 +165,7 @@ public class AudioBooksFragment extends Fragment {
 */
         @Override
         public int getItemCount() {
-            return consolidatedList != null ? consolidatedList.size() : 0;
+            return listModelList.size();
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
