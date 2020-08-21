@@ -1,8 +1,5 @@
 package com.qltech.bws.LoginModule.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,7 +16,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
 import com.bumptech.glide.Glide;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Activities.DashboardActivity;
 import com.qltech.bws.LoginModule.Models.LoginModel;
@@ -77,18 +78,15 @@ public class OtpActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE);
                 String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
                 if (TextUtils.isEmpty(fcm_id)) {
-                   /* FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, new OnSuccessListener<InstanceIdResult>() {
-                        @Override
-                        public void onSuccess(InstanceIdResult instanceIdResult) {
-                            String newToken = instanceIdResult.getToken();
-                            Log.e("newToken", newToken);
-                            SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit();
-                            editor.putString(CONSTANTS.Token, newToken); //Friend
-                            editor.apply();
-                            editor.commit();
-                        }
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, instanceIdResult -> {
+                        String newToken = instanceIdResult.getToken();
+                        Log.e("newToken", newToken);
+                        SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit();
+                        editor.putString(CONSTANTS.Token, newToken); //Friend
+                        editor.apply();
+                        editor.commit();
                     });
-                    fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");*/
+                    fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
                 }
                 if (binding.edtOTP1.getText().toString().equalsIgnoreCase("") ||
                         binding.edtOTP2.getText().toString().equalsIgnoreCase("") ||
@@ -102,7 +100,7 @@ public class OtpActivity extends AppCompatActivity {
                                 binding.edtOTP1.getText().toString() + "" +
                                         binding.edtOTP2.getText().toString() + "" +
                                         binding.edtOTP3.getText().toString() + "" +
-                                        binding.edtOTP4.getText().toString(), "", CONSTANTS.FLAG_ONE,
+                                        binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE,
                                 Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), MobileNo, CONSTANTS.FLAG_ZERO);
                         listCall.enqueue(new Callback<OtpModel>() {
                             @Override
