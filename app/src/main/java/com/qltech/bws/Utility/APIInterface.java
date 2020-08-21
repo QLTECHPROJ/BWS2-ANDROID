@@ -1,6 +1,8 @@
 package com.qltech.bws.Utility;
 
 import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
+import com.qltech.bws.BillingOrderModule.Models.CardListModel;
+import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.DirectionModel;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
@@ -20,18 +22,12 @@ import com.qltech.bws.UserModule.Models.ProfileUpdateModel;
 import com.qltech.bws.UserModule.Models.ProfileViewModel;
 import com.qltech.bws.UserModule.Models.RemoveProfileModel;
 
-import java.io.File;
-import java.util.List;
-
-import retrofit.http.Part;
 import retrofit.mime.TypedFile;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
-
 public interface APIInterface {
     /*TODO App Version*/
     @POST("appversion")
@@ -102,6 +98,29 @@ public interface APIInterface {
     @POST("audiodetail")
     @FormUrlEncoded
     Call<DirectionModel> getAudioDetailLists(@Field("AudioId") String audioId);
+
+    /* TODO Add Card */
+    @POST("cardadd")
+    @FormUrlEncoded
+    Call<CardModel> getAddCard(@Field("UserID") String userID,
+                                   @Field("TokenId") String tokenId);
+
+    /* TODO Card List */
+    @POST("cardlist")
+    @FormUrlEncoded
+    Call<CardListModel> getCardLists(@Field("UserID") String userID);
+
+    /* TODO Change Card */
+    @POST("carddefault")
+    @FormUrlEncoded
+    Call<CardModel> getChangeCard(@Field("UserID") String userID,
+                                      @Field("CardId") String cardId);
+
+    /* TODO Remove Card List */
+    @POST("cardremove")
+    @FormUrlEncoded
+    Call<CardModel> getRemoveCard(@Field("UserID") String userID,
+                                  @Field("CardId") String cardId);
 
     /* TODO AddQueueActivity */
     @POST("audiolike")

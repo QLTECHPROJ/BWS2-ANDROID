@@ -2,6 +2,9 @@
     <string name="app_name">BWS</string>
 
     <string name="ResponseCodesuccess">200</string>
+    <string name="ResponseCodefail">401</string>
+    <string name="stipe_test_key">pk_test_Mm4d65j7STTpLo0YrkYGmaWH00tQO1qMnv</string>
+    <string name="stipe_live_key">pk_live_nmRApzuiZfmKRruPcnpYhurb00tFp2EYYP</string>
 
     <string name="sign_in">Sign in</string>
     <string name="enter_phone_number">Enter Phone Number</string>
@@ -147,6 +150,15 @@
     <string name="your_created">Your Created</string>
     <string name="MyDownloads">MyDownloads</string>
     <string name="populars">Popular</string>
+    <string name="first_card_chars">XXXX XXXX XXXX </string>
+    <string name="blank_all_fields">Hey! I\'ll need your inputs</string>
+    <string name="valid_card_no_error">Hey! Seems like the card number is out of whack. Fancy a retry?</string>
+    <string name="valid_expiry_error">Hey! I\'ll need you to add expiry details</string>
+    <string name="valid_cvv_error">Hey! I\'ll need you to add the CVV</string>
+    <string name="invalid_expiry_date">Hey! Seems like the expiry details are out of whack. Fancy a retry?</string>
+    <string name="invalid_cvv_error">Hey! Seems like the CVV is out of whack. Fancy a retry?</string>
+    <string name="blank_card_no_error">Hey! I\'ll need you to add card number</string>
+    <string name="blank_card_holder_name_error">Hey! I\'ll need you to add cardholder name</string>
     <string name="Audio_Book">Audio Book</string>
     <string name="Podcasts">Podcasts</string>
     <string name="Apps">Apps</string>

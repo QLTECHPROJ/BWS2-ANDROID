@@ -25,6 +25,8 @@ import retrofit2.Callback;
 
 public class BillingOrderActivity extends AppCompatActivity {
     ActivityBillingOrderBinding binding;
+    int payment = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,10 +48,17 @@ public class BillingOrderActivity extends AppCompatActivity {
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
 
+        if (getIntent().hasExtra("payment")) {
+            payment = getIntent().getIntExtra("payment", 0);
+        }
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                binding.viewPager.setCurrentItem(tab.getPosition());
+                if (payment != 0) {
+                    binding.viewPager.setCurrentItem(payment);
+                } else {
+                    binding.viewPager.setCurrentItem(tab.getPosition());
+                }
             }
 
             @Override
@@ -65,6 +74,7 @@ public class BillingOrderActivity extends AppCompatActivity {
 
 
     }
+
     public class TabAdapter extends FragmentStatePagerAdapter {
 
         int totalTabs;
@@ -85,10 +95,11 @@ public class BillingOrderActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
+            Bundle bundle;
             switch (position) {
                 case 0:
                     CurrentPlanFragment currentPlanFragment = new CurrentPlanFragment();
-                    Bundle bundle = new Bundle();
+                    bundle = new Bundle();
                     currentPlanFragment.setArguments(bundle);
                     return currentPlanFragment;
                 case 1:

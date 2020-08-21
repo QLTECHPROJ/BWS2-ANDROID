@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -208,6 +212,7 @@
                             android:layout_width="@dimen/_0sdp"
                             android:layout_height="match_parent"
                             android:gravity="center"
+                            android:id="@+id/opendilog"
                             android:layout_weight="0.9">
 
 
@@ -290,6 +295,15 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_35sdp"
+                android:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/red"
+                android:textSize="@dimen/_12sdp" />
         </LinearLayout>
 
         <Button
@@ -307,4 +321,22 @@
             android:textColor="@color/white" />
 
     </RelativeLayout>
+    <ImageView
+    android:id="@+id/ImgV"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:padding="80dp"
+    android:scaleType="centerInside"
+    android:visibility="visible" />
+
+    <FrameLayout
+        android:id="@+id/progressBarHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.4"
+        android:animateLayoutChanges="true"
+        android:background="#C0000000"
+        android:visibility="visible" />
+</LinearLayout>
 </layout>
