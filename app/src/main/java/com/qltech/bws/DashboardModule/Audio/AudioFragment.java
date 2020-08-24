@@ -3,8 +3,6 @@ package com.qltech.bws.DashboardModule.Audio;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,15 +27,11 @@ import com.qltech.bws.DashboardModule.Audio.Adapters.RecentlyPlayedAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.RecommendedAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.TopCategoriesAdapter;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
-import com.qltech.bws.LoginModule.Activities.CountrySelectActivity;
-import com.qltech.bws.LoginModule.Adapters.CountrySelectAdapter;
-import com.qltech.bws.LoginModule.Models.CountryListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
-import com.qltech.bws.databinding.BigBoxLayoutBinding;
 import com.qltech.bws.databinding.FragmentAudioBinding;
 import com.qltech.bws.databinding.MainAudioLayoutBinding;
 
@@ -49,7 +43,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AudioFragment extends Fragment {
-    List<MainAudioModel> mainAudioModelList = new ArrayList<>();
     FragmentAudioBinding binding;
     private AudioViewModel audioViewModel;
     String UserID;
