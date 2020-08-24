@@ -6,10 +6,9 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="56dp"
+        android:layout_marginBottom="124dp"
         android:background="@color/white"
         tools:context=".DashboardModule.Search.SearchFragment">
-
         <RelativeLayout
             android:id="@+id/rlSearch"
             android:layout_width="match_parent"
@@ -52,8 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/rlSearch"
-            android:overScrollMode="never"
-            android:paddingBottom="@dimen/_60sdp">
+            android:overScrollMode="never">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -181,6 +179,7 @@
         </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
