@@ -15,6 +15,7 @@ import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
 import com.qltech.bws.LoginModule.Models.CountryListModel;
 import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.LoginModule.Models.OtpModel;
+import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.ResourceModule.Models.ResourceListModel;
 import com.qltech.bws.SplashModule.Models.VersionModel;
 import com.qltech.bws.UserModule.Models.AddProfileModel;
@@ -73,6 +74,11 @@ public interface APIInterface {
                                               @Field("EmailId") String emailId,
                                               @Field("IsVerify") String isVerify);
 
+    /* TODO Membership Plan List */
+    /* TODO CountryActivity */
+    @GET("countrylist")
+    Call<MembershipPlanListModel> getMembershipPlanList();
+
     /*TODO UserProfileActivity */
     @POST("addprofileimage")
     @FormUrlEncoded
@@ -113,7 +119,7 @@ public interface APIInterface {
     /* TODO Change Card */
     @POST("carddefault")
     @FormUrlEncoded
-    Call<CardModel> getChangeCard(@Field("UserID") String userID,
+    Call<CardListModel> getChangeCard(@Field("UserID") String userID,
                                       @Field("CardId") String cardId);
 
     /* TODO Remove Card List */

@@ -40,6 +40,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
     FrameLayout progressBarHolder;
     RecyclerView rvCardList;
     AllCardAdapter adapter;
+
     public AllCardAdapter(List<CardListModel.ResponseData> listModelList, FragmentActivity activity, String userId, ImageView ImgV, FrameLayout progressBarHolder, RecyclerView rvCardList) {
         this.listModelList = listModelList;
         this.activity = activity;
@@ -65,7 +66,11 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
         holder.binding.tvCardNo.setText(activity.getString(R.string.first_card_chars) + listModel.getLast4());
         holder.binding.tvExpiryTime.setText("Valid: " + listModel.getExpMonth() + "/" +
                 listModel.getExpYear());
-
+        Glide.with(activity).load(listModel.getImage())
+                .thumbnail(0.5f)
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.binding.ivCardimg);
         if (listModel.get_default().equalsIgnoreCase(CONSTANTS.FLAG_ONE)) {
             holder.binding.ivCheck.setImageResource(R.drawable.ic_checked_icon);
             card_id = listModel.getCustomer();
@@ -80,24 +85,31 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
         holder.binding.llAddNewCard.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(activity)) {
                 showProgressBar();
-                Call<CardModel> listCall = APIClient.getClient().getChangeCard(userId, listModel.getCustomer());
-                listCall.enqueue(new Callback<CardModel>() {
+                Call<CardListModel> listCall = APIClient.getClient().getChangeCard(userId, listModel.getCustomer());
+                listCall.enqueue(new Callback<CardListModel>() {
                     @Override
-                    public void onResponse(Call<CardModel> call, Response<CardModel> response) {
+                    public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
                         hideProgressBar();
                         if (response.isSuccessful()) {
-                            CardModel cardModel = response.body();
-                            if (cardModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
-                                getCardList();
+                            CardListModel cardListModel = response.body();
+                            if (cardListModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
+                                if (cardListModel.getResponseData().size() == 0) {
+                                    rvCardList.setAdapter(null);
+                                    rvCardList.setVisibility(View.GONE);
+                                } else {
+                                    rvCardList.setVisibility(View.VISIBLE);
+                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList);
+                                    rvCardList.setAdapter(adapter);
+                                }
                             } else {
-                                Toast.makeText(activity, cardModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, cardListModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                             }
 
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<CardModel> call, Throwable t) {
+                    public void onFailure(Call<CardListModel> call, Throwable t) {
 
                     }
 
@@ -139,11 +151,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
         });
 
-        Glide.with(activity).load(listModel.getImage())
-                .thumbnail(0.5f)
-                .crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.binding.ivCardimg);
+
     }
 
     private void hideProgressBar() {
@@ -190,7 +198,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                                 rvCardList.setVisibility(View.GONE);
                             } else {
                                 rvCardList.setVisibility(View.VISIBLE);
-                                adapter = new AllCardAdapter(cardListModel.getResponseData(),activity, userId, ImgV, progressBarHolder,rvCardList);
+                                adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList);
                                 rvCardList.setAdapter(adapter);
                             }
 
