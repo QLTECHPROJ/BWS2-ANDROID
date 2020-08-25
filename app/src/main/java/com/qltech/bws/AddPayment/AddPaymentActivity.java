@@ -65,10 +65,7 @@ public class AddPaymentActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_payment);
 
         binding.llBack.setOnClickListener(view -> finish());
-        binding.btnSave.setOnClickListener(view -> {
-            Toast.makeText(AddPaymentActivity.this, "Saved Sucessfully", Toast.LENGTH_SHORT).show();
-            finish();
-        });
+
         context = AddPaymentActivity.this;
         activity = AddPaymentActivity.this;
         year = Calendar.getInstance().get(Calendar.YEAR);

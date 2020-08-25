@@ -12,11 +12,13 @@
     app:cardCornerRadius="@dimen/_8sdp">
 
         <LinearLayout
+            android:id="@+id/llPlanMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/llPlanSub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/top_round_blue_cornor"
@@ -92,6 +94,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llFeatures"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                    <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
@@ -116,7 +123,7 @@
                     android:textSize="@dimen/_15sdp" />
             </LinearLayout>
 
-            <LinearLayout
+                    <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
@@ -140,7 +147,7 @@
                     android:textSize="@dimen/_15sdp" />
             </LinearLayout>
 
-            <LinearLayout
+                    <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
@@ -164,7 +171,7 @@
                     android:textSize="@dimen/_15sdp" />
             </LinearLayout>
 
-            <LinearLayout
+                    <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
@@ -187,7 +194,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp" />
             </LinearLayout>
-
+            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </layout>

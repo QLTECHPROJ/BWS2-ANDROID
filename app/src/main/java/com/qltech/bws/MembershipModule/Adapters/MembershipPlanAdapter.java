@@ -11,23 +11,25 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.qltech.bws.MembershipModule.Activities.MembershipActivity;
 import com.qltech.bws.MembershipModule.Activities.OrderSummaryActivity;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.MembershipPlanBinding;
-import com.qltech.bws.databinding.SubscribeBoxLayoutBinding;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class MembershipPlanAdapter extends RecyclerView.Adapter<com.qltech.bws.MembershipModule.Adapters.MembershipPlanAdapter.MyViewHolder> {
-    private List<MembershipPlanListModel.Plan> listModelList;
+    private ArrayList<MembershipPlanListModel.Plan> listModelList;
     Context ctx;
+    private int row_index = -1, pos = 0;
     Button btnFreeJoin;
+    String TrialPeriod;
+    public static String planFlag,planId;
 
-    public MembershipPlanAdapter(List<MembershipPlanListModel.Plan> listModelList, Context ctx, Button btnFreeJoin) {
+        public MembershipPlanAdapter(ArrayList<MembershipPlanListModel.Plan> listModelList, Context ctx, Button btnFreeJoin, String TrialPeriod) {
         this.listModelList = listModelList;
         this.ctx = ctx;
+        this.TrialPeriod = TrialPeriod;
         this.btnFreeJoin = btnFreeJoin;
     }
 
@@ -48,28 +50,66 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<com.qltech.bws.M
         holder.binding.tvPlanFeatures02.setText(listModel.getPlanFeatures().getFeature2());
         holder.binding.tvPlanFeatures03.setText(listModel.getPlanFeatures().getFeature3());
         holder.binding.tvPlanFeatures04.setText(listModel.getPlanFeatures().getFeature4());
-        holder.binding.tvPlanAmount.setText(listModel.getPlanAmount());
+        holder.binding.tvPlanAmount.setText("$" + listModel.getPlanAmount());
         holder.binding.tvSubName.setText(listModel.getSubName());
         holder.binding.tvPlanInterval.setText(listModel.getPlanInterval());
 
-        if(listModel.getRecommendedFlag().equalsIgnoreCase("1")){
+        if (listModel.getRecommendedFlag().equalsIgnoreCase("1")) {
             holder.binding.tvRecommended.setVisibility(View.VISIBLE);
-        }else{
+          /*  if (pos == 0) {
+                holder.binding.llPlanSub.setBackgroundColor(ctx.getResources().getColor(R.color.blue));
+                holder.binding.llFeatures.setVisibility(View.VISIBLE);
+                holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.white));
+                holder.binding.tvSubName.setTextColor(ctx.getResources().getColor(R.color.white));
+                holder.binding.tvPlanInterval.setTextColor(ctx.getResources().getColor(R.color.white));
+                holder.binding.llFeatures.setBackgroundColor(ctx.getResources().getColor(R.color.white));
+            }*/
+        } else {
             holder.binding.tvRecommended.setVisibility(View.GONE);
+        }
+        holder.binding.llPlanMain.setOnClickListener(view -> {
+            row_index = position;
+            pos++;
+            planFlag = listModel.getPlanFlag();
+            planId = listModel.getPlanID();
+            notifyDataSetChanged();
+        });
+
+        if (row_index == position) {
+            callAdpter(holder);
+        } else {
+            if (listModel.getRecommendedFlag().equalsIgnoreCase("1") && pos == 0) {
+                holder.binding.tvRecommended.setVisibility(View.VISIBLE);
+                holder.binding.llPlanSub.setBackgroundColor(ctx.getResources().getColor(R.color.blue));
+                holder.binding.llFeatures.setVisibility(View.VISIBLE);
+                holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.white));
+                holder.binding.tvSubName.setTextColor(ctx.getResources().getColor(R.color.white));
+                holder.binding.tvPlanInterval.setTextColor(ctx.getResources().getColor(R.color.white));
+                holder.binding.llFeatures.setBackgroundColor(ctx.getResources().getColor(R.color.white));
+            } else {
+                holder.binding.llPlanSub.setBackground(ctx.getResources().getDrawable(R.drawable.rounded_light_gray));
+                holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.black));
+                holder.binding.tvSubName.setTextColor(ctx.getResources().getColor(R.color.black));
+                holder.binding.tvPlanInterval.setTextColor(ctx.getResources().getColor(R.color.black));
+                holder.binding.llFeatures.setVisibility(View.GONE);
+            }
         }
         btnFreeJoin.setOnClickListener(view -> {
             Intent i = new Intent(ctx, OrderSummaryActivity.class);
-            i.putExtra("PlanID",listModel.getPlanID());
-            i.putExtra("PlanAmount",listModel.getPlanAmount());
-            i.putExtra("PlanCurrency",listModel.getPlanCurrency());
-            i.putExtra("PlanCurrency",listModel.getPlanCurrency());
-            i.putExtra("PlanInterval",listModel.getPlanInterval());
-            i.putExtra("PlanImage",listModel.getPlanImage());
-            i.putExtra("PlanTenure",listModel.getPlanTenure());
-            i.putExtra("PlanNextRenewal",listModel.getPlanNextRenewal());
-            i.putExtra("SubName",listModel.getSubName());
+            i.putParcelableArrayListExtra("PlanData", listModelList);
+            i.putExtra("TrialPeriod", TrialPeriod);
+            i.putExtra("position", position);
             ctx.startActivity(i);
         });
+    }
+
+    private void callAdpter(MyViewHolder holder) {
+        holder.binding.llPlanSub.setBackgroundColor(ctx.getResources().getColor(R.color.blue));
+        holder.binding.llFeatures.setVisibility(View.VISIBLE);
+        holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.white));
+        holder.binding.tvSubName.setTextColor(ctx.getResources().getColor(R.color.white));
+        holder.binding.tvPlanInterval.setTextColor(ctx.getResources().getColor(R.color.white));
+        holder.binding.llFeatures.setBackgroundColor(ctx.getResources().getColor(R.color.white));
     }
 
     @Override
@@ -85,5 +125,4 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<com.qltech.bws.M
             this.binding = binding;
         }
     }
-
 }

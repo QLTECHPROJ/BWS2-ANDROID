@@ -17,11 +17,14 @@ import com.qltech.bws.LoginModule.Activities.CountrySelectActivity;
 import com.qltech.bws.LoginModule.Activities.LoginActivity;
 import com.qltech.bws.LoginModule.Activities.OtpActivity;
 import com.qltech.bws.LoginModule.Models.LoginModel;
+import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.SplashModule.SplashScreenActivity;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityCheckoutGetCodeBinding;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +34,9 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
     ActivityCheckoutGetCodeBinding binding;
     String Name = "", Code = "";
     Context ctx;
+    String TrialPeriod;
+    private ArrayList<MembershipPlanListModel.Plan> listModelList;
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +45,12 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         ctx = CheckoutGetCodeActivity.this;
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
 
-        if (getIntent().getExtras() != null) {
+        if (getIntent().hasExtra("Name")) {
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
+//            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
+//            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
+//            position = getIntent().getIntExtra("position", 0);
         }
 
         if (Code.equalsIgnoreCase("") || Name.equalsIgnoreCase("")) {
@@ -55,6 +64,11 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                Intent i = new Intent(ctx, OrderSummaryActivity.class);
+//                i.putParcelableArrayListExtra("PlanData",listModelList);
+//                i.putExtra("TrialPeriod",TrialPeriod);
+//                i.putExtra("position",position);
+//                startActivity(i);
                 finish();
             }
         });
@@ -63,6 +77,9 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ctx, CountrySelectActivity.class);
+//                i.putParcelableArrayListExtra("PlanData",listModelList);
+//                i.putExtra("TrialPeriod",TrialPeriod);
+//                i.putExtra("position",position);
                 i.putExtra("Check", "0");
                 startActivity(i);
                 finish();
@@ -103,11 +120,14 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             LoginModel loginModel = response.body();
                             Intent i = new Intent(ctx, CheckoutOtpActivity.class);
+//                            i.putParcelableArrayListExtra("PlanData",listModelList);
+//                            i.putExtra("TrialPeriod",TrialPeriod);
+//                            i.putExtra("position",position);
                             i.putExtra("MobileNo", binding.edtNumber.getText().toString());
                             i.putExtra("Name", binding.tvCountry.getText().toString());
                             i.putExtra("Code", binding.tvCountryCode.getText().toString());
                             startActivity(i);
-                        }else {
+                        } else {
                             Toast.makeText(ctx, response.message(), Toast.LENGTH_SHORT).show();
                         }
                     }

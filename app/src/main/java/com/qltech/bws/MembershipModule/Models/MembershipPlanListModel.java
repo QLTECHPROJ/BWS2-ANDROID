@@ -1,11 +1,14 @@
 package com.qltech.bws.MembershipModule.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.util.ArrayList;
 
-public class MembershipPlanListModel {
+public class MembershipPlanListModel implements Parcelable {
 
     @SerializedName("ResponseData")
     @Expose
@@ -19,6 +22,25 @@ public class MembershipPlanListModel {
     @SerializedName("ResponseStatus")
     @Expose
     private String responseStatus;
+
+    protected MembershipPlanListModel(Parcel in) {
+        responseData = in.readParcelable(ResponseData.class.getClassLoader());
+        responseCode = in.readString();
+        responseMessage = in.readString();
+        responseStatus = in.readString();
+    }
+
+    public static final Creator<MembershipPlanListModel> CREATOR = new Creator<MembershipPlanListModel>() {
+        @Override
+        public MembershipPlanListModel createFromParcel(Parcel in) {
+            return new MembershipPlanListModel(in);
+        }
+
+        @Override
+        public MembershipPlanListModel[] newArray(int size) {
+            return new MembershipPlanListModel[size];
+        }
+    };
 
     public ResponseData getResponseData() {
         return responseData;
@@ -52,7 +74,20 @@ public class MembershipPlanListModel {
         this.responseStatus = responseStatus;
     }
 
-    public class ResponseData {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeParcelable(responseData, i);
+        parcel.writeString(responseCode);
+        parcel.writeString(responseMessage);
+        parcel.writeString(responseStatus);
+    }
+
+    public static class ResponseData implements Parcelable {
 
         @SerializedName("Image")
         @Expose
@@ -68,7 +103,30 @@ public class MembershipPlanListModel {
         private String trialPeriod;
         @SerializedName("Plan")
         @Expose
-        private List<Plan> plan = null;
+        private ArrayList<Plan> plan = null;
+        @SerializedName("AudioFiles")
+        @Expose
+        private ArrayList<AudioFile> audioFiles = null;
+
+        protected ResponseData(Parcel in) {
+            image = in.readString();
+            title = in.readString();
+            desc = in.readString();
+            trialPeriod = in.readString();
+        }
+
+        public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
+            @Override
+            public ResponseData createFromParcel(Parcel in) {
+                return new ResponseData(in);
+            }
+
+            @Override
+            public ResponseData[] newArray(int size) {
+                return new ResponseData[size];
+            }
+        };
+
 
         public String getImage() {
             return image;
@@ -102,16 +160,37 @@ public class MembershipPlanListModel {
             this.trialPeriod = trialPeriod;
         }
 
-        public List<Plan> getPlan() {
+        public ArrayList<Plan> getPlan() {
             return plan;
         }
 
-        public void setPlan(List<Plan> plan) {
+        public void setPlan(ArrayList<Plan> plan) {
             this.plan = plan;
+        }
+
+        public ArrayList<AudioFile> getAudioFiles() {
+            return audioFiles;
+        }
+
+        public void setAudioFiles(ArrayList<AudioFile> audioFiles) {
+            this.audioFiles = audioFiles;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(image);
+            parcel.writeString(title);
+            parcel.writeString(desc);
+            parcel.writeString(trialPeriod);
         }
     }
 
-    public class Plan {
+    public static class Plan implements Parcelable {
 
         @SerializedName("PlanPosition")
         @Expose
@@ -149,6 +228,32 @@ public class MembershipPlanListModel {
         @SerializedName("PlanFlag")
         @Expose
         private String planFlag;
+
+        protected Plan(Parcel in) {
+            planPosition = in.readString();
+            planID = in.readString();
+            planAmount = in.readString();
+            planCurrency = in.readString();
+            planInterval = in.readString();
+            planImage = in.readString();
+            planTenure = in.readString();
+            planNextRenewal = in.readString();
+            subName = in.readString();
+            recommendedFlag = in.readString();
+            planFlag = in.readString();
+        }
+
+        public static final Creator<Plan> CREATOR = new Creator<Plan>() {
+            @Override
+            public Plan createFromParcel(Parcel in) {
+                return new Plan(in);
+            }
+
+            @Override
+            public Plan[] newArray(int size) {
+                return new Plan[size];
+            }
+        };
 
         public String getPlanPosition() {
             return planPosition;
@@ -246,6 +351,25 @@ public class MembershipPlanListModel {
             this.planFlag = planFlag;
         }
 
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(planPosition);
+            parcel.writeString(planID);
+            parcel.writeString(planAmount);
+            parcel.writeString(planCurrency);
+            parcel.writeString(planInterval);
+            parcel.writeString(planImage);
+            parcel.writeString(planTenure);
+            parcel.writeString(planNextRenewal);
+            parcel.writeString(subName);
+            parcel.writeString(recommendedFlag);
+            parcel.writeString(planFlag);
+        }
     }
 
     public class PlanFeatures {
@@ -296,4 +420,41 @@ public class MembershipPlanListModel {
 
     }
 
+    public class AudioFile {
+
+        @SerializedName("ID")
+        @Expose
+        private String iD;
+        @SerializedName("Name")
+        @Expose
+        private String name;
+        @SerializedName("ImageFile")
+        @Expose
+        private String imageFile;
+
+        public String getID() {
+            return iD;
+        }
+
+        public void setID(String iD) {
+            this.iD = iD;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getImageFile() {
+            return imageFile;
+        }
+
+        public void setImageFile(String imageFile) {
+            this.imageFile = imageFile;
+        }
+
+    }
 }

@@ -88,6 +88,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvPlanInterval"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
@@ -96,6 +97,7 @@
                             android:textSize="@dimen/_14sdp" />
 
                         <TextView
+                            android:id="@+id/tvTrialPeriod"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_light"
@@ -113,6 +115,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvPlanAmount"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semi_bold"
@@ -122,6 +125,7 @@
                             android:textSize="@dimen/_17sdp" />
 
                         <TextView
+                            android:id="@+id/tvSubName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_light"
@@ -141,6 +145,7 @@
                     android:weightSum="1">
 
                     <TextView
+                        android:id="@+id/tvPlanTenure"
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
@@ -149,6 +154,7 @@
                         android:textColor="@color/light_gray" />
 
                     <TextView
+                        android:id="@+id/tvPlanNextRenewal"
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
@@ -211,6 +217,7 @@
                         android:textSize="@dimen/_13sdp" />
 
                     <TextView
+                        android:id="@+id/tvTotalAmount"
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"

@@ -27,11 +27,14 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.LoginModule.Models.OtpModel;
+import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.SplashModule.SplashScreenActivity;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityCheckoutOtpBinding;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,6 +46,9 @@ public class CheckoutOtpActivity extends AppCompatActivity {
     boolean tvSendOTPbool = true;
     Activity activity;
     Context ctx;
+    String TrialPeriod;
+    private ArrayList<MembershipPlanListModel.Plan> listModelList;
+    int position;
     ActivityCheckoutOtpBinding binding;
 
     @Override
@@ -54,6 +60,9 @@ public class CheckoutOtpActivity extends AppCompatActivity {
             MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
+//            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
+//            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
+//            position = getIntent().getIntExtra("position", 0);
         }
         activity = CheckoutOtpActivity.this;
         ctx = CheckoutOtpActivity.this;
@@ -77,6 +86,11 @@ public class CheckoutOtpActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+//                i.putParcelableArrayListExtra("PlanData",listModelList);
+//                i.putExtra("TrialPeriod",TrialPeriod);
+//                i.putExtra("position",position);
+//                startActivity(i);
                 finish();
             }
         });

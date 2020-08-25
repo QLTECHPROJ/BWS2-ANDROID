@@ -1,13 +1,5 @@
 package com.qltech.bws.LoginModule.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,8 +12,15 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
@@ -43,15 +42,23 @@ public class CountrySelectActivity extends AppCompatActivity {
     String Check;
     ActivityCountrySelectBinding binding;
     CountrySelectAdapter adapter;
+//    String TrialPeriod;
+//    private ArrayList<MembershipPlanListModel.Plan> listModelList;
+//    int position;
+    Context ctx;
     String MobileNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_country_select);
+        ctx = CountrySelectActivity.this;
 
         if (getIntent().getExtras() != null) {
             Check = getIntent().getStringExtra(CONSTANTS.Check);
+//            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
+//            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
+//            position = getIntent().getIntExtra("position", 0);
             MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
         }
         binding.llBack.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +66,11 @@ public class CountrySelectActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(CountrySelectActivity.this, LoginActivity.class);
                 startActivity(i);
+//                Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+//                i.putParcelableArrayListExtra("PlanData",listModelList);
+//                i.putExtra("TrialPeriod",TrialPeriod);
+//                i.putExtra("position",position);
+//                startActivity(i);
                 finish();
             }
         });

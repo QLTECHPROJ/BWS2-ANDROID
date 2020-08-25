@@ -1,17 +1,12 @@
 package com.qltech.bws.MembershipModule.Activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -23,22 +18,16 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.MembershipModule.Adapters.MembershipPlanAdapter;
 import com.qltech.bws.MembershipModule.Adapters.SubscriptionAdapter;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
-import com.qltech.bws.MembershipModule.Models.SubscriptionModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityMembershipBinding;
-import com.qltech.bws.databinding.MembershipPlanBinding;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MembershipActivity extends AppCompatActivity {
-    List<SubscriptionModel> listModelList = new ArrayList<>();
     ActivityMembershipBinding binding;
     SubscriptionAdapter subscriptionAdapter;
     MembershipPlanAdapter membershipPlanAdapter;
@@ -69,7 +58,8 @@ public class MembershipActivity extends AppCompatActivity {
         binding.rvList.setLayoutManager(mLayoutManager);
         binding.rvList.setItemAnimator(new DefaultItemAnimator());
 
-        binding.rvPlanList.setLayoutManager(mLayoutManager);
+        RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
+        binding.rvPlanList.setLayoutManager(mLayoutManager1);
         binding.rvPlanList.setItemAnimator(new DefaultItemAnimator());
         prepareMembershipData();
     }
@@ -89,10 +79,11 @@ public class MembershipActivity extends AppCompatActivity {
                             binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
                             binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
 
-                           /* membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan(),ctx,binding.btnFreeJoin );
-                            binding.rvPlanList.setAdapter(membershipPlanAdapter);*/
+                            membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan(),ctx,binding.btnFreeJoin,
+                                    membershipPlanListModel.getResponseData().getTrialPeriod());
+                            binding.rvPlanList.setAdapter(membershipPlanAdapter);
 
-                            subscriptionAdapter = new SubscriptionAdapter(listModelList);
+                            subscriptionAdapter = new SubscriptionAdapter(membershipPlanListModel.getResponseData().getAudioFiles(),ctx);
                             binding.rvList.setAdapter(subscriptionAdapter);
 
                         }
@@ -107,22 +98,6 @@ public class MembershipActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
         }
-        SubscriptionModel list = new SubscriptionModel("Monthly subscription");
-        listModelList.add(list);
-        list = new SubscriptionModel("Monthly subscription");
-        listModelList.add(list);
-        list = new SubscriptionModel("Monthly subscription");
-        listModelList.add(list);
-        list = new SubscriptionModel("Monthly subscription");
-        listModelList.add(list);
-        list = new SubscriptionModel("Monthly subscription");
-        listModelList.add(list);
-        list = new SubscriptionModel("Monthly subscription");
-        listModelList.add(list);
-        list = new SubscriptionModel("Monthly subscription");
-        listModelList.add(list);
-        list = new SubscriptionModel("Monthly subscription");
-        listModelList.add(list);
     }
 
     private void hideProgressBar() {

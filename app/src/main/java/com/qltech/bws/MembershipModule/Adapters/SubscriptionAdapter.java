@@ -1,5 +1,6 @@
 package com.qltech.bws.MembershipModule.Adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -7,17 +8,20 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.qltech.bws.MembershipModule.Models.SubscriptionModel;
+import com.bumptech.glide.Glide;
+import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.SubscribeBoxLayoutBinding;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapter.MyViewHolder> {
-    private List<SubscriptionModel> listModelList;
+    private ArrayList<MembershipPlanListModel.AudioFile> listModelList;
+    Context ctx;
 
-    public SubscriptionAdapter(List<SubscriptionModel> listModelList) {
+    public SubscriptionAdapter(ArrayList<MembershipPlanListModel.AudioFile> listModelList, Context ctx) {
         this.listModelList = listModelList;
+        this.ctx = ctx;
     }
 
     @NonNull
@@ -30,8 +34,9 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        SubscriptionModel listModel = listModelList.get(position);
-        holder.binding.tvTitle.setText(listModel.getTitle());
+        MembershipPlanListModel.AudioFile listModel = listModelList.get(position);
+        holder.binding.tvTitle.setText(listModel.getName());
+        Glide.with(ctx).load(listModel.getImageFile()).asGif().into(holder.binding.ivRestaurantImage);
     }
 
     @Override

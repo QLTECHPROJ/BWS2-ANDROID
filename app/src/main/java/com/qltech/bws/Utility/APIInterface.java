@@ -53,6 +53,19 @@ public interface APIInterface {
                                    @Field("DeviceType") String deviceType,
                                    @Field("Resend") String resend,
                                    @Field("key") String key);
+    /* TODO Registration */
+    @POST("signupcheckout")
+    @FormUrlEncoded
+    Call<LoginModel> getRegData(@Field("MobileNo") String mobileNo,
+                                   @Field("CountryCode") String countryCode);
+    /* TODO Membership Payment */
+    @POST("payment")
+    @FormUrlEncoded
+    Call<LoginModel> getMembershipPayment(
+                                   @Field("PlanId") String planId,
+                                   @Field("PlanFlag") String planFlag,
+                                   @Field("CardId") String CardId,
+                                   @Field("UserID") String UserId);
 
     /* TODO CheckoutGetCodeActivity & OtpActivity */
     @POST("signupcheckout")
@@ -97,8 +110,7 @@ public interface APIInterface {
                                               @Field("IsVerify") String isVerify);
 
     /* TODO Membership Plan List */
-    /* TODO CountryActivity */
-    @GET("countrylist")
+    @GET("planlist")
     Call<MembershipPlanListModel> getMembershipPlanList();
 
     /*TODO UserProfileActivity */

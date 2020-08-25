@@ -7,13 +7,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.ActivityOrderSummaryBinding;
+
+import java.util.ArrayList;
 
 public class OrderSummaryActivity extends AppCompatActivity {
 
     ActivityOrderSummaryBinding binding;
-    String PlanPosition, PlanID, PlanAmount, PlanCurrency, PlanInterval, PlanImage, PlanTenure, PlanNextRenewal, SubName;
+    String TrialPeriod;
+    private ArrayList<MembershipPlanListModel.Plan> listModelList;
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,15 +26,17 @@ public class OrderSummaryActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order_summary);
 
         if (getIntent() != null) {
-            PlanID = getIntent().getStringExtra("PlanID");
-            PlanAmount = getIntent().getStringExtra("PlanAmount");
-            PlanCurrency = getIntent().getStringExtra("PlanCurrency");
-            PlanInterval = getIntent().getStringExtra("PlanInterval");
-            PlanImage = getIntent().getStringExtra("PlanImage");
-            PlanTenure = getIntent().getStringExtra("PlanTenure");
-            PlanNextRenewal = getIntent().getStringExtra("PlanNextRenewal");
-            SubName = getIntent().getStringExtra("SubName");
+            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
+            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
+            position = getIntent().getIntExtra("position",0);
         }
+        binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval());
+        binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
+        binding.tvPlanNextRenewal.setText(listModelList.get(position).getPlanNextRenewal());
+        binding.tvSubName.setText(listModelList.get(position).getSubName());
+        binding.tvTrialPeriod.setText(TrialPeriod + "Membership");
+        binding.tvPlanAmount.setText("$"+listModelList.get(position).getPlanAmount());
+        binding.tvTotalAmount.setText("$"+listModelList.get(position).getPlanAmount());
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -40,15 +47,9 @@ public class OrderSummaryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(OrderSummaryActivity.this, CheckoutGetCodeActivity.class);
-                i.putExtra("PlanID", PlanID);
-                i.putExtra("PlanAmount", PlanAmount);
-                i.putExtra("PlanCurrency", PlanCurrency);
-                i.putExtra("PlanCurrency", PlanCurrency);
-                i.putExtra("PlanInterval", PlanInterval);
-                i.putExtra("PlanImage", PlanImage);
-                i.putExtra("PlanTenure", PlanTenure);
-                i.putExtra("PlanNextRenewal", PlanNextRenewal);
-                i.putExtra("SubName", SubName);
+                i.putParcelableArrayListExtra("PlanData",listModelList);
+                i.putExtra("TrialPeriod",TrialPeriod);
+                i.putExtra("position",position);
                 startActivity(i);
             }
         });
