@@ -1,5 +1,6 @@
 package com.qltech.bws.DashboardModule.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -27,11 +28,18 @@ public class DashboardActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        binding.llPlayearMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DashboardActivity.this, PlayWellnessActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finishAffinity();
     }
 }

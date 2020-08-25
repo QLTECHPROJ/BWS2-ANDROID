@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -42,6 +43,7 @@ public class AppsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apps, container, false);
         View view = binding.getRoot();
+        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             apps = bundle.getString("apps");
@@ -55,12 +57,14 @@ public class AppsFragment extends Fragment {
     }
 
     void prepareData() {
+        showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_FIVE,"");
+            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_FIVE, "");
             listCall.enqueue(new Callback<ResourceListModel>() {
                 @Override
                 public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
                     if (response.isSuccessful()) {
+                        hideProgressBar();
                         ResourceListModel listModel = response.body();
                         AppsAdapter adapter = new AppsAdapter(listModel.getResponseData(), getActivity(), apps);
                         binding.rvAppsList.setAdapter(adapter);
@@ -69,11 +73,25 @@ public class AppsFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                    hideProgressBar();
                 }
             });
         } else {
             Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void hideProgressBar() {
+        binding.progressBarHolder.setVisibility(View.GONE);
+        binding.ImgV.setVisibility(View.GONE);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void showProgressBar() {
+        binding.progressBarHolder.setVisibility(View.VISIBLE);
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        binding.ImgV.setVisibility(View.VISIBLE);
+        binding.ImgV.invalidate();
     }
 
     public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.MyViewHolder> {
@@ -104,12 +122,12 @@ public class AppsFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
-                    i.putExtra("apps",apps);
-                    i.putExtra("title",listModelList.get(position).getTitle());
-                    i.putExtra("linkOne",listModelList.get(position).getResourceLink1());
-                    i.putExtra("linkTwo",listModelList.get(position).getResourceLink2());
-                    i.putExtra("image",listModelList.get(position).getImage());
-                    i.putExtra("description",listModelList.get(position).getDescription());
+                    i.putExtra("apps", apps);
+                    i.putExtra("title", listModelList.get(position).getTitle());
+                    i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
+                    i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
+                    i.putExtra("image", listModelList.get(position).getImage());
+                    i.putExtra("description", listModelList.get(position).getDescription());
                     startActivity(i);
                 }
             });

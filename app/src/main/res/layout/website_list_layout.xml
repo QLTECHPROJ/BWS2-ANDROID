@@ -23,8 +23,7 @@
                 android:layout_height="@dimen/_70sdp"
                 android:layout_gravity="center"
                 android:layout_weight="0.22"
-                android:gravity="center"
-                app:cardCornerRadius="@dimen/_10sdp">
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/ivRestaurantImage"

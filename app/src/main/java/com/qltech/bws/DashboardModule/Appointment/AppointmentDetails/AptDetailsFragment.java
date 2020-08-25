@@ -4,12 +4,14 @@ import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.qltech.bws.DashboardModule.Appointment.SessionsFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -33,6 +35,11 @@ public class AptDetailsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getActivity(), "Book Now", Toast.LENGTH_SHORT).show();
+                Fragment sessionsFragment = new SessionsFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.flSession, sessionsFragment)
+                        .commit();
             }
         });
 

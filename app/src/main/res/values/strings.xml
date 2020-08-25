@@ -131,7 +131,7 @@
     <string name="not_valid_number">Please enter a valid mobile number</string>
     <string name="no_add_digits">Wait a sec! We need to exchange digits to get started</string>
     <string name="Australia">Australia</string>
-    <string name="code">61</string>
+    <string name="code">+61</string>
     <string name="my_download">MyDownload</string>
     <string name="my_like">MyLike</string>
     <string name="recently_played">Recently Played</string>
@@ -164,4 +164,7 @@
     <string name="Apps">Apps</string>
     <string name="Website">Website</string>
     <string name="Documentaries">Documentaries</string>
+    <string name="My_Playlist">My Playlist</string>
+    <string name="background_image">Background Image</string>
+    <string name="Search_for_audio">Search for audio</string>
 </resources>

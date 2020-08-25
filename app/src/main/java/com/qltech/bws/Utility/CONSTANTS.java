@@ -32,6 +32,7 @@ public class CONSTANTS {
     public static String Like = "Like";
     public static String Download = "Download";
     public static String Code = "Code";
+    public static String Codes = "Codes";
     public static String MobileNo = "MobileNo";
     public static String ID = "ID";
     public static String title = "title";

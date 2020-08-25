@@ -89,8 +89,8 @@ public class MembershipActivity extends AppCompatActivity {
                             binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
                             binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
 
-                            membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan(),ctx,binding.btnFreeJoin );
-                            binding.rvPlanList.setAdapter(membershipPlanAdapter);
+                           /* membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan(),ctx,binding.btnFreeJoin );
+                            binding.rvPlanList.setAdapter(membershipPlanAdapter);*/
 
                             subscriptionAdapter = new SubscriptionAdapter(listModelList);
                             binding.rvList.setAdapter(subscriptionAdapter);
@@ -101,6 +101,7 @@ public class MembershipActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<MembershipPlanListModel> call, Throwable t) {
+                    hideProgressBar();
                 }
             });
         } else {

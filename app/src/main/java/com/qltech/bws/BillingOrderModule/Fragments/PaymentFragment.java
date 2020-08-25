@@ -65,7 +65,6 @@ public class PaymentFragment extends Fragment {
     }
 
     private void prepareCardList() {
-
         if (BWSApplication.isNetworkConnected(context)) {
             showProgressBar();
             Call<CardListModel> listCall = APIClient.getClient().getCardLists(userId);
@@ -95,7 +94,7 @@ public class PaymentFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<CardListModel> call, Throwable t) {
-
+                    hideProgressBar();
                 }
 
             });

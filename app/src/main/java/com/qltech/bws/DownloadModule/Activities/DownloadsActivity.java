@@ -105,6 +105,7 @@ public class DownloadsActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<DownloadlistModel> call, Throwable t) {
+                    hideProgressBar();
                 }
             });
         } else {

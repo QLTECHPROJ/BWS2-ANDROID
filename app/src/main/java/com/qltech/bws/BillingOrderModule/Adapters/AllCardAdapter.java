@@ -110,7 +110,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
                     @Override
                     public void onFailure(Call<CardListModel> call, Throwable t) {
-
+                        hideProgressBar();
                     }
 
                 });
@@ -140,7 +140,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
                     @Override
                     public void onFailure(Call<CardModel> call, Throwable t) {
-
+                        hideProgressBar();
                     }
 
                 });
@@ -209,7 +209,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
                 @Override
                 public void onFailure(Call<CardListModel> call, Throwable t) {
-
+                    hideProgressBar();
                 }
 
             });

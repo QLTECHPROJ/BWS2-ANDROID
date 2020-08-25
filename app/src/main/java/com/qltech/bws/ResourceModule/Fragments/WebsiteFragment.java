@@ -42,7 +42,7 @@ public class WebsiteFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_website, container, false);
         View view = binding.getRoot();
-
+        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             website = bundle.getString("website");

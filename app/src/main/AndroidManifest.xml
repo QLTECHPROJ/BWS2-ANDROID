@@ -105,13 +105,13 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".FaqModule.AudioFaqActivity"
+            android:name=".FaqModule.Activities.AudioFaqActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".FaqModule.FaqActivity"
+            android:name=".FaqModule.Activities.FaqActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />

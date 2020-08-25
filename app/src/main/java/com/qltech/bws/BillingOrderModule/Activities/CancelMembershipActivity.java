@@ -5,6 +5,7 @@ import androidx.databinding.DataBindingUtil;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -25,6 +27,7 @@ import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.AppUtils;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityCancelMembershipBinding;
 
 import java.util.HashMap;
@@ -37,6 +40,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         YouTubePlayer.OnInitializedListener {
     ActivityCancelMembershipBinding binding;
     Context ctx;
+    String UserID;
     private static final int RECOVERY_DIALOG_REQUEST = 1;
 
     @Override
@@ -45,7 +49,9 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cancel_membership);
 
         ctx = CancelMembershipActivity.this;
-
+        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,7 +79,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         binding.btnCancelSubscrible.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             /*   if(responseReasonList.get(mSelectedItem).getCancelID().equalsIgnoreCase("5") &&
+                /*if(responseReasonList.get(mSelectedItem).getCancelID().equalsIgnoreCase("5") &&
                         edtCancelBox.getText().toString().equalsIgnoreCase("")){
                     Toast.makeText(ctx, "Please enter reason", Toast.LENGTH_SHORT).show();
                 }*/
@@ -88,32 +94,36 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                 tvconfirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog.dismiss();
-                       /* if (BWSApplication.isNetworkConnected(ctx)) {
+                        showProgressBar();
+                        /*if (BWSApplication.isNetworkConnected(ctx)) {
                             Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, CancelReason);
                             listCall.enqueue(new Callback<CancelPlanModel>() {
                                 @Override
                                 public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
-                                    showProgressBar();
+                                    dialog.dismiss();
+                                    hideProgressBar();
                                 }
 
                                 @Override
                                 public void onFailure(Call<CancelPlanModel> call, Throwable t) {
 
-                                }
-                            });
+                    hideProgressBar();
 
-                            tvGoBack.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
                                 }
                             });
-                            dialog.show();
-                            dialog.setCancelable(false);
+                        }else {
+                            Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
                         }*/
                     }
                 });
+                tvGoBack.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+                dialog.setCancelable(false);
             }
         });
     }

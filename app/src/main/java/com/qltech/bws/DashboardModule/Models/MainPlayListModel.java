@@ -5,12 +5,10 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MainPlayModel {
+public class MainPlayListModel {
     @SerializedName("ResponseData")
     @Expose
     private ArrayList<ResponseData> responseData = null;
@@ -102,51 +100,66 @@ public class MainPlayModel {
             this.details = details;
         }
 
-        public static class Detail {
-            @SerializedName("LibraryId")
+        public static class Detail implements Parcelable {
+            @SerializedName("PlaylistID")
             @Expose
-            private String libraryID;
-            @SerializedName("PatientID")
-            @Expose
-            private String patientID;
+            private String playlistID;
             @SerializedName("TotalAudio")
             @Expose
             private String totalAudio;
-            @SerializedName("LibraryName")
+            @SerializedName("Totalhour")
             @Expose
-            private String libraryName;
-            @SerializedName("LibraryDesc")
+            private String totalhour;
+            @SerializedName("Totalminute")
             @Expose
-            private String libraryDesc;
+            private String totalminute;
+            @SerializedName("PlaylistName")
+            @Expose
+            private String playlistName;
+            @SerializedName("PlaylistDesc")
+            @Expose
+            private String playlistDesc;
             @SerializedName("MasterCategory")
             @Expose
             private String masterCategory;
             @SerializedName("SubCategory")
             @Expose
             private String subCategory;
-            @SerializedName("LibraryImage")
-            @Expose
-            private String libraryImage;
-            @SerializedName("PlaylistId")
-            @Expose
-            private String playlistId;
-            @SerializedName("PlaylistName")
-            @Expose
-            private String playlistName;
             @SerializedName("PlaylistImage")
             @Expose
             private String playlistImage;
+            @SerializedName("PlaylistId")
+            @Expose
+            private String playlistId;
             @SerializedName("Audiolist")
             @Expose
             private ArrayList<Audiolist> audiolist = null;
 
-            public String getLibraryID() {
-                return libraryID;
+            protected Detail(Parcel in) {
+                playlistID = in.readString();
+                totalAudio = in.readString();
+                playlistName = in.readString();
+                playlistDesc = in.readString();
+                masterCategory = in.readString();
+                subCategory = in.readString();
+                playlistImage = in.readString();
+                playlistId = in.readString();
+                totalhour = in.readString();
+                totalminute = in.readString();
+                audiolist = in.createTypedArrayList(Audiolist.CREATOR);
             }
 
-            public void setLibraryID(String libraryID) {
-                this.libraryID = libraryID;
-            }
+            public static final Creator<Detail> CREATOR = new Creator<Detail>() {
+                @Override
+                public Detail createFromParcel(Parcel in) {
+                    return new Detail(in);
+                }
+
+                @Override
+                public Detail[] newArray(int size) {
+                    return new Detail[size];
+                }
+            };
 
             public String getTotalAudio() {
                 return totalAudio;
@@ -156,28 +169,40 @@ public class MainPlayModel {
                 this.totalAudio = totalAudio;
             }
 
-            public String getPatientID() {
-                return patientID;
+            public String getTotalhour() {
+                return totalhour;
             }
 
-            public void setPatientID(String patientID) {
-                this.patientID = patientID;
+            public void setTotalhour(String totalhour) {
+                this.totalhour = totalhour;
             }
 
-            public String getLibraryName() {
-                return libraryName;
+            public String getTotalminute() {
+                return totalminute;
             }
 
-            public void setLibraryName(String libraryName) {
-                this.libraryName = libraryName;
+            public void setTotalminute(String totalminute) {
+                this.totalminute = totalminute;
             }
 
-            public String getLibraryDesc() {
-                return libraryDesc;
+            public static Creator<Detail> getCREATOR() {
+                return CREATOR;
             }
 
-            public void setLibraryDesc(String libraryDesc) {
-                this.libraryDesc = libraryDesc;
+            public String getPlaylistID() {
+                return playlistID;
+            }
+
+            public void setPlaylistID(String playlistID) {
+                this.playlistID = playlistID;
+            }
+
+            public String getPlaylistDesc() {
+                return playlistDesc;
+            }
+
+            public void setPlaylistDesc(String playlistDesc) {
+                this.masterCategory = playlistDesc;
             }
 
             public String getMasterCategory() {
@@ -196,22 +221,6 @@ public class MainPlayModel {
                 this.subCategory = subCategory;
             }
 
-            public String getLibraryImage() {
-                return libraryImage;
-            }
-
-            public void setLibraryImage(String libraryImage) {
-                this.libraryImage = libraryImage;
-            }
-
-            public String getPlaylistId() {
-                return playlistId;
-            }
-
-            public void setPlaylistId(String playlistId) {
-                this.playlistId = playlistId;
-            }
-
             public String getPlaylistName() {
                 return playlistName;
             }
@@ -228,6 +237,14 @@ public class MainPlayModel {
                 this.playlistImage = playlistImage;
             }
 
+            public String getPlaylistId() {
+                return playlistId;
+            }
+
+            public void setPlaylistId(String playlistId) {
+                this.playlistId = playlistId;
+            }
+
             public ArrayList<Audiolist> getAudiolist() {
                 return audiolist;
             }
@@ -236,8 +253,26 @@ public class MainPlayModel {
                 this.audiolist = audiolist;
             }
 
-            public static class Audiolist implements Parcelable {
+            @Override
+            public int describeContents() {
+                return 0;
+            }
 
+            @Override
+            public void writeToParcel(Parcel parcel, int i) {
+                parcel.writeString(playlistID);
+                parcel.writeString(totalAudio);
+                parcel.writeString(playlistName);
+                parcel.writeString(playlistDesc);
+                parcel.writeString(masterCategory);
+                parcel.writeString(subCategory);
+                parcel.writeString(playlistImage);
+                parcel.writeString(playlistId);
+                parcel.writeString(totalhour);
+                parcel.writeString(totalminute);
+            }
+
+            public static class Audiolist implements Parcelable {
                 @SerializedName("AudioID")
                 @Expose
                 private String audioID;

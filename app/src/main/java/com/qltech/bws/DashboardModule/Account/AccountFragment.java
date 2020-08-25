@@ -22,14 +22,13 @@ import android.widget.TextView;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.BuildConfig;
 import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
-import com.qltech.bws.FaqModule.FaqActivity;
+import com.qltech.bws.FaqModule.Activities.FaqActivity;
 import com.qltech.bws.InvoiceModule.Activities.InvoiceActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.ReminderActivity;
 import com.qltech.bws.ResourceModule.Activities.ResourceActivity;
 import com.qltech.bws.UserModule.Activities.UserProfileActivity;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentAccountBinding;
 

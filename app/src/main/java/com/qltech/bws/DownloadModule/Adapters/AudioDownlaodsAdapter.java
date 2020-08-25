@@ -3,6 +3,8 @@ package com.qltech.bws.DownloadModule.Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -33,11 +35,16 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     private List<DownloadlistModel.Audio> listModelList;
     FragmentActivity ctx;
     String UserID;
+    FrameLayout progressBarHolder;
+    ImageView ImgV;
 
-    public AudioDownlaodsAdapter(List<DownloadlistModel.Audio> listModelList, FragmentActivity ctx, String UserID) {
+    public AudioDownlaodsAdapter(List<DownloadlistModel.Audio> listModelList, FragmentActivity ctx, String UserID,
+                                 FrameLayout progressBarHolder, ImageView ImgV) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.UserID = UserID;
+        this.progressBarHolder = progressBarHolder;
+        this.ImgV = ImgV;
     }
 
     @NonNull
@@ -52,7 +59,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(listModelList.get(position).getName());
         holder.binding.tvTime.setText(listModelList.get(position).getAudioDuration());
-
+        Glide.with(ctx).load(R.drawable.loading).asGif().into(ImgV);
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.12f, 0);
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -65,14 +72,14 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             @Override
             public void onClick(View view) {
                 String AudioID = listModelList.get(position).getAudioID();
-//                showProgressBar();
+                showProgressBar();
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioID, "");
                     listCall.enqueue(new Callback<SucessModel>() {
                         @Override
                         public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                             if (response.isSuccessful()) {
-//                                hideProgressBar();
+                                hideProgressBar();
                                 SucessModel listModel = response.body();
                                 Toast.makeText(ctx, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
 
@@ -81,6 +88,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
                         @Override
                         public void onFailure(Call<SucessModel> call, Throwable t) {
+                            hideProgressBar();
                         }
                     });
                 } else {
@@ -88,7 +96,19 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 }
             }
         });
+    }
 
+    private void hideProgressBar() {
+        progressBarHolder.setVisibility(View.GONE);
+        ImgV.setVisibility(View.GONE);
+        ctx.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void showProgressBar() {
+        progressBarHolder.setVisibility(View.VISIBLE);
+        ctx.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        ImgV.setVisibility(View.VISIBLE);
+        ImgV.invalidate();
     }
 
     @Override

@@ -71,7 +71,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.6"
                                 android:fontFamily="@font/montserrat_regular"
-                                android:text="14 November, 2019"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_12sdp" />
 
@@ -124,7 +123,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.6"
                                 android:fontFamily="@font/montserrat_regular"
-                                android:text="$233.00 (1 item)"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_12sdp" />
 
@@ -156,7 +154,6 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/montserrat_medium"
-                                    android:text="Emotional Empowerment Program"
                                     android:textColor="@color/light_black"
                                     android:textSize="@dimen/_14sdp" />
 
@@ -166,7 +163,6 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/_4sdp"
                                     android:fontFamily="@font/montserrat_regular"
-                                    android:text="Qty: 1"
                                     android:textColor="@color/light_black"
                                     android:textSize="@dimen/_12sdp" />
 
@@ -176,7 +172,6 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/_4sdp"
                                     android:fontFamily="@font/montserrat_regular"
-                                    android:text="Session: 12"
                                     android:textColor="@color/light_black"
                                     android:textSize="@dimen/_12sdp" />
 
@@ -188,12 +183,11 @@
                                 android:layout_weight="0.32">
 
                                 <TextView
-                                    android:id="@+id/tvOrderDate"
+                                    android:id="@+id/tvOrderTotal"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/montserrat_medium"
                                     android:gravity="right"
-                                    android:text="$220.00"
                                     android:textColor="@color/light_black"
                                     android:textSize="@dimen/_12sdp" />
 
@@ -266,7 +260,6 @@
                             android:fontFamily="@font/montserrat_regular"
                             android:paddingHorizontal="@dimen/_13sdp"
                             android:paddingBottom="@dimen/_13sdp"
-                            android:text="Brain Wellness Spa Stirling, \nUnit 15, first floor 51 Cedric \nStreet, Stirling, WA 6021, \nAustralia"
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_12sdp" />
 
@@ -295,7 +288,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_6sdp"
                             android:fontFamily="@font/montserrat_regular"
-                            android:text="John Smith \n1234 Main \nApt. 4B, \nSpringfield, ST 5432"
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_12sdp" />
 
@@ -342,7 +334,6 @@
                                 android:layout_weight="0.6"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:gravity="right"
-                                android:text="$220.00"
                                 android:textColor="@color/light_black"
                                 android:textSize="@dimen/_12sdp" />
 
@@ -370,7 +361,6 @@
                                 android:layout_weight="0.6"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:gravity="right"
-                                android:text="$13.00"
                                 android:textColor="@color/light_black"
                                 android:textSize="@dimen/_12sdp" />
 
@@ -392,13 +382,12 @@
                                 android:textSize="@dimen/_13sdp" />
 
                             <TextView
-                                android:id="@+id/tvOrderTotal"
+                                android:id="@+id/tvOrderTotalAmount"
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.6"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="right"
-                                android:text="$233.00"
                                 android:textColor="@color/light_black"
                                 android:textSize="@dimen/_13sdp" />
 

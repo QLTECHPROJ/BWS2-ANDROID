@@ -45,7 +45,7 @@ import retrofit2.Response;
 
 public class PlayWellnessActivity extends AppCompatActivity {
     ActivityPlayWellnessBinding binding;
-    String Like, Download, UserID, AudioFile,Name, ImageFile, PlaylistId, AudioId, AudioDirection, Audiomastercat, AudioSubCategory;
+    String Like, Download, UserID, AudioFile, Name, ImageFile, PlaylistId, AudioId, AudioDirection, Audiomastercat, AudioSubCategory;
     private static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
     private MediaPlayer mPlayer;
     Context ctx;
@@ -80,19 +80,19 @@ public class PlayWellnessActivity extends AppCompatActivity {
             }
         });
 
-        if (Like.equalsIgnoreCase("1")){
+        if (Like.equalsIgnoreCase("1")) {
             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-        }else if (!Like.equalsIgnoreCase("0")) {
+        } else if (!Like.equalsIgnoreCase("0")) {
             binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
         }
 
-        if (Download.equalsIgnoreCase("1")){
+        if (Download.equalsIgnoreCase("1")) {
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
             binding.ivDownloads.setAlpha(255);
             binding.llDownload.setClickable(false);
             binding.llDownload.setEnabled(false);
-        }else if (!Download.equalsIgnoreCase("")) {
+        } else if (!Download.equalsIgnoreCase("")) {
             binding.llDownload.setClickable(true);
             binding.llDownload.setEnabled(true);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
@@ -110,9 +110,9 @@ public class PlayWellnessActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 hideProgressBar();
                                 AudioLikeModel model = response.body();
-                                if (model.getResponseData().getFlag().equalsIgnoreCase("0")){
+                                if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
                                     binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-                                }else if (model.getResponseData().getFlag().equalsIgnoreCase("1")){
+                                } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                                     binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                                 }
                                 Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
@@ -121,6 +121,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<AudioLikeModel> call, Throwable t) {
+                            hideProgressBar();
                         }
                     });
                 } else {
@@ -129,16 +130,37 @@ public class PlayWellnessActivity extends AppCompatActivity {
             }
         });
 
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            showProgressBar();
+            Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(AudioId, UserID);
+            listCall.enqueue(new Callback<SucessModel>() {
+                @Override
+                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                    if (response.isSuccessful()) {
+                        hideProgressBar();
+                        SucessModel model = response.body();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SucessModel> call, Throwable t) {
+                    hideProgressBar();
+                }
+            });
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+        }
+
         binding.llDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
                     Call<SucessModel> listCall = null;
-                    if (AudioId.equalsIgnoreCase("")/* && !PlaylistId.equalsIgnoreCase("")*/){
-                        listCall = APIClient.getClient().getDownloadlistPlaylist(UserID,"", PlaylistId);
-                    }else if (!AudioId.equalsIgnoreCase("")/* && PlaylistId.equalsIgnoreCase("")*/){
-                        listCall = APIClient.getClient().getDownloadlistPlaylist(UserID,AudioId, "");
+                    if (AudioId.equalsIgnoreCase("")/* && !PlaylistId.equalsIgnoreCase("")*/) {
+                        listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistId);
+                    } else if (!AudioId.equalsIgnoreCase("")/* && PlaylistId.equalsIgnoreCase("")*/) {
+                        listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, "");
                     }
                     listCall.enqueue(new Callback<SucessModel>() {
                         @Override
@@ -152,6 +174,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<SucessModel> call, Throwable t) {
+                            hideProgressBar();
                         }
                     });
 
@@ -164,7 +187,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
         prepareData();
     }
 
-    void prepareData(){
+    void prepareData() {
         binding.tvName.setText(Name);
         binding.tvDireDesc.setText(AudioDirection);
         binding.tvTitle.setText(AudioSubCategory);

@@ -27,7 +27,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
-    String Name = "", Code = "";
+    String Name = "", Code = "", MobileNo = "";
     Context ctx;
 
     @Override
@@ -39,22 +39,27 @@ public class LoginActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
+            MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
         }
 
-        if (Code.equalsIgnoreCase("") || Name.equalsIgnoreCase("")) {
+        if (Code.equalsIgnoreCase("") || Name.equalsIgnoreCase("") || MobileNo.equalsIgnoreCase("")) {
             binding.tvCountryCode.setText(R.string.code);
             binding.tvCountry.setText(R.string.Australia);
+            binding.edtNumber.setText("");
         } else {
             binding.tvCountryCode.setText(Code);
             binding.tvCountry.setText(Name);
+            binding.edtNumber.setText(MobileNo);
         }
 
         Glide.with(getApplicationContext()).load(R.drawable.loading).asGif().into(binding.ImgV);
 
         binding.rlCountrySelect.setOnClickListener(view -> {
             Intent i = new Intent(ctx, CountrySelectActivity.class);
-            i.putExtra("Check","1");
+            i.putExtra("Check", "1");
+            i.putExtra("MobileNo",binding.edtNumber.getText().toString());
             startActivity(i);
+            finish();
         });
 
         binding.btnSendCode.setOnClickListener(view -> {
@@ -80,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             binding.edtNumber.requestFocus();
             binding.txtError.setVisibility(View.VISIBLE);
             binding.txtError.setText(getString(R.string.no_add_digits));
-        } else if (binding.edtNumber.getText().toString().length() == 1 || binding.edtNumber.getText().toString().length() != 9) {
+        } else if (binding.edtNumber.getText().toString().length() == 1 || binding.edtNumber.getText().toString().length() != 10) {
             binding.edtNumber.setFocusable(true);
             binding.edtNumber.requestFocus();
             binding.txtError.setVisibility(View.VISIBLE);
@@ -102,7 +107,9 @@ public class LoginActivity extends AppCompatActivity {
                             i.putExtra("Name", binding.tvCountry.getText().toString());
                             i.putExtra("Code", binding.tvCountryCode.getText().toString());
                             startActivity(i);
-                        }else {
+                            finish();
+                            Toast.makeText(ctx, loginModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
                             Toast.makeText(ctx, response.message(), Toast.LENGTH_SHORT).show();
                         }
                     }

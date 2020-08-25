@@ -56,8 +56,19 @@ public class OtpActivity extends AppCompatActivity {
         activity = OtpActivity.this;
 
         binding.tvSendCodeText.setText("We sent an SMS with a 4-digit code to +" + Code + MobileNo);
-
         Glide.with(getApplicationContext()).load(R.drawable.loading).asGif().into(binding.ImgV);
+
+        binding.llEditNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(OtpActivity.this, LoginActivity.class);
+                i.putExtra("Name",Name);
+                i.putExtra("Code",Code);
+                i.putExtra("MobileNo",MobileNo);
+                startActivity(i);
+                finish();
+            }
+        });
 
         editTexts = new EditText[]{binding.edtOTP1, binding.edtOTP2, binding.edtOTP3, binding.edtOTP4};
         binding.edtOTP1.addTextChangedListener(new PinTextWatcher(0));
@@ -108,18 +119,25 @@ public class OtpActivity extends AppCompatActivity {
                                 if (response.isSuccessful()) {
                                     hideProgressBar();
                                     OtpModel otpModel = response.body();
-                                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = shared.edit();
-                                    editor.putString(CONSTANTS.PREF_KEY_UserID, otpModel.getResponseData().getUserID());
-                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo, otpModel.getResponseData().getPhoneNumber());
-                                    editor.commit();
-                                    Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
-                                    startActivity(i);
+                                    if(otpModel.getResponseData().getError().equalsIgnoreCase("")){
+                                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = shared.edit();
+                                        editor.putString(CONSTANTS.PREF_KEY_UserID, otpModel.getResponseData().getUserID());
+                                        editor.putString(CONSTANTS.PREF_KEY_MobileNo, otpModel.getResponseData().getPhoneNumber());
+                                        editor.commit();
+                                        Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
+                                        startActivity(i);
+                                        finish();
+                                    }else if(otpModel.getResponseData().getError().equalsIgnoreCase("1")){
+                                        binding.txtError.setText(otpModel.getResponseMessage());
+                                        binding.txtError.setVisibility(View.VISIBLE);
+                                    }
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<OtpModel> call, Throwable t) {
+                                hideProgressBar();
                             }
                         });
                     } else {
@@ -135,6 +153,16 @@ public class OtpActivity extends AppCompatActivity {
                 prepareData();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(OtpActivity.this, LoginActivity.class);
+        i.putExtra("Name",Name);
+        i.putExtra("Code",Code);
+        i.putExtra("MobileNo",MobileNo);
+        startActivity(i);
+        finish();
     }
 
     void prepareData() {
@@ -164,6 +192,7 @@ public class OtpActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<LoginModel> call, Throwable t) {
+                    hideProgressBar();
                     Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });

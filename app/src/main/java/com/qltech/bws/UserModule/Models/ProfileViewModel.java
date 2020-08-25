@@ -52,7 +52,7 @@ public class ProfileViewModel {
         @SerializedName("Name")
         @Expose
         private String name;
-        @SerializedName("Mobile")
+        @SerializedName("PhoneNumber")
         @Expose
         private String mobile;
         @SerializedName("Address")
@@ -70,7 +70,7 @@ public class ProfileViewModel {
         @SerializedName("Occupation")
         @Expose
         private String occupation;
-        @SerializedName("EmailId")
+        @SerializedName("Email")
         @Expose
         private String emailId;
         @SerializedName("Image")

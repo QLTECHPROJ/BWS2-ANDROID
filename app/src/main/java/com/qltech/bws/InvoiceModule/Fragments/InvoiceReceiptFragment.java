@@ -82,11 +82,24 @@ public class InvoiceReceiptFragment extends DialogFragment {
                         hideProgressBar();
                         InvoiceDetailModel listModel = response.body();
                         binding.tvOrderId.setText(listModel.getResponseData().getInvoiceNumber());
+                        binding.tvDate.setText(listModel.getResponseData().getInvoiceDate());
+                        binding.tvTotal.setText(listModel.getResponseData().getTotalAmount());
+                        binding.tvOrderTotal.setText(listModel.getResponseData().getAmount());
+                        binding.tvPaymentDetails.setText(listModel.getResponseData().getEmail());
+                        binding.tvTitle.setText(listModel.getResponseData().getName());
+                        binding.tvQty.setText("Qty: " + listModel.getResponseData().getQty());
+                        binding.tvSession.setText("Session: " + listModel.getResponseData().getSession());
+                        binding.tvItems.setText(listModel.getResponseData().getAmount());
+                        binding.tvFromAddress.setText(listModel.getResponseData().getInvoiceFrom());
+                        binding.tvBilledTo.setText(listModel.getResponseData().getInvoiceTo());
+                        binding.tvGst.setText(listModel.getResponseData().getGstAmount());
+                        binding.tvOrderTotalAmount.setText(listModel.getResponseData().getTotalAmount());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<InvoiceDetailModel> call, Throwable t) {
+                    hideProgressBar();
                 }
             });
         } else {

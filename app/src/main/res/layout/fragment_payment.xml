@@ -80,7 +80,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins_medium"
+                                android:fontFamily="@font/montserrat_medium"
                                 android:gravity="center_vertical"
                                 android:text="Add new card"
                                 android:textColor="@color/black"

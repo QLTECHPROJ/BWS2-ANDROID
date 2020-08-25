@@ -133,6 +133,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<OtpModel> call, Throwable t) {
+                                hideProgressBar();
                             }
                         });
                     } else {
@@ -178,6 +179,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<LoginModel> call, Throwable t) {
+                    hideProgressBar();
                     Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });

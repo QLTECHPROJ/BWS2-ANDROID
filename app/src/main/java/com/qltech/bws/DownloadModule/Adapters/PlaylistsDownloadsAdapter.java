@@ -3,6 +3,8 @@ package com.qltech.bws.DownloadModule.Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -33,11 +35,16 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     private List<DownloadlistModel.Playlist> listModelList;
     FragmentActivity ctx;
     String UserID;
+    FrameLayout progressBarHolder;
+    ImageView ImgV;
 
-    public PlaylistsDownloadsAdapter(List<DownloadlistModel.Playlist> listModelList, FragmentActivity ctx, String UserID) {
+    public PlaylistsDownloadsAdapter(List<DownloadlistModel.Playlist> listModelList, FragmentActivity ctx, String UserID,
+                                     FrameLayout progressBarHolder, ImageView ImgV) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.UserID = UserID;
+        this.progressBarHolder = progressBarHolder;
+        this.ImgV = ImgV;
     }
 
     @NonNull
@@ -50,29 +57,31 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.binding.tvTitle.setText(listModelList.get(position).getAudiolist().get(position).getAudioName());
-        holder.binding.tvTime.setText(listModelList.get(position).getAudiolist().get(position).getAudioDuration());
+        holder.binding.tvTitle.setText(listModelList.get(position).getPlaylistName());
+        holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio()+
+                " Audios | "+listModelList.get(position).getTotalhour()+"h "+listModelList.get(position).getTotalminute()+"m");
 
+        Glide.with(ctx).load(R.drawable.loading).asGif().into(ImgV);
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.12f, 0);
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        Glide.with(ctx).load(listModelList.get(position).getAudiolist().get(position).getImageFile()).thumbnail(0.1f)
+        Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.1f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
         holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String PlaylistId = listModelList.get(position).getPlaylistId();
-//                showProgressBar();
+                showProgressBar();
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, "", PlaylistId);
                     listCall.enqueue(new Callback<SucessModel>() {
                         @Override
                         public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                             if (response.isSuccessful()) {
-//                                hideProgressBar();
+                                hideProgressBar();
                                 SucessModel listModel = response.body();
                                 Toast.makeText(ctx, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
 
@@ -81,6 +90,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
 
                         @Override
                         public void onFailure(Call<SucessModel> call, Throwable t) {
+                            hideProgressBar();
                         }
                     });
                 } else {
@@ -88,6 +98,19 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 }
             }
         });
+    }
+
+    private void hideProgressBar() {
+        progressBarHolder.setVisibility(View.GONE);
+        ImgV.setVisibility(View.GONE);
+        ctx.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void showProgressBar() {
+        progressBarHolder.setVisibility(View.VISIBLE);
+        ctx.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        ImgV.setVisibility(View.VISIBLE);
+        ImgV.invalidate();
     }
 
     @Override

@@ -55,6 +55,12 @@ public class InvoiceDetailModel {
         @SerializedName("Name")
         @Expose
         private String name;
+        @SerializedName("Qty")
+        @Expose
+        private String qty;
+        @SerializedName("Session")
+        @Expose
+        private String session;
         @SerializedName("TotalAmount")
         @Expose
         private String totalAmount;
@@ -70,6 +76,37 @@ public class InvoiceDetailModel {
         @SerializedName("InvoiceTo")
         @Expose
         private String invoiceTo;
+        @SerializedName("InvoiceDate")
+        @Expose
+        private String invoiceDate;
+        @SerializedName("Email")
+        @Expose
+        private String email;
+        @SerializedName("GSTAmount")
+        @Expose
+        private String gstAmount;
+        @SerializedName("Amount")
+        @Expose
+        private String amount;
+        @SerializedName("InvoiceFrom")
+        @Expose
+        private String invoiceFrom;
+
+        public String getQty() {
+            return qty;
+        }
+
+        public void setQty(String qty) {
+            this.qty = qty;
+        }
+
+        public String getSession() {
+            return session;
+        }
+
+        public void setSession(String session) {
+            this.session = session;
+        }
 
         public String getInvoiceNumber() {
             return invoiceNumber;
@@ -117,6 +154,46 @@ public class InvoiceDetailModel {
 
         public void setDiscountedAmount(String discountedAmount) {
             this.discountedAmount = discountedAmount;
+        }
+
+        public String getInvoiceDate() {
+            return invoiceDate;
+        }
+
+        public void setInvoiceDate(String invoiceDate) {
+            this.invoiceDate = invoiceDate;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getGstAmount() {
+            return gstAmount;
+        }
+
+        public void setGstAmount(String gstAmount) {
+            this.gstAmount = gstAmount;
+        }
+
+        public String getAmount() {
+            return amount;
+        }
+
+        public void setAmount(String amount) {
+            this.amount = amount;
+        }
+
+        public String getInvoiceFrom() {
+            return invoiceFrom;
+        }
+
+        public void setInvoiceFrom(String invoiceFrom) {
+            this.invoiceFrom = invoiceFrom;
         }
 
         public String getInvoiceTo() {

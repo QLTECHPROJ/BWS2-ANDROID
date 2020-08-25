@@ -36,6 +36,16 @@ public class AppointmentDetailsFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment_details, container, false);
         View view = binding.getRoot();
 
+        binding.llBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment sessionsFragment = new SessionsFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.flSession, sessionsFragment)
+                        .commit();
+            }
+        });
         binding.viewPager.setOffscreenPageLimit(4);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));

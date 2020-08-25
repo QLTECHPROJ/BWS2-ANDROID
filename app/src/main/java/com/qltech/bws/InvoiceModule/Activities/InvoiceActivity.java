@@ -16,16 +16,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
-import com.qltech.bws.DownloadModule.Fragments.AudioDownloadsFragment;
-import com.qltech.bws.DownloadModule.Fragments.PlaylistsDownlaodsFragment;
-import com.qltech.bws.DownloadModule.Models.DownloadsHistoryModel;
 import com.qltech.bws.InvoiceModule.Fragments.AppointmentInvoiceFragment;
 import com.qltech.bws.InvoiceModule.Fragments.MembershipInvoiceFragment;
 import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
-import com.qltech.bws.LoginModule.Activities.CountrySelectActivity;
-import com.qltech.bws.LoginModule.Adapters.CountrySelectAdapter;
-import com.qltech.bws.LoginModule.Models.CountryListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -105,6 +98,7 @@ public class InvoiceActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<InvoiceListModel> call, Throwable t) {
+                    hideProgressBar();
                 }
             });
         } else {

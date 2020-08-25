@@ -21,7 +21,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:cardCornerRadius="@dimen/_10sdp"
-                android:layout_marginHorizontal="@dimen/_9sdp">
+                android:layout_marginVertical="@dimen/_2sdp"
+                android:layout_marginHorizontal="@dimen/_10sdp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/title_layout"
@@ -59,7 +60,6 @@
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="start"
                 android:maxLines="1"
-                android:text="Motivation Program"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp" />
 
@@ -69,8 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_6sdp"
                 android:fontFamily="@font/montserrat_medium"
-                android:gravity="left"
-                android:text="12:37"
+                android:gravity="start"
                 android:textColor="@color/extra_light_gray"
                 android:textSize="@dimen/_14sdp" />
 

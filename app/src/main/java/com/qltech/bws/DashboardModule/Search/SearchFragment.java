@@ -69,11 +69,11 @@ public class SearchFragment extends Fragment {
 //                binding.textSearch.setText(s);
             }
         });
-        prepareSuggestionAudioData();
+//        prepareSuggestionAudioData();
         return view;
     }
 
-    private void prepareSuggestionAudioData() {
+   /* private void prepareSuggestionAudioData() {
         SuggestionAudiosModel list = new SuggestionAudiosModel("Motivation Program", R.drawable.add_icon);
         listModelList.add(list);
         list = new SuggestionAudiosModel("Self-Discipline Program", R.drawable.add_icon);
@@ -82,5 +82,5 @@ public class SearchFragment extends Fragment {
         listModelList.add(list);
         list = new SuggestionAudiosModel("I Can Attitude and Mind...", R.drawable.add_icon);
         listModelList.add(list);
-    }
+    }*/
 }

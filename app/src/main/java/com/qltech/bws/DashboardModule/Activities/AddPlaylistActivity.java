@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.DashboardModule.Models.AddPlaylistModel;
+import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.qltech.bws.R;
@@ -83,14 +84,19 @@ public class AddPlaylistActivity extends AppCompatActivity {
                             Toast.makeText(AddPlaylistActivity.this, "Please enter playlist name", Toast.LENGTH_SHORT).show();
                         } else {
                             if (BWSApplication.isNetworkConnected(AddPlaylistActivity.this)) {
-                                Call<SucessModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
-                                listCall.enqueue(new Callback<SucessModel>() {
+                                Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
+                                listCall.enqueue(new Callback<CreatePlaylistModel>() {
                                     @Override
-                                    public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                    public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
                                         if (response.isSuccessful()) {
-                                            SucessModel listModel = response.body();
+                                            CreatePlaylistModel listModel = response.body();
+                                            Bundle bundle = new Bundle();
                                             Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                                             FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                            bundle.putString("New", "1");
+                                            bundle.putString("PlaylistID", listModel.getResponseData().getId());
+                                            bundle.putString("PlaylistName", listModel.getResponseData().getName());
+                                            myPlaylistsFragment.setArguments(bundle);
                                             fragmentManager1.beginTransaction()
                                                     .replace(R.id.rlPlaylist, myPlaylistsFragment).
                                                     addToBackStack("MyPlaylistsFragment")
@@ -100,7 +106,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     }
 
                                     @Override
-                                    public void onFailure(Call<SucessModel> call, Throwable t) {
+                                    public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
                                     }
                                 });
                             } else {
@@ -166,7 +172,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            holder.binding.ivRestaurantImage.setImageResource(R.drawable.square_logo);
         }
 
         @Override

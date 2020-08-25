@@ -2,6 +2,7 @@ package com.qltech.bws.ResourceModule.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -42,7 +44,7 @@ public class PodcastsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_podcasts, container, false);
         View view = binding.getRoot();
-
+        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             podcasts = bundle.getString("podcasts");
@@ -58,12 +60,14 @@ public class PodcastsFragment extends Fragment {
     }
 
     void prepareData() {
+        showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
             Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_TWO,"");
             listCall.enqueue(new Callback<ResourceListModel>() {
                 @Override
                 public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
                     if (response.isSuccessful()) {
+                        hideProgressBar();
                         ResourceListModel listModel = response.body();
                         PodcastsAdapter adapter = new PodcastsAdapter(listModel.getResponseData(), getActivity(), podcasts);
                         binding.rvPodcastsList.setAdapter(adapter);
@@ -72,11 +76,25 @@ public class PodcastsFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                    hideProgressBar();
                 }
             });
         } else {
             Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void hideProgressBar() {
+        binding.progressBarHolder.setVisibility(View.GONE);
+        binding.ImgV.setVisibility(View.GONE);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void showProgressBar() {
+        binding.progressBarHolder.setVisibility(View.VISIBLE);
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        binding.ImgV.setVisibility(View.VISIBLE);
+        binding.ImgV.invalidate();
     }
 
     public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.MyViewHolder> {
@@ -104,6 +122,9 @@ public class PodcastsFragment extends Fragment {
             holder.binding.tvCreator.setText(listModelList.get(position).getAuthor());
             Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.1f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                holder.binding.rlMainLayout.setElevation(10);
+            }
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

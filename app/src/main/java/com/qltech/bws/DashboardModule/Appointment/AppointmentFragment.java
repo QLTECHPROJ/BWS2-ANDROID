@@ -1,6 +1,7 @@
 package com.qltech.bws.DashboardModule.Appointment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,11 +18,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.qltech.bws.BillingOrderModule.Models.CurrentPlanVieViewModel;
 import com.qltech.bws.DashboardModule.Models.PreviousAppointmentsModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentAppointmentBinding;
 import com.qltech.bws.databinding.PreviousAppointmentsLayoutBinding;
@@ -29,11 +37,15 @@ import com.qltech.bws.databinding.PreviousAppointmentsLayoutBinding;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AppointmentFragment extends Fragment {
-    List<PreviousAppointmentsModel> previousAppointmentsList = new ArrayList<>();
     FragmentAppointmentBinding binding;
     private AppointmentViewModel appointmentViewModel;
     public FragmentManager f_manager;
+    String UserID;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -42,18 +54,13 @@ public class AppointmentFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment, container, false);
         View view = binding.getRoot();
 
-        binding.ivStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.ivStatus.setImageResource(R.drawable.ic_play_icon);
-            }
-        });
+        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        PreviousAppointmentsAdapter appointmentsAdapter = new PreviousAppointmentsAdapter(previousAppointmentsList, getActivity(), f_manager);
-        RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPreviousData.setLayoutManager(recentlyPlayed);
         binding.rvPreviousData.setItemAnimator(new DefaultItemAnimator());
-        binding.rvPreviousData.setAdapter(appointmentsAdapter);
 
         binding.cvSetSession.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,32 +79,38 @@ public class AppointmentFragment extends Fragment {
     }
 
     private void preparePreviousAppointmentsData() {
-        PreviousAppointmentsModel list = new PreviousAppointmentsModel("Emotional empowerment program");
-        previousAppointmentsList.add(list);
-        list = new PreviousAppointmentsModel("Conditioned series");
-        previousAppointmentsList.add(list);
-        list = new PreviousAppointmentsModel("Non-spa menu");
-        previousAppointmentsList.add(list);
-        list = new PreviousAppointmentsModel("Phone emotional empowerment program");
-        previousAppointmentsList.add(list);
-        list = new PreviousAppointmentsModel("Emotional empowerment program");
-        previousAppointmentsList.add(list);
-        list = new PreviousAppointmentsModel("Conditioned series");
-        previousAppointmentsList.add(list);
-        list = new PreviousAppointmentsModel("Non-spa menu");
-        previousAppointmentsList.add(list);
-        list = new PreviousAppointmentsModel("Phone emotional empowerment program");
-        previousAppointmentsList.add(list);
+        showProgressBar();
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            Call<PreviousAppointmentsModel> listCall = APIClient.getClient().getAppointmentVIew(UserID);
+            listCall.enqueue(new Callback<PreviousAppointmentsModel>() {
+                @Override
+                public void onResponse(Call<PreviousAppointmentsModel> call, Response<PreviousAppointmentsModel> response) {
+                    if (response.isSuccessful()) {
+                        hideProgressBar();
+                        PreviousAppointmentsModel listModel = response.body();
+                        PreviousAppointmentsAdapter appointmentsAdapter = new PreviousAppointmentsAdapter(listModel.getResponseData(), getActivity(), f_manager);
+                        binding.rvPreviousData.setAdapter(appointmentsAdapter);
+                    }
+                }
 
+                @Override
+                public void onFailure(Call<PreviousAppointmentsModel> call, Throwable t) {
+                    hideProgressBar();
+                }
+            });
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+        }
     }
 
+
     public class PreviousAppointmentsAdapter extends RecyclerView.Adapter<PreviousAppointmentsAdapter.MyViewHolder> {
-        private List<PreviousAppointmentsModel> listModelList;
+        private List<PreviousAppointmentsModel.ResponseData> listModel;
         Context ctx;
         public FragmentManager f_manager;
 
-        public PreviousAppointmentsAdapter(List<PreviousAppointmentsModel> listModelList, Context ctx, FragmentManager f_manager) {
-            this.listModelList = listModelList;
+        public PreviousAppointmentsAdapter(List<PreviousAppointmentsModel.ResponseData> listModel, Context ctx, FragmentManager f_manager) {
+            this.listModel = listModel;
             this.ctx = ctx;
             this.f_manager = f_manager;
         }
@@ -111,16 +124,14 @@ public class AppointmentFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            PreviousAppointmentsModel listModel = listModelList.get(position);
-            holder.binding.tvTitle.setText(listModel.getTitle());
-
+            holder.binding.tvTitle.setText(listModel.get(position).getCategory());
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.11f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            holder.binding.ivRestaurantImage.setImageResource(R.drawable.square_logo);
-
+            Glide.with(ctx).load(listModel.get(position).getImage()).thumbnail(0.1f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -136,7 +147,7 @@ public class AppointmentFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return listModelList.size();
+            return listModel.size();
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -149,4 +160,16 @@ public class AppointmentFragment extends Fragment {
         }
     }
 
+    private void hideProgressBar() {
+        binding.progressBarHolder.setVisibility(View.GONE);
+        binding.ImgV.setVisibility(View.GONE);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void showProgressBar() {
+        binding.progressBarHolder.setVisibility(View.VISIBLE);
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        binding.ImgV.setVisibility(View.VISIBLE);
+        binding.ImgV.invalidate();
+    }
 }

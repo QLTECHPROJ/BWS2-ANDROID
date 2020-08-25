@@ -11,7 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter;
 import com.qltech.bws.DownloadModule.Adapters.PlaylistsDownloadsAdapter;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
@@ -32,7 +36,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_downloads, container, false);
         View view = binding.getRoot();
-
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
             playlistList = getArguments().getParcelableArrayList("playlistsDownlaodsFragment");
@@ -43,7 +46,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
 
         if (playlistList.size() != 0) {
-            getDataList(playlistList, UserID);
+            getDataList(playlistList, UserID, binding.progressBarHolder, binding.ImgV);
             binding.llError.setVisibility(View.GONE);
             binding.rvDownloadsList.setVisibility(View.VISIBLE);
         } else {
@@ -53,12 +56,12 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         return view;
     }
 
-    private void getDataList(ArrayList<DownloadlistModel.Playlist> historyList,String UserID) {
+    private void getDataList(ArrayList<DownloadlistModel.Playlist> historyList, String UserID, FrameLayout progressBarHolder, ImageView ImgV) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
         } else {
             binding.llError.setVisibility(View.GONE);
-            PlaylistsDownloadsAdapter adapter = new PlaylistsDownloadsAdapter(historyList, getActivity(), UserID);
+            PlaylistsDownloadsAdapter adapter = new PlaylistsDownloadsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV);
             binding.rvDownloadsList.setAdapter(adapter);
         }
     }

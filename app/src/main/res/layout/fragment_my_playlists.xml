@@ -164,17 +164,21 @@
                         android:src="@drawable/ic_blue_play_icon" />
 
                     <LinearLayout
+                        android:id="@+id/llAddAudio"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@id/ivPlaylistStatus"
                         android:gravity="center"
+                        android:layout_marginTop="@dimen/_40sdp"
+                        android:layout_centerInParent="true"
                         android:orientation="vertical"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/_16sdp"
+                            android:layout_marginTop="@dimen/_20sdp"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="center"
                             android:text="Let's find some Audios for your playlist."
@@ -185,9 +189,8 @@
                             android:id="@+id/btnAddAudio"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true"
                             android:layout_marginHorizontal="@dimen/_55sdp"
+                            android:layout_marginTop="@dimen/_30sdp"
                             android:layout_marginBottom="@dimen/_25sdp"
                             android:background="@drawable/extra_round_cornor"
                             android:fontFamily="@font/montserrat_bold"
@@ -198,10 +201,12 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llListing"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ivPlaylistStatus"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <RelativeLayout
                             android:id="@+id/rlSearch"
@@ -223,13 +228,29 @@
                                 android:src="@drawable/ic_search_icon"
                                 app:tint="@color/dark_blue_gray" />
 
+                            <TextView
+                                android:id="@+id/tvSearch"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_16sdp"
+                                android:layout_marginTop="@dimen/_20sdp"
+                                android:layout_marginRight="@dimen/_16sdp"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:gravity="start"
+                                android:layout_centerVertical="true"
+                                android:layout_toRightOf="@id/button1"
+                                android:text="@string/Search_for_audio"
+                                android:textColor="@color/light_gray"
+                                android:textSize="@dimen/_16sdp" />
+
                             <androidx.appcompat.widget.SearchView
                                 android:id="@+id/searchView"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_centerVertical="true"
-                                android:layout_toRightOf="@id/button1"
+                                android:clickable="false"
                                 android:focusable="true"
+                                android:visibility="gone"
                                 android:iconifiedByDefault="false"
                                 android:singleLine="true"
                                 android:theme="@style/WallSearchView"
@@ -248,7 +269,8 @@
                             android:layout_marginLeft="@dimen/_10sdp"
                             android:layout_marginRight="@dimen/_10sdp"
                             android:overScrollMode="never"
-                            android:paddingTop="@dimen/_8sdp" />
+                            android:paddingTop="@dimen/_8sdp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:layout_width="match_parent"

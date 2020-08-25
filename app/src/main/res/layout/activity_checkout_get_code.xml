@@ -163,7 +163,7 @@
                                         android:background="@null"
                                         android:inputType="number"
                                         android:textCursorDrawable="@null"
-                                        android:maxLength="9"
+                                        android:maxLength="10"
                                         android:backgroundTint="@color/dim_light_gray"
                                         android:fontFamily="@font/montserrat_medium"
                                         android:hint="@string/phone_number"

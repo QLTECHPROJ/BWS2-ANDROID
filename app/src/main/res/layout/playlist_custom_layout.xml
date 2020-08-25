@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/rlMainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_8sdp"
         android:layout_marginTop="@dimen/_16sdp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:gravity="center_horizontal">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -18,43 +18,50 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/title_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_4sdp">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/ivRestaurantImage"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scaleType="fitXY"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/background_image" />
+
+                <TextView
+                    android:id="@+id/tvPlaylistName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:gravity="start"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:maxLines="2"
+                    android:paddingLeft="@dimen/_13sdp"
+                    android:paddingTop="@dimen/_8sdp"
+                    android:paddingRight="@dimen/_13sdp"
+                    android:paddingBottom="@dimen/_8sdp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_15sdp" />
+
+                <ImageView
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:layout_marginLeft="@dimen/_8sdp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:src="@drawable/ic_lock_icon"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:contentDescription="TODO" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/tvPlaylistName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/gradient"
-            android:fontFamily="@font/montserrat_semi_bold"
-            android:gravity="left"
-            android:maxLines="2"
-            android:paddingLeft="@dimen/_13sdp"
-            android:paddingTop="@dimen/_8sdp"
-            android:paddingRight="@dimen/_13sdp"
-            android:paddingBottom="@dimen/_8sdp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_15sdp" />
 
-        <ImageView
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:layout_marginLeft="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:src="@drawable/ic_lock_icon" />
 
     </RelativeLayout>
 </layout>

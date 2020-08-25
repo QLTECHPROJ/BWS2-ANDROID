@@ -114,6 +114,9 @@ public class InvoiceListModel {
         @SerializedName("InvoiceId")
         @Expose
         private String invoiceId;
+        @SerializedName("InvoiceNumber")
+        @Expose
+        private String invoiceNumber;
         @SerializedName("Email")
         @Expose
         private String email;
@@ -135,9 +138,16 @@ public class InvoiceListModel {
         @SerializedName("Date")
         @Expose
         private String date;
+        @SerializedName("InvoicePdf")
+        @Expose
+        private String invoicePdf;
+        @SerializedName("InvoicePdfV")
+        @Expose
+        private String invoicePdfV;
 
         protected Appointment(Parcel in) {
             invoiceId = in.readString();
+            invoiceNumber = in.readString();
             email = in.readString();
             name = in.readString();
             interval = in.readString();
@@ -145,6 +155,8 @@ public class InvoiceListModel {
             invoiceUrl = in.readString();
             amount = in.readString();
             date = in.readString();
+            invoicePdf = in.readString();
+            invoicePdfV = in.readString();
         }
 
         public static final Creator<Appointment> CREATOR = new Creator<Appointment>() {
@@ -165,6 +177,30 @@ public class InvoiceListModel {
 
         public void setInvoiceId(String invoiceId) {
             this.invoiceId = invoiceId;
+        }
+
+        public String getInvoiceNumber() {
+            return invoiceNumber;
+        }
+
+        public void setInvoiceNumber(String invoiceNumber) {
+            this.invoiceNumber = invoiceNumber;
+        }
+
+        public String getInvoicePdf() {
+            return invoicePdf;
+        }
+
+        public void setInvoicePdf(String invoicePdf) {
+            this.invoicePdf = invoicePdf;
+        }
+
+        public String getInvoicePdfV() {
+            return invoicePdfV;
+        }
+
+        public void setInvoicePdfV(String invoicePdfV) {
+            this.invoicePdfV = invoicePdfV;
         }
 
         public static Creator<Appointment> getCREATOR() {
@@ -235,6 +271,7 @@ public class InvoiceListModel {
         @Override
         public void writeToParcel(Parcel dest, int i) {
             dest.writeString(invoiceId);
+            dest.writeString(invoiceNumber);
             dest.writeString(email);
             dest.writeString(name);
             dest.writeString(interval);
@@ -242,6 +279,8 @@ public class InvoiceListModel {
             dest.writeString(invoiceUrl);
             dest.writeString(amount);
             dest.writeString(date);
+            dest.writeString(invoicePdf);
+            dest.writeString(invoicePdfV);
         }
     }
 
@@ -270,6 +309,12 @@ public class InvoiceListModel {
         @SerializedName("Date")
         @Expose
         private String date;
+        @SerializedName("InvoicePdf")
+        @Expose
+        private String invoicePdf;
+        @SerializedName("InvoicePdfV")
+        @Expose
+        private String invoicePdfV;
 
         protected MemberShip(Parcel in) {
             invoiceId = in.readString();
@@ -280,6 +325,8 @@ public class InvoiceListModel {
             invoiceUrl = in.readString();
             amount = in.readString();
             date = in.readString();
+            invoicePdf = in.readString();
+            invoicePdfV = in.readString();
         }
 
         public static final Creator<MemberShip> CREATOR = new Creator<MemberShip>() {
@@ -312,6 +359,22 @@ public class InvoiceListModel {
 
         public void setEmail(String email) {
             this.email = email;
+        }
+
+        public String getInvoicePdf() {
+            return invoicePdf;
+        }
+
+        public void setInvoicePdf(String invoicePdf) {
+            this.invoicePdf = invoicePdf;
+        }
+
+        public String getInvoicePdfV() {
+            return invoicePdfV;
+        }
+
+        public void setInvoicePdfV(String invoicePdfV) {
+            this.invoicePdfV = invoicePdfV;
         }
 
         public String getName() {
@@ -377,6 +440,8 @@ public class InvoiceListModel {
             dest.writeString(invoiceUrl);
             dest.writeString(amount);
             dest.writeString(date);
+            dest.writeString(invoicePdf);
+            dest.writeString(invoicePdfV);
         }
     }
 }

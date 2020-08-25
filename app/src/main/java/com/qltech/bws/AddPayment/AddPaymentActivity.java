@@ -199,7 +199,7 @@ public class AddPaymentActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onFailure(Call<CardModel> call, Throwable t) {
-
+                                        hideProgressBar();
                                     }
 
                                 });

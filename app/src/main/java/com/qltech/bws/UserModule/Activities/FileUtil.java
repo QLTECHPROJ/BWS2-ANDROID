@@ -11,7 +11,6 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
 public class FileUtil {
-
     @SuppressLint("NewApi")
     public static String getPath(Uri uri, Context context) {
         final boolean needToCheckUri = Build.VERSION.SDK_INT >= 19;

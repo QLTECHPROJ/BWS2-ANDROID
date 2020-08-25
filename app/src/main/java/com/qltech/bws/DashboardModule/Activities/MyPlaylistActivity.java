@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -37,6 +38,7 @@ import retrofit2.Response;
 public class MyPlaylistActivity extends AppCompatActivity {
     ActivityMyPlaylistBinding binding;
     String UserID, PlaylistID;
+    Context ctx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         Glide.with(MyPlaylistActivity.this).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
+        ctx = MyPlaylistActivity.this;
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,12 +83,14 @@ public class MyPlaylistActivity extends AppCompatActivity {
                         if (edtCreate.getText().toString().equalsIgnoreCase("")) {
                             Toast.makeText(MyPlaylistActivity.this, "Please enter playlist name", Toast.LENGTH_SHORT).show();
                         } else {
+                            showProgressBar();
                             if (BWSApplication.isNetworkConnected(MyPlaylistActivity.this)) {
                                 Call<RenamePlaylistModel> listCall = APIClient.getClient().getRenamePlaylist(UserID, PlaylistID, edtCreate.getText().toString());
                                 listCall.enqueue(new Callback<RenamePlaylistModel>() {
                                     @Override
                                     public void onResponse(Call<RenamePlaylistModel> call, Response<RenamePlaylistModel> response) {
                                         if (response.isSuccessful()) {
+                                            hideProgressBar();
                                             RenamePlaylistModel listModel = response.body();
                                             Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                                             FragmentManager fragmentManager1 = getSupportFragmentManager();
@@ -100,6 +104,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onFailure(Call<RenamePlaylistModel> call, Throwable t) {
+                                        hideProgressBar();
                                     }
                                 });
                             } else {
@@ -128,12 +133,14 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 tvconfirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        showProgressBar();
                         if (BWSApplication.isNetworkConnected(MyPlaylistActivity.this)) {
                             Call<SucessModel> listCall = APIClient.getClient().getDeletePlaylist(UserID, PlaylistID);
                             listCall.enqueue(new Callback<SucessModel>() {
                                 @Override
                                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                                     if (response.isSuccessful()) {
+                                        hideProgressBar();
                                         SucessModel listModel = response.body();
                                         Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                                         FragmentManager fragmentManager1 = getSupportFragmentManager();
@@ -147,6 +154,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<SucessModel> call, Throwable t) {
+                                    hideProgressBar();
                                 }
                             });
                         } else {
@@ -165,5 +173,48 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 dialog.setCancelable(false);
             }
         });
+
+        binding.llDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    showProgressBar();
+                    Call<SucessModel> listCall = null;
+                    listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
+                    listCall.enqueue(new Callback<SucessModel>() {
+                        @Override
+                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                            if (response.isSuccessful()) {
+                                hideProgressBar();
+                                SucessModel model = response.body();
+                                Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<SucessModel> call, Throwable t) {
+                            hideProgressBar();
+                        }
+                    });
+
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    private void hideProgressBar() {
+        binding.progressBarHolder.setVisibility(View.GONE);
+        binding.ImgV.setVisibility(View.GONE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void showProgressBar() {
+        binding.progressBarHolder.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        binding.ImgV.setVisibility(View.VISIBLE);
+        binding.ImgV.invalidate();
     }
 }

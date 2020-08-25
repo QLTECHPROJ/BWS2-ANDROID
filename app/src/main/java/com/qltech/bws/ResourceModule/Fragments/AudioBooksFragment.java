@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -44,7 +45,7 @@ public class AudioBooksFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_audio_books, container, false);
         View view = binding.getRoot();
-
+        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             audio_books = bundle.getString("audio_books");
@@ -61,6 +62,7 @@ public class AudioBooksFragment extends Fragment {
     }
 
     void prepareData() {
+        showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
             Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_ONE,"");
             listCall.enqueue(new Callback<ResourceListModel>() {
@@ -68,6 +70,7 @@ public class AudioBooksFragment extends Fragment {
                 public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
                     if (response.isSuccessful()) {
                         ResourceListModel listModel = response.body();
+                        hideProgressBar();
                         AudioBooksAdapter adapter = new AudioBooksAdapter(listModel.getResponseData(), getActivity(), audio_books);
                         binding.rvAudioBooksList.setAdapter(adapter);
                     }
@@ -75,11 +78,25 @@ public class AudioBooksFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                    hideProgressBar();
                 }
             });
         } else {
             Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void hideProgressBar() {
+        binding.progressBarHolder.setVisibility(View.GONE);
+        binding.ImgV.setVisibility(View.GONE);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void showProgressBar() {
+        binding.progressBarHolder.setVisibility(View.VISIBLE);
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        binding.ImgV.setVisibility(View.VISIBLE);
+        binding.ImgV.invalidate();
     }
 
     public class AudioBooksAdapter extends RecyclerView.Adapter<AudioBooksAdapter.MyViewHolder> {

@@ -11,7 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter;
 import com.qltech.bws.DownloadModule.Models.AudioListModel;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
@@ -33,7 +37,7 @@ public class AudioDownloadsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_downloads, container, false);
         View view = binding.getRoot();
-
+        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
             audioList = getArguments().getParcelableArrayList("audioDownloadsFragment");
@@ -44,7 +48,7 @@ public class AudioDownloadsFragment extends Fragment {
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
 
         if (audioList.size() != 0) {
-            getDataList(audioList, UserID);
+            getDataList(audioList, UserID, binding.progressBarHolder, binding.ImgV);
             binding.llError.setVisibility(View.GONE);
             binding.rvDownloadsList.setVisibility(View.VISIBLE);
         } else {
@@ -55,12 +59,14 @@ public class AudioDownloadsFragment extends Fragment {
 
         return view;
     }
-    private void getDataList(ArrayList<DownloadlistModel.Audio> historyList, String UserID) {
+
+
+    private void getDataList(ArrayList<DownloadlistModel.Audio> historyList, String UserID, FrameLayout progressBarHolder, ImageView ImgV) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
         } else {
             binding.llError.setVisibility(View.GONE);
-            AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(historyList, getActivity(), UserID);
+            AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV);
             binding.rvDownloadsList.setAdapter(adapter);
         }
     }

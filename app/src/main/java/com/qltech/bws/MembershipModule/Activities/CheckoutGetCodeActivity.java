@@ -65,6 +65,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                 Intent i = new Intent(ctx, CountrySelectActivity.class);
                 i.putExtra("Check", "0");
                 startActivity(i);
+                finish();
             }
         });
 
@@ -94,7 +95,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             binding.txtError.setVisibility(View.GONE);
             if (BWSApplication.isNetworkConnected(ctx)) {
                 showProgressBar();
-                Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(binding.edtNumber.getText().toString(), binding.tvCountryCode.getText().toString(), CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
+                Call<LoginModel> listCall = APIClient.getClient().getSignUpDatas(binding.edtNumber.getText().toString(), binding.tvCountryCode.getText().toString(), CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
                 listCall.enqueue(new Callback<LoginModel>() {
                     @Override
                     public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {

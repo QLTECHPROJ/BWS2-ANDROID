@@ -84,10 +84,12 @@
                                 android:layout_centerVertical="true"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:paddingLeft="@dimen/_16sdp"
+                                android:layout_toLeftOf="@id/ivArrow"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_16sdp" />
 
                             <ImageView
+                                android:id="@+id/ivArrow"
                                 android:layout_width="@dimen/_35sdp"
                                 android:layout_height="@dimen/_40sdp"
                                 android:layout_alignParentRight="true"
@@ -114,7 +116,7 @@
                                 android:layout_weight="0.18"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:paddingVertical="@dimen/_11sdp"
-                                android:paddingLeft="@dimen/_16sdp"
+                                android:paddingLeft="@dimen/_14sdp"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_16sdp" />
 
@@ -135,7 +137,7 @@
                                     android:layout_height="wrap_content"
                                     android:background="@null"
                                     android:inputType="number"
-                                    android:maxLength="9"
+                                    android:maxLength="10"
                                     android:textCursorDrawable="@null"
                                     android:backgroundTint="@color/dim_light_gray"
                                     android:fontFamily="@font/montserrat_medium"

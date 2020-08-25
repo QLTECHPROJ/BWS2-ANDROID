@@ -57,13 +57,13 @@ public class CountrySelectAdapter extends RecyclerView.Adapter<CountrySelectAdap
             public void onClick(View view) {
                 if (Check.equalsIgnoreCase("0")){
                     Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
-                    i.putExtra("Name",modelList.get(position).getName());
-                    i.putExtra("Code",modelList.get(position).getCode());
+                    i.putExtra("Name",mData.getName());
+                    i.putExtra("Code",mData.getCode());
                     ctx.startActivity(i);
                 }else if (Check.equalsIgnoreCase("1")){
                     Intent i = new Intent(ctx, LoginActivity.class);
-                    i.putExtra("Name",modelList.get(position).getName());
-                    i.putExtra("Code",modelList.get(position).getCode());
+                    i.putExtra("Name",mData.getName());
+                    i.putExtra("Code",mData.getCode());
                     ctx.startActivity(i);
                 }
 

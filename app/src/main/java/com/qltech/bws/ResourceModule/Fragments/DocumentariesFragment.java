@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -45,7 +46,7 @@ public class DocumentariesFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_documentaries, container, false);
         View view = binding.getRoot();
-
+        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             documentaries = bundle.getString("documentaries");
@@ -60,6 +61,7 @@ public class DocumentariesFragment extends Fragment {
     }
 
     void prepareData() {
+        showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
             Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_TWO,"");
             listCall.enqueue(new Callback<ResourceListModel>() {
@@ -67,6 +69,7 @@ public class DocumentariesFragment extends Fragment {
                 public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
                     if (response.isSuccessful()) {
                         ResourceListModel listModel = response.body();
+                        hideProgressBar();
                         DocumentariesAdapter adapter = new DocumentariesAdapter(listModel.getResponseData(), getActivity(), documentaries);
                         binding.rvDocumentariesList.setAdapter(adapter);
                     }
@@ -74,11 +77,25 @@ public class DocumentariesFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                    hideProgressBar();
                 }
             });
         } else {
             Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void hideProgressBar() {
+        binding.progressBarHolder.setVisibility(View.GONE);
+        binding.ImgV.setVisibility(View.GONE);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void showProgressBar() {
+        binding.progressBarHolder.setVisibility(View.VISIBLE);
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        binding.ImgV.setVisibility(View.VISIBLE);
+        binding.ImgV.invalidate();
     }
 
     public class DocumentariesAdapter extends RecyclerView.Adapter<DocumentariesAdapter.MyViewHolder> {
@@ -104,8 +121,8 @@ public class DocumentariesFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModelList.get(position).getTitle());
             holder.binding.tvCreator.setText(listModelList.get(position).getAuthor());
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.4f, 0);
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 2,
+                    4, 2, 0.8f, 2);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);

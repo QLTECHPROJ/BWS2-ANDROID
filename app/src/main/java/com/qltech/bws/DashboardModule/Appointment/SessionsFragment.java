@@ -39,7 +39,11 @@ public class SessionsFragment extends Fragment {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+               /* Fragment appointmentFragment = new AppointmentFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.flMainLayout, appointmentFragment)
+                        .commit();*/
             }
         });
         SessionListAdapter appointmentsAdapter = new SessionListAdapter(sessionList, getActivity(), f_manager);

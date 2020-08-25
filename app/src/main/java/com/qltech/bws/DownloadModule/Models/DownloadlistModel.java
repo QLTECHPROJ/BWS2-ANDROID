@@ -224,6 +224,18 @@ public class DownloadlistModel {
         @SerializedName("PlaylistImage")
         @Expose
         private String playlistImage;
+        @SerializedName("TotalAudio")
+        @Expose
+        private String totalAudio;
+        @SerializedName("TotalDuration")
+        @Expose
+        private String totalDuration;
+        @SerializedName("Totalhour")
+        @Expose
+        private String totalhour;
+        @SerializedName("Totalminute")
+        @Expose
+        private String totalminute;
         @SerializedName("Audiolist")
         @Expose
         private List<Audiolist> audiolist = null;
@@ -232,6 +244,10 @@ public class DownloadlistModel {
             playlistId = in.readString();
             playlistName = in.readString();
             playlistImage = in.readString();
+            totalAudio = in.readString();
+            totalDuration = in.readString();
+            totalhour = in.readString();
+            totalminute = in.readString();
         }
 
         public static final Creator<Playlist> CREATOR = new Creator<Playlist>() {
@@ -252,6 +268,42 @@ public class DownloadlistModel {
 
         public void setPlaylistId(String playlistId) {
             this.playlistId = playlistId;
+        }
+
+        public String getTotalAudio() {
+            return totalAudio;
+        }
+
+        public void setTotalAudio(String totalAudio) {
+            this.totalAudio = totalAudio;
+        }
+
+        public String getTotalDuration() {
+            return totalDuration;
+        }
+
+        public void setTotalDuration(String totalDuration) {
+            this.totalDuration = totalDuration;
+        }
+
+        public String getTotalhour() {
+            return totalhour;
+        }
+
+        public void setTotalhour(String totalhour) {
+            this.totalhour = totalhour;
+        }
+
+        public String getTotalminute() {
+            return totalminute;
+        }
+
+        public void setTotalminute(String totalminute) {
+            this.totalminute = totalminute;
+        }
+
+        public static Creator<Playlist> getCREATOR() {
+            return CREATOR;
         }
 
         public String getPlaylistName() {
@@ -288,6 +340,10 @@ public class DownloadlistModel {
             parcel.writeString(playlistId);
             parcel.writeString(playlistName);
             parcel.writeString(playlistImage);
+            parcel.writeString(totalAudio);
+            parcel.writeString(totalDuration);
+            parcel.writeString(totalhour);
+            parcel.writeString(totalminute);
         }
 
         public class Audiolist {

@@ -51,7 +51,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semi_bold"
-                        android:gravity="left"
+                        android:gravity="start"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_20sdp" />
 
@@ -60,7 +60,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_medium"
-                        android:gravity="left"
+                        android:gravity="start"
                         android:text="@string/view_profile"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_13sdp" />
@@ -82,7 +82,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1.42"
+                android:layout_weight="1.77"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -277,19 +277,19 @@
                         android:textSize="@dimen/_16sdp" />
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/tvVersion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="@dimen/_18sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_horizontal|top"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sdp" />
+
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvVersion"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="@dimen/_18sdp"
-                android:layout_weight="0.35"
-                android:fontFamily="@font/montserrat_regular"
-                android:gravity="center_horizontal|top"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_14sdp" />
 
         </LinearLayout>
 

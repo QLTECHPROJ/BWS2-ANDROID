@@ -57,6 +57,9 @@ public class OtpModel {
         @SerializedName("FirstName")
         @Expose
         private String firstName;
+        @SerializedName("error")
+        @Expose
+        private String error;
         @SerializedName("LastName")
         @Expose
         private String lastName;
@@ -82,6 +85,14 @@ public class OtpModel {
 
         public void setUserID(String userID) {
             this.userID = userID;
+        }
+
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
         }
 
         public String getFirstName() {

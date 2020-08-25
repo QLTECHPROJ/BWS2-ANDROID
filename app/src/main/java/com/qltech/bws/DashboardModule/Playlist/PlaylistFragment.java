@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +35,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 
-import com.qltech.bws.DashboardModule.Models.MainPlayModel;
+import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
+import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
@@ -45,7 +47,6 @@ import com.qltech.bws.databinding.MainAudioLayoutBinding;
 import com.qltech.bws.databinding.PlaylistCustomLayoutBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,7 +55,7 @@ import retrofit2.Response;
 public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
     private PlaylistViewModel playlistViewModel;
-    String UserID;
+    String UserID, Check = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,25 +67,27 @@ public class PlaylistFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
+        if (getArguments() != null) {
+            Check = getArguments().getString("Check");
+        }
+
+       /* if (Check.equalsIgnoreCase("1")){
+            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+            linearParams.setMargins(0, 0, 0, 0);
+            binding.rlPlaylist.setLayoutParams(linearParams);
+        }else {
+            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            linearParams.setMargins(0, 0, 0, 125);
+            binding.rlPlaylist.setLayoutParams(linearParams);
+        }*/
+
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
         binding.rvMainPlayList.setItemAnimator(new DefaultItemAnimator());
 
         prepareData();
-
-        binding.tvExplore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), AddAudioActivity.class);
-                startActivity(i);
-            }
-        });
-        binding.ivStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.ivStatus.setImageResource(R.drawable.ic_play_icon);
-            }
-        });
 
         binding.rlCreatePlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,14 +108,19 @@ public class PlaylistFragment extends Fragment {
                             Toast.makeText(getActivity(), "Please enter playlist name", Toast.LENGTH_SHORT).show();
                         } else {
                             if (BWSApplication.isNetworkConnected(getActivity())) {
-                                Call<SucessModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
-                                listCall.enqueue(new Callback<SucessModel>() {
+                                Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
+                                listCall.enqueue(new Callback<CreatePlaylistModel>() {
                                     @Override
-                                    public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                    public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
                                         if (response.isSuccessful()) {
-                                            SucessModel listModel = response.body();
+                                            CreatePlaylistModel listModel = response.body();
+                                            Bundle bundle = new Bundle();
                                             Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                                             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                                            bundle.putString("New", "1");
+                                            bundle.putString("PlaylistID", listModel.getResponseData().getId());
+                                            bundle.putString("PlaylistName", listModel.getResponseData().getName());
+                                            myPlaylistsFragment.setArguments(bundle);
                                             fragmentManager1.beginTransaction()
                                                     .replace(R.id.rlPlaylist, myPlaylistsFragment).
                                                     addToBackStack("MyPlaylistsFragment")
@@ -122,7 +130,8 @@ public class PlaylistFragment extends Fragment {
                                     }
 
                                     @Override
-                                    public void onFailure(Call<SucessModel> call, Throwable t) {
+                                    public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
+                                        hideProgressBar();
                                     }
                                 });
                             } else {
@@ -150,20 +159,21 @@ public class PlaylistFragment extends Fragment {
     private void prepareData() {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<MainPlayModel> listCall = APIClient.getClient().getMainPlayLists(UserID);
-            listCall.enqueue(new Callback<MainPlayModel>() {
+            Call<MainPlayListModel> listCall = APIClient.getClient().getMainPlayLists(UserID);
+            listCall.enqueue(new Callback<MainPlayListModel>() {
                 @Override
-                public void onResponse(Call<MainPlayModel> call, Response<MainPlayModel> response) {
+                public void onResponse(Call<MainPlayListModel> call, Response<MainPlayListModel> response) {
                     if (response.isSuccessful()) {
                         hideProgressBar();
-                        MainPlayModel listModel = response.body();
+                        MainPlayListModel listModel = response.body();
                         MainPlayListAdapter adapter = new MainPlayListAdapter(listModel.getResponseData(), getActivity());
                         binding.rvMainPlayList.setAdapter(adapter);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<MainPlayModel> call, Throwable t) {
+                public void onFailure(Call<MainPlayListModel> call, Throwable t) {
+                    hideProgressBar();
                 }
             });
         } else {
@@ -172,10 +182,10 @@ public class PlaylistFragment extends Fragment {
     }
 
     public class MainPlayListAdapter extends RecyclerView.Adapter<MainPlayListAdapter.MyViewHolder>  {
-        private ArrayList<MainPlayModel.ResponseData> listModelList;
+        private ArrayList<MainPlayListModel.ResponseData> listModelList;
         Context ctx;
 
-        public MainPlayListAdapter(ArrayList<MainPlayModel.ResponseData> listModelList, Context ctx) {
+        public MainPlayListAdapter(ArrayList<MainPlayListModel.ResponseData> listModelList, Context ctx) {
             this.listModelList = listModelList;
             this.ctx = ctx;
         }
@@ -200,12 +210,16 @@ public class PlaylistFragment extends Fragment {
             holder.binding.tvViewAll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                    Fragment viewAllPlaylistFragment = new ViewAllPlaylistFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .replace(R.id.rlPlaylist, myPlaylistsFragment).
-                            addToBackStack("MyPlaylistsFragment")
+                            .replace(R.id.rlPlaylist, viewAllPlaylistFragment).
+                            addToBackStack("ViewAllPlaylistFragment")
                             .commit();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Name", listModelList.get(position).getView());
+                    bundle.putParcelableArrayList("Audiolist", listModelList.get(position).getDetails());
+                    viewAllPlaylistFragment.setArguments(bundle);
                 }
             });
 
@@ -253,10 +267,10 @@ public class PlaylistFragment extends Fragment {
     }
 
     public class PlaylistAdapter  extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>  {
-        private ArrayList<MainPlayModel.ResponseData.Detail> listModelList;
+        private ArrayList<MainPlayListModel.ResponseData.Detail> listModelList;
         Context ctx;
 
-        public PlaylistAdapter(ArrayList<MainPlayModel.ResponseData.Detail> listModelList, Context ctx) {
+        public PlaylistAdapter(ArrayList<MainPlayListModel.ResponseData.Detail> listModelList, Context ctx) {
             this.listModelList = listModelList;
             this.ctx = ctx;
         }
@@ -272,13 +286,13 @@ public class PlaylistFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.4f, 0);
+                    1, 1, 0.44f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
-            holder.binding.tvPlaylistName.setText(listModelList.get(position).getLibraryName());
-            Glide.with(ctx).load(listModelList.get(position).getLibraryImage()).thumbnail(0.1f)
+            holder.binding.tvPlaylistName.setText(listModelList.get(position).getPlaylistName());
+            Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.1f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
@@ -287,11 +301,10 @@ public class PlaylistFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    bundle.putString("LibraryID", listModelList.get(position).getLibraryID());
-                    bundle.putString("LibraryName", listModelList.get(position).getLibraryName());
-                    bundle.putString("LibraryImage", listModelList.get(position).getLibraryImage());
-                    bundle.putString("TotalAudio", listModelList.get(position).getTotalAudio());
-                    bundle.putParcelableArrayList("Audiolist", listModelList.get(position).getAudiolist());
+                    bundle.putString("New", "0");
+                    bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
+                    bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
+                    bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
                     myPlaylistsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
                             .replace(R.id.rlPlaylist, myPlaylistsFragment).
@@ -321,15 +334,23 @@ public class PlaylistFragment extends Fragment {
     }
 
     private void hideProgressBar() {
-        binding.progressBarHolder.setVisibility(View.GONE);
-        binding.ImgV.setVisibility(View.GONE);
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        try {
+            binding.progressBarHolder.setVisibility(View.GONE);
+            binding.ImgV.setVisibility(View.GONE);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showProgressBar() {
-        binding.progressBarHolder.setVisibility(View.VISIBLE);
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        binding.ImgV.setVisibility(View.VISIBLE);
-        binding.ImgV.invalidate();
+        try {
+            binding.progressBarHolder.setVisibility(View.VISIBLE);
+            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.ImgV.setVisibility(View.VISIBLE);
+            binding.ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

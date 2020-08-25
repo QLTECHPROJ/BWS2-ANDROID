@@ -41,9 +41,9 @@ public class SuggestionAudiosAdpater extends RecyclerView.Adapter<SuggestionAudi
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         SuggestionAudiosModel listModel = listModelList.get(position);
-        holder.binding.ivIcon.setImageResource(listModel.getId());
+    /*    holder.binding.ivIcon.setImageResource(listModel.getId());
         holder.binding.tvTitle.setText(listModel.getTitle());
-
+*/
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.12f, 0);
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());

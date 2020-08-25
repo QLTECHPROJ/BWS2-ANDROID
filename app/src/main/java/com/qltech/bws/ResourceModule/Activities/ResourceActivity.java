@@ -95,42 +95,39 @@ public class ResourceActivity extends AppCompatActivity {
             }
         });
 
-        binding.ivFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LayoutInflater li = LayoutInflater.from(ResourceActivity.this);
-                View promptsView = li.inflate(R.layout.resource_filter_menu, null);
-                Dialog dialogBox;
-                dialogBox = new Dialog(ResourceActivity.this, R.style.AppCompatAlertDialogStyle);
-                Window window = dialogBox.getWindow();
-                window.setBackgroundDrawableResource(android.R.color.transparent);
-                window.requestFeature(window.FEATURE_NO_TITLE);
-                dialogBox.setContentView(promptsView);
-                WindowManager.LayoutParams wlp = window.getAttributes();
-                wlp.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-                dialogBox.getWindow().getDecorView().setBottom(100);
-                dialogBox.getWindow().getDecorView().setRight(100);
-                dialogBox.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                wlp.y = 170;
-                wlp.x = 33;
-                wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-                window.setAttributes(wlp);
-                dialogBox.show();
+        binding.ivFilter.setOnClickListener(view -> {
+            LayoutInflater li = LayoutInflater.from(ResourceActivity.this);
+            View promptsView = li.inflate(R.layout.resource_filter_menu, null);
+            Dialog dialogBox;
+            dialogBox = new Dialog(ResourceActivity.this, R.style.AppCompatAlertDialogStyle);
+            Window window = dialogBox.getWindow();
+            window.setBackgroundDrawableResource(android.R.color.transparent);
+            window.requestFeature(window.FEATURE_NO_TITLE);
+            dialogBox.setContentView(promptsView);
+            WindowManager.LayoutParams wlp = window.getAttributes();
+            wlp.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+            dialogBox.getWindow().getDecorView().setBottom(100);
+            dialogBox.getWindow().getDecorView().setRight(100);
+            dialogBox.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            wlp.y = 170;
+            wlp.x = 33;
+            wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+            window.setAttributes(wlp);
+            dialogBox.show();
 
-                RecyclerView rvFilterList = promptsView.findViewById(R.id.rvFilterList);
-                dialogBox.setOnKeyListener((dialog, keyCode, event) -> {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        finish();
-                    }
-                    return false;
-                });
-                ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModelList, ResourceActivity.this);
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ResourceActivity.this);
-                rvFilterList.setLayoutManager(mLayoutManager);
-                rvFilterList.setItemAnimator(new DefaultItemAnimator());
-                rvFilterList.setAdapter(adapter);
-                prepareResourceFilterData();
-            }
+            RecyclerView rvFilterList = promptsView.findViewById(R.id.rvFilterList);
+            dialogBox.setOnKeyListener((dialog, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    finish();
+                }
+                return false;
+            });
+            ResourceFilterAdapter adapter1 = new ResourceFilterAdapter(listModelList, ResourceActivity.this);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ResourceActivity.this);
+            rvFilterList.setLayoutManager(mLayoutManager);
+            rvFilterList.setItemAnimator(new DefaultItemAnimator());
+            rvFilterList.setAdapter(adapter1);
+            prepareResourceFilterData();
         });
     }
 
@@ -142,12 +139,6 @@ public class ResourceActivity extends AppCompatActivity {
         public TabAdapter(FragmentManager fm, Context myContext, int totalTabs) {
             super(fm);
             this.myContext = myContext;
-            this.totalTabs = totalTabs;
-        }
-
-        public TabAdapter(FragmentManager fm, Callback<DownloadsHistoryModel> transactionHistoryModelCallback, int totalTabs) {
-            super(fm);
-            this.downloadsHistoryModelCallback = transactionHistoryModelCallback;
             this.totalTabs = totalTabs;
         }
 

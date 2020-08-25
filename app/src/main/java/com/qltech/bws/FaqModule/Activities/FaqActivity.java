@@ -1,4 +1,4 @@
-package com.qltech.bws.FaqModule;
+package com.qltech.bws.FaqModule.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -32,5 +32,6 @@ public class FaqActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
     }
 }

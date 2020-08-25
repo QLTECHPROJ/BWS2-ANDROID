@@ -132,7 +132,6 @@ public class UserProfileActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
-
                     dob = spf.format(newDate);
                 }
                 Call<ProfileUpdateModel> listCall = APIClient.getClient().getProfileUpdate(UserID,binding.etUser.getText().toString(),dob,
@@ -149,6 +148,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<ProfileUpdateModel> call, Throwable t) {
+                        hideProgressBar();
                     }
                 });
             }
@@ -298,6 +298,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ProfileViewModel> call, Throwable t) {
+                    hideProgressBar();
                 }
             });
         }
@@ -354,6 +355,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<RemoveProfileModel> call, Throwable t) {
+                                    hideProgressBar();
                                 }
                             });
                         }
@@ -405,6 +407,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<AddProfileModel> call, Throwable t) {
+                            hideProgressBar();
                         }
                     });
                 } else {
@@ -440,6 +443,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<AddProfileModel> call, Throwable t) {
+                            hideProgressBar();
                         }
                     });
                 } else {

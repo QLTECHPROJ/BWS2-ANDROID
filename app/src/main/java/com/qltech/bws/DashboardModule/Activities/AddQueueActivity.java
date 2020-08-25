@@ -1,6 +1,7 @@
 package com.qltech.bws.DashboardModule.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.Dialog;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -156,6 +158,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<AudioLikeModel> call, Throwable t) {
+                            hideProgressBar();
                         }
                     });
                 } else {
@@ -187,6 +190,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<SucessModel> call, Throwable t) {
+                            hideProgressBar();
                         }
                     });
 
@@ -215,11 +219,11 @@ public class AddQueueActivity extends AppCompatActivity {
                         if (directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")){
                             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                         }else if (!directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("0")) {
-                            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                            binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
                         }
 
                         if (directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("1")){
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                             binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
                             binding.ivDownloads.setAlpha(255);
                             binding.llDownload.setClickable(false);
@@ -227,7 +231,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         }else if (!directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("")) {
                             binding.llDownload.setClickable(true);
                             binding.llDownload.setEnabled(true);
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                         }
 
                         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 40,
@@ -306,6 +310,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<DirectionModel> call, Throwable t) {
+                    hideProgressBar();
                     Toast.makeText(ctx, t.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("getMessagegetMessage", "" + t.getMessage());
                 }
