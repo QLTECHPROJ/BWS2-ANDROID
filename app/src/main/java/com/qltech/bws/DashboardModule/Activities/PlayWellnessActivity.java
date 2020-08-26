@@ -156,12 +156,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
-                    Call<SucessModel> listCall = null;
-                    if (AudioId.equalsIgnoreCase("")/* && !PlaylistId.equalsIgnoreCase("")*/) {
-                        listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistId);
-                    } else if (!AudioId.equalsIgnoreCase("")/* && PlaylistId.equalsIgnoreCase("")*/) {
-                        listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, "");
-                    }
+                    Call<SucessModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistId);
                     listCall.enqueue(new Callback<SucessModel>() {
                         @Override
                         public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {

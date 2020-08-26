@@ -36,7 +36,7 @@ public class DirectionAdapter extends RecyclerView.Adapter<DirectionAdapter.MyVi
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         DirectionModel.ResponseData listModel = listModelList.get(position);
-//        holder.binding.tvTitle.setText(listModel.getTitle());
+        holder.binding.tvTitle.setText(listModel.getAudioSubCategory());
     }
 
     @Override

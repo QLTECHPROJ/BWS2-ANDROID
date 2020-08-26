@@ -3,6 +3,9 @@ package com.qltech.bws.DashboardModule.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -29,6 +32,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.qltech.bws.DashboardModule.Adapters.DirectionAdapter;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.DirectionModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
@@ -147,9 +151,9 @@ public class AddQueueActivity extends AppCompatActivity {
                                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                                 hideProgressBar();
                                 AudioLikeModel model = response.body();
-                                if (model.getResponseData().getFlag().equalsIgnoreCase("0")){
+                                if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
                                     binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-                                }else if (model.getResponseData().getFlag().equalsIgnoreCase("1")){
+                                } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                                     binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                                 }
                                 Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
@@ -172,12 +176,7 @@ public class AddQueueActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
-                    Call<SucessModel> listCall = null;
-                    if (AudioId.equalsIgnoreCase("")/* && !PlaylistId.equalsIgnoreCase("")*/) {
-                        listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistId);
-                    } else if (!AudioId.equalsIgnoreCase("")/* && PlaylistId.equalsIgnoreCase("")*/) {
-                        listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, "");
-                    }
+                    Call<SucessModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistId);
                     listCall.enqueue(new Callback<SucessModel>() {
                         @Override
                         public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
@@ -216,19 +215,19 @@ public class AddQueueActivity extends AppCompatActivity {
                         binding.tvDuration.setText(directionModel.getResponseData().get(0).getAudioDuration());
                         binding.tvSubDire.setText(directionModel.getResponseData().get(0).getAudioDirection());
 
-                        if (directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")){
+                        if (directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")) {
                             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                        }else if (!directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("0")) {
+                        } else if (!directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("0")) {
                             binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
                         }
 
-                        if (directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("1")){
+                        if (directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("1")) {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                             binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
                             binding.ivDownloads.setAlpha(255);
                             binding.llDownload.setClickable(false);
                             binding.llDownload.setEnabled(false);
-                        }else if (!directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("")) {
+                        } else if (!directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("")) {
                             binding.llDownload.setClickable(true);
                             binding.llDownload.setEnabled(true);
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
@@ -291,11 +290,11 @@ public class AddQueueActivity extends AppCompatActivity {
                             }
                         });
 
-                           /* DirectionAdapter directionAdapter = new DirectionAdapter(listModelList, ctx);
+                            DirectionAdapter directionAdapter = new DirectionAdapter(directionModel.getResponseData(), ctx);
                             RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
                             binding.rvDirlist.setLayoutManager(recentlyPlayed);
                             binding.rvDirlist.setItemAnimator(new DefaultItemAnimator());
-                            binding.rvDirlist.setAdapter(directionAdapter);*/
+                            binding.rvDirlist.setAdapter(directionAdapter);
 
                         binding.llAddQueue.setOnClickListener(new View.OnClickListener() {
                             @Override

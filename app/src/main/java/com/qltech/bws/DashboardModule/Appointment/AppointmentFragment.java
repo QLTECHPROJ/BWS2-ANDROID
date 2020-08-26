@@ -78,6 +78,12 @@ public class AppointmentFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        preparePreviousAppointmentsData();
+    }
+
     private void preparePreviousAppointmentsData() {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
@@ -102,6 +108,7 @@ public class AppointmentFragment extends Fragment {
             Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
     public class PreviousAppointmentsAdapter extends RecyclerView.Adapter<PreviousAppointmentsAdapter.MyViewHolder> {

@@ -179,8 +179,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
-                    Call<SucessModel> listCall = null;
-                    listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
+                    Call<SucessModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
                     listCall.enqueue(new Callback<SucessModel>() {
                         @Override
                         public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {

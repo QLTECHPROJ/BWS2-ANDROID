@@ -151,6 +151,7 @@ public class MyPlaylistsFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(getActivity(), AddAudioActivity.class);
+                    i.putExtra("PlaylistID",PlaylistID);
                     startActivity(i);
                 }
             });
@@ -224,6 +225,7 @@ public class MyPlaylistsFragment extends Fragment {
                                 @Override
                                 public void onClick(View view) {
                                     Intent i = new Intent(getActivity(), AddAudioActivity.class);
+                                    i.putExtra("PlaylistID",PlaylistID);
                                     startActivity(i);
                                 }
                             });
@@ -312,6 +314,35 @@ public class MyPlaylistsFragment extends Fragment {
                 holder.binding.llDownload.setEnabled(true);
                 holder.binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
+
+            holder.binding.llDownload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        showProgressBar();
+                        String AudioId = listModelList.getPlaylistSongs().get(position).getID();
+                        Call<SucessModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistID);
+                        listCall.enqueue(new Callback<SucessModel>() {
+                            @Override
+                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                if (response.isSuccessful()) {
+                                    hideProgressBar();
+                                    SucessModel model = response.body();
+                                    Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SucessModel> call, Throwable t) {
+                                hideProgressBar();
+                            }
+                        });
+
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
             holder.binding.llRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -404,7 +435,7 @@ public class MyPlaylistsFragment extends Fragment {
                     String AudioID = modelList.get(position).getID();
                     showProgressBar();
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, "");
+                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID);
                         listCall.enqueue(new Callback<SucessModel>() {
                             @Override
                             public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {

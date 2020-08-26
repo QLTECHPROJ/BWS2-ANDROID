@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -24,8 +25,6 @@ import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
-import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.DownloadModule.Models.DownloadsHistoryModel;
 import com.qltech.bws.R;
 import com.qltech.bws.ResourceModule.Adapters.ResourceFilterAdapter;
@@ -51,12 +50,13 @@ public class ResourceActivity extends AppCompatActivity {
     ActivityResourceBinding binding;
     List<ResourceFilterModel> listModelList = new ArrayList<>();
     String UserID;
+    Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_resource);
-
+        activity = ResourceActivity.this;
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,14 +122,39 @@ public class ResourceActivity extends AppCompatActivity {
                 }
                 return false;
             });
-            ResourceFilterAdapter adapter1 = new ResourceFilterAdapter(listModelList, ResourceActivity.this);
+
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ResourceActivity.this);
             rvFilterList.setLayoutManager(mLayoutManager);
             rvFilterList.setItemAnimator(new DefaultItemAnimator());
-            rvFilterList.setAdapter(adapter1);
-            prepareResourceFilterData();
+            prepareData(ResourceActivity.this, rvFilterList);
         });
     }
+
+    void prepareData(Context ctx, RecyclerView rvFilterList) {
+        BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_FIVE, "");
+            listCall.enqueue(new Callback<ResourceListModel>() {
+                @Override
+                public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                        ResourceListModel listModel = response.body();
+                        ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx);
+                        rvFilterList.setAdapter(adapter);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                }
+            });
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     public class TabAdapter extends FragmentStatePagerAdapter {
         int totalTabs;
@@ -189,34 +214,5 @@ public class ResourceActivity extends AppCompatActivity {
         public int getCount() {
             return totalTabs;
         }
-    }
-
-    private void prepareResourceFilterData() {
-        ResourceFilterModel list = new ResourceFilterModel("All");
-        listModelList.add(list);
-        list = new ResourceFilterModel("Mental Health");
-        listModelList.add(list);
-        list = new ResourceFilterModel("Teenager");
-        listModelList.add(list);
-        list = new ResourceFilterModel("Biography");
-        listModelList.add(list);
-        list = new ResourceFilterModel("Self-Development");
-        listModelList.add(list);
-        list = new ResourceFilterModel("Novel");
-        listModelList.add(list);
-        list = new ResourceFilterModel("Spiritual");
-        listModelList.add(list);
-        list = new ResourceFilterModel("Relationshiops");
-        listModelList.add(list);
-        list = new ResourceFilterModel("Cocaching");
-        listModelList.add(list);
-        list = new ResourceFilterModel("Wellness");
-        listModelList.add(list);
-        list = new ResourceFilterModel("Parenting");
-        listModelList.add(list);
-        list = new ResourceFilterModel("Financess");
-        listModelList.add(list);
-        list = new ResourceFilterModel("Addiction");
-        listModelList.add(list);
     }
 }
