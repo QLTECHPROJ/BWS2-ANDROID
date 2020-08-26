@@ -147,12 +147,8 @@ public class UserProfileActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             hideProgressBar();
                             ProfileUpdateModel viewModel = response.body();
-                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                            SharedPreferences.Editor editor = shared.edit();
-                            editor.putString(CONSTANTS.PREF_KEY_Name, binding.etUser.getText().toString());
-                            editor.commit();
-                            Toast.makeText(ctx, viewModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                             finish();
+                            Toast.makeText(ctx, viewModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                         }else {
                             hideProgressBar();
                         }

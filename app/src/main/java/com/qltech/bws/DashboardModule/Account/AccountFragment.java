@@ -18,9 +18,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.BuildConfig;
 import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
@@ -31,14 +33,24 @@ import com.qltech.bws.ReminderModule.ReminderActivity;
 import com.qltech.bws.ResourceModule.Activities.ResourceActivity;
 import com.qltech.bws.UserModule.Activities.UserProfileActivity;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.UserModule.Models.ProfileViewModel;
+import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentAccountBinding;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AccountFragment extends Fragment {
     FragmentAccountBinding binding;
     private AccountViewModel accountViewModel;
-    String Name,Plan;
+    String UserID,Plan;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -47,15 +59,15 @@ public class AccountFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false);
         View view = binding.getRoot();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        Name = (shared1.getString(CONSTANTS.PREF_KEY_Name, ""));
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         Plan = (shared1.getString(CONSTANTS.PREF_KEY_Plan, ""));
 
+        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 10,
                 1, 1, 0.2f, 10);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-
-        binding.tvName.setText(Name);
+        profileViewData(getActivity());
         if (Plan.equalsIgnoreCase("")){
             binding.tvCrtPlan.setText("Current plan: $0 / month");
         }else {
@@ -67,10 +79,7 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), UserProfileActivity.class);
-                i.putExtra("Name",binding.tvName.getText().toString());
-//                i.putExtra("Image",binding.civProfile);
                 startActivity(i);
-                getActivity().finish();
             }
         });
 
@@ -162,5 +171,63 @@ public class AccountFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        profileViewData(getActivity());
+    }
+
+    private void hideProgressBar() {
+        try {
+            binding.progressBarHolder.setVisibility(View.GONE);
+            binding.ImgV.setVisibility(View.GONE);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showProgressBar() {
+        try {
+            binding.progressBarHolder.setVisibility(View.VISIBLE);
+            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.ImgV.setVisibility(View.VISIBLE);
+            binding.ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void profileViewData(Context ctx) {
+        showProgressBar();
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
+            listCall.enqueue(new Callback<ProfileViewModel>() {
+                @Override
+                public void onResponse(Call<ProfileViewModel> call, Response<ProfileViewModel> response) {
+                    if (response.isSuccessful()) {
+                        hideProgressBar();
+                        ProfileViewModel viewModel = response.body();
+                        binding.tvName.setText(viewModel.getResponseData().getName());
+                        String profilePicPath = viewModel.getResponseData().getImage();
+                        Glide.with(ctx).load(profilePicPath)
+                                .centerCrop()
+                                .placeholder(R.color.dark_blue)
+                                .error(R.color.dark_blue)
+                                .crossFade()
+                                .dontAnimate().into(binding.civProfile);
+                    }else {
+                        hideProgressBar();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ProfileViewModel> call, Throwable t) {
+                    hideProgressBar();
+                }
+            });
+        }
     }
 }
