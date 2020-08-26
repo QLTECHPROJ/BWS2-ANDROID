@@ -6,6 +6,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.app.Activity;
@@ -27,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BuildConfig;
 import com.qltech.bws.DashboardModule.Account.AccountFragment;
+import com.qltech.bws.DashboardModule.Appointment.SessionsFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.UserModule.Models.AddProfileModel;
@@ -144,7 +147,14 @@ public class UserProfileActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             hideProgressBar();
                             ProfileUpdateModel viewModel = response.body();
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(CONSTANTS.PREF_KEY_Name, binding.etUser.getText().toString());
+                            editor.commit();
+                            Toast.makeText(ctx, viewModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                             finish();
+                        }else {
+                            hideProgressBar();
                         }
                     }
 
@@ -155,6 +165,11 @@ public class UserProfileActivity extends AppCompatActivity {
                 });
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     public void setDate() {
@@ -248,18 +263,27 @@ public class UserProfileActivity extends AppCompatActivity {
                         binding.etEmail.setText(viewModel.getResponseData().getEmailId());
                         binding.etMobileNumber.setText(viewModel.getResponseData().getMobile());
 
-                        if (binding.etCalendar.getText().toString().matches("")) {
+                       /* if (binding.etCalendar.getText().toString().matches("")) {
                             binding.etCalendar.setEnabled(true);
                         } else {
                             binding.etCalendar.setEnabled(false);
                             binding.etCalendar.setClickable(false);
-                        }
+                        }*/
+
                         if (!viewModel.getResponseData().getEmailId().equalsIgnoreCase("")) {
                             binding.etEmail.setEnabled(false);
                             binding.etEmail.setClickable(false);
                         } else {
                             binding.etEmail.setEnabled(true);
                             binding.etEmail.setClickable(true);
+                        }
+
+                        if (!viewModel.getResponseData().getMobile().equalsIgnoreCase("")) {
+                            binding.etMobileNumber.setEnabled(false);
+                            binding.etMobileNumber.setClickable(false);
+                        } else {
+                            binding.etMobileNumber.setEnabled(true);
+                            binding.etMobileNumber.setClickable(true);
                         }
 
                         if ((viewModel.getResponseData().getIsVerify().equalsIgnoreCase("0"))) {
@@ -295,6 +319,8 @@ public class UserProfileActivity extends AppCompatActivity {
 //                            tvApply.setEnabled(false);
 //                            tvApply.setTextColor(getResources().getColor(R.color.gray));
                         }
+                    }else {
+                        hideProgressBar();
                     }
                 }
 
@@ -486,15 +512,23 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void hideProgressBar() {
-        binding.progressBarHolder.setVisibility(View.GONE);
-        binding.ImgV.setVisibility(View.GONE);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        try {
+            binding.progressBarHolder.setVisibility(View.GONE);
+            binding.ImgV.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showProgressBar() {
+        try {
         binding.progressBarHolder.setVisibility(View.VISIBLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         binding.ImgV.setVisibility(View.VISIBLE);
         binding.ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

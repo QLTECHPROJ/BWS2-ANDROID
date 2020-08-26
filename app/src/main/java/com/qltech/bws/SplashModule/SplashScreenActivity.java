@@ -73,13 +73,10 @@ public class SplashScreenActivity extends AppCompatActivity {
                 finish();
             }, 2 * 1000);
         }
-
-
     }
 
     public static void getLatasteUpdate(Context context) {
         String appURI = "";
-
         if (BWSApplication.isNetworkConnected(context)) {
             Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(BuildConfig.VERSION_NAME, CONSTANTS.FLAG_ONE);
             listCall.enqueue(new Callback<VersionModel>() {

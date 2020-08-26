@@ -96,6 +96,8 @@ public class AudioFragment extends Fragment {
                         binding.rvMainAudioList.setLayoutManager(manager);
                         binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
                         binding.rvMainAudioList.setAdapter(adapter);
+                    } else {
+                        hideProgressBar();
                     }
                 }
 
@@ -109,7 +111,7 @@ public class AudioFragment extends Fragment {
         }
     }
 
-    public class MainAudioListAdapter extends RecyclerView.Adapter<MainAudioListAdapter.MyViewHolder>  {
+    public class MainAudioListAdapter extends RecyclerView.Adapter<MainAudioListAdapter.MyViewHolder> {
         private List<MainAudioModel.ResponseData> listModelList;
         Context ctx;
 
@@ -137,7 +139,7 @@ public class AudioFragment extends Fragment {
 
             if (listModelList.get(position).getDetails().size() == 0) {
                 holder.binding.llMainLayout.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.binding.llMainLayout.setVisibility(View.VISIBLE);
                 holder.binding.tvTitle.setText(listModelList.get(position).getView());
                 if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.my_download))) {
@@ -147,11 +149,12 @@ public class AudioFragment extends Fragment {
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(myDownloadsAdapter);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.my_like))) {
-                    RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModelList.get(position).getDetails(), getActivity());
+                    holder.binding.llMainLayout.setVisibility(View.GONE);
+                    /*RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModelList.get(position).getDetails(), getActivity());
                     RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recentlyPlayed);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
-                    holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);
+                    holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);*/
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.recently_played))) {
                     RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModelList.get(position).getDetails(), getActivity());
                     RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -191,7 +194,7 @@ public class AudioFragment extends Fragment {
                 }
             }
 
-            if (!listModelList.get(position).getDetails().equals("")){
+            if (!listModelList.get(position).getDetails().equals("")) {
 
             }
         }
@@ -218,15 +221,23 @@ public class AudioFragment extends Fragment {
     }
 
     private void hideProgressBar() {
-        binding.progressBarHolder.setVisibility(View.GONE);
-        binding.ImgV.setVisibility(View.GONE);
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        try {
+            binding.progressBarHolder.setVisibility(View.GONE);
+            binding.ImgV.setVisibility(View.GONE);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showProgressBar() {
-        binding.progressBarHolder.setVisibility(View.VISIBLE);
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        binding.ImgV.setVisibility(View.VISIBLE);
-        binding.ImgV.invalidate();
+        try {
+            binding.progressBarHolder.setVisibility(View.VISIBLE);
+            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.ImgV.setVisibility(View.VISIBLE);
+            binding.ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

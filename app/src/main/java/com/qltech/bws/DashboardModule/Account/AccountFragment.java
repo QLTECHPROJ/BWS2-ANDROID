@@ -1,7 +1,9 @@
 package com.qltech.bws.DashboardModule.Account;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
@@ -29,12 +31,14 @@ import com.qltech.bws.ReminderModule.ReminderActivity;
 import com.qltech.bws.ResourceModule.Activities.ResourceActivity;
 import com.qltech.bws.UserModule.Activities.UserProfileActivity;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentAccountBinding;
 
 public class AccountFragment extends Fragment {
     FragmentAccountBinding binding;
     private AccountViewModel accountViewModel;
+    String Name,Plan;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -42,18 +46,31 @@ public class AccountFragment extends Fragment {
                 ViewModelProviders.of(this).get(AccountViewModel.class);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false);
         View view = binding.getRoot();
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        Name = (shared1.getString(CONSTANTS.PREF_KEY_Name, ""));
+        Plan = (shared1.getString(CONSTANTS.PREF_KEY_Plan, ""));
 
         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 10,
                 1, 1, 0.2f, 10);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
 
+        binding.tvName.setText(Name);
+        if (Plan.equalsIgnoreCase("")){
+            binding.tvCrtPlan.setText("Current plan: $0 / month");
+        }else {
+            binding.tvCrtPlan.setText("Current plan: $"+Plan+" / month");
+        }
         binding.tvVersion.setText("Version " +BuildConfig.VERSION_NAME);
+
         binding.llUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), UserProfileActivity.class);
+                i.putExtra("Name",binding.tvName.getText().toString());
+//                i.putExtra("Image",binding.civProfile);
                 startActivity(i);
+                getActivity().finish();
             }
         });
 

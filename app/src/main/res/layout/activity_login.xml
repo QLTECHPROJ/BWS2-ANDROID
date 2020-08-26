@@ -114,9 +114,10 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.18"
+                                android:gravity="center"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:paddingVertical="@dimen/_11sdp"
-                                android:paddingLeft="@dimen/_14sdp"
+                                android:paddingHorizontal="@dimen/_4sdp"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_16sdp" />
 

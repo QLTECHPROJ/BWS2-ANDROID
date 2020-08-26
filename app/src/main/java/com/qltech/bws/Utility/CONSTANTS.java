@@ -34,6 +34,7 @@ public class CONSTANTS {
     public static String Code = "Code";
     public static String Codes = "Codes";
     public static String MobileNo = "MobileNo";
+    public static String Number = "Number";
     public static String ID = "ID";
     public static String title = "title";
     public static String author = "author";
@@ -54,6 +55,9 @@ public class CONSTANTS {
     public static final String PREF_KEY_UserID = "UserID";
     public static final String PREF_KEY_MobileNo = "MobileNo";
     public static final String PREF_KEY_CardID = "CardID";
+    public static final String PREF_KEY_Name = "Name";
+    public static final String PREF_KEY_Image = "Image";
+    public static final String PREF_KEY_Plan = "Plan";
 
     public static final String Token = "Token";
 }

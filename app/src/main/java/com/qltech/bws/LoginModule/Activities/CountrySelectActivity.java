@@ -39,14 +39,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CountrySelectActivity extends AppCompatActivity {
-    String Check;
     ActivityCountrySelectBinding binding;
     CountrySelectAdapter adapter;
 //    String TrialPeriod;
 //    private ArrayList<MembershipPlanListModel.Plan> listModelList;
 //    int position;
     Context ctx;
-    String MobileNo;
+    String MobileNo, Name, Code, Number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,9 @@ public class CountrySelectActivity extends AppCompatActivity {
         ctx = CountrySelectActivity.this;
 
         if (getIntent().getExtras() != null) {
-            Check = getIntent().getStringExtra(CONSTANTS.Check);
+            Number = getIntent().getStringExtra(CONSTANTS.Number);
+            Name = getIntent().getStringExtra(CONSTANTS.Name);
+            Code = getIntent().getStringExtra(CONSTANTS.Code);
 //            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
 //            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
 //            position = getIntent().getIntExtra("position", 0);
@@ -65,6 +66,9 @@ public class CountrySelectActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(CountrySelectActivity.this, LoginActivity.class);
+                i.putExtra("Name",Name);
+                i.putExtra("Code",Code);
+                i.putExtra("Number", Number);
                 startActivity(i);
 //                Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
 //                i.putParcelableArrayListExtra("PlanData",listModelList);
@@ -122,7 +126,7 @@ public class CountrySelectActivity extends AppCompatActivity {
                         hideProgressBar();
                         CountryListModel listModel = response.body();
                         if (listModel != null) {
-                            adapter = new CountrySelectAdapter(listModel.getResponseData());
+                            adapter = new CountrySelectAdapter(listModel.getResponseData(),Number);
                         }
                         binding.rvCountryList.setAdapter(adapter);
                     }
@@ -141,6 +145,9 @@ public class CountrySelectActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent i = new Intent(CountrySelectActivity.this, LoginActivity.class);
+        i.putExtra("Name",Name);
+        i.putExtra("Code",Code);
+        i.putExtra("Number", Number);
         startActivity(i);
         finish();
     }
@@ -148,10 +155,12 @@ public class CountrySelectActivity extends AppCompatActivity {
     public class CountrySelectAdapter extends RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder> implements Filterable {
         private List<CountryListModel.ResponseData> modelList;
         private List<CountryListModel.ResponseData> listFilterData;
+        String Number;
 
-        public CountrySelectAdapter(List<CountryListModel.ResponseData> modelList) {
+        public CountrySelectAdapter(List<CountryListModel.ResponseData> modelList,String Number) {
             this.modelList = modelList;
             this.listFilterData = modelList;
+            this.Number = Number;
         }
 
         @NonNull
@@ -172,7 +181,7 @@ public class CountrySelectActivity extends AppCompatActivity {
                 Intent i = new Intent(CountrySelectActivity.this, LoginActivity.class);
                 i.putExtra("Name", mData.getName());
                 i.putExtra("Code", conutry);
-                i.putExtra("MobileNo", MobileNo);
+                i.putExtra("Number", Number);
                 startActivity(i);
                 finish();
             });
@@ -231,15 +240,23 @@ public class CountrySelectActivity extends AppCompatActivity {
     }
 
     private void hideProgressBar() {
-        binding.progressBarHolder.setVisibility(View.GONE);
-        binding.ImgV.setVisibility(View.GONE);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        try {
+            binding.progressBarHolder.setVisibility(View.GONE);
+            binding.ImgV.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showProgressBar() {
-        binding.progressBarHolder.setVisibility(View.VISIBLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        binding.ImgV.setVisibility(View.VISIBLE);
-        binding.ImgV.invalidate();
+        try {
+            binding.progressBarHolder.setVisibility(View.VISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.ImgV.setVisibility(View.VISIBLE);
+            binding.ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

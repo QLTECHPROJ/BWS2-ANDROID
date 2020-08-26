@@ -155,16 +155,24 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
     }
 
     private void hideProgressBar() {
-        progressBarHolder.setVisibility(View.GONE);
-        ImgV.setVisibility(View.GONE);
-        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        try {
+            progressBarHolder.setVisibility(View.GONE);
+            ImgV.setVisibility(View.GONE);
+            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showProgressBar() {
-        progressBarHolder.setVisibility(View.VISIBLE);
-        activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        ImgV.setVisibility(View.VISIBLE);
-        ImgV.invalidate();
+        try {
+            progressBarHolder.setVisibility(View.VISIBLE);
+            activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            ImgV.setVisibility(View.VISIBLE);
+            ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

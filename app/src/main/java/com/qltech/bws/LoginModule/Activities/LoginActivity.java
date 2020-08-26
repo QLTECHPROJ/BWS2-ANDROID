@@ -27,7 +27,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
-    String Name = "", Code = "", MobileNo = "";
+    String Name = "", Code = "", MobileNo = "", Number = "";
     Context ctx;
 
     @Override
@@ -40,24 +40,31 @@ public class LoginActivity extends AppCompatActivity {
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
             MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
+            Number = getIntent().getStringExtra(CONSTANTS.Number);
         }
 
-        if (Code.equalsIgnoreCase("") || Name.equalsIgnoreCase("") || MobileNo.equalsIgnoreCase("")) {
+        if (Code.equalsIgnoreCase("") || Name.equalsIgnoreCase("")) {
             binding.tvCountryCode.setText(R.string.code);
             binding.tvCountry.setText(R.string.Australia);
             binding.edtNumber.setText("");
         } else {
             binding.tvCountryCode.setText(Code);
             binding.tvCountry.setText(Name);
-            binding.edtNumber.setText(MobileNo);
+        }
+
+        if (Number.equalsIgnoreCase("")){
+            binding.edtNumber.setText("");
+        }else {
+            binding.edtNumber.setText(Number);
         }
 
         Glide.with(getApplicationContext()).load(R.drawable.loading).asGif().into(binding.ImgV);
 
         binding.rlCountrySelect.setOnClickListener(view -> {
             Intent i = new Intent(ctx, CountrySelectActivity.class);
-            i.putExtra("Check", "1");
-            i.putExtra("MobileNo",binding.edtNumber.getText().toString());
+            i.putExtra("Name",binding.tvCountry.getText().toString());
+            i.putExtra("Code",binding.tvCountryCode.getText().toString());
+            i.putExtra("Number",binding.edtNumber.getText().toString());
             startActivity(i);
             finish();
         });
@@ -103,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             LoginModel loginModel = response.body();
                             Intent i = new Intent(ctx, OtpActivity.class);
-                            i.putExtra("MobileNo", binding.edtNumber.getText().toString());
+                            i.putExtra("Number", binding.edtNumber.getText().toString());
                             i.putExtra("Name", binding.tvCountry.getText().toString());
                             i.putExtra("Code", binding.tvCountryCode.getText().toString());
                             startActivity(i);
@@ -128,15 +135,23 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void hideProgressBar() {
-        binding.progressBarHolder.setVisibility(View.GONE);
-        binding.ImgV.setVisibility(View.GONE);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        try {
+            binding.progressBarHolder.setVisibility(View.GONE);
+            binding.ImgV.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showProgressBar() {
-        binding.progressBarHolder.setVisibility(View.VISIBLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        binding.ImgV.setVisibility(View.VISIBLE);
-        binding.ImgV.invalidate();
+        try {
+            binding.progressBarHolder.setVisibility(View.VISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.ImgV.setVisibility(View.VISIBLE);
+            binding.ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -60,10 +60,14 @@ public class CurrentPlanFragment extends Fragment {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         CurrentPlanVieViewModel listModel = response.body();
-                        binding.tvDoller.setText("$"+listModel.getResponseData().getOrderTotal());
-                        if (listModel.getResponseData().getFeature() == null || listModel.getResponseData().getFeature().equals("")){
+                        binding.tvDoller.setText("$" + listModel.getResponseData().getOrderTotal());
+                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        editor.putString(CONSTANTS.PREF_KEY_Plan, listModel.getResponseData().getOrderTotal());
+                        editor.commit();
+                        if (listModel.getResponseData().getFeature() == null || listModel.getResponseData().getFeature().equals("")) {
                             binding.llFeatured.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             binding.llFeatured.setVisibility(View.VISIBLE);
                             binding.tvFeatures01.setText(listModel.getResponseData().getFeature().getFeature1());
                             binding.tvFeatures02.setText(listModel.getResponseData().getFeature().getFeature2());
@@ -91,16 +95,25 @@ public class CurrentPlanFragment extends Fragment {
         });
         return view;
     }
+
     private void hideProgressBar() {
-        binding.progressBarHolder.setVisibility(View.GONE);
-        binding.ImgV.setVisibility(View.GONE);
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        try {
+            binding.progressBarHolder.setVisibility(View.GONE);
+            binding.ImgV.setVisibility(View.GONE);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showProgressBar() {
-        binding.progressBarHolder.setVisibility(View.VISIBLE);
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        binding.ImgV.setVisibility(View.VISIBLE);
-        binding.ImgV.invalidate();
+        try {
+            binding.progressBarHolder.setVisibility(View.VISIBLE);
+            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.ImgV.setVisibility(View.VISIBLE);
+            binding.ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

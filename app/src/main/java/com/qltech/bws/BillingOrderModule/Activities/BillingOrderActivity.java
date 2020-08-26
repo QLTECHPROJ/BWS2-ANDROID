@@ -14,6 +14,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BillingOrderModule.Fragments.BillingAddressFragment;
 import com.qltech.bws.BillingOrderModule.Fragments.CurrentPlanFragment;
 import com.qltech.bws.BillingOrderModule.Fragments.PaymentFragment;
+import com.qltech.bws.DashboardModule.Account.AccountFragment;
 import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
 import com.qltech.bws.DownloadModule.Fragments.AudioDownloadsFragment;
 import com.qltech.bws.DownloadModule.Fragments.PlaylistsDownlaodsFragment;
