@@ -48,14 +48,18 @@ public class ViewAllPlaylistFragment extends Fragment {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PlaylistFragment playlistFragment = new PlaylistFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.rlPlaylist, playlistFragment)
-                        .commit();
-                Bundle bundle = new Bundle();
-                bundle.putString("Check", "1");
-                playlistFragment.setArguments(bundle);
+
+//                PlaylistFragment playlistFragment = new PlaylistFragment();
+//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentManager fm = getActivity()
+                        .getSupportFragmentManager();
+                fm.popBackStack ("ViewAllPlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                fragmentManager.beginTransaction()
+//                        .replace(R.id.rlPlaylist, playlistFragment)
+//                        .commit();
+//                Bundle bundle = new Bundle();
+//                bundle.putString("Check", "1");
+//                playlistFragment.setArguments(bundle);
 
             }
         });

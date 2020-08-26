@@ -44,6 +44,10 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.Utility.MySpannable;
 import com.qltech.bws.databinding.ActivityQueueBinding;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,6 +56,7 @@ public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
     String play, UserID, PlaylistId, AudioId;
     Context ctx;
+    ArrayList<String> queue ;
 
     public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
         if (tv.getTag() == null) {
@@ -290,7 +295,10 @@ public class AddQueueActivity extends AppCompatActivity {
                             }
                         });
 
-                            DirectionAdapter directionAdapter = new DirectionAdapter(directionModel.getResponseData(), ctx);
+                        String[] elements = directionModel.getResponseData().get(0).getAudioSubCategory().split(",");
+                        List<String> direction = Arrays.asList(elements);
+
+                             DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
                             RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
                             binding.rvDirlist.setLayoutManager(recentlyPlayed);
                             binding.rvDirlist.setItemAnimator(new DefaultItemAnimator());

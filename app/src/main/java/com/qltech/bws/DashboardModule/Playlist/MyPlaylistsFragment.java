@@ -78,14 +78,9 @@ public class MyPlaylistsFragment extends Fragment {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment playlistFragment = new PlaylistFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.rlPlaylist, playlistFragment)
-                        .commit();
-                Bundle bundle = new Bundle();
-                bundle.putString("Check", "1");
-                playlistFragment.setArguments(bundle);
+                FragmentManager fm = getActivity()
+                        .getSupportFragmentManager();
+                fm.popBackStack ("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
         binding.tvSearch.setOnClickListener(new View.OnClickListener() {

@@ -45,10 +45,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_playlist);
 
-        Glide.with(MyPlaylistActivity.this).load(R.drawable.loading).asGif().into(binding.ImgV);
+        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        ctx = MyPlaylistActivity.this;
+        ctx = ctx;
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,7 +56,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             }
         });
 
-        MeasureRatio measureRatio = BWSApplication.measureRatio(MyPlaylistActivity.this, 20,
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 20,
                 1, 1, 0.54f, 20);
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
@@ -66,7 +66,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         binding.llRename.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog dialog = new Dialog(MyPlaylistActivity.this);
+                final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.create_palylist);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
@@ -81,10 +81,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                            Toast.makeText(MyPlaylistActivity.this, "Please enter playlist name", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ctx, "Please enter playlist name", Toast.LENGTH_SHORT).show();
                         } else {
                             showProgressBar();
-                            if (BWSApplication.isNetworkConnected(MyPlaylistActivity.this)) {
+                            if (BWSApplication.isNetworkConnected(ctx)) {
                                 Call<RenamePlaylistModel> listCall = APIClient.getClient().getRenamePlaylist(UserID, PlaylistID, edtCreate.getText().toString());
                                 listCall.enqueue(new Callback<RenamePlaylistModel>() {
                                     @Override
@@ -108,7 +108,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                     }
                                 });
                             } else {
-                                Toast.makeText(MyPlaylistActivity.this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -122,7 +122,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         binding.llDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog dialog = new Dialog(MyPlaylistActivity.this);
+                final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.delete_playlist);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
@@ -134,7 +134,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         showProgressBar();
-                        if (BWSApplication.isNetworkConnected(MyPlaylistActivity.this)) {
+                        if (BWSApplication.isNetworkConnected(ctx)) {
                             Call<SucessModel> listCall = APIClient.getClient().getDeletePlaylist(UserID, PlaylistID);
                             listCall.enqueue(new Callback<SucessModel>() {
                                 @Override
@@ -158,7 +158,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            Toast.makeText(MyPlaylistActivity.this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

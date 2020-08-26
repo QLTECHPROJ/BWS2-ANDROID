@@ -52,7 +52,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_4sdp"
                 android:layout_marginTop="@dimen/_6sdp"
-                android:paddingBottom="@dimen/_20sdp"
                 android:overScrollMode="never" />
 
         </LinearLayout>

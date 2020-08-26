@@ -213,8 +213,8 @@ public class PlaylistFragment extends Fragment {
                     Fragment viewAllPlaylistFragment = new ViewAllPlaylistFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .replace(R.id.rlPlaylist, viewAllPlaylistFragment).
-                            addToBackStack("ViewAllPlaylistFragment")
+                            .add(R.id.rlPlaylist, viewAllPlaylistFragment)
+                            .addToBackStack("ViewAllPlaylistFragment")
                             .commit();
                     Bundle bundle = new Bundle();
                     bundle.putString("Name", listModelList.get(position).getView());
@@ -307,7 +307,7 @@ public class PlaylistFragment extends Fragment {
                     bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
                     myPlaylistsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
-                            .replace(R.id.rlPlaylist, myPlaylistsFragment).
+                            .add(R.id.rlPlaylist, myPlaylistsFragment).
                             addToBackStack("MyPlaylistsFragment")
                             .commit();
                 }

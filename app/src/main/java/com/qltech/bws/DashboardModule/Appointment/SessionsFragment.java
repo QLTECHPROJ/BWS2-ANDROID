@@ -44,6 +44,9 @@ public class SessionsFragment extends Fragment {
                 fragmentManager.beginTransaction()
                         .replace(R.id.flMainLayout, appointmentFragment)
                         .commit();*/
+                FragmentManager fm = getActivity()
+                        .getSupportFragmentManager();
+                fm.popBackStack ("SessionsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
         SessionListAdapter appointmentsAdapter = new SessionListAdapter(sessionList, getActivity(), f_manager);

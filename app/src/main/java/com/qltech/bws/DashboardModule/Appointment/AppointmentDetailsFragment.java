@@ -40,10 +40,9 @@ public class AppointmentDetailsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment sessionsFragment = new SessionsFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.flSession, sessionsFragment)
-                        .commit();
+                FragmentManager fm = getActivity()
+                        .getSupportFragmentManager();
+                fm.popBackStack ("AppointmentDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
         binding.viewPager.setOffscreenPageLimit(4);
