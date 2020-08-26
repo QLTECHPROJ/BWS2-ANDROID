@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.LoginModule.Models.OtpModel;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
@@ -120,19 +121,19 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                     if (BWSApplication.isNetworkConnected(CheckoutOtpActivity.this)) {
                         BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
 
-                        Call<OtpModel> listCall = APIClient.getClient().getAuthOtps(
+                        Call<CardModel> listCall = APIClient.getClient().getAuthOtps1(
                                 binding.edtOTP1.getText().toString() + "" +
                                         binding.edtOTP2.getText().toString() + "" +
                                         binding.edtOTP3.getText().toString() + "" +
                                         binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE,
                                 Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), MobileNo, CONSTANTS.FLAG_ONE);
-                        listCall.enqueue(new Callback<OtpModel>() {
+                        listCall.enqueue(new Callback<CardModel>() {
                             @Override
-                            public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
+                            public void onResponse(Call<CardModel> call, Response<CardModel> response) {
                                 if (response.isSuccessful()) {
                                     BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
 
-                                    OtpModel otpModel = response.body();
+                                    CardModel otpModel = response.body();
                                     Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
                                     i.putExtra("MobileNo",MobileNo);
                                     startActivity(i);
@@ -141,7 +142,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onFailure(Call<OtpModel> call, Throwable t) {
+                            public void onFailure(Call<CardModel> call, Throwable t) {
                                 BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
 
                             }
@@ -178,7 +179,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
             tvSendOTPbool = false;
             BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
 
-            Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
+            Call<LoginModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
             listCall.enqueue(new Callback<LoginModel>() {
                 @Override
                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {

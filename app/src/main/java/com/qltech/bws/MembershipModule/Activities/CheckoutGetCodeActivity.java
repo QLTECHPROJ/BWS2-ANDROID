@@ -115,7 +115,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             binding.edtNumber.requestFocus();
             binding.txtError.setVisibility(View.VISIBLE);
             binding.txtError.setText(getString(R.string.no_add_digits));
-        } else if (binding.edtNumber.getText().toString().length() == 0 || binding.edtNumber.getText().toString().length() < 10) {
+        } else if (binding.edtNumber.getText().toString().length() == 0 || binding.edtNumber.getText().toString().length() < 8) {
             binding.edtNumber.setFocusable(true);
             binding.edtNumber.requestFocus();
             binding.txtError.setVisibility(View.VISIBLE);

@@ -86,6 +86,15 @@ public interface APIInterface {
                                @Field("DeviceID") String deviceID,
                                @Field("MobileNo") String mobileNo,
                                @Field("SignupFlag") String signupFlag);
+    /* TODO OtpActivity */
+    @POST("authotp")
+    @FormUrlEncoded
+    Call<CardModel> getAuthOtps1(@Field("OTP") String otp,
+                               @Field("Token") String token,
+                               @Field("DeviceType") String deviceType,
+                               @Field("DeviceID") String deviceID,
+                               @Field("MobileNo") String mobileNo,
+                               @Field("SignupFlag") String signupFlag);
 
     /* TODO CountryActivity */
     @GET("countrylist")

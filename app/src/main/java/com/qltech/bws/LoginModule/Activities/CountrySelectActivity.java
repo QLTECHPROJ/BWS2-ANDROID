@@ -197,12 +197,14 @@ public class CountrySelectActivity extends AppCompatActivity {
                     i.putExtra("Code", conutry);
                     i.putExtra("MobileNo", MobileNo);
                     ctx.startActivity(i);
+                    finish();
                 }else if (Check.equalsIgnoreCase("1")){
                     Intent i = new Intent(ctx, LoginActivity.class);
                     i.putExtra("Name", mData.getName());
                     i.putExtra("Code", conutry);
                     i.putExtra("MobileNo", MobileNo);
                     ctx.startActivity(i);
+                    finish();
                 }
             });
         }
