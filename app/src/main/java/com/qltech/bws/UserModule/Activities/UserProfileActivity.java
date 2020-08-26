@@ -57,6 +57,7 @@ public class UserProfileActivity extends AppCompatActivity {
     Context ctx;
     String UserID, profilePicPath, tryafter = "Try after 5 minutes";
     File image;
+    Activity activity;
     CharSequence[] options;
     public int BirthYear;
     private static final int CONTENT_REQUEST = 100;
@@ -70,6 +71,7 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_profile);
         ctx = UserProfileActivity.this;
+        activity = UserProfileActivity.this;
         mRequestPermissionHandler = new RequestPermissionHandler();
 
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
@@ -104,7 +106,7 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
-        MeasureRatio measureRatio = BWSApplication.measureRatio(UserProfileActivity.this, 20,
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 20,
                 1, 1, 0.4f, 20);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
@@ -305,7 +307,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void selectImage() {
-        mRequestPermissionHandler.requestPermission(UserProfileActivity.this, new String[]{
+        mRequestPermissionHandler.requestPermission(activity, new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA
         }, 123, new RequestPermissionHandler.RequestPermissionListener() {
@@ -316,7 +318,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 } else {
                     options = new String[]{getString(R.string.takePhoto), getString(R.string.chooseFromGallary), getString(R.string.removeProfilePicture), getString(R.string.cancel)};
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(UserProfileActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
                 builder.setTitle(R.string.addPhoto);
                 builder.setItems(options, (dialog, item) -> {
                     if (options[item].equals(getString(R.string.takePhoto))) {
@@ -329,7 +331,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             }
 
                             if (photoFile != null) {
-                                Uri photoURI = FileProvider.getUriForFile(UserProfileActivity.this,
+                                Uri photoURI = FileProvider.getUriForFile(ctx,
                                         BuildConfig.APPLICATION_ID + ".provider", photoFile);
                                 pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                                 startActivityForResult(pictureIntent,

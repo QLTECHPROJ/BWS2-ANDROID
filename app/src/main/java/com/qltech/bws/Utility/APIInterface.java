@@ -1,5 +1,6 @@
 package com.qltech.bws.Utility;
 
+import com.qltech.bws.AddPayment.Model.AddCardModel;
 import com.qltech.bws.BillingOrderModule.Models.BillingAddressSaveModel;
 import com.qltech.bws.BillingOrderModule.Models.BillingAddressViewModel;
 import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
@@ -202,8 +203,8 @@ public interface APIInterface {
     /* TODO AddPaymentActivity */
     @POST("cardadd")
     @FormUrlEncoded
-    Call<CardModel> getAddCard(@Field("UserID") String userID,
-                               @Field("TokenId") String tokenId);
+    Call<AddCardModel> getAddCard(@Field("UserID") String userID,
+                                  @Field("TokenId") String tokenId);
 
     /* TODO PaymentFragment & AllCardAdapter*/
     @POST("cardlist")

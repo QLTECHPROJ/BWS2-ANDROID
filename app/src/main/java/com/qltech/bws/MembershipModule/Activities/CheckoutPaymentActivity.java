@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.AddPayment.AddPaymentActivity;
+import com.qltech.bws.AddPayment.Model.AddCardModel;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.LoginModule.Models.LoginModel;
@@ -184,19 +185,19 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                 if (!strToken.equalsIgnoreCase("")) {
                                     if (BWSApplication.isNetworkConnected(context)) {
                                         showProgressBar();
-                                        Call<CardModel> listCall = APIClient.getClient().getAddCard(userId, strToken);
-                                        listCall.enqueue(new Callback<CardModel>() {
+                                        Call<AddCardModel> listCall = APIClient.getClient().getAddCard(userId, strToken);
+                                        listCall.enqueue(new Callback<AddCardModel>() {
                                             @Override
-                                            public void onResponse(Call<CardModel> call, Response<CardModel> response) {
+                                            public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {
                                                 hideProgressBar();
                                                 if (response.isSuccessful()) {
-                                                    CardModel cardModel = response.body();
-                                                    if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                                    AddCardModel addcardModel = response.body();
+                                                    if (addcardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                         InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                                         keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                                        if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                                        if (addcardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
 
-                                                            Call<LoginModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, userId);
+                                                            Call<LoginModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, addcardModel.getResponseData().getCardId(), userId);
                                                             listCall.enqueue(new Callback<LoginModel>() {
                                                                 @Override
                                                                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
@@ -227,19 +228,19 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                                 }
 
                                                             });
-                                                        } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                                            Toast.makeText(context, cardModel.getResponseMessage(), Toast.LENGTH_LONG).show();
+                                                        } else if (addcardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                                            Toast.makeText(context, addcardModel.getResponseMessage(), Toast.LENGTH_LONG).show();
                                                         } else {
-                                                            Toast.makeText(getApplicationContext(), cardModel.getResponseMessage(), Toast.LENGTH_LONG).show();
+                                                            Toast.makeText(getApplicationContext(), addcardModel.getResponseMessage(), Toast.LENGTH_LONG).show();
                                                         }
                                                     } else {
-                                                        Toast.makeText(context, cardModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(context, addcardModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
                                             }
 
                                             @Override
-                                            public void onFailure(Call<CardModel> call, Throwable t) {
+                                            public void onFailure(Call<AddCardModel> call, Throwable t) {
 
                                             }
 

@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
+import com.qltech.bws.AddPayment.Model.AddCardModel;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.BillingOrderModule.Fragments.PaymentFragment;
@@ -167,13 +168,13 @@ public class AddPaymentActivity extends AppCompatActivity {
                         if (!strToken.equalsIgnoreCase("")) {
                             if (BWSApplication.isNetworkConnected(context)) {
                                 showProgressBar();
-                                Call<CardModel> listCall = APIClient.getClient().getAddCard(userId, strToken);
-                                listCall.enqueue(new Callback<CardModel>() {
+                                Call<AddCardModel> listCall = APIClient.getClient().getAddCard(userId, strToken);
+                                listCall.enqueue(new Callback<AddCardModel>() {
                                     @Override
-                                    public void onResponse(Call<CardModel> call, Response<CardModel> response) {
+                                    public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {
                                         hideProgressBar();
                                         if (response.isSuccessful()) {
-                                            CardModel cardModel = response.body();
+                                            AddCardModel cardModel = response.body();
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                 InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                                 keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -195,7 +196,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                                     }
 
                                     @Override
-                                    public void onFailure(Call<CardModel> call, Throwable t) {
+                                    public void onFailure(Call<AddCardModel> call, Throwable t) {
                                         hideProgressBar();
                                     }
 
