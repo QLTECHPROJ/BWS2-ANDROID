@@ -34,7 +34,6 @@ public class CONSTANTS {
     public static String Code = "Code";
     public static String Codes = "Codes";
     public static String MobileNo = "MobileNo";
-    public static String Number = "Number";
     public static String ID = "ID";
     public static String title = "title";
     public static String author = "author";

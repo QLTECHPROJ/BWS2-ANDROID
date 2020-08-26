@@ -3,6 +3,7 @@ package com.qltech.bws.MembershipModule.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,8 +33,9 @@ import retrofit2.Response;
 
 public class CheckoutGetCodeActivity extends AppCompatActivity {
     ActivityCheckoutGetCodeBinding binding;
-    String Name = "", Code = "";
+    String Name = "", Code = "",MobileNo = "";
     Context ctx;
+    Activity activity;
     String TrialPeriod;
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     int position;
@@ -43,11 +45,13 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_checkout_get_code);
         ctx = CheckoutGetCodeActivity.this;
+        activity = CheckoutGetCodeActivity.this;
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
 
         if (getIntent().hasExtra("Name")) {
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
+            MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
 //            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
 //            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
 //            position = getIntent().getIntExtra("position", 0);
@@ -59,6 +63,11 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         } else {
             binding.tvCountryCode.setText(Code);
             binding.tvCountry.setText(Name);
+        }
+        if (MobileNo.equalsIgnoreCase("")){
+            binding.edtNumber.setText("");
+        }else {
+            binding.edtNumber.setText(MobileNo);
         }
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +89,9 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
 //                i.putParcelableArrayListExtra("PlanData",listModelList);
 //                i.putExtra("TrialPeriod",TrialPeriod);
 //                i.putExtra("position",position);
+                i.putExtra("Name",binding.tvCountry.getText().toString());
+                i.putExtra("Code",binding.tvCountryCode.getText().toString());
+                i.putExtra("MobileNo",binding.edtNumber.getText().toString());
                 i.putExtra("Check", "0");
                 startActivity(i);
                 finish();
@@ -103,7 +115,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             binding.edtNumber.requestFocus();
             binding.txtError.setVisibility(View.VISIBLE);
             binding.txtError.setText(getString(R.string.no_add_digits));
-        } else if (binding.edtNumber.getText().toString().length() == 1 || binding.edtNumber.getText().toString().length() != 9) {
+        } else if (binding.edtNumber.getText().toString().length() == 0 || binding.edtNumber.getText().toString().length() < 10) {
             binding.edtNumber.setFocusable(true);
             binding.edtNumber.requestFocus();
             binding.txtError.setVisibility(View.VISIBLE);
@@ -111,12 +123,13 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         } else {
             binding.txtError.setVisibility(View.GONE);
             if (BWSApplication.isNetworkConnected(ctx)) {
-                showProgressBar();
+
+                BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
                 Call<LoginModel> listCall = APIClient.getClient().getSignUpDatas(binding.edtNumber.getText().toString(), binding.tvCountryCode.getText().toString(), CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
                 listCall.enqueue(new Callback<LoginModel>() {
                     @Override
                     public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
                         if (response.isSuccessful()) {
                             LoginModel loginModel = response.body();
                             Intent i = new Intent(ctx, CheckoutOtpActivity.class);
@@ -127,6 +140,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                             i.putExtra("Name", binding.tvCountry.getText().toString());
                             i.putExtra("Code", binding.tvCountryCode.getText().toString());
                             startActivity(i);
+                            finish();
                         } else {
                             Toast.makeText(ctx, response.message(), Toast.LENGTH_SHORT).show();
                         }
@@ -134,7 +148,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<LoginModel> call, Throwable t) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
                         binding.txtError.setVisibility(View.VISIBLE);
                         binding.txtError.setText(getString(R.string.notvalid_number));
                     }
@@ -142,27 +156,6 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
             }
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

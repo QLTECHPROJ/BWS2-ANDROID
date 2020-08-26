@@ -67,9 +67,6 @@ public class CheckoutOtpActivity extends AppCompatActivity {
         activity = CheckoutOtpActivity.this;
         ctx = CheckoutOtpActivity.this;
         binding.tvSendCodeText.setText("We sent an SMS with a 4-digit code to +" + Code + MobileNo);
-
-        Glide.with(getApplicationContext()).load(R.drawable.loading).asGif().into(binding.ImgV);
-
         editTexts = new EditText[]{binding.edtOTP1, binding.edtOTP2, binding.edtOTP3, binding.edtOTP4};
         binding.edtOTP1.addTextChangedListener(new PinTextWatcher(0));
         binding.edtOTP2.addTextChangedListener(new PinTextWatcher(1));
@@ -86,11 +83,11 @@ public class CheckoutOtpActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
-//                i.putParcelableArrayListExtra("PlanData",listModelList);
-//                i.putExtra("TrialPeriod",TrialPeriod);
-//                i.putExtra("position",position);
-//                startActivity(i);
+                Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+                i.putExtra("MobileNo",MobileNo);
+                i.putExtra("Name", Name);
+                i.putExtra("Code", Code);
+                startActivity(i);
                 finish();
             }
         });
@@ -121,6 +118,8 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                     binding.txtError.setVisibility(View.VISIBLE);
                 } else {
                     if (BWSApplication.isNetworkConnected(CheckoutOtpActivity.this)) {
+                        BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+
                         Call<OtpModel> listCall = APIClient.getClient().getAuthOtps(
                                 binding.edtOTP1.getText().toString() + "" +
                                         binding.edtOTP2.getText().toString() + "" +
@@ -131,23 +130,20 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
                                 if (response.isSuccessful()) {
-                                    hideProgressBar();
+                                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+
                                     OtpModel otpModel = response.body();
-                                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = shared.edit();
-                                    String UserID = otpModel.getResponseData().getUserID();
-                                    editor.putString(CONSTANTS.PREF_KEY_UserID, UserID);
-                                    String Phone = otpModel.getResponseData().getPhoneNumber();
-                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo, Phone);
-                                    editor.commit();
                                     Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
+                                    i.putExtra("MobileNo",MobileNo);
                                     startActivity(i);
+                                    finish();
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<OtpModel> call, Throwable t) {
-                                hideProgressBar();
+                                BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+
                             }
                         });
                     } else {
@@ -166,16 +162,29 @@ public class CheckoutOtpActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+        i.putExtra("MobileNo",MobileNo);
+        i.putExtra("Name", Name);
+        i.putExtra("Code", Code);
+        startActivity(i);
+        finish();
+    }
+
     void prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             tvSendOTPbool = false;
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+
             Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
             listCall.enqueue(new Callback<LoginModel>() {
                 @Override
                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+
                         LoginModel loginModel = response.body();
                         if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             tvSendOTPbool = true;
@@ -193,7 +202,8 @@ public class CheckoutOtpActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<LoginModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+
                     Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -300,24 +310,4 @@ public class CheckoutOtpActivity extends AppCompatActivity {
         }
     }
 
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

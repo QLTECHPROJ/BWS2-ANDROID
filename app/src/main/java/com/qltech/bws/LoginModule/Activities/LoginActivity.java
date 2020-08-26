@@ -27,7 +27,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
-    String Name = "", Code = "", MobileNo = "", Number = "";
+    String Name = "", Code = "", MobileNo = "";
     Context ctx;
 
     @Override
@@ -40,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
             MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
-            Number = getIntent().getStringExtra(CONSTANTS.Number);
         }
 
         if (Code.equalsIgnoreCase("") || Name.equalsIgnoreCase("")) {
@@ -52,19 +51,20 @@ public class LoginActivity extends AppCompatActivity {
             binding.tvCountry.setText(Name);
         }
 
-        if (Number.equalsIgnoreCase("")){
+        if (MobileNo.equalsIgnoreCase("")){
             binding.edtNumber.setText("");
         }else {
-            binding.edtNumber.setText(Number);
+            binding.edtNumber.setText(MobileNo);
         }
 
         Glide.with(getApplicationContext()).load(R.drawable.loading).asGif().into(binding.ImgV);
 
         binding.rlCountrySelect.setOnClickListener(view -> {
             Intent i = new Intent(ctx, CountrySelectActivity.class);
-            i.putExtra("Name",binding.tvCountry.getText().toString());
-            i.putExtra("Code",binding.tvCountryCode.getText().toString());
-            i.putExtra("Number",binding.edtNumber.getText().toString());
+            i.putExtra(CONSTANTS.Name,binding.tvCountry.getText().toString());
+            i.putExtra(CONSTANTS.Code,binding.tvCountryCode.getText().toString());
+            i.putExtra(CONSTANTS.MobileNo,binding.edtNumber.getText().toString());
+            i.putExtra(CONSTANTS.Check, "1");
             startActivity(i);
             finish();
         });
@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             LoginModel loginModel = response.body();
                             Intent i = new Intent(ctx, OtpActivity.class);
-                            i.putExtra("Number", binding.edtNumber.getText().toString());
+                            i.putExtra("MobileNo", binding.edtNumber.getText().toString());
                             i.putExtra("Name", binding.tvCountry.getText().toString());
                             i.putExtra("Code", binding.tvCountryCode.getText().toString());
                             startActivity(i);

@@ -37,7 +37,7 @@ import retrofit2.Response;
 
 public class OtpActivity extends AppCompatActivity {
     ActivityOtpBinding binding;
-    String Name, Code, Number;
+    String Name, Code, MobileNo;
     private EditText[] editTexts;
     boolean tvSendOTPbool = true;
     Activity activity;
@@ -48,14 +48,14 @@ public class OtpActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_otp);
 
         if (getIntent().getExtras() != null) {
-            Number = getIntent().getStringExtra(CONSTANTS.Number);
+            MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
         }
 
         activity = OtpActivity.this;
 
-        binding.tvSendCodeText.setText("We sent an SMS with a 4-digit code to " + Code + Number);
+        binding.tvSendCodeText.setText("We sent an SMS with a 4-digit code to " + Code + MobileNo);
         Glide.with(getApplicationContext()).load(R.drawable.loading).asGif().into(binding.ImgV);
 
         binding.llEditNumber.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +64,7 @@ public class OtpActivity extends AppCompatActivity {
                 Intent i = new Intent(OtpActivity.this, LoginActivity.class);
                 i.putExtra("Name",Name);
                 i.putExtra("Code",Code);
-                i.putExtra("Number",Number);
+                i.putExtra(CONSTANTS.MobileNo,MobileNo);
                 startActivity(i);
                 finish();
             }
@@ -113,7 +113,7 @@ public class OtpActivity extends AppCompatActivity {
                                         binding.edtOTP2.getText().toString() + "" +
                                         binding.edtOTP3.getText().toString() + "" +
                                         binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE,
-                                Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), Number, CONSTANTS.FLAG_ZERO);
+                                Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), MobileNo, CONSTANTS.FLAG_ZERO);
                         listCall.enqueue(new Callback<OtpModel>() {
                             @Override
                             public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
@@ -161,7 +161,7 @@ public class OtpActivity extends AppCompatActivity {
         Intent i = new Intent(OtpActivity.this, LoginActivity.class);
         i.putExtra("Name",Name);
         i.putExtra("Code",Code);
-        i.putExtra("Number",Number);
+        i.putExtra(CONSTANTS.MobileNo,MobileNo);
         startActivity(i);
         finish();
     }
@@ -170,7 +170,7 @@ public class OtpActivity extends AppCompatActivity {
         if (BWSApplication.isNetworkConnected(OtpActivity.this)) {
             tvSendOTPbool = false;
             showProgressBar();
-            Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(Number, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
+            Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
             listCall.enqueue(new Callback<LoginModel>() {
                 @Override
                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {

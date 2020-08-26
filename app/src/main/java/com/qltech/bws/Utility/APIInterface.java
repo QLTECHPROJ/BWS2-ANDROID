@@ -65,8 +65,8 @@ public interface APIInterface {
     Call<LoginModel> getMembershipPayment(
                                    @Field("PlanId") String planId,
                                    @Field("PlanFlag") String planFlag,
-                                   @Field("CardId") String CardId,
-                                   @Field("UserID") String UserId);
+                                   @Field("TokenId") String CardId,
+                                   @Field("MobileNo") String UserId);
 
     /* TODO CheckoutGetCodeActivity & OtpActivity */
     @POST("signupcheckout")

@@ -1,15 +1,21 @@
 package com.qltech.bws;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.qltech.bws.Utility.CryptLib;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.databinding.ActivityCountrySelectBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,6 +54,27 @@ public class BWSApplication extends Application {
 
     public static synchronized BWSApplication getInstance() {
         return BWSApplication;
+    }
+
+    public static void hideProgressBar(ImageView ImgV, FrameLayout progressBarHolder, Activity ctx) {
+        try {
+            progressBarHolder.setVisibility(View.GONE);
+            ImgV.setVisibility(View.GONE);
+            ctx.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void showProgressBar(ImageView ImgV, FrameLayout progressBarHolder, Activity ctx) {
+        try {
+            Glide.with(ctx).load(R.drawable.loading).asGif().into(ImgV);
+            progressBarHolder.setVisibility(View.VISIBLE);
+            ctx.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            ImgV.setVisibility(View.VISIBLE);
+            ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -129,4 +156,6 @@ public class BWSApplication extends Application {
         }
         return cipher;
     }
+
+
 }

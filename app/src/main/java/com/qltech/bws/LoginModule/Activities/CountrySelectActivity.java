@@ -1,5 +1,6 @@
 package com.qltech.bws.LoginModule.Activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.LoginModule.Models.CountryListModel;
+import com.qltech.bws.MembershipModule.Activities.CheckoutGetCodeActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -45,41 +47,46 @@ public class CountrySelectActivity extends AppCompatActivity {
 //    private ArrayList<MembershipPlanListModel.Plan> listModelList;
 //    int position;
     Context ctx;
-    String MobileNo, Name, Code, Number;
+    Activity activity;
+    String  Name, Code, MobileNo,Check;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_country_select);
         ctx = CountrySelectActivity.this;
+        activity = CountrySelectActivity.this;
 
         if (getIntent().getExtras() != null) {
-            Number = getIntent().getStringExtra(CONSTANTS.Number);
+            MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
+            Check = getIntent().getStringExtra(CONSTANTS.Check);
 //            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
 //            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
 //            position = getIntent().getIntExtra("position", 0);
-            MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
         }
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(CountrySelectActivity.this, LoginActivity.class);
-                i.putExtra("Name",Name);
-                i.putExtra("Code",Code);
-                i.putExtra("Number", Number);
-                startActivity(i);
-//                Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
-//                i.putParcelableArrayListExtra("PlanData",listModelList);
-//                i.putExtra("TrialPeriod",TrialPeriod);
-//                i.putExtra("position",position);
-//                startActivity(i);
-                finish();
+                if (Check.equalsIgnoreCase("0")){
+                    Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+                    i.putExtra("Name", Name);
+                    i.putExtra("Code", Code);
+                    i.putExtra("MobileNo", MobileNo);
+                    startActivity(i);
+                    finish();
+                }else if (Check.equalsIgnoreCase("1")){
+                    Intent i = new Intent(ctx, LoginActivity.class);
+                    i.putExtra("Name", Name);
+                    i.putExtra("Code", Code);
+                    i.putExtra("MobileNo", MobileNo);
+                    startActivity(i);
+                    finish();
+                }
             }
         });
 
-        Glide.with(getApplicationContext()).load(R.drawable.loading).asGif().into(binding.ImgV);
         binding.searchView.onActionViewExpanded();
         EditText searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.gray));
@@ -116,17 +123,17 @@ public class CountrySelectActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         binding.rvCountryList.setLayoutManager(mLayoutManager);
         binding.rvCountryList.setItemAnimator(new DefaultItemAnimator());
-        showProgressBar();
+        BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
         if (BWSApplication.isNetworkConnected(this)) {
             Call<CountryListModel> listCall = APIClient.getClient().getCountryLists();
             listCall.enqueue(new Callback<CountryListModel>() {
                 @Override
                 public void onResponse(Call<CountryListModel> call, Response<CountryListModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
                         CountryListModel listModel = response.body();
                         if (listModel != null) {
-                            adapter = new CountrySelectAdapter(listModel.getResponseData(),Number);
+                            adapter = new CountrySelectAdapter(listModel.getResponseData());
                         }
                         binding.rvCountryList.setAdapter(adapter);
                     }
@@ -134,7 +141,7 @@ public class CountrySelectActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<CountryListModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
                 }
             });
         } else {
@@ -144,23 +151,29 @@ public class CountrySelectActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(CountrySelectActivity.this, LoginActivity.class);
-        i.putExtra("Name",Name);
-        i.putExtra("Code",Code);
-        i.putExtra("Number", Number);
-        startActivity(i);
-        finish();
+        if (Check.equalsIgnoreCase("0")){
+            Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+            i.putExtra("Name", Name);
+            i.putExtra("Code", Code);
+            i.putExtra("MobileNo", MobileNo);
+            startActivity(i);
+            finish();
+        }else if (Check.equalsIgnoreCase("1")){
+            Intent i = new Intent(ctx, LoginActivity.class);
+            i.putExtra("Name", Name);
+            i.putExtra("Code", Code);
+            i.putExtra("MobileNo", MobileNo);
+            startActivity(i);
+            finish();
+        }
     }
 
     public class CountrySelectAdapter extends RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder> implements Filterable {
         private List<CountryListModel.ResponseData> modelList;
         private List<CountryListModel.ResponseData> listFilterData;
-        String Number;
-
-        public CountrySelectAdapter(List<CountryListModel.ResponseData> modelList,String Number) {
+        public CountrySelectAdapter(List<CountryListModel.ResponseData> modelList) {
             this.modelList = modelList;
             this.listFilterData = modelList;
-            this.Number = Number;
         }
 
         @NonNull
@@ -178,12 +191,19 @@ public class CountrySelectActivity extends AppCompatActivity {
             holder.binding.tvCountryCode.setText("+" + mData.getCode());
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 String conutry = "+" + mData.getCode();
-                Intent i = new Intent(CountrySelectActivity.this, LoginActivity.class);
-                i.putExtra("Name", mData.getName());
-                i.putExtra("Code", conutry);
-                i.putExtra("Number", Number);
-                startActivity(i);
-                finish();
+                if (Check.equalsIgnoreCase("0")){
+                    Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+                    i.putExtra("Name", mData.getName());
+                    i.putExtra("Code", conutry);
+                    i.putExtra("MobileNo", MobileNo);
+                    ctx.startActivity(i);
+                }else if (Check.equalsIgnoreCase("1")){
+                    Intent i = new Intent(ctx, LoginActivity.class);
+                    i.putExtra("Name", mData.getName());
+                    i.putExtra("Code", conutry);
+                    i.putExtra("MobileNo", MobileNo);
+                    ctx.startActivity(i);
+                }
             });
         }
 
@@ -236,27 +256,6 @@ public class CountrySelectActivity extends AppCompatActivity {
                 super(binding.getRoot());
                 this.binding = binding;
             }
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
