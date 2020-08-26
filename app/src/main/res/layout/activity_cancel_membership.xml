@@ -110,200 +110,100 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="horizontal"
-                        android:visibility="visible"
-                        android:weightSum="1">
+                        android:orientation="vertical"
+                        android:visibility="visible">
 
-                        <LinearLayout
-                            android:layout_width="@dimen/_0sdp"
+                        <CheckBox
+                            android:id="@+id/cbOne"
+                            style="@android:style/Widget.CompoundButton.RadioButton"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.12"
-                            android:gravity="center">
-
-                            <CheckBox
-                                style="@android:style/Widget.CompoundButton.RadioButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_margin="@dimen/_4sdp"
-                                android:button="@drawable/radio_btn_background"
-                                android:checked="true"
-                                android:fontFamily="@font/poppins_light"
-                                android:gravity="center"
-                                android:paddingLeft="@dimen/_12sdp"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/_16sdp" />
-
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.88"
-                            android:fontFamily="@font/poppins_light"
-                            android:gravity="center_vertical|left|center_horizontal"
-                            android:text="Feeling better"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:button="@drawable/radio_btn_background"
+                            android:checked="true"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center_vertical|start"
+                            android:paddingLeft="@dimen/_12sdp"
+                            android:text="@string/Feeling_better"
                             android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+
+                        <CheckBox
+                            android:id="@+id/cbTwo"
+                            style="@android:style/Widget.CompoundButton.RadioButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_18sdp"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:button="@drawable/radio_btn_background"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center_vertical|start"
+                            android:paddingLeft="@dimen/_12sdp"
+                            android:text="@string/Condition_worse"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+
+                        <CheckBox
+                            android:id="@+id/cbThree"
+                            style="@android:style/Widget.CompoundButton.RadioButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_18sdp"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:button="@drawable/radio_btn_background"
+                            android:fontFamily="@font/poppins_light"
+                            android:gravity="center_vertical|start"
+                            android:paddingLeft="@dimen/_12sdp"
+                            android:text="@string/Pricing"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+
+                        <CheckBox
+                            android:id="@+id/cbFour"
+                            style="@android:style/Widget.CompoundButton.RadioButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_18sdp"
+                            android:layout_marginHorizontal="@dimen/_4sdp"
+                            android:button="@drawable/radio_btn_background"
+                            android:fontFamily="@font/poppins_light"
+                            android:gravity="center_vertical|start"
+                            android:paddingLeft="@dimen/_12sdp"
+                            android:text="@string/Other_reason"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+
+
+                        <EditText
+                            android:id="@+id/edtCancelBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_140sdp"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginTop="@dimen/_22sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_16sdp"
+                            android:background="@drawable/edittext_background"
+                            android:cursorVisible="true"
+                            android:fontFamily="@font/poppins_light"
+                            android:gravity="top"
+                            android:visibility="gone"
+                            android:hint="Add your comments here"
+                            android:inputType="textMultiLine|textVisiblePassword"
+                            android:overScrollMode="always"
+                            android:paddingLeft="@dimen/_8sdp"
+                            android:paddingTop="@dimen/_8sdp"
+                            android:paddingRight="@dimen/_8sdp"
+                            android:scrollbarStyle="insideInset"
+                            android:scrollbars="vertical"
+                            android:singleLine="false"
+                            android:textColor="@color/gray"
+                            android:textCursorDrawable="@null"
                             android:textSize="@dimen/_14sdp" />
 
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_6sdp"
-                        android:orientation="horizontal"
-                        android:visibility="visible"
-                        android:weightSum="1">
-
-                        <LinearLayout
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.12"
-                            android:gravity="center">
-
-                            <CheckBox
-                                style="@android:style/Widget.CompoundButton.RadioButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_margin="@dimen/_4sdp"
-                                android:button="@drawable/radio_btn_background"
-                                android:fontFamily="@font/poppins_light"
-                                android:gravity="center"
-                                android:paddingLeft="@dimen/_12sdp"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/_16sdp" />
-
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.88"
-                            android:fontFamily="@font/poppins_light"
-                            android:gravity="center_vertical|left|center_horizontal"
-                            android:text="Condition worse"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_14sdp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_6sdp"
-                        android:orientation="horizontal"
-                        android:visibility="visible"
-                        android:weightSum="1">
-
-                        <LinearLayout
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.12"
-                            android:gravity="center">
-
-                            <CheckBox
-                                style="@android:style/Widget.CompoundButton.RadioButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_margin="@dimen/_4sdp"
-                                android:button="@drawable/radio_btn_background"
-                                android:fontFamily="@font/poppins_light"
-                                android:gravity="center"
-                                android:paddingLeft="@dimen/_12sdp"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/_16sdp" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.88"
-                            android:fontFamily="@font/poppins_light"
-                            android:gravity="center_vertical|left|center_horizontal"
-                            android:text="Pricing"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_14sdp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_6sdp"
-                        android:orientation="horizontal"
-                        android:visibility="visible"
-                        android:weightSum="1">
-
-                        <LinearLayout
-                            android:layout_width="@dimen/_0sdp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.12"
-                            android:gravity="center">
-
-                            <CheckBox
-                                style="@android:style/Widget.CompoundButton.RadioButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_margin="@dimen/_4sdp"
-                                android:button="@drawable/radio_btn_background"
-                                android:fontFamily="@font/poppins_light"
-                                android:gravity="center"
-                                android:paddingLeft="@dimen/_12sdp"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/_16sdp" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.88"
-                            android:fontFamily="@font/poppins_light"
-                            android:gravity="center_vertical|left|center_horizontal"
-                            android:text="Other reason"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_14sdp" />
-
-                    </LinearLayout>
-
-                    <EditText
-                        android:id="@+id/edtCancelBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_140sdp"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:layout_marginRight="@dimen/_10sdp"
-                        android:layout_marginBottom="@dimen/_16sdp"
-                        android:background="@drawable/edittext_background"
-                        android:cursorVisible="true"
-                        android:fontFamily="@font/poppins_light"
-                        android:gravity="top"
-                        android:hint="Add your comments here"
-                        android:inputType="textMultiLine|textVisiblePassword"
-                        android:overScrollMode="always"
-                        android:paddingLeft="@dimen/_8sdp"
-                        android:paddingTop="@dimen/_8sdp"
-                        android:paddingRight="@dimen/_8sdp"
-                        android:scrollbarStyle="insideInset"
-                        android:scrollbars="vertical"
-                        android:singleLine="false"
-                        android:textColor="@color/gray"
-                        android:textCursorDrawable="@null"
-                        android:textSize="@dimen/_14sdp" />
-
                 </LinearLayout>
+
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 

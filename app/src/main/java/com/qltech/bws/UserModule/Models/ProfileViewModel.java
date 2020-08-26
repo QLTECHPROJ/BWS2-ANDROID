@@ -54,13 +54,16 @@ public class ProfileViewModel {
         private String name;
         @SerializedName("PhoneNumber")
         @Expose
-        private String mobile;
+        private String phoneNumber;
         @SerializedName("Address")
         @Expose
         private String address;
         @SerializedName("Suburb")
         @Expose
         private String suburb;
+        @SerializedName("OrderTotal")
+        @Expose
+        private String orderTotal;
         @SerializedName("DOB")
         @Expose
         private String dOB;
@@ -72,7 +75,7 @@ public class ProfileViewModel {
         private String occupation;
         @SerializedName("Email")
         @Expose
-        private String emailId;
+        private String email;
         @SerializedName("Image")
         @Expose
         private String image;
@@ -88,12 +91,20 @@ public class ProfileViewModel {
             this.name = name;
         }
 
-        public String getMobile() {
-            return mobile;
+        public String getOrderTotal() {
+            return orderTotal;
         }
 
-        public void setMobile(String mobile) {
-            this.mobile = mobile;
+        public void setOrderTotal(String orderTotal) {
+            this.orderTotal = orderTotal;
+        }
+
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+
+        public void setPhoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
         }
 
         public String getAddress() {
@@ -136,12 +147,12 @@ public class ProfileViewModel {
             this.occupation = occupation;
         }
 
-        public String getEmailId() {
-            return emailId;
+        public String getEmail() {
+            return email;
         }
 
-        public void setEmailId(String emailId) {
-            this.emailId = emailId;
+        public void setEmail(String email) {
+            this.email = email;
         }
 
         public String getImage() {

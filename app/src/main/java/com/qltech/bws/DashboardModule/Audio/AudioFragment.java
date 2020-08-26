@@ -56,7 +56,6 @@ public class AudioFragment extends Fragment {
         audioViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-//                binding.tvExplore.setText(s);
             }
         });
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);

@@ -52,6 +52,8 @@ public class BillingAddressFragment extends Fragment {
                         BillingAddressViewModel listModel = response.body();
                         binding.etName.setText(listModel.getResponseData().getName());
                         binding.etEmail.setText(listModel.getResponseData().getEmail());
+                        binding.etEmail.setClickable(false);
+                        binding.etEmail.setEnabled(false);
                         binding.etMobileNumber.setText(listModel.getResponseData().getPhoneNumber());
                         binding.etMobileNumber.setClickable(false);
                         binding.etMobileNumber.setEnabled(false);

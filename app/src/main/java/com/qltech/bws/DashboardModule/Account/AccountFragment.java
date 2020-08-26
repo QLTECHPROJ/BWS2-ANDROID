@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,8 @@ import retrofit2.Response;
 public class AccountFragment extends Fragment {
     FragmentAccountBinding binding;
     private AccountViewModel accountViewModel;
-    String UserID,Plan;
+    String UserID;
+    private long mLastClickTime = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +62,6 @@ public class AccountFragment extends Fragment {
         View view = binding.getRoot();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        Plan = (shared1.getString(CONSTANTS.PREF_KEY_Plan, ""));
 
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 10,
@@ -68,16 +69,16 @@ public class AccountFragment extends Fragment {
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         profileViewData(getActivity());
-        if (Plan.equalsIgnoreCase("")){
-            binding.tvCrtPlan.setText("Current plan: $0 / month");
-        }else {
-            binding.tvCrtPlan.setText("Current plan: $"+Plan+" / month");
-        }
+
         binding.tvVersion.setText("Version " +BuildConfig.VERSION_NAME);
 
         binding.llUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(getActivity(), UserProfileActivity.class);
                 startActivity(i);
             }
@@ -86,6 +87,10 @@ public class AccountFragment extends Fragment {
         binding.llDownloads.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(getActivity(), DownloadsActivity.class);
                 startActivity(i);
             }
@@ -94,6 +99,10 @@ public class AccountFragment extends Fragment {
         binding.llInvoices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(getActivity(), InvoiceActivity.class);
                 startActivity(i);
             }
@@ -102,6 +111,10 @@ public class AccountFragment extends Fragment {
         binding.llBillingOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(getActivity(), BillingOrderActivity.class);
                 startActivity(i);
             }
@@ -110,6 +123,10 @@ public class AccountFragment extends Fragment {
         binding.llReminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(getActivity(), ReminderActivity.class);
                 startActivity(i);
             }
@@ -118,6 +135,10 @@ public class AccountFragment extends Fragment {
         binding.llResource.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(getActivity(), ResourceActivity.class);
                 startActivity(i);
             }
@@ -126,6 +147,10 @@ public class AccountFragment extends Fragment {
         binding.llFaq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(getActivity(), FaqActivity.class);
                 startActivity(i);
             }
@@ -167,7 +192,6 @@ public class AccountFragment extends Fragment {
         accountViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                binding.tvName.setText(s);
             }
         });
         return view;
@@ -218,6 +242,12 @@ public class AccountFragment extends Fragment {
                                 .error(R.color.dark_blue)
                                 .crossFade()
                                 .dontAnimate().into(binding.civProfile);
+
+                        if (viewModel.getResponseData().getOrderTotal().equalsIgnoreCase("")){
+                            binding.tvCrtPlan.setText("Current plan: $0.00 / month");
+                        }else {
+                            binding.tvCrtPlan.setText("Current plan: $"+viewModel.getResponseData().getOrderTotal()+" / month");
+                        }
                     }else {
                         hideProgressBar();
                     }

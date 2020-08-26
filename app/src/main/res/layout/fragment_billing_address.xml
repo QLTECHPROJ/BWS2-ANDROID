@@ -145,7 +145,6 @@
                                     android:fontFamily="@font/montserrat_medium"
                                     android:hint="@string/Mobile_Number"
                                     android:inputType="number"
-                                    android:maxLength="25"
                                     android:maxLines="1"
                                     android:singleLine="true"
                                     android:textCursorDrawable="@null"

@@ -46,7 +46,7 @@ public class AddAudioActivity extends AppCompatActivity {
     ActivityAddAudioBinding binding;
     List<SuggestedModel> listSuggestedList = new ArrayList<>();
     Context ctx;
-    String UserID;
+    String UserID, PlaylistID;
     SerachListAdpater adpater;
 
     @Override
@@ -56,6 +56,9 @@ public class AddAudioActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_audio);
         ctx = AddAudioActivity.this;
 
+        if (getIntent().getExtras() != null) {
+            PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
+        }
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -115,7 +118,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         hideProgressBar();
                         SuggestionAudiosModel listModel = response.body();
                         if (listModel != null) {
-                            adpater = new SerachListAdpater(listModel.getResponseData(), ctx, binding.rvSerachList, UserID);
+                            adpater = new SerachListAdpater(listModel.getResponseData(), ctx, binding.rvSerachList, UserID, PlaylistID);
                         }
                         binding.rvSerachList.setAdapter(adpater);
                     }
@@ -155,15 +158,16 @@ public class AddAudioActivity extends AppCompatActivity {
     public class SerachListAdpater extends RecyclerView.Adapter<SerachListAdpater.MyViewHolder> {
         private List<SuggestionAudiosModel.ResponseData> modelList;
         Context ctx;
-        String UserID;
+        String UserID, PlaylistID;
         RecyclerView rvSerachList;
 
         public SerachListAdpater(List<SuggestionAudiosModel.ResponseData> modelList, Context ctx,
-                                 RecyclerView rvSerachList, String UserID) {
+                                 RecyclerView rvSerachList, String UserID, String PlaylistID) {
             this.modelList = modelList;
             this.ctx = ctx;
             this.rvSerachList = rvSerachList;
             this.UserID = UserID;
+            this.PlaylistID = PlaylistID;
         }
 
         @NonNull
@@ -192,7 +196,7 @@ public class AddAudioActivity extends AppCompatActivity {
                     String AudioID = modelList.get(position).getID();
                     showProgressBar();
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, "");
+                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID);
                         listCall.enqueue(new Callback<SucessModel>() {
                             @Override
                             public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {

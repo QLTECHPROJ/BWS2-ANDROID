@@ -9,9 +9,9 @@ public class AccountViewModel  extends ViewModel {
 
     public AccountViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("John Smith");
+        mText.setValue("");
         getmText = new MutableLiveData<>();
-        getmText.setValue("View Profile");
+        getmText.setValue("");
     }
 
     public LiveData<String> getText() {

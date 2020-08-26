@@ -92,6 +92,7 @@ public class MyPlaylistsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), AddAudioActivity.class);
+                i.putExtra("PlaylistID",PlaylistID);
                 startActivity(i);
             }
         });
@@ -188,6 +189,13 @@ public class MyPlaylistsFragment extends Fragment {
             Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareData(UserID, PlaylistID);
+    }
+
     private void prepareData(String UserID, String PlaylistID) {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {

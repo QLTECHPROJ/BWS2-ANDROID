@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,6 +26,7 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
+import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.AppUtils;
@@ -40,7 +43,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         YouTubePlayer.OnInitializedListener {
     ActivityCancelMembershipBinding binding;
     Context ctx;
-    String UserID;
+    String UserID, CancelId = "";
     private static final int RECOVERY_DIALOG_REQUEST = 1;
 
     @Override
@@ -76,54 +79,111 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
             }
         });*/
 
+        binding.cbOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.cbOne.setChecked(true);
+                binding.cbTwo.setChecked(false);
+                binding.cbThree.setChecked(false);
+                binding.cbFour.setChecked(false);
+                CancelId = "1";
+                binding.edtCancelBox.setVisibility(View.GONE);
+                binding.edtCancelBox.setText("");
+            }
+        });
+
+
+        binding.cbTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.cbOne.setChecked(false);
+                binding.cbTwo.setChecked(true);
+                binding.cbThree.setChecked(false);
+                binding.cbFour.setChecked(false);
+                CancelId = "2";
+                binding.edtCancelBox.setVisibility(View.GONE);
+                binding.edtCancelBox.setText("");
+            }
+        });
+
+        binding.cbThree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.cbOne.setChecked(false);
+                binding.cbTwo.setChecked(false);
+                binding.cbThree.setChecked(true);
+                binding.cbFour.setChecked(false);
+                CancelId = "3";
+                binding.edtCancelBox.setVisibility(View.GONE);
+                binding.edtCancelBox.setText("");
+            }
+        });
+
+        binding.cbFour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.cbOne.setChecked(false);
+                binding.cbTwo.setChecked(false);
+                binding.cbThree.setChecked(false);
+                binding.cbFour.setChecked(true);
+                CancelId = "4";
+                binding.edtCancelBox.setVisibility(View.VISIBLE);
+            }
+        });
+
+
         binding.btnCancelSubscrible.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*if(responseReasonList.get(mSelectedItem).getCancelID().equalsIgnoreCase("5") &&
-                        edtCancelBox.getText().toString().equalsIgnoreCase("")){
+                if (CancelId.equalsIgnoreCase("4") &&
+                        binding.edtCancelBox.getText().toString().equalsIgnoreCase("")) {
                     Toast.makeText(ctx, "Please enter reason", Toast.LENGTH_SHORT).show();
-                }*/
-                final Dialog dialog = new Dialog(ctx);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.cancel_membership);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                } else {
+                    final Dialog dialog = new Dialog(ctx);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.cancel_membership);
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
-                tvconfirm.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showProgressBar();
-                        /*if (BWSApplication.isNetworkConnected(ctx)) {
-                            Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, CancelReason);
-                            listCall.enqueue(new Callback<CancelPlanModel>() {
-                                @Override
-                                public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
-                                    dialog.dismiss();
-                                    hideProgressBar();
-                                }
+                    final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                    final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+                    tvconfirm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showProgressBar();
+                            if (BWSApplication.isNetworkConnected(ctx)) {
+                                Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, binding.edtCancelBox.getText().toString());
+                                listCall.enqueue(new Callback<CancelPlanModel>() {
+                                    @Override
+                                    public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
+                                        if (response.isSuccessful()) {
+                                            CancelPlanModel model = response.body();
+                                            Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+                                            hideProgressBar();
+                                            finish();
+                                        }
+                                    }
 
-                                @Override
-                                public void onFailure(Call<CancelPlanModel> call, Throwable t) {
-
-                    hideProgressBar();
-
-                                }
-                            });
-                        }else {
-                            Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
-                        }*/
-                    }
-                });
-                tvGoBack.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.show();
-                dialog.setCancelable(false);
+                                    @Override
+                                    public void onFailure(Call<CancelPlanModel> call, Throwable t) {
+                                        hideProgressBar();
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    tvGoBack.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                    dialog.setCancelable(false);
+                }
             }
         });
     }

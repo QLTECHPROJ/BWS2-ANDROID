@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.LoginModule.Models.CountryListModel;
 import com.qltech.bws.MembershipModule.Activities.CheckoutGetCodeActivity;

@@ -51,9 +51,9 @@ public class LoginActivity extends AppCompatActivity {
             binding.tvCountry.setText(Name);
         }
 
-        if (MobileNo.equalsIgnoreCase("")){
+        if (MobileNo.equalsIgnoreCase("")) {
             binding.edtNumber.setText("");
-        }else {
+        } else {
             binding.edtNumber.setText(MobileNo);
         }
 
@@ -61,9 +61,9 @@ public class LoginActivity extends AppCompatActivity {
 
         binding.rlCountrySelect.setOnClickListener(view -> {
             Intent i = new Intent(ctx, CountrySelectActivity.class);
-            i.putExtra(CONSTANTS.Name,binding.tvCountry.getText().toString());
-            i.putExtra(CONSTANTS.Code,binding.tvCountryCode.getText().toString());
-            i.putExtra(CONSTANTS.MobileNo,binding.edtNumber.getText().toString());
+            i.putExtra(CONSTANTS.Name, binding.tvCountry.getText().toString());
+            i.putExtra(CONSTANTS.Code, binding.tvCountryCode.getText().toString());
+            i.putExtra(CONSTANTS.MobileNo, binding.edtNumber.getText().toString());
             i.putExtra(CONSTANTS.Check, "1");
             startActivity(i);
             finish();
@@ -92,7 +92,8 @@ public class LoginActivity extends AppCompatActivity {
             binding.edtNumber.requestFocus();
             binding.txtError.setVisibility(View.VISIBLE);
             binding.txtError.setText(getString(R.string.no_add_digits));
-        } else if (binding.edtNumber.getText().toString().length() == 1 || binding.edtNumber.getText().toString().length() <= 4) {
+        } else if (binding.edtNumber.getText().toString().length() == 1 || binding.edtNumber.getText().toString().length() < 8 ||
+                binding.edtNumber.getText().toString().length() > 10) {
             binding.edtNumber.setFocusable(true);
             binding.edtNumber.requestFocus();
             binding.txtError.setVisibility(View.VISIBLE);

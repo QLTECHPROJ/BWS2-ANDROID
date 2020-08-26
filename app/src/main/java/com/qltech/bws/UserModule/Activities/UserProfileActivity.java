@@ -115,6 +115,7 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
     }
 
+
     void profileUpdate() {
         if (binding.etUser.getText().toString().equalsIgnoreCase("")) {
             binding.flUser.setError(getString(R.string.valid_name));
@@ -256,8 +257,8 @@ public class UserProfileActivity extends AppCompatActivity {
                             date = spf.format(newDate);
                             binding.etCalendar.setText(date);
                         }
-                        binding.etEmail.setText(viewModel.getResponseData().getEmailId());
-                        binding.etMobileNumber.setText(viewModel.getResponseData().getMobile());
+                        binding.etEmail.setText(viewModel.getResponseData().getEmail());
+                        binding.etMobileNumber.setText(viewModel.getResponseData().getPhoneNumber());
 
                        /* if (binding.etCalendar.getText().toString().matches("")) {
                             binding.etCalendar.setEnabled(true);
@@ -266,7 +267,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             binding.etCalendar.setClickable(false);
                         }*/
 
-                        if (!viewModel.getResponseData().getEmailId().equalsIgnoreCase("")) {
+                        if (!viewModel.getResponseData().getEmail().equalsIgnoreCase("")) {
                             binding.etEmail.setEnabled(false);
                             binding.etEmail.setClickable(false);
                         } else {
@@ -274,7 +275,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             binding.etEmail.setClickable(true);
                         }
 
-                        if (!viewModel.getResponseData().getMobile().equalsIgnoreCase("")) {
+                        if (!viewModel.getResponseData().getPhoneNumber().equalsIgnoreCase("")) {
                             binding.etMobileNumber.setEnabled(false);
                             binding.etMobileNumber.setClickable(false);
                         } else {

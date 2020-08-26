@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import retrofit2.Response;
 public class CurrentPlanFragment extends Fragment {
     FragmentCurrentPlanBinding binding;
     String UserID;
+    private long mLastClickTime = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,11 +62,12 @@ public class CurrentPlanFragment extends Fragment {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         CurrentPlanVieViewModel listModel = response.body();
+                        if (listModel.getResponseData().getOrderTotal().equalsIgnoreCase("")){
+                            binding.tvDoller.setText("$0.00");
+                        }else {
+                            binding.tvDoller.setText("$" + listModel.getResponseData().getOrderTotal());
+                        }
                         binding.tvDoller.setText("$" + listModel.getResponseData().getOrderTotal());
-                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        editor.putString(CONSTANTS.PREF_KEY_Plan, listModel.getResponseData().getOrderTotal());
-                        editor.commit();
                         if (listModel.getResponseData().getFeature() == null || listModel.getResponseData().getFeature().equals("")) {
                             binding.llFeatured.setVisibility(View.GONE);
                         } else {
@@ -89,6 +92,10 @@ public class CurrentPlanFragment extends Fragment {
         binding.btnCancelSubscrible.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(getActivity(), CancelMembershipActivity.class);
                 startActivity(i);
             }

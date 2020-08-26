@@ -167,4 +167,8 @@
     <string name="My_Playlist">My Playlist</string>
     <string name="background_image">Background Image</string>
     <string name="Search_for_audio">Search for audio</string>
+    <string name="Feeling_better">Feeling better</string>
+    <string name="Condition_worse">Condition worse</string>
+    <string name="Pricing">Pricing</string>
+    <string name="Other_reason">Other reason</string>
 </resources>
