@@ -92,7 +92,7 @@ public class AppointmentFragment extends Fragment {
          BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
         if (BWSApplication.isNetworkConnected(getActivity())) {
 
-            Call<PreviousAppointmentsModel> listCall1 = APIClient.getClient().getAppointmentVIew("1");
+            Call<PreviousAppointmentsModel> listCall1 = APIClient.getClient().getAppointmentVIew(UserID);
             listCall1.enqueue(new Callback<PreviousAppointmentsModel>() {
                 @Override
                 public void onResponse(Call<PreviousAppointmentsModel> call, Response<PreviousAppointmentsModel> response) {
@@ -109,7 +109,7 @@ public class AppointmentFragment extends Fragment {
                      BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
                 }
             });
-            Call<NextSessionViewModel> listCall = APIClient.getClient().getNextSessionVIew("1");
+            Call<NextSessionViewModel> listCall = APIClient.getClient().getNextSessionVIew(UserID);
             listCall.enqueue(new Callback<NextSessionViewModel>() {
                 @Override
                 public void onResponse(Call<NextSessionViewModel> call, Response<NextSessionViewModel> response) {
@@ -214,24 +214,4 @@ public class AppointmentFragment extends Fragment {
         }
     }
 
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

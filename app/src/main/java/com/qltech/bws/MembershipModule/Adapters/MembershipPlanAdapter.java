@@ -76,11 +76,11 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<com.qltech.bws.M
         });
 
         if (row_index == position) {
-            callAdpter(holder, listModel, position);
+            ChangeFunction(holder, listModel, position);
         } else {
             if (listModel.getRecommendedFlag().equalsIgnoreCase("1") && pos == 0) {
                 holder.binding.tvRecommended.setVisibility(View.VISIBLE);
-                callAdpter(holder,listModel,position);
+                ChangeFunction(holder,listModel,position);
             } else {
                 holder.binding.llPlanSub.setBackground(ctx.getResources().getDrawable(R.drawable.rounded_light_gray));
                 holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.black));
@@ -94,7 +94,7 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<com.qltech.bws.M
         });
     }
 
-    private void callAdpter(MyViewHolder holder, MembershipPlanListModel.Plan listModel, int position) {
+    private void ChangeFunction(MyViewHolder holder, MembershipPlanListModel.Plan listModel, int position) {
         holder.binding.llPlanSub.setBackgroundColor(ctx.getResources().getColor(R.color.blue));
         holder.binding.llFeatures.setVisibility(View.VISIBLE);
         holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.white));
