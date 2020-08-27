@@ -99,7 +99,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".ReminderModule.ReminderActivity"
+            android:name=".ReminderModule.Activities.ReminderActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />

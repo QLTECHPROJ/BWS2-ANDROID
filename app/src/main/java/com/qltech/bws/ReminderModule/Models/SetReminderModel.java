@@ -1,14 +1,14 @@
-package com.qltech.bws.ResourceModule.Models;
+package com.qltech.bws.ReminderModule.Models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class ResourceFilterModel {
+public class SetReminderModel {
     @SerializedName("ResponseData")
     @Expose
-    private List<ResponseData> responseData = null;
+    private List<Object> responseData = null;
     @SerializedName("ResponseCode")
     @Expose
     private String responseCode;
@@ -19,11 +19,11 @@ public class ResourceFilterModel {
     @Expose
     private String responseStatus;
 
-    public List<ResponseData> getResponseData() {
+    public List<Object> getResponseData() {
         return responseData;
     }
 
-    public void setResponseData(List<ResponseData> responseData) {
+    public void setResponseData(List<Object> responseData) {
         this.responseData = responseData;
     }
 
@@ -49,20 +49,5 @@ public class ResourceFilterModel {
 
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
-    }
-    public class ResponseData {
-
-        @SerializedName("CategoryName")
-        @Expose
-        private String categoryName;
-
-        public String getCategoryName() {
-            return categoryName;
-        }
-
-        public void setCategoryName(String categoryName) {
-            this.categoryName = categoryName;
-        }
-
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -23,18 +24,21 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
+import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -52,6 +56,7 @@ public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
     String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage;
     SuggestionAudiosAdpater adpater;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,14 +85,14 @@ public class MyPlaylistsFragment extends Fragment {
             public void onClick(View view) {
                 FragmentManager fm = getActivity()
                         .getSupportFragmentManager();
-                fm.popBackStack ("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
         binding.tvSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), AddAudioActivity.class);
-                i.putExtra("PlaylistID",PlaylistID);
+                i.putExtra("PlaylistID", PlaylistID);
                 startActivity(i);
             }
         });
@@ -115,6 +120,14 @@ public class MyPlaylistsFragment extends Fragment {
         binding.rvPlayLists.setLayoutManager(playList);
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
 
+        binding.llReminder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), ReminderActivity.class);
+                i.putExtra("PlaylistID",PlaylistID);
+                startActivity(i);
+            }
+        });
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String search) {
@@ -130,11 +143,39 @@ public class MyPlaylistsFragment extends Fragment {
             }
         });
 
+        binding.llDownloads.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (BWSApplication.isNetworkConnected(getActivity())) {
+                    showProgressBar();
+                    Call<SucessModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
+                    listCall.enqueue(new Callback<SucessModel>() {
+                        @Override
+                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                            if (response.isSuccessful()) {
+                                hideProgressBar();
+                                SucessModel model = response.body();
+                                Toast.makeText(getActivity(), model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<SucessModel> call, Throwable t) {
+                            hideProgressBar();
+                        }
+                    });
+
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         binding.llMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
-                i.putExtra("PlaylistID",PlaylistID);
+                i.putExtra("PlaylistID", PlaylistID);
                 startActivity(i);
             }
         });
@@ -146,7 +187,7 @@ public class MyPlaylistsFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(getActivity(), AddAudioActivity.class);
-                    i.putExtra("PlaylistID",PlaylistID);
+                    i.putExtra("PlaylistID", PlaylistID);
                     startActivity(i);
                 }
             });
@@ -159,7 +200,7 @@ public class MyPlaylistsFragment extends Fragment {
         return view;
     }
 
-    private void prepareSearchData(String search){
+    private void prepareSearchData(String search) {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
             Call<SuggestionAudiosModel> listCall = APIClient.getClient().getAddSearchAudio(search);
@@ -203,7 +244,32 @@ public class MyPlaylistsFragment extends Fragment {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         SubPlayListModel listModel = response.body();
+                        MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
+                                4, 2, 1f, 0);
+                        binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+                        binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+                        binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
+                        if (!listModel.getResponseData().getPlaylistImage().equalsIgnoreCase("")) {
+                            Glide.with(getActivity()).load(listModel.getResponseData().getPlaylistImage()).thumbnail(0.1f)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
+                        } else {
+                            binding.ivBanner.setImageResource(R.drawable.audio_bg);
+                        }
 
+                        if (listModel.getResponseData().getDownload().equalsIgnoreCase("0")
+                                || listModel.getResponseData().getDownload().equalsIgnoreCase("")) {
+                            binding.llDownloads.setClickable(true);
+                            binding.llDownloads.setEnabled(true);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                            binding.ivDownloads.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                        } else if (listModel.getResponseData().getDownload().equalsIgnoreCase("1")) {
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                            binding.ivDownloads.setAlpha(255);
+                            binding.llDownloads.setClickable(false);
+                            binding.llDownloads.setEnabled(false);
+                            binding.ivDownloads.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                        }
                         if (listModel.getResponseData().getTotalAudio().equalsIgnoreCase("") &&
                                 listModel.getResponseData().getTotalhour().equalsIgnoreCase("")
                                 && listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
@@ -220,7 +286,7 @@ public class MyPlaylistsFragment extends Fragment {
                                 @Override
                                 public void onClick(View view) {
                                     Intent i = new Intent(getActivity(), AddAudioActivity.class);
-                                    i.putExtra("PlaylistID",PlaylistID);
+                                    i.putExtra("PlaylistID", PlaylistID);
                                     startActivity(i);
                                 }
                             });
@@ -287,8 +353,10 @@ public class MyPlaylistsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.binding.tvTitle.setText(listModelList.getPlaylistSongs().get(position).getName());
-            holder.binding.tvTime.setText(listModelList.getPlaylistSongs().get(position).getAudioDuration());
+            holder.binding.tvTitleA.setText(listModelList.getPlaylistSongs().get(position).getName());
+            holder.binding.tvTitleB.setText(listModelList.getPlaylistSongs().get(position).getName());
+            holder.binding.tvTimeA.setText(listModelList.getPlaylistSongs().get(position).getAudioDuration());
+            holder.binding.tvTimeB.setText(listModelList.getPlaylistSongs().get(position).getAudioDuration());
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
@@ -298,17 +366,42 @@ public class MyPlaylistsFragment extends Fragment {
             Glide.with(ctx).load(listModelList.getPlaylistSongs().get(position).getImageFile()).thumbnail(0.1f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
+            if (listModelList.getCreated().equalsIgnoreCase("1")) {
+                holder.binding.llMore.setVisibility(View.GONE);
+                holder.binding.llCenterLayoutA.setVisibility(View.GONE);
+                holder.binding.llCenterLayoutB.setVisibility(View.VISIBLE);
+                holder.binding.llDownload.setVisibility(View.VISIBLE);
+                holder.binding.llRemove.setVisibility(View.VISIBLE);
+                holder.binding.llSort.setVisibility(View.VISIBLE);
+            } else if (listModelList.getCreated().equalsIgnoreCase("0")) {
+                holder.binding.llMore.setVisibility(View.VISIBLE);
+                holder.binding.llCenterLayoutA.setVisibility(View.VISIBLE);
+                holder.binding.llCenterLayoutB.setVisibility(View.GONE);
+                holder.binding.llDownload.setVisibility(View.GONE);
+                holder.binding.llRemove.setVisibility(View.GONE);
+                holder.binding.llSort.setVisibility(View.GONE);
+            }
             if (listModelList.getPlaylistSongs().get(position).getDownload().equalsIgnoreCase("1")) {
                 holder.binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                holder. binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                holder.binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
                 holder.binding.ivDownloads.setAlpha(255);
-                holder. binding.llDownload.setClickable(false);
-                holder. binding.llDownload.setEnabled(false);
+                holder.binding.llDownload.setClickable(false);
+                holder.binding.llDownload.setEnabled(false);
             } else if (!listModelList.getPlaylistSongs().get(position).getDownload().equalsIgnoreCase("")) {
                 holder.binding.llDownload.setClickable(true);
                 holder.binding.llDownload.setEnabled(true);
                 holder.binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
+
+            holder.binding.llMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(ctx, AddQueueActivity.class);
+                    i.putExtra("play", "");
+                    i.putExtra("ID", listModelList.getPlaylistSongs().get(position).getID());
+                    startActivity(i);
+                }
+            });
 
             holder.binding.llDownload.setOnClickListener(new View.OnClickListener() {
                 @Override

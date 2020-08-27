@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         app:cardCornerRadius="@dimen/_8sdp"
@@ -36,20 +35,20 @@
             <LinearLayout
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.78"
                 android:layout_marginLeft="@dimen/_13sdp"
                 android:layout_marginRight="@dimen/_13sdp"
+                android:layout_weight="0.78"
+                android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:ellipsize="end"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="start"
                     android:maxLines="1"
-                    android:ellipsize="end"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp" />
 
@@ -58,10 +57,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
+                    android:ellipsize="end"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="start"
                     android:maxLines="2"
-                    android:ellipsize="end"
                     android:textColor="@color/extra_light_gray"
                     android:textSize="@dimen/_11sdp" />
 

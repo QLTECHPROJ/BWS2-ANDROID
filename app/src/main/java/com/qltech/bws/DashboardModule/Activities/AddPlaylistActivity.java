@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -25,8 +26,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Models.AddPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
+import com.qltech.bws.DashboardModule.Models.PlaylistingModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.qltech.bws.R;
@@ -48,12 +51,15 @@ public class AddPlaylistActivity extends AppCompatActivity {
     ActivityAddPlaylistBinding binding;
     List<AddPlaylistModel> addPlaylist = new ArrayList<>();
     String UserID;
+    Context ctx;
+    Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_playlist);
-
+        ctx = AddPlaylistActivity.this;
+        activity = AddPlaylistActivity.this;
         Glide.with(AddPlaylistActivity.this).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -122,35 +128,43 @@ public class AddPlaylistActivity extends AppCompatActivity {
             }
         });
 
-        AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(addPlaylist, AddPlaylistActivity.this);
         RecyclerView.LayoutManager played = new LinearLayoutManager(AddPlaylistActivity.this, LinearLayoutManager.VERTICAL, false);
         binding.rvPlayLists.setLayoutManager(played);
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
-        binding.rvPlayLists.setAdapter(addPlaylistAdapter);
-        preparePlayLists();
+        prepareData(ctx);
     }
 
-    private void preparePlayLists() {
-        AddPlaylistModel list = new AddPlaylistModel("Playlist 1");
-        addPlaylist.add(list);
-        list = new AddPlaylistModel("Playlist 2");
-        addPlaylist.add(list);
-        list = new AddPlaylistModel("Playlist 3");
-        addPlaylist.add(list);
-        list = new AddPlaylistModel("Night audio");
-        addPlaylist.add(list);
-        list = new AddPlaylistModel("Playlist 3");
-        addPlaylist.add(list);
-        list = new AddPlaylistModel("Night audio");
-        addPlaylist.add(list);
+    private void prepareData(Context ctx) {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+            Call<PlaylistingModel> listCall = APIClient.getClient().getPlaylisting(UserID);
+            listCall.enqueue(new Callback<PlaylistingModel>() {
+                @Override
+                public void onResponse(Call<PlaylistingModel> call, Response<PlaylistingModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                        PlaylistingModel model = response.body();
+                        AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
+                        binding.rvPlayLists.setAdapter(addPlaylistAdapter);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PlaylistingModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);                }
+            });
+
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private class AddPlaylistAdapter extends RecyclerView.Adapter<AddPlaylistAdapter.MyViewHolder> {
-        private List<AddPlaylistModel> listModelList;
+        private List<PlaylistingModel.ResponseData> listModel;
         Context ctx;
 
-        public AddPlaylistAdapter(List<AddPlaylistModel> listModelList, Context ctx) {
-            this.listModelList = listModelList;
+        public AddPlaylistAdapter(List<PlaylistingModel.ResponseData> listModel, Context ctx) {
+            this.listModel = listModel;
             this.ctx = ctx;
         }
 
@@ -164,19 +178,18 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            AddPlaylistModel listModel = listModelList.get(position);
-            holder.binding.tvTitle.setText(listModel.getTitle());
-
+            holder.binding.tvTitle.setText(listModel.get(position).getName());
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+            Glide.with(ctx).load(listModel.get(position).getImage()).thumbnail(0.1f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
         }
 
         @Override
         public int getItemCount() {
-            return listModelList.size();
+            return listModel.size();
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {

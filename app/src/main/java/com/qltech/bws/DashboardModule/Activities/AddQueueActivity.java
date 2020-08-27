@@ -131,8 +131,12 @@ public class AddQueueActivity extends AppCompatActivity {
         }
         if (play.equalsIgnoreCase("play")) {
             binding.llOptions.setVisibility(View.VISIBLE);
+            binding.llAddPlaylist.setVisibility(View.VISIBLE);
+            binding.llAddQueue.setVisibility(View.VISIBLE);
         } else {
             binding.llOptions.setVisibility(View.GONE);
+            binding.llAddPlaylist.setVisibility(View.GONE);
+            binding.llAddQueue.setVisibility(View.GONE);
         }
         prepareData();
 

@@ -26,7 +26,6 @@
                 android:layout_marginHorizontal="@dimen/_16sdp"
                 android:fontFamily="@font/montserrat_semi_bold"
                 android:gravity="start"
-                android:text="Emotional empowerment program session 1"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_17sdp" />
 
@@ -69,8 +68,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_2sdp"
                         android:fontFamily="@font/montserrat_medium"
-                        android:gravity="left"
-                        android:text="4 November, 2019"
+                        android:gravity="start"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_11sdp" />
                 </LinearLayout>
@@ -94,8 +92,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/_8sdp"
                         android:fontFamily="@font/montserrat_medium"
-                        android:gravity="left"
-                        android:text="11:00 am"
+                        android:gravity="start"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_11sdp" />
                 </LinearLayout>
@@ -129,8 +126,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_2sdp"
                         android:fontFamily="@font/montserrat_medium"
-                        android:gravity="left"
-                        android:text="60 Mins"
+                        android:gravity="start"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_11sdp" />
                 </LinearLayout>

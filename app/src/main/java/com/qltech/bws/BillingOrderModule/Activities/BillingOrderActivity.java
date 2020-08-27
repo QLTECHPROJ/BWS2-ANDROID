@@ -78,6 +78,11 @@ public class BillingOrderActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
     public class TabAdapter extends FragmentStatePagerAdapter {
 
         int totalTabs;

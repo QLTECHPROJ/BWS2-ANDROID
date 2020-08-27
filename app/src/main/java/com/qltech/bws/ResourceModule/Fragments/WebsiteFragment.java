@@ -60,7 +60,7 @@ public class WebsiteFragment extends Fragment {
     void prepareData() {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_TWO,"");
+            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_FOUR,"");
             listCall.enqueue(new Callback<ResourceListModel>() {
                 @Override
                 public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
@@ -124,7 +124,12 @@ public class WebsiteFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModelList.get(position).getTitle());
-            holder.binding.tvCreator.setText(listModelList.get(position).getAuthor());
+            if (!listModelList.get(position).getAuthor().equalsIgnoreCase("")){
+                holder.binding.tvCreator.setVisibility(View.VISIBLE);
+                holder.binding.tvCreator.setText(listModelList.get(position).getAuthor());
+            }else {
+                holder.binding.tvCreator.setVisibility(View.GONE);
+            }
             Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.1f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {

@@ -61,7 +61,6 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
         CardListModel.ResponseData listModel = listModelList.get(position);
         holder.binding.tvCardNo.setText(activity.getString(R.string.first_card_chars) + listModel.getLast4());
         holder.binding.tvExpiryTime.setText("Valid: " + listModel.getExpMonth() + "/" +
@@ -71,7 +70,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.binding.ivCardimg);
-        if (listModel.get_default().equalsIgnoreCase(CONSTANTS.FLAG_ONE)) {
+        if (listModel.getIsDefault().equalsIgnoreCase(CONSTANTS.FLAG_ONE)) {
             holder.binding.ivCheck.setImageResource(R.drawable.ic_checked_icon);
             card_id = listModel.getCustomer();
             SharedPreferences shared = activity.getSharedPreferences(CONSTANTS.PREF_KEY_CardID, MODE_PRIVATE);
@@ -190,7 +189,6 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
     }
 
     private void getCardList() {
-
         if (BWSApplication.isNetworkConnected(activity)) {
             showProgressBar();
             Call<CardListModel> listCall = APIClient.getClient().getCardLists(userId);

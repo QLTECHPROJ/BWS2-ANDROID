@@ -52,7 +52,10 @@ public class CONSTANTS {
     public static final String MULTIPART_FORMAT = "multipart/form-data";
 
     public static final String PREF_KEY_LOGIN = "Login";
+    public static final String PREF_KEY_ReminderStatus = "ReminderStatus";
     public static final String PREF_KEY_UserID = "UserID";
+    public static final String PREF_KEY_IsRepeat = "IsRepeat";
+    public static final String PREF_KEY_IsShuffle = "IsShuffle";
     public static final String PREF_KEY_MobileNo = "MobileNo";
     public static final String PREF_KEY_CardID = "CardID";
     public static final String PREF_KEY_Name = "Name";

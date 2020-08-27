@@ -72,9 +72,10 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             @Override
             public void onClick(View view) {
                 String AudioID = listModelList.get(position).getAudioID();
+                String PlaylistID = listModelList.get(position).getPlaylistId();
                 showProgressBar();
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioID, "");
+                    Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioID, PlaylistID);
                     listCall.enqueue(new Callback<SucessModel>() {
                         @Override
                         public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {

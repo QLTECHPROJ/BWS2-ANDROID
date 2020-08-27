@@ -28,4 +28,5 @@
 
     <color name="shadow">#555555</color>
     <color name="title">#777777</color>
+    <color name="dark_yellow">#f89552</color>
 </resources>

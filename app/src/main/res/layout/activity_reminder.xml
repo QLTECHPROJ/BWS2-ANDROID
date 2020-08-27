@@ -258,6 +258,7 @@
                 </LinearLayout>
 
                 <Switch
+                    android:id="@+id/switchStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_8sdp"

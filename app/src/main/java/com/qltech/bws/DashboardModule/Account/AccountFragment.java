@@ -30,7 +30,7 @@ import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
 import com.qltech.bws.FaqModule.Activities.FaqActivity;
 import com.qltech.bws.InvoiceModule.Activities.InvoiceActivity;
 import com.qltech.bws.R;
-import com.qltech.bws.ReminderModule.ReminderActivity;
+import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
 import com.qltech.bws.ResourceModule.Activities.ResourceActivity;
 import com.qltech.bws.UserModule.Activities.UserProfileActivity;
 import com.qltech.bws.BWSApplication;
@@ -39,10 +39,6 @@ import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentAccountBinding;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -50,11 +50,11 @@ public class CardListModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
-    public class ResponseData {
 
-        @SerializedName("default")
+    public class ResponseData {
+        @SerializedName("isDefault")
         @Expose
-        private String _default;
+        private String isDefault;
         @SerializedName("brand")
         @Expose
         private String brand;
@@ -74,12 +74,12 @@ public class CardListModel {
         @Expose
         private String last4;
 
-        public String get_default() {
-            return _default;
+        public String getIsDefault() {
+            return isDefault;
         }
 
-        public void set_default(String _default) {
-            this._default = _default;
+        public void setIsDefault(String isDefault) {
+            this.isDefault = isDefault;
         }
 
         public String getImage() {

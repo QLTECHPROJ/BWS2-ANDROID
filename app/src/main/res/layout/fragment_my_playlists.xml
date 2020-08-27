@@ -28,17 +28,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_210sdp">
 
+
                         <ImageView
+                            android:id="@+id/ivBanner"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_centerInParent="true"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/audio_bg" />
+                            android:layout_centerInParent="true" />
 
                         <RelativeLayout
                             android:id="@+id/rlLayout"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_56sdp">
+                            android:layout_height="@dimen/_56sdp"
+                            android:background="@drawable/top_transparent_gradient">
 
                             <LinearLayout
                                 android:id="@+id/llBack"
@@ -86,10 +87,9 @@
                                     android:gravity="center">
 
                                     <ImageView
+                                        android:id="@+id/ivDownloads"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:src="@drawable/ic_download_icon"
-                                        app:tint="@color/white" />
+                                        android:layout_height="wrap_content" />
 
                                 </LinearLayout>
 
@@ -114,8 +114,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginBottom="@dimen/_16sdp"
-                            android:orientation="vertical">
+                            android:background="@drawable/transparent_gradient"
+                            android:orientation="vertical"
+                            android:paddingBottom="@dimen/_16sdp">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -150,6 +151,8 @@
                                 android:textSize="@dimen/_15sdp" />
 
                         </LinearLayout>
+
+
                     </RelativeLayout>
 
                     <ImageView
@@ -168,9 +171,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@id/ivPlaylistStatus"
-                        android:gravity="center"
-                        android:layout_marginTop="@dimen/_40sdp"
                         android:layout_centerInParent="true"
+                        android:layout_marginTop="@dimen/_40sdp"
+                        android:gravity="center"
                         android:orientation="vertical"
                         android:visibility="visible">
 
@@ -232,13 +235,13 @@
                                 android:id="@+id/tvSearch"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
                                 android:layout_marginLeft="@dimen/_16sdp"
                                 android:layout_marginTop="@dimen/_20sdp"
                                 android:layout_marginRight="@dimen/_16sdp"
+                                android:layout_toRightOf="@id/button1"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
-                                android:layout_centerVertical="true"
-                                android:layout_toRightOf="@id/button1"
                                 android:text="@string/Search_for_audio"
                                 android:textColor="@color/light_gray"
                                 android:textSize="@dimen/_16sdp" />
@@ -250,10 +253,10 @@
                                 android:layout_centerVertical="true"
                                 android:clickable="false"
                                 android:focusable="true"
-                                android:visibility="gone"
                                 android:iconifiedByDefault="false"
                                 android:singleLine="true"
                                 android:theme="@style/WallSearchView"
+                                android:visibility="gone"
                                 app:queryBackground="@null"
                                 app:queryHint="Search for audio"
                                 app:searchHintIcon="@null"

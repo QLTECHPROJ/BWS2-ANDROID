@@ -1,11 +1,11 @@
-package com.qltech.bws.ResourceModule.Models;
+package com.qltech.bws.DashboardModule.Models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class ResourceFilterModel {
+public class PlaylistingModel {
     @SerializedName("ResponseData")
     @Expose
     private List<ResponseData> responseData = null;
@@ -52,17 +52,38 @@ public class ResourceFilterModel {
     }
     public class ResponseData {
 
-        @SerializedName("CategoryName")
+        @SerializedName("ID")
         @Expose
-        private String categoryName;
+        private String iD;
+        @SerializedName("Name")
+        @Expose
+        private String name;
+        @SerializedName("Image")
+        @Expose
+        private String image;
 
-        public String getCategoryName() {
-            return categoryName;
+        public String getID() {
+            return iD;
         }
 
-        public void setCategoryName(String categoryName) {
-            this.categoryName = categoryName;
+        public void setID(String iD) {
+            this.iD = iD;
         }
 
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getImage() {
+            return image;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
+        }
     }
 }

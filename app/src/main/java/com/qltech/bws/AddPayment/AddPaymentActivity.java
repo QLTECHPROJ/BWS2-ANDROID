@@ -289,7 +289,6 @@ public class AddPaymentActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public void onBackPressed() {
         finish();

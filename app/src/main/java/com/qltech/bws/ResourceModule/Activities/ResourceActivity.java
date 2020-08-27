@@ -1,5 +1,6 @@
 package com.qltech.bws.ResourceModule.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -27,17 +28,16 @@ import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DownloadModule.Models.DownloadsHistoryModel;
 import com.qltech.bws.R;
-import com.qltech.bws.ResourceModule.Adapters.ResourceFilterAdapter;
 import com.qltech.bws.ResourceModule.Fragments.AppsFragment;
 import com.qltech.bws.ResourceModule.Fragments.AudioBooksFragment;
 import com.qltech.bws.ResourceModule.Fragments.DocumentariesFragment;
 import com.qltech.bws.ResourceModule.Fragments.PodcastsFragment;
 import com.qltech.bws.ResourceModule.Fragments.WebsiteFragment;
 import com.qltech.bws.ResourceModule.Models.ResourceFilterModel;
-import com.qltech.bws.ResourceModule.Models.ResourceListModel;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityResourceBinding;
+import com.qltech.bws.databinding.FilterListLayoutBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +113,7 @@ public class ResourceActivity extends AppCompatActivity {
             wlp.x = 33;
             wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
             window.setAttributes(wlp);
-            dialogBox.show();
+
 
             RecyclerView rvFilterList = promptsView.findViewById(R.id.rvFilterList);
             dialogBox.setOnKeyListener((dialog, keyCode, event) -> {
@@ -126,27 +126,26 @@ public class ResourceActivity extends AppCompatActivity {
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ResourceActivity.this);
             rvFilterList.setLayoutManager(mLayoutManager);
             rvFilterList.setItemAnimator(new DefaultItemAnimator());
-            prepareData(ResourceActivity.this, rvFilterList);
+            prepareData(ResourceActivity.this, rvFilterList, dialogBox);
         });
     }
 
-    void prepareData(Context ctx, RecyclerView rvFilterList) {
-        BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+    void prepareData(Context ctx, RecyclerView rvFilterList,Dialog dialogBox) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_FIVE, "");
-            listCall.enqueue(new Callback<ResourceListModel>() {
+            Call<ResourceFilterModel> listCall = APIClient.getClient().getResourcFilterLists(UserID);
+            listCall.enqueue(new Callback<ResourceFilterModel>() {
                 @Override
-                public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
+                public void onResponse(Call<ResourceFilterModel> call, Response<ResourceFilterModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
-                        ResourceListModel listModel = response.body();
+                        ResourceFilterModel listModel = response.body();
                         ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx);
                         rvFilterList.setAdapter(adapter);
+                        dialogBox.show();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                public void onFailure(Call<ResourceFilterModel> call, Throwable t) {
                     BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
                 }
             });
@@ -155,6 +154,42 @@ public class ResourceActivity extends AppCompatActivity {
         }
     }
 
+    public class ResourceFilterAdapter extends RecyclerView.Adapter<ResourceFilterAdapter.MyViewHolder> {
+        private List<ResourceFilterModel.ResponseData> listModel;
+        Context ctx;
+
+        public ResourceFilterAdapter(List<ResourceFilterModel.ResponseData> listModel, Context ctx) {
+            this.listModel = listModel;
+            this.ctx = ctx;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            FilterListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.filter_list_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.binding.tvTitle.setText(listModel.get(position).getCategoryName());
+        }
+
+        @Override
+        public int getItemCount() {
+            return listModel.size();
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            FilterListLayoutBinding binding;
+
+            public MyViewHolder(FilterListLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+    }
 
     public class TabAdapter extends FragmentStatePagerAdapter {
         int totalTabs;
@@ -175,6 +210,7 @@ public class ResourceActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString("audio_books", "audio_books");
                     bundle.putString("UserID", UserID);
+                    bundle.putString("Category","");
                     audioBooksFragment.setArguments(bundle);
                     return audioBooksFragment;
                 case 1:
@@ -182,6 +218,7 @@ public class ResourceActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     bundle.putString("podcasts", "podcasts");
                     bundle.putString("UserID", UserID);
+                    bundle.putString("Category","");
                     podcastsFragment.setArguments(bundle);
                     return podcastsFragment;
                 case 2:
@@ -189,6 +226,7 @@ public class ResourceActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     bundle.putString("apps", "apps");
                     bundle.putString("UserID", UserID);
+                    bundle.putString("Category","");
                     appsFragment.setArguments(bundle);
                     return appsFragment;
                 case 3:
@@ -196,6 +234,7 @@ public class ResourceActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     bundle.putString("website", "website");
                     bundle.putString("UserID", UserID);
+                    bundle.putString("Category","");
                     websiteFragment.setArguments(bundle);
                     return websiteFragment;
                 case 4:
@@ -203,6 +242,7 @@ public class ResourceActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     bundle.putString("documentaries", "documentaries");
                     bundle.putString("UserID", UserID);
+                    bundle.putString("Category","");
                     documentariesFragment.setArguments(bundle);
                     return documentariesFragment;
                 default:

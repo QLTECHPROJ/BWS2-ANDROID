@@ -82,6 +82,12 @@ public class SubPlayListModel {
         @SerializedName("Totalminute")
         @Expose
         private String totalminute;
+        @SerializedName("Created")
+        @Expose
+        private String created;
+        @SerializedName("Download")
+        @Expose
+        private String download;
         @SerializedName("PlaylistSongs")
         @Expose
         private List<PlaylistSong> playlistSongs = null;
@@ -100,6 +106,22 @@ public class SubPlayListModel {
 
         public void setPlaylistName(String playlistName) {
             this.playlistName = playlistName;
+        }
+
+        public String getDownload() {
+            return download;
+        }
+
+        public void setDownload(String download) {
+            this.download = download;
+        }
+
+        public String getCreated() {
+            return created;
+        }
+
+        public void setCreated(String created) {
+            this.created = created;
         }
 
         public String getPlaylistDesc() {
@@ -193,9 +215,6 @@ public class SubPlayListModel {
             @SerializedName("AudioFile")
             @Expose
             private String audioFile;
-            @SerializedName("AudioID")
-            @Expose
-            private String audioID;
             @SerializedName("Name")
             @Expose
             private String name;
@@ -277,15 +296,6 @@ public class SubPlayListModel {
             public void setAudioFile(String audioFile) {
                 this.audioFile = audioFile;
             }
-
-            public String getAudioID() {
-                return audioID;
-            }
-
-            public void setAudioID(String audioID) {
-                this.audioID = audioID;
-            }
-
         }
     }
 }

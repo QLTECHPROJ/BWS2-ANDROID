@@ -13,6 +13,7 @@ import com.qltech.bws.DashboardModule.Models.DirectionModel;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
 import com.qltech.bws.DashboardModule.Models.NextSessionViewModel;
+import com.qltech.bws.DashboardModule.Models.PlaylistingModel;
 import com.qltech.bws.DashboardModule.Models.PreviousAppointmentsModel;
 import com.qltech.bws.DashboardModule.Models.RenamePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SessionListModel;
@@ -27,6 +28,9 @@ import com.qltech.bws.LoginModule.Models.CountryListModel;
 import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.LoginModule.Models.OtpModel;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
+import com.qltech.bws.ReminderModule.Models.ReminderStatusModel;
+import com.qltech.bws.ReminderModule.Models.SetReminderModel;
+import com.qltech.bws.ResourceModule.Models.ResourceFilterModel;
 import com.qltech.bws.ResourceModule.Models.ResourceListModel;
 import com.qltech.bws.SplashModule.Models.VersionModel;
 import com.qltech.bws.UserModule.Models.AddProfileModel;
@@ -56,19 +60,21 @@ public interface APIInterface {
                                    @Field("DeviceType") String deviceType,
                                    @Field("Resend") String resend,
                                    @Field("key") String key);
+
     /* TODO Registration */
     @POST("signupcheckout")
     @FormUrlEncoded
     Call<LoginModel> getRegData(@Field("MobileNo") String mobileNo,
-                                   @Field("CountryCode") String countryCode);
+                                @Field("CountryCode") String countryCode);
+
     /* TODO Membership Payment */
     @POST("payment")
     @FormUrlEncoded
     Call<LoginModel> getMembershipPayment(
-                                   @Field("PlanId") String planId,
-                                   @Field("PlanFlag") String planFlag,
-                                   @Field("TokenId") String CardId,
-                                   @Field("MobileNo") String UserId);
+            @Field("PlanId") String planId,
+            @Field("PlanFlag") String planFlag,
+            @Field("TokenId") String CardId,
+            @Field("MobileNo") String UserId);
 
     /* TODO CheckoutGetCodeActivity & OtpActivity */
     @POST("signupcheckout")
@@ -88,15 +94,16 @@ public interface APIInterface {
                                @Field("DeviceID") String deviceID,
                                @Field("MobileNo") String mobileNo,
                                @Field("SignupFlag") String signupFlag);
+
     /* TODO OtpActivity */
     @POST("authotp")
     @FormUrlEncoded
     Call<CardModel> getAuthOtps1(@Field("OTP") String otp,
-                               @Field("Token") String token,
-                               @Field("DeviceType") String deviceType,
-                               @Field("DeviceID") String deviceID,
-                               @Field("MobileNo") String mobileNo,
-                               @Field("SignupFlag") String signupFlag);
+                                 @Field("Token") String token,
+                                 @Field("DeviceType") String deviceType,
+                                 @Field("DeviceID") String deviceID,
+                                 @Field("MobileNo") String mobileNo,
+                                 @Field("SignupFlag") String signupFlag);
 
     /* TODO CountryActivity */
     @GET("countrylist")
@@ -209,10 +216,11 @@ public interface APIInterface {
     @POST("appointmentsession")
     @FormUrlEncoded
     Call<SessionListModel> getAppointmentSession(@Field("UserID") String userID);
-  /* TODO Reminder */
-    @POST("appointmentsession")
+
+  /* TODO ReminderActivity */
+    @POST("setreminder")
     @FormUrlEncoded
-    Call<CardModel> SetReminder(@Field("PlaylistId") String PlaylistId,
+    Call<SetReminderModel> SetReminder(@Field("PlaylistId") String PlaylistId,
                                 @Field("UserID") String userID,
                                 @Field("IsSingle") String IsSingle,
                                 @Field("ReminderTime") String ReminderTime,
@@ -223,7 +231,7 @@ public interface APIInterface {
     @POST("recentlyplayed")
     @FormUrlEncoded
     Call<SucessModel> getRecentlyplayed(@Field("AudioId") String audioId,
-                                           @Field("UserID") String userID);
+                                        @Field("UserID") String userID);
 
     /* TODO AddQueueActivity */
     @POST("audiodetail")
@@ -285,6 +293,11 @@ public interface APIInterface {
     Call<SucessModel> getDeletePlaylist(@Field("UserID") String userID,
                                         @Field("PlaylistId") String playlistId);
 
+     /* TODO AddPlaylistActivity */
+    @POST("playlist")
+    @FormUrlEncoded
+    Call<PlaylistingModel> getPlaylisting(@Field("UserID") String userID);
+
     /* TODO AddQueueActivity & PlayWellnessActivity */
     @POST("downloads")
     @FormUrlEncoded
@@ -308,11 +321,22 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<DownloadlistModel> getDownloadlistPlaylist(@Field("UserID") String userID);
 
-    /* TODO ResourceActivity */
+    /* TODO AppsFragment & AudioBooksFragment & DocumentariesFragment & PodcastsFragment & WebsiteFragment */
     @POST("resourcelist")
     @FormUrlEncoded
     Call<ResourceListModel> getResourcLists(@Field("UserID") String userID,
                                             @Field("ResourceTypeId") String resourceTypeId,
                                             @Field("Category") String category);
 
+  /* TODO ResourceActivity */
+    @POST("resourcecategorylist")
+    @FormUrlEncoded
+    Call<ResourceFilterModel> getResourcFilterLists(@Field("UserID") String userID);
+
+
+    /* TODO ReminderActivity */
+    @POST("reminderstatus")
+    @FormUrlEncoded
+    Call<ReminderStatusModel> getReminderStatus(@Field("UserID") String userID,
+                                          @Field("ReminderStatus") String reminderStatus);
 }

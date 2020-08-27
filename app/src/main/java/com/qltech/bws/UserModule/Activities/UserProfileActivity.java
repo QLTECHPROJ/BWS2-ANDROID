@@ -374,6 +374,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                     if (response.isSuccessful()) {
                                         hideProgressBar();
                                         RemoveProfileModel viewModel = response.body();
+                                        Toast.makeText(ctx, viewModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
 
                                     }
                                 }

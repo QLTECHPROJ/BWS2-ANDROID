@@ -38,9 +38,14 @@ public class BWSApplication extends Application {
 
     public static MeasureRatio measureRatio(Context context, float outerMargin, float aspectX, float aspectY,
                                             float proportion, float innerMargin) {
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+        try {
+            WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         float width = (float) (displayMetrics.widthPixels / displayMetrics.density);
         float widthImg = (float) (((width - outerMargin) * proportion) - innerMargin);
         float height = (float) (widthImg * aspectY / aspectX);

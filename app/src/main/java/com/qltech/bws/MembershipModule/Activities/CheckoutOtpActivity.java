@@ -92,6 +92,19 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        binding.llEditNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+                i.putExtra("MobileNo",MobileNo);
+                i.putExtra("Name", Name);
+                i.putExtra("Code", Code);
+                startActivity(i);
+                finish();
+            }
+        });
+
         binding.btnSendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

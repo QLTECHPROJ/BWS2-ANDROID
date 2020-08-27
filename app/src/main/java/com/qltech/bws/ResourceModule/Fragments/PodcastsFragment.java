@@ -62,7 +62,7 @@ public class PodcastsFragment extends Fragment {
     void prepareData() {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_TWO,"");
+            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_THREE,"");
             listCall.enqueue(new Callback<ResourceListModel>() {
                 @Override
                 public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {

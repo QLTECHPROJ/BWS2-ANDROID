@@ -44,11 +44,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_playlist);
-
-        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
+        ctx = MyPlaylistActivity.this;
+        Glide.with(MyPlaylistActivity.this).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        ctx = ctx;
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
