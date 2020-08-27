@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -83,13 +82,13 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
         holder.binding.llAddNewCard.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(activity)) {
-                showProgressBar();
+                BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
                 Call<CardListModel> listCall = APIClient.getClient().getChangeCard(userId, listModel.getCustomer());
                 listCall.enqueue(new Callback<CardListModel>() {
                     @Override
                     public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
-                        hideProgressBar();
-                        if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+                        {
                             CardListModel cardListModel = response.body();
                             if (cardListModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
                                 if (cardListModel.getResponseData().size() == 0) {
@@ -109,24 +108,24 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
                     @Override
                     public void onFailure(Call<CardListModel> call, Throwable t) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
                     }
 
                 });
             } else {
                 Toast.makeText(activity, activity.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
-                hideProgressBar();
+                BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
             }
 
         });
         holder.binding.rlRemoveCard.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(activity)) {
-                showProgressBar();
+                BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
                 Call<CardModel> listCall = APIClient.getClient().getRemoveCard(userId, listModel.getCustomer());
                 listCall.enqueue(new Callback<CardModel>() {
                     @Override
                     public void onResponse(Call<CardModel> call, Response<CardModel> response) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
                         if (response.isSuccessful()) {
                             CardModel cardModel = response.body();
                             if (cardModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
@@ -139,39 +138,18 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
                     @Override
                     public void onFailure(Call<CardModel> call, Throwable t) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
                     }
 
                 });
             } else {
                 Toast.makeText(activity, activity.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
-                hideProgressBar();
+                BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
             }
 
         });
 
 
-    }
-
-    private void hideProgressBar() {
-        try {
-            progressBarHolder.setVisibility(View.GONE);
-            ImgV.setVisibility(View.GONE);
-            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            progressBarHolder.setVisibility(View.VISIBLE);
-            activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            ImgV.setVisibility(View.VISIBLE);
-            ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -190,13 +168,13 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
     private void getCardList() {
         if (BWSApplication.isNetworkConnected(activity)) {
-            showProgressBar();
+            BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
             Call<CardListModel> listCall = APIClient.getClient().getCardLists(userId);
             listCall.enqueue(new Callback<CardListModel>() {
                 @Override
                 public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
                         CardListModel cardListModel = response.body();
                         if (cardListModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
                             if (cardListModel.getResponseData().size() == 0) {
@@ -215,7 +193,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
                 @Override
                 public void onFailure(Call<CardListModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
                 }
 
             });
