@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -62,7 +63,7 @@ public class ReminderActivity extends AppCompatActivity {
         reminderDayList.add("T");
         reminderDayList.add("F");
         reminderDayList.add("S");
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context,7);
         binding.rvReminderDay.setLayoutManager(mLayoutManager);
         binding.rvReminderDay.setItemAnimator(new DefaultItemAnimator());
         ReminderDayAdapter reminderDayAdapter = new ReminderDayAdapter();
