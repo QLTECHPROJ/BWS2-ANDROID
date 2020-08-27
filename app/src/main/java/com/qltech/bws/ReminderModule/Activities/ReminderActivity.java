@@ -107,7 +107,7 @@ public class ReminderActivity extends AppCompatActivity {
                 BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 if (BWSApplication.isNetworkConnected(context)) {
                     Call<SetReminderModel> listCall = APIClient.getClient().SetReminder("6",UserId, ReminderStatus,
-                            binding.tvTime.getText().toString(),"");
+                            binding.tvTime.getText().toString(),"WednesDay");
                     listCall.enqueue(new Callback<SetReminderModel>() {
                         @Override
                         public void onResponse(Call<SetReminderModel> call, Response<SetReminderModel> response) {

@@ -38,7 +38,7 @@ import retrofit2.Response;
 
 public class AudioBooksFragment extends Fragment {
     FragmentAudioBooksBinding binding;
-    String audio_books, UserID;
+    String audio_books, UserID, Category;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,6 +50,7 @@ public class AudioBooksFragment extends Fragment {
         if (bundle != null) {
             audio_books = bundle.getString("audio_books");
             UserID = bundle.getString("UserID");
+            Category = bundle.getString("Category");
         }
 
 
@@ -64,7 +65,7 @@ public class AudioBooksFragment extends Fragment {
     void prepareData() {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_ONE,"");
+            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_ONE, Category);
             listCall.enqueue(new Callback<ResourceListModel>() {
                 @Override
                 public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {

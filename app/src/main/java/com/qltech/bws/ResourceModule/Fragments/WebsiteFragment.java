@@ -36,7 +36,7 @@ import retrofit2.Response;
 
 public class WebsiteFragment extends Fragment {
     FragmentWebsiteBinding binding;
-    String website, UserID;
+    String website, UserID, Category;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +48,7 @@ public class WebsiteFragment extends Fragment {
         if (bundle != null) {
             website = bundle.getString("website");
             UserID = bundle.getString("UserID");
+            Category = bundle.getString("Category");
         }
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -60,7 +61,7 @@ public class WebsiteFragment extends Fragment {
     void prepareData() {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_FOUR,"");
+            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_FOUR, Category);
             listCall.enqueue(new Callback<ResourceListModel>() {
                 @Override
                 public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {

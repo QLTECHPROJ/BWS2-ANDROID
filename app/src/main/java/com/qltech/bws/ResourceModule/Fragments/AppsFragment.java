@@ -36,7 +36,7 @@ import retrofit2.Response;
 
 public class AppsFragment extends Fragment {
     FragmentAppsBinding binding;
-    String apps, UserID;
+    String apps, UserID, Category;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +48,7 @@ public class AppsFragment extends Fragment {
         if (bundle != null) {
             apps = bundle.getString("apps");
             UserID = bundle.getString("UserID");
+            Category = bundle.getString("Category");
         }
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvAppsList.setLayoutManager(manager);
@@ -59,7 +60,7 @@ public class AppsFragment extends Fragment {
     void prepareData() {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_FIVE, "");
+            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_FIVE, Category);
             listCall.enqueue(new Callback<ResourceListModel>() {
                 @Override
                 public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {

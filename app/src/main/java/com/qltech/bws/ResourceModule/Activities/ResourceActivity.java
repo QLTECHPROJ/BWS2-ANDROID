@@ -49,7 +49,7 @@ import retrofit2.Response;
 public class ResourceActivity extends AppCompatActivity {
     ActivityResourceBinding binding;
     List<ResourceFilterModel> listModelList = new ArrayList<>();
-    String UserID;
+    String UserID, Category ="";
     Activity activity;
 
     @Override
@@ -74,10 +74,6 @@ public class ResourceActivity extends AppCompatActivity {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Documentaries"));
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), this, binding.tabLayout.getTabCount());
-        binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
-
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -94,7 +90,7 @@ public class ResourceActivity extends AppCompatActivity {
 
             }
         });
-
+        setAdapter();
         binding.ivFilter.setOnClickListener(view -> {
             LayoutInflater li = LayoutInflater.from(ResourceActivity.this);
             View promptsView = li.inflate(R.layout.resource_filter_menu, null);
@@ -130,7 +126,13 @@ public class ResourceActivity extends AppCompatActivity {
         });
     }
 
-    void prepareData(Context ctx, RecyclerView rvFilterList,Dialog dialogBox) {
+    private void setAdapter() {
+        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), this, binding.tabLayout.getTabCount());
+        binding.viewPager.setAdapter(adapter);
+        binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
+    }
+
+    void prepareData(Context ctx, RecyclerView rvFilterList, Dialog dialogBox) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             Call<ResourceFilterModel> listCall = APIClient.getClient().getResourcFilterLists(UserID);
             listCall.enqueue(new Callback<ResourceFilterModel>() {
@@ -138,7 +140,7 @@ public class ResourceActivity extends AppCompatActivity {
                 public void onResponse(Call<ResourceFilterModel> call, Response<ResourceFilterModel> response) {
                     if (response.isSuccessful()) {
                         ResourceFilterModel listModel = response.body();
-                        ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx);
+                        ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx,dialogBox);
                         rvFilterList.setAdapter(adapter);
                         dialogBox.show();
                     }
@@ -157,10 +159,12 @@ public class ResourceActivity extends AppCompatActivity {
     public class ResourceFilterAdapter extends RecyclerView.Adapter<ResourceFilterAdapter.MyViewHolder> {
         private List<ResourceFilterModel.ResponseData> listModel;
         Context ctx;
+        Dialog dialogBox;
 
-        public ResourceFilterAdapter(List<ResourceFilterModel.ResponseData> listModel, Context ctx) {
+        public ResourceFilterAdapter(List<ResourceFilterModel.ResponseData> listModel, Context ctx, Dialog dialogBox) {
             this.listModel = listModel;
             this.ctx = ctx;
+            this.dialogBox = dialogBox;
         }
 
         @NonNull
@@ -174,6 +178,15 @@ public class ResourceActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModel.get(position).getCategoryName());
+            holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Category = listModel.get(position).getCategoryName();
+                    setAdapter();
+                    dialogBox.dismiss();
+                }
+            });
+
         }
 
         @Override
@@ -210,7 +223,7 @@ public class ResourceActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString("audio_books", "audio_books");
                     bundle.putString("UserID", UserID);
-                    bundle.putString("Category","");
+                    bundle.putString("Category",Category);
                     audioBooksFragment.setArguments(bundle);
                     return audioBooksFragment;
                 case 1:
@@ -218,7 +231,7 @@ public class ResourceActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     bundle.putString("podcasts", "podcasts");
                     bundle.putString("UserID", UserID);
-                    bundle.putString("Category","");
+                    bundle.putString("Category",Category);
                     podcastsFragment.setArguments(bundle);
                     return podcastsFragment;
                 case 2:
@@ -226,7 +239,7 @@ public class ResourceActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     bundle.putString("apps", "apps");
                     bundle.putString("UserID", UserID);
-                    bundle.putString("Category","");
+                    bundle.putString("Category",Category);
                     appsFragment.setArguments(bundle);
                     return appsFragment;
                 case 3:
@@ -234,7 +247,7 @@ public class ResourceActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     bundle.putString("website", "website");
                     bundle.putString("UserID", UserID);
-                    bundle.putString("Category","");
+                    bundle.putString("Category",Category);
                     websiteFragment.setArguments(bundle);
                     return websiteFragment;
                 case 4:
@@ -242,7 +255,7 @@ public class ResourceActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     bundle.putString("documentaries", "documentaries");
                     bundle.putString("UserID", UserID);
-                    bundle.putString("Category","");
+                    bundle.putString("Category",Category);
                     documentariesFragment.setArguments(bundle);
                     return documentariesFragment;
                 default:

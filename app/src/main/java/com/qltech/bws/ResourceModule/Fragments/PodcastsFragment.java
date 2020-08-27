@@ -37,7 +37,7 @@ import retrofit2.Response;
 
 public class PodcastsFragment extends Fragment {
     FragmentPodcastsBinding binding;
-    String podcasts, UserID;
+    String podcasts, UserID, Category;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +49,7 @@ public class PodcastsFragment extends Fragment {
         if (bundle != null) {
             podcasts = bundle.getString("podcasts");
             UserID = bundle.getString("UserID");
+            Category = bundle.getString("Category");
         }
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -62,7 +63,7 @@ public class PodcastsFragment extends Fragment {
     void prepareData() {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_THREE,"");
+            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_THREE, Category);
             listCall.enqueue(new Callback<ResourceListModel>() {
                 @Override
                 public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
