@@ -186,17 +186,22 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                     if (BWSApplication.isNetworkConnected(context)) {
                                         showProgressBar();
 
-                                        Call<LoginModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag,strToken, MobileNo);
-                                        listCall.enqueue(new Callback<LoginModel>() {
+                                        Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag,strToken, MobileNo);
+                                        listCall.enqueue(new Callback<AddCardModel>() {
                                             @Override
-                                            public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
+                                            public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {
                                                 hideProgressBar();
                                                 if (response.isSuccessful()) {
-                                                    LoginModel cardModel = response.body();
+                                                    AddCardModel cardModel = response.body();
                                                     if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                         InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                                         keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
                                                         if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                                                            SharedPreferences.Editor editor = shared.edit();
+                                                            editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserId());
+                                                            editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
+                                                            editor.commit();
                                                             Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
                                                             startActivity(i);
                                                             finish();
@@ -212,7 +217,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                             }
 
                                             @Override
-                                            public void onFailure(Call<LoginModel> call, Throwable t) {
+                                            public void onFailure(Call<AddCardModel> call, Throwable t) {
 
                                             }
 

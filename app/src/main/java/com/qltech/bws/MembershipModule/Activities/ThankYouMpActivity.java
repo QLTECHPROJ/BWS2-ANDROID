@@ -35,6 +35,7 @@ public class ThankYouMpActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(ThankYouMpActivity.this, DashboardActivity.class);
                 startActivity(i);
+                finish();
             }
         });
     }

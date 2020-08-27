@@ -72,7 +72,7 @@ public interface APIInterface {
     /* TODO Membership Payment */
     @POST("payment")
     @FormUrlEncoded
-    Call<LoginModel> getMembershipPayment(
+    Call<AddCardModel> getMembershipPayment(
             @Field("PlanId") String planId,
             @Field("PlanFlag") String planFlag,
             @Field("TokenId") String CardId,

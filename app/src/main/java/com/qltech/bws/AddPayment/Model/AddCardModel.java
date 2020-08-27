@@ -53,12 +53,24 @@ public class AddCardModel {
         @Expose
         private String cardId;
 
+        @SerializedName("UserID")
+        @Expose
+        private String userId;
+
         public String getCardId() {
             return cardId;
         }
 
         public void setCardId(String cardId) {
             this.cardId = cardId;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
         }
     }
 
