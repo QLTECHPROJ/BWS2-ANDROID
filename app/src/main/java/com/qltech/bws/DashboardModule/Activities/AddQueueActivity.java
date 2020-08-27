@@ -35,6 +35,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Adapters.DirectionAdapter;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.DirectionModel;
+import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
@@ -185,19 +186,19 @@ public class AddQueueActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
-                    Call<SucessModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistId);
-                    listCall.enqueue(new Callback<SucessModel>() {
+                    Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistId);
+                    listCall.enqueue(new Callback<DownloadPlaylistModel>() {
                         @Override
-                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                        public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
                             if (response.isSuccessful()) {
                                 hideProgressBar();
-                                SucessModel model = response.body();
+                                DownloadPlaylistModel model = response.body();
                                 Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<SucessModel> call, Throwable t) {
+                        public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
                             hideProgressBar();
                         }
                     });

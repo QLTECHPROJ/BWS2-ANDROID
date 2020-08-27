@@ -10,6 +10,7 @@ import com.qltech.bws.BillingOrderModule.Models.CurrentPlanVieViewModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.DirectionModel;
+import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
 import com.qltech.bws.DashboardModule.Models.NextSessionViewModel;
@@ -301,9 +302,9 @@ public interface APIInterface {
     /* TODO AddQueueActivity & PlayWellnessActivity */
     @POST("downloads")
     @FormUrlEncoded
-    Call<SucessModel> getDownloadlistPlaylist(@Field("UserID") String userID,
-                                              @Field("AudioId") String audioId,
-                                              @Field("PlaylistId") String playlistId);
+    Call<DownloadPlaylistModel> getDownloadlistPlaylist(@Field("UserID") String userID,
+                                                        @Field("AudioId") String audioId,
+                                                        @Field("PlaylistId") String playlistId);
 
     /* TODO InvoiceActivity */
     @POST("invoicelist")

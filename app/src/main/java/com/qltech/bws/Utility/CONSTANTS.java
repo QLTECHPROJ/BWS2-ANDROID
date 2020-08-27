@@ -36,6 +36,7 @@ public class CONSTANTS {
     public static String MobileNo = "MobileNo";
     public static String ID = "ID";
     public static String PlaylistID = "PlaylistID";
+    public static String PlaylistName = "PlaylistName";
     public static String title = "title";
     public static String author = "author";
     public static String linkOne = "linkOne";

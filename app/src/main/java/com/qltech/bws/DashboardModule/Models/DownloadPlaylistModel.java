@@ -3,12 +3,10 @@ package com.qltech.bws.DashboardModule.Models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
-public class RenamePlaylistModel {
+public class DownloadPlaylistModel {
     @SerializedName("ResponseData")
     @Expose
-    private List<Object> responseData = null;
+    private ResponseData responseData;
     @SerializedName("ResponseCode")
     @Expose
     private String responseCode;
@@ -19,11 +17,11 @@ public class RenamePlaylistModel {
     @Expose
     private String responseStatus;
 
-    public List<Object> getResponseData() {
+    public ResponseData getResponseData() {
         return responseData;
     }
 
-    public void setResponseData(List<Object> responseData) {
+    public void setResponseData(ResponseData responseData) {
         this.responseData = responseData;
     }
 
@@ -49,5 +47,19 @@ public class RenamePlaylistModel {
 
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
+    }
+    public class ResponseData {
+        @SerializedName("flag")
+        @Expose
+        private String flag;
+
+        public String getFlag() {
+            return flag;
+        }
+
+        public void setFlag(String flag) {
+            this.flag = flag;
+        }
+
     }
 }

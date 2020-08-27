@@ -156,6 +156,12 @@ public class PlaylistFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareData();
+    }
+
     private void prepareData() {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
