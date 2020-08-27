@@ -12,8 +12,10 @@ import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.DirectionModel;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
+import com.qltech.bws.DashboardModule.Models.NextSessionViewModel;
 import com.qltech.bws.DashboardModule.Models.PreviousAppointmentsModel;
 import com.qltech.bws.DashboardModule.Models.RenamePlaylistModel;
+import com.qltech.bws.DashboardModule.Models.SessionListModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
@@ -194,9 +196,28 @@ public interface APIInterface {
                                         @Field("CancelReason") String cancelReason);
 
     /* TODO AppointmentFragment */
+    @POST("nextsessionview")
+    @FormUrlEncoded
+    Call<NextSessionViewModel> getNextSessionVIew(@Field("UserID") String userID);
+
+    /* TODO AppointmentFragment */
     @POST("appointmentcategorylist")
     @FormUrlEncoded
     Call<PreviousAppointmentsModel> getAppointmentVIew(@Field("UserID") String userID);
+
+    /* TODO AppointmentFragment */
+    @POST("appointmentsession")
+    @FormUrlEncoded
+    Call<SessionListModel> getAppointmentSession(@Field("UserID") String userID);
+  /* TODO Reminder */
+    @POST("appointmentsession")
+    @FormUrlEncoded
+    Call<CardModel> SetReminder(@Field("PlaylistId") String PlaylistId,
+                                @Field("UserID") String userID,
+                                @Field("IsSingle") String IsSingle,
+                                @Field("ReminderTime") String ReminderTime,
+                                @Field("ReminderDay") String ReminderDay
+                                );
 
     /* TODO PlayWellnessActivity */
     @POST("recentlyplayed")
