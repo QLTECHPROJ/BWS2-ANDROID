@@ -96,17 +96,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
                                         if (response.isSuccessful()) {
                                             CreatePlaylistModel listModel = response.body();
-                                            Bundle bundle = new Bundle();
-                                            Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                                            FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                            bundle.putString("New", "1");
-                                            bundle.putString("PlaylistID", listModel.getResponseData().getId());
-                                            bundle.putString("PlaylistName", listModel.getResponseData().getName());
-                                            myPlaylistsFragment.setArguments(bundle);
-                                            fragmentManager1.beginTransaction()
-                                                    .replace(R.id.rlPlaylist, myPlaylistsFragment).
-                                                    addToBackStack("MyPlaylistsFragment")
-                                                    .commit();
+                                            Toast.makeText(AddPlaylistActivity.this, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
                                         }
                                     }
@@ -180,7 +170,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModel.get(position).getName());
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.12f, 0);
+                    3, 3, 0.12f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             Glide.with(ctx).load(listModel.get(position).getImage()).thumbnail(0.1f)

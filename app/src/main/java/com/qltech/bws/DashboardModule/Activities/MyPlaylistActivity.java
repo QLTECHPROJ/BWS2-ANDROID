@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.RenamePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
@@ -37,7 +38,7 @@ import retrofit2.Response;
 
 public class MyPlaylistActivity extends AppCompatActivity {
     ActivityMyPlaylistBinding binding;
-    String UserID, PlaylistID;
+    String UserID, PlaylistID, PlaylistName;
     Context ctx;
 
     @Override
@@ -48,6 +49,12 @@ public class MyPlaylistActivity extends AppCompatActivity {
         Glide.with(MyPlaylistActivity.this).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+
+        if (getIntent().getExtras() != null) {
+            PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
+            PlaylistName = getIntent().getStringExtra(CONSTANTS.PlaylistName);
+        }
+
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,7 +82,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 final TextView tvAction = dialog.findViewById(R.id.tvAction);
                 final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
                 tvAction.setText(R.string.Rename);
-
+                edtCreate.setText(PlaylistName);
                 rlCreate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -91,13 +98,9 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                         if (response.isSuccessful()) {
                                             hideProgressBar();
                                             RenamePlaylistModel listModel = response.body();
-                                            Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                                            FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                            fragmentManager1.beginTransaction()
-                                                    .replace(R.id.rlPlaylist, myPlaylistsFragment).
-                                                    addToBackStack("MyPlaylistsFragment")
-                                                    .commit();
+                                            Toast.makeText(MyPlaylistActivity.this, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
+                                            finish();
                                         }
                                     }
 
@@ -141,12 +144,9 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                     if (response.isSuccessful()) {
                                         hideProgressBar();
                                         SucessModel listModel = response.body();
-                                        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                                        FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                        fragmentManager1.beginTransaction()
-                                                .replace(R.id.rlPlaylist, myPlaylistsFragment).
-                                                addToBackStack("MyPlaylistsFragment")
-                                                .commit();
+                                        FragmentManager fm = getSupportFragmentManager();
+                                        fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                        Toast.makeText(MyPlaylistActivity.this, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                                         dialog.dismiss();
                                     }
                                 }
@@ -178,19 +178,20 @@ public class MyPlaylistActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
-                    Call<SucessModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
-                    listCall.enqueue(new Callback<SucessModel>() {
+                    Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
+                    listCall.enqueue(new Callback<DownloadPlaylistModel>() {
                         @Override
-                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                        public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
                             if (response.isSuccessful()) {
                                 hideProgressBar();
-                                SucessModel model = response.body();
+                                DownloadPlaylistModel model = response.body();
                                 Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                finish();
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<SucessModel> call, Throwable t) {
+                        public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
                             hideProgressBar();
                         }
                     });

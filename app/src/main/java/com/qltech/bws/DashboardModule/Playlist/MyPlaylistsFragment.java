@@ -33,6 +33,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
+import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
@@ -148,19 +149,19 @@ public class MyPlaylistsFragment extends Fragment {
             public void onClick(View view) {
                 if (BWSApplication.isNetworkConnected(getActivity())) {
                     showProgressBar();
-                    Call<SucessModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
-                    listCall.enqueue(new Callback<SucessModel>() {
+                    Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
+                    listCall.enqueue(new Callback<DownloadPlaylistModel>() {
                         @Override
-                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                        public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
                             if (response.isSuccessful()) {
                                 hideProgressBar();
-                                SucessModel model = response.body();
+                                DownloadPlaylistModel model = response.body();
                                 Toast.makeText(getActivity(), model.getResponseMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<SucessModel> call, Throwable t) {
+                        public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
                             hideProgressBar();
                         }
                     });
@@ -176,6 +177,7 @@ public class MyPlaylistsFragment extends Fragment {
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
                 i.putExtra("PlaylistID", PlaylistID);
+                i.putExtra("PlaylistName", PlaylistName);
                 startActivity(i);
             }
         });
@@ -409,19 +411,19 @@ public class MyPlaylistsFragment extends Fragment {
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         showProgressBar();
                         String AudioId = listModelList.getPlaylistSongs().get(position).getID();
-                        Call<SucessModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistID);
-                        listCall.enqueue(new Callback<SucessModel>() {
+                        Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistID);
+                        listCall.enqueue(new Callback<DownloadPlaylistModel>() {
                             @Override
-                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                            public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
                                 if (response.isSuccessful()) {
                                     hideProgressBar();
-                                    SucessModel model = response.body();
+                                    DownloadPlaylistModel model = response.body();
                                     Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
 
                             @Override
-                            public void onFailure(Call<SucessModel> call, Throwable t) {
+                            public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
                                 hideProgressBar();
                             }
                         });
