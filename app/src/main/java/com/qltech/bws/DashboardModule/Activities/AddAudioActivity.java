@@ -27,7 +27,6 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.SuggestedModel;
 import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
-import com.qltech.bws.DashboardModule.Playlist.Adapters.SuggestedAdpater;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -96,15 +95,15 @@ public class AddAudioActivity extends AppCompatActivity {
             }
         });
 
-        SuggestedAdpater suggestedAdpater = new SuggestedAdpater(listSuggestedList, AddAudioActivity.this);
         RecyclerView.LayoutManager suggested = new LinearLayoutManager(AddAudioActivity.this, LinearLayoutManager.VERTICAL, false);
         binding.rvSuggestedList.setLayoutManager(suggested);
         binding.rvSuggestedList.setItemAnimator(new DefaultItemAnimator());
-        binding.rvSuggestedList.setAdapter(suggestedAdpater);
 
         RecyclerView.LayoutManager serachList = new LinearLayoutManager(AddAudioActivity.this, LinearLayoutManager.VERTICAL, false);
         binding.rvSerachList.setLayoutManager(serachList);
         binding.rvSerachList.setItemAnimator(new DefaultItemAnimator());
+
+        prepareSuggestedData();
     }
 
     private void prepareSearchData(String search){
@@ -126,6 +125,31 @@ public class AddAudioActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<SuggestionAudiosModel> call, Throwable t) {
+                    hideProgressBar();
+                }
+            });
+        } else {
+            Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void prepareSuggestedData(){
+        showProgressBar();
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            Call<SuggestedModel> listCall = APIClient.getClient().getSuggestedLists();
+            listCall.enqueue(new Callback<SuggestedModel>() {
+                @Override
+                public void onResponse(Call<SuggestedModel> call, Response<SuggestedModel> response) {
+                    if (response.isSuccessful()) {
+                        hideProgressBar();
+                        SuggestedModel listModel = response.body();
+                        SuggestedAdpater suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), AddAudioActivity.this);
+                        binding.rvSuggestedList.setAdapter(suggestedAdpater);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SuggestedModel> call, Throwable t) {
                     hideProgressBar();
                 }
             });
@@ -234,6 +258,92 @@ public class AddAudioActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return modelList.size();
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            DownloadsLayoutBinding binding;
+
+            public MyViewHolder(DownloadsLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+    }
+
+    public class SuggestedAdpater extends RecyclerView.Adapter<SuggestedAdpater.MyViewHolder> {
+        private List<SuggestedModel.ResponseData> listModel;
+        Context ctx;
+
+        public SuggestedAdpater(List<SuggestedModel.ResponseData> listModel, Context ctx) {
+            this.listModel = listModel;
+            this.ctx = ctx;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            DownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.downloads_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.binding.tvTitle.setText(listModel.get(position).getName());
+            holder.binding.tvTime.setText(listModel.get(position).getAudioDuration());
+
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                    1, 1, 0.12f, 0);
+            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+            holder.binding.ivRestaurantImage.setImageResource(R.drawable.square_logo);
+            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+            holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String AudioID = listModel.get(position).getID();
+                    showProgressBar();
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID);
+                        listCall.enqueue(new Callback<SucessModel>() {
+                            @Override
+                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                if (response.isSuccessful()) {
+                                    hideProgressBar();
+                                    SucessModel listModel = response.body();
+//                                    showToast("Added to My Playlist.");
+                                    showToast(listModel.getResponseMessage());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SucessModel> call, Throwable t) {
+                                hideProgressBar();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(ctx, ctx.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return listModel.size();
+        }
+
+        void showToast(String message) {
+            Toast toast = new Toast(ctx);
+            View view = LayoutInflater.from(ctx).inflate(R.layout.toast_layout, null);
+            TextView tvMessage = view.findViewById(R.id.tvMessage);
+            tvMessage.setText(message);
+            toast.setGravity(Gravity.BOTTOM|Gravity.CENTER, 0, 35);
+            toast.setView(view);
+            toast.show();
+
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {

@@ -1,6 +1,7 @@
 package com.qltech.bws.DashboardModule.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.content.Context;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
+import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
@@ -37,6 +39,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -45,7 +49,8 @@ import retrofit2.Response;
 
 public class PlayWellnessActivity extends AppCompatActivity {
     ActivityPlayWellnessBinding binding;
-    String Like, Download, UserID, AudioFile, Name, ImageFile, PlaylistId, AudioId, AudioDirection, Audiomastercat, AudioSubCategory;
+    String IsRepeat ="", IsShuffle = "", Like, Download, UserID, AudioFile, Name, ImageFile, PlaylistId,
+            AudioId, AudioDirection, Audiomastercat, AudioSubCategory;
     private static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
     private MediaPlayer mPlayer;
     Context ctx;
@@ -59,6 +64,8 @@ public class PlayWellnessActivity extends AppCompatActivity {
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        IsRepeat = (shared1.getString(CONSTANTS.PREF_KEY_IsRepeat, ""));
+        IsShuffle = (shared1.getString(CONSTANTS.PREF_KEY_IsShuffle, ""));
 
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);
@@ -79,6 +86,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
                 finish();
             }
         });
+
 
         if (Like.equalsIgnoreCase("1")) {
             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
@@ -156,19 +164,19 @@ public class PlayWellnessActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
-                    Call<SucessModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistId);
-                    listCall.enqueue(new Callback<SucessModel>() {
+                    Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistId);
+                    listCall.enqueue(new Callback<DownloadPlaylistModel>() {
                         @Override
-                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                        public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
                             if (response.isSuccessful()) {
                                 hideProgressBar();
-                                SucessModel model = response.body();
+                                DownloadPlaylistModel model = response.body();
                                 Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<SucessModel> call, Throwable t) {
+                        public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
                             hideProgressBar();
                         }
                     });

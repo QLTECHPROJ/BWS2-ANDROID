@@ -98,6 +98,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             CreatePlaylistModel listModel = response.body();
                                             Toast.makeText(AddPlaylistActivity.this, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
+                                            prepareData(ctx);
                                         }
                                     }
 
@@ -122,6 +123,12 @@ public class AddPlaylistActivity extends AppCompatActivity {
         binding.rvPlayLists.setLayoutManager(played);
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
         prepareData(ctx);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        prepareData(AddPlaylistActivity.this);
     }
 
     private void prepareData(Context ctx) {
@@ -170,7 +177,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModel.get(position).getName());
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    3, 3, 0.12f, 0);
+                    1, 1, 0.16f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             Glide.with(ctx).load(listModel.get(position).getImage()).thumbnail(0.1f)

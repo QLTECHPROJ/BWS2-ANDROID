@@ -368,25 +368,30 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llShuffle"
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
                         android:gravity="center">
 
                         <ImageView
+                            android:id="@+id/ivShuffle"
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
-                            android:src="@drawable/ic_shuffle_icon" />
+                            android:src="@drawable/ic_shuffle_icon"
+                            app:tint="@color/black"/>
                     </LinearLayout>
 
 
                     <LinearLayout
+                        android:id="@+id/llRepeat"
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
                         android:gravity="center">
 
                         <ImageView
+                            android:id="@+id/ivRepeat"
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
                             android:src="@drawable/ic_repeat_music_icon" />

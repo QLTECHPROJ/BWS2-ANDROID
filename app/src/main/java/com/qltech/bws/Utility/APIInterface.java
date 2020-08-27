@@ -20,6 +20,7 @@ import com.qltech.bws.DashboardModule.Models.RenamePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SessionListModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
+import com.qltech.bws.DashboardModule.Models.SuggestedModel;
 import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.FaqModule.Models.FaqListModel;
@@ -165,6 +166,10 @@ public interface APIInterface {
     @POST("addaudiosearch")
     @FormUrlEncoded
     Call<SuggestionAudiosModel> getAddSearchAudio(@Field("AudioName") String audioName);
+
+    /* TODO AudioFaqActivity */
+    @GET("suggested")
+    Call<SuggestedModel> getSuggestedLists();
 
     /* TODO MyPlaylistsFragment */
     @POST("addaudiotoplaylist")
