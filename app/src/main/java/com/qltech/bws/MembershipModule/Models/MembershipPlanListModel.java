@@ -7,6 +7,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MembershipPlanListModel implements Parcelable {
 
@@ -221,7 +222,7 @@ public class MembershipPlanListModel implements Parcelable {
         private String subName;
         @SerializedName("PlanFeatures")
         @Expose
-        private PlanFeatures planFeatures;
+        private List<PlanFeatures> planFeatures;
         @SerializedName("RecommendedFlag")
         @Expose
         private String recommendedFlag;
@@ -327,11 +328,11 @@ public class MembershipPlanListModel implements Parcelable {
             this.subName = subName;
         }
 
-        public PlanFeatures getPlanFeatures() {
+        public List<PlanFeatures> getPlanFeatures() {
             return planFeatures;
         }
 
-        public void setPlanFeatures(PlanFeatures planFeatures) {
+        public void setPlanFeatures(List<PlanFeatures> planFeatures) {
             this.planFeatures = planFeatures;
         }
 
@@ -373,51 +374,17 @@ public class MembershipPlanListModel implements Parcelable {
     }
 
     public class PlanFeatures {
-        @SerializedName("Feature1")
+        @SerializedName("Feature")
         @Expose
-        private String feature1;
-        @SerializedName("Feature2")
-        @Expose
-        private String feature2;
-        @SerializedName("Feature3")
-        @Expose
-        private String feature3;
-        @SerializedName("Feature4")
-        @Expose
-        private String feature4;
+        private String feature;
 
-        public String getFeature1() {
-            return feature1;
+        public String getFeature() {
+            return feature;
         }
 
-        public void setFeature1(String feature1) {
-            this.feature1 = feature1;
+        public void setFeature(String feature) {
+            this.feature = feature;
         }
-
-        public String getFeature2() {
-            return feature2;
-        }
-
-        public void setFeature2(String feature2) {
-            this.feature2 = feature2;
-        }
-
-        public String getFeature3() {
-            return feature3;
-        }
-
-        public void setFeature3(String feature3) {
-            this.feature3 = feature3;
-        }
-
-        public String getFeature4() {
-            return feature4;
-        }
-
-        public void setFeature4(String feature4) {
-            this.feature4 = feature4;
-        }
-
     }
 
     public class AudioFile {

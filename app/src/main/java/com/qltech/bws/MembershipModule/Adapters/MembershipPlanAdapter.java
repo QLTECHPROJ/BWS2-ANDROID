@@ -47,10 +47,10 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<com.qltech.bws.M
         MembershipPlanListModel.Plan listModel = listModelList.get(position);
 //        holder.binding.tvTitle.setText(listModel.getTitle());
 
-        holder.binding.tvPlanFeatures01.setText(listModel.getPlanFeatures().getFeature1());
-        holder.binding.tvPlanFeatures02.setText(listModel.getPlanFeatures().getFeature2());
-        holder.binding.tvPlanFeatures03.setText(listModel.getPlanFeatures().getFeature3());
-        holder.binding.tvPlanFeatures04.setText(listModel.getPlanFeatures().getFeature4());
+        holder.binding.tvPlanFeatures01.setText(listModel.getPlanFeatures().get(0).getFeature());
+        holder.binding.tvPlanFeatures02.setText(listModel.getPlanFeatures().get(1).getFeature());
+        holder.binding.tvPlanFeatures03.setText(listModel.getPlanFeatures().get(2).getFeature());
+        holder.binding.tvPlanFeatures04.setText(listModel.getPlanFeatures().get(3).getFeature());
         holder.binding.tvPlanAmount.setText("$" + listModel.getPlanAmount());
         holder.binding.tvSubName.setText(listModel.getSubName());
         holder.binding.tvPlanInterval.setText(listModel.getPlanInterval());

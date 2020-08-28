@@ -53,6 +53,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.deleteFrg;
+
 public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
     String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage;
@@ -80,7 +82,6 @@ public class MyPlaylistsFragment extends Fragment {
         } else {
             binding.tvLibraryName.setText(PlaylistName);
         }
-
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -232,7 +233,15 @@ public class MyPlaylistsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        prepareData(UserID, PlaylistID);
+        if(deleteFrg == 1){
+            FragmentManager fm = getActivity()
+                    .getSupportFragmentManager();
+            fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+            deleteFrg = 0;
+        }else{
+            prepareData(UserID, PlaylistID);
+        }
     }
 
     private void prepareData(String UserID, String PlaylistID) {

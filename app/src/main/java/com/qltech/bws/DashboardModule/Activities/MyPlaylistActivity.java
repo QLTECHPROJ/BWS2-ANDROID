@@ -1,10 +1,5 @@
 package com.qltech.bws.DashboardModule.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,13 +15,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
 import com.bumptech.glide.Glide;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.RenamePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
-import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.qltech.bws.R;
-import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -40,6 +37,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     ActivityMyPlaylistBinding binding;
     String UserID, PlaylistID, PlaylistName;
     Context ctx;
+    public static int deleteFrg = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +94,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                     @Override
                                     public void onResponse(Call<RenamePlaylistModel> call, Response<RenamePlaylistModel> response) {
                                         if (response.isSuccessful()) {
+                                            deleteFrg = 1;
                                             hideProgressBar();
                                             RenamePlaylistModel listModel = response.body();
                                             Toast.makeText(MyPlaylistActivity.this, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
@@ -142,12 +141,12 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                                     if (response.isSuccessful()) {
+                                        deleteFrg = 1;
                                         hideProgressBar();
                                         SucessModel listModel = response.body();
-                                        FragmentManager fm = getSupportFragmentManager();
-                                        fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                        Toast.makeText(MyPlaylistActivity.this, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                                         dialog.dismiss();
+                                        Toast.makeText(MyPlaylistActivity.this, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                        finish();
                                     }
                                 }
 
