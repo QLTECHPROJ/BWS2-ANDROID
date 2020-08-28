@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -41,6 +43,7 @@ public class OtpActivity extends AppCompatActivity {
     private EditText[] editTexts;
     boolean tvSendOTPbool = true;
     Activity activity;
+    CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +172,8 @@ public class OtpActivity extends AppCompatActivity {
     void prepareData() {
         if (BWSApplication.isNetworkConnected(OtpActivity.this)) {
             tvSendOTPbool = false;
+            binding.txtError.setText("");
+            binding.txtError.setVisibility(View.GONE);
             showProgressBar();
             Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
             listCall.enqueue(new Callback<LoginModel>() {
@@ -178,12 +183,27 @@ public class OtpActivity extends AppCompatActivity {
                         hideProgressBar();
                         LoginModel loginModel = response.body();
                         if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            tvSendOTPbool = true;
+                            countDownTimer = new CountDownTimer(30000, 1000) {
+                                public void onTick(long millisUntilFinished) {
+                                    binding.llResendSms.setEnabled(false);
+                                    binding.tvResendOTP.setText(Html.fromHtml(millisUntilFinished / 1000 + "<font color=\"#999999\">" + " Resent SMS" + "</font>"));
+                                }
+
+                                public void onFinish() {
+                                    binding.llResendSms.setEnabled(true);
+                                    binding.tvResendOTP.setText(getString(R.string.resent_sms));
+                                    binding.tvResendOTP.setTextColor(getResources().getColor(R.color.white));
+                                    binding.tvResendOTP.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                                    binding.tvResendOTP.getPaint().setMaskFilter(null);
+                                }
+                            }.start();
                             binding.edtOTP1.requestFocus();
                             binding.edtOTP1.setText("");
                             binding.edtOTP2.setText("");
                             binding.edtOTP3.setText("");
                             binding.edtOTP4.setText("");
+                            tvSendOTPbool = true;
+                            Toast.makeText(getApplicationContext(), loginModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                         } else {
                             binding.txtError.setVisibility(View.VISIBLE);
                             binding.txtError.setText(loginModel.getResponseMessage());

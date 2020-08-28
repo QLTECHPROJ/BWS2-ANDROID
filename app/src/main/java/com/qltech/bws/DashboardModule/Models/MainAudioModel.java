@@ -52,7 +52,6 @@ public class MainAudioModel {
     }
 
     public class ResponseData {
-
         @SerializedName("HomeID")
         @Expose
         private String homeID;

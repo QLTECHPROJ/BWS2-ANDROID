@@ -171,4 +171,7 @@
     <string name="Condition_worse">Condition worse</string>
     <string name="Pricing">Pricing</string>
     <string name="Other_reason">Other reason</string>
+    <string name="Appointment_Header">There are no upcoming appointments scheduled. Would you like to <b>Book a new appointment?</b></string>
+    <string name="Rename_your_playlist">Rename your playlist .</string>
+    <string name="no_data_found">Try searching again using a diffrent spelling or keyword.</string>
 </resources>

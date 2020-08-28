@@ -26,7 +26,7 @@
 
                     <LinearLayout
                         android:id="@+id/llBack"
-                        android:layout_width="42dp"
+                        android:layout_width="50dp"
                         android:layout_height="match_parent"
                         android:layout_centerVertical="true"
                         android:gravity="center">

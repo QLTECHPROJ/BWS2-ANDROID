@@ -30,7 +30,6 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.DocumentariesListLayoutBinding;
 import com.qltech.bws.databinding.FragmentDocumentariesBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;

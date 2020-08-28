@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,11 +33,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
-import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -71,17 +69,15 @@ public class PlaylistFragment extends Fragment {
             Check = getArguments().getString("Check");
         }
 
-       /* if (Check.equalsIgnoreCase("1")){
-            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-            linearParams.setMargins(0, 0, 0, 0);
-            binding.rlPlaylist.setLayoutParams(linearParams);
-        }else {
-            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            linearParams.setMargins(0, 0, 0, 125);
-            binding.rlPlaylist.setLayoutParams(linearParams);
-        }*/
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                FragmentManager fm = getActivity()
+                        .getSupportFragmentManager();
+                fm.popBackStack("PlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                return true;
+            }
+            return false;
+        });
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
@@ -100,6 +96,14 @@ public class PlaylistFragment extends Fragment {
                 final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
                 final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
                 final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+                edtCreate.requestFocus();
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                        return true;
+                    }
+                    return false;
+                });
 
                 rlCreate.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -207,7 +211,7 @@ public class PlaylistFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             if (listModelList.get(position).getDetails() != null &&
-                    listModelList.get(position).getDetails().size() > 6) {
+                    listModelList.get(position).getDetails().size() > 2) {
                 holder.binding.tvViewAll.setVisibility(View.VISIBLE);
             } else {
                 holder.binding.tvViewAll.setVisibility(View.GONE);

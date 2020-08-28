@@ -130,7 +130,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 if (!binding.etCalendar.getText().toString().isEmpty()) {
                     dob = binding.etCalendar.getText().toString();
                     SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
-
                     Date newDate = null;
                     try {
                         newDate = spf.parse(dob);
@@ -148,8 +147,8 @@ public class UserProfileActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             hideProgressBar();
                             ProfileUpdateModel viewModel = response.body();
-                            finish();
                             Toast.makeText(ctx, viewModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            finish();
                         }else {
                             hideProgressBar();
                         }

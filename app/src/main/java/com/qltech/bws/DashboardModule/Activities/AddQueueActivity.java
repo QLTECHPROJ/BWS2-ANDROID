@@ -20,6 +20,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -57,7 +58,7 @@ public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
     String play, UserID, PlaylistId, AudioId;
     Context ctx;
-    ArrayList<String> queue ;
+    ArrayList<String> queue;
 
     public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
         if (tv.getTag() == null) {
@@ -102,9 +103,9 @@ public class AddQueueActivity extends AppCompatActivity {
                     tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                     tv.invalidate();
                     if (viewMore) {
-                        makeTextViewResizable(tv, 3, "Read More...", false);
+                        makeTextViewResizable(tv, 4, "Read More...", false);
                     } else {
-                        makeTextViewResizable(tv, 3, "Read More...", true);
+                        makeTextViewResizable(tv, 4, "Read More...", true);
                     }
                 }
             }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), 0);
@@ -210,6 +211,12 @@ public class AddQueueActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        prepareData();
+    }
+
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             showProgressBar();
@@ -223,7 +230,19 @@ public class AddQueueActivity extends AppCompatActivity {
                         binding.tvName.setText(directionModel.getResponseData().get(0).getName());
                         binding.tvDesc.setText(directionModel.getResponseData().get(0).getAudioSubCategory());
                         binding.tvDuration.setText(directionModel.getResponseData().get(0).getAudioDuration());
-                        binding.tvSubDire.setText(directionModel.getResponseData().get(0).getAudioDirection());
+
+                        if (directionModel.getResponseData().get(0).getAudioDirection().equalsIgnoreCase("")){
+                            binding.tvSubDire.setVisibility(View.GONE);
+                            binding.tvDire.setVisibility(View.GONE);
+                            binding.rvDirlist.setVisibility(View.GONE);
+                        }else {
+                            binding.tvSubDire.setVisibility(View.VISIBLE);
+                            binding.tvDire.setVisibility(View.VISIBLE);
+                            binding.rvDirlist.setVisibility(View.VISIBLE);
+                            binding.tvSubDire.setText(directionModel.getResponseData().get(0).getAudioDirection());
+                        }
+
+
 
                         if (directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")) {
                             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
@@ -254,10 +273,10 @@ public class AddQueueActivity extends AppCompatActivity {
                         binding.tvSubDec.setText(directionModel.getResponseData().get(0).getAudioDescription());
                         binding.tvSubDec.post(() -> {
                             int lineCount = binding.tvSubDec.getLineCount();
-                            if (lineCount < 3 || lineCount == 3) {
+                            if (lineCount < 4 || lineCount == 4) {
 
                             } else {
-                                makeTextViewResizable(binding.tvSubDec, 3, "Read More...", true);
+                                makeTextViewResizable(binding.tvSubDec, 4, "Read More...", true);
                                 binding.tvSubDec.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -269,6 +288,14 @@ public class AddQueueActivity extends AppCompatActivity {
                                         final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
                                         final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
                                         tvDesc.setText(directionModel.getResponseData().get(0).getAudioDescription());
+
+                                        dialog.setOnKeyListener((v, keyCode, event) -> {
+                                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                                dialog.dismiss();
+                                                return true;
+                                            }
+                                            return false;
+                                        });
 
                                         tvClose.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -288,6 +315,7 @@ public class AddQueueActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                                i.putExtra("AudioId", AudioId);
                                 startActivity(i);
                             }
                         });
@@ -300,14 +328,14 @@ public class AddQueueActivity extends AppCompatActivity {
                             }
                         });
 
-                        String[] elements = directionModel.getResponseData().get(0).getAudioSubCategory().split(",");
+                        String[] elements = directionModel.getResponseData().get(0).getAudiomastercat().split(",");
                         List<String> direction = Arrays.asList(elements);
 
-                             DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
-                            RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
-                            binding.rvDirlist.setLayoutManager(recentlyPlayed);
-                            binding.rvDirlist.setItemAnimator(new DefaultItemAnimator());
-                            binding.rvDirlist.setAdapter(directionAdapter);
+                        DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
+                        RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
+                        binding.rvDirlist.setLayoutManager(recentlyPlayed);
+                        binding.rvDirlist.setItemAnimator(new DefaultItemAnimator());
+                        binding.rvDirlist.setAdapter(directionAdapter);
 
                         binding.llAddQueue.setOnClickListener(new View.OnClickListener() {
                             @Override

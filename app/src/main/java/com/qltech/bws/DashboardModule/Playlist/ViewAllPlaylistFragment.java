@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Parcelable;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,36 +41,46 @@ public class ViewAllPlaylistFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_all_playlist, container, false);
         View view = binding.getRoot();
 
-
         if (getArguments() != null) {
             Name = getArguments().getString("Name");
             Audiolist = getArguments().getParcelableArrayList("Audiolist");
         }
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-//                PlaylistFragment playlistFragment = new PlaylistFragment();
-//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
                 FragmentManager fm = getActivity()
                         .getSupportFragmentManager();
                 fm.popBackStack ("ViewAllPlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                fragmentManager.beginTransaction()
-//                        .replace(R.id.rlPlaylist, playlistFragment)
-//                        .commit();
-//                Bundle bundle = new Bundle();
-//                bundle.putString("Check", "1");
-//                playlistFragment.setArguments(bundle);
+                return true;
+            }
+            return false;
+        });
 
+        binding.llBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getActivity()
+                        .getSupportFragmentManager();
+                fm.popBackStack ("ViewAllPlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
         binding.tvTitle.setText(Name);
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
         binding.rvMainAudio.setLayoutManager(manager);
+        setAdapter();
+        return view;
+    }
+
+    void setAdapter(){
         PlaylistAdapter adapter = new PlaylistAdapter(Audiolist, getActivity());
         binding.rvMainAudio.setAdapter(adapter);
-        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setAdapter();
     }
 
     public class PlaylistAdapter  extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>  {

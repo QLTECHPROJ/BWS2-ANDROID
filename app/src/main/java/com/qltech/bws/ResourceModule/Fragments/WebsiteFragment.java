@@ -103,6 +103,7 @@ public class WebsiteFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
     public class WebsiteAdapter extends RecyclerView.Adapter<WebsiteAdapter.MyViewHolder> {
         private List<ResourceListModel.ResponseData> listModelList;
         Context ctx;
@@ -125,10 +126,10 @@ public class WebsiteFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModelList.get(position).getTitle());
-            if (!listModelList.get(position).getAuthor().equalsIgnoreCase("")){
+            if (!listModelList.get(position).getDescription().equalsIgnoreCase("")) {
                 holder.binding.tvCreator.setVisibility(View.VISIBLE);
-                holder.binding.tvCreator.setText(listModelList.get(position).getAuthor());
-            }else {
+                holder.binding.tvCreator.setText(listModelList.get(position).getDescription());
+            } else {
                 holder.binding.tvCreator.setVisibility(View.GONE);
             }
             Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.1f)
@@ -138,11 +139,11 @@ public class WebsiteFragment extends Fragment {
                 public void onClick(View view) {
                     Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
                     i.putExtra("website", website);
-                    i.putExtra("title",listModelList.get(position).getTitle());
-                    i.putExtra("linkOne",listModelList.get(position).getResourceLink1());
-                    i.putExtra("linkTwo",listModelList.get(position).getResourceLink2());
-                    i.putExtra("image",listModelList.get(position).getImage());
-                    i.putExtra("description",listModelList.get(position).getDescription());
+                    i.putExtra("title", listModelList.get(position).getTitle());
+                    i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
+                    i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
+                    i.putExtra("image", listModelList.get(position).getImage());
+                    i.putExtra("description", listModelList.get(position).getDescription());
                     startActivity(i);
                 }
             });

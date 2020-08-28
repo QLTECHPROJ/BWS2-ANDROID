@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Selection;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
@@ -60,6 +64,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             }
         });
 
+        binding.tvName.setText(PlaylistName);
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 20,
                 1, 1, 0.54f, 20);
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -78,9 +83,24 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
                 final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
                 final TextView tvAction = dialog.findViewById(R.id.tvAction);
+                final TextView tvHeading = dialog.findViewById(R.id.tvHeading);
                 final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
-                tvAction.setText(R.string.Rename);
+                tvHeading.setText(R.string.Rename_your_playlist);
+                tvAction.setText(R.string.Save);
+                edtCreate.requestFocus();
                 edtCreate.setText(PlaylistName);
+                int position1 = edtCreate.getText().length();
+                Editable editObj = edtCreate.getText();
+                Selection.setSelection(editObj, position1);
+
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                        return true;
+                    }
+                    return false;
+                });
+
                 rlCreate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -94,7 +114,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                     @Override
                                     public void onResponse(Call<RenamePlaylistModel> call, Response<RenamePlaylistModel> response) {
                                         if (response.isSuccessful()) {
-                                            deleteFrg = 1;
                                             hideProgressBar();
                                             RenamePlaylistModel listModel = response.body();
                                             Toast.makeText(MyPlaylistActivity.this, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
@@ -131,6 +150,17 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
                 final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
                 final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                        FragmentManager fm = getSupportFragmentManager();
+                        fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        return true;
+                    }
+                    return false;
+                });
+
                 tvconfirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

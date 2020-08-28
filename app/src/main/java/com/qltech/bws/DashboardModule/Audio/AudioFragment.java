@@ -35,7 +35,6 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentAudioBinding;
 import com.qltech.bws.databinding.MainAudioLayoutBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;

@@ -124,9 +124,9 @@
                     android:id="@+id/rvReminderDay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginHorizontal="@dimen/_13sdp"
                     android:layout_marginTop="@dimen/_6sdp"
-                    android:layout_gravity="center"
                     android:isScrollContainer="false"
                     android:overScrollMode="never" />
 
@@ -147,9 +147,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
-                android:gravity="center|bottom"
                 android:layout_gravity="center|bottom"
-                android:layout_weight="0.1">
+                android:layout_weight="0.1"
+                android:gravity="center|bottom">
 
                 <Button
                     android:id="@+id/btnSave"
@@ -164,6 +164,7 @@
 
             </LinearLayout>
         </LinearLayout>
+
         <ImageView
             android:id="@+id/ImgV"
             android:layout_width="match_parent"

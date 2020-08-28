@@ -31,19 +31,23 @@
                         android:layout_gravity="center_horizontal" />
 
                     <TextView
+                        android:id="@+id/tvHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_28sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="center"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
                         android:text="Your current membership"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_22sdp" />
 
                     <LinearLayout
+                        android:id="@+id/llPlanMain"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -65,116 +69,21 @@
                             android:textSize="@dimen/_20sdp" />
 
                         <TextView
+                            android:id="@+id/tvPlan"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center"
-                            android:text=" / month"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_20sdp" />
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/llFeatured"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvFeatured"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_16sdp"
-                            android:layout_marginTop="@dimen/_22sdp"
-                            android:gravity="center_vertical">
-
-                            <ImageView
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_40sdp"
-                                android:padding="@dimen/_12sdp"
-                                android:src="@drawable/ic_orange_check_icon" />
-
-                            <TextView
-                                android:id="@+id/tvFeatures01"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_13sdp"
-                                android:fontFamily="@font/montserrat_medium"
-                                android:gravity="start"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/_15sdp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_16sdp"
-                            android:gravity="center_vertical">
-
-                            <ImageView
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_40sdp"
-                                android:padding="@dimen/_12sdp"
-                                android:src="@drawable/ic_orange_check_icon" />
-
-                            <TextView
-                                android:id="@+id/tvFeatures02"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_13sdp"
-                                android:fontFamily="@font/montserrat_medium"
-                                android:gravity="start"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/_15sdp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_16sdp"
-                            android:gravity="center_vertical">
-
-                            <ImageView
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_40sdp"
-                                android:padding="@dimen/_12sdp"
-                                android:src="@drawable/ic_orange_check_icon" />
-
-                            <TextView
-                                android:id="@+id/tvFeatures03"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_13sdp"
-                                android:fontFamily="@font/montserrat_medium"
-                                android:gravity="start"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/_15sdp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_16sdp"
-                            android:gravity="center_vertical">
-
-                            <ImageView
-                                android:layout_width="@dimen/_40sdp"
-                                android:layout_height="@dimen/_40sdp"
-                                android:padding="@dimen/_12sdp"
-                                android:src="@drawable/ic_orange_check_icon" />
-
-                            <TextView
-                                android:id="@+id/tvFeatures04"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_13sdp"
-                                android:fontFamily="@font/montserrat_medium"
-                                android:gravity="start"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/_15sdp" />
-                        </LinearLayout>
-
-                    </LinearLayout>
+                        android:layout_marginTop="@dimen/_22sdp" />
 
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>

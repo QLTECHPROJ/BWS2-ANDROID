@@ -50,8 +50,8 @@ public class AudioDetailModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
-    public class ResponseData {
 
+    public class ResponseData {
         @SerializedName("ID")
         @Expose
         private String iD;

@@ -48,6 +48,7 @@ public class DownloadPlaylistModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
+
     public class ResponseData {
         @SerializedName("flag")
         @Expose
@@ -60,6 +61,5 @@ public class DownloadPlaylistModel {
         public void setFlag(String flag) {
             this.flag = flag;
         }
-
     }
 }

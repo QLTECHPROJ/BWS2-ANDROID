@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.qltech.bws.BWSApplication;
@@ -63,7 +62,7 @@ public class ReminderActivity extends AppCompatActivity {
         reminderDayList.add("T");
         reminderDayList.add("F");
         reminderDayList.add("S");
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context,7);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context, 7);
         binding.rvReminderDay.setLayoutManager(mLayoutManager);
         binding.rvReminderDay.setItemAnimator(new DefaultItemAnimator());
         ReminderDayAdapter reminderDayAdapter = new ReminderDayAdapter();
@@ -200,7 +199,6 @@ public class ReminderActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ReminderDayAdapter.MyViewHolder holder, int position) {
-
             holder.binding.tvday.setText(reminderDayList.get(position));
 
             if (position == 1) {
@@ -229,7 +227,7 @@ public class ReminderActivity extends AppCompatActivity {
             if (day == 1) {
                 holder.binding.tvday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
                 holder.binding.tvday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
-                switch (position){
+                switch (position) {
                     case 0:
                         reminderDay = "Sunday";
                         break;
@@ -276,6 +274,4 @@ public class ReminderActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }

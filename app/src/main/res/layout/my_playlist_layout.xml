@@ -35,6 +35,8 @@
             android:layout_width="@dimen/_0sdp"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
             android:visibility="gone"
             android:layout_weight="0.69">
 
@@ -48,17 +50,17 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_13sdp" />
 
             <TextView
                 android:id="@+id/tvTimeA"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_6sdp"
+                android:layout_marginTop="@dimen/_4sdp"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="start"
                 android:textColor="@color/extra_light_gray"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_13sdp" />
 
 
         </LinearLayout>
@@ -68,8 +70,10 @@
             android:layout_width="@dimen/_0sdp"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
             android:visibility="gone"
-            android:layout_weight="0.43">
+            android:layout_weight="0.69">
 
             <TextView
                 android:id="@+id/tvTitleB"
@@ -81,17 +85,17 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_13sdp" />
 
             <TextView
                 android:id="@+id/tvTimeB"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_6sdp"
+                android:layout_marginTop="@dimen/_4sdp"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="start"
                 android:textColor="@color/extra_light_gray"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_13sdp" />
 
 
         </LinearLayout>

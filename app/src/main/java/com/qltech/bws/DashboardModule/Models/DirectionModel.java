@@ -50,8 +50,8 @@ public class DirectionModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
-    public class ResponseData {
 
+    public class ResponseData {
         @SerializedName("ID")
         @Expose
         private String iD;
@@ -181,6 +181,5 @@ public class DirectionModel {
         public void setAudioSubCategory(String audioSubCategory) {
             this.audioSubCategory = audioSubCategory;
         }
-
     }
 }

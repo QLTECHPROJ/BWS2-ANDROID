@@ -52,8 +52,6 @@ public class BillingAddressFragment extends Fragment {
                         BillingAddressViewModel listModel = response.body();
                         binding.etName.setText(listModel.getResponseData().getName());
                         binding.etEmail.setText(listModel.getResponseData().getEmail());
-                        binding.etEmail.setClickable(false);
-                        binding.etEmail.setEnabled(false);
                         binding.etMobileNumber.setText(listModel.getResponseData().getPhoneNumber());
                         binding.etMobileNumber.setClickable(false);
                         binding.etMobileNumber.setEnabled(false);
@@ -79,31 +77,35 @@ public class BillingAddressFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 showProgressBar();
-                if (BWSApplication.isNetworkConnected(getActivity())) {
-                    Call<BillingAddressSaveModel> listCall = APIClient.getClient().getBillingAddressSave(UserID,
-                            binding.etName.getText().toString(), binding.etEmail.getText().toString(),
-                            binding.etCountry.getText().toString(),binding.etAddressLine1.getText().toString(),
-                            binding.etAddressLine2.getText().toString(),binding.etCity.getText().toString(),
-                            binding.etState.getText().toString(),
-                            binding.etPostCode.getText().toString());
-                    listCall.enqueue(new Callback<BillingAddressSaveModel>() {
-                        @Override
-                        public void onResponse(Call<BillingAddressSaveModel> call, Response<BillingAddressSaveModel> response) {
-                            if (response.isSuccessful()) {
-                                hideProgressBar();
-                                BillingAddressSaveModel listModel = response.body();
-                                Toast.makeText(getActivity(), listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
-                                getActivity().finish();
+                if (binding.etName.getText().toString().equalsIgnoreCase("")){
+                    binding.etName.setError(getString(R.string.valid_name));
+                }else {
+                    if (BWSApplication.isNetworkConnected(getActivity())) {
+                        Call<BillingAddressSaveModel> listCall = APIClient.getClient().getBillingAddressSave(UserID,
+                                binding.etName.getText().toString(), binding.etEmail.getText().toString(),
+                                binding.etCountry.getText().toString(),binding.etAddressLine1.getText().toString(),
+                                binding.etAddressLine2.getText().toString(),binding.etCity.getText().toString(),
+                                binding.etState.getText().toString(),
+                                binding.etPostCode.getText().toString());
+                        listCall.enqueue(new Callback<BillingAddressSaveModel>() {
+                            @Override
+                            public void onResponse(Call<BillingAddressSaveModel> call, Response<BillingAddressSaveModel> response) {
+                                if (response.isSuccessful()) {
+                                    hideProgressBar();
+                                    BillingAddressSaveModel listModel = response.body();
+                                    Toast.makeText(getActivity(), listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                    getActivity().finish();
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<BillingAddressSaveModel> call, Throwable t) {
-                            hideProgressBar();
-                        }
-                    });
-                } else {
-                    Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                            @Override
+                            public void onFailure(Call<BillingAddressSaveModel> call, Throwable t) {
+                                hideProgressBar();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

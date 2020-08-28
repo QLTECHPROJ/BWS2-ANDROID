@@ -2,7 +2,9 @@ package com.qltech.bws.DashboardModule.Appointment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -69,6 +71,9 @@ public class AppointmentFragment extends Fragment {
         binding.cvSetSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse("https://brainwellnessspa.com.au/bookings/services.php"));
+                startActivity(i);
                 binding.cvShowSession.setVisibility(View.VISIBLE);
             }
         });

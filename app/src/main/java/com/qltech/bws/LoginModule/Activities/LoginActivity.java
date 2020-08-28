@@ -86,6 +86,12 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
+
     void prepareData() {
         if (binding.edtNumber.getText().toString().isEmpty()) {
             binding.edtNumber.setFocusable(true);

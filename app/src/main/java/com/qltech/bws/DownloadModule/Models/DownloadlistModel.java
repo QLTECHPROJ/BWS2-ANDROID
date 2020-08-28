@@ -110,7 +110,7 @@ public class DownloadlistModel {
     }
 
     public static class Audio implements Parcelable {
-        @SerializedName("AudioID")
+        @SerializedName("ID")
         @Expose
         private String audioID;
         @SerializedName("PlaylistId")

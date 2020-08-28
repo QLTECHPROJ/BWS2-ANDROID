@@ -39,7 +39,6 @@ import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityResourceBinding;
 import com.qltech.bws.databinding.FilterListLayoutBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,7 +47,6 @@ import retrofit2.Response;
 
 public class ResourceActivity extends AppCompatActivity {
     ActivityResourceBinding binding;
-    List<ResourceFilterModel> listModelList = new ArrayList<>();
     String UserID, Category ="";
     Activity activity;
 
@@ -90,6 +88,7 @@ public class ResourceActivity extends AppCompatActivity {
 
             }
         });
+
         setAdapter();
         binding.ivFilter.setOnClickListener(view -> {
             LayoutInflater li = LayoutInflater.from(ResourceActivity.this);
@@ -109,7 +108,6 @@ public class ResourceActivity extends AppCompatActivity {
             wlp.x = 33;
             wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
             window.setAttributes(wlp);
-
 
             RecyclerView rvFilterList = promptsView.findViewById(R.id.rvFilterList);
             dialogBox.setOnKeyListener((dialog, keyCode, event) -> {
@@ -178,13 +176,10 @@ public class ResourceActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModel.get(position).getCategoryName());
-            holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Category = listModel.get(position).getCategoryName();
-                    setAdapter();
-                    dialogBox.dismiss();
-                }
+            holder.binding.llMainLayout.setOnClickListener(view -> {
+                Category = listModel.get(position).getCategoryName();
+                setAdapter();
+                dialogBox.dismiss();
             });
 
         }

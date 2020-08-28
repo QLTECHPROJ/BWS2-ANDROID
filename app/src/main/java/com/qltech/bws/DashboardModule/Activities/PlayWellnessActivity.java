@@ -1,7 +1,6 @@
 package com.qltech.bws.DashboardModule.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.content.Context;
@@ -13,7 +12,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,12 +33,6 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityPlayWellnessBinding;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -49,7 +41,7 @@ import retrofit2.Response;
 
 public class PlayWellnessActivity extends AppCompatActivity {
     ActivityPlayWellnessBinding binding;
-    String IsRepeat ="", IsShuffle = "", Like, Download, UserID, AudioFile, Name, ImageFile, PlaylistId,
+    String IsRepeat = "", IsShuffle = "", Like, Download, UserID, AudioFile, Name, ImageFile, PlaylistId,
             AudioId, AudioDirection, Audiomastercat, AudioSubCategory;
     private static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
     private MediaPlayer mPlayer;
@@ -187,6 +179,12 @@ public class PlayWellnessActivity extends AppCompatActivity {
             }
         });
 
+        prepareData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         prepareData();
     }
 

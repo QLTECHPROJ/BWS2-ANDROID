@@ -165,7 +165,8 @@ public interface APIInterface {
     /* TODO MyPlaylistsFragment */
     @POST("addaudiosearch")
     @FormUrlEncoded
-    Call<SuggestionAudiosModel> getAddSearchAudio(@Field("AudioName") String audioName);
+    Call<SuggestionAudiosModel> getAddSearchAudio(@Field("AudioName") String audioName,
+                                                  @Field("PlaylistId") String playlistId);
 
     /* TODO AudioFaqActivity */
     @GET("suggested")

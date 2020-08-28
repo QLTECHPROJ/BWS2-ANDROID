@@ -66,7 +66,7 @@ public class ResourceListModel {
         @SerializedName("sub_category")
         @Expose
         private String subCategory;
-        @SerializedName("description")
+        @SerializedName("ResourceDesc")
         @Expose
         private String description;
         @SerializedName("image")

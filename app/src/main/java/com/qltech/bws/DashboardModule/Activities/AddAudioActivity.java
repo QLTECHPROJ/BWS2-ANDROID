@@ -34,7 +34,6 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityAddAudioBinding;
 import com.qltech.bws.databinding.DownloadsLayoutBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -43,10 +42,10 @@ import retrofit2.Response;
 
 public class AddAudioActivity extends AppCompatActivity {
     ActivityAddAudioBinding binding;
-    List<SuggestedModel> listSuggestedList = new ArrayList<>();
     Context ctx;
     String UserID, PlaylistID;
     SerachListAdpater adpater;
+    EditText searchEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,7 @@ public class AddAudioActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.searchView.onActionViewExpanded();
-        EditText searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.gray));
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
         ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
@@ -82,8 +81,11 @@ public class AddAudioActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String search) {
-                prepareSearchData(search);
-                Log.e("searchsearch", "" + search);
+                if (searchEditText.getText().toString().equalsIgnoreCase("")) {
+
+                } else {
+                    prepareSearchData(search, searchEditText, PlaylistID);
+                }
                 return false;
             }
         });
@@ -106,20 +108,33 @@ public class AddAudioActivity extends AppCompatActivity {
         prepareSuggestedData();
     }
 
-    private void prepareSearchData(String search){
+    private void prepareSearchData(String search, EditText searchEditText, String PlaylistID) {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(ctx)) {
-            Call<SuggestionAudiosModel> listCall = APIClient.getClient().getAddSearchAudio(search);
+            Call<SuggestionAudiosModel> listCall = APIClient.getClient().getAddSearchAudio(search, PlaylistID);
             listCall.enqueue(new Callback<SuggestionAudiosModel>() {
                 @Override
                 public void onResponse(Call<SuggestionAudiosModel> call, Response<SuggestionAudiosModel> response) {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         SuggestionAudiosModel listModel = response.body();
-                        if (listModel != null) {
-                            adpater = new SerachListAdpater(listModel.getResponseData(), ctx, binding.rvSerachList, UserID, PlaylistID);
+                        if (!searchEditText.getText().toString().equalsIgnoreCase("")) {
+                            if (listModel.getResponseData().size() == 0) {
+                                binding.rvSerachList.setVisibility(View.GONE);
+                                binding.llError.setVisibility(View.VISIBLE);
+                                binding.tvFound.setText("" +searchEditText);
+                            } else {
+                                binding.llError.setVisibility(View.GONE);
+                                binding.rvSerachList.setVisibility(View.VISIBLE);
+                                adpater = new SerachListAdpater(listModel.getResponseData(), ctx, binding.rvSerachList, UserID, PlaylistID);
+                                binding.rvSerachList.setAdapter(adpater);
+                            }
+                        } else if (searchEditText.getText().toString().equalsIgnoreCase("")) {
+                            binding.rvSerachList.setAdapter(null);
+                            binding.rvSerachList.setVisibility(View.GONE);
+                            binding.llError.setVisibility(View.GONE);
                         }
-                        binding.rvSerachList.setAdapter(adpater);
+
                     }
                 }
 
@@ -133,7 +148,7 @@ public class AddAudioActivity extends AppCompatActivity {
         }
     }
 
-    private void prepareSuggestedData(){
+    private void prepareSuggestedData() {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(ctx)) {
             Call<SuggestedModel> listCall = APIClient.getClient().getSuggestedLists();
@@ -250,7 +265,7 @@ public class AddAudioActivity extends AppCompatActivity {
             View view = LayoutInflater.from(ctx).inflate(R.layout.toast_layout, null);
             TextView tvMessage = view.findViewById(R.id.tvMessage);
             tvMessage.setText(message);
-            toast.setGravity(Gravity.BOTTOM|Gravity.CENTER, 0, 35);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
             toast.setView(view);
             toast.show();
         }
@@ -340,7 +355,7 @@ public class AddAudioActivity extends AppCompatActivity {
             View view = LayoutInflater.from(ctx).inflate(R.layout.toast_layout, null);
             TextView tvMessage = view.findViewById(R.id.tvMessage);
             tvMessage.setText(message);
-            toast.setGravity(Gravity.BOTTOM|Gravity.CENTER, 0, 35);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
             toast.setView(view);
             toast.show();
 

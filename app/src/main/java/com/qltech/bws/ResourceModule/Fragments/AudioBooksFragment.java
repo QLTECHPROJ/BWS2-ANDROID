@@ -29,7 +29,6 @@ import com.qltech.bws.databinding.AudioBooksLayoutBinding;
 import com.qltech.bws.databinding.BannerImageBinding;
 import com.qltech.bws.databinding.FragmentAudioBooksBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -172,24 +171,24 @@ public class AudioBooksFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
-                    i.putExtra("audio_books",audio_books);
-                    i.putExtra("title",listModelList.get(position).getTitle());
-                    i.putExtra("author",listModelList.get(position).getAuthor());
-                    i.putExtra("linkOne",listModelList.get(position).getResourceLink1());
-                    i.putExtra("linkTwo",listModelList.get(position).getResourceLink2());
-                    i.putExtra("image",listModelList.get(position).getImage());
-                    i.putExtra("description",listModelList.get(position).getDescription());
+                    i.putExtra("audio_books", audio_books);
+                    i.putExtra("title", listModelList.get(position).getTitle());
+                    i.putExtra("author", listModelList.get(position).getAuthor());
+                    i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
+                    i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
+                    i.putExtra("image", listModelList.get(position).getImage());
+                    i.putExtra("description", listModelList.get(position).getDescription());
                     startActivity(i);
                 }
             });
 
         }
 
-      /*  @Override
-        public int getItemViewType(int position) {
-            return consolidatedList.get(position).getType();
-        }
-*/
+        /*  @Override
+          public int getItemViewType(int position) {
+              return consolidatedList.get(position).getType();
+          }
+  */
         @Override
         public int getItemCount() {
             return listModelList.size();

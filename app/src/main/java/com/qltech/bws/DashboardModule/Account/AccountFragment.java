@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.SystemClock;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -164,6 +165,14 @@ public class AccountFragment extends Fragment {
                 final TextView tvSubTitle = dialog.findViewById(R.id.tvSubTitle);
                 final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
                 final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                        return true;
+                    }
+                    return false;
+                });
 
                 tvTitle.setText(R.string.logout);
                 tvSubTitle.setText(R.string.logout_quotes);

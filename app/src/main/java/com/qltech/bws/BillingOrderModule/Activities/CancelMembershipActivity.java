@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -147,6 +148,15 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
                     final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
                     final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+
+                    dialog.setOnKeyListener((v, keyCode, event) -> {
+                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                            dialog.dismiss();
+                            return true;
+                        }
+                        return false;
+                    });
+
                     tvconfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

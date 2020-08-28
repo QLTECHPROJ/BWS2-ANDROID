@@ -78,7 +78,7 @@
                         android:gravity="center"
                         android:backgroundTint="@color/white"
                         android:imeOptions="actionNext"
-                        android:inputType="number"
+                        android:inputType="number|textNoSuggestions"
                         android:maxLength="1"
                         android:maxLines="1"
                         android:paddingBottom="@dimen/_15sdp"
@@ -99,7 +99,7 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="center"
                         android:imeOptions="actionNext"
-                        android:inputType="number"
+                        android:inputType="number|textNoSuggestions"
                         android:maxLength="1"
                         android:maxLines="1"
                         android:paddingBottom="@dimen/_15sdp"
@@ -120,7 +120,7 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="center"
                         android:imeOptions="actionNext"
-                        android:inputType="number"
+                        android:inputType="number|textNoSuggestions"
                         android:maxLength="1"
                         android:maxLines="1"
                         android:paddingBottom="@dimen/_15sdp"
@@ -141,7 +141,7 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="center"
                         android:imeOptions="actionDone"
-                        android:inputType="number"
+                        android:inputType="number|textNoSuggestions"
                         android:maxLength="1"
                         android:maxLines="1"
                         android:paddingBottom="@dimen/_15sdp"
@@ -214,6 +214,7 @@
                         android:src="@drawable/ic_sms_icon" />
 
                     <TextView
+                        android:id="@+id/tvResendOTP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

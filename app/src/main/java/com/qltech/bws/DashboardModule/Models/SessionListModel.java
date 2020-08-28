@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class SessionListModel {
-
     @SerializedName("ResponseData")
     @Expose
     private List<ResponseData> responseData = null;
@@ -53,7 +52,6 @@ public class SessionListModel {
     }
 
     public class ResponseData {
-
         @SerializedName("Id")
         @Expose
         private String id;

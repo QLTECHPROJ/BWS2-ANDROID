@@ -139,12 +139,12 @@ public class PodcastsFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
-                    i.putExtra("podcasts",podcasts);
-                    i.putExtra("title",listModelList.get(position).getTitle());
-                    i.putExtra("linkOne",listModelList.get(position).getResourceLink1());
-                    i.putExtra("linkTwo",listModelList.get(position).getResourceLink2());
-                    i.putExtra("image",listModelList.get(position).getImage());
-                    i.putExtra("description",listModelList.get(position).getDescription());
+                    i.putExtra("podcasts", podcasts);
+                    i.putExtra("title", listModelList.get(position).getTitle());
+                    i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
+                    i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
+                    i.putExtra("image", listModelList.get(position).getImage());
+                    i.putExtra("description", listModelList.get(position).getDescription());
                     startActivity(i);
                 }
             });

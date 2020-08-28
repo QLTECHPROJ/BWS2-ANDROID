@@ -76,44 +76,43 @@ public class ResourceDetailsActivity extends AppCompatActivity {
             Glide.with(ctx).load(image).thumbnail(0.1f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
-            if (linkOne.equalsIgnoreCase("")) {
-                Toast.makeText(ctx, "Not Available", Toast.LENGTH_SHORT).show();
-            } else {
-                binding.btnComplete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+            binding.btnComplete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (linkOne.equalsIgnoreCase("")) {
+                        Toast.makeText(ctx, "Not Available", Toast.LENGTH_SHORT).show();
+                    } else {
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(linkOne));
                         startActivity(i);
                     }
-                });
-            }
+                }
+            });
 
-            if (linkOne.equalsIgnoreCase("")) {
-                Toast.makeText(ctx, "Not Available", Toast.LENGTH_SHORT).show();
-            } else {
-                binding.ivAndroid.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+            binding.ivAndroid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (linkOne.equalsIgnoreCase("")) {
+                        Toast.makeText(ctx, "Not Available", Toast.LENGTH_SHORT).show();
+                    } else {
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(linkOne));
                         startActivity(i);
                     }
-                });
-            }
-
-            if (linkTwo.equalsIgnoreCase("")) {
-                Toast.makeText(ctx, "Not Available", Toast.LENGTH_SHORT).show();
-            } else {
-                binding.ivIos.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                }
+            });
+            binding.ivIos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (linkTwo.equalsIgnoreCase("")) {
+                        Toast.makeText(ctx, "Not Available", Toast.LENGTH_SHORT).show();
+                    } else {
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(linkTwo));
                         startActivity(i);
                     }
-                });
-            }
+                }
+            });
         }
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {

@@ -3,8 +3,6 @@ package com.qltech.bws.DashboardModule.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +13,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +27,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.qltech.bws.DashboardModule.Models.AddPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.PlaylistingModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
-import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -40,7 +38,6 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityAddPlaylistBinding;
 import com.qltech.bws.databinding.AddPlayListLayoutBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -49,8 +46,7 @@ import retrofit2.Response;
 
 public class AddPlaylistActivity extends AppCompatActivity {
     ActivityAddPlaylistBinding binding;
-    List<AddPlaylistModel> addPlaylist = new ArrayList<>();
-    String UserID;
+    String UserID, AudioId;
     Context ctx;
     Activity activity;
 
@@ -64,6 +60,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
+        if (getIntent().getExtras() != null) {
+            AudioId = getIntent().getStringExtra("AudioId");
+        }
+
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,7 +74,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         binding.btnAddPlatLists.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog dialog = new Dialog(AddPlaylistActivity.this);
+                final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.create_palylist);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
@@ -83,20 +83,28 @@ public class AddPlaylistActivity extends AppCompatActivity {
                 final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
                 final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
 
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                        return true;
+                    }
+                    return false;
+                });
+
                 rlCreate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                            Toast.makeText(AddPlaylistActivity.this, "Please enter playlist name", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ctx, "Please enter playlist name", Toast.LENGTH_SHORT).show();
                         } else {
-                            if (BWSApplication.isNetworkConnected(AddPlaylistActivity.this)) {
+                            if (BWSApplication.isNetworkConnected(ctx)) {
                                 Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
                                 listCall.enqueue(new Callback<CreatePlaylistModel>() {
                                     @Override
                                     public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
                                         if (response.isSuccessful()) {
                                             CreatePlaylistModel listModel = response.body();
-                                            Toast.makeText(AddPlaylistActivity.this, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ctx, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
                                             prepareData(ctx);
                                         }
@@ -107,7 +115,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     }
                                 });
                             } else {
-                                Toast.makeText(AddPlaylistActivity.this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -119,7 +127,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
             }
         });
 
-        RecyclerView.LayoutManager played = new LinearLayoutManager(AddPlaylistActivity.this, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager played = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvPlayLists.setLayoutManager(played);
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
         prepareData(ctx);
@@ -182,6 +190,45 @@ public class AddPlaylistActivity extends AppCompatActivity {
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             Glide.with(ctx).load(listModel.get(position).getImage()).thumbnail(0.1f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+
+            holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String PlaylistID = listModel.get(position).getID();
+                    BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID);
+                        listCall.enqueue(new Callback<SucessModel>() {
+                            @Override
+                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                if (response.isSuccessful()) {
+                                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                                    SucessModel listModel = response.body();
+                                    showToast(listModel.getResponseMessage());
+                                    finish();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SucessModel> call, Throwable t) {
+                                BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                            }
+                        });
+                    } else {
+                        Toast.makeText(ctx, ctx.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+
+        void showToast(String message) {
+            Toast toast = new Toast(ctx);
+            View view = LayoutInflater.from(ctx).inflate(R.layout.toast_layout, null);
+            TextView tvMessage = view.findViewById(R.id.tvMessage);
+            tvMessage.setText(message);
+            toast.setGravity(Gravity.BOTTOM|Gravity.CENTER, 0, 35);
+            toast.setView(view);
+            toast.show();
         }
 
         @Override
