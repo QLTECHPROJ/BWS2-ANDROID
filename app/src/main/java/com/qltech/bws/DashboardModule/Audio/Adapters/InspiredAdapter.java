@@ -20,13 +20,14 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.BigBoxLayoutBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InspiredAdapter extends RecyclerView.Adapter<InspiredAdapter.MyViewHolder> {
-    private List<MainAudioModel.ResponseData.Detail> listModelList;
+    private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
 
-    public InspiredAdapter(List<MainAudioModel.ResponseData.Detail> listModelList, Context ctx) {
+    public InspiredAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx) {
         this.listModelList = listModelList;
         this.ctx = ctx;
     }
@@ -62,6 +63,8 @@ public class InspiredAdapter extends RecyclerView.Adapter<InspiredAdapter.MyView
                 i.putExtra("AudioSubCategory",listModelList.get(position).getAudioSubCategory());
                 i.putExtra("Like",listModelList.get(position).getLike());
                 i.putExtra("Download",listModelList.get(position).getDownload());
+                i.putExtra("position",position);
+                i.putParcelableArrayListExtra("AudioList",listModelList);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
             }

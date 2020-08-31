@@ -77,7 +77,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tvSubTitle" />
 
                 <TextView
-                    android:id="@+id/tvView"
+                    android:id="@+id/tvViewInvoice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_24sdp"

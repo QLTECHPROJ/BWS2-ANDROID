@@ -274,6 +274,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llprev"
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.19"
@@ -317,6 +318,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llnext"
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.19"

@@ -13,20 +13,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Activities.PlayWellnessActivity;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.R;
-import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.SmallBoxLayoutBinding;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder> {
-    private List<MainAudioModel.ResponseData.Detail> listModelList;
+    private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
 
-    public RecentlyPlayedAdapter(List<MainAudioModel.ResponseData.Detail> listModelList, Context ctx) {
+    public RecentlyPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx) {
         this.listModelList = listModelList;
         this.ctx = ctx;
     }
@@ -63,6 +63,8 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 i.putExtra("AudioSubCategory",listModelList.get(position).getAudioSubCategory());
                 i.putExtra("Like",listModelList.get(position).getLike());
                 i.putExtra("Download",listModelList.get(position).getDownload());
+                i.putExtra("position",position);
+                i.putParcelableArrayListExtra("AudioList",listModelList);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
             }

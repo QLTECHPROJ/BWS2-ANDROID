@@ -133,13 +133,13 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                 } else {
                     if (BWSApplication.isNetworkConnected(CheckoutOtpActivity.this)) {
                         BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
-
+                        String deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                         Call<CardModel> listCall = APIClient.getClient().getAuthOtps1(
                                 binding.edtOTP1.getText().toString() + "" +
                                         binding.edtOTP2.getText().toString() + "" +
                                         binding.edtOTP3.getText().toString() + "" +
-                                        binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE,
-                                Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), MobileNo, CONSTANTS.FLAG_ONE);
+                                        binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE,deviceid
+                                , MobileNo, CONSTANTS.FLAG_ONE);
                         listCall.enqueue(new Callback<CardModel>() {
                             @Override
                             public void onResponse(Call<CardModel> call, Response<CardModel> response) {

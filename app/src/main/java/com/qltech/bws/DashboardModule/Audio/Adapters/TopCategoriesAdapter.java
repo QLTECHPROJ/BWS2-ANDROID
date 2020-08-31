@@ -21,13 +21,14 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.RoundBoxLayoutBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TopCategoriesAdapter  extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
-    private List<MainAudioModel.ResponseData.Detail> listModelList;
+    private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
 
-    public TopCategoriesAdapter(List<MainAudioModel.ResponseData.Detail> listModelList, Context ctx) {
+    public TopCategoriesAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx) {
         this.listModelList = listModelList;
         this.ctx = ctx;
     }
@@ -70,6 +71,8 @@ public class TopCategoriesAdapter  extends RecyclerView.Adapter<TopCategoriesAda
                 i.putExtra("AudioSubCategory",listModelList.get(position).getAudioSubCategory());
                 i.putExtra("Like",listModelList.get(position).getLike());
                 i.putExtra("Download",listModelList.get(position).getDownload());
+                i.putExtra("position",position);
+                i.putParcelableArrayListExtra("AudioList",listModelList);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
             }

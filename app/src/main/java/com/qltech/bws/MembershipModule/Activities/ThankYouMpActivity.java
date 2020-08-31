@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.qltech.bws.DashboardModule.Activities.DashboardActivity;
+import com.qltech.bws.InvoiceModule.Activities.InvoiceActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -17,6 +18,7 @@ import com.qltech.bws.databinding.ActivityThankYouMembershipBinding;
 public class ThankYouMpActivity extends AppCompatActivity {
 
     ActivityThankYouMembershipBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,14 @@ public class ThankYouMpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ThankYouMpActivity.this, DashboardActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+        binding.tvViewInvoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ThankYouMpActivity.this, InvoiceActivity.class);
                 startActivity(i);
                 finish();
             }

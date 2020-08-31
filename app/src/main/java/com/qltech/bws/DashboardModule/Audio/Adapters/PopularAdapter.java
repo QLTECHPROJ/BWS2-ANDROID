@@ -20,13 +20,14 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.SmallBoxLayoutBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.MyViewHolder> {
-    private List<MainAudioModel.ResponseData.Detail> listModelList;
+    private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
 
-    public PopularAdapter(List<MainAudioModel.ResponseData.Detail> listModelList,Context ctx) {
+    public PopularAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList,Context ctx) {
         this.listModelList = listModelList;
         this.ctx = ctx;
     }
@@ -54,6 +55,17 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.MyViewHo
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                i.putExtra("ID",listModelList.get(position).getID());
+                i.putExtra("Name",listModelList.get(position).getName());
+                i.putExtra("AudioFile",listModelList.get(position).getAudioFile());
+                i.putExtra("ImageFile",listModelList.get(position).getImageFile());
+                i.putExtra("AudioDirection",listModelList.get(position).getAudioDirection());
+                i.putExtra("Audiomastercat",listModelList.get(position).getAudiomastercat());
+                i.putExtra("AudioSubCategory",listModelList.get(position).getAudioSubCategory());
+                i.putExtra("Like",listModelList.get(position).getLike());
+                i.putExtra("Download",listModelList.get(position).getDownload());
+                i.putExtra("position",position);
+                i.putParcelableArrayListExtra("AudioList",listModelList);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
             }

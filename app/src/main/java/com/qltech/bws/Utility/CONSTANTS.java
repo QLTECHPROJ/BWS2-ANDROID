@@ -31,6 +31,8 @@ public class CONSTANTS {
     public static String Name = "Name";
     public static String Like = "Like";
     public static String Download = "Download";
+    public static String position = "position";
+    public static String AudioList = "AudioList";
     public static String Code = "Code";
     public static String Codes = "Codes";
     public static String MobileNo = "MobileNo";

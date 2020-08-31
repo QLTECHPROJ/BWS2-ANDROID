@@ -1,8 +1,6 @@
 package com.qltech.bws.DashboardModule.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,19 +18,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
+import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.R;
-import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityPlayWellnessBinding;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -46,6 +49,9 @@ public class PlayWellnessActivity extends AppCompatActivity {
     private static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
     private MediaPlayer mPlayer;
     Context ctx;
+    Activity activity;
+    private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
+    int position;
     private Handler hdlr = new Handler();
 
     @Override
@@ -53,12 +59,13 @@ public class PlayWellnessActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_wellness);
         ctx = PlayWellnessActivity.this;
+        activity = PlayWellnessActivity.this;
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         IsRepeat = (shared1.getString(CONSTANTS.PREF_KEY_IsRepeat, ""));
         IsShuffle = (shared1.getString(CONSTANTS.PREF_KEY_IsShuffle, ""));
-
+        listModelList = new ArrayList<>();
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);
             Name = getIntent().getStringExtra(CONSTANTS.Name);
@@ -69,16 +76,16 @@ public class PlayWellnessActivity extends AppCompatActivity {
             AudioSubCategory = getIntent().getStringExtra(CONSTANTS.AudioSubCategory);
             Like = getIntent().getStringExtra(CONSTANTS.Like);
             Download = getIntent().getStringExtra(CONSTANTS.Download);
+            position = getIntent().getIntExtra(CONSTANTS.position, 0);
+            listModelList = getIntent().getParcelableArrayListExtra(CONSTANTS.AudioList);
         }
-        Glide.with(PlayWellnessActivity.this).load(R.drawable.loading).asGif().into(binding.ImgV);
-
+        prepareData();
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-
 
         if (Like.equalsIgnoreCase("1")) {
             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
@@ -102,13 +109,13 @@ public class PlayWellnessActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    showProgressBar();
+                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                     Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(AudioId, UserID);
                     listCall.enqueue(new Callback<AudioLikeModel>() {
                         @Override
                         public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
                             if (response.isSuccessful()) {
-                                hideProgressBar();
+                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                                 AudioLikeModel model = response.body();
                                 if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
                                     binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
@@ -121,7 +128,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<AudioLikeModel> call, Throwable t) {
-                            hideProgressBar();
+                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         }
                     });
                 } else {
@@ -131,20 +138,20 @@ public class PlayWellnessActivity extends AppCompatActivity {
         });
 
         if (BWSApplication.isNetworkConnected(ctx)) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(AudioId, UserID);
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         SucessModel model = response.body();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<SucessModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 }
             });
         } else {
@@ -155,13 +162,13 @@ public class PlayWellnessActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    showProgressBar();
+                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                     Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistId);
                     listCall.enqueue(new Callback<DownloadPlaylistModel>() {
                         @Override
                         public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
                             if (response.isSuccessful()) {
-                                hideProgressBar();
+                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                                 DownloadPlaylistModel model = response.body();
                                 Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
                             }
@@ -169,7 +176,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                            hideProgressBar();
+                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         }
                     });
 
@@ -178,8 +185,84 @@ public class PlayWellnessActivity extends AppCompatActivity {
                 }
             }
         });
+        binding.llMore.setOnClickListener(view -> {
+            Intent i = new Intent(ctx, AddQueueActivity.class);
+            i.putExtra("play", "play");
+            i.putExtra("ID", AudioId);
+            startActivity(i);
+        });
 
-        prepareData();
+        binding.llViewQueue.setOnClickListener(view -> {
+            Intent i = new Intent(ctx, ViewQueueActivity.class);
+            startActivity(i);
+        });
+        mPlayer.setOnCompletionListener(mediaPlayer -> {
+            if (position < listModelList.size() - 1) {
+                position = position + 1;
+                prepareData();
+            }
+        });
+
+        binding.llplay.setOnClickListener(v -> {
+            mPlayer.start();
+            binding.llplay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.VISIBLE);
+            binding.llPause.setEnabled(true);
+            binding.llplay.setEnabled(false);
+        });
+
+        binding.llPause.setOnClickListener(view -> {
+            binding.llplay.setVisibility(View.VISIBLE);
+            binding.llPause.setVisibility(View.GONE);
+            mPlayer.pause();
+            binding.llPause.setEnabled(false);
+            binding.llplay.setEnabled(true);
+        });
+
+        binding.llForwardSec.setOnClickListener(v -> {
+            if ((startTime + forwardTime) <= endTime) {
+                startTime = startTime + forwardTime;
+                mPlayer.seekTo(startTime);
+            } else {
+                showToast("Please wait");
+            }
+            if (!binding.llplay.isEnabled()) {
+                binding.llplay.setEnabled(true);
+            }
+        });
+
+        binding.llBackWordSec.setOnClickListener(v -> {
+            if ((startTime - backwardTime) > 0) {
+                startTime = startTime - backwardTime;
+                mPlayer.seekTo(startTime);
+            } else {
+                showToast("Please wait");
+            }
+            if (!binding.llplay.isEnabled()) {
+                binding.llplay.setEnabled(true);
+            }
+        });
+        binding.llnext.setOnClickListener(view -> {
+            if (position < listModelList.size() - 1) {
+                mPlayer.release();
+                position = position + 1;
+                prepareData();
+            }
+
+        });
+
+        binding.llprev.setOnClickListener(view -> {
+            if (position > 0) {
+                mPlayer.pause();
+                position = position - 1;
+                prepareData();
+            } else {
+                mPlayer.pause();
+                position = 0;
+                prepareData();
+
+            }
+        });
     }
 
     @Override
@@ -189,15 +272,14 @@ public class PlayWellnessActivity extends AppCompatActivity {
     }
 
     void prepareData() {
-        binding.tvName.setText(Name);
-        binding.tvDireDesc.setText(AudioDirection);
-        binding.tvTitle.setText(AudioSubCategory);
-        binding.tvDesc.setText(Audiomastercat);
+        binding.tvName.setText(listModelList.get(position).getName());
+        binding.tvDireDesc.setText(listModelList.get(position).getAudioDirection());
+        binding.tvTitle.setText(listModelList.get(position).getAudioSubCategory());
+        binding.tvDesc.setText(listModelList.get(position).getAudiomastercat());
         mPlayer = new MediaPlayer();
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
         try {
-            mPlayer.setDataSource(PlayWellnessActivity.this, Uri.parse(AudioFile));
+            mPlayer.setDataSource(ctx, Uri.parse(listModelList.get(position).getAudioFile()));
             mPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
@@ -207,7 +289,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
             url = new URL(AudioFile);
             URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
             String encodedUrl = uri.toASCIIString();
-            mPlayer.setDataSource(PlayWellnessActivity.this, Uri.parse(encodedUrl));
+            mPlayer.setDataSource(ctx, Uri.parse(encodedUrl));
             mPlayer.prepare();
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -218,12 +300,12 @@ public class PlayWellnessActivity extends AppCompatActivity {
         }*/
 
         binding.simpleSeekbar.setClickable(false);
-        MeasureRatio measureRatio = BWSApplication.measureRatio(PlayWellnessActivity.this, 0,
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 1f, 30);
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        Glide.with(PlayWellnessActivity.this).load(ImageFile).thumbnail(0.1f)
+        Glide.with(ctx).load(ImageFile).thumbnail(0.1f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
         endTime = mPlayer.getDuration();
         startTime = mPlayer.getCurrentPosition();
@@ -240,102 +322,12 @@ public class PlayWellnessActivity extends AppCompatActivity {
 
         showToast("Added to your queue");
         mPlayer.start();
-
-        binding.llMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(PlayWellnessActivity.this, AddQueueActivity.class);
-                i.putExtra("play", "play");
-                i.putExtra("ID", AudioId);
-                startActivity(i);
-            }
-        });
-
-        binding.llViewQueue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(PlayWellnessActivity.this, ViewQueueActivity.class);
-                startActivity(i);
-            }
-        });
-
-        binding.llplay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPlayer.start();
-                binding.llplay.setVisibility(View.GONE);
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPause.setEnabled(true);
-                binding.llplay.setEnabled(false);
-            }
-        });
-
-        binding.llPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.llplay.setVisibility(View.VISIBLE);
-                binding.llPause.setVisibility(View.GONE);
-                mPlayer.pause();
-                binding.llPause.setEnabled(false);
-                binding.llplay.setEnabled(true);
-            }
-        });
-
-        binding.llForwardSec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ((startTime + forwardTime) <= endTime) {
-                    startTime = startTime + forwardTime;
-                    mPlayer.seekTo(startTime);
-                } else {
-                    showToast("Please wait");
-                }
-                if (!binding.llplay.isEnabled()) {
-                    binding.llplay.setEnabled(true);
-                }
-            }
-        });
-
-        binding.llBackWordSec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ((startTime - backwardTime) > 0) {
-                    startTime = startTime - backwardTime;
-                    mPlayer.seekTo(startTime);
-                } else {
-                    showToast("Please wait");
-                }
-                if (!binding.llplay.isEnabled()) {
-                    binding.llplay.setEnabled(true);
-                }
-            }
-        });
     }
 
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     void showToast(String message) {
-        Toast toast = new Toast(PlayWellnessActivity.this);
-        View view = LayoutInflater.from(PlayWellnessActivity.this).inflate(R.layout.toast_layout, null);
+        Toast toast = new Toast(ctx);
+        View view = LayoutInflater.from(ctx).inflate(R.layout.toast_layout, null);
         TextView tvMessage = view.findViewById(R.id.tvMessage);
         tvMessage.setText(message);
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);

@@ -1,11 +1,15 @@
 package com.qltech.bws.DashboardModule.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainAudioModel {
+public class MainAudioModel implements Parcelable {
     @SerializedName("ResponseData")
     @Expose
     private List<ResponseData> responseData = null;
@@ -51,7 +55,18 @@ public class MainAudioModel {
         this.responseStatus = responseStatus;
     }
 
-    public class ResponseData {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
+    }
+
+    public static class ResponseData implements Parcelable{
+
         @SerializedName("HomeID")
         @Expose
         private String homeID;
@@ -66,7 +81,26 @@ public class MainAudioModel {
         private String userID;
         @SerializedName("Details")
         @Expose
-        private List<Detail> details = null;
+        private ArrayList<Detail> details = null;
+
+        protected ResponseData(Parcel in) {
+            homeID = in.readString();
+            view = in.readString();
+            type = in.readString();
+            userID = in.readString();
+        }
+
+        public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
+            @Override
+            public ResponseData createFromParcel(Parcel in) {
+                return new ResponseData(in);
+            }
+
+            @Override
+            public ResponseData[] newArray(int size) {
+                return new ResponseData[size];
+            }
+        };
 
         public String getHomeID() {
             return homeID;
@@ -100,15 +134,28 @@ public class MainAudioModel {
             this.userID = userID;
         }
 
-        public List<Detail> getDetails() {
+        public ArrayList<Detail> getDetails() {
             return details;
         }
 
-        public void setDetails(List<Detail> details) {
+        public void setDetails(ArrayList<Detail> details) {
             this.details = details;
         }
 
-        public class Detail {
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(homeID);
+            parcel.writeString(view);
+            parcel.writeString(type);
+            parcel.writeString(userID);
+        }
+
+        public static class Detail implements Parcelable{
             @SerializedName("ID")
             @Expose
             private String iD;
@@ -139,6 +186,31 @@ public class MainAudioModel {
             @SerializedName("AudioDuration")
             @Expose
             private String audioDuration;
+
+            protected Detail(Parcel in) {
+                iD = in.readString();
+                name = in.readString();
+                audioFile = in.readString();
+                audioDirection = in.readString();
+                audiomastercat = in.readString();
+                audioSubCategory = in.readString();
+                imageFile = in.readString();
+                like = in.readString();
+                download = in.readString();
+                audioDuration = in.readString();
+            }
+
+            public static final Creator<Detail> CREATOR = new Creator<Detail>() {
+                @Override
+                public Detail createFromParcel(Parcel in) {
+                    return new Detail(in);
+                }
+
+                @Override
+                public Detail[] newArray(int size) {
+                    return new Detail[size];
+                }
+            };
 
             public String getID() {
                 return iD;
@@ -226,6 +298,25 @@ public class MainAudioModel {
 
             public void setAudioDuration(String audioDuration) {
                 this.audioDuration = audioDuration;
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel parcel, int i) {
+                parcel.writeString(iD);
+                parcel.writeString(name);
+                parcel.writeString(audioFile);
+                parcel.writeString(audioDirection);
+                parcel.writeString(audiomastercat);
+                parcel.writeString(audioSubCategory);
+                parcel.writeString(imageFile);
+                parcel.writeString(like);
+                parcel.writeString(download);
+                parcel.writeString(audioDuration);
             }
         }
     }
