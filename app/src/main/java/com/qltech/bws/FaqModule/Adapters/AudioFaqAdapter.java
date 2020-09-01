@@ -46,6 +46,7 @@ public class AudioFaqAdapter extends RecyclerView.Adapter<AudioFaqAdapter.MyView
             @Override
             public void onClick(View view) {
                 holder.binding.llMainLayout.setBackgroundResource(R.color.discalimer_gray);
+                holder.binding.tvDesc.setFocusable(true);
                 holder.binding.tvDesc.setVisibility(View.VISIBLE);
                 holder.binding.ivClickRight.setVisibility(View.GONE);
                 holder.binding.ivClickDown.setVisibility(View.VISIBLE);

@@ -14,10 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
-import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
-import com.qltech.bws.BillingOrderModule.Fragments.BillingAddressFragment;
-import com.qltech.bws.BillingOrderModule.Fragments.CurrentPlanFragment;
-import com.qltech.bws.BillingOrderModule.Fragments.PaymentFragment;
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptAnswersFragment;
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptAudioFragment;
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptBookletFragment;
@@ -41,7 +37,7 @@ public class AppointmentDetailsFragment extends Fragment {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 FragmentManager fm = getActivity()
                         .getSupportFragmentManager();
-                fm.popBackStack ("AppointmentDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.popBackStack("AppointmentDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 return true;
             }
             return false;
@@ -52,7 +48,7 @@ public class AppointmentDetailsFragment extends Fragment {
             public void onClick(View view) {
                 FragmentManager fm = getActivity()
                         .getSupportFragmentManager();
-                fm.popBackStack ("AppointmentDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.popBackStack("AppointmentDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
         binding.viewPager.setOffscreenPageLimit(4);
@@ -84,6 +80,7 @@ public class AppointmentDetailsFragment extends Fragment {
         });
         return view;
     }
+
     public class TabAdapter extends FragmentStatePagerAdapter {
 
         int totalTabs;

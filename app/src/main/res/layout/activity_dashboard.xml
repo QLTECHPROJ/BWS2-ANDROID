@@ -111,6 +111,7 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
             style="@style/BottomNavigationView"

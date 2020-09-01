@@ -73,7 +73,7 @@
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
             android:visibility="gone"
-            android:layout_weight="0.69">
+            android:layout_weight="0.43">
 
             <TextView
                 android:id="@+id/tvTitleB"
@@ -115,7 +115,6 @@
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:padding="@dimen/_8sdp"
-
                 android:src="@drawable/ic_menu_icon"/>
 
         </LinearLayout>

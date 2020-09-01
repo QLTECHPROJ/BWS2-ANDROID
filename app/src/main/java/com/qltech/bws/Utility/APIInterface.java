@@ -22,6 +22,7 @@ import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.SuggestedModel;
 import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
+import com.qltech.bws.DashboardModule.Models.ViewAllPlayListModel;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.FaqModule.Models.FaqListModel;
 import com.qltech.bws.InvoiceModule.Models.InvoiceDetailModel;
@@ -155,6 +156,12 @@ public interface APIInterface {
     @POST("getlibrary")
     @FormUrlEncoded
     Call<MainPlayListModel> getMainPlayLists(@Field("UserID") String userID);
+
+   /* TODO PlaylistFragment */
+    @POST("playlistongetlibrary")
+    @FormUrlEncoded
+    Call<ViewAllPlayListModel> getViewAllPlayLists(@Field("UserID") String userID,
+                                                   @Field("GetLibraryId") String getLibraryId);
 
     /* TODO MyPlaylistsFragment */
     @POST("playlistdetails")

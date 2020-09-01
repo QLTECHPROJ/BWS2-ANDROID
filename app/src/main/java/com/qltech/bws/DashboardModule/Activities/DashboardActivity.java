@@ -2,14 +2,19 @@ package com.qltech.bws.DashboardModule.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.qltech.bws.DashboardModule.Audio.AudioFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.ActivityDashboardBinding;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -40,6 +45,24 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
+            binding.navView.setSelectedItemId(R.id.navigation_audio);
+            super.onBackPressed();
+            finish();
+        } else if (binding.navView.getSelectedItemId() == R.id.navigation_playlist) {
+            binding.navView.setSelectedItemId(R.id.navigation_playlist);
+            /*if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStack();
+            } else {
+                finishAffinity();
+                return;
+            }*/
+        } else if (binding.navView.getSelectedItemId() == R.id.navigation_search) {
+            binding.navView.setSelectedItemId(R.id.navigation_search);
+        } else if (binding.navView.getSelectedItemId() == R.id.navigation_appointment) {
+            binding.navView.setSelectedItemId(R.id.navigation_appointment);
+        } else if (binding.navView.getSelectedItemId() == R.id.navigation_account) {
+            binding.navView.setSelectedItemId(R.id.navigation_account);
+        }
     }
 }

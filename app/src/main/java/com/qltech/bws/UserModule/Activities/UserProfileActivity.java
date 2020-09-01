@@ -414,7 +414,7 @@ public class UserProfileActivity extends AppCompatActivity {
                         .placeholder(R.color.dark_blue)
                         .error(R.color.dark_blue)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .skipMemoryCache(true)
+                        .skipMemoryCache(false)
                         .dontAnimate().into(binding.civProfile);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
@@ -448,7 +448,7 @@ public class UserProfileActivity extends AppCompatActivity {
                         .placeholder(R.color.dark_blue)
                         .error(R.color.dark_blue)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .skipMemoryCache(true)
+                        .skipMemoryCache(false)
                         .dontAnimate().into(binding.civProfile);
 
                 if (BWSApplication.isNetworkConnected(ctx)) {

@@ -77,16 +77,6 @@ public class MyPlaylistsFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                FragmentManager fm = getActivity()
-                        .getSupportFragmentManager();
-                fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                return true;
-            }
-            return false;
-        });
-
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,7 +178,8 @@ public class MyPlaylistsFragment extends Fragment {
 
         if (New.equalsIgnoreCase("1")) {
             binding.llAddAudio.setVisibility(View.VISIBLE);
-            binding.llOptions.setVisibility(View.INVISIBLE);
+            binding.llDownloads.setVisibility(View.INVISIBLE);
+            binding.llReminder.setVisibility(View.INVISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.INVISIBLE);
             binding.llListing.setVisibility(View.GONE);
             binding.btnAddAudio.setOnClickListener(new View.OnClickListener() {
@@ -201,7 +192,8 @@ public class MyPlaylistsFragment extends Fragment {
             });
         } else if (New.equalsIgnoreCase("0")) {
             binding.llAddAudio.setVisibility(View.GONE);
-            binding.llOptions.setVisibility(View.VISIBLE);
+            binding.llDownloads.setVisibility(View.VISIBLE);
+            binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
             binding.llListing.setVisibility(View.VISIBLE);
             prepareData(UserID, PlaylistID);
@@ -304,7 +296,8 @@ public class MyPlaylistsFragment extends Fragment {
 
                         if (listModel.getResponseData().getPlaylistSongs().size() == 0) {
                             binding.llAddAudio.setVisibility(View.VISIBLE);
-                            binding.llOptions.setVisibility(View.INVISIBLE);
+                            binding.llDownloads.setVisibility(View.INVISIBLE);
+                            binding.llReminder.setVisibility(View.INVISIBLE);
                             binding.ivPlaylistStatus.setVisibility(View.INVISIBLE);
                             binding.llListing.setVisibility(View.GONE);
                             binding.btnAddAudio.setOnClickListener(new View.OnClickListener() {
@@ -317,7 +310,8 @@ public class MyPlaylistsFragment extends Fragment {
                             });
                         } else {
                             binding.llAddAudio.setVisibility(View.GONE);
-                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llDownloads.setVisibility(View.VISIBLE);
+                            binding.llReminder.setVisibility(View.VISIBLE);
                             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
                             binding.llListing.setVisibility(View.VISIBLE);
                             PlayListsAdpater adapter = new PlayListsAdpater(listModel.getResponseData(), getActivity(), UserID);

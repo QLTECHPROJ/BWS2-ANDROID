@@ -17,8 +17,6 @@ import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Models.BillingAddressSaveModel;
 import com.qltech.bws.BillingOrderModule.Models.BillingAddressViewModel;
-import com.qltech.bws.DashboardModule.Models.SucessModel;
-import com.qltech.bws.InvoiceModule.Activities.InvoiceActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;

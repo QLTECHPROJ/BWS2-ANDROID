@@ -8,11 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.qltech.bws.DashboardModule.Models.DirectionModel;
-import com.qltech.bws.DashboardModule.Models.QueueModel;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.DirectionTagLayoutBinding;
-import com.qltech.bws.databinding.QueueListLayoutBinding;
 
 import java.util.List;
 
@@ -51,5 +48,4 @@ public class DirectionAdapter extends RecyclerView.Adapter<DirectionAdapter.MyVi
             this.binding = binding;
         }
     }
-
 }

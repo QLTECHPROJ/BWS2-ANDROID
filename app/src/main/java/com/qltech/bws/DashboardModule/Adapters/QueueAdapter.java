@@ -86,5 +86,4 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.MyViewHolder
             this.binding = binding;
         }
     }
-
 }

@@ -67,7 +67,7 @@ public class AccountFragment extends Fragment {
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         profileViewData(getActivity());
 
-        binding.tvVersion.setText("Version " +BuildConfig.VERSION_NAME);
+        binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
 
         binding.llUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,12 +248,12 @@ public class AccountFragment extends Fragment {
                                 .crossFade()
                                 .dontAnimate().into(binding.civProfile);
 
-                        if (viewModel.getResponseData().getOrderTotal().equalsIgnoreCase("")){
+                        if (viewModel.getResponseData().getOrderTotal().equalsIgnoreCase("")) {
                             binding.tvCrtPlan.setText("Current plan: $0.00 / month");
-                        }else {
-                            binding.tvCrtPlan.setText("Current plan: $"+viewModel.getResponseData().getOrderTotal()+" / month");
+                        } else {
+                            binding.tvCrtPlan.setText("Current plan: $" + viewModel.getResponseData().getOrderTotal() + " / month");
                         }
-                    }else {
+                    } else {
                         hideProgressBar();
                     }
                 }

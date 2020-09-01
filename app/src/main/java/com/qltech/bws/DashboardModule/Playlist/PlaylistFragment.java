@@ -69,16 +69,6 @@ public class PlaylistFragment extends Fragment {
             Check = getArguments().getString("Check");
         }
 
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                FragmentManager fm = getActivity()
-                        .getSupportFragmentManager();
-                fm.popBackStack("PlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                return true;
-            }
-            return false;
-        });
-
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
         binding.rvMainPlayList.setItemAnimator(new DefaultItemAnimator());
@@ -227,8 +217,8 @@ public class PlaylistFragment extends Fragment {
                             .addToBackStack("ViewAllPlaylistFragment")
                             .commit();
                     Bundle bundle = new Bundle();
+                    bundle.putString("GetLibraryID", listModelList.get(position).getGetLibraryID());
                     bundle.putString("Name", listModelList.get(position).getView());
-                    bundle.putParcelableArrayList("Audiolist", listModelList.get(position).getDetails());
                     viewAllPlaylistFragment.setArguments(bundle);
                 }
             });

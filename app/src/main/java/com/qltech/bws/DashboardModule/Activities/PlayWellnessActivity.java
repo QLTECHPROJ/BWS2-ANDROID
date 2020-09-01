@@ -5,15 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +61,8 @@ public class PlayWellnessActivity extends AppCompatActivity {
         ctx = PlayWellnessActivity.this;
         activity = PlayWellnessActivity.this;
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
+
+        mPlayer = new MediaPlayer();
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         IsRepeat = (shared1.getString(CONSTANTS.PREF_KEY_IsRepeat, ""));
@@ -79,6 +81,19 @@ public class PlayWellnessActivity extends AppCompatActivity {
             position = getIntent().getIntExtra(CONSTANTS.position, 0);
             listModelList = getIntent().getParcelableArrayListExtra(CONSTANTS.AudioList);
         }
+
+
+        binding.tvName.setText(listModelList.get(position).getName());
+        binding.tvDireDesc.setText(listModelList.get(position).getAudioDirection());
+        binding.tvTitle.setText(listModelList.get(position).getAudioSubCategory());
+        binding.tvDesc.setText(listModelList.get(position).getAudiomastercat());
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                1, 1, 1f, 30);
+        binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        Glide.with(ctx).load(ImageFile).thumbnail(0.1f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
         prepareData();
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,6 +211,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
             Intent i = new Intent(ctx, ViewQueueActivity.class);
             startActivity(i);
         });
+
         mPlayer.setOnCompletionListener(mediaPlayer -> {
             if (position < listModelList.size() - 1) {
                 position = position + 1;
@@ -207,16 +223,12 @@ public class PlayWellnessActivity extends AppCompatActivity {
             mPlayer.start();
             binding.llplay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.VISIBLE);
-            binding.llPause.setEnabled(true);
-            binding.llplay.setEnabled(false);
         });
 
         binding.llPause.setOnClickListener(view -> {
             binding.llplay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
             mPlayer.pause();
-            binding.llPause.setEnabled(false);
-            binding.llplay.setEnabled(true);
         });
 
         binding.llForwardSec.setOnClickListener(v -> {
@@ -260,53 +272,33 @@ public class PlayWellnessActivity extends AppCompatActivity {
                 mPlayer.pause();
                 position = 0;
                 prepareData();
-
             }
         });
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        prepareData();
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPlayer != null) {
+//            MediaPlayerService.stopMedia();
+            mPlayer.release();
+//            wifiLock.release();
+
+        }
+//        MediaPlayerService.removeAudioFocus();
     }
 
     void prepareData() {
-        binding.tvName.setText(listModelList.get(position).getName());
-        binding.tvDireDesc.setText(listModelList.get(position).getAudioDirection());
-        binding.tvTitle.setText(listModelList.get(position).getAudioSubCategory());
-        binding.tvDesc.setText(listModelList.get(position).getAudiomastercat());
-        mPlayer = new MediaPlayer();
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
         try {
-            mPlayer.setDataSource(ctx, Uri.parse(listModelList.get(position).getAudioFile()));
+            mPlayer.setDataSource(AudioFile);
             mPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*URL url = null;
-        try {
-            url = new URL(AudioFile);
-            URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
-            String encodedUrl = uri.toASCIIString();
-            mPlayer.setDataSource(ctx, Uri.parse(encodedUrl));
-            mPlayer.prepare();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
 
         binding.simpleSeekbar.setClickable(false);
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                1, 1, 1f, 30);
-        binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        Glide.with(ctx).load(ImageFile).thumbnail(0.1f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
         endTime = mPlayer.getDuration();
         startTime = mPlayer.getCurrentPosition();
         if (oTime == 0) {
@@ -319,8 +311,6 @@ public class PlayWellnessActivity extends AppCompatActivity {
                 TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
         binding.simpleSeekbar.setProgress(startTime);
         hdlr.postDelayed(UpdateSongTime, 100);
-
-        showToast("Added to your queue");
         mPlayer.start();
     }
 
