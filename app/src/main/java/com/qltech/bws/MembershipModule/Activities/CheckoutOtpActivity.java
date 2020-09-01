@@ -192,7 +192,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
             tvSendOTPbool = false;
             BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
 
-            Call<LoginModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
+            Call<LoginModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
             listCall.enqueue(new Callback<LoginModel>() {
                 @Override
                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
