@@ -9,12 +9,16 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Activities.PlayWellnessActivity;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
+import com.qltech.bws.DashboardModule.Playlist.PlaylistFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -26,10 +30,12 @@ import java.util.List;
 public class MyDownloadsAdapter extends RecyclerView.Adapter<MyDownloadsAdapter.MyViewHolder>  {
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
+    FragmentActivity activity;
 
-    public MyDownloadsAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx) {
+    public MyDownloadsAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity) {
         this.listModelList = listModelList;
         this.ctx = ctx;
+        this.activity = activity;
     }
 
     @NonNull
@@ -51,6 +57,12 @@ public class MyDownloadsAdapter extends RecyclerView.Adapter<MyDownloadsAdapter.
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.1f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+        Fragment viewAllAudioFragment = new PlaylistFragment();
+        FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.rlPlaylist, viewAllAudioFragment)
+                .addToBackStack("ViewAllAudioFragment")
+                .commit();
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
