@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PlayWellnessActivity extends AppCompatActivity {
+public class PlayWellnessActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", Like, Download, UserID, AudioFile, Name, ImageFile, PlaylistId,
             AudioId, AudioDirection, Audiomastercat, AudioSubCategory;
@@ -52,6 +54,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
     Activity activity;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     int position;
+    boolean isPrepere;
     private Handler hdlr = new Handler();
 
     @Override
@@ -119,6 +122,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
             binding.llDownload.setEnabled(true);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
         }
+        //callStateListener();
 
         binding.llLike.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,12 +216,12 @@ public class PlayWellnessActivity extends AppCompatActivity {
             startActivity(i);
         });
 
-        mPlayer.setOnCompletionListener(mediaPlayer -> {
-            if (position < listModelList.size() - 1) {
-                position = position + 1;
-                prepareData();
-            }
-        });
+//        mPlayer.setOnCompletionListener(mediaPlayer -> {
+//            if (position < listModelList.size() - 1) {
+//                position = position + 1;
+//                prepareData();
+//            }
+//        });
 
         binding.llplay.setOnClickListener(v -> {
             mPlayer.start();
@@ -256,7 +260,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
         });
         binding.llnext.setOnClickListener(view -> {
             if (position < listModelList.size() - 1) {
-                mPlayer.release();
+                mPlayer.stop();
                 position = position + 1;
                 prepareData();
             }
@@ -290,6 +294,15 @@ public class PlayWellnessActivity extends AppCompatActivity {
 
     void prepareData() {
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mPlayer.setDataSource(ctx, Uri.parse(listModelList.get(position).getAudioFile()));
+            mPlayer.prepare();
+            mPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*URL url = null;
 
         try {
             mPlayer.setDataSource(AudioFile);
@@ -297,7 +310,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+*/
         binding.simpleSeekbar.setClickable(false);
         endTime = mPlayer.getDuration();
         startTime = mPlayer.getCurrentPosition();
@@ -311,7 +324,7 @@ public class PlayWellnessActivity extends AppCompatActivity {
                 TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
         binding.simpleSeekbar.setProgress(startTime);
         hdlr.postDelayed(UpdateSongTime, 100);
-        mPlayer.start();
+        showToast("Added to your queue");
     }
 
 
@@ -335,4 +348,32 @@ public class PlayWellnessActivity extends AppCompatActivity {
             hdlr.postDelayed(this, 60);
         }
     };
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        if (position < listModelList.size() - 1) {
+            position = position + 1;
+            prepareData();
+        }
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
 }

@@ -217,7 +217,6 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<LoginModel> call, Throwable t) {
                     BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
-
                     Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
