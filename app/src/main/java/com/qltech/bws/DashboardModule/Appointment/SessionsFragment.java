@@ -48,7 +48,7 @@ public class SessionsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_sessions, container, false);
         View view = binding.getRoot();
-        activity= getActivity();
+        activity = getActivity();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -57,7 +57,7 @@ public class SessionsFragment extends Fragment {
             public void onClick(View view) {
                 FragmentManager fm = getActivity()
                         .getSupportFragmentManager();
-                fm.popBackStack ("SessionsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fm.popBackStack("SessionsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -69,14 +69,14 @@ public class SessionsFragment extends Fragment {
     }
 
     private void prepareSessionList() {
-        BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (BWSApplication.isNetworkConnected(getActivity())) {
             Call<SessionListModel> listCall = APIClient.getClient().getAppointmentSession(UserId);
             listCall.enqueue(new Callback<SessionListModel>() {
                 @Override
                 public void onResponse(Call<SessionListModel> call, Response<SessionListModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         SessionListModel listModel = response.body();
                         SessionListAdapter appointmentsAdapter = new SessionListAdapter(listModel.getResponseData(), getActivity(), f_manager);
                         binding.rvSessionList.setAdapter(appointmentsAdapter);
@@ -85,13 +85,14 @@ public class SessionsFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<SessionListModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 }
             });
         } else {
             Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
         }
     }
+
     public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.MyViewHolder> {
         private List<SessionListModel.ResponseData> listModelList;
         Context ctx;
@@ -115,14 +116,22 @@ public class SessionsFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             SessionListModel.ResponseData listModel = listModelList.get(position);
             holder.binding.tvTitle.setText(listModel.getName());
-            holder.binding.tvStatus.setText(listModel.getStatus());
+            if (listModel.getDate().equalsIgnoreCase("") &&
+                    listModel.getStatus().equalsIgnoreCase("") &&
+                    listModel.getDuration().equalsIgnoreCase("") &&
+                    listModel.getTime().equalsIgnoreCase("")) {
+                holder.binding.llDateTime.setVisibility(View.GONE);
+            } else {
+                holder.binding.llDateTime.setVisibility(View.VISIBLE);
+            }
             holder.binding.tvDate.setText(listModel.getDate());
+            holder.binding.tvStatus.setText(listModel.getStatus());
             holder.binding.tvTime.setText(listModel.getTime());
             holder.binding.tvHourGlass.setText(listModel.getDuration());
 
-            if (listModel.getStatus().equalsIgnoreCase("Booked")){
+            if (listModel.getStatus().equalsIgnoreCase("Booked")) {
                 holder.binding.tvStatus.setBackgroundResource(R.drawable.text_background);
-            }else if (listModel.getStatus().equalsIgnoreCase("Arrived")){
+            } else if (listModel.getStatus().equalsIgnoreCase("Arrived")) {
                 holder.binding.tvStatus.setBackgroundResource(R.drawable.green_text_background);
             }
 
@@ -131,6 +140,9 @@ public class SessionsFragment extends Fragment {
                 public void onClick(View view) {
                     Fragment appointmentDetailsFragment = new AppointmentDetailsFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("appointmentId",listModel.getId());
+                    appointmentDetailsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
                             .replace(R.id.flSession, appointmentDetailsFragment).
                             addToBackStack("AppointmentDetailsFragment")

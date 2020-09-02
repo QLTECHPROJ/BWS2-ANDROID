@@ -283,7 +283,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <androidx.recyclerview.widget.RecyclerView
+                        <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvPreviousData"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

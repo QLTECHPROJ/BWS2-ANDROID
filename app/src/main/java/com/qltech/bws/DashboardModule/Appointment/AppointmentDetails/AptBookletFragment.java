@@ -12,17 +12,22 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.qltech.bws.DashboardModule.Appointment.SessionsFragment;
+import com.qltech.bws.DashboardModule.Models.AppointmentDetail;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.FragmentAptBookletBinding;
 
 public class AptBookletFragment extends Fragment {
     FragmentAptBookletBinding binding;
+    AppointmentDetail.ResponseData appointmentDetail;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_booklet, container, false);
         View view = binding.getRoot();
-
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            appointmentDetail = bundle.getParcelable("AppointmentDetail");
+        }
         binding.btnComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

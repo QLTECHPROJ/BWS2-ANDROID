@@ -7,6 +7,8 @@ import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
 import com.qltech.bws.BillingOrderModule.Models.CardListModel;
 import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.BillingOrderModule.Models.CurrentPlanVieViewModel;
+import com.qltech.bws.DashboardModule.Appointment.AppointmentDetailsFragment;
+import com.qltech.bws.DashboardModule.Models.AppointmentDetail;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.DirectionModel;
@@ -48,7 +50,9 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 public interface APIInterface {
     /*TODO App Version*/
@@ -145,10 +149,10 @@ public interface APIInterface {
     Call<MembershipPlanListModel> getMembershipPlanList();
 
     /*TODO UserProfileActivity */
+    @Multipart
     @POST("addprofileimage")
-    @FormUrlEncoded
-    Call<AddProfileModel> getAddProfile(@Field("UserID") String userID,
-                                        @Field("ProfileImage") TypedFile profileImage);
+    Call<AddProfileModel> getAddProfile(@Part("UserID") String userID,
+                                        @Part("ProfileImage") TypedFile profileImage);
 
     /*TODO UserProfileActivity */
     @POST("removeprofileimage")
@@ -245,6 +249,11 @@ public interface APIInterface {
     @POST("appointmentsession")
     @FormUrlEncoded
     Call<SessionListModel> getAppointmentSession(@Field("UserID") String userID);
+    /* TODO AppointmentFragment */
+    @POST("appointmentdetail")
+    @FormUrlEncoded
+    Call<AppointmentDetail> getAppointmentDetails(@Field("UserID") String userID,
+                                                  @Field("AppointmentTypeId") String appointmentTypeId);
 
   /* TODO ReminderActivity */
     @POST("setreminder")

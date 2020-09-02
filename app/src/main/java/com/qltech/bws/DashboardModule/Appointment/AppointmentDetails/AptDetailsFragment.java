@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.qltech.bws.DashboardModule.Appointment.SessionsFragment;
+import com.qltech.bws.DashboardModule.Models.AppointmentDetail;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -19,6 +20,7 @@ import com.qltech.bws.databinding.FragmentAptDetailsBinding;
 
 public class AptDetailsFragment extends Fragment {
     FragmentAptDetailsBinding binding;
+    AppointmentDetail.ResponseData appointmentDetail;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,7 +32,16 @@ public class AptDetailsFragment extends Fragment {
                 1, 1, 0.24f, 10);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            appointmentDetail = bundle.getParcelable("AppointmentDetail");
+        }
+        binding.tvTilte.setText(appointmentDetail.getName());
+        binding.tvTilte.setText(appointmentDetail.getName());
+        binding.tvTilte.setText(appointmentDetail.getName());
+        binding.tvTilte.setText(appointmentDetail.getName());
+        binding.tvTilte.setText(appointmentDetail.getName());
+        binding.tvTilte.setText(appointmentDetail.getName());
         binding.btnComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

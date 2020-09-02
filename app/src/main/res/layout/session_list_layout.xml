@@ -42,13 +42,16 @@
                 android:textSize="@dimen/_12sdp" />
 
             <LinearLayout
+                android:id="@+id/llDateTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:background="#EEEEEE"
+                android:background="#EEEEEE">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:weightSum="1">
-
-
                 <LinearLayout
                     android:id="@+id/llDates"
                     android:layout_width="@dimen/_0sdp"
@@ -151,6 +154,7 @@
 
                 </LinearLayout>
 
+            </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 

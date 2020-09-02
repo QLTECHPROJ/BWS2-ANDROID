@@ -1,6 +1,8 @@
 package com.qltech.bws.DashboardModule.Appointment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
@@ -12,20 +14,32 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptAnswersFragment;
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptAudioFragment;
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptBookletFragment;
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptDetailsFragment;
+import com.qltech.bws.DashboardModule.Models.AppointmentDetail;
+import com.qltech.bws.DashboardModule.Models.SessionListModel;
 import com.qltech.bws.DownloadModule.Models.DownloadsHistoryModel;
 import com.qltech.bws.R;
+import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.FragmentAppointmentDetailsBinding;
 
+import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AppointmentDetailsFragment extends Fragment {
     FragmentAppointmentDetailsBinding binding;
+    Activity activity;
+    String UserId, appointmentTypeId;
+    AppointmentDetail global_appointmentDetail;
+    boolean withThree, withoutThree;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +47,7 @@ public class AppointmentDetailsFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment_details, container, false);
         View view = binding.getRoot();
 
+        activity = getActivity();
         view.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 FragmentManager fm = getActivity()
@@ -42,7 +57,12 @@ public class AppointmentDetailsFragment extends Fragment {
             }
             return false;
         });
-
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            appointmentTypeId = bundle.getString("appointmentId");
+        }
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,34 +71,108 @@ public class AppointmentDetailsFragment extends Fragment {
                 fm.popBackStack("AppointmentDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
-        binding.viewPager.setOffscreenPageLimit(4);
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"));
-        binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        getAppointmentData();
 
-        TabAdapter adapter = new TabAdapter(getActivity().getSupportFragmentManager(), getActivity(), binding.tabLayout.getTabCount());
-        binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
-
-        binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                binding.viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
         return view;
+    }
+
+    private void getAppointmentData() {
+        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            Call<AppointmentDetail> listCall = APIClient.getClient().getAppointmentDetails(UserId, appointmentTypeId);
+            listCall.enqueue(new Callback<AppointmentDetail>() {
+                @Override
+                public void onResponse(Call<AppointmentDetail> call, Response<AppointmentDetail> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        AppointmentDetail appointmentDetail = response.body();
+                        global_appointmentDetail = appointmentDetail;
+
+                        if (appointmentDetail.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+
+                            if (appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
+                                    && appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.viewPager.setOffscreenPageLimit(1);
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
+                            }
+
+                            if (!appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
+                                    && appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.viewPager.setOffscreenPageLimit(2);
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
+                            }
+                            if (!appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
+                                    && !appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.viewPager.setOffscreenPageLimit(3);
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"));
+                            }
+                            if (!appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
+                                    && appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && !appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.viewPager.setOffscreenPageLimit(3);
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"));
+                            }
+                            if (appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
+                                    && !appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && !appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.viewPager.setOffscreenPageLimit(3);
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"));
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"));
+                            }
+                            if (!appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
+                                    && !appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && !appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.viewPager.setOffscreenPageLimit(4);
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"));
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"));
+                            }
+                            binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+                            TabAdapter adapter = new TabAdapter(getActivity().getSupportFragmentManager(), getActivity(), binding.tabLayout.getTabCount());
+                            binding.viewPager.setAdapter(adapter);
+                            binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
+
+                            binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                                @Override
+                                public void onTabSelected(TabLayout.Tab tab) {
+                                    binding.viewPager.setCurrentItem(tab.getPosition());
+                                }
+
+                                @Override
+                                public void onTabUnselected(TabLayout.Tab tab) {
+
+                                }
+
+                                @Override
+                                public void onTabReselected(TabLayout.Tab tab) {
+
+                                }
+                            });
+                        } else {
+                            Toast.makeText(activity, appointmentDetail.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AppointmentDetail> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public class TabAdapter extends FragmentStatePagerAdapter {
@@ -101,30 +195,99 @@ public class AppointmentDetailsFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    AptDetailsFragment aptDetailsFragment = new AptDetailsFragment();
-                    Bundle bundle = new Bundle();
-                    aptDetailsFragment.setArguments(bundle);
-                    return aptDetailsFragment;
-                case 1:
-                    AptAudioFragment aptAudioFragment = new AptAudioFragment();
-                    bundle = new Bundle();
-                    aptAudioFragment.setArguments(bundle);
-                    return aptAudioFragment;
-                case 2:
-                    AptBookletFragment aptBookletFragment = new AptBookletFragment();
-                    bundle = new Bundle();
-                    aptBookletFragment.setArguments(bundle);
-                    return aptBookletFragment;
-                case 3:
-                    AptAnswersFragment aptAnswersFragment = new AptAnswersFragment();
-                    bundle = new Bundle();
-                    aptAnswersFragment.setArguments(bundle);
-                    return aptAnswersFragment;
-                default:
-                    return null;
+            AptDetailsFragment aptDetailsFragment = new AptDetailsFragment();
+            AptAudioFragment aptAudioFragment = new AptAudioFragment();
+            AptBookletFragment aptBookletFragment = new AptBookletFragment();
+            AptAnswersFragment aptAnswersFragment = new AptAnswersFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("AppointmentDetail",global_appointmentDetail.getResponseData());
+            if (global_appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
+                    && global_appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && global_appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                switch (position) {
+                    case 0:
+                        aptDetailsFragment.setArguments(bundle);
+                        return aptDetailsFragment;
+                }
             }
+
+            if (!global_appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
+                    && global_appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && global_appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                switch (position) {
+                    case 0:
+                        aptDetailsFragment.setArguments(bundle);
+                        return aptDetailsFragment;
+                    case 1:
+                        bundle = new Bundle();
+                        aptAudioFragment.setArguments(bundle);
+                        return aptAudioFragment;
+                }
+            }
+            if (!global_appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
+                    && !global_appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && global_appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                switch (position) {
+                    case 0:
+                        aptDetailsFragment.setArguments(bundle);
+                        return aptDetailsFragment;
+                    case 1:
+                        aptAudioFragment.setArguments(bundle);
+                        return aptAudioFragment;
+                    case 2:
+                        aptBookletFragment.setArguments(bundle);
+                        return aptBookletFragment;
+                }
+            }
+            if (!global_appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
+                    && global_appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && !global_appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                switch (position) {
+                    case 0:
+                        aptDetailsFragment.setArguments(bundle);
+                        return aptDetailsFragment;
+                    case 1:
+                        aptAudioFragment.setArguments(bundle);
+                        return aptAudioFragment;
+                    case 2:
+                        aptAnswersFragment.setArguments(bundle);
+                        return aptAnswersFragment;
+                }
+            }
+            if (global_appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
+                    && !global_appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && !global_appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                switch (position) {
+                    case 0:
+                        aptDetailsFragment.setArguments(bundle);
+                        return aptDetailsFragment;
+                    case 1:
+                        aptBookletFragment.setArguments(bundle);
+                        return aptBookletFragment;
+                    case 2:
+                        aptAnswersFragment.setArguments(bundle);
+                        return aptAnswersFragment;
+                }
+            }
+            if (!global_appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
+                    && !global_appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && !global_appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                switch (position) {
+                    case 0:
+                        aptDetailsFragment.setArguments(bundle);
+                        return aptDetailsFragment;
+                    case 1:
+                        aptAudioFragment.setArguments(bundle);
+                        return aptAudioFragment;
+                    case 2:
+                        aptBookletFragment.setArguments(bundle);
+                        return aptBookletFragment;
+                    case 3:
+                        aptAnswersFragment.setArguments(bundle);
+                        return aptAnswersFragment;
+                }
+            }
+            return null;
         }
 
         @Override

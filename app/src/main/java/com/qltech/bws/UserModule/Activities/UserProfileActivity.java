@@ -37,6 +37,8 @@ import com.qltech.bws.UserModule.Models.ProfileUpdateModel;
 import com.qltech.bws.UserModule.Models.ProfileViewModel;
 import com.qltech.bws.UserModule.Models.RemoveProfileModel;
 import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.APIClientProfile;
+import com.qltech.bws.Utility.APIInterfaceProfile;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityUserProfileBinding;
@@ -50,6 +52,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import retrofit.RetrofitError;
 import retrofit.mime.TypedFile;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,7 +61,7 @@ import retrofit2.Response;
 public class UserProfileActivity extends AppCompatActivity {
     ActivityUserProfileBinding binding;
     Context ctx;
-    String UserID, profilePicPath, tryafter = "Try after 5 minutes";
+    String UserID, profilePicPath = "", tryafter = "Try after 5 minutes";
     File image;
     Activity activity;
     CharSequence[] options;
@@ -139,8 +142,8 @@ public class UserProfileActivity extends AppCompatActivity {
                     spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
                     dob = spf.format(newDate);
                 }
-                Call<ProfileUpdateModel> listCall = APIClient.getClient().getProfileUpdate(UserID,binding.etUser.getText().toString(),dob,
-                        binding.etMobileNumber.getText().toString(), binding.etEmail.getText().toString(),"");
+                Call<ProfileUpdateModel> listCall = APIClient.getClient().getProfileUpdate(UserID, binding.etUser.getText().toString(), dob,
+                        binding.etMobileNumber.getText().toString(), binding.etEmail.getText().toString(), "");
                 listCall.enqueue(new Callback<ProfileUpdateModel>() {
                     @Override
                     public void onResponse(Call<ProfileUpdateModel> call, Response<ProfileUpdateModel> response) {
@@ -149,7 +152,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             ProfileUpdateModel viewModel = response.body();
                             Toast.makeText(ctx, viewModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                             finish();
-                        }else {
+                        } else {
                             hideProgressBar();
                         }
                     }
@@ -315,7 +318,7 @@ public class UserProfileActivity extends AppCompatActivity {
 //                            tvApply.setEnabled(false);
 //                            tvApply.setTextColor(getResources().getColor(R.color.gray));
                         }
-                    }else {
+                    } else {
                         hideProgressBar();
                     }
                 }
@@ -419,22 +422,22 @@ public class UserProfileActivity extends AppCompatActivity {
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
                     TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, image);
-                    Call<AddProfileModel> listCall = APIClient.getClient().getAddProfile(UserID, typedFile);
-                    listCall.enqueue(new Callback<AddProfileModel>() {
-                        @Override
-                        public void onResponse(Call<AddProfileModel> call, Response<AddProfileModel> response) {
-                            if (response.isSuccessful()) {
-                                AddProfileModel viewModel = response.body();
-                                hideProgressBar();
-                                Toast.makeText(getApplicationContext(), viewModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                    APIClientProfile.getApiService().getAddProfile(UserID, typedFile,
+                            new retrofit.Callback<AddProfileModel>() {
+                                @Override
+                                public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
+                                    if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                        hideProgressBar();
+                                        Toast.makeText(getApplicationContext(), addProfileModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
 
-                        @Override
-                        public void onFailure(Call<AddProfileModel> call, Throwable t) {
-                            hideProgressBar();
-                        }
-                    });
+                                @Override
+                                public void failure(RetrofitError e) {
+                                    hideProgressBar();
+                                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
                 }
@@ -454,23 +457,24 @@ public class UserProfileActivity extends AppCompatActivity {
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
                     File file = new File(FileUtil.getPath(selectedImageUri, this));
-                    TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, file);
-                    Call<AddProfileModel> listCall = APIClient.getClient().getAddProfile(UserID, typedFile);
-                    listCall.enqueue(new Callback<AddProfileModel>() {
-                        @Override
-                        public void onResponse(Call<AddProfileModel> call, Response<AddProfileModel> response) {
-                            if (response.isSuccessful()) {
-                                AddProfileModel viewModel = response.body();
-                                hideProgressBar();
-                                Toast.makeText(getApplicationContext(), viewModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(Call<AddProfileModel> call, Throwable t) {
-                            hideProgressBar();
-                        }
-                    });
+                    TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, file);
+                    APIClientProfile.getApiService().getAddProfile(UserID, typedFile,
+                            new retrofit.Callback<AddProfileModel>() {
+                                @Override
+                                public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
+                                    if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                        hideProgressBar();
+                                        Toast.makeText(getApplicationContext(), addProfileModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void failure(RetrofitError e) {
+                                    hideProgressBar();
+                                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
                 }
@@ -520,10 +524,10 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void showProgressBar() {
         try {
-        binding.progressBarHolder.setVisibility(View.VISIBLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        binding.ImgV.setVisibility(View.VISIBLE);
-        binding.ImgV.invalidate();
+            binding.progressBarHolder.setVisibility(View.VISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.ImgV.setVisibility(View.VISIBLE);
+            binding.ImgV.invalidate();
         } catch (Exception e) {
             e.printStackTrace();
         }

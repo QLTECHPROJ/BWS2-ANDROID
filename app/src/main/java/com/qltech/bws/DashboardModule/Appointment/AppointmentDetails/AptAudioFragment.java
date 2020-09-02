@@ -2,6 +2,10 @@ package com.qltech.bws.DashboardModule.Appointment.AppointmentDetails;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -11,61 +15,41 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-
-import com.qltech.bws.DashboardModule.Models.AudioListsModel;
-import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.DashboardModule.Models.AppointmentDetail;
+import com.qltech.bws.R;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.AudioAptListLayoutBinding;
 import com.qltech.bws.databinding.FragmentAptAudioBinding;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class AptAudioFragment extends Fragment {
     FragmentAptAudioBinding binding;
-    List<AudioListsModel> audioLists = new ArrayList<>();
     public FragmentManager f_manager;
+    AppointmentDetail.ResponseData appointmentDetail;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_audio, container, false);
         View view = binding.getRoot();
-
-        AudioListAdapter appointmentsAdapter = new AudioListAdapter(audioLists, getActivity(), f_manager);
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            appointmentDetail = bundle.getParcelable("AppointmentDetail");
+        }
+        AudioListAdapter appointmentsAdapter = new AudioListAdapter(appointmentDetail.getAudio(), getActivity(), f_manager);
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvAudioList.setLayoutManager(recentlyPlayed);
         binding.rvAudioList.setItemAnimator(new DefaultItemAnimator());
         binding.rvAudioList.setAdapter(appointmentsAdapter);
 
-
-        prepareAudioList();
         return view;
     }
-
-    private void prepareAudioList() {
-        AudioListsModel list = new AudioListsModel("Emotional empowerment...");
-        audioLists.add(list);
-        list = new AudioListsModel("Emotional empowerment...");
-        audioLists.add(list);
-        list = new AudioListsModel("Emotional empowerment...");
-        audioLists.add(list);
-        list = new AudioListsModel("Emotional empowerment...");
-        audioLists.add(list);
-    }
-
-
     public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.MyViewHolder>{
-        private List<AudioListsModel> listModelList;
+        private AppointmentDetail.ResponseData.Audio listModelList;
         Context ctx;
         public FragmentManager f_manager;
 
-        public AudioListAdapter(List<AudioListsModel> listModelList, Context ctx, FragmentManager f_manager) {
+        public AudioListAdapter(AppointmentDetail.ResponseData.Audio listModelList, Context ctx, FragmentManager f_manager) {
             this.listModelList = listModelList;
             this.ctx = ctx;
             this.f_manager = f_manager;
@@ -81,9 +65,7 @@ public class AptAudioFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            AudioListsModel listModel = listModelList.get(position);
-            holder.binding.tvTitle.setText(listModel.getTitle());
-
+             holder.binding.tvTitle.setText(listModelList.getName());
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.13f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -98,7 +80,7 @@ public class AptAudioFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return listModelList.size();
+            return 1;
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
