@@ -9,10 +9,10 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainAudioModel implements Parcelable {
+public class ViewAllAudioListModel {
     @SerializedName("ResponseData")
     @Expose
-    private List<ResponseData> responseData = null;
+    private ResponseData responseData;
     @SerializedName("ResponseCode")
     @Expose
     private String responseCode;
@@ -23,30 +23,11 @@ public class MainAudioModel implements Parcelable {
     @Expose
     private String responseStatus;
 
-    protected MainAudioModel(Parcel in) {
-        responseData = in.createTypedArrayList(ResponseData.CREATOR);
-        responseCode = in.readString();
-        responseMessage = in.readString();
-        responseStatus = in.readString();
-    }
-
-    public static final Creator<MainAudioModel> CREATOR = new Creator<MainAudioModel>() {
-        @Override
-        public MainAudioModel createFromParcel(Parcel in) {
-            return new MainAudioModel(in);
-        }
-
-        @Override
-        public MainAudioModel[] newArray(int size) {
-            return new MainAudioModel[size];
-        }
-    };
-
-    public List<ResponseData> getResponseData() {
+    public ResponseData getResponseData() {
         return responseData;
     }
 
-    public void setResponseData(List<ResponseData> responseData) {
+    public void setResponseData(ResponseData responseData) {
         this.responseData = responseData;
     }
 
@@ -74,29 +55,13 @@ public class MainAudioModel implements Parcelable {
         this.responseStatus = responseStatus;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeTypedList(responseData);
-        parcel.writeString(responseCode);
-        parcel.writeString(responseMessage);
-        parcel.writeString(responseStatus);
-    }
-
-    public static class ResponseData implements Parcelable{
+    public static class ResponseData  implements Parcelable {
         @SerializedName("HomeID")
         @Expose
         private String homeID;
         @SerializedName("View")
         @Expose
         private String view;
-        @SerializedName("Type")
-        @Expose
-        private String type;
         @SerializedName("UserID")
         @Expose
         private String userID;
@@ -107,19 +72,18 @@ public class MainAudioModel implements Parcelable {
         protected ResponseData(Parcel in) {
             homeID = in.readString();
             view = in.readString();
-            type = in.readString();
             userID = in.readString();
         }
 
-        public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
+        public static final Creator<MainAudioModel.ResponseData> CREATOR = new Creator<MainAudioModel.ResponseData>() {
             @Override
-            public ResponseData createFromParcel(Parcel in) {
-                return new ResponseData(in);
+            public MainAudioModel.ResponseData createFromParcel(Parcel in) {
+                return new MainAudioModel.ResponseData(in);
             }
 
             @Override
-            public ResponseData[] newArray(int size) {
-                return new ResponseData[size];
+            public MainAudioModel.ResponseData[] newArray(int size) {
+                return new MainAudioModel.ResponseData[size];
             }
         };
 
@@ -137,14 +101,6 @@ public class MainAudioModel implements Parcelable {
 
         public void setView(String view) {
             this.view = view;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
         }
 
         public String getUserID() {
@@ -172,11 +128,10 @@ public class MainAudioModel implements Parcelable {
         public void writeToParcel(Parcel parcel, int i) {
             parcel.writeString(homeID);
             parcel.writeString(view);
-            parcel.writeString(type);
             parcel.writeString(userID);
         }
 
-        public static class Detail implements Parcelable{
+        public static class Detail  implements Parcelable {
             @SerializedName("ID")
             @Expose
             private String iD;
@@ -186,6 +141,12 @@ public class MainAudioModel implements Parcelable {
             @SerializedName("AudioFile")
             @Expose
             private String audioFile;
+            @SerializedName("ImageFile")
+            @Expose
+            private String imageFile;
+            @SerializedName("AudioDuration")
+            @Expose
+            private String audioDuration;
             @SerializedName("AudioDirection")
             @Expose
             private String audioDirection;
@@ -195,18 +156,12 @@ public class MainAudioModel implements Parcelable {
             @SerializedName("AudioSubCategory")
             @Expose
             private String audioSubCategory;
-            @SerializedName("ImageFile")
-            @Expose
-            private String imageFile;
             @SerializedName("Like")
             @Expose
             private String like;
             @SerializedName("Download")
             @Expose
             private String download;
-            @SerializedName("AudioDuration")
-            @Expose
-            private String audioDuration;
 
             protected Detail(Parcel in) {
                 iD = in.readString();
@@ -221,15 +176,15 @@ public class MainAudioModel implements Parcelable {
                 audioDuration = in.readString();
             }
 
-            public static final Creator<Detail> CREATOR = new Creator<Detail>() {
+            public static final Creator<MainAudioModel.ResponseData.Detail> CREATOR = new Creator<MainAudioModel.ResponseData.Detail>() {
                 @Override
-                public Detail createFromParcel(Parcel in) {
-                    return new Detail(in);
+                public MainAudioModel.ResponseData.Detail createFromParcel(Parcel in) {
+                    return new MainAudioModel.ResponseData.Detail(in);
                 }
 
                 @Override
-                public Detail[] newArray(int size) {
-                    return new Detail[size];
+                public MainAudioModel.ResponseData.Detail[] newArray(int size) {
+                    return new MainAudioModel.ResponseData.Detail[size];
                 }
             };
 
@@ -241,12 +196,36 @@ public class MainAudioModel implements Parcelable {
                 this.iD = iD;
             }
 
-            public String getiD() {
-                return iD;
+            public String getName() {
+                return name;
             }
 
-            public void setiD(String iD) {
-                this.iD = iD;
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getAudioFile() {
+                return audioFile;
+            }
+
+            public void setAudioFile(String audioFile) {
+                this.audioFile = audioFile;
+            }
+
+            public String getImageFile() {
+                return imageFile;
+            }
+
+            public void setImageFile(String imageFile) {
+                this.imageFile = imageFile;
+            }
+
+            public String getAudioDuration() {
+                return audioDuration;
+            }
+
+            public void setAudioDuration(String audioDuration) {
+                this.audioDuration = audioDuration;
             }
 
             public String getAudioDirection() {
@@ -273,14 +252,6 @@ public class MainAudioModel implements Parcelable {
                 this.audioSubCategory = audioSubCategory;
             }
 
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
             public String getLike() {
                 return like;
             }
@@ -295,30 +266,6 @@ public class MainAudioModel implements Parcelable {
 
             public void setDownload(String download) {
                 this.download = download;
-            }
-
-            public String getAudioFile() {
-                return audioFile;
-            }
-
-            public void setAudioFile(String audioFile) {
-                this.audioFile = audioFile;
-            }
-
-            public String getImageFile() {
-                return imageFile;
-            }
-
-            public void setImageFile(String imageFile) {
-                this.imageFile = imageFile;
-            }
-
-            public String getAudioDuration() {
-                return audioDuration;
-            }
-
-            public void setAudioDuration(String audioDuration) {
-                this.audioDuration = audioDuration;
             }
 
             @Override

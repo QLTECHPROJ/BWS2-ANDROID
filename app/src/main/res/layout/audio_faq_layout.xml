@@ -6,8 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#00FFFFFF"
-        app:cardCornerRadius="@dimen/_2sdp">
+        android:background="#00FFFFFF">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -15,7 +14,7 @@
             app:cardCornerRadius="@dimen/_4sdp"
             android:layout_marginHorizontal="@dimen/_6sdp"
             android:layout_marginVertical="@dimen/_6sdp"
-            app:cardElevation="@dimen/_4sdp">
+            app:cardElevation="3.4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -87,6 +86,8 @@
                     android:gravity="center_vertical"
                     android:lineSpacingExtra="@dimen/_4sdp"
                     android:textColor="@color/light_black"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:textSize="@dimen/_13sdp"
                     android:visibility="gone" />
 

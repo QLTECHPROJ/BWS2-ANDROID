@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -22,12 +23,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.qltech.bws.DashboardModule.Audio.Adapters.InspiredAdapter;
-import com.qltech.bws.DashboardModule.Audio.Adapters.MyDownloadsAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.RecentlyPlayedAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.RecommendedAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.TopCategoriesAdapter;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -58,6 +58,7 @@ public class AudioFragment extends Fragment {
             public void onChanged(@Nullable String s) {
             }
         });
+
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -90,7 +91,7 @@ public class AudioFragment extends Fragment {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         MainAudioModel listModel = response.body();
-                        MainAudioListAdapter adapter = new MainAudioListAdapter(listModel.getResponseData(), getActivity(),getActivity());
+                        MainAudioListAdapter adapter = new MainAudioListAdapter(listModel.getResponseData(), getActivity(), getActivity());
                         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
                         binding.rvMainAudioList.setLayoutManager(manager);
                         binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
@@ -132,11 +133,27 @@ public class AudioFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             if (listModelList.get(position).getDetails() != null &&
-                    listModelList.get(position).getDetails().size() > 6) {
+                    listModelList.get(position).getDetails().size() >= 4) {
                 holder.binding.tvViewAll.setVisibility(View.VISIBLE);
             } else {
                 holder.binding.tvViewAll.setVisibility(View.GONE);
             }
+
+            holder.binding.tvViewAll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Fragment viewAllAudioFragment = new ViewAllAudioFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.rlAudiolist, viewAllAudioFragment)
+                            .addToBackStack("ViewAllAudioFragment")
+                            .commit();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("ID", listModelList.get(position).getHomeID());
+                    bundle.putString("Name", listModelList.get(position).getView());
+                    viewAllAudioFragment.setArguments(bundle);
+                }
+            });
 
             if (listModelList.get(position).getDetails().size() == 0) {
                 holder.binding.llMainLayout.setVisibility(View.GONE);
@@ -144,7 +161,7 @@ public class AudioFragment extends Fragment {
                 holder.binding.llMainLayout.setVisibility(View.VISIBLE);
                 holder.binding.tvTitle.setText(listModelList.get(position).getView());
                 if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.my_download))) {
-                    MyDownloadsAdapter myDownloadsAdapter = new MyDownloadsAdapter(listModelList.get(position).getDetails(), getActivity(),activity);
+                    RecommendedAdapter myDownloadsAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(),activity);
                     RecyclerView.LayoutManager myDownloads = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(myDownloads);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
@@ -169,7 +186,7 @@ public class AudioFragment extends Fragment {
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recommendedAdapter);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.get_inspired))) {
-                    InspiredAdapter inspiredAdapter = new InspiredAdapter(listModelList.get(position).getDetails(), getActivity(),activity);
+                    RecommendedAdapter inspiredAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(),activity);
                     RecyclerView.LayoutManager inspired = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(inspired);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
@@ -180,12 +197,6 @@ public class AudioFragment extends Fragment {
                     holder.binding.rvMainAudio.setLayoutManager(recentlyPlayed);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);
-
-                           /*PopularAdapter popularAdapter = new PopularAdapter(popularList, getActivity());
-                                RecyclerView.LayoutManager popular = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-                                binding.rvMainAudioList.setLayoutManager(popular);
-                                binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
-                                binding.rvMainAudioList.setAdapter(popularAdapter); */
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.top_categories))) {
                     TopCategoriesAdapter topCategoriesAdapter = new TopCategoriesAdapter(listModelList.get(position).getDetails(), getActivity(),activity);
                     RecyclerView.LayoutManager topCategories = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);

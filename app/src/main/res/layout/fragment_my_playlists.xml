@@ -214,6 +214,7 @@
                         android:layout_height="match_parent"
                         android:layout_below="@id/ivPlaylistStatus"
                         android:orientation="vertical"
+                        android:paddingBottom="121dp"
                         android:visibility="visible">
 
                         <RelativeLayout
@@ -225,7 +226,7 @@
                             android:layout_marginTop="@dimen/_16sdp"
                             android:layout_marginRight="@dimen/_16sdp"
                             android:layout_weight="2"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             android:background="@drawable/rounded_extra_gray_corner">
 
                             <ImageView
@@ -248,6 +249,7 @@
                                 android:layout_toRightOf="@id/button1"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
+                                android:visibility="gone"
                                 android:text="@string/Search_for_audio"
                                 android:textColor="@color/light_gray"
                                 android:textSize="@dimen/_16sdp" />
@@ -257,8 +259,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_centerVertical="true"
-                                android:clickable="false"
-                                android:focusable="true"
+                                android:layout_toRightOf="@id/button1"
                                 android:iconifiedByDefault="false"
                                 android:singleLine="true"
                                 android:theme="@style/WallSearchView"
@@ -300,7 +301,21 @@
                             android:layout_marginLeft="@dimen/_10sdp"
                             android:layout_marginRight="@dimen/_10sdp"
                             android:overScrollMode="never"
+                            android:visibility="visible"
                             android:paddingTop="@dimen/_8sdp" />
+
+                        <TextView
+                            android:id="@+id/tvFound"
+                            android:layout_width="match_parent"
+                            android:layout_height="310dp"
+                            android:layout_centerInParent="true"
+                            android:layout_marginHorizontal="@dimen/_16sdp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center"
+                            android:text="No Result Found"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_16sdp"
+                            android:visibility="gone" />
 
                     </LinearLayout>
                 </RelativeLayout>

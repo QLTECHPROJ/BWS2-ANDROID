@@ -170,6 +170,7 @@ public class CountrySelectActivity extends AppCompatActivity {
     public class CountrySelectAdapter extends RecyclerView.Adapter<CountrySelectAdapter.MyViewHolder> implements Filterable {
         private List<CountryListModel.ResponseData> modelList;
         private List<CountryListModel.ResponseData> listFilterData;
+
         public CountrySelectAdapter(List<CountryListModel.ResponseData> modelList) {
             this.modelList = modelList;
             this.listFilterData = modelList;

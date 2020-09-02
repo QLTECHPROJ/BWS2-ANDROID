@@ -15,6 +15,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.SystemClock;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,16 +25,25 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.BuildConfig;
+import com.qltech.bws.DashboardModule.Models.LogoutModel;
 import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
 import com.qltech.bws.FaqModule.Activities.FaqActivity;
 import com.qltech.bws.InvoiceModule.Activities.InvoiceActivity;
+import com.qltech.bws.LoginModule.Activities.LoginActivity;
+import com.qltech.bws.LoginModule.Models.LoginModel;
+import com.qltech.bws.MembershipModule.Activities.CheckoutOtpActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
 import com.qltech.bws.ResourceModule.Activities.ResourceActivity;
+import com.qltech.bws.SplashModule.SplashScreenActivity;
 import com.qltech.bws.UserModule.Activities.UserProfileActivity;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.UserModule.Models.ProfileViewModel;
@@ -44,6 +55,8 @@ import com.qltech.bws.databinding.FragmentAccountBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class AccountFragment extends Fragment {
     FragmentAccountBinding binding;
@@ -152,6 +165,7 @@ public class AccountFragment extends Fragment {
                 startActivity(i);
             }
         });
+
         binding.llLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -176,10 +190,76 @@ public class AccountFragment extends Fragment {
 
                 tvTitle.setText(R.string.logout);
                 tvSubTitle.setText(R.string.logout_quotes);
+
                 tvconfirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog.dismiss();
+                        SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+                        String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+                        if (TextUtils.isEmpty(fcm_id)) {
+                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), new OnSuccessListener<InstanceIdResult>() {
+                                @Override
+                                public void onSuccess(InstanceIdResult instanceIdResult) {
+                                    String newToken = instanceIdResult.getToken();
+                                    Log.e("newToken", newToken);
+                                    SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                                    editor.putString(CONSTANTS.Token, newToken); //Friend
+                                    editor.apply();
+                                    editor.commit();
+                                }
+                            });
+                            fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+                        }
+
+                        SharedPreferences preferences= getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor edit = preferences.edit();
+                        edit.remove(CONSTANTS.PREF_KEY_UserID);
+                        edit.remove(CONSTANTS.PREF_KEY_MobileNo);
+                        edit.remove(CONSTANTS.PREF_KEY_IsRepeat);
+                        edit.remove(CONSTANTS.PREF_KEY_IsShuffle);
+                        edit.clear();
+                        edit.commit();
+
+                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_ReminderStatus, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor edit1 = shared.edit();
+                        edit1.remove(CONSTANTS.PREF_KEY_ReminderStatus);
+                        edit1.remove(CONSTANTS.PREF_KEY_MobileNo);
+                        edit1.clear();
+                        edit1.commit();
+
+                        SharedPreferences shareds = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_CardID, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shareds.edit();
+                        editor.remove(CONSTANTS.PREF_KEY_CardID);
+                        editor.clear();
+                        editor.commit();
+
+                        if (BWSApplication.isNetworkConnected(getActivity())) {
+                            showProgressBar();
+                            Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID,fcm_id,CONSTANTS.FLAG_ONE);
+                            listCall.enqueue(new Callback<LogoutModel>() {
+                                @Override
+                                public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
+                                    hideProgressBar();
+                                    if (response.isSuccessful()) {
+                                        LogoutModel loginModel = response.body();
+                                        Intent i = new Intent(getActivity(), LoginActivity.class);
+                                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                        startActivity(i);
+                                        getActivity().overridePendingTransition(0, 0);
+                                        dialog.dismiss();
+                                    } else {
+                                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<LogoutModel> call, Throwable t) {
+                                    hideProgressBar();
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 

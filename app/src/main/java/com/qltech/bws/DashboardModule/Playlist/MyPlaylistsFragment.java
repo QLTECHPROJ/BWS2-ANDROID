@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,11 +34,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
+import com.qltech.bws.DashboardModule.Activities.DashboardActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.TransparentPlayerFragment;
+import com.qltech.bws.LoginModule.Models.CountryListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
@@ -47,6 +52,7 @@ import com.qltech.bws.databinding.DownloadsLayoutBinding;
 import com.qltech.bws.databinding.FragmentMyPlaylistsBinding;
 import com.qltech.bws.databinding.MyPlaylistLayoutBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -58,7 +64,7 @@ import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.delet
 public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
     String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage;
-    SuggestionAudiosAdpater adpater;
+    PlayListsAdpater adpater;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,14 +107,35 @@ public class MyPlaylistsFragment extends Fragment {
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
         ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
         binding.searchView.clearFocus();
-        searchEditText.setClickable(false);
-        searchEditText.setEnabled(false);
+
         closeButton.setOnClickListener(v -> {
             binding.searchView.clearFocus();
             searchEditText.setText("");
             binding.searchView.setQuery("", false);
         });
         searchEditText.setHint("Search for audio");
+
+        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String search) {
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String search) {
+                try {
+                    if (adpater != null) {
+                        adpater.getFilter().filter(search);
+                        Log.e("searchsearch", "" + search);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        });
+
         RecyclerView.LayoutManager suggestedList = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvSuggestedList.setLayoutManager(suggestedList);
         binding.rvSuggestedList.setItemAnimator(new DefaultItemAnimator());
@@ -120,22 +147,8 @@ public class MyPlaylistsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), ReminderActivity.class);
-                i.putExtra("PlaylistID",PlaylistID);
+                i.putExtra("PlaylistID", PlaylistID);
                 startActivity(i);
-            }
-        });
-        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String search) {
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String search) {
-                prepareSearchData(search, PlaylistID);
-                Log.e("searchsearch", "" + search);
-                return false;
             }
         });
 
@@ -166,16 +179,6 @@ public class MyPlaylistsFragment extends Fragment {
             }
         });
 
-        binding.llMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
-                i.putExtra("PlaylistID", PlaylistID);
-                i.putExtra("PlaylistName", PlaylistName);
-                startActivity(i);
-            }
-        });
-
         if (New.equalsIgnoreCase("1")) {
             binding.llAddAudio.setVisibility(View.VISIBLE);
             binding.llDownloads.setVisibility(View.INVISIBLE);
@@ -201,43 +204,16 @@ public class MyPlaylistsFragment extends Fragment {
         return view;
     }
 
-    private void prepareSearchData(String search, String PlaylistID) {
-        showProgressBar();
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<SuggestionAudiosModel> listCall = APIClient.getClient().getAddSearchAudio(search, PlaylistID);
-            listCall.enqueue(new Callback<SuggestionAudiosModel>() {
-                @Override
-                public void onResponse(Call<SuggestionAudiosModel> call, Response<SuggestionAudiosModel> response) {
-                    if (response.isSuccessful()) {
-                        hideProgressBar();
-                        SuggestionAudiosModel listModel = response.body();
-                        if (listModel != null) {
-                            adpater = new SuggestionAudiosAdpater(listModel.getResponseData(), getActivity(), binding.rvSuggestedList, UserID);
-                        }
-                        binding.rvSuggestedList.setAdapter(adpater);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<SuggestionAudiosModel> call, Throwable t) {
-                    hideProgressBar();
-                }
-            });
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-        if(deleteFrg == 1){
+        if (deleteFrg == 1) {
             FragmentManager fm = getActivity()
                     .getSupportFragmentManager();
             fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
             deleteFrg = 0;
-        }else{
+        } else {
             prepareData(UserID, PlaylistID);
         }
     }
@@ -265,8 +241,12 @@ public class MyPlaylistsFragment extends Fragment {
                         binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
                         binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
                         if (!listModel.getResponseData().getPlaylistImage().equalsIgnoreCase("")) {
+                            try {
                             Glide.with(getActivity()).load(listModel.getResponseData().getPlaylistImage()).thumbnail(0.1f)
                                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         } else {
                             binding.ivBanner.setImageResource(R.drawable.audio_bg);
                         }
@@ -314,8 +294,8 @@ public class MyPlaylistsFragment extends Fragment {
                             binding.llReminder.setVisibility(View.VISIBLE);
                             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
                             binding.llListing.setVisibility(View.VISIBLE);
-                            PlayListsAdpater adapter = new PlayListsAdpater(listModel.getResponseData(), getActivity(), UserID);
-                            binding.rvPlayLists.setAdapter(adapter);
+                            adpater = new PlayListsAdpater(listModel.getResponseData().getPlaylistSongs(), getActivity(), UserID, listModel.getResponseData().getCreated());
+                            binding.rvPlayLists.setAdapter(adpater);
                         }
                     }
                 }
@@ -351,15 +331,19 @@ public class MyPlaylistsFragment extends Fragment {
         }
     }
 
-    public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> {
-        private SubPlayListModel.ResponseData listModelList;
+    public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable {
+        private List<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
+        private List<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
         Context ctx;
-        String UserID;
+        String UserID, Created;
 
-        public PlayListsAdpater(SubPlayListModel.ResponseData listModelList, Context ctx, String UserID) {
+        public PlayListsAdpater(List<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
+                                String Created) {
             this.listModelList = listModelList;
+            this.listFilterData = listModelList;
             this.ctx = ctx;
             this.UserID = UserID;
+            this.Created = Created;
         }
 
         @NonNull
@@ -372,43 +356,80 @@ public class MyPlaylistsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.binding.tvTitleA.setText(listModelList.getPlaylistSongs().get(position).getName());
-            holder.binding.tvTitleB.setText(listModelList.getPlaylistSongs().get(position).getName());
-            holder.binding.tvTimeA.setText(listModelList.getPlaylistSongs().get(position).getAudioDuration());
-            holder.binding.tvTimeB.setText(listModelList.getPlaylistSongs().get(position).getAudioDuration());
+            final List<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
+            holder.binding.tvTitleA.setText(mData.get(position).getName());
+            holder.binding.tvTitleB.setText(mData.get(position).getName());
+            holder.binding.tvTimeA.setText(mData.get(position).getAudioDuration());
+            holder.binding.tvTimeB.setText(mData.get(position).getAudioDuration());
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(ctx).load(listModelList.getPlaylistSongs().get(position).getImageFile()).thumbnail(0.1f)
+            Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.1f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            if (listModelList.getCreated().equalsIgnoreCase("1")) {
+            holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                  /*  Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.rlAudiolist, fragment)
+                            .addToBackStack("TransparentPlayerFragment")
+                            .commit();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelableArrayList("modelList", listModelList);
+                    bundle.putInt("position", position);
+                    fragment.setArguments(bundle);*/
+                }
+            });
+            if (Created.equalsIgnoreCase("1")) {
                 holder.binding.llMore.setVisibility(View.GONE);
                 holder.binding.llCenterLayoutA.setVisibility(View.GONE);
                 holder.binding.llCenterLayoutB.setVisibility(View.VISIBLE);
                 holder.binding.llDownload.setVisibility(View.VISIBLE);
                 holder.binding.llRemove.setVisibility(View.VISIBLE);
                 holder.binding.llSort.setVisibility(View.VISIBLE);
-                binding.rlSearch.setVisibility(View.VISIBLE);
-            } else if (listModelList.getCreated().equalsIgnoreCase("0")) {
+                binding.tvSearch.setVisibility(View.VISIBLE);
+                binding.searchView.setVisibility(View.GONE);
+
+                binding.llMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
+                        i.putExtra("PlaylistID", PlaylistID);
+                        startActivity(i);
+                    }
+                });
+
+            } else if (Created.equalsIgnoreCase("0")) {
                 holder.binding.llMore.setVisibility(View.VISIBLE);
                 holder.binding.llCenterLayoutA.setVisibility(View.VISIBLE);
                 holder.binding.llCenterLayoutB.setVisibility(View.GONE);
                 holder.binding.llDownload.setVisibility(View.GONE);
                 holder.binding.llRemove.setVisibility(View.GONE);
                 holder.binding.llSort.setVisibility(View.GONE);
-                binding.rlSearch.setVisibility(View.GONE);
+                binding.tvSearch.setVisibility(View.GONE);
+                binding.searchView.setVisibility(View.VISIBLE);
+
+                binding.llMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
+                        i.putExtra("PlaylistID", PlaylistID);
+                        startActivity(i);
+                    }
+                });
             }
-            if (listModelList.getPlaylistSongs().get(position).getDownload().equalsIgnoreCase("1")) {
+            if (mData.get(position).getDownload().equalsIgnoreCase("1")) {
                 holder.binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                 holder.binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
                 holder.binding.ivDownloads.setAlpha(255);
                 holder.binding.llDownload.setClickable(false);
                 holder.binding.llDownload.setEnabled(false);
-            } else if (!listModelList.getPlaylistSongs().get(position).getDownload().equalsIgnoreCase("")) {
+            } else if (!mData.get(position).getDownload().equalsIgnoreCase("")) {
                 holder.binding.llDownload.setClickable(true);
                 holder.binding.llDownload.setEnabled(true);
                 holder.binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
@@ -419,7 +440,7 @@ public class MyPlaylistsFragment extends Fragment {
                 public void onClick(View view) {
                     Intent i = new Intent(ctx, AddQueueActivity.class);
                     i.putExtra("play", "");
-                    i.putExtra("ID", listModelList.getPlaylistSongs().get(position).getID());
+                    i.putExtra("ID", mData.get(position).getID());
                     startActivity(i);
                 }
             });
@@ -429,7 +450,7 @@ public class MyPlaylistsFragment extends Fragment {
                 public void onClick(View view) {
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         showProgressBar();
-                        String AudioId = listModelList.getPlaylistSongs().get(position).getID();
+                        String AudioId = mData.get(position).getID();
                         Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistID);
                         listCall.enqueue(new Callback<DownloadPlaylistModel>() {
                             @Override
@@ -457,7 +478,7 @@ public class MyPlaylistsFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     showProgressBar();
-                    String AudioId = listModelList.getPlaylistSongs().get(position).getID();
+                    String AudioId = mData.get(position).getID();
                     if (BWSApplication.isNetworkConnected(getActivity())) {
                         Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistID);
                         listCall.enqueue(new Callback<SucessModel>() {
@@ -486,109 +507,53 @@ public class MyPlaylistsFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return listModelList.getPlaylistSongs().size();
+            if (listFilterData != null) {
+                return listFilterData.size();
+            }
+            return 0;
+        }
+
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence charSequence) {
+                    final FilterResults filterResults = new FilterResults();
+                    String charString = charSequence.toString();
+                    if (charString.isEmpty()) {
+                        listFilterData = listModelList;
+                    } else {
+                        List<SubPlayListModel.ResponseData.PlaylistSong> filteredList = new ArrayList<>();
+                        for (SubPlayListModel.ResponseData.PlaylistSong row : listModelList) {
+                            if (row.getName().toLowerCase().contains(charString.toLowerCase())) {
+                                filteredList.add(row);
+                            }
+                        }
+                        listFilterData = filteredList;
+                    }
+                    filterResults.values = listFilterData;
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                    if (listFilterData.size() == 0) {
+                        binding.tvFound.setVisibility(View.VISIBLE);
+                        binding.rvPlayLists.setVisibility(View.GONE);
+                    } else {
+                        binding.tvFound.setVisibility(View.GONE);
+                        binding.rvPlayLists.setVisibility(View.VISIBLE);
+                        listFilterData = (List<SubPlayListModel.ResponseData.PlaylistSong>) filterResults.values;
+                        notifyDataSetChanged();
+                    }
+                }
+            };
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             MyPlaylistLayoutBinding binding;
 
             public MyViewHolder(MyPlaylistLayoutBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-            }
-        }
-    }
-
-    public class SuggestionAudiosAdpater extends RecyclerView.Adapter<SuggestionAudiosAdpater.MyViewHolder> {
-        private List<SuggestionAudiosModel.ResponseData> modelList;
-        private List<SuggestionAudiosModel.ResponseData> listFilterData;
-        Context ctx;
-        RecyclerView rvSuggestedList;
-        String UserID;
-
-        public SuggestionAudiosAdpater(List<SuggestionAudiosModel.ResponseData> modelList, Context ctx,
-                                       RecyclerView rvSuggestedList, String UserID) {
-            this.modelList = modelList;
-            this.listFilterData = modelList;
-            this.ctx = ctx;
-            this.rvSuggestedList = rvSuggestedList;
-            this.UserID = UserID;
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            DownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.downloads_layout, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            final SuggestionAudiosModel.ResponseData mData = listFilterData.get(position);
-            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
-            holder.binding.tvTitle.setText(modelList.get(position).getName());
-            holder.binding.tvTime.setText(modelList.get(position).getAudioDuration());
-
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.12f, 0);
-            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(ctx).load(modelList.get(position).getImageFile()).thumbnail(0.1f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-
-            holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String AudioID = modelList.get(position).getID();
-                    showProgressBar();
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID);
-                        listCall.enqueue(new Callback<SucessModel>() {
-                            @Override
-                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                                if (response.isSuccessful()) {
-                                    hideProgressBar();
-                                    SucessModel listModel = response.body();
-//                                    showToast("Added to My Playlist.");
-                                    showToast(listModel.getResponseMessage());
-
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<SucessModel> call, Throwable t) {
-                                hideProgressBar();
-                            }
-                        });
-                    } else {
-                        Toast.makeText(ctx, ctx.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-
-        }
-
-        void showToast(String message) {
-            Toast toast = new Toast(ctx);
-            View view = LayoutInflater.from(ctx).inflate(R.layout.toast_layout, null);
-            TextView tvMessage = view.findViewById(R.id.tvMessage);
-            tvMessage.setText(message);
-            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
-            toast.setView(view);
-            toast.show();
-        }
-
-        @Override
-        public int getItemCount() {
-            return listFilterData.size();
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            DownloadsLayoutBinding binding;
-
-            public MyViewHolder(DownloadsLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
             }

@@ -2,6 +2,7 @@ package com.qltech.bws.DashboardModule.Audio.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,13 +11,16 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Activities.PlayWellnessActivity;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -64,27 +68,27 @@ public class TopCategoriesAdapter  extends RecyclerView.Adapter<TopCategoriesAda
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ctx, PlayWellnessActivity.class);
-                i.putExtra("ID",listModelList.get(position).getID());
-                i.putExtra("Name",listModelList.get(position).getName());
-                i.putExtra("AudioFile",listModelList.get(position).getAudioFile());
-                i.putExtra("ImageFile",listModelList.get(position).getImageFile());
-                i.putExtra("AudioDirection",listModelList.get(position).getAudioDirection());
-                i.putExtra("Audiomastercat",listModelList.get(position).getAudiomastercat());
-                i.putExtra("AudioSubCategory",listModelList.get(position).getAudioSubCategory());
-                i.putExtra("Like",listModelList.get(position).getLike());
-                i.putExtra("Download",listModelList.get(position).getDownload());
-                i.putExtra("position",position);
-                i.putParcelableArrayListExtra("AudioList",listModelList);
-                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                ctx.startActivity(i);
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.rlAudiolist, fragment)
+                        .addToBackStack("TransparentPlayerFragment")
+                        .commit();
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("modelList", listModelList);
+                bundle.putInt("position", position);
+                fragment.setArguments(bundle);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return listModelList.size();
+        if (4 > listModelList.size()) {
+            return listModelList.size();
+        } else {
+            return 4;
+        }
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

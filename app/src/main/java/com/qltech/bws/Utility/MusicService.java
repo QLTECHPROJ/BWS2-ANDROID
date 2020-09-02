@@ -2,16 +2,27 @@ package com.qltech.bws.Utility;
 
 import android.app.Service;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-public class MusicService extends Service {
-    MediaPlayer mediaPlayer;
+import java.io.IOException;
 
-    private void initMediaPlayer() {
+public class MusicService extends Service {
+    static MediaPlayer mediaPlayer;
+
+    public static void initMediaPlayer(String AudioFile) {
         mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mediaPlayer.setDataSource(AudioFile);
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Nullable
@@ -20,7 +31,7 @@ public class MusicService extends Service {
         return null;
     }
 
-    private void playMedia() {
+    public static void playMedia() {
         if (!mediaPlayer.isPlaying()) {
             mediaPlayer.start();
         }
@@ -33,7 +44,7 @@ public class MusicService extends Service {
         }
     }
 
-    private void pauseMedia() {
+    public static void pauseMedia() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
 //            resumePosition = mediaPlayer.getCurrentPosition();

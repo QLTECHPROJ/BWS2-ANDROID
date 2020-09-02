@@ -39,6 +39,7 @@ public class CONSTANTS {
     public static String ID = "ID";
     public static String PlaylistID = "PlaylistID";
     public static String PlaylistName = "PlaylistName";
+    public static String PlaylistImage = "PlaylistImage";
     public static String title = "title";
     public static String author = "author";
     public static String linkOne = "linkOne";

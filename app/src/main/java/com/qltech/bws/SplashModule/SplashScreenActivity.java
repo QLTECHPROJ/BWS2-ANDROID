@@ -54,7 +54,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         AppSignatureHashHelper appSignatureHashHelper = new AppSignatureHashHelper(this);
         key = appSignatureHashHelper.getAppSignatures().get(0);
-        Glide.with(SplashScreenActivity.this).load(R.drawable.splash).asGif().into(binding.ivBackground);
+//        Glide.with(SplashScreenActivity.this).load(R.drawable.splash).asGif().into(binding.ivBackground);
         getLatasteUpdate(SplashScreenActivity.this);
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);

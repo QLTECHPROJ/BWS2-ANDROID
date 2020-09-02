@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -51,6 +53,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     int position;
     ActivityCheckoutOtpBinding binding;
+    CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,8 +134,8 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                     binding.txtError.setText("Wait a sec! We need to exchange digits to get started");
                     binding.txtError.setVisibility(View.VISIBLE);
                 } else {
+                    BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
                     if (BWSApplication.isNetworkConnected(CheckoutOtpActivity.this)) {
-                        BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
                         String deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                         Call<CardModel> listCall = APIClient.getClient().getAuthOtps1(
                                 binding.edtOTP1.getText().toString() + "" +
@@ -145,7 +148,6 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                             public void onResponse(Call<CardModel> call, Response<CardModel> response) {
                                 if (response.isSuccessful()) {
                                     BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
-
                                     CardModel otpModel = response.body();
                                     Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
                                     i.putExtra("MobileNo",MobileNo);
@@ -164,9 +166,9 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                         Toast.makeText(CheckoutOtpActivity.this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
                     }
                 }
-
             }
         });
+
         binding.llResendSms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -191,22 +193,35 @@ public class CheckoutOtpActivity extends AppCompatActivity {
         if (BWSApplication.isNetworkConnected(ctx)) {
             tvSendOTPbool = false;
             BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
-
-            Call<LoginModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
+            Call<LoginModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
             listCall.enqueue(new Callback<LoginModel>() {
                 @Override
                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
-
                         LoginModel loginModel = response.body();
                         if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            tvSendOTPbool = true;
+                            countDownTimer = new CountDownTimer(30000, 1000) {
+                                public void onTick(long millisUntilFinished) {
+                                    binding.llResendSms.setEnabled(false);
+                                    binding.tvResendOTP.setText(Html.fromHtml(millisUntilFinished / 1000 + "<font color=\"#999999\">" + " Resent SMS" + "</font>"));
+                                }
+
+                                public void onFinish() {
+                                    binding.llResendSms.setEnabled(true);
+                                    binding.tvResendOTP.setText(getString(R.string.resent_sms));
+                                    binding.tvResendOTP.setTextColor(getResources().getColor(R.color.white));
+                                    binding.tvResendOTP.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                                    binding.tvResendOTP.getPaint().setMaskFilter(null);
+                                }
+                            }.start();
                             binding.edtOTP1.requestFocus();
                             binding.edtOTP1.setText("");
                             binding.edtOTP2.setText("");
                             binding.edtOTP3.setText("");
                             binding.edtOTP4.setText("");
+                            tvSendOTPbool = true;
+                            Toast.makeText(getApplicationContext(), loginModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                         } else {
                             binding.txtError.setVisibility(View.VISIBLE);
                             binding.txtError.setText(loginModel.getResponseMessage());

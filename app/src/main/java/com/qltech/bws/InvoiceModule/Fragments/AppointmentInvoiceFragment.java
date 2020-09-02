@@ -119,7 +119,7 @@ public class AppointmentInvoiceFragment extends Fragment {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     InvoiceReceiptFragment receiptFragment = new InvoiceReceiptFragment();
                     receiptFragment.setCancelable(true);
-                    receiptFragment.setValues(listModelList.get(position).getInvoiceNumber());
+                    receiptFragment.setValues(listModelList.get(position).getInvoiceId());
                     receiptFragment.show(fragmentManager,"receipt");
                 }
             });

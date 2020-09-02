@@ -11,6 +11,7 @@ import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.DirectionModel;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
+import com.qltech.bws.DashboardModule.Models.LogoutModel;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
 import com.qltech.bws.DashboardModule.Models.NextSessionViewModel;
@@ -22,6 +23,7 @@ import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.SuggestedModel;
 import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
+import com.qltech.bws.DashboardModule.Models.ViewAllAudioListModel;
 import com.qltech.bws.DashboardModule.Models.ViewAllPlayListModel;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.FaqModule.Models.FaqListModel;
@@ -108,6 +110,13 @@ public interface APIInterface {
                                  @Field("MobileNo") String mobileNo,
                                  @Field("SignupFlag") String signupFlag);
 
+    /* TODO AccountFragment */
+    @POST("logout")
+    @FormUrlEncoded
+    Call<LogoutModel> getLogout(@Field("UserID") String otp,
+                                @Field("Token") String token,
+                                @Field("Type") String type);
+
     /* TODO CountryActivity */
     @GET("countrylist")
     Call<CountryListModel> getCountryLists();
@@ -157,11 +166,17 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<MainPlayListModel> getMainPlayLists(@Field("UserID") String userID);
 
-   /* TODO PlaylistFragment */
+   /* TODO ViewAllPlaylistFragment */
     @POST("playlistongetlibrary")
     @FormUrlEncoded
     Call<ViewAllPlayListModel> getViewAllPlayLists(@Field("UserID") String userID,
                                                    @Field("GetLibraryId") String getLibraryId);
+
+   /* TODO ViewAllAudioFragment */
+    @POST("gethomeallaudio")
+    @FormUrlEncoded
+    Call<ViewAllAudioListModel> getViewAllAudioLists(@Field("UserID") String userID,
+                                                    @Field("GetHomeId") String HomeId);
 
     /* TODO MyPlaylistsFragment */
     @POST("playlistdetails")

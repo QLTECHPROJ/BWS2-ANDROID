@@ -34,6 +34,10 @@ public class DashboardActivity extends AppCompatActivity {
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+
+    }
+
+    public void Player(){
         binding.llPlayearMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

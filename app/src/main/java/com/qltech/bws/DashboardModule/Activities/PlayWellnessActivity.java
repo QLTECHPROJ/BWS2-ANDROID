@@ -34,6 +34,7 @@ import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityPlayWellnessBinding;
 
 import java.io.IOException;
@@ -46,8 +47,8 @@ import retrofit2.Response;
 
 public class PlayWellnessActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     ActivityPlayWellnessBinding binding;
-    String IsRepeat = "", IsShuffle = "", Like, Download, UserID, AudioFile, Name, ImageFile, PlaylistId,
-            AudioId, AudioDirection, Audiomastercat, AudioSubCategory;
+    String IsRepeat = "", IsShuffle = "", Like, Download, UserID, ImageFile, PlaylistId,
+            AudioId;
     private static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
     private MediaPlayer mPlayer;
     Context ctx;
@@ -72,19 +73,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         IsShuffle = (shared1.getString(CONSTANTS.PREF_KEY_IsShuffle, ""));
         listModelList = new ArrayList<>();
         if (getIntent().getExtras() != null) {
-            AudioId = getIntent().getStringExtra(CONSTANTS.ID);
-            Name = getIntent().getStringExtra(CONSTANTS.Name);
-            AudioFile = getIntent().getStringExtra(CONSTANTS.AudioFile);
-            ImageFile = getIntent().getStringExtra(CONSTANTS.ImageFile);
-            AudioDirection = getIntent().getStringExtra(CONSTANTS.AudioDirection);
-            Audiomastercat = getIntent().getStringExtra(CONSTANTS.Audiomastercat);
-            AudioSubCategory = getIntent().getStringExtra(CONSTANTS.AudioSubCategory);
-            Like = getIntent().getStringExtra(CONSTANTS.Like);
-            Download = getIntent().getStringExtra(CONSTANTS.Download);
             position = getIntent().getIntExtra(CONSTANTS.position, 0);
-            listModelList = getIntent().getParcelableArrayListExtra(CONSTANTS.AudioList);
+            listModelList = getIntent().getParcelableArrayListExtra("modelList");
         }
-
 
         binding.tvName.setText(listModelList.get(position).getName());
         binding.tvDireDesc.setText(listModelList.get(position).getAudioDirection());
@@ -204,6 +195,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 }
             }
         });
+
         binding.llMore.setOnClickListener(view -> {
             Intent i = new Intent(ctx, AddQueueActivity.class);
             i.putExtra("play", "play");
@@ -281,6 +273,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     }
 
     @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mPlayer != null) {
@@ -303,14 +300,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         }
 
         /*URL url = null;
-
         try {
             mPlayer.setDataSource(AudioFile);
             mPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-*/
+        }*/
+
         binding.simpleSeekbar.setClickable(false);
         endTime = mPlayer.getDuration();
         startTime = mPlayer.getCurrentPosition();

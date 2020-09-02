@@ -58,6 +58,9 @@ public class CurrentPlanVieViewModel {
         @SerializedName("OrderTotal")
         @Expose
         private String orderTotal;
+        @SerializedName("IsActive")
+        @Expose
+        private String IsActive;
         @SerializedName("Feature")
         @Expose
         private List<Feature> feature = null;
@@ -68,6 +71,14 @@ public class CurrentPlanVieViewModel {
 
         public void setPlan(String plan) {
             this.plan = plan;
+        }
+
+        public String getIsActive() {
+            return IsActive;
+        }
+
+        public void setIsActive(String isActive) {
+            IsActive = isActive;
         }
 
         public String getOrderTotal() {

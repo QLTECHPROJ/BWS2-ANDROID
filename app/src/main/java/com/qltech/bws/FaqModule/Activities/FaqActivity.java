@@ -32,6 +32,9 @@ public class FaqActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
+    }
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

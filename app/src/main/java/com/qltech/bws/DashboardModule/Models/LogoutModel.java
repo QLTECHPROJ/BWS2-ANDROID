@@ -1,14 +1,14 @@
-package com.qltech.bws.LoginModule.Models;
+package com.qltech.bws.DashboardModule.Models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class CountryListModel {
+public class LogoutModel {
     @SerializedName("ResponseData")
     @Expose
-    private List<ResponseData> responseData = null;
+    private List<Object> responseData = null;
     @SerializedName("ResponseCode")
     @Expose
     private String responseCode;
@@ -19,11 +19,11 @@ public class CountryListModel {
     @Expose
     private String responseStatus;
 
-    public List<ResponseData> getResponseData() {
+    public List<Object> getResponseData() {
         return responseData;
     }
 
-    public void setResponseData(List<ResponseData> responseData) {
+    public void setResponseData(List<Object> responseData) {
         this.responseData = responseData;
     }
 
@@ -49,40 +49,5 @@ public class CountryListModel {
 
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
-    }
-    public class ResponseData {
-        @SerializedName("ID")
-        @Expose
-        private String iD;
-        @SerializedName("Name")
-        @Expose
-        private String name;
-        @SerializedName("Code")
-        @Expose
-        private String code;
-
-        public String getID() {
-            return iD;
-        }
-
-        public void setID(String iD) {
-            this.iD = iD;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public void setCode(String code) {
-            this.code = code;
-        }
     }
 }

@@ -134,10 +134,10 @@ public class AddQueueActivity extends AppCompatActivity {
 
         int lineCount = binding.tvSubDec.getLineCount();
         if (lineCount < 4 || lineCount == 4) {
-
         } else {
             makeTextViewResizable(binding.tvSubDec, 4, "Read More...", true);
         }
+
         prepareData();
 
         if (getIntent().hasExtra("play")) {
@@ -147,12 +147,14 @@ public class AddQueueActivity extends AppCompatActivity {
         }
         if (play.equalsIgnoreCase("play")) {
             binding.llOptions.setVisibility(View.VISIBLE);
+            binding.llDownload.setVisibility(View.VISIBLE);
             binding.llAddPlaylist.setVisibility(View.VISIBLE);
             binding.llAddQueue.setVisibility(View.VISIBLE);
         } else {
-            binding.llOptions.setVisibility(View.GONE);
+            binding.llOptions.setVisibility(View.VISIBLE); /*GONE*/
             binding.llAddPlaylist.setVisibility(View.GONE);
-            binding.llAddQueue.setVisibility(View.GONE);
+            binding.llDownload.setVisibility(View.VISIBLE);
+            binding.llAddQueue.setVisibility(View.VISIBLE);/*GONE*/
         }
 
         binding.llLike.setOnClickListener(view -> {
@@ -168,10 +170,10 @@ public class AddQueueActivity extends AppCompatActivity {
                             AudioLikeModel model = response.body();
                             if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
                                 binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
-//                                Like = "0";
+                                Like = "0";
                             } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-//                                Like = "1";
+                                Like = "1";
                             }
                             Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -197,6 +199,20 @@ public class AddQueueActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             hideProgressBar();
                             DownloadPlaylistModel model = response.body();
+                            if (model.getResponseData().getFlag().equalsIgnoreCase("0")
+                                    || model.getResponseData().getFlag().equalsIgnoreCase("")) {
+                                binding.llDownload.setClickable(true);
+                                binding.llDownload.setEnabled(true);
+                                binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                                Download = "0";
+                            } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                                binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                                binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                                binding.ivDownloads.setAlpha(255);
+                                binding.llDownload.setClickable(false);
+                                binding.llDownload.setEnabled(false);
+                                Download = "1";
+                            }
                             Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -211,6 +227,26 @@ public class AddQueueActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
             }
         });
+
+        binding.llBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                i.putExtra("Like", Like);
+                i.putExtra("Download", Download);
+                startActivity(i);
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(ctx, PlayWellnessActivity.class);
+        i.putExtra("Like", Like);
+        i.putExtra("Download", Download);
+        startActivity(i);
+        finish();
     }
 
     private void prepareData() {
@@ -229,34 +265,11 @@ public class AddQueueActivity extends AppCompatActivity {
                         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
                         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
                         Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile())
-                                .listener(new RequestListener<String, GlideDrawable>() {
-                                    @Override
-                                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                        showProgressBar();
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                        hideProgressBar();
-                                        return false;
-                                    }
-                                }).dontAnimate().thumbnail(0.2f)
+                                .thumbnail(0.2f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
                         Like = directionModel.getResponseData().get(0).getLike();
                         Download = directionModel.getResponseData().get(0).getDownload();
-
-                        binding.llBack.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                              /*  Intent i = new Intent(ctx, PlayWellnessActivity.class);
-                                i.putExtra("Like", directionModel.getResponseData().get(0).getLike());
-                                i.putExtra("Download", directionModel.getResponseData().get(0).getDownload());
-                                startActivity(i);*/
-                                finish();
-                            }
-                        });
 
                         binding.tvName.setText(directionModel.getResponseData().get(0).getName());
                         binding.tvDesc.setText(directionModel.getResponseData().get(0).getAudioSubCategory());

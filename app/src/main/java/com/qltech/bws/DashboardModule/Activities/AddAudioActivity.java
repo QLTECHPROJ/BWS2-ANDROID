@@ -173,6 +173,11 @@ public class AddAudioActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
     private void hideProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.GONE);

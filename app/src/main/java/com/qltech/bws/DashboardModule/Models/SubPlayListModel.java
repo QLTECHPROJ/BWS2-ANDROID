@@ -88,6 +88,9 @@ public class SubPlayListModel {
         @SerializedName("Download")
         @Expose
         private String download;
+        @SerializedName("Like")
+        @Expose
+        private String like;
         @SerializedName("PlaylistSongs")
         @Expose
         private List<PlaylistSong> playlistSongs = null;
@@ -114,6 +117,14 @@ public class SubPlayListModel {
 
         public void setDownload(String download) {
             this.download = download;
+        }
+
+        public String getLike() {
+            return like;
+        }
+
+        public void setLike(String like) {
+            this.like = like;
         }
 
         public String getCreated() {

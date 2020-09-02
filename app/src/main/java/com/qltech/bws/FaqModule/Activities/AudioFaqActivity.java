@@ -43,6 +43,7 @@ public class AudioFaqActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         RecyclerView.LayoutManager serachList = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvFaqList.setLayoutManager(serachList);
         binding.rvFaqList.setItemAnimator(new DefaultItemAnimator());
@@ -69,6 +70,11 @@ public class AudioFaqActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     private void hideProgressBar() {

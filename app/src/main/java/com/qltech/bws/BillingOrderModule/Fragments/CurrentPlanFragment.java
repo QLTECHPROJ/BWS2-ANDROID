@@ -73,20 +73,15 @@ public class CurrentPlanFragment extends Fragment {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         CurrentPlanVieViewModel listModel = response.body();
-                        if (listModel.getResponseData().getPlan().equalsIgnoreCase("You have cancelled your plan")){
-                            binding.tvHeader.setText(listModel.getResponseData().getPlan());
-                            binding.llPlanMain.setVisibility(View.GONE);
-                        }else {
-                            binding.tvHeader.setText("Your current membership");
-                            binding.llPlanMain.setVisibility(View.VISIBLE);
-                            if (listModel.getResponseData().getOrderTotal().equalsIgnoreCase("")){
-                                binding.tvDoller.setText("$0.00");
-                            }else {
-                                binding.tvDoller.setText("$" + listModel.getResponseData().getOrderTotal());
-                            }
-                            binding.tvPlan.setText(" / " + listModel.getResponseData().getPlan());
-                        }
 
+                        binding.tvHeader.setText("Your current membership");
+                        binding.llPlanMain.setVisibility(View.VISIBLE);
+                        if (listModel.getResponseData().getOrderTotal().equalsIgnoreCase("")) {
+                            binding.tvDoller.setText("$0.00");
+                        } else {
+                            binding.tvDoller.setText("$" + listModel.getResponseData().getOrderTotal());
+                        }
+                        binding.tvPlan.setText(" / " + listModel.getResponseData().getPlan());
 
                         adpater = new FeaturedListAdpater(listModel.getResponseData().getFeature());
                         binding.rvFeatured.setAdapter(adpater);
@@ -136,6 +131,7 @@ public class CurrentPlanFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
     public class FeaturedListAdpater extends RecyclerView.Adapter<FeaturedListAdpater.MyViewHolder> {
         private List<CurrentPlanVieViewModel.ResponseData.Feature> modelList;
 

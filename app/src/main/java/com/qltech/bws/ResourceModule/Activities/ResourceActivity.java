@@ -124,6 +124,11 @@ public class ResourceActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
     private void setAdapter() {
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), this, binding.tabLayout.getTabCount());
         binding.viewPager.setAdapter(adapter);
