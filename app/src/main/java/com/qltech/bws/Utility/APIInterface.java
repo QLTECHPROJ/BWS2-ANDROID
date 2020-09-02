@@ -337,13 +337,15 @@ public interface APIInterface {
     /* TODO InvoiceActivity */
     @POST("invoicelist")
     @FormUrlEncoded
-    Call<InvoiceListModel> getInvoicelistPlaylist(@Field("UserID") String userID);
+    Call<InvoiceListModel> getInvoicelistPlaylist(@Field("UserID") String userID,
+                                                  @Field("Flag") String flag);
 
     /* TODO InvoiceReceiptFragment */
     @POST("invoicedetaildownload")
     @FormUrlEncoded
     Call<InvoiceDetailModel> getInvoiceDetailPlaylist(@Field("UserID") String userID,
-                                                      @Field("InvoiceId") String invoiceId);
+                                                      @Field("InvoiceId") String invoiceId,
+                                                      @Field("Flag") String flag);
 
     /* TODO DownloadsActivity */
     @POST("downloadlist")

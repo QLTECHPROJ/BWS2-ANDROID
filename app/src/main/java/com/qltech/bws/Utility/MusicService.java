@@ -1,28 +1,71 @@
 package com.qltech.bws.Utility;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.io.FileDescriptor;
 import java.io.IOException;
 
 public class MusicService extends Service {
     static MediaPlayer mediaPlayer;
+    static private Handler handler;
+    static boolean isPLAYING;
 
-    public static void initMediaPlayer(String AudioFile) {
+    public MusicService(Handler handler) {
+        this.handler = handler;
+    }
+
+    private static void initMediaPlayer() {
+        if (null == mediaPlayer) {
+            mediaPlayer = new MediaPlayer();
+            Log.e("Playinggggg", "Playinggggg");
+        }
+    }
+
+    public static void play(Context conext, Uri AudioFile) {
+        initMediaPlayer();
+//        stopMedia();
+        playAudio(conext, AudioFile);
+    }
+
+    public static void playAudio(Context conext, Uri AudioFile) {
+//        if (!isPLAYING) {
+//            isPLAYING = true;
         mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
-            mediaPlayer.setDataSource(AudioFile);
-            mediaPlayer.prepare();
+            mediaPlayer.setDataSource(conext, AudioFile);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mediaPlayer.setAudioAttributes(
+                        new AudioAttributes
+                                .Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .build());
+            }
+            mediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
+            Log.e("Failedddddddd", "prepare() failed");
         }
+//        }else {
+//            isPLAYING = false;
+//            stopPlaying();
+//        }
+    }
+
+    private static void stopPlaying() {
+        mediaPlayer.release();
+        mediaPlayer = null;
     }
 
     @Nullable
@@ -33,13 +76,20 @@ public class MusicService extends Service {
 
     public static void playMedia() {
         if (!mediaPlayer.isPlaying()) {
-            mediaPlayer.start();
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    Log.e("Playinggggg", "Startinggg");
+                    mediaPlayer.start();
+                }
+            });
         }
     }
 
-    public void stopMedia() {
+    public static void stopMedia() {
         if (mediaPlayer == null) return;
         if (mediaPlayer.isPlaying()) {
+            Log.e("Playinggggg", "stoppppp");
             mediaPlayer.stop();
         }
     }
@@ -56,5 +106,17 @@ public class MusicService extends Service {
 //            mediaPlayer.seekTo(resumePosition);
             mediaPlayer.start();
         }
+    }
+
+    private void releasePlayer() {
+        if (null != mediaPlayer) {
+            mediaPlayer.release();
+        }
+    }
+
+    public void destroyPlayer() {
+        stopMedia();
+        releasePlayer();
+        mediaPlayer = null;
     }
 }

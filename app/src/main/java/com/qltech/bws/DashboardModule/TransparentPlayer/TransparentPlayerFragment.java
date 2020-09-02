@@ -3,11 +3,17 @@ package com.qltech.bws.DashboardModule.TransparentPlayer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +27,7 @@ import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.FragmentTransparentPlayerBinding;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class TransparentPlayerFragment extends Fragment {
@@ -28,6 +35,7 @@ public class TransparentPlayerFragment extends Fragment {
     String UserID;
     int position = 0;
     ArrayList<MainAudioModel.ResponseData.Detail> modelList;
+    MediaPlayer mediaPlayer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,14 +50,14 @@ public class TransparentPlayerFragment extends Fragment {
             position = getArguments().getInt("position", 0);
         }
 
-        MusicService.initMediaPlayer(modelList.get(position).getAudioFile());
+        MusicService.play(getActivity(),Uri.parse(modelList.get(position).getAudioFile()));
         MusicService.playMedia();
         Glide.with(getActivity()).load(modelList.get(position).getImageFile()).thumbnail(0.1f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
         binding.tvTitle.setText(modelList.get(position).getName());
 
-        binding.tvSubTitle.setText("Play the "+ modelList.get(position).getName()+" every night on a low volume.");
+        binding.tvSubTitle.setText("Play the " + modelList.get(position).getName() + " every night on a low volume.");
         binding.ivPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

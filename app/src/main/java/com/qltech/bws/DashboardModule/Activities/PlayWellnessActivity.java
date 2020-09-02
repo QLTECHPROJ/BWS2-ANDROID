@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,9 +65,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_wellness);
         ctx = PlayWellnessActivity.this;
         activity = PlayWellnessActivity.this;
+        mPlayer = new MediaPlayer();
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
 
-        mPlayer = new MediaPlayer();
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         IsRepeat = (shared1.getString(CONSTANTS.PREF_KEY_IsRepeat, ""));

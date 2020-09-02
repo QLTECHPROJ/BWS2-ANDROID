@@ -64,7 +64,6 @@
                     android:ellipsize="end"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="center"
-                    android:text="My Playlist"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_22sdp" />
 
@@ -76,7 +75,6 @@
                     android:ellipsize="end"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
-                    android:text="7 Audios | 4h 40m"
                     android:textColor="#838383"
                     android:textSize="@dimen/_13sdp" />
 
@@ -119,6 +117,7 @@
                         android:layout_marginTop="@dimen/_20sdp"
                         android:fontFamily="@font/montserrat_semi_bold"
                         android:gravity="start"
+                        android:visibility="gone"
                         android:text="@string/Directions"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_16sdp" />
@@ -131,6 +130,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="start"
+                        android:visibility="gone"
                         android:lineSpacingExtra="@dimen/_4sdp"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_13sdp" />
