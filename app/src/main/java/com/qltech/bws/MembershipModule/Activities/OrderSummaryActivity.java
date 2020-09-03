@@ -30,11 +30,11 @@ public class OrderSummaryActivity extends AppCompatActivity {
             listModelList = getIntent().getParcelableArrayListExtra("PlanData");
             position = getIntent().getIntExtra("position",0);
         }
-        binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval());
+        binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval() + " Membership");
         binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
         binding.tvPlanNextRenewal.setText(listModelList.get(position).getPlanNextRenewal());
         binding.tvSubName.setText(listModelList.get(position).getSubName());
-        binding.tvTrialPeriod.setText(TrialPeriod + "Membership");
+        binding.tvTrialPeriod.setText(TrialPeriod);
         binding.tvPlanAmount.setText("$"+listModelList.get(position).getPlanAmount());
         binding.tvTotalAmount.setText("$"+listModelList.get(position).getPlanAmount());
         binding.llBack.setOnClickListener(new View.OnClickListener() {

@@ -73,6 +73,14 @@ public class AudioBooksFragment extends Fragment {
                         hideProgressBar();
                         AudioBooksAdapter adapter = new AudioBooksAdapter(listModel.getResponseData(), getActivity(), audio_books);
                         binding.rvAudioBooksList.setAdapter(adapter);
+
+                        if (listModel.getResponseData().size() != 0) {
+                            binding.llError.setVisibility(View.GONE);
+                            binding.rvAudioBooksList.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvAudioBooksList.setVisibility(View.GONE);
+                        }
                     }
                 }
 

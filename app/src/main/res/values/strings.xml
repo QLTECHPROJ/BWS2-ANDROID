@@ -176,4 +176,5 @@
     <string name="no_data_found">Try searching again using a diffrent spelling or keyword.</string>
     <string name="f_A_Q">Frequently Asked Questions</string>
     <string name="Find_in_playlist">Find in playlist</string>
+    <string name="Remove_from_this_playlist">Remove from this playlist</string>
 </resources>

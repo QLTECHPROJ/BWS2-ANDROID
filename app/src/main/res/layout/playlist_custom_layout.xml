@@ -57,6 +57,7 @@
                     android:layout_marginTop="@dimen/_10sdp"
                     android:src="@drawable/ic_lock_icon"
                     android:layout_marginStart="@dimen/_8sdp"
+                    android:visibility="gone"
                     android:contentDescription="TODO" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

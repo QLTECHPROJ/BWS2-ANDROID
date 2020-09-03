@@ -70,7 +70,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
         }
         activity = CheckoutOtpActivity.this;
         ctx = CheckoutOtpActivity.this;
-        binding.tvSendCodeText.setText("We sent an SMS with a 4-digit code to +" + Code + MobileNo);
+        binding.tvSendCodeText.setText("We sent an SMS with a 4-digit code to " + Code + MobileNo);
         editTexts = new EditText[]{binding.edtOTP1, binding.edtOTP2, binding.edtOTP3, binding.edtOTP4};
         binding.edtOTP1.addTextChangedListener(new PinTextWatcher(0));
         binding.edtOTP2.addTextChangedListener(new PinTextWatcher(1));
@@ -210,7 +210,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                                 public void onFinish() {
                                     binding.llResendSms.setEnabled(true);
                                     binding.tvResendOTP.setText(getString(R.string.resent_sms));
-                                    binding.tvResendOTP.setTextColor(getResources().getColor(R.color.white));
+                                    binding.tvResendOTP.setTextColor(getResources().getColor(R.color.dark_blue_gray));
                                     binding.tvResendOTP.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
                                     binding.tvResendOTP.getPaint().setMaskFilter(null);
                                 }

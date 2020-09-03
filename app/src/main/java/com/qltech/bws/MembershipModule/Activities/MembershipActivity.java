@@ -112,7 +112,6 @@ public class MembershipActivity extends AppCompatActivity {
                         hideProgressBar();
                         MembershipPlanListModel membershipPlanListModel = response.body();
                         if (membershipPlanListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            Glide.with(getApplicationContext()).load(membershipPlanListModel.getResponseData().getImage()).thumbnail(1f).into(binding.ivRestaurantImage);
                             binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
                             binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
 

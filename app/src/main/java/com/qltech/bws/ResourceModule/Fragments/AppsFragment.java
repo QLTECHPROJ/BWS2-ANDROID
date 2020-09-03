@@ -69,6 +69,14 @@ public class AppsFragment extends Fragment {
                         ResourceListModel listModel = response.body();
                         AppsAdapter adapter = new AppsAdapter(listModel.getResponseData(), getActivity(), apps);
                         binding.rvAppsList.setAdapter(adapter);
+
+                        if (listModel.getResponseData().size() != 0) {
+                            binding.llError.setVisibility(View.GONE);
+                            binding.rvAppsList.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvAppsList.setVisibility(View.GONE);
+                        }
                     }
                 }
 

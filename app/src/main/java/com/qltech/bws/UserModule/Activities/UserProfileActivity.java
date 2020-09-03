@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -120,9 +121,20 @@ public class UserProfileActivity extends AppCompatActivity {
 
 
     void profileUpdate() {
+        binding.flUser.setError("");
+        binding.tlMobileNumber.setError("");
+        binding.tlCalendar.setError("");
+        binding.tlEmail.setError("");
         if (binding.etUser.getText().toString().equalsIgnoreCase("")) {
             binding.flUser.setError(getString(R.string.valid_name));
-        } else {
+        }else if(binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
+            binding.tlMobileNumber.setError("please enter mobile number");
+        }else if(binding.etEmail.getText().toString().equalsIgnoreCase("")) {
+            binding.tlEmail.setError("Please enter email address");
+        }else if(!binding.etEmail.getText().toString().equalsIgnoreCase("")
+                && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
+            binding.tlEmail.setError("Please enter valid email address");
+        }else {
             binding.flUser.setError("");
             binding.tlCalendar.setError("");
             binding.flUser.clearFocus();
@@ -150,8 +162,8 @@ public class UserProfileActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             hideProgressBar();
                             ProfileUpdateModel viewModel = response.body();
-                            Toast.makeText(ctx, viewModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                             finish();
+                            Toast.makeText(ctx, viewModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                         } else {
                             hideProgressBar();
                         }
@@ -182,6 +194,7 @@ public class UserProfileActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
+                        view.setMinDate(System.currentTimeMillis() - 1000);
                         Calendar cal = Calendar.getInstance();
                         cal.getTimeInMillis();
                         cal.set(year, monthOfYear, dayOfMonth);
@@ -194,15 +207,15 @@ public class UserProfileActivity extends AppCompatActivity {
                         ageDate = dayOfMonth;
 
                         BirthYear = getAge(ageYear, ageMonth, ageDate);
-                       /* if (BirthYear < 18) {
-                            binding.tlCalendar.setError("You should be 18 years or above to use Yupit");
+                        if (BirthYear < 18) {
+                            binding.tlCalendar.setError("You should be 18 years or above to use BWS");
                             binding.btnSave.setEnabled(false);
                             binding.btnSave.setClickable(false);
                         } else {
                             binding.tlCalendar.setError("");
                             binding.btnSave.setEnabled(true);
                             binding.btnSave.setClickable(true);
-                        }*/
+                        }
                         binding.etCalendar.setText(strDate);
                     }
                 }, mYear, mMonth, mDay);
@@ -245,19 +258,32 @@ public class UserProfileActivity extends AppCompatActivity {
                                 .crossFade()
                                 .dontAnimate().into(binding.civProfile);
 
-                        String date = viewModel.getResponseData().getDOB();
-                        SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
-                        if (!date.isEmpty()) {
-                            Date newDate = null;
-                            try {
-                                newDate = spf.parse(date);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
+                        if (viewModel.getResponseData().getDOB().equalsIgnoreCase("0000-00-00")){
+                            binding.etCalendar.setText("");
+                        }else {
+                            String date = viewModel.getResponseData().getDOB();
+                            SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
+                            if (!date.isEmpty()) {
+                                Date newDate = null;
+                                try {
+                                    newDate = spf.parse(date);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
 
-                            date = spf.format(newDate);
-                            binding.etCalendar.setText(date);
+                                date = spf.format(newDate);
+                                binding.etCalendar.setText(date);
+                            }
+                        }
+
+                        if(!viewModel.getResponseData().getEmail().equalsIgnoreCase("")
+                                && BWSApplication.isEmailValid(viewModel.getResponseData().getEmail())) {
+                            binding.ivCheckEmail.setColorFilter(ContextCompat.getColor(ctx, R.color.green_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+
+                        }else {
+                            binding.ivCheckEmail.setColorFilter(ContextCompat.getColor(ctx, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+
                         }
                         binding.etEmail.setText(viewModel.getResponseData().getEmail());
                         binding.etMobileNumber.setText(viewModel.getResponseData().getPhoneNumber());
@@ -270,8 +296,8 @@ public class UserProfileActivity extends AppCompatActivity {
                         }*/
 
                         if (!viewModel.getResponseData().getEmail().equalsIgnoreCase("")) {
-                            binding.etEmail.setEnabled(false);
-                            binding.etEmail.setClickable(false);
+                            binding.etEmail.setEnabled(true);
+                            binding.etEmail.setClickable(true);
                         } else {
                             binding.etEmail.setEnabled(true);
                             binding.etEmail.setClickable(true);

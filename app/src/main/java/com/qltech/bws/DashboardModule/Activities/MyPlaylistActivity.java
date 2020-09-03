@@ -105,19 +105,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             binding.ivRestaurantImage.setImageResource(R.drawable.ic_playlist_bg);
                         }
 
-//                        Like = model.getResponseData().getLike();
                         Download = model.getResponseData().getDownload();
-
-                        /*if (model.getResponseData().getAudioDirection().equalsIgnoreCase("")) {
-                            binding.tvSubDire.setVisibility(View.GONE);
-                            binding.tvDire.setVisibility(View.GONE);
-                            binding.rvDirlist.setVisibility(View.GONE);
-                        } else {
-                            binding.tvSubDire.setVisibility(View.VISIBLE);
-                            binding.tvDire.setVisibility(View.VISIBLE);
-                            binding.rvDirlist.setVisibility(View.VISIBLE);
-                            binding.tvSubDire.setText(model.getResponseData().getAudioDirection());
-                        }*/
 
                         if (model.getResponseData().getCreated().equalsIgnoreCase("1")){
                             binding.llOptions.setVisibility(View.GONE);
@@ -130,6 +118,13 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             binding.llDelete.setVisibility(View.GONE);
                             binding.llFind.setVisibility(View.VISIBLE);
                         }
+
+                        binding.llFind.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                finish();
+                            }
+                        });
 
                         binding.tvName.setText(model.getResponseData().getPlaylistName());
                         if (model.getResponseData().getTotalAudio().equalsIgnoreCase("") &&

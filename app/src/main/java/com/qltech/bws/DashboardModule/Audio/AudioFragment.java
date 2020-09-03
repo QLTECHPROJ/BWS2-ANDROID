@@ -133,7 +133,7 @@ public class AudioFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             if (listModelList.get(position).getDetails() != null &&
-                    listModelList.get(position).getDetails().size() >= 4) {
+                    listModelList.get(position).getDetails().size() > 4) {
                 holder.binding.tvViewAll.setVisibility(View.VISIBLE);
             } else {
                 holder.binding.tvViewAll.setVisibility(View.GONE);

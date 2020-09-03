@@ -6,7 +6,6 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="124dp"
         android:background="@color/white"
         tools:context=".DashboardModule.Search.SearchFragment">
         <RelativeLayout
@@ -28,7 +27,6 @@
                 android:layout_marginLeft="@dimen/_14sdp"
                 android:src="@drawable/ic_search_icon"
                 app:tint="@color/dark_blue_gray" />
-
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
@@ -93,88 +91,16 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp" />
 
-                <LinearLayout
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvPlayList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_16sdp"
-                    android:layout_marginBottom="@dimen/_20sdp"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_below="@id/rlLayout"
+                    android:paddingBottom="121dp"
+                    android:overScrollMode="never" />
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.5"
-                        android:gravity="center_horizontal">
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/_16sdp"
-                            android:layout_marginRight="@dimen/_9sdp">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:scaleType="fitXY"
-                                android:src="@drawable/ic_playlist_image" />
-
-                            <TextView
-                                android:id="@+id/tvTitleOne"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:background="@drawable/gradient"
-                                android:fontFamily="@font/montserrat_semi_bold"
-                                android:gravity="left"
-                                android:maxLines="2"
-                                android:paddingLeft="@dimen/_13sdp"
-                                android:paddingTop="@dimen/_8sdp"
-                                android:paddingRight="@dimen/_13sdp"
-                                android:paddingBottom="@dimen/_8sdp"
-                                android:text="Executive Performance"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/_14sdp" />
-                        </RelativeLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.5"
-                        android:gravity="center_horizontal">
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/_9sdp"
-                            android:layout_marginRight="@dimen/_16sdp">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:scaleType="fitXY"
-                                android:src="@drawable/ic_playlist_image" />
-
-                            <TextView
-                                android:id="@+id/tvTitleTwo"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:background="@drawable/gradient"
-                                android:fontFamily="@font/montserrat_semi_bold"
-                                android:gravity="left"
-                                android:maxLines="2"
-                                android:paddingLeft="@dimen/_13sdp"
-                                android:paddingTop="@dimen/_8sdp"
-                                android:paddingRight="@dimen/_13sdp"
-                                android:paddingBottom="@dimen/_8sdp"
-                                android:text="Peaceful Sleeping"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/_14sdp" />
-                        </RelativeLayout>
-                    </LinearLayout>
-                </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 

@@ -21,6 +21,29 @@
                 android:paddingTop="@dimen/_8sdp"
                 android:paddingBottom="@dimen/_10sdp" />
 
+            <LinearLayout
+                android:id="@+id/llError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvFound"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
+                    android:text="No Result Found"
+                    android:textColor="@color/dark_blue_gray"
+                    android:textSize="@dimen/_16sdp" />
+
+            </LinearLayout>
+
             <ImageView
                 android:id="@+id/ImgV"
                 android:layout_width="match_parent"

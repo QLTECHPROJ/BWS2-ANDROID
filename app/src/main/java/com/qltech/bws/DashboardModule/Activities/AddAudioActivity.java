@@ -122,7 +122,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             if (listModel.getResponseData().size() == 0) {
                                 binding.rvSerachList.setVisibility(View.GONE);
                                 binding.llError.setVisibility(View.VISIBLE);
-                                binding.tvFound.setText("" +searchEditText);
+                                binding.tvFound.setText("" + searchEditText);
                             } else {
                                 binding.llError.setVisibility(View.GONE);
                                 binding.rvSerachList.setVisibility(View.VISIBLE);

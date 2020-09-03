@@ -33,6 +33,7 @@
                 android:layout_weight="0.4"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="right"
+                android:visibility="gone"
                 android:text="@string/View_all"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp" />

@@ -72,6 +72,14 @@ public class DocumentariesFragment extends Fragment {
                         hideProgressBar();
                         DocumentariesAdapter adapter = new DocumentariesAdapter(listModel.getResponseData(), getActivity(), documentaries);
                         binding.rvDocumentariesList.setAdapter(adapter);
+
+                        if (listModel.getResponseData().size() != 0) {
+                            binding.llError.setVisibility(View.GONE);
+                            binding.rvDocumentariesList.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvDocumentariesList.setVisibility(View.GONE);
+                        }
                     }
                 }
 

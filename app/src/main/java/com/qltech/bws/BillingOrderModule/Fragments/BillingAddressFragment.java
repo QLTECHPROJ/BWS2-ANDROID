@@ -39,46 +39,41 @@ public class BillingAddressFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        showProgressBar();
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<BillingAddressViewModel> listCall = APIClient.getClient().getBillingAddressView(UserID);
-            listCall.enqueue(new Callback<BillingAddressViewModel>() {
-                @Override
-                public void onResponse(Call<BillingAddressViewModel> call, Response<BillingAddressViewModel> response) {
-                    if (response.isSuccessful()) {
-                        hideProgressBar();
-                        BillingAddressViewModel listModel = response.body();
-                        binding.etName.setText(listModel.getResponseData().getName());
-                        binding.etEmail.setText(listModel.getResponseData().getEmail());
-                        binding.etMobileNumber.setText(listModel.getResponseData().getPhoneNumber());
-                        binding.etMobileNumber.setClickable(false);
-                        binding.etMobileNumber.setEnabled(false);
-                        binding.etCountry.setText(listModel.getResponseData().getCountry());
-                        binding.etAddressLine1.setText(listModel.getResponseData().getAddress1());
-                        binding.etAddressLine2.setText(listModel.getResponseData().getAddress2());
-                        binding.etCity.setText(listModel.getResponseData().getSuburb());
-                        binding.etState.setText(listModel.getResponseData().getState());
-                        binding.etPostCode.setText(listModel.getResponseData().getPostcode());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<BillingAddressViewModel> call, Throwable t) {
-                    hideProgressBar();
-                }
-            });
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
-        }
+        getPrepareData();
 
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showProgressBar();
+                binding.tlName.setError("");
+                binding.tlEmail.setError("");
+                binding.tlMobileNumber.setError("");
+                binding.tlCountry.setError("");
+                binding.tlAddressLine1.setError("");
+                binding.tlCity.setError("");
+                binding.tlState.setError("");
+                binding.tlPostCode.setError("");
                 if (binding.etName.getText().toString().equalsIgnoreCase("")){
-                    binding.etName.setError(getString(R.string.valid_name));
+                    binding.tlName.setError(getString(R.string.valid_name));
+                }else if(binding.etEmail.getText().toString().equalsIgnoreCase("")) {
+                    binding.tlEmail.setError("Please enter email address");
+                }else if(!binding.etEmail.getText().toString().equalsIgnoreCase("")
+                        && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
+                    binding.tlEmail.setError("Please enter valid email address");
+                }else if(binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
+                    binding.tlMobileNumber.setError("please enter mobile number");
+                }else if(binding.etCountry.getText().toString().equalsIgnoreCase("")) {
+                    binding.tlCountry.setError("please enter country");
+                }else if(binding.etAddressLine1.getText().toString().equalsIgnoreCase("")) {
+                    binding.tlAddressLine1.setError("please enter address");
+                }else if(binding.etCity.getText().toString().equalsIgnoreCase("")) {
+                    binding.tlCity.setError("please enter suburb / town / city");
+                }else if(binding.etState.getText().toString().equalsIgnoreCase("")) {
+                    binding.tlState.setError("please enter state");
+                }else if(binding.etPostCode.getText().toString().equalsIgnoreCase("")) {
+                    binding.tlPostCode.setError("please enter postcode");
                 }else {
                     if (BWSApplication.isNetworkConnected(getActivity())) {
+                        showProgressBar();
                         Call<BillingAddressSaveModel> listCall = APIClient.getClient().getBillingAddressSave(UserID,
                                 binding.etName.getText().toString(), binding.etEmail.getText().toString(),
                                 binding.etCountry.getText().toString(),binding.etAddressLine1.getText().toString(),
@@ -109,6 +104,44 @@ public class BillingAddressFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void getPrepareData() {
+        showProgressBar();
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            Call<BillingAddressViewModel> listCall = APIClient.getClient().getBillingAddressView(UserID);
+            listCall.enqueue(new Callback<BillingAddressViewModel>() {
+                @Override
+                public void onResponse(Call<BillingAddressViewModel> call, Response<BillingAddressViewModel> response) {
+                    if (response.isSuccessful()) {
+                        hideProgressBar();
+                        BillingAddressViewModel listModel = response.body();
+                        if (listModel.getResponseData().getName().equalsIgnoreCase("") ||
+                                listModel.getResponseData().getName().equalsIgnoreCase(" ") ||
+                                listModel.getResponseData().getName() == null){
+                            binding.etName.setText("");
+                        }else {
+                            binding.etName.setText(listModel.getResponseData().getName());
+                        }
+                        binding.etEmail.setText(listModel.getResponseData().getEmail());
+                        binding.etMobileNumber.setText(listModel.getResponseData().getPhoneNumber());
+                        binding.etCountry.setText(listModel.getResponseData().getCountry());
+                        binding.etAddressLine1.setText(listModel.getResponseData().getAddress1());
+                        binding.etAddressLine2.setText(listModel.getResponseData().getAddress2());
+                        binding.etCity.setText(listModel.getResponseData().getSuburb());
+                        binding.etState.setText(listModel.getResponseData().getState());
+                        binding.etPostCode.setText(listModel.getResponseData().getPostcode());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<BillingAddressViewModel> call, Throwable t) {
+                    hideProgressBar();
+                }
+            });
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void hideProgressBar() {

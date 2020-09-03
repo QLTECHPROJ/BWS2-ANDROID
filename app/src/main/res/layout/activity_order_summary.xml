@@ -92,7 +92,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
-                            android:text="Monthly Membership"
                             android:textColor="@color/white"
                             android:textSize="@dimen/_14sdp" />
 
@@ -100,8 +99,8 @@
                             android:id="@+id/tvTrialPeriod"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_2sdp"
                             android:fontFamily="@font/montserrat_light"
-                            android:text="with a 30-day free trial"
                             android:textColor="@color/white"
                             android:textSize="@dimen/_12sdp" />
 

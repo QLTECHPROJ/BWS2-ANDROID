@@ -35,14 +35,13 @@ public class MusicService extends Service {
 
     public static void play(Context conext, Uri AudioFile) {
         initMediaPlayer();
-//        stopMedia();
+        stopMedia();
         playAudio(conext, AudioFile);
     }
 
     public static void playAudio(Context conext, Uri AudioFile) {
 //        if (!isPLAYING) {
 //            isPLAYING = true;
-        mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setDataSource(conext, AudioFile);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -76,12 +75,9 @@ public class MusicService extends Service {
 
     public static void playMedia() {
         if (!mediaPlayer.isPlaying()) {
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    Log.e("Playinggggg", "Startinggg");
-                    mediaPlayer.start();
-                }
+            mediaPlayer.setOnPreparedListener(mp -> {
+                Log.e("Playinggggg", "Startinggg");
+                mediaPlayer.start();
             });
         }
     }

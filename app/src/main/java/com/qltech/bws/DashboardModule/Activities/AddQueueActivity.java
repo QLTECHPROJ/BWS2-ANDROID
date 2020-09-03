@@ -150,11 +150,13 @@ public class AddQueueActivity extends AppCompatActivity {
             binding.llDownload.setVisibility(View.VISIBLE);
             binding.llAddPlaylist.setVisibility(View.VISIBLE);
             binding.llAddQueue.setVisibility(View.VISIBLE);
+            binding.llRemovePlaylist.setVisibility(View.GONE);
         } else {
             binding.llOptions.setVisibility(View.VISIBLE); /*GONE*/
             binding.llAddPlaylist.setVisibility(View.GONE);
             binding.llDownload.setVisibility(View.VISIBLE);
             binding.llAddQueue.setVisibility(View.VISIBLE);/*GONE*/
+            binding.llRemovePlaylist.setVisibility(View.VISIBLE);
         }
 
         binding.llLike.setOnClickListener(view -> {
@@ -228,13 +230,39 @@ public class AddQueueActivity extends AppCompatActivity {
             }
         });
 
+        binding.llRemovePlaylist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showProgressBar();
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistId);
+                    listCall.enqueue(new Callback<SucessModel>() {
+                        @Override
+                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                            if (response.isSuccessful()) {
+                                hideProgressBar();
+                                SucessModel listModel = response.body();
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<SucessModel> call, Throwable t) {
+                            hideProgressBar();
+                        }
+                    });
+                } else {
+                    Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ctx, PlayWellnessActivity.class);
+              /*  Intent i = new Intent(ctx, PlayWellnessActivity.class);
                 i.putExtra("Like", Like);
                 i.putExtra("Download", Download);
-                startActivity(i);
+                startActivity(i);*/
                 finish();
             }
         });
@@ -242,10 +270,10 @@ public class AddQueueActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(ctx, PlayWellnessActivity.class);
+       /* Intent i = new Intent(ctx, PlayWellnessActivity.class);
         i.putExtra("Like", Like);
         i.putExtra("Download", Download);
-        startActivity(i);
+        startActivity(i);*/
         finish();
     }
 
@@ -375,7 +403,6 @@ public class AddQueueActivity extends AppCompatActivity {
                         });
                     } else {
                     }
-
                 }
 
                 @Override

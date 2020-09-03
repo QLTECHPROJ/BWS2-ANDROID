@@ -15,6 +15,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
@@ -49,6 +51,7 @@ public class ResourceActivity extends AppCompatActivity {
     ActivityResourceBinding binding;
     String UserID, Category ="";
     Activity activity;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,10 @@ public class ResourceActivity extends AppCompatActivity {
 
         setAdapter();
         binding.ivFilter.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
             LayoutInflater li = LayoutInflater.from(ResourceActivity.this);
             View promptsView = li.inflate(R.layout.resource_filter_menu, null);
             Dialog dialogBox;
@@ -110,6 +117,7 @@ public class ResourceActivity extends AppCompatActivity {
             window.setAttributes(wlp);
 
             RecyclerView rvFilterList = promptsView.findViewById(R.id.rvFilterList);
+            TextView tvAll = promptsView.findViewById(R.id.tvAll);
             dialogBox.setOnKeyListener((dialog, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     finish();
@@ -117,6 +125,14 @@ public class ResourceActivity extends AppCompatActivity {
                 return false;
             });
 
+            tvAll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Category = "";
+                    setAdapter();
+                    dialogBox.dismiss();
+                }
+            });
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ResourceActivity.this);
             rvFilterList.setLayoutManager(mLayoutManager);
             rvFilterList.setItemAnimator(new DefaultItemAnimator());

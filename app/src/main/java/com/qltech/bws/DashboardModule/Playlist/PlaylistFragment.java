@@ -181,7 +181,7 @@ public class PlaylistFragment extends Fragment {
         }
     }
 
-    public class MainPlayListAdapter extends RecyclerView.Adapter<MainPlayListAdapter.MyViewHolder>  {
+    public class MainPlayListAdapter extends RecyclerView.Adapter<MainPlayListAdapter.MyViewHolder> {
         private ArrayList<MainPlayListModel.ResponseData> listModelList;
         Context ctx;
 
@@ -228,7 +228,7 @@ public class PlaylistFragment extends Fragment {
             holder.binding.rvMainAudio.setLayoutManager(manager);
             if (listModelList.get(position).getDetails().size() == 0) {
                 holder.binding.llMainLayout.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.binding.llMainLayout.setVisibility(View.VISIBLE);
                 holder.binding.tvTitle.setText(listModelList.get(position).getView());
                 if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.your_created))) {
@@ -246,7 +246,7 @@ public class PlaylistFragment extends Fragment {
                 }
             }
 
-            if (!listModelList.get(position).getDetails().equals("")){
+            if (!listModelList.get(position).getDetails().equals("")) {
 
             }
         }
@@ -266,7 +266,7 @@ public class PlaylistFragment extends Fragment {
         }
     }
 
-    public class PlaylistAdapter  extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>  {
+    public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
         private ArrayList<MainPlayListModel.ResponseData.Detail> listModelList;
         Context ctx;
 

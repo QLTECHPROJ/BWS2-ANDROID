@@ -1,8 +1,11 @@
 package com.qltech.bws.DashboardModule.TransparentPlayer;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -10,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
@@ -29,6 +33,8 @@ import com.qltech.bws.databinding.FragmentTransparentPlayerBinding;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class TransparentPlayerFragment extends Fragment {
     FragmentTransparentPlayerBinding binding;

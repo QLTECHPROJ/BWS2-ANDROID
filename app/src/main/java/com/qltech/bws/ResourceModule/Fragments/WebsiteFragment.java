@@ -70,6 +70,14 @@ public class WebsiteFragment extends Fragment {
                         ResourceListModel listModel = response.body();
                         WebsiteAdapter adapter = new WebsiteAdapter(listModel.getResponseData(), getActivity(), website);
                         binding.rvWebsiteList.setAdapter(adapter);
+
+                        if (listModel.getResponseData().size() != 0) {
+                            binding.llError.setVisibility(View.GONE);
+                            binding.rvWebsiteList.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvWebsiteList.setVisibility(View.GONE);
+                        }
                     }
                 }
 

@@ -19,6 +19,7 @@ import com.qltech.bws.DashboardModule.Models.NextSessionViewModel;
 import com.qltech.bws.DashboardModule.Models.PlaylistingModel;
 import com.qltech.bws.DashboardModule.Models.PreviousAppointmentsModel;
 import com.qltech.bws.DashboardModule.Models.RenamePlaylistModel;
+import com.qltech.bws.DashboardModule.Models.SearchPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SessionListModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
@@ -169,17 +170,17 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<MainPlayListModel> getMainPlayLists(@Field("UserID") String userID);
 
-   /* TODO ViewAllPlaylistFragment */
+    /* TODO ViewAllPlaylistFragment */
     @POST("playlistongetlibrary")
     @FormUrlEncoded
     Call<ViewAllPlayListModel> getViewAllPlayLists(@Field("UserID") String userID,
                                                    @Field("GetLibraryId") String getLibraryId);
 
-   /* TODO ViewAllAudioFragment */
+    /* TODO ViewAllAudioFragment */
     @POST("gethomeallaudio")
     @FormUrlEncoded
     Call<ViewAllAudioListModel> getViewAllAudioLists(@Field("UserID") String userID,
-                                                    @Field("GetHomeId") String HomeId);
+                                                     @Field("GetHomeId") String HomeId);
 
     /* TODO MyPlaylistsFragment */
     @POST("playlistdetails")
@@ -193,9 +194,13 @@ public interface APIInterface {
     Call<SuggestionAudiosModel> getAddSearchAudio(@Field("AudioName") String audioName,
                                                   @Field("PlaylistId") String playlistId);
 
-    /* TODO AudioFaqActivity */
+    /* TODO AddAudioActivity & SearchFragment */
     @GET("suggested")
     Call<SuggestedModel> getSuggestedLists();
+
+    /* TODO SearchFragment */
+    @GET("suggestedplaylist")
+    Call<SearchPlaylistModel> getSuggestedPlayLists();
 
     /* TODO MyPlaylistsFragment */
     @POST("addaudiotoplaylist")
@@ -256,15 +261,15 @@ public interface APIInterface {
     Call<AppointmentDetailModel> getAppointmentDetails(@Field("UserID") String userID,
                                                        @Field("AppointmentTypeId") String appointmentTypeId);
 
-  /* TODO ReminderActivity */
+    /* TODO ReminderActivity */
     @POST("setreminder")
     @FormUrlEncoded
     Call<SetReminderModel> SetReminder(@Field("PlaylistId") String PlaylistId,
-                                @Field("UserID") String userID,
-                                @Field("IsSingle") String IsSingle,
-                                @Field("ReminderTime") String ReminderTime,
-                                @Field("ReminderDay") String ReminderDay
-                                );
+                                       @Field("UserID") String userID,
+                                       @Field("IsSingle") String IsSingle,
+                                       @Field("ReminderTime") String ReminderTime,
+                                       @Field("ReminderDay") String ReminderDay
+    );
 
     /* TODO PlayWellnessActivity */
     @POST("recentlyplayed")
@@ -332,7 +337,7 @@ public interface APIInterface {
     Call<SucessModel> getDeletePlaylist(@Field("UserID") String userID,
                                         @Field("PlaylistId") String playlistId);
 
-     /* TODO AddPlaylistActivity */
+    /* TODO AddPlaylistActivity */
     @POST("playlist")
     @FormUrlEncoded
     Call<PlaylistingModel> getPlaylisting(@Field("UserID") String userID);
@@ -369,7 +374,7 @@ public interface APIInterface {
                                             @Field("ResourceTypeId") String resourceTypeId,
                                             @Field("Category") String category);
 
-  /* TODO ResourceActivity */
+    /* TODO ResourceActivity */
     @POST("resourcecategorylist")
     @FormUrlEncoded
     Call<ResourceFilterModel> getResourcFilterLists(@Field("UserID") String userID);
@@ -379,5 +384,5 @@ public interface APIInterface {
     @POST("reminderstatus")
     @FormUrlEncoded
     Call<ReminderStatusModel> getReminderStatus(@Field("UserID") String userID,
-                                          @Field("ReminderStatus") String reminderStatus);
+                                                @Field("ReminderStatus") String reminderStatus);
 }

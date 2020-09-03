@@ -144,18 +144,6 @@ public class ViewAllAudioFragment extends Fragment {
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlAudiolist, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
-                    .commit();
-            Bundle bundle = new Bundle();
-            bundle.putString("ID", listModelList.get(position).getID());
-            bundle.putString("Name", listModelList.get(position).getName());
-            bundle.putString("Image", listModelList.get(position).getImageFile());
-            fragment.setArguments(bundle);
-
             holder.binding.tvPlaylistName.setText(listModelList.get(position).getName());
             Glide.with(getActivity()).load(listModelList.get(position).getImageFile()).thumbnail(0.1f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
@@ -163,20 +151,16 @@ public class ViewAllAudioFragment extends Fragment {
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
-                    i.putExtra("ID",listModelList.get(position).getID());
-                    i.putExtra("Name",listModelList.get(position).getName());
-                    i.putExtra("AudioFile",listModelList.get(position).getAudioFile());
-                    i.putExtra("ImageFile",listModelList.get(position).getImageFile());
-                    i.putExtra("AudioDirection",listModelList.get(position).getAudioDirection());
-                    i.putExtra("Audiomastercat",listModelList.get(position).getAudiomastercat());
-                    i.putExtra("AudioSubCategory",listModelList.get(position).getAudioSubCategory());
-                    i.putExtra("Like",listModelList.get(position).getLike());
-                    i.putExtra("Download",listModelList.get(position).getDownload());
-                    i.putExtra("position",position);
-                    i.putParcelableArrayListExtra("AudioList",listModelList);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    getActivity().startActivity(i);
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.rlAudiolist, fragment)
+                            .addToBackStack("TransparentPlayerFragment")
+                            .commit();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelableArrayList("modelList", listModelList);
+                    bundle.putInt("position", position);
+                    fragment.setArguments(bundle);
                 }
             });
 

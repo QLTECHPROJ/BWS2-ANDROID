@@ -1,12 +1,13 @@
 package com.qltech.bws.DashboardModule.Activities;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
@@ -35,7 +37,6 @@ import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
-import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityPlayWellnessBinding;
 
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        Glide.with(ctx).load(ImageFile).thumbnail(0.1f)
+        Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.1f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
         prepareData();
         binding.llBack.setOnClickListener(new View.OnClickListener() {
@@ -97,19 +98,19 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             }
         });
 
-        if (Like.equalsIgnoreCase("1")) {
+        if (listModelList.get(position).getLike().equalsIgnoreCase("1")) {
             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-        } else if (!Like.equalsIgnoreCase("0")) {
+        } else if (!listModelList.get(position).getLike().equalsIgnoreCase("0")) {
             binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
         }
 
-        if (Download.equalsIgnoreCase("1")) {
+        if (listModelList.get(position).getDownload().equalsIgnoreCase("1")) {
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
             binding.ivDownloads.setAlpha(255);
             binding.llDownload.setClickable(false);
             binding.llDownload.setEnabled(false);
-        } else if (!Download.equalsIgnoreCase("")) {
+        } else if (!listModelList.get(position).getDownload().equalsIgnoreCase("")) {
             binding.llDownload.setClickable(true);
             binding.llDownload.setEnabled(true);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
@@ -217,9 +218,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 //        });
 
         binding.llplay.setOnClickListener(v -> {
-            mPlayer.start();
             binding.llplay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.VISIBLE);
+            if (mPlayer == null) return;
+            if (mPlayer.isPlaying()) {
+                mPlayer.stop();
+            }
         });
 
         binding.llPause.setOnClickListener(view -> {
@@ -282,33 +286,36 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     protected void onDestroy() {
         super.onDestroy();
         if (mPlayer != null) {
-//            MediaPlayerService.stopMedia();
             mPlayer.release();
-//            wifiLock.release();
-
         }
-//        MediaPlayerService.removeAudioFocus();
     }
 
     void prepareData() {
-        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        if (mPlayer == null) return;
+        if (mPlayer.isPlaying()) {
+            Log.e("Playinggggg", "stoppppp");
+            mPlayer.stop();
+        }
         try {
             mPlayer.setDataSource(ctx, Uri.parse(listModelList.get(position).getAudioFile()));
-            mPlayer.prepare();
-            mPlayer.start();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mPlayer.setAudioAttributes(
+                        new AudioAttributes
+                                .Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .build());
+            }
+            mPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
+            Log.e("Failedddddddd", "prepare() failed");
         }
-
-        /*URL url = null;
-        try {
-            mPlayer.setDataSource(AudioFile);
-            mPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
+        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         binding.simpleSeekbar.setClickable(false);
+        mPlayer.setOnPreparedListener(mp -> {
+            mPlayer.start();
+            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+        });
         endTime = mPlayer.getDuration();
         startTime = mPlayer.getCurrentPosition();
         if (oTime == 0) {
@@ -321,7 +328,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
         binding.simpleSeekbar.setProgress(startTime);
         hdlr.postDelayed(UpdateSongTime, 100);
-        showToast("Added to your queue");
     }
 
 

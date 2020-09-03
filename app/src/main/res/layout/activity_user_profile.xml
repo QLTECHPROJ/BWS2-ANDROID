@@ -183,6 +183,8 @@
                                 android:cursorVisible="true"
                                 android:fontFamily="@font/montserrat_regular"
                                 android:hint="@string/Date_of_Birth"
+                                android:focusable="false"
+                                android:inputType="number"
                                 android:maxLines="1"
                                 android:singleLine="true"
                                 android:textCursorDrawable="@null"

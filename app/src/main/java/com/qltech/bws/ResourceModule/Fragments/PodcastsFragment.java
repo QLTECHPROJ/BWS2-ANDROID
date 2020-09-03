@@ -72,6 +72,14 @@ public class PodcastsFragment extends Fragment {
                         ResourceListModel listModel = response.body();
                         PodcastsAdapter adapter = new PodcastsAdapter(listModel.getResponseData(), getActivity(), podcasts);
                         binding.rvPodcastsList.setAdapter(adapter);
+
+                        if (listModel.getResponseData().size() != 0) {
+                            binding.llError.setVisibility(View.GONE);
+                            binding.rvPodcastsList.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvPodcastsList.setVisibility(View.GONE);
+                        }
                     }
                 }
 
