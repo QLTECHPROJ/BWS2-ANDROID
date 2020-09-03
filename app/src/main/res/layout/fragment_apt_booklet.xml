@@ -13,7 +13,6 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/nestedScroll"
                 android:layout_above="@+id/btnComplete"
                 android:overScrollMode="never">
 
@@ -58,6 +57,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginHorizontal="@dimen/_55sdp"
                 android:layout_marginBottom="@dimen/_18sdp"
+                android:layout_below="@+id/nestedScroll"
                 android:background="@drawable/extra_round_cornor"
                 android:fontFamily="@font/montserrat_medium"
                 android:paddingVertical="@dimen/_2sdp"
