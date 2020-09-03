@@ -37,6 +37,13 @@ public class AptDetailsFragment extends Fragment {
         if (getArguments() != null) {
             appointmentDetail = getArguments().getParcelable("AppointmentDetail");
         }
+        if(appointmentDetail.getDate().equalsIgnoreCase("")
+                &&appointmentDetail.getUserName().equalsIgnoreCase("")
+                &&appointmentDetail.getTime().equalsIgnoreCase("")){
+            binding.llDetails.setVisibility(View.GONE);
+        }else{
+            binding.llDetails.setVisibility(View.VISIBLE);
+        }
         binding.tvTilte.setText(appointmentDetail.getName());
         binding.tvFacilitator.setText(appointmentDetail.getFacilitator());
         binding.tvUserName.setText(appointmentDetail.getUserName());

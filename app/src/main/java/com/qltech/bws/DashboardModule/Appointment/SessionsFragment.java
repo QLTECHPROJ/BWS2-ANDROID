@@ -129,15 +129,7 @@ public class SessionsFragment extends Fragment {
                     listModel.getDuration().equalsIgnoreCase("") &&
                     listModel.getTime().equalsIgnoreCase("")) {
                 holder.binding.llDateTime.setVisibility(View.GONE);
-              /*  LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                buttonLayoutParams.setMargins(0, 16, 0, 16);
-
-                holder.binding.llMainLayout.setLayoutParams(buttonLayoutParams);*/
             } else {
-    /*            LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                buttonLayoutParams.setMargins(0, 16, 0, 0);
-
-                holder.binding.llMainLayout.setLayoutParams(buttonLayoutParams);*/
                 holder.binding.llDateTime.setVisibility(View.VISIBLE);
             }
             holder.binding.tvDate.setText(listModel.getDate());

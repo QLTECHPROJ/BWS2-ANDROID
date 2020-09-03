@@ -16,6 +16,7 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/_85sdp"
                 android:overScrollMode="never">
 
                 <LinearLayout
@@ -169,6 +170,7 @@
                         android:textSize="@dimen/_15sdp" />
 
                 </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
 
             <Button
                 android:id="@+id/btnComplete"
@@ -184,7 +186,6 @@
                 android:text="@string/Book_Now"
                 android:textColor="@color/white" />
 
-        </androidx.core.widget.NestedScrollView>
         </RelativeLayout>
     </FrameLayout>
 </layout>
