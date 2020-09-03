@@ -1,92 +1,15 @@
-package com.qltech.bws.DashboardModule.Models;
+package com.qltech.bws.DashboardModule.TransparentPlayer.Models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MainAudioModel implements Parcelable {
-    @SerializedName("ResponseData")
-    @Expose
-    private List<ResponseData> responseData = null;
-    @SerializedName("ResponseCode")
-    @Expose
-    private String responseCode;
-    @SerializedName("ResponseMessage")
-    @Expose
-    private String responseMessage;
-    @SerializedName("ResponseStatus")
-    @Expose
-    private String responseStatus;
-
-    protected MainAudioModel(Parcel in) {
-        responseData = in.createTypedArrayList(ResponseData.CREATOR);
-        responseCode = in.readString();
-        responseMessage = in.readString();
-        responseStatus = in.readString();
-    }
-
-    public static final Creator<MainAudioModel> CREATOR = new Creator<MainAudioModel>() {
-        @Override
-        public MainAudioModel createFromParcel(Parcel in) {
-            return new MainAudioModel(in);
-        }
-
-        @Override
-        public MainAudioModel[] newArray(int size) {
-            return new MainAudioModel[size];
-        }
-    };
-
-    public List<ResponseData> getResponseData() {
-        return responseData;
-    }
-
-    public void setResponseData(List<ResponseData> responseData) {
-        this.responseData = responseData;
-    }
-
-    public String getResponseCode() {
-        return responseCode;
-    }
-
-    public void setResponseCode(String responseCode) {
-        this.responseCode = responseCode;
-    }
-
-    public String getResponseMessage() {
-        return responseMessage;
-    }
-
-    public void setResponseMessage(String responseMessage) {
-        this.responseMessage = responseMessage;
-    }
-
-    public String getResponseStatus() {
-        return responseStatus;
-    }
-
-    public void setResponseStatus(String responseStatus) {
-        this.responseStatus = responseStatus;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeTypedList(responseData);
-        parcel.writeString(responseCode);
-        parcel.writeString(responseMessage);
-        parcel.writeString(responseStatus);
-    }
-
+public class MainPlayModel {
     public static class ResponseData implements Parcelable{
         @SerializedName("HomeID")
         @Expose
@@ -102,26 +25,8 @@ public class MainAudioModel implements Parcelable {
         private String userID;
         @SerializedName("Details")
         @Expose
-        private ArrayList<Detail> details = null;
+        private ArrayList<ResponseData.Detail> details = null;
 
-        protected ResponseData(Parcel in) {
-            homeID = in.readString();
-            view = in.readString();
-            type = in.readString();
-            userID = in.readString();
-        }
-
-        public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
-            @Override
-            public ResponseData createFromParcel(Parcel in) {
-                return new ResponseData(in);
-            }
-
-            @Override
-            public ResponseData[] newArray(int size) {
-                return new ResponseData[size];
-            }
-        };
 
         public String getHomeID() {
             return homeID;
@@ -155,26 +60,14 @@ public class MainAudioModel implements Parcelable {
             this.userID = userID;
         }
 
-        public ArrayList<Detail> getDetails() {
+        public ArrayList<ResponseData.Detail> getDetails() {
             return details;
         }
 
-        public void setDetails(ArrayList<Detail> details) {
+        public void setDetails(ArrayList<ResponseData.Detail> details) {
             this.details = details;
         }
 
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeString(homeID);
-            parcel.writeString(view);
-            parcel.writeString(type);
-            parcel.writeString(userID);
-        }
 
         public static class Detail implements Parcelable {
             @SerializedName("ID")
@@ -221,15 +114,15 @@ public class MainAudioModel implements Parcelable {
                 audioDuration = in.readString();
             }
 
-            public static final Creator<Detail> CREATOR = new Creator<Detail>() {
+            public static final Creator<ResponseData.Detail> CREATOR = new Creator<ResponseData.Detail>() {
                 @Override
-                public Detail createFromParcel(Parcel in) {
-                    return new Detail(in);
+                public ResponseData.Detail createFromParcel(Parcel in) {
+                    return new ResponseData.Detail(in);
                 }
 
                 @Override
-                public Detail[] newArray(int size) {
-                    return new Detail[size];
+                public ResponseData.Detail[] newArray(int size) {
+                    return new ResponseData.Detail[size];
                 }
             };
 

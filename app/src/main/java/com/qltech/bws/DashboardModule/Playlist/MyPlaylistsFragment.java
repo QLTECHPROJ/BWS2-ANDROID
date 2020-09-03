@@ -17,8 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,28 +25,22 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
-import com.qltech.bws.DashboardModule.Activities.DashboardActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
-import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
-import com.qltech.bws.DashboardModule.TransparentPlayer.TransparentPlayerFragment;
-import com.qltech.bws.LoginModule.Models.CountryListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
-import com.qltech.bws.databinding.DownloadsLayoutBinding;
 import com.qltech.bws.databinding.FragmentMyPlaylistsBinding;
 import com.qltech.bws.databinding.MyPlaylistLayoutBinding;
 

@@ -1,6 +1,7 @@
 package com.qltech.bws.DashboardModule.Appointment.AppointmentDetails;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity;
 import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -89,11 +91,20 @@ public class AptAudioFragment extends Fragment {
 
             Glide.with(getActivity()).load(audiolist.getImageFile()).thumbnail(0.1f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
+
+            holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                    i.putExtra("AudioId", listModelList.get(position).getID());
+                    startActivity(i);
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
-            return 1;
+            return listModelList.size();
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -104,6 +115,5 @@ public class AptAudioFragment extends Fragment {
                 this.binding = binding;
             }
         }
-
     }
 }

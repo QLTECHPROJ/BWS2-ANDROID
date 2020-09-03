@@ -1,7 +1,6 @@
 package com.qltech.bws.DashboardModule.Audio;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -24,22 +23,16 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Activities.PlayWellnessActivity;
 import com.qltech.bws.DashboardModule.Models.ViewAllAudioListModel;
-import com.qltech.bws.DashboardModule.Models.ViewAllPlayListModel;
-import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
-import com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment;
-import com.qltech.bws.DashboardModule.TransparentPlayer.TransparentPlayerFragment;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.AudiolistCustomLayoutBinding;
 import com.qltech.bws.databinding.FragmentViewAllAudioBinding;
-import com.qltech.bws.databinding.PlaylistCustomLayoutBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -160,6 +153,7 @@ public class ViewAllAudioFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putParcelableArrayList("modelList", listModelList);
                     bundle.putInt("position", position);
+                    bundle.putString("AudioFlag","ViewAllAudioList");
                     fragment.setArguments(bundle);
                 }
             });

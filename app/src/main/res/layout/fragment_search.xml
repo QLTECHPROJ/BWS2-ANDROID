@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         tools:context=".DashboardModule.Search.SearchFragment">
+
         <RelativeLayout
             android:id="@+id/rlSearch"
             android:layout_width="match_parent"
@@ -45,64 +46,126 @@
 
         </RelativeLayout>
 
-        <androidx.core.widget.NestedScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/rlSearch"
-            android:overScrollMode="never">
+            android:orientation="vertical"
+            android:layout_below="@id/rlSearch">
 
-            <LinearLayout
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/rlSearch"
-                android:layout_marginBottom="@dimen/_18sdp"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:layout_below="@id/rvSerachList"
+                android:overScrollMode="never">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_24sdp"
-                    android:layout_marginRight="@dimen/_16sdp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="start"
-                    android:text="@string/Suggested_Audios"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp" />
+                    android:layout_below="@id/rlSearch"
+                    android:layout_marginBottom="@dimen/_18sdp"
+                    android:orientation="vertical">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvDownloadsList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_10sdp"
-                    android:overScrollMode="never"
-                    android:paddingTop="@dimen/_8sdp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:layout_marginRight="@dimen/_16sdp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="start"
-                    android:text="@string/Suggested_Playlist"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp" />
+                    <LinearLayout
+                        android:id="@+id/llError"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_22sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvPlayList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_4sdp"
-                    android:layout_marginTop="@dimen/_6sdp"
-                    android:layout_below="@id/rlLayout"
-                    android:paddingBottom="121dp"
-                    android:overScrollMode="never" />
+                        <TextView
+                            android:id="@+id/tvFound"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="center"
+                            android:textColor="@color/dark_blue_gray"
+                            android:textSize="@dimen/_20sdp" />
 
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center"
+                            android:text="@string/no_data_found"
+                            android:textColor="@color/dark_blue_gray"
+                            android:textSize="@dimen/_15sdp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_16sdp"
+                        android:layout_marginRight="@dimen/_16sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="start"
+                        android:text=""
+                        android:visibility="invisible"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_15sdp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvSerachList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:overScrollMode="never"
+                        android:paddingTop="@dimen/_8sdp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_16sdp"
+                        android:layout_marginRight="@dimen/_16sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="start"
+                        android:text="@string/Suggested_Audios"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_15sdp" />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvDownloadsList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:overScrollMode="never"
+                        android:paddingTop="@dimen/_8sdp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginRight="@dimen/_16sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="start"
+                        android:text="@string/Suggested_Playlist"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_15sdp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvPlayList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/rlLayout"
+                        android:layout_marginHorizontal="@dimen/_4sdp"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:overScrollMode="never"
+                        android:paddingBottom="121dp" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/ImgV"

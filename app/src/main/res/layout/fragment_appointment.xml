@@ -7,8 +7,8 @@
         android:id="@+id/flMainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="124dp"
         android:background="@color/white"
+        android:layout_marginBottom="121dp"
         tools:context=".DashboardModule.Appointment.AppointmentFragment">
 
         <RelativeLayout
@@ -81,6 +81,7 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:layout_marginRight="@dimen/_16sdp"
                         android:elevation="3.6dp"
+                        android:visibility="gone"
                         app:cardCornerRadius="@dimen/_4sdp">
 
                         <LinearLayout
@@ -266,8 +267,6 @@
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/_12sdp" />
                             </LinearLayout>
-
-
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -283,7 +282,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                        <androidx.recyclerview.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvPreviousData"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

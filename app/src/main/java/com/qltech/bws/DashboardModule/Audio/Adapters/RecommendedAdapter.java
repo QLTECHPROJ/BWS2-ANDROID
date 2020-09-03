@@ -1,7 +1,6 @@
 package com.qltech.bws.DashboardModule.Audio.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Activities.PlayWellnessActivity;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
-import com.qltech.bws.DashboardModule.TransparentPlayer.TransparentPlayerFragment;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.BigBoxLayoutBinding;
@@ -49,7 +48,6 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(listModelList.get(position).getName());
-
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 20,
                 1, 1, 0.48f, 20);
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -70,6 +68,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("modelList", listModelList);
                 bundle.putInt("position", position);
+                bundle.putString("AudioFlag","MainAudio");
                 fragment.setArguments(bundle);
             }
         });

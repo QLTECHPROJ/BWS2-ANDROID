@@ -19,6 +19,7 @@ import com.qltech.bws.DashboardModule.Models.NextSessionViewModel;
 import com.qltech.bws.DashboardModule.Models.PlaylistingModel;
 import com.qltech.bws.DashboardModule.Models.PreviousAppointmentsModel;
 import com.qltech.bws.DashboardModule.Models.RenamePlaylistModel;
+import com.qltech.bws.DashboardModule.Models.SearchBothModel;
 import com.qltech.bws.DashboardModule.Models.SearchPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SessionListModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
@@ -201,6 +202,11 @@ public interface APIInterface {
     /* TODO SearchFragment */
     @GET("suggestedplaylist")
     Call<SearchPlaylistModel> getSuggestedPlayLists();
+
+    /* TODO SearchFragment */
+    @POST("searchonsuggestedlist")
+    @FormUrlEncoded
+    Call<SearchBothModel> getSearchBoth(@Field("SuggestedName") String suggestedName);
 
     /* TODO MyPlaylistsFragment */
     @POST("addaudiotoplaylist")

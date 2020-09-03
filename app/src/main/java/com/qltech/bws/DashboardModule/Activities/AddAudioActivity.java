@@ -69,6 +69,9 @@ public class AddAudioActivity extends AppCompatActivity {
         closeButton.setOnClickListener(view -> {
             binding.searchView.clearFocus();
             searchEditText.setText("");
+            binding.rvSerachList.setAdapter(null);
+            binding.rvSerachList.setVisibility(View.GONE);
+            binding.llError.setVisibility(View.GONE);
             binding.searchView.setQuery("", false);
         });
 
@@ -122,7 +125,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             if (listModel.getResponseData().size() == 0) {
                                 binding.rvSerachList.setVisibility(View.GONE);
                                 binding.llError.setVisibility(View.VISIBLE);
-                                binding.tvFound.setText("" + searchEditText);
+                                binding.tvFound.setText("Couldn't find '" + searchEditText.getText().toString()+ "'");
                             } else {
                                 binding.llError.setVisibility(View.GONE);
                                 binding.rvSerachList.setVisibility(View.VISIBLE);

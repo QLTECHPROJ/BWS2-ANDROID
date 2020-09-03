@@ -74,13 +74,11 @@ public class AppointmentFragment extends Fragment {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse("https://brainwellnessspa.com.au/bookings/services.php"));
                 startActivity(i);
-                binding.cvShowSession.setVisibility(View.VISIBLE);
             }
         });
         appointmentViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-//                binding.textAppointment.setText(s);
             }
         });
 //        preparePreviousAppointmentsData();

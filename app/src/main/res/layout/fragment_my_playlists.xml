@@ -30,7 +30,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_210sdp">
 
-
                         <ImageView
                             android:id="@+id/ivBanner"
                             android:layout_width="match_parent"
@@ -214,7 +213,6 @@
                         android:layout_height="match_parent"
                         android:layout_below="@id/ivPlaylistStatus"
                         android:orientation="vertical"
-                        android:paddingBottom="121dp"
                         android:visibility="visible">
 
                         <RelativeLayout

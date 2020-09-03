@@ -1,7 +1,6 @@
 package com.qltech.bws.DashboardModule.Audio.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -18,16 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.qltech.bws.DashboardModule.Activities.PlayWellnessActivity;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
-import com.qltech.bws.DashboardModule.TransparentPlayer.TransparentPlayerFragment;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.RoundBoxLayoutBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TopCategoriesAdapter  extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
@@ -77,6 +74,7 @@ public class TopCategoriesAdapter  extends RecyclerView.Adapter<TopCategoriesAda
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("modelList", listModelList);
                 bundle.putInt("position", position);
+                bundle.putString("AudioFlag", "MainAudio");
                 fragment.setArguments(bundle);
             }
         });
