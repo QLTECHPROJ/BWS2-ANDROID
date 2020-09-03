@@ -72,6 +72,7 @@
                                     android:orientation="vertical">
 
                                     <TextView
+                                        android:id="@+id/tvFacilitator"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/_2sdp"
@@ -82,6 +83,7 @@
                                         android:textSize="@dimen/_11sdp" />
 
                                     <TextView
+                                        android:id="@+id/tvUserName"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/_2sdp"
@@ -139,7 +141,7 @@
                                         android:src="@drawable/ic_time_icon" />
 
                                     <TextView
-                                        android:id="@+id/tvTie"
+                                        android:id="@+id/tvTime"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="@dimen/_2sdp"

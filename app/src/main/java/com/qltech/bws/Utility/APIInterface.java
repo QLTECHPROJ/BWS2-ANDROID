@@ -7,8 +7,7 @@ import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
 import com.qltech.bws.BillingOrderModule.Models.CardListModel;
 import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.BillingOrderModule.Models.CurrentPlanVieViewModel;
-import com.qltech.bws.DashboardModule.Appointment.AppointmentDetailsFragment;
-import com.qltech.bws.DashboardModule.Models.AppointmentDetail;
+import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.DirectionModel;
@@ -248,12 +247,14 @@ public interface APIInterface {
     /* TODO AppointmentFragment */
     @POST("appointmentsession")
     @FormUrlEncoded
-    Call<SessionListModel> getAppointmentSession(@Field("UserID") String userID);
+    Call<SessionListModel> getAppointmentSession(@Field("UserID") String userID,
+                                                 @Field("AppointmentName") String appointmentName
+                                                 );
     /* TODO AppointmentFragment */
     @POST("appointmentdetail")
     @FormUrlEncoded
-    Call<AppointmentDetail> getAppointmentDetails(@Field("UserID") String userID,
-                                                  @Field("AppointmentTypeId") String appointmentTypeId);
+    Call<AppointmentDetailModel> getAppointmentDetails(@Field("UserID") String userID,
+                                                       @Field("AppointmentTypeId") String appointmentTypeId);
 
   /* TODO ReminderActivity */
     @POST("setreminder")

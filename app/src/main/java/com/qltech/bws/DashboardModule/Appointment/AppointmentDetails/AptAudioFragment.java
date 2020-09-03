@@ -15,41 +15,49 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Models.AppointmentDetail;
+import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.AudioAptListLayoutBinding;
 import com.qltech.bws.databinding.FragmentAptAudioBinding;
 
+import java.util.ArrayList;
+
 public class AptAudioFragment extends Fragment {
     FragmentAptAudioBinding binding;
     public FragmentManager f_manager;
-    AppointmentDetail.ResponseData appointmentDetail;
+    ArrayList<AppointmentDetailModel.Audio> appointmentDetail;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_audio, container, false);
         View view = binding.getRoot();
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            appointmentDetail = bundle.getParcelable("AppointmentDetail");
+        appointmentDetail = new ArrayList<>();
+        if (getArguments() != null) {
+            appointmentDetail = getArguments().getParcelableArrayList("AppointmentDetailList");
         }
-        AudioListAdapter appointmentsAdapter = new AudioListAdapter(appointmentDetail.getAudio(), getActivity(), f_manager);
-        RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        binding.rvAudioList.setLayoutManager(recentlyPlayed);
-        binding.rvAudioList.setItemAnimator(new DefaultItemAnimator());
-        binding.rvAudioList.setAdapter(appointmentsAdapter);
+        if(appointmentDetail.size() == 0){
+
+        }else{
+            AudioListAdapter appointmentsAdapter = new AudioListAdapter(appointmentDetail, getActivity(), f_manager);
+            RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+            binding.rvAudioList.setLayoutManager(recentlyPlayed);
+            binding.rvAudioList.setItemAnimator(new DefaultItemAnimator());
+            binding.rvAudioList.setAdapter(appointmentsAdapter);
+        }
 
         return view;
     }
     public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.MyViewHolder>{
-        private AppointmentDetail.ResponseData.Audio listModelList;
+        private ArrayList<AppointmentDetailModel.Audio> listModelList;
         Context ctx;
         public FragmentManager f_manager;
 
-        public AudioListAdapter(AppointmentDetail.ResponseData.Audio listModelList, Context ctx, FragmentManager f_manager) {
+        public AudioListAdapter(ArrayList<AppointmentDetailModel.Audio> listModelList, Context ctx, FragmentManager f_manager) {
             this.listModelList = listModelList;
             this.ctx = ctx;
             this.f_manager = f_manager;
@@ -65,7 +73,9 @@ public class AptAudioFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-             holder.binding.tvTitle.setText(listModelList.getName());
+            AppointmentDetailModel.Audio audiolist = listModelList.get(position);
+             holder.binding.tvTitle.setText(audiolist.getName());
+
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.13f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -76,6 +86,9 @@ public class AptAudioFragment extends Fragment {
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+
+            Glide.with(getActivity()).load(audiolist.getImageFile()).thumbnail(0.1f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivBackgroundImage);
         }
 
         @Override

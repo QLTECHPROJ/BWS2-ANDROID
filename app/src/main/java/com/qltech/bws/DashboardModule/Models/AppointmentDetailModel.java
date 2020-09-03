@@ -6,7 +6,9 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AppointmentDetail implements Parcelable {
+import java.util.ArrayList;
+
+public class AppointmentDetailModel implements Parcelable {
     @SerializedName("ResponseData")
     @Expose
     private ResponseData responseData;
@@ -19,6 +21,25 @@ public class AppointmentDetail implements Parcelable {
     @SerializedName("ResponseStatus")
     @Expose
     private String responseStatus;
+
+    protected AppointmentDetailModel(Parcel in) {
+        responseData = in.readParcelable(ResponseData.class.getClassLoader());
+        responseCode = in.readString();
+        responseMessage = in.readString();
+        responseStatus = in.readString();
+    }
+
+    public static final Creator<AppointmentDetailModel> CREATOR = new Creator<AppointmentDetailModel>() {
+        @Override
+        public AppointmentDetailModel createFromParcel(Parcel in) {
+            return new AppointmentDetailModel(in);
+        }
+
+        @Override
+        public AppointmentDetailModel[] newArray(int size) {
+            return new AppointmentDetailModel[size];
+        }
+    };
 
     public ResponseData getResponseData() {
         return responseData;
@@ -59,10 +80,13 @@ public class AppointmentDetail implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-
+        parcel.writeParcelable(responseData, i);
+        parcel.writeString(responseCode);
+        parcel.writeString(responseMessage);
+        parcel.writeString(responseStatus);
     }
 
-    public static class ResponseData implements Parcelable{
+    public static class ResponseData implements Parcelable {
 
         @SerializedName("Id")
         @Expose
@@ -73,6 +97,9 @@ public class AppointmentDetail implements Parcelable {
         @SerializedName("Desc")
         @Expose
         private String desc;
+        @SerializedName("Facilitator")
+        @Expose
+        private String facilitator;
         @SerializedName("UserName")
         @Expose
         private String userName;
@@ -96,7 +123,7 @@ public class AppointmentDetail implements Parcelable {
         private String status;
         @SerializedName("Audio")
         @Expose
-        private Audio audio;
+        private ArrayList<Audio> audio;
         @SerializedName("Booklet")
         @Expose
         private String booklet;
@@ -108,6 +135,7 @@ public class AppointmentDetail implements Parcelable {
             id = in.readString();
             name = in.readString();
             desc = in.readString();
+            facilitator = in.readString();
             userName = in.readString();
             image = in.readString();
             date = in.readString();
@@ -115,7 +143,7 @@ public class AppointmentDetail implements Parcelable {
             time = in.readString();
             bookUrl = in.readString();
             status = in.readString();
-            audio = in.readParcelable(Audio.class.getClassLoader());
+            audio = in.createTypedArrayList(Audio.CREATOR);
             booklet = in.readString();
             myAnswers = in.readString();
         }
@@ -212,11 +240,19 @@ public class AppointmentDetail implements Parcelable {
             this.status = status;
         }
 
-        public Audio getAudio() {
+        public String getFacilitator() {
+            return facilitator;
+        }
+
+        public void setFacilitator(String facilitator) {
+            this.facilitator = facilitator;
+        }
+
+        public ArrayList<Audio> getAudio() {
             return audio;
         }
 
-        public void setAudio(Audio audio) {
+        public void setAudio(ArrayList<Audio> audio) {
             this.audio = audio;
         }
 
@@ -246,6 +282,7 @@ public class AppointmentDetail implements Parcelable {
             parcel.writeString(id);
             parcel.writeString(name);
             parcel.writeString(desc);
+            parcel.writeString(facilitator);
             parcel.writeString(userName);
             parcel.writeString(image);
             parcel.writeString(date);
@@ -253,103 +290,102 @@ public class AppointmentDetail implements Parcelable {
             parcel.writeString(time);
             parcel.writeString(bookUrl);
             parcel.writeString(status);
-            parcel.writeParcelable(audio, i);
+            parcel.writeTypedList(audio);
             parcel.writeString(booklet);
             parcel.writeString(myAnswers);
         }
-
-        public static class Audio implements Parcelable{
-
-            @SerializedName("ID")
-            @Expose
-            private String iD;
-            @SerializedName("Name")
-            @Expose
-            private String name;
-            @SerializedName("AudioFile")
-            @Expose
-            private String audioFile;
-            @SerializedName("ImageFile")
-            @Expose
-            private String imageFile;
-            @SerializedName("AudioDuration")
-            @Expose
-            private String audioDuration;
-
-            protected Audio(Parcel in) {
-                iD = in.readString();
-                name = in.readString();
-                audioFile = in.readString();
-                imageFile = in.readString();
-                audioDuration = in.readString();
-            }
-
-            public static final Creator<Audio> CREATOR = new Creator<Audio>() {
-                @Override
-                public Audio createFromParcel(Parcel in) {
-                    return new Audio(in);
-                }
-
-                @Override
-                public Audio[] newArray(int size) {
-                    return new Audio[size];
-                }
-            };
-
-            public String getID() {
-                return iD;
-            }
-
-            public void setID(String iD) {
-                this.iD = iD;
-            }
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
-            public String getAudioFile() {
-                return audioFile;
-            }
-
-            public void setAudioFile(String audioFile) {
-                this.audioFile = audioFile;
-            }
-
-            public String getImageFile() {
-                return imageFile;
-            }
-
-            public void setImageFile(String imageFile) {
-                this.imageFile = imageFile;
-            }
-
-            public String getAudioDuration() {
-                return audioDuration;
-            }
-
-            public void setAudioDuration(String audioDuration) {
-                this.audioDuration = audioDuration;
-            }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel parcel, int i) {
-                parcel.writeString(iD);
-                parcel.writeString(name);
-                parcel.writeString(audioFile);
-                parcel.writeString(imageFile);
-                parcel.writeString(audioDuration);
-            }
-        }
     }
 
+    public static class Audio implements Parcelable {
+
+        @SerializedName("ID")
+        @Expose
+        private String iD;
+        @SerializedName("Name")
+        @Expose
+        private String name;
+        @SerializedName("AudioFile")
+        @Expose
+        private String audioFile;
+        @SerializedName("ImageFile")
+        @Expose
+        private String imageFile;
+        @SerializedName("AudioDuration")
+        @Expose
+        private String audioDuration;
+
+        protected Audio(Parcel in) {
+            iD = in.readString();
+            name = in.readString();
+            audioFile = in.readString();
+            imageFile = in.readString();
+            audioDuration = in.readString();
+        }
+
+        public static final Creator<Audio> CREATOR = new Creator<Audio>() {
+            @Override
+            public Audio createFromParcel(Parcel in) {
+                return new Audio(in);
+            }
+
+            @Override
+            public Audio[] newArray(int size) {
+                return new Audio[size];
+            }
+        };
+
+        public String getID() {
+            return iD;
+        }
+
+        public void setID(String iD) {
+            this.iD = iD;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getAudioFile() {
+            return audioFile;
+        }
+
+        public void setAudioFile(String audioFile) {
+            this.audioFile = audioFile;
+        }
+
+        public String getImageFile() {
+            return imageFile;
+        }
+
+        public void setImageFile(String imageFile) {
+            this.imageFile = imageFile;
+        }
+
+        public String getAudioDuration() {
+            return audioDuration;
+        }
+
+        public void setAudioDuration(String audioDuration) {
+            this.audioDuration = audioDuration;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(iD);
+            parcel.writeString(name);
+            parcel.writeString(audioFile);
+            parcel.writeString(imageFile);
+            parcel.writeString(audioDuration);
+        }
+    }
 }

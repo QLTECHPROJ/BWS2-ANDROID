@@ -22,8 +22,7 @@ import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptAnswersF
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptAudioFragment;
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptBookletFragment;
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptDetailsFragment;
-import com.qltech.bws.DashboardModule.Models.AppointmentDetail;
-import com.qltech.bws.DashboardModule.Models.SessionListModel;
+import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
 import com.qltech.bws.DownloadModule.Models.DownloadsHistoryModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
@@ -38,7 +37,7 @@ public class AppointmentDetailsFragment extends Fragment {
     FragmentAppointmentDetailsBinding binding;
     Activity activity;
     String UserId, appointmentTypeId;
-    AppointmentDetail global_appointmentDetail;
+    AppointmentDetailModel global_appointmentDetailModel;
     boolean withThree, withoutThree;
 
     @Override
@@ -57,9 +56,8 @@ public class AppointmentDetailsFragment extends Fragment {
             }
             return false;
         });
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            appointmentTypeId = bundle.getString("appointmentId");
+        if (getArguments() != null) {
+            appointmentTypeId = getArguments().getString("appointmentId");
         }
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -79,58 +77,58 @@ public class AppointmentDetailsFragment extends Fragment {
     private void getAppointmentData() {
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<AppointmentDetail> listCall = APIClient.getClient().getAppointmentDetails(UserId, appointmentTypeId);
-            listCall.enqueue(new Callback<AppointmentDetail>() {
+            Call<AppointmentDetailModel> listCall = APIClient.getClient().getAppointmentDetails(UserId, appointmentTypeId);
+            listCall.enqueue(new Callback<AppointmentDetailModel>() {
                 @Override
-                public void onResponse(Call<AppointmentDetail> call, Response<AppointmentDetail> response) {
+                public void onResponse(Call<AppointmentDetailModel> call, Response<AppointmentDetailModel> response) {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                        AppointmentDetail appointmentDetail = response.body();
-                        global_appointmentDetail = appointmentDetail;
+                        AppointmentDetailModel appointmentDetailModel = response.body();
+                        global_appointmentDetailModel = appointmentDetailModel;
 
-                        if (appointmentDetail.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                        if (appointmentDetailModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
 
-                            if (appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
-                                    && appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
-                                    && appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                            if (appointmentDetailModel.getResponseData().getAudio().size() == 0
+                                    && appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                                 binding.viewPager.setOffscreenPageLimit(1);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                             }
 
-                            if (!appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
-                                    && appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
-                                    && appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                            if (appointmentDetailModel.getResponseData().getAudio().size() != 0
+                                    && appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                                 binding.viewPager.setOffscreenPageLimit(2);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
                             }
-                            if (!appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
-                                    && !appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
-                                    && appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                            if (appointmentDetailModel.getResponseData().getAudio().size() != 0
+                                    && !appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                                 binding.viewPager.setOffscreenPageLimit(3);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"));
                             }
-                            if (!appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
-                                    && appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
-                                    && !appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                            if (appointmentDetailModel.getResponseData().getAudio().size() != 0
+                                    && appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && !appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                                 binding.viewPager.setOffscreenPageLimit(3);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"));
                             }
-                            if (appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
-                                    && !appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
-                                    && !appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                            if (appointmentDetailModel.getResponseData().getAudio().size() == 0
+                                    && !appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && !appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                                 binding.viewPager.setOffscreenPageLimit(3);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"));
                             }
-                            if (!appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
-                                    && !appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
-                                    && !appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                            if (appointmentDetailModel.getResponseData().getAudio().size() != 0
+                                    && !appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && !appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                                 binding.viewPager.setOffscreenPageLimit(4);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
@@ -160,13 +158,13 @@ public class AppointmentDetailsFragment extends Fragment {
                                 }
                             });
                         } else {
-                            Toast.makeText(activity, appointmentDetail.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, appointmentDetailModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
 
                 @Override
-                public void onFailure(Call<AppointmentDetail> call, Throwable t) {
+                public void onFailure(Call<AppointmentDetailModel> call, Throwable t) {
                     BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 }
             });
@@ -200,10 +198,13 @@ public class AppointmentDetailsFragment extends Fragment {
             AptBookletFragment aptBookletFragment = new AptBookletFragment();
             AptAnswersFragment aptAnswersFragment = new AptAnswersFragment();
             Bundle bundle = new Bundle();
-            bundle.putParcelable("AppointmentDetail",global_appointmentDetail.getResponseData());
-            if (global_appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
-                    && global_appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
-                    && global_appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+            Bundle bundle2 = new Bundle();
+            bundle.putParcelable("AppointmentDetail", global_appointmentDetailModel.getResponseData());
+            bundle2.putParcelable("AppointmentDetail", global_appointmentDetailModel.getResponseData());
+            bundle2.putParcelableArrayList("AppointmentDetailList", global_appointmentDetailModel.getResponseData().getAudio());
+            if (global_appointmentDetailModel.getResponseData().getAudio().size() != 0
+                    && global_appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && global_appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                 switch (position) {
                     case 0:
                         aptDetailsFragment.setArguments(bundle);
@@ -211,52 +212,51 @@ public class AppointmentDetailsFragment extends Fragment {
                 }
             }
 
-            if (!global_appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
-                    && global_appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
-                    && global_appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+            if (global_appointmentDetailModel.getResponseData().getAudio().size() != 0
+                    && global_appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && global_appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                 switch (position) {
                     case 0:
                         aptDetailsFragment.setArguments(bundle);
                         return aptDetailsFragment;
                     case 1:
-                        bundle = new Bundle();
-                        aptAudioFragment.setArguments(bundle);
+                        aptAudioFragment.setArguments(bundle2);
                         return aptAudioFragment;
                 }
             }
-            if (!global_appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
-                    && !global_appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
-                    && global_appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+            if (global_appointmentDetailModel.getResponseData().getAudio().size() != 0
+                    && !global_appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && global_appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                 switch (position) {
                     case 0:
                         aptDetailsFragment.setArguments(bundle);
                         return aptDetailsFragment;
                     case 1:
-                        aptAudioFragment.setArguments(bundle);
+                        aptAudioFragment.setArguments(bundle2);
                         return aptAudioFragment;
                     case 2:
                         aptBookletFragment.setArguments(bundle);
                         return aptBookletFragment;
                 }
             }
-            if (!global_appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
-                    && global_appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
-                    && !global_appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+            if (global_appointmentDetailModel.getResponseData().getAudio().size() != 0
+                    && global_appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && !global_appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                 switch (position) {
                     case 0:
                         aptDetailsFragment.setArguments(bundle);
                         return aptDetailsFragment;
                     case 1:
-                        aptAudioFragment.setArguments(bundle);
+                        aptAudioFragment.setArguments(bundle2);
                         return aptAudioFragment;
                     case 2:
                         aptAnswersFragment.setArguments(bundle);
                         return aptAnswersFragment;
                 }
             }
-            if (global_appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
-                    && !global_appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
-                    && !global_appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+            if (global_appointmentDetailModel.getResponseData().getAudio().size() == 0
+                    && !global_appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && !global_appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                 switch (position) {
                     case 0:
                         aptDetailsFragment.setArguments(bundle);
@@ -269,15 +269,15 @@ public class AppointmentDetailsFragment extends Fragment {
                         return aptAnswersFragment;
                 }
             }
-            if (!global_appointmentDetail.getResponseData().getAudio().getID().equalsIgnoreCase("")
-                    && !global_appointmentDetail.getResponseData().getBooklet().equalsIgnoreCase("")
-                    && !global_appointmentDetail.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+            if (global_appointmentDetailModel.getResponseData().getAudio().size() != 0
+                    && !global_appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && !global_appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                 switch (position) {
                     case 0:
                         aptDetailsFragment.setArguments(bundle);
                         return aptDetailsFragment;
                     case 1:
-                        aptAudioFragment.setArguments(bundle);
+                        aptAudioFragment.setArguments(bundle2);
                         return aptAudioFragment;
                     case 2:
                         aptBookletFragment.setArguments(bundle);

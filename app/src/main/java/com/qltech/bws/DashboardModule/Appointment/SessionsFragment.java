@@ -17,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.qltech.bws.BWSApplication;
@@ -41,7 +42,7 @@ public class SessionsFragment extends Fragment {
     FragmentSessionsBinding binding;
     public FragmentManager f_manager;
     Activity activity;
-    String UserId;
+    String UserId,appointmentName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,7 +52,10 @@ public class SessionsFragment extends Fragment {
         activity = getActivity();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            appointmentName = bundle.getString("appointmentName");
+        }
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,15 +75,19 @@ public class SessionsFragment extends Fragment {
     private void prepareSessionList() {
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<SessionListModel> listCall = APIClient.getClient().getAppointmentSession(UserId);
+            Call<SessionListModel> listCall = APIClient.getClient().getAppointmentSession(UserId,appointmentName);
             listCall.enqueue(new Callback<SessionListModel>() {
                 @Override
                 public void onResponse(Call<SessionListModel> call, Response<SessionListModel> response) {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         SessionListModel listModel = response.body();
+                        if(listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))){
                         SessionListAdapter appointmentsAdapter = new SessionListAdapter(listModel.getResponseData(), getActivity(), f_manager);
-                        binding.rvSessionList.setAdapter(appointmentsAdapter);
+                        binding.rvSessionList.setAdapter(appointmentsAdapter);}
+                        else {
+                            Toast.makeText(activity, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
 
@@ -121,7 +129,15 @@ public class SessionsFragment extends Fragment {
                     listModel.getDuration().equalsIgnoreCase("") &&
                     listModel.getTime().equalsIgnoreCase("")) {
                 holder.binding.llDateTime.setVisibility(View.GONE);
+              /*  LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                buttonLayoutParams.setMargins(0, 16, 0, 16);
+
+                holder.binding.llMainLayout.setLayoutParams(buttonLayoutParams);*/
             } else {
+    /*            LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                buttonLayoutParams.setMargins(0, 16, 0, 0);
+
+                holder.binding.llMainLayout.setLayoutParams(buttonLayoutParams);*/
                 holder.binding.llDateTime.setVisibility(View.VISIBLE);
             }
             holder.binding.tvDate.setText(listModel.getDate());

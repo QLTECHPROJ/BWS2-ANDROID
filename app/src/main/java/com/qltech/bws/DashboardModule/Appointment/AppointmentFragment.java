@@ -195,6 +195,9 @@ public class AppointmentFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Fragment sessionsFragment = new SessionsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("appointmentName",listModel.get(position).getCatMenual());
+                    sessionsFragment.setArguments(bundle);
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
                             .replace(R.id.flMainLayout, sessionsFragment).

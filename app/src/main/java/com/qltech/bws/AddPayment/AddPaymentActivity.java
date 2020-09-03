@@ -77,10 +77,10 @@ public class AddPaymentActivity extends AppCompatActivity {
         binding1 = DataBindingUtil.inflate(LayoutInflater.from(context),
                 R.layout.yeardialog, null, false);
         d.setContentView(binding1.getRoot());
-        binding.etNumber.addTextChangedListener(addCardTextWatcher);
+     /*   binding.etNumber.addTextChangedListener(addCardTextWatcher);
         binding.etName.addTextChangedListener(addCardTextWatcher);
         binding.textMonth.addTextChangedListener(addCardTextWatcher);
-        binding.etCvv.addTextChangedListener(addCardTextWatcher);
+        binding.etCvv.addTextChangedListener(addCardTextWatcher);*/
 
         binding.etNumber.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -118,7 +118,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                 binding.tlNumber.setError(getString(R.string.blank_card_no_error));
                 binding.txtError.setText("");
                 binding.tlName.setError("");
-            } else if (binding.etNumber.getText().toString().length() < 15) {
+            } else if (binding.etNumber.getText().toString().length() < 16) {
                 binding.tlName.setError("");
                 binding.tlNumber.setError(getString(R.string.valid_card_no_error));
                 binding.txtError.setText("");
@@ -213,6 +213,7 @@ public class AddPaymentActivity extends AppCompatActivity {
         });
     }
 
+/*
     private TextWatcher addCardTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -239,6 +240,7 @@ public class AddPaymentActivity extends AppCompatActivity {
         public void afterTextChanged(Editable s) {
         }
     };
+*/
 
     public void showYearDialog() {
         binding1.MonthPicker.setMaxValue(12);

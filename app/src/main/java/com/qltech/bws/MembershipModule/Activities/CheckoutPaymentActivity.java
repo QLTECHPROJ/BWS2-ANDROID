@@ -90,10 +90,10 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         binding1 = DataBindingUtil.inflate(LayoutInflater.from(context),
                 R.layout.yeardialog, null, false);
         d.setContentView(binding1.getRoot());
-        binding.etNumber.addTextChangedListener(addCardTextWatcher);
+       /* binding.etNumber.addTextChangedListener(addCardTextWatcher);
         binding.etName.addTextChangedListener(addCardTextWatcher);
         binding.textMonth.addTextChangedListener(addCardTextWatcher);
-        binding.etCvv.addTextChangedListener(addCardTextWatcher);
+        binding.etCvv.addTextChangedListener(addCardTextWatcher);*/
 
         binding.etNumber.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -239,7 +239,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
 
     }
 
-    private TextWatcher addCardTextWatcher = new TextWatcher() {
+  /*  private TextWatcher addCardTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
@@ -264,7 +264,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable s) {
         }
-    };
+    };*/
 
     public void showYearDialog() {
         binding1.MonthPicker.setMaxValue(12);
