@@ -11,8 +11,15 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+
+import com.qltech.bws.R;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -21,6 +28,7 @@ public class MusicService extends Service {
     static MediaPlayer mediaPlayer;
     static private Handler handler;
     static boolean isPLAYING;
+    private static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
 
     public MusicService(Handler handler) {
         this.handler = handler;
@@ -42,6 +50,7 @@ public class MusicService extends Service {
     public static void playAudio(Context conext, Uri AudioFile) {
 //        if (!isPLAYING) {
 //            isPLAYING = true;
+        mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setDataSource(conext, AudioFile);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -60,6 +69,34 @@ public class MusicService extends Service {
 //            isPLAYING = false;
 //            stopPlaying();
 //        }
+    }
+
+    public static void ToForward(Context conext) {
+        if ((startTime + forwardTime) <= endTime) {
+            startTime = startTime + forwardTime;
+            mediaPlayer.seekTo(startTime);
+        } else {
+            showToast("Please wait", conext);
+        }
+    }
+
+    public static void ToBackward(Context conext) {
+        if ((startTime - backwardTime) > 0) {
+            startTime = startTime - backwardTime;
+            mediaPlayer.seekTo(startTime);
+        } else {
+            showToast("Please wait", conext);
+        }
+    }
+
+    static void showToast(String message, Context conext) {
+        Toast toast = new Toast(conext);
+        View view = LayoutInflater.from(conext).inflate(R.layout.toast_layout, null);
+        TextView tvMessage = view.findViewById(R.id.tvMessage);
+        tvMessage.setText(message);
+        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
+        toast.setView(view);
+        toast.show();
     }
 
     private static void stopPlaying() {
@@ -104,7 +141,7 @@ public class MusicService extends Service {
         }
     }
 
-    private void releasePlayer() {
+    public static void releasePlayer() {
         if (null != mediaPlayer) {
             mediaPlayer.release();
         }

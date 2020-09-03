@@ -19,7 +19,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
-import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.BigBoxLayoutBinding;

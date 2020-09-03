@@ -37,6 +37,7 @@ import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityPlayWellnessBinding;
 
 import java.io.IOException;
@@ -66,7 +67,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_wellness);
         ctx = PlayWellnessActivity.this;
         activity = PlayWellnessActivity.this;
-        mPlayer = new MediaPlayer();
+//        mPlayer = new MediaPlayer();
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -220,44 +221,31 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.llplay.setOnClickListener(v -> {
             binding.llplay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.VISIBLE);
-            if (mPlayer == null) return;
-            if (mPlayer.isPlaying()) {
-                mPlayer.stop();
-            }
+            MusicService.stopMedia();
         });
 
         binding.llPause.setOnClickListener(view -> {
             binding.llplay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
-            mPlayer.pause();
+           MusicService.pauseMedia();
         });
 
         binding.llForwardSec.setOnClickListener(v -> {
-            if ((startTime + forwardTime) <= endTime) {
-                startTime = startTime + forwardTime;
-                mPlayer.seekTo(startTime);
-            } else {
-                showToast("Please wait");
-            }
+            MusicService.ToForward(ctx);
             if (!binding.llplay.isEnabled()) {
                 binding.llplay.setEnabled(true);
             }
         });
 
         binding.llBackWordSec.setOnClickListener(v -> {
-            if ((startTime - backwardTime) > 0) {
-                startTime = startTime - backwardTime;
-                mPlayer.seekTo(startTime);
-            } else {
-                showToast("Please wait");
-            }
+            MusicService.ToBackward(ctx);
             if (!binding.llplay.isEnabled()) {
                 binding.llplay.setEnabled(true);
             }
         });
         binding.llnext.setOnClickListener(view -> {
             if (position < listModelList.size() - 1) {
-                mPlayer.stop();
+                MusicService.stopMedia();
                 position = position + 1;
                 prepareData();
             }
@@ -266,11 +254,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
         binding.llprev.setOnClickListener(view -> {
             if (position > 0) {
-                mPlayer.pause();
+                MusicService.pauseMedia();
                 position = position - 1;
                 prepareData();
             } else {
-                mPlayer.pause();
+                MusicService.pauseMedia();
                 position = 0;
                 prepareData();
             }
@@ -285,43 +273,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mPlayer != null) {
-            mPlayer.release();
-        }
+        MusicService.releasePlayer();
     }
 
     void prepareData() {
-        if (mPlayer == null) return;
-        if (mPlayer.isPlaying()) {
-            Log.e("Playinggggg", "stoppppp");
-            mPlayer.stop();
-        }
-        try {
-            mPlayer.setDataSource(ctx, Uri.parse(listModelList.get(position).getAudioFile()));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mPlayer.setAudioAttributes(
-                        new AudioAttributes
-                                .Builder()
-                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                                .build());
-            }
-            mPlayer.prepareAsync();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("Failedddddddd", "prepare() failed");
-        }
+        MusicService.play(ctx, Uri.parse(listModelList.get(position).getAudioFile()));
+        MusicService.playMedia();
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         binding.simpleSeekbar.setClickable(false);
-        mPlayer.setOnPreparedListener(mp -> {
-            mPlayer.start();
-            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-        });
+
         endTime = mPlayer.getDuration();
         startTime = mPlayer.getCurrentPosition();
         if (oTime == 0) {
             binding.simpleSeekbar.setMax(endTime);
             oTime = 1;
         }
+
         binding.tvSongTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(endTime),
                 TimeUnit.MILLISECONDS.toSeconds(endTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime))));
         binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
