@@ -71,6 +71,16 @@ public class MusicService extends Service {
 //        }
     }
 
+    public static int getEndTime() {
+        endTime = mediaPlayer.getDuration();
+        return endTime;
+    }
+
+    public static int getStartTime() {
+        startTime = mediaPlayer.getCurrentPosition();
+        return startTime;
+    }
+
     public static void ToForward(Context conext) {
         if ((startTime + forwardTime) <= endTime) {
             startTime = startTime + forwardTime;
@@ -90,7 +100,7 @@ public class MusicService extends Service {
     }
 
     public static void ToSeek(int endTime, int startTime) {
-        endTime =  mediaPlayer.getDuration();
+        endTime = mediaPlayer.getDuration();
         startTime = mediaPlayer.getCurrentPosition();
     }
 

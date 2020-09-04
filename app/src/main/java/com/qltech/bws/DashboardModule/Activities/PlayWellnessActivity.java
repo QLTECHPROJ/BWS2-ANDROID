@@ -38,6 +38,7 @@ import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.ViewAllAudioListModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
@@ -59,18 +60,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", Like, Download, UserID, ImageFile, PlaylistId,
             AudioId, AudioFlag;
-    private static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
-    private MediaPlayer mPlayer;
+    private static int oTime = 0, startTime = 0, endTime = 0;
     Context ctx;
     Activity activity;
-    ArrayList<MainAudioModel.ResponseData.Detail> mainAudioList;
-    ArrayList<ViewAllAudioListModel.ResponseData.Detail> ViewAllAudioList;
-    ArrayList<AppointmentDetailModel.Audio> AppointmentDetailList;
-    ArrayList<DownloadlistModel.Audio> Downloadlist;
-    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> SubPlayList;
-    int position;
+    int position, listsize;
     boolean isPrepere;
     private Handler hdlr = new Handler();
+    MainPlayModel mainPlayModel = new MainPlayModel();
+    ArrayList<MainPlayModel> mainPlayModelList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +75,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_wellness);
         ctx = PlayWellnessActivity.this;
         activity = PlayWellnessActivity.this;
+        mainPlayModelList = new ArrayList<>();
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -94,66 +92,99 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-            getPrepareShowData(arrayList.get(position).getName(),
-                    arrayList.get(position).getAudioDirection(),
-                    arrayList.get(position).getAudioSubCategory(),
-                    arrayList.get(position).getAudiomastercat(),
-                    arrayList.get(position).getImageFile(),
-                    arrayList.get(position).getLike(),
-                    arrayList.get(position).getDownload(),
-                    arrayList.get(position).getAudioFile());
+            listsize = arrayList.size();
+            for(int i = 0;i<listsize;i++){
+                mainPlayModel.setID(arrayList.get(position).getID());
+                mainPlayModel.setName(arrayList.get(position).getName());
+                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
+                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
+                mainPlayModel.setLike(arrayList.get(position).getLike());
+                mainPlayModel.setDownload(arrayList.get(position).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            getPrepareShowData();
         } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-            getPrepareShowData(arrayList.get(position).getName(),
-                    arrayList.get(position).getAudioDirection(),
-                    arrayList.get(position).getAudioSubCategory(),
-                    arrayList.get(position).getAudiomastercat(),
-                    arrayList.get(position).getImageFile(),
-                    arrayList.get(position).getLike(),
-                    arrayList.get(position).getDownload(),
-                    arrayList.get(position).getAudioFile());
+            listsize = arrayList.size();
+            for(int i = 0;i<listsize;i++){
+                mainPlayModel.setID(arrayList.get(position).getID());
+                mainPlayModel.setName(arrayList.get(position).getName());
+                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
+                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
+                mainPlayModel.setLike(arrayList.get(position).getLike());
+                mainPlayModel.setDownload(arrayList.get(position).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            getPrepareShowData();
         } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
             ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
-            getPrepareShowData(arrayList.get(position).getName(),
-                    arrayList.get(position).getAudioDirection(),
-                    arrayList.get(position).getAudioSubCategory(),
-                    arrayList.get(position).getAudiomastercat(),
-                    arrayList.get(position).getImageFile(),
-                    arrayList.get(position).getLike(),
-                    arrayList.get(position).getDownload(),
-                    arrayList.get(position).getAudioFile());
+            listsize = arrayList.size();
+            for(int i = 0;i<listsize;i++){
+                mainPlayModel.setID(arrayList.get(position).getID());
+                mainPlayModel.setName(arrayList.get(position).getName());
+                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
+                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
+                mainPlayModel.setLike(arrayList.get(position).getLike());
+                mainPlayModel.setDownload(arrayList.get(position).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            getPrepareShowData();
         } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
             Type type = new TypeToken<ArrayList<DownloadlistModel.Audio>>() {
             }.getType();
             ArrayList<DownloadlistModel.Audio> arrayList = gson.fromJson(json, type);
-            getPrepareShowData(arrayList.get(position).getName(),
-                    arrayList.get(position).getAudioDirection(),
-                    arrayList.get(position).getAudioSubCategory(),
-                    arrayList.get(position).getAudiomastercat(),
-                    arrayList.get(position).getImageFile(),
-                    arrayList.get(position).getLike(),
-                    arrayList.get(position).getDownload(),
-                    arrayList.get(position).getAudioFile());
+            listsize = arrayList.size();
+            for(int i = 0;i<listsize;i++){
+                mainPlayModel.setID(arrayList.get(position).getAudioID());
+                mainPlayModel.setName(arrayList.get(position).getName());
+                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
+                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
+                mainPlayModel.setLike(arrayList.get(position).getLike());
+                mainPlayModel.setDownload(arrayList.get(position).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            getPrepareShowData();
         } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
-            getPrepareShowData(arrayList.get(position).getName(),
-                    arrayList.get(position).getAudioDirection(),
-                    arrayList.get(position).getAudioSubCategory(),
-                    arrayList.get(position).getAudiomastercat(),
-                    arrayList.get(position).getImageFile(),
-                    arrayList.get(position).getLike(),
-                    arrayList.get(position).getDownload(),
-                    arrayList.get(position).getAudioFile());
+            listsize = arrayList.size();
+            for(int i = 0;i<listsize;i++){
+                mainPlayModel.setID(arrayList.get(position).getID());
+                mainPlayModel.setName(arrayList.get(position).getName());
+                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
+                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
+                mainPlayModel.setLike(arrayList.get(position).getLike());
+                mainPlayModel.setDownload(arrayList.get(position).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            getPrepareShowData();
         }
 
-
-        prepareData();
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -290,10 +321,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         });
 
         binding.llnext.setOnClickListener(view -> {
-            if (position < mainAudioList.size() - 1) {
+            if (position < listsize - 1) {
                 MusicService.stopMedia();
                 position = position + 1;
-                prepareData();
+                getPrepareShowData();
+            } else {
+                position = 0;
+                getPrepareShowData();
             }
 
         });
@@ -302,21 +336,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             if (position > 0) {
                 MusicService.pauseMedia();
                 position = position - 1;
-                prepareData();
+                getPrepareShowData();
             } else {
                 MusicService.pauseMedia();
                 position = 0;
-                prepareData();
+                getPrepareShowData();
             }
         });
     }
 
-    private void getPrepareShowData(String name, String AudioDirection, String AudioSubCategory, String Audiomastercat,
-                                    String ImageFile, String Like, String Download, String AudioFile) {
-        binding.tvName.setText(name);
-        binding.tvDireDesc.setText(AudioDirection);
-        binding.tvTitle.setText(AudioSubCategory);
-        binding.tvDesc.setText(Audiomastercat);
+    private void getPrepareShowData() {
+
+        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+        binding.tvName.setText(mainPlayModelList.get(position).getName());
+        binding.tvDireDesc.setText(mainPlayModelList.get(position).getAudioDirection());
+        binding.tvTitle.setText(mainPlayModelList.get(position).getAudioSubCategory());
+        binding.tvDesc.setText(mainPlayModelList.get(position).getAudiomastercat());
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 1f, 30);
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -342,9 +377,26 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             binding.llDownload.setEnabled(true);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
         }
-        MusicService.play(ctx, Uri.parse(AudioFile));
+
+        MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
         MusicService.playMedia();
+        binding.simpleSeekbar.setClickable(false);
+
+        endTime = MusicService.getEndTime();
+        startTime = MusicService.getStartTime();
+        if (oTime == 0) {
+            binding.simpleSeekbar.setMax(endTime);
+            oTime = 1;
+        }
+        binding.tvSongTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(endTime),
+                TimeUnit.MILLISECONDS.toSeconds(endTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime))));
+        binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
+                TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
+        binding.simpleSeekbar.setProgress(startTime);
+        hdlr.postDelayed(UpdateSongTime, 100);
+        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
+
 
     @Override
     public void onBackPressed() {
@@ -357,41 +409,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         MusicService.releasePlayer();
     }
 
-    void prepareData() {
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-        binding.simpleSeekbar.setClickable(false);
-
-        MusicService.ToSeek(endTime, startTime);
-        endTime = mPlayer.getDuration();
-        startTime = mPlayer.getCurrentPosition();
-        if (oTime == 0) {
-            binding.simpleSeekbar.setMax(endTime);
-            oTime = 1;
-        }
-
-        binding.tvSongTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(endTime),
-                TimeUnit.MILLISECONDS.toSeconds(endTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime))));
-        binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
-                TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
-        binding.simpleSeekbar.setProgress(startTime);
-        hdlr.postDelayed(UpdateSongTime, 100);
-    }
-
-
-    void showToast(String message) {
-        Toast toast = new Toast(ctx);
-        View view = LayoutInflater.from(ctx).inflate(R.layout.toast_layout, null);
-        TextView tvMessage = view.findViewById(R.id.tvMessage);
-        tvMessage.setText(message);
-        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
-        toast.setView(view);
-        toast.show();
-    }
-
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
-            startTime = mPlayer.getCurrentPosition();
+            startTime = MusicService.getStartTime();
             binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
                     TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
             binding.simpleSeekbar.setProgress(startTime);
@@ -401,9 +422,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        if (position < mainAudioList.size() - 1) {
+        if (position < listsize - 1) {
             position = position + 1;
-            prepareData();
+            getPrepareShowData();
+        } else {
+            position = 0;
+            getPrepareShowData();
         }
     }
 

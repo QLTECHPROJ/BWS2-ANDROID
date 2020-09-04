@@ -1,5 +1,7 @@
 package com.qltech.bws.DownloadModule.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
@@ -24,6 +26,7 @@ import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.InvoiceModule.Fragments.MembershipInvoiceFragment;
 import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
 import com.qltech.bws.R;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.FragmentDownloadsBinding;
 
 import java.util.ArrayList;
@@ -44,14 +47,17 @@ public class AudioDownloadsFragment extends Fragment {
             UserID = getArguments().getString("UserID");
             audioList = getArguments().getParcelableArrayList("audioDownloadsFragment");
         }
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
-        Fragment fragment = new TransparentPlayerFragment();
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .add(R.id.flAccount, fragment)
-                .addToBackStack("TransparentPlayerFragment")
-                .commit();
-
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.f_audio, fragment)
+                    .addToBackStack("TransparentPlayerFragment")
+                    .commit();
+        }
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());

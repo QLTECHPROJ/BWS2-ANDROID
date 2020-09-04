@@ -42,7 +42,7 @@ public class SessionsFragment extends Fragment {
     FragmentSessionsBinding binding;
     public FragmentManager f_manager;
     Activity activity;
-    String UserId,appointmentName;
+    String UserId, appointmentName, appointmentMainName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,6 +55,7 @@ public class SessionsFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             appointmentName = bundle.getString("appointmentName");
+            appointmentMainName = bundle.getString("appointmentMainName");
         }
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,17 +76,18 @@ public class SessionsFragment extends Fragment {
     private void prepareSessionList() {
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<SessionListModel> listCall = APIClient.getClient().getAppointmentSession(UserId,appointmentName);
+            Call<SessionListModel> listCall = APIClient.getClient().getAppointmentSession(UserId, appointmentName);
             listCall.enqueue(new Callback<SessionListModel>() {
                 @Override
                 public void onResponse(Call<SessionListModel> call, Response<SessionListModel> response) {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         SessionListModel listModel = response.body();
-                        if(listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))){
-                        SessionListAdapter appointmentsAdapter = new SessionListAdapter(listModel.getResponseData(), getActivity(), f_manager);
-                        binding.rvSessionList.setAdapter(appointmentsAdapter);}
-                        else {
+                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            binding.tvSessionTitle.setText(appointmentMainName);
+                            SessionListAdapter appointmentsAdapter = new SessionListAdapter(listModel.getResponseData(), getActivity(), f_manager);
+                            binding.rvSessionList.setAdapter(appointmentsAdapter);
+                        } else {
                             Toast.makeText(activity, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -149,7 +151,7 @@ public class SessionsFragment extends Fragment {
                     Fragment appointmentDetailsFragment = new AppointmentDetailsFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     Bundle bundle = new Bundle();
-                    bundle.putString("appointmentId",listModel.getId());
+                    bundle.putString("appointmentId", listModel.getId());
                     appointmentDetailsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
                             .replace(R.id.flSession, appointmentDetailsFragment).

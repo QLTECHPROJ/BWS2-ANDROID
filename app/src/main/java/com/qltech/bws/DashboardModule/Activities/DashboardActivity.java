@@ -1,6 +1,8 @@
 package com.qltech.bws.DashboardModule.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
@@ -8,9 +10,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
 import com.qltech.bws.DashboardModule.Audio.AudioFragment;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityDashboardBinding;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,12 +41,18 @@ public class DashboardActivity extends AppCompatActivity {
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        Fragment fragment = new TransparentPlayerFragment();
-        FragmentManager fragmentManager1 = getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .add(R.id.rlAudiolist, fragment)
-                .addToBackStack("TransparentPlayerFragment")
-                .commit();
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.rlAudiolist, fragment)
+                    .addToBackStack("TransparentPlayerFragment")
+                    .commit();
+
+        }
 
 //        TransparentPlayerFragment.binding.llPlayearMain.setVisibility(View.VISIBLE);
     }
