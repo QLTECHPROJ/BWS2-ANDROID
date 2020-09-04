@@ -94,81 +94,57 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-            binding.tvName.setText(arrayList.get(position).getName());
-            binding.tvDireDesc.setText(arrayList.get(position).getAudioDirection());
-            binding.tvTitle.setText(arrayList.get(position).getAudioSubCategory());
-            binding.tvDesc.setText(arrayList.get(position).getAudiomastercat());
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 1f, 30);
-            binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(ctx).load(arrayList.get(position).getImageFile()).thumbnail(0.1f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-        }
-        else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
+            getPrepareShowData(arrayList.get(position).getName(),
+                    arrayList.get(position).getAudioDirection(),
+                    arrayList.get(position).getAudioSubCategory(),
+                    arrayList.get(position).getAudiomastercat(),
+                    arrayList.get(position).getImageFile(),
+                    arrayList.get(position).getLike(),
+                    arrayList.get(position).getDownload());
+        } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-            binding.tvName.setText(arrayList.get(position).getName());
-            binding.tvDireDesc.setText(arrayList.get(position).getAudioDirection());
-            binding.tvTitle.setText(arrayList.get(position).getAudioSubCategory());
-            binding.tvDesc.setText(arrayList.get(position).getAudiomastercat());
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 1f, 30);
-            binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(ctx).load(arrayList.get(position).getImageFile()).thumbnail(0.1f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-        }
-        else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+            getPrepareShowData(arrayList.get(position).getName(),
+                    arrayList.get(position).getAudioDirection(),
+                    arrayList.get(position).getAudioSubCategory(),
+                    arrayList.get(position).getAudiomastercat(),
+                    arrayList.get(position).getImageFile(),
+                    arrayList.get(position).getLike(),
+                    arrayList.get(position).getDownload());
+        } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
             ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
-            binding.tvName.setText(arrayList.get(position).getName());
-                /*binding.tvDireDesc.setText(AppointmentDetailList.get(position).getAudioDirection());
-                binding.tvTitle.setText(AppointmentDetailList.get(position).getAudioSubCategory());
-                binding.tvDesc.setText(AppointmentDetailList.get(position).getAudiomastercat());*/
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 1f, 30);
-            binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(ctx).load(arrayList.get(position).getImageFile()).thumbnail(0.1f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-        }
-        else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
+            getPrepareShowData(arrayList.get(position).getName(),
+                    arrayList.get(position).getAudioDirection(),
+                    arrayList.get(position).getAudioSubCategory(),
+                    arrayList.get(position).getAudiomastercat(),
+                    arrayList.get(position).getImageFile(),
+                    arrayList.get(position).getLike(),
+                    arrayList.get(position).getDownload());
+        } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
             Type type = new TypeToken<ArrayList<DownloadlistModel.Audio>>() {
             }.getType();
             ArrayList<DownloadlistModel.Audio> arrayList = gson.fromJson(json, type);
-            binding.tvName.setText(arrayList.get(position).getName());
-                /*binding.tvDireDesc.setText(Downloadlist.get(position).getAudioDirection());
-                binding.tvTitle.setText(Downloadlist.get(position).getAudioSubCategory());
-                binding.tvDesc.setText(Downloadlist.get(position).getAudiomastercat());*/
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 1f, 30);
-            binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(ctx).load(arrayList.get(position).getImageFile()).thumbnail(0.1f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-        }
-        else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+            getPrepareShowData(arrayList.get(position).getName(),
+                    arrayList.get(position).getAudioDirection(),
+                    arrayList.get(position).getAudioSubCategory(),
+                    arrayList.get(position).getAudiomastercat(),
+                    arrayList.get(position).getImageFile(),
+                    arrayList.get(position).getLike(),
+                    arrayList.get(position).getDownload());
+        } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
-            binding.tvName.setText(arrayList.get(position).getName());
-               /* binding.tvDireDesc.setText(SubPlayList.get(position).getAudioDirection());
-                binding.tvTitle.setText(SubPlayList.get(position).getAudioSubCategory());
-                binding.tvDesc.setText(SubPlayList.get(position).getAudiomastercat());*/
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 1f, 30);
-            binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(ctx).load(arrayList.get(position).getImageFile()).thumbnail(0.1f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+            getPrepareShowData(arrayList.get(position).getName(),
+                    arrayList.get(position).getAudioDirection(),
+                    arrayList.get(position).getAudioSubCategory(),
+                    arrayList.get(position).getAudiomastercat(),
+                    arrayList.get(position).getImageFile(),
+                    arrayList.get(position).getLike(),
+                    arrayList.get(position).getDownload());
         }
 
 
@@ -180,23 +156,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             }
         });
 
-        if (mainAudioList.get(position).getLike().equalsIgnoreCase("1")) {
-            binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-        } else if (!mainAudioList.get(position).getLike().equalsIgnoreCase("0")) {
-            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-        }
-
-        if (mainAudioList.get(position).getDownload().equalsIgnoreCase("1")) {
-            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-            binding.ivDownloads.setAlpha(255);
-            binding.llDownload.setClickable(false);
-            binding.llDownload.setEnabled(false);
-        } else if (!mainAudioList.get(position).getDownload().equalsIgnoreCase("")) {
-            binding.llDownload.setClickable(true);
-            binding.llDownload.setEnabled(true);
-            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-        }
         //callStateListener();
 
         binding.llLike.setOnClickListener(new View.OnClickListener() {
@@ -348,7 +307,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     }
 
     private void getPrepareShowData(String name, String AudioDirection, String AudioSubCategory, String Audiomastercat,
-                                    String ImageFile) {
+                                    String ImageFile, String Like, String Download) {
         binding.tvName.setText(name);
         binding.tvDireDesc.setText(AudioDirection);
         binding.tvTitle.setText(AudioSubCategory);
@@ -360,6 +319,24 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(ctx).load(ImageFile).thumbnail(0.1f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+
+        if (Like.equalsIgnoreCase("1")) {
+            binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+        } else if (!Like.equalsIgnoreCase("0")) {
+            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+        }
+
+        if (Download.equalsIgnoreCase("1")) {
+            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+            binding.ivDownloads.setAlpha(255);
+            binding.llDownload.setClickable(false);
+            binding.llDownload.setEnabled(false);
+        } else if (!Download.equalsIgnoreCase("")) {
+            binding.llDownload.setClickable(true);
+            binding.llDownload.setEnabled(true);
+            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+        }
     }
 
     @Override

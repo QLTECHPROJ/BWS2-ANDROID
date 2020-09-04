@@ -313,6 +313,21 @@ public class AppointmentDetailModel implements Parcelable {
         @SerializedName("AudioDuration")
         @Expose
         private String audioDuration;
+        @SerializedName("Audiomastercat")
+        @Expose
+        private String audiomastercat;
+        @SerializedName("AudioSubCategory")
+        @Expose
+        private String audioSubCategory;
+        @SerializedName("AudioDirection")
+        @Expose
+        private String audioDirection;
+        @SerializedName("Like")
+        @Expose
+        private String like;
+        @SerializedName("Download")
+        @Expose
+        private String download;
 
         protected Audio(Parcel in) {
             iD = in.readString();
@@ -320,6 +335,11 @@ public class AppointmentDetailModel implements Parcelable {
             audioFile = in.readString();
             imageFile = in.readString();
             audioDuration = in.readString();
+            audiomastercat = in.readString();
+            audioSubCategory = in.readString();
+            audioDirection = in.readString();
+            like = in.readString();
+            download = in.readString();
         }
 
         public static final Creator<Audio> CREATOR = new Creator<Audio>() {
@@ -374,6 +394,46 @@ public class AppointmentDetailModel implements Parcelable {
             this.audioDuration = audioDuration;
         }
 
+        public String getAudiomastercat() {
+            return audiomastercat;
+        }
+
+        public void setAudiomastercat(String audiomastercat) {
+            this.audiomastercat = audiomastercat;
+        }
+
+        public String getAudioSubCategory() {
+            return audioSubCategory;
+        }
+
+        public void setAudioSubCategory(String audioSubCategory) {
+            this.audioSubCategory = audioSubCategory;
+        }
+
+        public String getAudioDirection() {
+            return audioDirection;
+        }
+
+        public void setAudioDirection(String audioDirection) {
+            this.audioDirection = audioDirection;
+        }
+
+        public String getLike() {
+            return like;
+        }
+
+        public void setLike(String like) {
+            this.like = like;
+        }
+
+        public String getDownload() {
+            return download;
+        }
+
+        public void setDownload(String download) {
+            this.download = download;
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -386,6 +446,11 @@ public class AppointmentDetailModel implements Parcelable {
             parcel.writeString(audioFile);
             parcel.writeString(imageFile);
             parcel.writeString(audioDuration);
+            parcel.writeString(audiomastercat);
+            parcel.writeString(audioSubCategory);
+            parcel.writeString(audioDirection);
+            parcel.writeString(like);
+            parcel.writeString(download);
         }
     }
 }

@@ -288,6 +288,15 @@ public class SubPlayListModel {
             @SerializedName("Like")
             @Expose
             private String like;
+            @SerializedName("Audiomastercat")
+            @Expose
+            private String audiomastercat;
+            @SerializedName("AudioSubCategory")
+            @Expose
+            private String audioSubCategory;
+            @SerializedName("AudioDirection")
+            @Expose
+            private String audioDirection;
 
             protected PlaylistSong(Parcel in) {
                 iD = in.readString();
@@ -299,6 +308,9 @@ public class SubPlayListModel {
                 name = in.readString();
                 download = in.readString();
                 like = in.readString();
+                audiomastercat = in.readString();
+                audioSubCategory = in.readString();
+                audioDirection = in.readString();
             }
 
             public static final Creator<PlaylistSong> CREATOR = new Creator<PlaylistSong>() {
@@ -380,6 +392,30 @@ public class SubPlayListModel {
                 return audioFile;
             }
 
+            public String getAudiomastercat() {
+                return audiomastercat;
+            }
+
+            public void setAudiomastercat(String audiomastercat) {
+                this.audiomastercat = audiomastercat;
+            }
+
+            public String getAudioSubCategory() {
+                return audioSubCategory;
+            }
+
+            public void setAudioSubCategory(String audioSubCategory) {
+                this.audioSubCategory = audioSubCategory;
+            }
+
+            public String getAudioDirection() {
+                return audioDirection;
+            }
+
+            public void setAudioDirection(String audioDirection) {
+                this.audioDirection = audioDirection;
+            }
+
             public void setAudioFile(String audioFile) {
                 this.audioFile = audioFile;
             }
@@ -400,6 +436,9 @@ public class SubPlayListModel {
                 parcel.writeString(name);
                 parcel.writeString(download);
                 parcel.writeString(like);
+                parcel.writeString(audiomastercat);
+                parcel.writeString(audioSubCategory);
+                parcel.writeString(audioDirection);
             }
         }
     }
