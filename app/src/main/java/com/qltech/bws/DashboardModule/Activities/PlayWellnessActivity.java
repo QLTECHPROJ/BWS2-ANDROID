@@ -76,14 +76,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-//        Gson gson = new Gson();
-//        String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+        Gson gson = new Gson();
+        String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
+        }.getType();
+        mainPlayModelList = gson.fromJson(json, type);
 
-        if(getIntent() !=null){
-           mainPlayModelList = getIntent().getParcelableExtra("audioList");
-        }
         /*if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();

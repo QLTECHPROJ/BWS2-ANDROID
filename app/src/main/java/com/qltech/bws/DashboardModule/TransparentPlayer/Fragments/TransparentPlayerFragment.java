@@ -203,12 +203,13 @@ public class TransparentPlayerFragment extends Fragment {
 
         binding.llPlayearMain.setOnClickListener(view -> {
             Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
-            i.putExtra("audioList",mainPlayModelList);
-            i.putExtra(CONSTANTS.PREF_KEY_position,position);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             getActivity().startActivity(i);
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, json);
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
         });
