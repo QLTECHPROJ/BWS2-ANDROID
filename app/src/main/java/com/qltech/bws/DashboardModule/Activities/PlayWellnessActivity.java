@@ -76,6 +76,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         }.getType();
         mainPlayModelList = gson.fromJson(json, type);
         listSize = mainPlayModelList.size();
+        getPrepareShowData();
 
         /*if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
