@@ -125,6 +125,8 @@ public class BillingAddressFragment extends Fragment {
                         }
                         binding.etEmail.setText(listModel.getResponseData().getEmail());
                         binding.etMobileNumber.setText(listModel.getResponseData().getPhoneNumber());
+                        binding.etMobileNumber.setEnabled(false);
+                        binding.etMobileNumber.setClickable(false);
                         binding.etCountry.setText(listModel.getResponseData().getCountry());
                         binding.etAddressLine1.setText(listModel.getResponseData().getAddress1());
                         binding.etAddressLine2.setText(listModel.getResponseData().getAddress2());
