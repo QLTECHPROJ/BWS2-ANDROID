@@ -253,24 +253,41 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.llRepeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
-                editor.commit();
-                MusicService.ToRepeat(true);
-                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                if (IsRepeat.equalsIgnoreCase("")) {
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
+                    editor.commit();
+                    MusicService.ToRepeat(true);
+                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                } else if (IsRepeat.equalsIgnoreCase("1")) {
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
+                    editor.commit();
+                    MusicService.ToRepeat(false);
+                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                }
             }
         });
 
         binding.llShuffle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "1");
-                editor.commit();
-                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-                Collections.shuffle(mainPlayModelList, new Random(System.nanoTime()));
+                if (IsShuffle.equalsIgnoreCase("")) {
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "1");
+                    editor.commit();
+                    binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                    Collections.shuffle(mainPlayModelList, new Random(System.nanoTime()));
+                } else if (IsShuffle.equalsIgnoreCase("1")) {
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
+                    editor.commit();
+                    binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                }
             }
         });
 
