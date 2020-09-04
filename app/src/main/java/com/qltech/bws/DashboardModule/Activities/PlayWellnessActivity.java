@@ -46,6 +46,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.Utility.MusicService.isPause;
+
 public class PlayWellnessActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag;
@@ -367,8 +369,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
         }
 
-        MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-        MusicService.playMedia();
+        if (isPause) {
+            MusicService.resumeMedia();
+        } else {
+            MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+            MusicService.playMedia();
+        }
         binding.simpleSeekbar.setClickable(false);
 
         endTime = MusicService.getEndTime();

@@ -39,7 +39,7 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
-                android:text="We begin your journey towards emotional empowerment by helping you to strengthen your foundations. By doing so, you may be able..."
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp" />
 

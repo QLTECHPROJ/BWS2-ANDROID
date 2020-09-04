@@ -27,7 +27,7 @@ import java.io.IOException;
 public class MusicService extends Service {
     static MediaPlayer mediaPlayer;
     static private Handler handler;
-    static boolean isPLAYING;
+    static boolean isPLAYING, isPause = false;
     private static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
 
     public MusicService(Handler handler) {
@@ -143,13 +143,25 @@ public class MusicService extends Service {
     }
 
     public static void pauseMedia() {
+
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
+            isPause = true;
 //            resumePosition = mediaPlayer.getCurrentPosition();
         }
     }
 
-    private void resumeMedia() {
+    public static boolean isPlaying() {
+        boolean playing;
+        if (mediaPlayer.isPlaying()) {
+            playing = true;
+        } else {
+            playing = false;
+        }
+        return playing;
+    }
+
+    public static void resumeMedia() {
         if (!mediaPlayer.isPlaying()) {
 //            mediaPlayer.seekTo(resumePosition);
             mediaPlayer.start();

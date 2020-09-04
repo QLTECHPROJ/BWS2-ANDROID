@@ -31,6 +31,8 @@ import com.qltech.bws.databinding.FragmentTransparentPlayerBinding;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import static com.qltech.bws.Utility.MusicService.isPause;
+
 public class TransparentPlayerFragment extends Fragment {
     public static FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag;
@@ -120,7 +122,8 @@ public class TransparentPlayerFragment extends Fragment {
                     /*i.putParcelableArrayListExtra("modelList", arrayList);
                     i.putExtra("position", position);
                     i.putExtra("AudioFlag", "AppointmentDetailModel");*/
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                     i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    MusicService.pauseMedia();
                     getActivity().startActivity(i);
                     SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = shared.edit();
