@@ -382,7 +382,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
                 TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
         binding.simpleSeekbar.setProgress(startTime);
-        hdlr.postDelayed(UpdateSongTime, 100);
+//        hdlr.postDelayed(UpdateSongTime, 100);
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
 
@@ -398,7 +398,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         MusicService.releasePlayer();
     }
 
-    private Runnable UpdateSongTime = new Runnable() {
+/*    private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
             startTime = MusicService.getStartTime();
@@ -407,7 +407,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             binding.simpleSeekbar.setProgress(startTime);
             hdlr.postDelayed(this, 60);
         }
-    };
+    };*/
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
