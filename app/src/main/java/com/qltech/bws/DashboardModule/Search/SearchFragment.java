@@ -40,6 +40,7 @@ import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
 import com.qltech.bws.DashboardModule.Models.ViewAllPlayListModel;
 import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -72,6 +73,14 @@ public class SearchFragment extends Fragment {
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+
+        Fragment fragment = new TransparentPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.rlSearchList, fragment)
+                .addToBackStack("TransparentPlayerFragment")
+                .commit();
+
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.gray));

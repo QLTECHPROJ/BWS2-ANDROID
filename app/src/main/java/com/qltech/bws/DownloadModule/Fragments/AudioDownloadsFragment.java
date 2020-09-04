@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter;
 import com.qltech.bws.DownloadModule.Models.AudioListModel;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
@@ -42,6 +44,13 @@ public class AudioDownloadsFragment extends Fragment {
             UserID = getArguments().getString("UserID");
             audioList = getArguments().getParcelableArrayList("audioDownloadsFragment");
         }
+
+        Fragment fragment = new TransparentPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flAccount, fragment)
+                .addToBackStack("TransparentPlayerFragment")
+                .commit();
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);

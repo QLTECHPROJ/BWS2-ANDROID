@@ -27,6 +27,7 @@ import com.qltech.bws.DashboardModule.Audio.Adapters.RecentlyPlayedAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.RecommendedAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.TopCategoriesAdapter;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -62,19 +63,12 @@ public class AudioFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
-                1, 1, 0.11f, 0);
-        binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        binding.ivRestaurantImage.setImageResource(R.drawable.square_logo);
-
-        binding.ivStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.ivStatus.setImageResource(R.drawable.ic_play_icon);
-            }
-        });
+        Fragment fragment = new TransparentPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.rlAudiolist, fragment)
+                .addToBackStack("TransparentPlayerFragment")
+                .commit();
 
         prepareData();
         return view;

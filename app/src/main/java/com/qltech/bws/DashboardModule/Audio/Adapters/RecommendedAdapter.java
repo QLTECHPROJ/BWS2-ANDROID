@@ -1,7 +1,9 @@
 package com.qltech.bws.DashboardModule.Audio.Adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.BigBoxLayoutBinding;
 
@@ -64,11 +68,15 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                         .add(R.id.rlAudiolist, fragment)
                         .addToBackStack("TransparentPlayerFragment")
                         .commit();
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("modelList", listModelList);
-                bundle.putInt("position", position);
-                bundle.putString("AudioFlag","MainAudio");
-                fragment.setArguments(bundle);
+
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(listModelList);
+                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
+                editor.commit();
             }
         });
     }

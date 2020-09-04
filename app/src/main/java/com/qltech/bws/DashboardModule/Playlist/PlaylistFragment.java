@@ -36,6 +36,7 @@ import com.qltech.bws.BWSApplication;
 
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -68,6 +69,13 @@ public class PlaylistFragment extends Fragment {
         if (getArguments() != null) {
             Check = getArguments().getString("Check");
         }
+
+        Fragment fragment = new TransparentPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.rlPlaylist, fragment)
+                .addToBackStack("TransparentPlayerFragment")
+                .commit();
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);

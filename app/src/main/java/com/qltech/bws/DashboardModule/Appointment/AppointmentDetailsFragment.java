@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptAnswersFragment;
@@ -23,6 +24,7 @@ import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptAudioFra
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptBookletFragment;
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptDetailsFragment;
 import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Models.DownloadsHistoryModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
@@ -45,8 +47,12 @@ public class AppointmentDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment_details, container, false);
         View view = binding.getRoot();
-
         activity = getActivity();
+
+        if (getArguments() != null) {
+            appointmentTypeId = getArguments().getString("appointmentId");
+        }
+
         view.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 FragmentManager fm = getActivity()
@@ -56,11 +62,17 @@ public class AppointmentDetailsFragment extends Fragment {
             }
             return false;
         });
-        if (getArguments() != null) {
-            appointmentTypeId = getArguments().getString("appointmentId");
-        }
+
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
+        Fragment fragment = new TransparentPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flMainLayout, fragment)
+                .addToBackStack("TransparentPlayerFragment")
+                .commit();
+
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -8,7 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:layout_marginBottom="121dp"
         tools:context=".DashboardModule.Appointment.AppointmentFragment">
 
         <RelativeLayout
@@ -289,7 +288,8 @@
                         android:layout_marginHorizontal="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_8sdp"
                         android:nestedScrollingEnabled="true"
-                        android:overScrollMode="never" />
+                        android:overScrollMode="never"
+                        android:paddingBottom="121dp" />
 
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>

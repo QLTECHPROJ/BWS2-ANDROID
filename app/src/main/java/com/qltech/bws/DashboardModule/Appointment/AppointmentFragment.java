@@ -30,6 +30,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BillingOrderModule.Models.CurrentPlanVieViewModel;
 import com.qltech.bws.DashboardModule.Models.NextSessionViewModel;
 import com.qltech.bws.DashboardModule.Models.PreviousAppointmentsModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -64,6 +65,13 @@ public class AppointmentFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
+        Fragment fragment = new TransparentPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flMainLayout, fragment)
+                .addToBackStack("TransparentPlayerFragment")
+                .commit();
+
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPreviousData.setLayoutManager(recentlyPlayed);
         binding.rvPreviousData.setItemAnimator(new DefaultItemAnimator());
@@ -81,7 +89,7 @@ public class AppointmentFragment extends Fragment {
             public void onChanged(@Nullable String s) {
             }
         });
-//        preparePreviousAppointmentsData();
+        preparePreviousAppointmentsData();
         return view;
     }
 

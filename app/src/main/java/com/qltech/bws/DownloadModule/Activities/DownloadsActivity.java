@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Fragments.AudioDownloadsFragment;
 import com.qltech.bws.DownloadModule.Fragments.PlaylistsDownlaodsFragment;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;

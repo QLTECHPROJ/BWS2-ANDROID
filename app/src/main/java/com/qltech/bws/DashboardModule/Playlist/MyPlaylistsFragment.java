@@ -29,12 +29,14 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
@@ -74,6 +76,13 @@ public class MyPlaylistsFragment extends Fragment {
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+
+        Fragment fragment = new TransparentPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.rlPlaylist, fragment)
+                .addToBackStack("TransparentPlayerFragment")
+                .commit();
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,8 +243,8 @@ public class MyPlaylistsFragment extends Fragment {
                         binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
                         if (!listModel.getResponseData().getPlaylistImage().equalsIgnoreCase("")) {
                             try {
-                            Glide.with(getActivity()).load(listModel.getResponseData().getPlaylistImage()).thumbnail(0.1f)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
+                                Glide.with(getActivity()).load(listModel.getResponseData().getPlaylistImage()).thumbnail(0.1f)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -324,12 +333,12 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable {
-        private List<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
-        private List<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
+        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
+        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
         Context ctx;
         String UserID, Created;
 
-        public PlayListsAdpater(List<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
+        public PlayListsAdpater(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
                                 String Created) {
             this.listModelList = listModelList;
             this.listFilterData = listModelList;
@@ -365,16 +374,20 @@ public class MyPlaylistsFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                  /*  Fragment fragment = new TransparentPlayerFragment();
+                    Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .add(R.id.rlAudiolist, fragment)
+                            .add(R.id.rlPlaylist, fragment)
                             .addToBackStack("TransparentPlayerFragment")
                             .commit();
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList("modelList", listModelList);
-                    bundle.putInt("position", position);
-                    fragment.setArguments(bundle);*/
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(listModelList);
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                    editor.commit();
                 }
             });
             if (Created.equalsIgnoreCase("1")) {
@@ -515,7 +528,7 @@ public class MyPlaylistsFragment extends Fragment {
                     if (charString.isEmpty()) {
                         listFilterData = listModelList;
                     } else {
-                        List<SubPlayListModel.ResponseData.PlaylistSong> filteredList = new ArrayList<>();
+                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> filteredList = new ArrayList<>();
                         for (SubPlayListModel.ResponseData.PlaylistSong row : listModelList) {
                             if (row.getName().toLowerCase().contains(charString.toLowerCase())) {
                                 filteredList.add(row);
@@ -535,7 +548,7 @@ public class MyPlaylistsFragment extends Fragment {
                     } else {
                         binding.tvFound.setVisibility(View.GONE);
                         binding.rvPlayLists.setVisibility(View.VISIBLE);
-                        listFilterData = (List<SubPlayListModel.ResponseData.PlaylistSong>) filterResults.values;
+                        listFilterData = (ArrayList<SubPlayListModel.ResponseData.PlaylistSong>) filterResults.values;
                         notifyDataSetChanged();
                     }
                 }

@@ -9,11 +9,14 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.qltech.bws.DashboardModule.Audio.AudioFragment;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.ActivityDashboardBinding;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -34,17 +37,14 @@ public class DashboardActivity extends AppCompatActivity {
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+        Fragment fragment = new TransparentPlayerFragment();
+        FragmentManager fragmentManager1 = getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.rlAudiolist, fragment)
+                .addToBackStack("TransparentPlayerFragment")
+                .commit();
 
-    }
-
-    public void Player(){
-        binding.llPlayearMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(DashboardActivity.this, PlayWellnessActivity.class);
-                startActivity(i);
-            }
-        });
+//        TransparentPlayerFragment.binding.llPlayearMain.setVisibility(View.VISIBLE);
     }
 
     @Override

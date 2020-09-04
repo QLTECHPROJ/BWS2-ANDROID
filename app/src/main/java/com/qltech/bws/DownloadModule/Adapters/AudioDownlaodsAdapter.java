@@ -1,5 +1,8 @@
 package com.qltech.bws.DownloadModule.Adapters;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,21 +13,27 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
 import com.qltech.bws.DownloadModule.Models.AudioListModel;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.DownloadsLayoutBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -32,13 +41,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
-    private List<DownloadlistModel.Audio> listModelList;
+    private ArrayList<DownloadlistModel.Audio> listModelList;
     FragmentActivity ctx;
     String UserID;
     FrameLayout progressBarHolder;
     ImageView ImgV;
 
-    public AudioDownlaodsAdapter(List<DownloadlistModel.Audio> listModelList, FragmentActivity ctx, String UserID,
+    public AudioDownlaodsAdapter(ArrayList<DownloadlistModel.Audio> listModelList, FragmentActivity ctx, String UserID,
                                  FrameLayout progressBarHolder, ImageView ImgV) {
         this.listModelList = listModelList;
         this.ctx = ctx;
@@ -67,6 +76,27 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.1f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+
+        holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.flAccount, fragment)
+                        .addToBackStack("TransparentPlayerFragment")
+                        .commit();
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(listModelList);
+                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
+                editor.commit();
+            }
+        });
 
         holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,5 +163,4 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             this.binding = binding;
         }
     }
-
 }

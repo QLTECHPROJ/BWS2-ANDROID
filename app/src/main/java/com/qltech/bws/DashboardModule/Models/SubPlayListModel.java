@@ -1,8 +1,12 @@
 package com.qltech.bws.DashboardModule.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SubPlayListModel {
@@ -51,7 +55,7 @@ public class SubPlayListModel {
         this.responseStatus = responseStatus;
     }
 
-    public class ResponseData {
+    public static class ResponseData implements Parcelable {
         @SerializedName("PlaylistID")
         @Expose
         private String playlistID;
@@ -93,7 +97,35 @@ public class SubPlayListModel {
         private String like;
         @SerializedName("PlaylistSongs")
         @Expose
-        private List<PlaylistSong> playlistSongs = null;
+        private ArrayList<PlaylistSong> playlistSongs = null;
+
+        protected ResponseData(Parcel in) {
+            playlistID = in.readString();
+            playlistName = in.readString();
+            playlistDesc = in.readString();
+            playlistMastercat = in.readString();
+            playlistSubcat = in.readString();
+            playlistImage = in.readString();
+            totalAudio = in.readString();
+            totalDuration = in.readString();
+            totalhour = in.readString();
+            totalminute = in.readString();
+            created = in.readString();
+            download = in.readString();
+            like = in.readString();
+        }
+
+        public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
+            @Override
+            public ResponseData createFromParcel(Parcel in) {
+                return new ResponseData(in);
+            }
+
+            @Override
+            public ResponseData[] newArray(int size) {
+                return new ResponseData[size];
+            }
+        };
 
         public String getPlaylistID() {
             return playlistID;
@@ -199,15 +231,36 @@ public class SubPlayListModel {
             this.playlistImage = playlistImage;
         }
 
-        public List<PlaylistSong> getPlaylistSongs() {
+        public ArrayList<PlaylistSong> getPlaylistSongs() {
             return playlistSongs;
         }
 
-        public void setPlaylistSongs(List<PlaylistSong> playlistSongs) {
+        public void setPlaylistSongs(ArrayList<PlaylistSong> playlistSongs) {
             this.playlistSongs = playlistSongs;
         }
 
-        public class PlaylistSong {
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(playlistID);
+            parcel.writeString(playlistName);
+            parcel.writeString(playlistDesc);
+            parcel.writeString(playlistMastercat);
+            parcel.writeString(playlistSubcat);
+            parcel.writeString(playlistImage);
+            parcel.writeString(totalAudio);
+            parcel.writeString(totalDuration);
+            parcel.writeString(totalhour);
+            parcel.writeString(totalminute);
+            parcel.writeString(created);
+            parcel.writeString(like);
+        }
+
+        public static class PlaylistSong implements Parcelable{
             @SerializedName("ID")
             @Expose
             private String iD;
@@ -236,6 +289,29 @@ public class SubPlayListModel {
             @Expose
             private String like;
 
+            protected PlaylistSong(Parcel in) {
+                iD = in.readString();
+                imageFile = in.readString();
+                patientID = in.readString();
+                audioDuration = in.readString();
+                playlistID = in.readString();
+                audioFile = in.readString();
+                name = in.readString();
+                download = in.readString();
+                like = in.readString();
+            }
+
+            public static final Creator<PlaylistSong> CREATOR = new Creator<PlaylistSong>() {
+                @Override
+                public PlaylistSong createFromParcel(Parcel in) {
+                    return new PlaylistSong(in);
+                }
+
+                @Override
+                public PlaylistSong[] newArray(int size) {
+                    return new PlaylistSong[size];
+                }
+            };
             public String getImageFile() {
                 return imageFile;
             }
@@ -306,6 +382,24 @@ public class SubPlayListModel {
 
             public void setAudioFile(String audioFile) {
                 this.audioFile = audioFile;
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel parcel, int i) {
+                parcel.writeString(iD);
+                parcel.writeString(imageFile);
+                parcel.writeString(patientID);
+                parcel.writeString(audioDuration);
+                parcel.writeString(playlistID);
+                parcel.writeString(audioFile);
+                parcel.writeString(name);
+                parcel.writeString(download);
+                parcel.writeString(like);
             }
         }
     }

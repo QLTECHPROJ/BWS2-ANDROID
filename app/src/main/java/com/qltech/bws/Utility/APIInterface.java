@@ -196,7 +196,7 @@ public interface APIInterface {
                                                   @Field("PlaylistId") String playlistId);
 
     /* TODO AddAudioActivity & SearchFragment */
-    @GET("suggested")
+    @GET("suggestedaudio")
     Call<SuggestedModel> getSuggestedLists();
 
     /* TODO SearchFragment */
