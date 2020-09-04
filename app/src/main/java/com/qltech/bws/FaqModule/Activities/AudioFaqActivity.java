@@ -20,6 +20,8 @@ import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.databinding.ActivityAudioFaqBinding;
 
+import java.util.ArrayList;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,6 +30,8 @@ public class AudioFaqActivity extends AppCompatActivity {
     ActivityAudioFaqBinding binding;
     Context ctx;
     AudioFaqAdapter adapter;
+    ArrayList<FaqListModel.ResponseData> faqListModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +39,10 @@ public class AudioFaqActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_audio_faq);
         ctx = AudioFaqActivity.this;
 
-        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
-
+        faqListModel = new ArrayList<>();
+        if (getIntent() != null) {
+            faqListModel = getIntent().getParcelableArrayListExtra("faqListModel");
+        }
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,6 +53,8 @@ public class AudioFaqActivity extends AppCompatActivity {
         RecyclerView.LayoutManager serachList = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvFaqList.setLayoutManager(serachList);
         binding.rvFaqList.setItemAnimator(new DefaultItemAnimator());
+        adapter = new AudioFaqAdapter(faqListModel, ctx, binding.rvFaqList, binding.tvFound);
+        binding.rvFaqList.setAdapter(adapter);
 
     }
 
@@ -55,24 +63,4 @@ public class AudioFaqActivity extends AppCompatActivity {
         finish();
     }
 
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

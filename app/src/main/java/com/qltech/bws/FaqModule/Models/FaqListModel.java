@@ -1,14 +1,18 @@
 package com.qltech.bws.FaqModule.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class FaqListModel {
+public class FaqListModel implements Parcelable {
     @SerializedName("ResponseData")
     @Expose
-    private List<ResponseData> responseData = null;
+    private ArrayList<ResponseData> responseData = null;
     @SerializedName("ResponseCode")
     @Expose
     private String responseCode;
@@ -19,11 +23,29 @@ public class FaqListModel {
     @Expose
     private String responseStatus;
 
-    public List<ResponseData> getResponseData() {
+    protected FaqListModel(Parcel in) {
+        responseCode = in.readString();
+        responseMessage = in.readString();
+        responseStatus = in.readString();
+    }
+
+    public static final Creator<FaqListModel> CREATOR = new Creator<FaqListModel>() {
+        @Override
+        public FaqListModel createFromParcel(Parcel in) {
+            return new FaqListModel(in);
+        }
+
+        @Override
+        public FaqListModel[] newArray(int size) {
+            return new FaqListModel[size];
+        }
+    };
+
+    public ArrayList<ResponseData> getResponseData() {
         return responseData;
     }
 
-    public void setResponseData(List<ResponseData> responseData) {
+    public void setResponseData(ArrayList<ResponseData> responseData) {
         this.responseData = responseData;
     }
 
@@ -50,7 +72,20 @@ public class FaqListModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
-    public class ResponseData {
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(responseCode);
+        parcel.writeString(responseMessage);
+        parcel.writeString(responseStatus);
+    }
+
+    public static class ResponseData implements Parcelable{
         @SerializedName("ID")
         @Expose
         private String iD;
@@ -63,6 +98,29 @@ public class FaqListModel {
         @SerializedName("VideoURL")
         @Expose
         private String videoURL;
+        @SerializedName("Category")
+        @Expose
+        private String Category;
+
+        protected ResponseData(Parcel in) {
+            iD = in.readString();
+            title = in.readString();
+            desc = in.readString();
+            videoURL = in.readString();
+            Category = in.readString();
+        }
+
+        public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
+            @Override
+            public ResponseData createFromParcel(Parcel in) {
+                return new ResponseData(in);
+            }
+
+            @Override
+            public ResponseData[] newArray(int size) {
+                return new ResponseData[size];
+            }
+        };
 
         public String getID() {
             return iD;
@@ -94,6 +152,28 @@ public class FaqListModel {
 
         public void setVideoURL(String videoURL) {
             this.videoURL = videoURL;
+        }
+
+        public String getCategory() {
+            return Category;
+        }
+
+        public void setCategory(String planFlag) {
+            Category = planFlag;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(iD);
+            parcel.writeString(title);
+            parcel.writeString(desc);
+            parcel.writeString(videoURL);
+            parcel.writeString(Category);
         }
     }
 }

@@ -42,6 +42,7 @@ public class AudioFaqAdapter extends RecyclerView.Adapter<AudioFaqAdapter.MyView
         holder.binding.tvTitle.setText(modelList.get(position).getTitle());
         holder.binding.tvDesc.setText(modelList.get(position).getDesc());
 
+
         holder.binding.ivClickRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
