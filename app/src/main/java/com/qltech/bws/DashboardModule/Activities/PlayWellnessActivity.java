@@ -35,6 +35,7 @@ import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityPlayWellnessBinding;
 
 import java.lang.reflect.Type;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -68,6 +69,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 
+        binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
@@ -371,27 +373,23 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         });
 
         binding.llnext.setOnClickListener(view -> {
+            MusicService.pauseMedia();
             if (position < listSize - 1) {
-                MusicService.pauseMedia();
                 position = position + 1;
-                getPrepareShowData();
             } else {
                 position = 0;
-                getPrepareShowData();
             }
-
+            getPrepareShowData();
         });
 
         binding.llprev.setOnClickListener(view -> {
+            MusicService.pauseMedia();
             if (position > 0) {
-                MusicService.pauseMedia();
                 position = position - 1;
-                getPrepareShowData();
             } else {
-                MusicService.pauseMedia();
                 position = 0;
-                getPrepareShowData();
             }
+            getPrepareShowData();
         });
     }
 
@@ -408,7 +406,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.1f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-        binding.simpleSeekbar.setOnSeekBarChangeListener(this); // Important
 
         if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
@@ -437,22 +434,23 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.simpleSeekbar.setClickable(false);
 
         startTime = MusicService.getStartTime();
-        if (oTime == 0) {
-            binding.simpleSeekbar.setMax(endTime);
-            oTime = 1;
-        }
+
         binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
 
         binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
                 TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
-        binding.simpleSeekbar.setProgress(startTime);
-        hdlr.postDelayed(UpdateSongTime, 100);
+        hdlr.postDelayed(UpdateSongTime, 60);
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
 
 
     @Override
     public void onBackPressed() {
+        MusicService.pauseMedia();
+        SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared2.edit();
+        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+        editor.commit();
         finish();
     }
 
@@ -468,7 +466,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             startTime = MusicService.getStartTime();
             binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
                     TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
-            binding.simpleSeekbar.setProgress(startTime);
+            Time t = Time.valueOf("00:"+mainPlayModelList.get(position).getAudioDuration());
+            long totalDuration = t.getTime();
+            long currentDuration = MusicService.getStartTime();
+
+            int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            binding.simpleSeekbar.setProgress(progress);
+            binding.simpleSeekbar.setMax(100);
+
+            // Running this thread after 100 milliseconds
             hdlr.postDelayed(this, 60);
         }
     };

@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -31,15 +32,16 @@ import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.FragmentTransparentPlayerBinding;
 
 import java.lang.reflect.Type;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import static com.qltech.bws.Utility.MusicService.isPause;
 
-public class TransparentPlayerFragment extends Fragment {
+public class TransparentPlayerFragment extends Fragment implements  SeekBar.OnSeekBarChangeListener{
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle;
-    int position = 0,startTime,oTime,endTime,listSize;
+    int position = 0,startTime,oTime,listSize;
     private Handler hdlr;
     MainPlayModel mainPlayModel;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -59,6 +61,7 @@ public class TransparentPlayerFragment extends Fragment {
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
+        binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
@@ -199,14 +202,11 @@ public class TransparentPlayerFragment extends Fragment {
         binding.simpleSeekbar.setClickable(false);
 
         startTime = MusicService.getStartTime();
-        if (oTime == 0) {
-            binding.simpleSeekbar.setMax(endTime);
-            oTime = 1;
-        }
-        binding.simpleSeekbar.setProgress(startTime);
-        hdlr.postDelayed(UpdateSongTime, 100);
+
+        hdlr.postDelayed(UpdateSongTime, 60);
 
         binding.llPlayearMain.setOnClickListener(view -> {
+            MusicService.pauseMedia();
             Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             getActivity().startActivity(i);
@@ -224,8 +224,33 @@ public class TransparentPlayerFragment extends Fragment {
         @Override
         public void run() {
             startTime = MusicService.getStartTime();
-            binding.simpleSeekbar.setProgress(startTime);
+
+            binding.simpleSeekbar.setMax(100);
+            Time t = Time.valueOf("00:"+mainPlayModelList.get(position).getAudioDuration());
+            long totalDuration = t.getTime();
+            long currentDuration = MusicService.getStartTime();
+
+            int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            binding.simpleSeekbar.setProgress(progress);
+
+            // Running this thread after 100 milliseconds
             hdlr.postDelayed(this, 60);
         }
     };
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
 }

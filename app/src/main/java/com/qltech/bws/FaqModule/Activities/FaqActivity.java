@@ -85,7 +85,7 @@ public class FaqActivity extends AppCompatActivity {
                 modelList.clear();
                 modelList = new ArrayList<>();
                 for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
-                    if (faqListModel.getResponseData().get(i).getCategory().contains("Audio")) {
+                    if (faqListModel.getResponseData().get(i).getCategory().contains("Help")) {
                         modelList.add(faqListModel.getResponseData().get(i));
                     }
                 }
@@ -101,7 +101,7 @@ public class FaqActivity extends AppCompatActivity {
                 modelList.clear();
                 modelList = new ArrayList<>();
                 for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
-                    if (faqListModel.getResponseData().get(i).getCategory().contains("Audio")) {
+                    if (faqListModel.getResponseData().get(i).getCategory().contains("Playlist")) {
                         modelList.add(faqListModel.getResponseData().get(i));
                     }
                 }
