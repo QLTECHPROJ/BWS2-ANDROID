@@ -50,6 +50,7 @@ public class TransparentPlayerFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_transparent_player, container, false);
         View view = binding.getRoot();
         mainPlayModel = new MainPlayModel();
+        mainPlayModelList = new ArrayList<>();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         hdlr = new Handler();
