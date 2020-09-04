@@ -23,15 +23,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
-import com.qltech.bws.DashboardModule.Models.MainAudioModel;
-import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
-import com.qltech.bws.DashboardModule.Models.ViewAllAudioListModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -49,12 +44,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.qltech.bws.Utility.MusicService.isPause;
-
 public class PlayWellnessActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag;
-    int oTime = 0, startTime = 0,endTime = 0, position, listSize;
+    int oTime = 0, startTime = 0, endTime = 0, position, listSize;
     Context ctx;
     Activity activity;
     private Handler hdlr;
@@ -79,7 +72,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-        Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
+        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
         }.getType();
         mainPlayModelList = gson.fromJson(json, type);
 
@@ -180,16 +173,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             getPrepareShowData();
         }*/
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MusicService.pauseMedia();
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                editor.commit();
-                finish();
-            }
+        binding.llBack.setOnClickListener(view -> {
+            MusicService.pauseMedia();
+            SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared2.edit();
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.commit();
+            finish();
         });
 
         //callStateListener();
@@ -247,12 +237,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
         }
 
-        if (IsShuffle.equalsIgnoreCase("")|| IsRepeat.equalsIgnoreCase("")){
-            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+        if (IsShuffle.equalsIgnoreCase("")) {
             binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-        }else if (IsShuffle.equalsIgnoreCase("1")|| IsRepeat.equalsIgnoreCase("1")){
-            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+        } else if (IsShuffle.equalsIgnoreCase("1")) {
             binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+
+        if (IsRepeat.equalsIgnoreCase("")) {
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+        } else if (IsRepeat.equalsIgnoreCase("1")) {
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         }
 
         binding.llRepeat.setOnClickListener(new View.OnClickListener() {
