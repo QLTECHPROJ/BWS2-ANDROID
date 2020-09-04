@@ -372,7 +372,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
         binding.llnext.setOnClickListener(view -> {
             if (position < listSize - 1) {
-                MusicService.stopMedia();
+                MusicService.pauseMedia();
                 position = position + 1;
                 getPrepareShowData();
             } else {

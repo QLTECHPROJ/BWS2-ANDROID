@@ -49,7 +49,6 @@ public class TransparentPlayerFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_transparent_player, container, false);
         View view = binding.getRoot();
-        mainPlayModel = new MainPlayModel();
         mainPlayModelList = new ArrayList<>();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -70,6 +69,7 @@ public class TransparentPlayerFragment extends Fragment {
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
+                mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(position).getID());
                 mainPlayModel.setName(arrayList.get(position).getName());
                 mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
@@ -90,6 +90,7 @@ public class TransparentPlayerFragment extends Fragment {
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
+                mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(position).getID());
                 mainPlayModel.setName(arrayList.get(position).getName());
                 mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
@@ -108,6 +109,7 @@ public class TransparentPlayerFragment extends Fragment {
             }.getType();
             ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type); listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
+                mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(position).getID());
                 mainPlayModel.setName(arrayList.get(position).getName());
                 mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
@@ -126,6 +128,7 @@ public class TransparentPlayerFragment extends Fragment {
             }.getType();
             ArrayList<DownloadlistModel.Audio> arrayList = gson.fromJson(json, type); listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
+                mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(position).getAudioID());
                 mainPlayModel.setName(arrayList.get(position).getName());
                 mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
@@ -144,6 +147,7 @@ public class TransparentPlayerFragment extends Fragment {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type); listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
+                mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(position).getID());
                 mainPlayModel.setName(arrayList.get(position).getName());
                 mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());

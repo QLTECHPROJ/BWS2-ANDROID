@@ -48,28 +48,6 @@ public class AudioFaqActivity extends AppCompatActivity {
         binding.rvFaqList.setLayoutManager(serachList);
         binding.rvFaqList.setItemAnimator(new DefaultItemAnimator());
 
-        showProgressBar();
-        if (BWSApplication.isNetworkConnected(this)) {
-            Call<FaqListModel> listCall = APIClient.getClient().getFaqLists();
-            listCall.enqueue(new Callback<FaqListModel>() {
-                @Override
-                public void onResponse(Call<FaqListModel> call, Response<FaqListModel> response) {
-                    if (response.isSuccessful()) {
-                        hideProgressBar();
-                        FaqListModel listModel = response.body();
-                        adapter = new AudioFaqAdapter(listModel.getResponseData(), ctx, binding.rvFaqList, binding.tvFound);
-                        binding.rvFaqList.setAdapter(adapter);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<FaqListModel> call, Throwable t) {
-                    hideProgressBar();
-                }
-            });
-        } else {
-            Toast.makeText(this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
