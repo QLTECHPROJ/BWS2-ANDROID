@@ -15,6 +15,8 @@ public class MainPlayModel implements Parcelable {
         private String download;
         private String audioDuration;
 
+    public MainPlayModel() {
+    }
     public MainPlayModel(Parcel in) {
         ID = in.readString();
         name = in.readString();
