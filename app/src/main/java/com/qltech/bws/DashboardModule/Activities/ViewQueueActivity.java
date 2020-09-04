@@ -6,17 +6,23 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
 import com.qltech.bws.DashboardModule.Adapters.QueueAdapter;
 import com.qltech.bws.DashboardModule.Models.QueueModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityViewQueueBinding;
 
 import java.util.ArrayList;
@@ -25,28 +31,24 @@ import java.util.List;
 public class ViewQueueActivity extends AppCompatActivity {
     ActivityViewQueueBinding binding;
     List<QueueModel> listModelList = new ArrayList<>();
-    private MediaPlayer mPlayer;
-    private static int endTime = 0;
+    String AudioFlag;
+    int position;
+    Context ctx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_view_queue);
+        ctx = ViewQueueActivity.this;
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+        position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
         binding.rvQueueList.setFocusable(false);
         binding.nestedScroll.requestFocus();
-//        mPlayer = new MediaPlayer();
-        mPlayer = MediaPlayer.create(ViewQueueActivity.this, R.raw.aasha);
-        endTime = mPlayer.getDuration();
-        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-      /*  try {
-            mPlayer.setDataSource(ViewQueueActivity.this, Uri.parse(listModelList.get(1).getLink()));
-            Log.e("listModel.getLink", "" + listModelList.get(1).getLink());
-            mPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,12 +63,19 @@ public class ViewQueueActivity extends AppCompatActivity {
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         binding.ivRestaurantImage.setImageResource(R.drawable.square_logo);
 
+        /*if (MusicService.isPause) {
+            MusicService.resumeMedia();
+        } else {
+            MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+            MusicService.playMedia();
+        }*/
+
         binding.simpleSeekbar.setClickable(false);
-        QueueAdapter adapter = new QueueAdapter(listModelList, ViewQueueActivity.this, mPlayer, endTime);
+//        QueueAdapter adapter = new QueueAdapter(listModelList, ViewQueueActivity.this, mPlayer, endTime);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ViewQueueActivity.this);
         binding.rvQueueList.setLayoutManager(mLayoutManager);
         binding.rvQueueList.setItemAnimator(new DefaultItemAnimator());
-        binding.rvQueueList.setAdapter(adapter);
+//        binding.rvQueueList.setAdapter(adapter);
 
         prepareQueueData();
 
@@ -76,7 +85,7 @@ public class ViewQueueActivity extends AppCompatActivity {
                 binding.llPause.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.ivPause.setImageResource(R.drawable.ic_play_white_icon);
-                mPlayer.pause();
+//                MusicService.pauseMedia();
             }
         });
 
@@ -86,7 +95,7 @@ public class ViewQueueActivity extends AppCompatActivity {
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.ivPlay.setImageResource(R.drawable.ic_pause_icon);
-                mPlayer.isPlaying();
+//                MusicService.resumeMedia();
             }
         });
     }
@@ -105,24 +114,6 @@ public class ViewQueueActivity extends AppCompatActivity {
         list = new QueueModel("Self-Discipline Program", "12:37", "");
         listModelList.add(list);
         list = new QueueModel("Love Thy Self", "12:37", "");
-        listModelList.add(list);
-        list = new QueueModel("I Can Attitude and Mind...", "12:37", "");
-        listModelList.add(list);
-        list = new QueueModel("Motivation Program", "12:37", "");
-        listModelList.add(list);
-        list = new QueueModel("Self-Discipline Program", "12:37", "");
-        listModelList.add(list);
-        list = new QueueModel("Love Thy Self", "12:37", "");
-        listModelList.add(list);
-        list = new QueueModel("I Can Attitude and Mind...", "12:37", "");
-        listModelList.add(list);
-        list = new QueueModel("Motivation Program", "12:37", "");
-        listModelList.add(list);
-        list = new QueueModel("Self-Discipline Program", "12:37", "");
-        listModelList.add(list);
-        list = new QueueModel("Love Thy Self", "12:37", "");
-        listModelList.add(list);
-        list = new QueueModel("I Can Attitude and Mind...", "12:37", "");
         listModelList.add(list);
     }
 

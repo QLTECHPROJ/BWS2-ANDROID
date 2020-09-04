@@ -311,7 +311,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
         binding.llViewQueue.setOnClickListener(view -> {
             Intent i = new Intent(ctx, ViewQueueActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
+            SharedPreferences ViewQueue = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = ViewQueue.edit();
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.commit();
         });
 
 //        mPlayer.setOnCompletionListener(mediaPlayer -> {
@@ -373,7 +378,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     }
 
     private void getPrepareShowData() {
-
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         binding.tvName.setText(mainPlayModelList.get(position).getName());
         binding.tvDireDesc.setText(mainPlayModelList.get(position).getAudioDirection());
