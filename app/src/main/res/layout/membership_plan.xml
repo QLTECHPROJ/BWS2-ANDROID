@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/_4sdp"
-    android:layout_marginTop="@dimen/_20sdp"
-    android:layout_marginBottom="@dimen/_6sdp"
-    android:elevation="3.6dp"
-    app:cardCornerRadius="@dimen/_8sdp">
+
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_6sdp"
+        android:elevation="3.6dp"
+        app:cardCornerRadius="@dimen/_8sdp">
 
         <LinearLayout
             android:id="@+id/llPlanMain"
@@ -98,102 +98,103 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                    <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_16sdp"
-                android:gravity="center_vertical">
 
-                <ImageView
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:padding="@dimen/_12sdp"
-                    android:src="@drawable/ic_orange_check_icon" />
-
-                <TextView
-                    android:id="@+id/tvPlanFeatures01"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_13sdp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="left"
-                    android:text="Access 65+ Audio Programs"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp" />
-            </LinearLayout>
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:gravity="center_vertical">
 
-                    <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="@dimen/_40sdp"
+                        android:padding="@dimen/_12sdp"
+                        android:src="@drawable/ic_orange_check_icon" />
 
-                <ImageView
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:padding="@dimen/_12sdp"
-                    android:src="@drawable/ic_orange_check_icon" />
+                    <TextView
+                        android:id="@+id/tvPlanFeatures01"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_13sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="left"
+                        android:text="Access 65+ Audio Programs"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_15sdp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvPlanFeatures02"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_13sdp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="start"
-                    android:text="30 Day Free Trial"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp" />
-            </LinearLayout>
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:gravity="center_vertical">
 
-                    <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="@dimen/_40sdp"
+                        android:padding="@dimen/_12sdp"
+                        android:src="@drawable/ic_orange_check_icon" />
 
-                <ImageView
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:padding="@dimen/_12sdp"
-                    android:src="@drawable/ic_orange_check_icon" />
+                    <TextView
+                        android:id="@+id/tvPlanFeatures02"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_13sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="start"
+                        android:text="30 Day Free Trial"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_15sdp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvPlanFeatures03"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_13sdp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="start"
-                    android:text="Email Support"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp" />
-            </LinearLayout>
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:gravity="center_vertical">
 
-                    <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
-                android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="@dimen/_40sdp"
+                        android:padding="@dimen/_12sdp"
+                        android:src="@drawable/ic_orange_check_icon" />
 
-                <ImageView
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:padding="@dimen/_12sdp"
-                    android:src="@drawable/ic_orange_check_icon" />
+                    <TextView
+                        android:id="@+id/tvPlanFeatures03"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_13sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="start"
+                        android:text="Email Support"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_15sdp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvPlanFeatures04"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_13sdp"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:gravity="start"
-                    android:text="24/7 Available"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp" />
-            </LinearLayout>
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="@dimen/_40sdp"
+                        android:padding="@dimen/_12sdp"
+                        android:src="@drawable/ic_orange_check_icon" />
+
+                    <TextView
+                        android:id="@+id/tvPlanFeatures04"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_13sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="start"
+                        android:text="24/7 Available"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_15sdp" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

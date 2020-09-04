@@ -436,7 +436,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         startTime = MusicService.getStartTime();
 
         binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
-
         binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
                 TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
         hdlr.postDelayed(UpdateSongTime, 60);

@@ -74,14 +74,44 @@ public class CurrentPlanFragment extends Fragment {
                         hideProgressBar();
                         CurrentPlanVieViewModel listModel = response.body();
 
-                        binding.tvHeader.setText("Your current membership");
-                        binding.llPlanMain.setVisibility(View.VISIBLE);
-                        if (listModel.getResponseData().getOrderTotal().equalsIgnoreCase("")) {
-                            binding.tvDoller.setText("$0.00");
-                        } else {
-                            binding.tvDoller.setText("$" + listModel.getResponseData().getOrderTotal());
+                        binding.tvHeader.setText(listModel.getResponseData().getPlan());
+                        if (listModel.getResponseData().getActivate().equalsIgnoreCase("")){
+                            binding.tvPlan.setText("");
+                            binding.tvPlan.setVisibility(View.GONE);
+                        }else {
+                            binding.tvPlan.setVisibility(View.VISIBLE);
+                            binding.tvPlan.setText("Active Since: "+listModel.getResponseData().getActivate());
                         }
-                        binding.tvPlan.setText(" / " + listModel.getResponseData().getPlan());
+                        binding.tvSubName.setText(listModel.getResponseData().getSubtitle());
+                        binding.tvPlanAmount.setText(listModel.getResponseData().getOrderTotal());
+                        binding.tvPlanInterval.setText(listModel.getResponseData().getPlanStr());
+                        binding.tvPayUsing.setText(listModel.getResponseData().getCardDigit());
+
+                        if (listModel.getResponseData().getStatus().equalsIgnoreCase("1")){
+                            binding.tvRecommended.setBackgroundResource(R.drawable.green_background);
+                            binding.tvRecommended.setText(R.string.Active);
+                            binding.btnPayNow.setVisibility(View.VISIBLE);
+                            binding.tvPayUsing.setVisibility(View.VISIBLE);
+                            binding.tvChangeCard.setVisibility(View.VISIBLE);
+                        }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("2")){
+                            binding.tvRecommended.setBackgroundResource(R.drawable.dark_blue_background);
+                            binding.tvRecommended.setText(R.string.InActive);
+                            binding.btnPayNow.setVisibility(View.GONE);
+                            binding.btnPayNow.setVisibility(View.GONE);
+                            binding.btnPayNow.setVisibility(View.GONE);
+                        }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("3")){
+                            binding.tvRecommended.setBackgroundResource(R.drawable.yellow_background);
+                            binding.tvRecommended.setText(R.string.Suspended);
+                            binding.btnPayNow.setVisibility(View.GONE);
+                            binding.btnPayNow.setVisibility(View.GONE);
+                            binding.btnPayNow.setVisibility(View.GONE);
+                        }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("4")){
+                            binding.tvRecommended.setBackgroundResource(R.drawable.dark_blue_background);
+                            binding.tvRecommended.setText(R.string.Cancelled);
+                            binding.btnPayNow.setVisibility(View.GONE);
+                            binding.btnPayNow.setVisibility(View.GONE);
+                            binding.btnPayNow.setVisibility(View.GONE);
+                        }
 
                         adpater = new FeaturedListAdpater(listModel.getResponseData().getFeature());
                         binding.rvFeatured.setAdapter(adpater);
@@ -106,6 +136,20 @@ public class CurrentPlanFragment extends Fragment {
                 mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(getActivity(), CancelMembershipActivity.class);
                 startActivity(i);
+            }
+        });
+
+        binding.btnPayNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        binding.tvChangeCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PaymentFragment.updateCardList();
             }
         });
         return view;

@@ -50,11 +50,32 @@ public class CurrentPlanVieViewModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
-    public class ResponseData {
 
+    public class ResponseData {
         @SerializedName("Plan")
         @Expose
         private String plan;
+        @SerializedName("PlanId")
+        @Expose
+        private String planId;
+        @SerializedName("PlanFlag")
+        @Expose
+        private String planFlag;
+        @SerializedName("PlanStr")
+        @Expose
+        private String planStr;
+        @SerializedName("Activate")
+        @Expose
+        private String activate;
+        @SerializedName("Status")
+        @Expose
+        private String status;
+        @SerializedName("Subtitle")
+        @Expose
+        private String subtitle;
+        @SerializedName("CardDigit")
+        @Expose
+        private String cardDigit;
         @SerializedName("OrderTotal")
         @Expose
         private String orderTotal;
@@ -87,6 +108,62 @@ public class CurrentPlanVieViewModel {
 
         public void setOrderTotal(String orderTotal) {
             this.orderTotal = orderTotal;
+        }
+
+        public String getPlanId() {
+            return planId;
+        }
+
+        public void setPlanId(String planId) {
+            this.planId = planId;
+        }
+
+        public String getPlanFlag() {
+            return planFlag;
+        }
+
+        public void setPlanFlag(String planFlag) {
+            this.planFlag = planFlag;
+        }
+
+        public String getPlanStr() {
+            return planStr;
+        }
+
+        public void setPlanStr(String planStr) {
+            this.planStr = planStr;
+        }
+
+        public String getActivate() {
+            return activate;
+        }
+
+        public void setActivate(String activate) {
+            this.activate = activate;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getSubtitle() {
+            return subtitle;
+        }
+
+        public void setSubtitle(String subtitle) {
+            this.subtitle = subtitle;
+        }
+
+        public String getCardDigit() {
+            return cardDigit;
+        }
+
+        public void setCardDigit(String cardDigit) {
+            this.cardDigit = cardDigit;
         }
 
         public List<Feature> getFeature() {

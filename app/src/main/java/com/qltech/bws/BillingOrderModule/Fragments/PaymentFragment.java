@@ -35,7 +35,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class PaymentFragment extends Fragment {
     FragmentPaymentBinding binding;
     AllCardAdapter adapter;
-    Context context;
+    static Context context;
     String userId;
 
     @Override
@@ -62,6 +62,11 @@ public class PaymentFragment extends Fragment {
         });
         prepareCardList();
         return view;
+    }
+
+    public static void updateCardList() {
+        Toast.makeText(context, "Changedd", Toast.LENGTH_SHORT).show();
+//        prepareCardList();
     }
 
     private void prepareCardList() {
