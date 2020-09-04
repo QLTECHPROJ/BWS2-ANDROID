@@ -58,7 +58,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     Context ctx;
     Activity activity;
     private Handler hdlr;
-    MainPlayModel mainPlayModel;
     ArrayList<MainPlayModel> mainPlayModelList;
 
     @Override
@@ -68,7 +67,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         hdlr = new Handler();
         ctx = PlayWellnessActivity.this;
         activity = PlayWellnessActivity.this;
-        mainPlayModel = new MainPlayModel();
         mainPlayModelList = new ArrayList<>();
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -78,12 +76,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+//        Gson gson = new Gson();
+//        String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
-        if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
+        if(getIntent() !=null){
+           mainPlayModelList = getIntent().getParcelableExtra("audioList");
+        }
+        /*if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
@@ -178,11 +179,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 mainPlayModelList.add(mainPlayModel);
             }
             getPrepareShowData();
-        }
+        }*/
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MusicService.pauseMedia();
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                editor.commit();
                 finish();
             }
         });
@@ -390,6 +396,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.1f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+        binding.simpleSeekbar.setOnSeekBarChangeListener(this); // Important
 
         if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);

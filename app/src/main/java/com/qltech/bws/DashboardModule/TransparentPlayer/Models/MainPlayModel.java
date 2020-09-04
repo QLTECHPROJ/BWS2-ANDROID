@@ -1,6 +1,9 @@
 package com.qltech.bws.DashboardModule.TransparentPlayer.Models;
 
-public class MainPlayModel {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class MainPlayModel implements Parcelable {
         private String ID;
         private String name;
         private String audioFile;
@@ -12,7 +15,32 @@ public class MainPlayModel {
         private String download;
         private String audioDuration;
 
-        public String getID() {
+    public MainPlayModel(Parcel in) {
+        ID = in.readString();
+        name = in.readString();
+        audioFile = in.readString();
+        audioDirection = in.readString();
+        audiomastercat = in.readString();
+        audioSubCategory = in.readString();
+        imageFile = in.readString();
+        like = in.readString();
+        download = in.readString();
+        audioDuration = in.readString();
+    }
+
+    public static final Creator<MainPlayModel> CREATOR = new Creator<MainPlayModel>() {
+        @Override
+        public MainPlayModel createFromParcel(Parcel in) {
+            return new MainPlayModel(in);
+        }
+
+        @Override
+        public MainPlayModel[] newArray(int size) {
+            return new MainPlayModel[size];
+        }
+    };
+
+    public String getID() {
             return ID;
         }
 
@@ -92,4 +120,22 @@ public class MainPlayModel {
             this.audioDuration = audioDuration;
         }
 
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(ID);
+        parcel.writeString(name);
+        parcel.writeString(audioFile);
+        parcel.writeString(audioDirection);
+        parcel.writeString(audiomastercat);
+        parcel.writeString(audioSubCategory);
+        parcel.writeString(imageFile);
+        parcel.writeString(like);
+        parcel.writeString(download);
+        parcel.writeString(audioDuration);
+    }
+}

@@ -31,14 +31,13 @@
                     app:layout_constraintRight_toRightOf="parent">
 
                     <SeekBar
-                        android:id="@+id/pbLevelStatus"
+                        android:id="@+id/simpleSeekbar"
                         style="@android:style/Widget.ProgressBar.Horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_4sdp"
                         android:fontFamily="@font/poppins_medium"
                         android:gravity="center|center_vertical|bottom"
                         android:indeterminate="false"
-                        android:progress="60"
                         android:progressDrawable="@drawable/curved_progress_bar"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_12sdp" />
