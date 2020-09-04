@@ -34,8 +34,8 @@ import java.util.ArrayList;
 import static com.qltech.bws.Utility.MusicService.isPause;
 
 public class TransparentPlayerFragment extends Fragment {
-    public static FragmentTransparentPlayerBinding binding;
-    String UserID, AudioFlag;
+    public FragmentTransparentPlayerBinding binding;
+    String UserID, AudioFlag, IsRepeat, IsShuffle;
     int position = 0;
 
     @Override
@@ -52,6 +52,9 @@ public class TransparentPlayerFragment extends Fragment {
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
+        SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
+        IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
+        IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 
         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
@@ -203,7 +206,7 @@ public class TransparentPlayerFragment extends Fragment {
             public void onClick(View view) {
                 binding.ivPlay.setVisibility(View.GONE);
                 binding.ivPause.setVisibility(View.VISIBLE);
-                MusicService.playMedia();
+                MusicService.resumeMedia();
             }
         });
 

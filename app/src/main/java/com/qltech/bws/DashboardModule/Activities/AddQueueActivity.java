@@ -61,7 +61,7 @@ import retrofit2.Response;
 
 public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
-    String play, UserID, PlaylistId, AudioId, Like, Download;
+    String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle;
     Context ctx;
     ArrayList<String> queue;
 
@@ -127,6 +127,10 @@ public class AddQueueActivity extends AppCompatActivity {
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+
+        SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
+        IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
+        IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);

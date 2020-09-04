@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
@@ -40,6 +41,8 @@ import com.qltech.bws.databinding.ActivityPlayWellnessBinding;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -51,13 +54,12 @@ import static com.qltech.bws.Utility.MusicService.isPause;
 public class PlayWellnessActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag;
-    private int oTime = 0, startTime = 0, endTime = 0, position, listSize;
+    int oTime = 0, startTime = 0,endTime = 0, position, listSize;
     Context ctx;
     Activity activity;
     private Handler hdlr;
     MainPlayModel mainPlayModel;
     ArrayList<MainPlayModel> mainPlayModelList;
-    int modelEndTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +73,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        IsRepeat = (shared1.getString(CONSTANTS.PREF_KEY_IsRepeat, ""));
-        IsShuffle = (shared1.getString(CONSTANTS.PREF_KEY_IsShuffle, ""));
+        SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
+        IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
+        IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         Gson gson = new Gson();
@@ -95,8 +98,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
                 mainPlayModel.setLike(arrayList.get(position).getLike());
                 mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                modelEndTime = Integer.parseInt(arrayList.get(position).getAudioDuration().replace(":","."));
-                mainPlayModel.setAudioDuration(modelEndTime);
+                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
             getPrepareShowData();
@@ -115,8 +117,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
                 mainPlayModel.setLike(arrayList.get(position).getLike());
                 mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                modelEndTime = Integer.parseInt(arrayList.get(position).getAudioDuration().replace(":","."));
-                mainPlayModel.setAudioDuration(modelEndTime);
+                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
             getPrepareShowData();
@@ -135,8 +136,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
                 mainPlayModel.setLike(arrayList.get(position).getLike());
                 mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                modelEndTime = Integer.parseInt(arrayList.get(position).getAudioDuration().replace(":","."));
-                mainPlayModel.setAudioDuration(modelEndTime);
+                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
             getPrepareShowData();
@@ -155,8 +155,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
                 mainPlayModel.setLike(arrayList.get(position).getLike());
                 mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                modelEndTime = Integer.parseInt(arrayList.get(position).getAudioDuration().replace(":","."));
-                mainPlayModel.setAudioDuration(modelEndTime);
+                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
             getPrepareShowData();
@@ -175,8 +174,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
                 mainPlayModel.setLike(arrayList.get(position).getLike());
                 mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                modelEndTime = Integer.parseInt(arrayList.get(position).getAudioDuration().replace(":","."));
-                mainPlayModel.setAudioDuration(modelEndTime);
+                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
             getPrepareShowData();
@@ -243,6 +241,38 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
         }
+
+        if (IsShuffle.equalsIgnoreCase("")|| IsRepeat.equalsIgnoreCase("")){
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+        }else if (IsShuffle.equalsIgnoreCase("1")|| IsRepeat.equalsIgnoreCase("1")){
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+
+        binding.llRepeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
+                editor.commit();
+                MusicService.ToRepeat(true);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
+        });
+
+        binding.llShuffle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "1");
+                editor.commit();
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                Collections.shuffle(mainPlayModelList, new Random(System.nanoTime()));
+            }
+        });
 
         binding.llDownload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -375,7 +405,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
         }
 
-        if (isPause) {
+        if (MusicService.isPause) {
             MusicService.resumeMedia();
         } else {
             MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
@@ -383,18 +413,17 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         }
         binding.simpleSeekbar.setClickable(false);
 
-        endTime = MusicService.getEndTime();
         startTime = MusicService.getStartTime();
         if (oTime == 0) {
             binding.simpleSeekbar.setMax(endTime);
             oTime = 1;
         }
-        binding.tvSongTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(endTime),
-                TimeUnit.MILLISECONDS.toSeconds(endTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime))));
+        binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
+
         binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
                 TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
         binding.simpleSeekbar.setProgress(startTime);
-//        hdlr.postDelayed(UpdateSongTime, 100);
+        hdlr.postDelayed(UpdateSongTime, 100);
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
 
@@ -410,7 +439,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         MusicService.releasePlayer();
     }
 
-/*    private Runnable UpdateSongTime = new Runnable() {
+    private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
             startTime = MusicService.getStartTime();
@@ -419,7 +448,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             binding.simpleSeekbar.setProgress(startTime);
             hdlr.postDelayed(this, 60);
         }
-    };*/
+    };
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {

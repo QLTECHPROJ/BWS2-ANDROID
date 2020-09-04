@@ -27,7 +27,9 @@ import java.io.IOException;
 public class MusicService extends Service {
     static MediaPlayer mediaPlayer;
     static private Handler handler;
-    static boolean isPLAYING, isPause = false;
+    static boolean isPLAYING;
+    static boolean isPrepare = false;
+    public static boolean isPause = false;
     private static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
 
     public MusicService(Handler handler) {
@@ -61,6 +63,7 @@ public class MusicService extends Service {
                                 .build());
             }
             mediaPlayer.prepareAsync();
+            isPrepare = true;
         } catch (IOException e) {
             e.printStackTrace();
             Log.e("Failedddddddd", "prepare() failed");
@@ -77,8 +80,20 @@ public class MusicService extends Service {
     }
 
     public static int getStartTime() {
-        startTime = mediaPlayer.getCurrentPosition();
+        try {
+            if (!mediaPlayer.isPlaying()){
+                startTime = 0;
+            }else {
+                startTime = mediaPlayer.getCurrentPosition();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return startTime;
+    }
+
+    public static void ToRepeat(boolean Status){
+        mediaPlayer.setLooping(Status);
     }
 
     public static void ToForward(Context conext) {
@@ -115,8 +130,13 @@ public class MusicService extends Service {
     }
 
     private static void stopPlaying() {
-        mediaPlayer.release();
-        mediaPlayer = null;
+        if(mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+            }
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
     @Nullable
@@ -135,16 +155,20 @@ public class MusicService extends Service {
     }
 
     public static void stopMedia() {
-        if (mediaPlayer == null) return;
-        if (mediaPlayer.isPlaying()) {
-            Log.e("Playinggggg", "stoppppp");
-            mediaPlayer.stop();
+        try {
+            if (mediaPlayer == null) return;
+            if (mediaPlayer.isPlaying()) {
+                Log.e("Playinggggg", "stoppppp");
+                mediaPlayer.stop();
+            }
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
         }
     }
 
     public static void pauseMedia() {
-
         if (mediaPlayer.isPlaying()) {
+            Log.e("Playinggggg", "pauseeeeeee");
             mediaPlayer.pause();
             isPause = true;
 //            resumePosition = mediaPlayer.getCurrentPosition();
@@ -163,6 +187,7 @@ public class MusicService extends Service {
 
     public static void resumeMedia() {
         if (!mediaPlayer.isPlaying()) {
+            Log.e("Playinggggg", "resumeeeeeee");
 //            mediaPlayer.seekTo(resumePosition);
             mediaPlayer.start();
         }
