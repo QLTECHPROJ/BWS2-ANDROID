@@ -100,7 +100,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                     arrayList.get(position).getAudiomastercat(),
                     arrayList.get(position).getImageFile(),
                     arrayList.get(position).getLike(),
-                    arrayList.get(position).getDownload());
+                    arrayList.get(position).getDownload(),
+                    arrayList.get(position).getAudioFile());
         } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
             }.getType();
@@ -111,7 +112,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                     arrayList.get(position).getAudiomastercat(),
                     arrayList.get(position).getImageFile(),
                     arrayList.get(position).getLike(),
-                    arrayList.get(position).getDownload());
+                    arrayList.get(position).getDownload(),
+                    arrayList.get(position).getAudioFile());
         } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
@@ -122,7 +124,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                     arrayList.get(position).getAudiomastercat(),
                     arrayList.get(position).getImageFile(),
                     arrayList.get(position).getLike(),
-                    arrayList.get(position).getDownload());
+                    arrayList.get(position).getDownload(),
+                    arrayList.get(position).getAudioFile());
         } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
             Type type = new TypeToken<ArrayList<DownloadlistModel.Audio>>() {
             }.getType();
@@ -133,7 +136,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                     arrayList.get(position).getAudiomastercat(),
                     arrayList.get(position).getImageFile(),
                     arrayList.get(position).getLike(),
-                    arrayList.get(position).getDownload());
+                    arrayList.get(position).getDownload(),
+                    arrayList.get(position).getAudioFile());
         } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
@@ -144,7 +148,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                     arrayList.get(position).getAudiomastercat(),
                     arrayList.get(position).getImageFile(),
                     arrayList.get(position).getLike(),
-                    arrayList.get(position).getDownload());
+                    arrayList.get(position).getDownload(),
+                    arrayList.get(position).getAudioFile());
         }
 
 
@@ -307,7 +312,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     }
 
     private void getPrepareShowData(String name, String AudioDirection, String AudioSubCategory, String Audiomastercat,
-                                    String ImageFile, String Like, String Download) {
+                                    String ImageFile, String Like, String Download, String AudioFile) {
         binding.tvName.setText(name);
         binding.tvDireDesc.setText(AudioDirection);
         binding.tvTitle.setText(AudioSubCategory);
@@ -337,6 +342,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             binding.llDownload.setEnabled(true);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
         }
+        MusicService.play(ctx, Uri.parse(AudioFile));
+        MusicService.playMedia();
     }
 
     @Override
@@ -351,8 +358,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     }
 
     void prepareData() {
-        MusicService.play(ctx, Uri.parse(mainAudioList.get(position).getAudioFile()));
-        MusicService.playMedia();
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         binding.simpleSeekbar.setClickable(false);
 
