@@ -1,29 +1,20 @@
 package com.qltech.bws.DashboardModule.Activities;
 
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
@@ -47,7 +38,6 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityPlayWellnessBinding;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -58,23 +48,22 @@ import retrofit2.Response;
 
 public class PlayWellnessActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     ActivityPlayWellnessBinding binding;
-    String IsRepeat = "", IsShuffle = "", Like, Download, UserID, ImageFile, PlaylistId,
-            AudioId, AudioFlag;
-    private static int oTime = 0, startTime = 0, endTime = 0;
+    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag;
+    private int oTime = 0, startTime = 0, endTime = 0, position, listSize;
     Context ctx;
     Activity activity;
-    int position, listsize;
-    boolean isPrepere;
-    private Handler hdlr = new Handler();
-    MainPlayModel mainPlayModel = new MainPlayModel();
+    private Handler hdlr;
+    MainPlayModel mainPlayModel;
     ArrayList<MainPlayModel> mainPlayModelList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_wellness);
+        hdlr = new Handler();
         ctx = PlayWellnessActivity.this;
         activity = PlayWellnessActivity.this;
+        mainPlayModel = new MainPlayModel();
         mainPlayModelList = new ArrayList<>();
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -92,8 +81,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-            listsize = arrayList.size();
-            for(int i = 0;i<listsize;i++){
+            listSize = arrayList.size();
+            for (int i = 0; i < listSize; i++) {
                 mainPlayModel.setID(arrayList.get(position).getID());
                 mainPlayModel.setName(arrayList.get(position).getName());
                 mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
@@ -111,8 +100,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-            listsize = arrayList.size();
-            for(int i = 0;i<listsize;i++){
+            listSize = arrayList.size();
+            for (int i = 0; i < listSize; i++) {
                 mainPlayModel.setID(arrayList.get(position).getID());
                 mainPlayModel.setName(arrayList.get(position).getName());
                 mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
@@ -130,8 +119,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
             ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
-            listsize = arrayList.size();
-            for(int i = 0;i<listsize;i++){
+            listSize = arrayList.size();
+            for (int i = 0; i < listSize; i++) {
                 mainPlayModel.setID(arrayList.get(position).getID());
                 mainPlayModel.setName(arrayList.get(position).getName());
                 mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
@@ -149,8 +138,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             Type type = new TypeToken<ArrayList<DownloadlistModel.Audio>>() {
             }.getType();
             ArrayList<DownloadlistModel.Audio> arrayList = gson.fromJson(json, type);
-            listsize = arrayList.size();
-            for(int i = 0;i<listsize;i++){
+            listSize = arrayList.size();
+            for (int i = 0; i < listSize; i++) {
                 mainPlayModel.setID(arrayList.get(position).getAudioID());
                 mainPlayModel.setName(arrayList.get(position).getName());
                 mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
@@ -168,8 +157,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
-            listsize = arrayList.size();
-            for(int i = 0;i<listsize;i++){
+            listSize = arrayList.size();
+            for (int i = 0; i < listSize; i++) {
                 mainPlayModel.setID(arrayList.get(position).getID());
                 mainPlayModel.setName(arrayList.get(position).getName());
                 mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
@@ -199,7 +188,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             public void onClick(View view) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                    Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(AudioId, UserID);
+                    Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(mainPlayModelList.get(position).getID(), UserID);
                     listCall.enqueue(new Callback<AudioLikeModel>() {
                         @Override
                         public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
@@ -228,7 +217,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(AudioId, UserID);
+            Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(mainPlayModelList.get(position).getID(), UserID);
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
@@ -252,7 +241,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             public void onClick(View view) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                    Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistId);
+                    Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, mainPlayModelList.get(position).getID(), PlaylistId);
                     listCall.enqueue(new Callback<DownloadPlaylistModel>() {
                         @Override
                         public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
@@ -278,7 +267,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.llMore.setOnClickListener(view -> {
             Intent i = new Intent(ctx, AddQueueActivity.class);
             i.putExtra("play", "play");
-            i.putExtra("ID", AudioId);
+            i.putExtra("ID", mainPlayModelList.get(position).getID());
             startActivity(i);
         });
 
@@ -321,7 +310,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         });
 
         binding.llnext.setOnClickListener(view -> {
-            if (position < listsize - 1) {
+            if (position < listSize - 1) {
                 MusicService.stopMedia();
                 position = position + 1;
                 getPrepareShowData();
@@ -357,22 +346,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        Glide.with(ctx).load(ImageFile).thumbnail(0.1f)
+        Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.1f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
-        if (Like.equalsIgnoreCase("1")) {
+        if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-        } else if (!Like.equalsIgnoreCase("0")) {
+        } else if (!mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
             binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
         }
 
-        if (Download.equalsIgnoreCase("1")) {
+        if (mainPlayModelList.get(position).getDownload().equalsIgnoreCase("1")) {
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
             binding.ivDownloads.setAlpha(255);
             binding.llDownload.setClickable(false);
             binding.llDownload.setEnabled(false);
-        } else if (!Download.equalsIgnoreCase("")) {
+        } else if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) {
             binding.llDownload.setClickable(true);
             binding.llDownload.setEnabled(true);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
@@ -422,7 +411,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        if (position < listsize - 1) {
+        if (position < listSize - 1) {
             position = position + 1;
             getPrepareShowData();
         } else {
