@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -21,8 +21,29 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/_16sdp">
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_28sdp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_22sdp" />
+
+                    <TextView
+                        android:id="@+id/tvPlan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_16sdp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_20sdp" />
+
 
                     <ImageView
                         android:id="@+id/ivRestaurantImage"
@@ -30,60 +51,102 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal" />
 
-                    <TextView
-                        android:id="@+id/tvHeader"
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_28sdp"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:gravity="center"
                         android:layout_marginHorizontal="@dimen/_16sdp"
-                        android:text="Your current membership"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_22sdp" />
+                        android:layout_marginTop="@dimen/_18sdp"
+                        android:layout_marginBottom="@dimen/_26sdp"
+                        app:cardCornerRadius="@dimen/_10sdp">
 
-                    <LinearLayout
-                        android:id="@+id/llPlanMain"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_marginHorizontal="@dimen/_16sdp"
-                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:gravity="center"
-                            android:text="Plan: "
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_20sdp" />
+                            <LinearLayout
+                                android:id="@+id/llPlanSub"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/top_round_blue_cornor"
+                                android:orientation="vertical"
+                                android:paddingLeft="@dimen/_16sdp"
+                                android:paddingTop="@dimen/_16sdp"
+                                android:paddingRight="@dimen/_16sdp"
+                                android:paddingBottom="@dimen/_16sdp">
 
-                        <TextView
-                            android:id="@+id/tvDoller"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_bold"
-                            android:gravity="center"
-                            android:textColor="@color/blue"
-                            android:textSize="@dimen/_20sdp" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:weightSum="1">
 
-                        <TextView
-                            android:id="@+id/tvPlan"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:gravity="center"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_20sdp" />
+                                    <TextView
+                                        android:id="@+id/tvPlanAmount"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/montserrat_semi_bold"
+                                        android:textColor="@color/white"
+                                        android:textSize="@dimen/_18sdp"
+                                        android:visibility="visible" />
 
-                    </LinearLayout>
+                                    <TextView
+                                        android:id="@+id/tvPlanInterval"
+                                        android:layout_width="@dimen/_0sdp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.5"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:textColor="@color/white" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvFeatured"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_22sdp" />
+                                    <LinearLayout
+                                        android:layout_width="@dimen/_0sdp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.5"
+                                        android:gravity="right">
+
+                                        <TextView
+                                            android:id="@+id/tvRecommended"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:fontFamily="@font/montserrat_medium"
+                                            android:gravity="right"
+                                            android:paddingHorizontal="@dimen/_10sdp"
+                                            android:paddingVertical="@dimen/_2sdp"
+                                            android:text="Recommended"
+                                            android:textAllCaps="true"
+                                            android:textColor="@color/white"
+                                            android:textSize="@dimen/_12sdp" />
+
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/tvSubName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="@dimen/_6sdp"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:textColor="@color/white"
+                                        android:textSize="@dimen/_15sdp" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvFeatured"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:layout_marginBottom="@dimen/_10sdp"
+                                android:overScrollMode="never" />
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
@@ -106,21 +169,62 @@
                 android:background="#C0000000"
                 android:visibility="gone" />
 
-            <Button
-                android:id="@+id/btnCancelSubscrible"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginHorizontal="@dimen/_40sdp"
-                android:layout_marginBottom="@dimen/_25sdp"
-                android:background="@drawable/gray_extra_round_corners"
-                android:fontFamily="@font/montserrat_bold"
-                android:paddingVertical="@dimen/_4sdp"
-                android:text="@string/Cancel_Subscription"
-                android:textColor="@color/white" />
+                android:orientation="vertical">
 
+                <Button
+                    android:id="@+id/btnCancelSubscrible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_40sdp"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:background="@drawable/gray_extra_round_corners"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:paddingVertical="@dimen/_4sdp"
+                    android:text="@string/Cancel_Subscription"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/btnPayNow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_40sdp"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:background="@drawable/gray_extra_round_corners"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:paddingVertical="@dimen/_4sdp"
+                    android:text="@string/Pay_Now"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvPayUsing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_6sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/dark_blue_gray"
+                    android:textSize="@dimen/_15sdp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvChangeCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="@dimen/_6sdp"
+                    android:paddingBottom="@dimen/_18sdp"
+                    android:text="Change Card"
+                    android:textColor="#005BAA"
+                    android:textSize="@dimen/_15sdp"
+                    android:visibility="gone" />
+            </LinearLayout>
         </RelativeLayout>
-
-
     </FrameLayout>
 </layout>
