@@ -45,7 +45,7 @@ import retrofit2.Response;
 public class AudioFragment extends Fragment {
     FragmentAudioBinding binding;
     private AudioViewModel audioViewModel;
-    String UserID;
+    String UserID,AudioFlag;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -63,16 +63,8 @@ public class AudioFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+          AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlAudiolist, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
-                    .commit();
-        }
         prepareData();
         return view;
     }
@@ -225,6 +217,15 @@ public class AudioFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.rlAudiolist, fragment)
+                    .addToBackStack("TransparentPlayerFragment")
+                    .commit();
+        }
         prepareData();
     }
 

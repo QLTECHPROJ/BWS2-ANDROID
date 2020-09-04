@@ -36,12 +36,12 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 
-public class TransparentPlayerFragment extends Fragment implements  SeekBar.OnSeekBarChangeListener{
+public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle;
-    int position = 0,startTime,oTime,listSize;
+    int position = 0, startTime, oTime, listSize;
     private Handler hdlr;
     MainPlayModel mainPlayModel;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -110,7 +110,8 @@ public class TransparentPlayerFragment extends Fragment implements  SeekBar.OnSe
         } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
-            ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type); listSize = arrayList.size();
+            ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
+            listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(position).getID());
@@ -129,7 +130,8 @@ public class TransparentPlayerFragment extends Fragment implements  SeekBar.OnSe
         } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
             Type type = new TypeToken<ArrayList<DownloadlistModel.Audio>>() {
             }.getType();
-            ArrayList<DownloadlistModel.Audio> arrayList = gson.fromJson(json, type); listSize = arrayList.size();
+            ArrayList<DownloadlistModel.Audio> arrayList = gson.fromJson(json, type);
+            listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(position).getAudioID());
@@ -148,7 +150,8 @@ public class TransparentPlayerFragment extends Fragment implements  SeekBar.OnSe
         } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
-            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type); listSize = arrayList.size();
+            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
+            listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(position).getID());
@@ -193,12 +196,14 @@ public class TransparentPlayerFragment extends Fragment implements  SeekBar.OnSe
 
         binding.tvTitle.setText(mainPlayModelList.get(position).getName());
         binding.tvSubTitle.setText("Play the " + mainPlayModelList.get(position).getName() + " every night on a low volume.");
-        if (MusicService.isPause) {
-            MusicService.resumeMedia();
-        } else {
-            MusicService.play(getActivity(), Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-            MusicService.playMedia();
-        };
+        if (player == 1) {
+            if (MusicService.isPause) {
+                MusicService.resumeMedia();
+            } else {
+                MusicService.play(getActivity(), Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                MusicService.playMedia();
+            }
+        }
         binding.simpleSeekbar.setClickable(false);
 
         startTime = MusicService.getStartTime();
@@ -206,7 +211,9 @@ public class TransparentPlayerFragment extends Fragment implements  SeekBar.OnSe
         hdlr.postDelayed(UpdateSongTime, 60);
 
         binding.llPlayearMain.setOnClickListener(view -> {
-            MusicService.pauseMedia();
+            if (MusicService.isPlaying()) {
+                MusicService.pauseMedia();
+            }
             Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             getActivity().startActivity(i);
@@ -226,7 +233,7 @@ public class TransparentPlayerFragment extends Fragment implements  SeekBar.OnSe
             startTime = MusicService.getStartTime();
 
             binding.simpleSeekbar.setMax(100);
-            Time t = Time.valueOf("00:"+mainPlayModelList.get(position).getAudioDuration());
+            Time t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
             long totalDuration = t.getTime();
             long currentDuration = MusicService.getStartTime();
 
