@@ -57,6 +57,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     private Handler hdlr;
     MainPlayModel mainPlayModel;
     ArrayList<MainPlayModel> mainPlayModelList;
+    int modelEndTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +95,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
                 mainPlayModel.setLike(arrayList.get(position).getLike());
                 mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                modelEndTime = Integer.parseInt(arrayList.get(position).getAudioDuration().replace(":","."));
+                mainPlayModel.setAudioDuration(modelEndTime);
                 mainPlayModelList.add(mainPlayModel);
             }
             getPrepareShowData();
@@ -113,7 +115,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
                 mainPlayModel.setLike(arrayList.get(position).getLike());
                 mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                modelEndTime = Integer.parseInt(arrayList.get(position).getAudioDuration().replace(":","."));
+                mainPlayModel.setAudioDuration(modelEndTime);
                 mainPlayModelList.add(mainPlayModel);
             }
             getPrepareShowData();
@@ -132,7 +135,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
                 mainPlayModel.setLike(arrayList.get(position).getLike());
                 mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                modelEndTime = Integer.parseInt(arrayList.get(position).getAudioDuration().replace(":","."));
+                mainPlayModel.setAudioDuration(modelEndTime);
                 mainPlayModelList.add(mainPlayModel);
             }
             getPrepareShowData();
@@ -151,7 +155,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
                 mainPlayModel.setLike(arrayList.get(position).getLike());
                 mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                modelEndTime = Integer.parseInt(arrayList.get(position).getAudioDuration().replace(":","."));
+                mainPlayModel.setAudioDuration(modelEndTime);
                 mainPlayModelList.add(mainPlayModel);
             }
             getPrepareShowData();
@@ -170,7 +175,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
                 mainPlayModel.setLike(arrayList.get(position).getLike());
                 mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                modelEndTime = Integer.parseInt(arrayList.get(position).getAudioDuration().replace(":","."));
+                mainPlayModel.setAudioDuration(modelEndTime);
                 mainPlayModelList.add(mainPlayModel);
             }
             getPrepareShowData();

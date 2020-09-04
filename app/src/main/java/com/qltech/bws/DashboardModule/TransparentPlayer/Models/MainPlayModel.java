@@ -10,7 +10,7 @@ public class MainPlayModel {
         private String imageFile;
         private String like;
         private String download;
-        private String audioDuration;
+        private int audioDuration;
 
         public String getID() {
             return ID;
@@ -84,11 +84,11 @@ public class MainPlayModel {
             this.imageFile = imageFile;
         }
 
-        public String getAudioDuration() {
+        public int getAudioDuration() {
             return audioDuration;
         }
 
-        public void setAudioDuration(String audioDuration) {
+        public void setAudioDuration(int audioDuration) {
             this.audioDuration = audioDuration;
         }
 
