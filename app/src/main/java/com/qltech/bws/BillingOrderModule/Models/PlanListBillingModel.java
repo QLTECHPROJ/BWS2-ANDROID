@@ -1,5 +1,8 @@
 package com.qltech.bws.BillingOrderModule.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -97,7 +100,7 @@ public class PlanListBillingModel {
         public void setPlan(ArrayList<Plan> plan) {
             this.plan = plan;
         }
-        public class Plan {
+        public class Plan implements Parcelable {
 
             @SerializedName("PlanPosition")
             @Expose
@@ -136,6 +139,19 @@ public class PlanListBillingModel {
             @Expose
             private List<PlanFeature> planFeatures = null;
 
+            protected Plan(Parcel in) {
+                planPosition = in.readString();
+                planID = in.readString();
+                planAmount = in.readString();
+                planCurrency = in.readString();
+                planInterval = in.readString();
+                planImage = in.readString();
+                planTenure = in.readString();
+                planNextRenewal = in.readString();
+                subName = in.readString();
+                recommendedFlag = in.readString();
+                planFlag = in.readString();
+            }
             public String getPlanPosition() {
                 return planPosition;
             }
@@ -224,6 +240,7 @@ public class PlanListBillingModel {
                 this.planFlag = planFlag;
             }
 
+
             public List<PlanFeature> getPlanFeatures() {
                 return planFeatures;
             }
@@ -231,6 +248,27 @@ public class PlanListBillingModel {
             public void setPlanFeatures(List<PlanFeature> planFeatures) {
                 this.planFeatures = planFeatures;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel parcel, int i) {
+                parcel.writeString(planPosition);
+                parcel.writeString(planID);
+                parcel.writeString(planAmount);
+                parcel.writeString(planCurrency);
+                parcel.writeString(planInterval);
+                parcel.writeString(planImage);
+                parcel.writeString(planTenure);
+                parcel.writeString(planNextRenewal);
+                parcel.writeString(subName);
+                parcel.writeString(recommendedFlag);
+                parcel.writeString(planFlag);
+            }
+
             public class PlanFeature {
 
                 @SerializedName("Feature")
