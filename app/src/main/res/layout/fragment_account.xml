@@ -40,7 +40,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:padding="@dimen/_4sdp"
-                            android:src="@color/dark_blue" />
+                            android:src="@drawable/default_profile" />
                     </LinearLayout>
 
                     <LinearLayout
