@@ -377,7 +377,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         });
 
         binding.llnext.setOnClickListener(view -> {
-            MusicService.pauseMedia();
+            MusicService.stopMedia();
             if (position < listSize - 1) {
                 position = position + 1;
             } else {
@@ -387,7 +387,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         });
 
         binding.llprev.setOnClickListener(view -> {
-            MusicService.pauseMedia();
+            MusicService.stopMedia();
             if (position > 0) {
                 position = position - 1;
             } else {

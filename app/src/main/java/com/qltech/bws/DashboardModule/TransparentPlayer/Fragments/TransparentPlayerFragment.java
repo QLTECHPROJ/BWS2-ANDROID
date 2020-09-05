@@ -71,16 +71,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(position).getID());
-                mainPlayModel.setName(arrayList.get(position).getName());
-                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
-                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
-                mainPlayModel.setLike(arrayList.get(position).getLike());
-                mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
             playmedia();
@@ -92,16 +92,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(position).getID());
-                mainPlayModel.setName(arrayList.get(position).getName());
-                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
-                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
-                mainPlayModel.setLike(arrayList.get(position).getLike());
-                mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
             playmedia();
@@ -112,16 +112,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(position).getID());
-                mainPlayModel.setName(arrayList.get(position).getName());
-                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
-                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
-                mainPlayModel.setLike(arrayList.get(position).getLike());
-                mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
             playmedia();
@@ -132,16 +132,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(position).getAudioID());
-                mainPlayModel.setName(arrayList.get(position).getName());
-                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
-                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
-                mainPlayModel.setLike(arrayList.get(position).getLike());
-                mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                mainPlayModel.setID(arrayList.get(i).getAudioID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
             playmedia();
@@ -152,16 +152,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(position).getID());
-                mainPlayModel.setName(arrayList.get(position).getName());
-                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
-                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
-                mainPlayModel.setLike(arrayList.get(position).getLike());
-                mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
             }
             playmedia();
