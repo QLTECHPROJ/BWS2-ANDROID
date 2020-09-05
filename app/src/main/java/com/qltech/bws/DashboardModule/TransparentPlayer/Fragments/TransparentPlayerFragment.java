@@ -61,7 +61,6 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
-        MusicService.mediaPlayer.setOnCompletionListener(this);
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
@@ -207,6 +206,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         }
         binding.simpleSeekbar.setClickable(false);
 
+        MusicService.mediaPlayer.setOnCompletionListener(this);
         startTime = MusicService.getStartTime();
 
         hdlr.postDelayed(UpdateSongTime, 60);
