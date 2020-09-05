@@ -28,7 +28,7 @@ public class MusicService extends Service {
     public static MediaPlayer mediaPlayer;
     static private Handler handler;
     static boolean isPLAYING;
-    public static boolean isPrepare = false, songComplete = false;
+    public static boolean isPrepare = false, songComplete = false,isMediaStart = false;
     public static boolean isPause = false;
     public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
 
@@ -148,6 +148,7 @@ public class MusicService extends Service {
             mediaPlayer.setOnPreparedListener(mp -> {
                 Log.e("Playinggggg", "Startinggg");
                 mediaPlayer.start();
+                isMediaStart = true;
             });
         }
     }

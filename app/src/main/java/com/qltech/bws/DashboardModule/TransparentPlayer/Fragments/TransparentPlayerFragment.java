@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class TransparentPlayerFragment extends Fragment implements MediaPlayer.OnCompletionListener,SeekBar.OnSeekBarChangeListener {
     public FragmentTransparentPlayerBinding binding;
@@ -206,7 +207,9 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         }
         binding.simpleSeekbar.setClickable(false);
 
-        MusicService.mediaPlayer.setOnCompletionListener(this);
+        if(isMediaStart){
+            MusicService.mediaPlayer.setOnCompletionListener(this);
+        }
         startTime = MusicService.getStartTime();
 
         hdlr.postDelayed(UpdateSongTime, 60);

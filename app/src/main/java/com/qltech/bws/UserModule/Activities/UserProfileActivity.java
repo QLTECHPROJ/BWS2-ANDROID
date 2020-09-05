@@ -127,14 +127,14 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.tlEmail.setError("");
         if (binding.etUser.getText().toString().equalsIgnoreCase("")) {
             binding.flUser.setError(getString(R.string.valid_name));
-        }else if(binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
+        } else if (binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
             binding.tlMobileNumber.setError("please enter mobile number");
-        }else if(binding.etEmail.getText().toString().equalsIgnoreCase("")) {
+        } else if (binding.etEmail.getText().toString().equalsIgnoreCase("")) {
             binding.tlEmail.setError("Please enter email address");
-        }else if(!binding.etEmail.getText().toString().equalsIgnoreCase("")
+        } else if (!binding.etEmail.getText().toString().equalsIgnoreCase("")
                 && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
             binding.tlEmail.setError("Please enter valid email address");
-        }else {
+        } else {
             binding.flUser.setError("");
             binding.tlCalendar.setError("");
             binding.flUser.clearFocus();
@@ -251,16 +251,15 @@ public class UserProfileActivity extends AppCompatActivity {
                         binding.etUser.setText(viewModel.getResponseData().getName());
 
                         profilePicPath = viewModel.getResponseData().getImage();
+
                         Glide.with(getApplicationContext()).load(profilePicPath)
-                                .centerCrop()
-                                .placeholder(R.color.dark_blue)
-                                .error(R.color.dark_blue)
-                                .crossFade()
+                                .placeholder(R.drawable.default_profile)
+                                .thumbnail(1f)
                                 .dontAnimate().into(binding.civProfile);
 
-                        if (viewModel.getResponseData().getDOB().equalsIgnoreCase("0000-00-00")){
+                        if (viewModel.getResponseData().getDOB().equalsIgnoreCase("0000-00-00")) {
                             binding.etCalendar.setText("");
-                        }else {
+                        } else {
                             String date = viewModel.getResponseData().getDOB();
                             SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
                             if (!date.isEmpty()) {
@@ -277,11 +276,11 @@ public class UserProfileActivity extends AppCompatActivity {
                             }
                         }
 
-                        if(!viewModel.getResponseData().getEmail().equalsIgnoreCase("")
+                        if (!viewModel.getResponseData().getEmail().equalsIgnoreCase("")
                                 && BWSApplication.isEmailValid(viewModel.getResponseData().getEmail())) {
                             binding.ivCheckEmail.setColorFilter(ContextCompat.getColor(ctx, R.color.green_dark), android.graphics.PorterDuff.Mode.SRC_IN);
 
-                        }else {
+                        } else {
                             binding.ivCheckEmail.setColorFilter(ContextCompat.getColor(ctx, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
 
                         }
@@ -440,10 +439,8 @@ public class UserProfileActivity extends AppCompatActivity {
         if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
                 Glide.with(this).load(imageFilePath)
-                        .placeholder(R.color.dark_blue)
-                        .error(R.color.dark_blue)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .skipMemoryCache(false)
+                        .placeholder(R.drawable.default_profile)
+                        .thumbnail(1f)
                         .dontAnimate().into(binding.civProfile);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
@@ -452,7 +449,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             new retrofit.Callback<AddProfileModel>() {
                                 @Override
                                 public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
-                                     if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                    if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                         hideProgressBar();
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
 
@@ -476,10 +473,8 @@ public class UserProfileActivity extends AppCompatActivity {
             if (data != null) {
                 Uri selectedImageUri = data.getData();
                 Glide.with(this).load(selectedImageUri)
-                        .placeholder(R.color.dark_blue)
-                        .error(R.color.dark_blue)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .skipMemoryCache(false)
+                        .placeholder(R.drawable.default_profile)
+                        .thumbnail(1f)
                         .dontAnimate().into(binding.civProfile);
 
                 if (BWSApplication.isNetworkConnected(ctx)) {
@@ -495,10 +490,8 @@ public class UserProfileActivity extends AppCompatActivity {
                                         hideProgressBar();
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .centerCrop()
-                                                .placeholder(R.color.dark_blue)
-                                                .error(R.color.dark_blue)
-                                                .crossFade()
+                                                .placeholder(R.drawable.default_profile)
+                                                .thumbnail(1f)
                                                 .dontAnimate().into(binding.civProfile);
                                         Toast.makeText(getApplicationContext(), addProfileModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                                     }

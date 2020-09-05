@@ -211,7 +211,7 @@ public class AccountFragment extends Fragment {
                             fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
                         }
 
-                        SharedPreferences preferences= getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                        SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                         SharedPreferences.Editor edit = preferences.edit();
                         edit.remove(CONSTANTS.PREF_KEY_UserID);
                         edit.remove(CONSTANTS.PREF_KEY_MobileNo);
@@ -235,7 +235,7 @@ public class AccountFragment extends Fragment {
 
                         if (BWSApplication.isNetworkConnected(getActivity())) {
                             showProgressBar();
-                            Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID,fcm_id,CONSTANTS.FLAG_ONE);
+                            Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID, fcm_id, CONSTANTS.FLAG_ONE);
                             listCall.enqueue(new Callback<LogoutModel>() {
                                 @Override
                                 public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
@@ -321,11 +321,10 @@ public class AccountFragment extends Fragment {
                         ProfileViewModel viewModel = response.body();
                         binding.tvName.setText(viewModel.getResponseData().getName());
                         String profilePicPath = viewModel.getResponseData().getImage();
+
                         Glide.with(ctx).load(profilePicPath)
-                                .centerCrop()
-                                .placeholder(R.color.dark_blue)
-                                .error(R.color.dark_blue)
-                                .crossFade()
+                                .placeholder(R.drawable.default_profile)
+                                .thumbnail(1f)
                                 .dontAnimate().into(binding.civProfile);
 
                         if (viewModel.getResponseData().getOrderTotal().equalsIgnoreCase("")) {

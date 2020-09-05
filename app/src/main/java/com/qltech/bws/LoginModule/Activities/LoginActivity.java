@@ -116,13 +116,17 @@ public class LoginActivity extends AppCompatActivity {
                         binding.txtError.setVisibility(View.GONE);
                         if (response.isSuccessful()) {
                             LoginModel loginModel = response.body();
-                            Intent i = new Intent(ctx, OtpActivity.class);
-                            i.putExtra("MobileNo", binding.edtNumber.getText().toString());
-                            i.putExtra("Name", binding.tvCountry.getText().toString());
-                            i.putExtra("Code", binding.tvCountryCode.getText().toString());
-                            startActivity(i);
-                            finish();
-                            Toast.makeText(ctx, loginModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            if(loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))){
+                                Intent i = new Intent(ctx, OtpActivity.class);
+                                i.putExtra("MobileNo", binding.edtNumber.getText().toString());
+                                i.putExtra("Name", binding.tvCountry.getText().toString());
+                                i.putExtra("Code", binding.tvCountryCode.getText().toString());
+                                startActivity(i);
+                                finish();
+                                Toast.makeText(ctx, loginModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            }else if(loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))){
+                                Toast.makeText(ctx, loginModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             Toast.makeText(ctx, response.message(), Toast.LENGTH_SHORT).show();
                         }
