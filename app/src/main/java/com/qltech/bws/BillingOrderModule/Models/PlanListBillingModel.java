@@ -3,6 +3,7 @@ package com.qltech.bws.BillingOrderModule.Models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlanListBillingModel {
@@ -63,7 +64,7 @@ public class PlanListBillingModel {
         private String desc;
         @SerializedName("Plan")
         @Expose
-        private List<Plan> plan = null;
+        private ArrayList<Plan> plan = null;
 
         public String getImage() {
             return image;
@@ -89,11 +90,11 @@ public class PlanListBillingModel {
             this.desc = desc;
         }
 
-        public List<Plan> getPlan() {
+        public ArrayList<Plan> getPlan() {
             return plan;
         }
 
-        public void setPlan(List<Plan> plan) {
+        public void setPlan(ArrayList<Plan> plan) {
             this.plan = plan;
         }
         public class Plan {
