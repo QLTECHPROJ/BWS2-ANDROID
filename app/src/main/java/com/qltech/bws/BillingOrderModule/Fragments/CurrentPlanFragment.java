@@ -91,9 +91,9 @@ public class CurrentPlanFragment extends Fragment {
                         if (listModel.getResponseData().getStatus().equalsIgnoreCase("1")){
                             binding.tvRecommended.setBackgroundResource(R.drawable.green_background);
                             binding.tvRecommended.setText(R.string.Active);
-                            binding.btnPayNow.setVisibility(View.VISIBLE);
-                            binding.tvPayUsing.setVisibility(View.VISIBLE);
-                            binding.tvChangeCard.setVisibility(View.VISIBLE);
+                            binding.btnPayNow.setVisibility(View.GONE);
+                            binding.tvPayUsing.setVisibility(View.GONE);
+                            binding.tvChangeCard.setVisibility(View.GONE);
                         }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("2")){
                             binding.tvRecommended.setBackgroundResource(R.drawable.dark_blue_background);
                             binding.tvRecommended.setText(R.string.InActive);
@@ -103,9 +103,9 @@ public class CurrentPlanFragment extends Fragment {
                         }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("3")){
                             binding.tvRecommended.setBackgroundResource(R.drawable.yellow_background);
                             binding.tvRecommended.setText(R.string.Suspended);
-                            binding.btnPayNow.setVisibility(View.GONE);
-                            binding.btnPayNow.setVisibility(View.GONE);
-                            binding.btnPayNow.setVisibility(View.GONE);
+                            binding.btnPayNow.setVisibility(View.VISIBLE);
+                            binding.btnPayNow.setVisibility(View.VISIBLE);
+                            binding.btnPayNow.setVisibility(View.VISIBLE);
                         }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("4")){
                             binding.tvRecommended.setBackgroundResource(R.drawable.dark_blue_background);
                             binding.tvRecommended.setText(R.string.Cancelled);
