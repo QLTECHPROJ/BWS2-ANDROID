@@ -78,7 +78,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
                             binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
 
                             membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan()
-                                    ,ctx,binding.btnFreeJoin, membershipPlanListModel.getResponseData().getTrialPeriod());
+                                    ,ctx,binding.btnFreeJoin, "");
                             binding.rvPlanList.setAdapter(membershipPlanAdapter);
 
                         }

@@ -67,7 +67,9 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 
-        if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
+        if(AudioFlag.equalsIgnoreCase("OnlyOne")){
+
+        }else if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);

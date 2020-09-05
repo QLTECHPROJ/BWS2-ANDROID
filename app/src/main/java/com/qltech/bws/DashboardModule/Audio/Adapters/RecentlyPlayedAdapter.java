@@ -34,11 +34,13 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
     FragmentActivity activity;
+    String ComeFrom;
 
-    public RecentlyPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity) {
+    public RecentlyPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,String ComeFrom) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
+        this.ComeFrom = ComeFrom;
     }
 
     @NonNull
@@ -73,7 +75,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();
-                String json = gson.toJson(listModelList);
+                String json = gson.toJson(listModelList.get(position));
                 editor.putString(CONSTANTS.PREF_KEY_modelList, json);
                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");

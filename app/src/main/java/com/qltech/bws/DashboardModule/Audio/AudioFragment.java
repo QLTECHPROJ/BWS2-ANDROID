@@ -147,7 +147,7 @@ public class AudioFragment extends Fragment {
                 holder.binding.llMainLayout.setVisibility(View.VISIBLE);
                 holder.binding.tvTitle.setText(listModelList.get(position).getView());
                 if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.my_download))) {
-                    RecommendedAdapter myDownloadsAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(),activity);
+                    RecommendedAdapter myDownloadsAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(),activity,listModelList.get(position).getView());
                     RecyclerView.LayoutManager myDownloads = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(myDownloads);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
@@ -160,31 +160,31 @@ public class AudioFragment extends Fragment {
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);*/
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.recently_played))) {
-                    RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModelList.get(position).getDetails(), getActivity(),activity);
+                    RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModelList.get(position).getDetails(), getActivity(),activity,listModelList.get(position).getView());
                     RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recentlyPlayed);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.recommended))) {
-                    RecommendedAdapter recommendedAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(),activity);
+                    RecommendedAdapter recommendedAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(),activity,listModelList.get(position).getView());
                     RecyclerView.LayoutManager recommended = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recommended);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recommendedAdapter);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.get_inspired))) {
-                    RecommendedAdapter inspiredAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(),activity);
+                    RecommendedAdapter inspiredAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(),activity,listModelList.get(position).getView());
                     RecyclerView.LayoutManager inspired = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(inspired);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(inspiredAdapter);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.popular))) {
-                    RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModelList.get(position).getDetails(), getActivity(),activity);
+                    RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModelList.get(position).getDetails(), getActivity(),activity,listModelList.get(position).getView());
                     RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recentlyPlayed);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.top_categories))) {
-                    TopCategoriesAdapter topCategoriesAdapter = new TopCategoriesAdapter(listModelList.get(position).getDetails(), getActivity(),activity);
+                    TopCategoriesAdapter topCategoriesAdapter = new TopCategoriesAdapter(listModelList.get(position).getDetails(), getActivity(),activity,listModelList.get(position).getView());
                     RecyclerView.LayoutManager topCategories = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(topCategories);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
