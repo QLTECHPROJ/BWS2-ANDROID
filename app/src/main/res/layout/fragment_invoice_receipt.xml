@@ -146,7 +146,7 @@
                             <LinearLayout
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="0.68"
+                                android:layout_weight="0.69"
                                 android:orientation="vertical">
 
                                 <TextView
@@ -155,7 +155,7 @@
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/montserrat_medium"
                                     android:textColor="@color/light_black"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_13sdp" />
 
                                 <TextView
                                     android:id="@+id/tvQty"
@@ -180,7 +180,7 @@
                             <LinearLayout
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="0.32">
+                                android:layout_weight="0.31">
 
                                 <TextView
                                     android:id="@+id/tvOrderTotal"

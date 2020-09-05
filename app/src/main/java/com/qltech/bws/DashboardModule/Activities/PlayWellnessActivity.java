@@ -326,6 +326,18 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                             if (response.isSuccessful()) {
                                 BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                                 DownloadPlaylistModel model = response.body();
+                                if (model.getResponseData().getFlag().equalsIgnoreCase("0")
+                                        || model.getResponseData().getFlag().equalsIgnoreCase("")) {
+                                    binding.llDownload.setClickable(true);
+                                    binding.llDownload.setEnabled(true);
+                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                                } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                                    binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                                    binding.ivDownloads.setAlpha(255);
+                                    binding.llDownload.setClickable(false);
+                                    binding.llDownload.setEnabled(false);
+                                }
                                 Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }

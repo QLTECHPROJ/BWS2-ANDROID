@@ -3,6 +3,7 @@ package com.qltech.bws.DashboardModule.Appointment.AppointmentDetails;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -167,6 +168,18 @@ public class AptAudioFragment extends Fragment {
                                 if (response.isSuccessful()) {
                                     hideProgressBar();
                                     DownloadPlaylistModel model = response.body();
+                                    if (model.getResponseData().getFlag().equalsIgnoreCase("0")
+                                            || model.getResponseData().getFlag().equalsIgnoreCase("")) {
+                                        holder.binding.llDownload.setClickable(true);
+                                        holder.binding.llDownload.setEnabled(true);
+                                        holder.binding.ivDownload.setImageResource(R.drawable.ic_download_white_icon);
+                                    } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                                        holder.binding.ivDownload.setImageResource(R.drawable.ic_download_white_icon);
+                                        holder.binding.ivDownload.setColorFilter(Color.argb(99, 99, 99, 99));
+                                        holder.binding.ivDownload.setAlpha(255);
+                                        holder.binding.llDownload.setClickable(false);
+                                        holder.binding.llDownload.setEnabled(false);
+                                    }
                                     Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }

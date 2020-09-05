@@ -37,7 +37,7 @@ import retrofit2.Response;
 
 public class InvoiceReceiptFragment extends DialogFragment {
     FragmentInvoiceReceiptBinding binding;
-    String UserID,InvoiceID;
+    String UserID,InvoiceID, Flag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,33 +67,41 @@ public class InvoiceReceiptFragment extends DialogFragment {
         return view;
     }
 
-    public void setValues(String InvoiceId) {
+    public void setValues(String InvoiceId, String flag) {
         InvoiceID = InvoiceId;
+        Flag = flag;
     }
 
     private void prepareData() {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<InvoiceDetailModel> listCall = APIClient.getClient().getInvoiceDetailPlaylist(UserID,InvoiceID, "1"); /*Flag = 0 Stagging Flag = 1 Live*/
+            Call<InvoiceDetailModel> listCall = APIClient.getClient().getInvoiceDetailPlaylist(UserID, InvoiceID, "1"); /*Flag = 0 Stagging Flag = 1 Live*/
             listCall.enqueue(new Callback<InvoiceDetailModel>() {
                 @Override
                 public void onResponse(Call<InvoiceDetailModel> call, Response<InvoiceDetailModel> response) {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         InvoiceDetailModel listModel = response.body();
+
+                        if (Flag.equalsIgnoreCase("1")){
+                            binding.tvSession.setVisibility(View.GONE);
+                        }else if (Flag.equalsIgnoreCase("2")) {
+                            binding.tvSession.setVisibility(View.VISIBLE);
+                        }
+
                         binding.tvOrderId.setText(listModel.getResponseData().getInvoiceNumber());
                         binding.tvDate.setText(listModel.getResponseData().getInvoiceDate());
-                        binding.tvTotal.setText(listModel.getResponseData().getTotalAmount());
-                        binding.tvOrderTotal.setText(listModel.getResponseData().getAmount());
+                        binding.tvTotal.setText("$"+listModel.getResponseData().getTotalAmount());
+                        binding.tvOrderTotal.setText("$"+listModel.getResponseData().getAmount());
                         binding.tvPaymentDetails.setText(listModel.getResponseData().getEmail());
                         binding.tvTitle.setText(listModel.getResponseData().getName());
                         binding.tvQty.setText("Qty: " + listModel.getResponseData().getQty());
                         binding.tvSession.setText("Session: " + listModel.getResponseData().getSession());
-                        binding.tvItems.setText(listModel.getResponseData().getAmount());
+                        binding.tvItems.setText("$"+listModel.getResponseData().getAmount());
                         binding.tvFromAddress.setText(listModel.getResponseData().getInvoiceFrom());
                         binding.tvBilledTo.setText(listModel.getResponseData().getInvoiceTo());
-                        binding.tvGst.setText(listModel.getResponseData().getGstAmount());
-                        binding.tvOrderTotalAmount.setText(listModel.getResponseData().getTotalAmount());
+                        binding.tvGst.setText("$"+listModel.getResponseData().getGstAmount());
+                        binding.tvOrderTotalAmount.setText("$"+listModel.getResponseData().getTotalAmount());
                     }
                 }
 

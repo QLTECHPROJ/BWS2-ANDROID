@@ -125,7 +125,8 @@ public class LoginActivity extends AppCompatActivity {
                                 finish();
                                 Toast.makeText(ctx, loginModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                             }else if(loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))){
-                                Toast.makeText(ctx, loginModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                binding.txtError.setVisibility(View.VISIBLE);
+                                binding.txtError.setText(loginModel.getResponseMessage());
                             }
                         } else {
                             Toast.makeText(ctx, response.message(), Toast.LENGTH_SHORT).show();
@@ -135,8 +136,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<LoginModel> call, Throwable t) {
                         hideProgressBar();
-                        binding.txtError.setVisibility(View.VISIBLE);
-                        binding.txtError.setText(getString(R.string.notvalid_number));
                     }
                 });
             } else {

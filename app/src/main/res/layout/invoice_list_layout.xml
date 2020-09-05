@@ -63,7 +63,7 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_12sdp" />
 
                     <ImageView
                         android:layout_width="@dimen/_35sdp"
@@ -81,7 +81,7 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_12sdp" />
 
                 </LinearLayout>
 

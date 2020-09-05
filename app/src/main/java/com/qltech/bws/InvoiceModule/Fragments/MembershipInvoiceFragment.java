@@ -118,7 +118,7 @@ public class MembershipInvoiceFragment extends Fragment {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     InvoiceReceiptFragment receiptFragment = new InvoiceReceiptFragment();
                     receiptFragment.setCancelable(true);
-                    receiptFragment.setValues(listModelList.get(position).getInvoiceId());
+                    receiptFragment.setValues(listModelList.get(position).getInvoiceId(), "1");
                     receiptFragment.show(fragmentManager,"receipt");
                 }
             });

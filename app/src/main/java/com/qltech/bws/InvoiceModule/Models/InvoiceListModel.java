@@ -123,6 +123,9 @@ public class InvoiceListModel {
         @SerializedName("Name")
         @Expose
         private String name;
+        @SerializedName("NetAmount")
+        @Expose
+        private String netAmount;
         @SerializedName("Interval")
         @Expose
         private String interval;
@@ -157,6 +160,7 @@ public class InvoiceListModel {
             date = in.readString();
             invoicePdf = in.readString();
             invoicePdfV = in.readString();
+            netAmount = in.readString();
         }
 
         public static final Creator<Appointment> CREATOR = new Creator<Appointment>() {
@@ -263,6 +267,14 @@ public class InvoiceListModel {
             this.date = date;
         }
 
+        public String getNetAmount() {
+            return netAmount;
+        }
+
+        public void setNetAmount(String netAmount) {
+            this.netAmount = netAmount;
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -281,6 +293,7 @@ public class InvoiceListModel {
             dest.writeString(date);
             dest.writeString(invoicePdf);
             dest.writeString(invoicePdfV);
+            dest.writeString(netAmount);
         }
     }
 

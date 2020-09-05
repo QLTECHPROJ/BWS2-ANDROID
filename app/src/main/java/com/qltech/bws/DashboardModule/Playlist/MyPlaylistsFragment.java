@@ -97,6 +97,15 @@ public class MyPlaylistsFragment extends Fragment {
             }
         });
 
+        binding.llMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
+                i.putExtra("PlaylistID", PlaylistID);
+                startActivity(i);
+            }
+        });
+
         binding.tvSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,6 +178,18 @@ public class MyPlaylistsFragment extends Fragment {
                             if (response.isSuccessful()) {
                                 hideProgressBar();
                                 DownloadPlaylistModel model = response.body();
+                                if (model.getResponseData().getFlag().equalsIgnoreCase("0")
+                                        || model.getResponseData().getFlag().equalsIgnoreCase("")) {
+                                    binding.llDownloads.setClickable(true);
+                                    binding.llDownloads.setEnabled(true);
+                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                                } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                                    binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                                    binding.ivDownloads.setAlpha(255);
+                                    binding.llDownloads.setClickable(false);
+                                    binding.llDownloads.setEnabled(false);
+                                }
                                 Toast.makeText(getActivity(), model.getResponseMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -395,6 +416,7 @@ public class MyPlaylistsFragment extends Fragment {
                     editor.commit();
                 }
             });
+
             if (Created.equalsIgnoreCase("1")) {
                 holder.binding.llMore.setVisibility(View.GONE);
                 holder.binding.llCenterLayoutA.setVisibility(View.GONE);
@@ -404,16 +426,6 @@ public class MyPlaylistsFragment extends Fragment {
                 holder.binding.llSort.setVisibility(View.VISIBLE);
                 binding.tvSearch.setVisibility(View.VISIBLE);
                 binding.searchView.setVisibility(View.GONE);
-
-                binding.llMore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
-                        i.putExtra("PlaylistID", PlaylistID);
-                        startActivity(i);
-                    }
-                });
-
             } else if (Created.equalsIgnoreCase("0")) {
                 holder.binding.llMore.setVisibility(View.VISIBLE);
                 holder.binding.llCenterLayoutA.setVisibility(View.VISIBLE);
@@ -423,16 +435,8 @@ public class MyPlaylistsFragment extends Fragment {
                 holder.binding.llSort.setVisibility(View.GONE);
                 binding.tvSearch.setVisibility(View.GONE);
                 binding.searchView.setVisibility(View.VISIBLE);
-
-                binding.llMore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
-                        i.putExtra("PlaylistID", PlaylistID);
-                        startActivity(i);
-                    }
-                });
             }
+
             if (mData.get(position).getDownload().equalsIgnoreCase("1")) {
                 holder.binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                 holder.binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
@@ -468,6 +472,18 @@ public class MyPlaylistsFragment extends Fragment {
                                 if (response.isSuccessful()) {
                                     hideProgressBar();
                                     DownloadPlaylistModel model = response.body();
+                                    if (model.getResponseData().getFlag().equalsIgnoreCase("0")
+                                            || model.getResponseData().getFlag().equalsIgnoreCase("")) {
+                                        binding.llDownloads.setClickable(true);
+                                        binding.llDownloads.setEnabled(true);
+                                        binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                                    } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                                        binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                                        binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                                        binding.ivDownloads.setAlpha(255);
+                                        binding.llDownloads.setClickable(false);
+                                        binding.llDownloads.setEnabled(false);
+                                    }
                                     Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }

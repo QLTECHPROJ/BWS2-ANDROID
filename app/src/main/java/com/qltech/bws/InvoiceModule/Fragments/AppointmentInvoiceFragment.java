@@ -111,7 +111,7 @@ public class AppointmentInvoiceFragment extends Fragment {
             holder.binding.tvInvoiceID.setText("Invoice #"+listModelList.get(position).getInvoiceNumber());
             holder.binding.tvTitle.setText(listModelList.get(position).getName());
             holder.binding.tvDate.setText(listModelList.get(position).getDate());
-            holder.binding.tvDoller.setText("$"+listModelList.get(position).getAmount());
+            holder.binding.tvDoller.setText("$"+listModelList.get(position).getNetAmount());
 
             holder.binding.llViewReceipt.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,7 +119,7 @@ public class AppointmentInvoiceFragment extends Fragment {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     InvoiceReceiptFragment receiptFragment = new InvoiceReceiptFragment();
                     receiptFragment.setCancelable(true);
-                    receiptFragment.setValues(listModelList.get(position).getInvoiceNumber());
+                    receiptFragment.setValues(listModelList.get(position).getInvoiceNumber(),"2");
                     receiptFragment.show(fragmentManager,"receipt");
                 }
             });

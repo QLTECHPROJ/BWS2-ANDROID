@@ -7,6 +7,7 @@ import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
 import com.qltech.bws.BillingOrderModule.Models.CardListModel;
 import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.BillingOrderModule.Models.CurrentPlanVieViewModel;
+import com.qltech.bws.BillingOrderModule.Models.PlanListBillingModel;
 import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
@@ -262,7 +263,8 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<SessionListModel> getAppointmentSession(@Field("UserID") String userID,
                                                  @Field("AppointmentName") String appointmentName
-                                                 );
+    );
+
     /* TODO AppointmentFragment */
     @POST("appointmentdetail")
     @FormUrlEncoded
@@ -295,6 +297,11 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<AddCardModel> getAddCard(@Field("UserID") String userID,
                                   @Field("TokenId") String tokenId);
+
+    /* TODO AddPaymentActivity */
+    @POST("planlistonbilling")
+    @FormUrlEncoded
+    Call<PlanListBillingModel> getPlanListBilling(@Field("UserID") String userID);
 
     /* TODO PaymentFragment & AllCardAdapter*/
     @POST("cardlist")
