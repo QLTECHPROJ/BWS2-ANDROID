@@ -85,8 +85,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
             playmedia();
 
-        }
-        else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
+        } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
@@ -106,8 +105,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mainPlayModelList.add(mainPlayModel);
             }
             playmedia();
-        }
-        else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+        } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
             ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
@@ -127,8 +125,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mainPlayModelList.add(mainPlayModel);
             }
             playmedia();
-        }
-        else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
+        } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
             Type type = new TypeToken<ArrayList<DownloadlistModel.Audio>>() {
             }.getType();
             ArrayList<DownloadlistModel.Audio> arrayList = gson.fromJson(json, type);
@@ -148,8 +145,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mainPlayModelList.add(mainPlayModel);
             }
             playmedia();
-        }
-        else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+        } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
@@ -213,8 +209,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         hdlr.postDelayed(UpdateSongTime, 60);
 
         binding.llPlayearMain.setOnClickListener(view -> {
-            if (MusicService.isPlaying()) {
-                MusicService.pauseMedia();
+            if (player == 0) {
+                player = 1;
+            }else{
+                if (MusicService.isPlaying()) {
+                    MusicService.pauseMedia();
+                }
             }
             Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

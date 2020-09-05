@@ -507,15 +507,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             position = rand.nextInt((listSize - 1) - 0 + 1) + 0;
             getPrepareShowData(position);
         }*/ else {
-            // no repeat or shuffle ON - play next song
             if (position < (listSize - 1)) {
-                getPrepareShowData(position + 1);
                 position = position + 1;
             } else {
-                // play first song
                 position = 0;
-                getPrepareShowData(position);
             }
+            getPrepareShowData(position);
         }
     }
 

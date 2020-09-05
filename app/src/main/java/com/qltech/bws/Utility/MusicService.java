@@ -30,7 +30,7 @@ public class MusicService extends Service {
     static boolean isPLAYING;
     static boolean isPrepare = false;
     public static boolean isPause = false;
-    private static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
+    public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
 
     private static void initMediaPlayer() {
         if (null == mediaPlayer) {
@@ -93,6 +93,7 @@ public class MusicService extends Service {
     }
 
     public static void ToForward(Context conext) {
+        endTime = getEndTime();
         if ((startTime + forwardTime) <= endTime) {
             startTime = startTime + forwardTime;
             mediaPlayer.seekTo(startTime);
