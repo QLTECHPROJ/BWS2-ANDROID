@@ -140,7 +140,7 @@ public class WebsiteFragment extends Fragment {
             } else {
                 holder.binding.tvCreator.setVisibility(View.GONE);
             }
-            Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.1f)
+            Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

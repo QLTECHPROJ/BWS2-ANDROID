@@ -303,7 +303,7 @@ public class PlaylistFragment extends Fragment {
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
             holder.binding.tvPlaylistName.setText(listModelList.get(position).getPlaylistName());
-            Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.1f)
+            Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {

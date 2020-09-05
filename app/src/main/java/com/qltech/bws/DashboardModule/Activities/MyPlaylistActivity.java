@@ -99,7 +99,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
                         if (!model.getResponseData().getPlaylistImage().equalsIgnoreCase("")){
                             Glide.with(ctx).load(model.getResponseData().getPlaylistImage())
-                                    .thumbnail(0.2f)
+                                    .thumbnail(0.05f)
                                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                         }else {
                             binding.ivRestaurantImage.setImageResource(R.drawable.ic_playlist_bg);

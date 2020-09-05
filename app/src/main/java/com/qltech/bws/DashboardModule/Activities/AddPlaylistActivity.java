@@ -188,7 +188,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     1, 1, 0.16f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            Glide.with(ctx).load(listModel.get(position).getImage()).thumbnail(0.1f)
+            Glide.with(ctx).load(listModel.get(position).getImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {

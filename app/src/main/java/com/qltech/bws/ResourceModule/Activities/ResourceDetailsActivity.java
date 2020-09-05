@@ -73,7 +73,7 @@ public class ResourceDetailsActivity extends AppCompatActivity {
             binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);*/
-            Glide.with(ctx).load(image).thumbnail(0.1f)
+            Glide.with(ctx).load(image).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
             binding.btnComplete.setOnClickListener(new View.OnClickListener() {

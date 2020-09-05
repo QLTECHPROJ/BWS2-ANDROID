@@ -46,6 +46,8 @@ import com.qltech.bws.UserModule.Models.ProfileUpdateModel;
 import com.qltech.bws.UserModule.Models.ProfileViewModel;
 import com.qltech.bws.UserModule.Models.RemoveProfileModel;
 
+import java.util.List;
+
 import retrofit.mime.TypedFile;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -286,7 +288,7 @@ public interface APIInterface {
     /* TODO AddQueueActivity */
     @POST("audiodetail")
     @FormUrlEncoded
-    Call<DirectionModel> getAudioDetailLists(@Field("AudioId") String audioId);
+    Call<List<DirectionModel.ResponseData>> getAudioDetailLists(@Field("AudioId") String audioId);
 
     /* TODO AddPaymentActivity */
     @POST("cardadd")

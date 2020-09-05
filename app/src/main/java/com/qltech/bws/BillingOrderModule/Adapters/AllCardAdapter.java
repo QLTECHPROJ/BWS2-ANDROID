@@ -65,7 +65,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
         holder.binding.tvExpiryTime.setText("Valid: " + listModel.getExpMonth() + "/" +
                 listModel.getExpYear());
         Glide.with(activity).load(listModel.getImage())
-                .thumbnail(0.5f)
+                .thumbnail(0.05f)
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.binding.ivCardimg);

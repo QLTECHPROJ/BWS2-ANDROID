@@ -50,7 +50,7 @@ public class AptDetailsFragment extends Fragment {
         binding.tvSubTitle.setText(appointmentDetail.getDesc());
         binding.tvDate.setText(appointmentDetail.getDate());
         binding.tvTime.setText(appointmentDetail.getTime());
-        Glide.with(getActivity()).load(appointmentDetail.getImage()).thumbnail(0.1f)
+        Glide.with(getActivity()).load(appointmentDetail.getImage()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile);
 
         binding.btnComplete.setOnClickListener(new View.OnClickListener() {

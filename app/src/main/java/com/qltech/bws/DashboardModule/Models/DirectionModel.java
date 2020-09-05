@@ -50,20 +50,14 @@ public class DirectionModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
-
     public class ResponseData {
+
         @SerializedName("ID")
         @Expose
         private String iD;
         @SerializedName("Name")
         @Expose
         private String name;
-        @SerializedName("Like")
-        @Expose
-        private String like;
-        @SerializedName("Download")
-        @Expose
-        private String download;
         @SerializedName("AudioFile")
         @Expose
         private String audioFile;
@@ -73,18 +67,24 @@ public class DirectionModel {
         @SerializedName("AudioDuration")
         @Expose
         private String audioDuration;
-        @SerializedName("AudioDescription")
-        @Expose
-        private String audioDescription;
         @SerializedName("AudioDirection")
         @Expose
         private String audioDirection;
+        @SerializedName("AudioDescription")
+        @Expose
+        private String audioDescription;
         @SerializedName("Audiomastercat")
         @Expose
         private String audiomastercat;
         @SerializedName("AudioSubCategory")
         @Expose
         private String audioSubCategory;
+        @SerializedName("Like")
+        @Expose
+        private String like;
+        @SerializedName("Download")
+        @Expose
+        private String download;
 
         public String getID() {
             return iD;
@@ -100,22 +100,6 @@ public class DirectionModel {
 
         public void setName(String name) {
             this.name = name;
-        }
-
-        public String getLike() {
-            return like;
-        }
-
-        public void setLike(String like) {
-            this.like = like;
-        }
-
-        public String getDownload() {
-            return download;
-        }
-
-        public void setDownload(String download) {
-            this.download = download;
         }
 
         public String getAudioFile() {
@@ -134,12 +118,12 @@ public class DirectionModel {
             this.imageFile = imageFile;
         }
 
-        public String getiD() {
-            return iD;
+        public String getAudioDuration() {
+            return audioDuration;
         }
 
-        public void setiD(String iD) {
-            this.iD = iD;
+        public void setAudioDuration(String audioDuration) {
+            this.audioDuration = audioDuration;
         }
 
         public String getAudioDirection() {
@@ -148,14 +132,6 @@ public class DirectionModel {
 
         public void setAudioDirection(String audioDirection) {
             this.audioDirection = audioDirection;
-        }
-
-        public String getAudioDuration() {
-            return audioDuration;
-        }
-
-        public void setAudioDuration(String audioDuration) {
-            this.audioDuration = audioDuration;
         }
 
         public String getAudioDescription() {
@@ -181,5 +157,22 @@ public class DirectionModel {
         public void setAudioSubCategory(String audioSubCategory) {
             this.audioSubCategory = audioSubCategory;
         }
+
+        public String getLike() {
+            return like;
+        }
+
+        public void setLike(String like) {
+            this.like = like;
+        }
+
+        public String getDownload() {
+            return download;
+        }
+
+        public void setDownload(String download) {
+            this.download = download;
+        }
+
     }
 }

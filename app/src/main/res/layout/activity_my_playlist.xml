@@ -77,7 +77,6 @@
                     android:textColor="#838383"
                     android:textSize="@dimen/_13sdp" />
 
-
                 <LinearLayout
                     android:id="@+id/llOptions"
                     android:layout_width="match_parent"

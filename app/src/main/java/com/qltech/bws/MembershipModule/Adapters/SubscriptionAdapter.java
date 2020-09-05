@@ -40,7 +40,7 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         MembershipPlanListModel.AudioFile listModel = listModelList.get(position);
         holder.binding.tvTitle.setText(listModel.getName());
-        Glide.with(ctx).load(listModel.getImageFile()).thumbnail(0.1f)
+        Glide.with(ctx).load(listModel.getImageFile()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
     }
 

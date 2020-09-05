@@ -189,7 +189,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void playmedia() {
-        Glide.with(getActivity()).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.1f)
+        Glide.with(getActivity()).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
         binding.tvTitle.setText(mainPlayModelList.get(position).getName());
