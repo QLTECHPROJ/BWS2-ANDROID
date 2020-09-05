@@ -79,6 +79,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
                             membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan()
                                     ,ctx,binding.btnFreeJoin, "");
                             binding.rvPlanList.setAdapter(membershipPlanAdapter);
+
                         }
                     }
                 }
