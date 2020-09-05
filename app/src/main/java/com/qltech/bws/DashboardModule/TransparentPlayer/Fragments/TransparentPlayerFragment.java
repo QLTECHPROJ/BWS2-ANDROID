@@ -3,6 +3,7 @@ package com.qltech.bws.DashboardModule.TransparentPlayer.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,10 +34,11 @@ import com.qltech.bws.databinding.FragmentTransparentPlayerBinding;
 import java.lang.reflect.Type;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 
-public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
+public class TransparentPlayerFragment extends Fragment implements MediaPlayer.OnCompletionListener,SeekBar.OnSeekBarChangeListener {
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle;
     int position = 0, startTime, oTime, listSize;
@@ -59,6 +61,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
+        MusicService.mediaPlayer.setOnCompletionListener(this);
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
@@ -261,5 +264,25 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        if (IsRepeat.equalsIgnoreCase("1")) {
+            // repeat is on play same song again
+            playmedia();
+        } else if (IsShuffle.equalsIgnoreCase("1")) {
+            // shuffle is on - play a random song
+            Random random = new Random();
+            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+            playmedia();
+        } else {
+            if (position < (listSize - 1)) {
+                position = position + 1;
+            } else {
+                position = 0;
+            }
+            playmedia();
+        }
     }
 }

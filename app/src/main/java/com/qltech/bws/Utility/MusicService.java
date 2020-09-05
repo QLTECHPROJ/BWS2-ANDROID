@@ -25,10 +25,10 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 
 public class MusicService extends Service {
-    static MediaPlayer mediaPlayer;
+    public static MediaPlayer mediaPlayer;
     static private Handler handler;
     static boolean isPLAYING;
-    static boolean isPrepare = false;
+    public static boolean isPrepare = false, songComplete = false;
     public static boolean isPause = false;
     public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
 
@@ -39,18 +39,19 @@ public class MusicService extends Service {
         }
     }
 
-    public static void play(Context conext, Uri AudioFile) {
+    public static void play(Context context, Uri AudioFile) {
         initMediaPlayer();
         stopMedia();
-        playAudio(conext, AudioFile);
+        playAudio(context, AudioFile);
     }
 
-    public static void playAudio(Context conext, Uri AudioFile) {
+    public static void playAudio(Context context, Uri AudioFile) {
 //        if (!isPLAYING) {
 //            isPLAYING = true;
         mediaPlayer = new MediaPlayer();
+
         try {
-            mediaPlayer.setDataSource(conext, AudioFile);
+            mediaPlayer.setDataSource(context, AudioFile);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
                         new AudioAttributes
@@ -77,9 +78,9 @@ public class MusicService extends Service {
 
     public static int getStartTime() {
         try {
-            if (!mediaPlayer.isPlaying()){
+            if (!mediaPlayer.isPlaying()) {
                 startTime = 0;
-            }else {
+            } else {
                 startTime = mediaPlayer.getCurrentPosition();
             }
         } catch (Exception e) {
@@ -88,7 +89,7 @@ public class MusicService extends Service {
         return startTime;
     }
 
-    public static void ToRepeat(boolean Status){
+    public static void ToRepeat(boolean Status) {
         mediaPlayer.setLooping(Status);
     }
 
@@ -127,7 +128,7 @@ public class MusicService extends Service {
     }
 
     private static void stopPlaying() {
-        if(mediaPlayer != null) {
+        if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.stop();
             }
@@ -202,24 +203,25 @@ public class MusicService extends Service {
         mediaPlayer = null;
     }
 
-    public String milliSecondsToTimer(long milliseconds){
+    public String milliSecondsToTimer(long milliseconds) {
         String finalTimerString = "";
         String secondsString = "";
 
         // Convert total duration into time
-        int hours = (int)( milliseconds / (1000*60*60));
-        int minutes = (int)(milliseconds % (1000*60*60)) / (1000*60);
-        int seconds = (int) ((milliseconds % (1000*60*60)) % (1000*60) / 1000);
+        int hours = (int) (milliseconds / (1000 * 60 * 60));
+        int minutes = (int) (milliseconds % (1000 * 60 * 60)) / (1000 * 60);
+        int seconds = (int) ((milliseconds % (1000 * 60 * 60)) % (1000 * 60) / 1000);
         // Add hours if there
-        if(hours > 0){
+        if (hours > 0) {
             finalTimerString = hours + ":";
         }
 
         // Prepending 0 to seconds if it is one digit
-        if(seconds < 10){
+        if (seconds < 10) {
             secondsString = "0" + seconds;
-        }else{
-            secondsString = "" + seconds;}
+        } else {
+            secondsString = "" + seconds;
+        }
 
         finalTimerString = finalTimerString + minutes + ":" + secondsString;
 
@@ -227,14 +229,14 @@ public class MusicService extends Service {
         return finalTimerString;
     }
 
-    public static int getProgressPercentage(long currentDuration, long totalDuration){
+    public static int getProgressPercentage(long currentDuration, long totalDuration) {
         Double percentage = (double) 0;
 
         long currentSeconds = (int) (currentDuration / 1000);
         long totalSeconds = (int) (totalDuration / 1000);
 
         // calculating percentage
-        percentage =(((double)currentSeconds)/totalSeconds)*100;
+        percentage = (((double) currentSeconds) / totalSeconds) * 100;
 
         // return percentage
         return percentage.intValue();
@@ -243,9 +245,10 @@ public class MusicService extends Service {
     public static int progressToTimer(int progress, int totalDuration) {
         int currentDuration = 0;
         totalDuration = (int) (totalDuration / 1000);
-        currentDuration = (int) ((((double)progress) / 100) * totalDuration);
+        currentDuration = (int) ((((double) progress) / 100) * totalDuration);
 
         // return current duration in milliseconds
         return currentDuration * 1000;
     }
+
 }

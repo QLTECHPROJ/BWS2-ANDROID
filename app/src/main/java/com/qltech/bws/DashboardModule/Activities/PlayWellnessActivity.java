@@ -37,7 +37,6 @@ import com.qltech.bws.databinding.ActivityPlayWellnessBinding;
 import java.lang.reflect.Type;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -80,6 +79,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         listSize = mainPlayModelList.size();
         getPrepareShowData(position);
 
+        MusicService.mediaPlayer.setOnCompletionListener(this);
         /*if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();
@@ -259,9 +259,18 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 if (IsRepeat.equalsIgnoreCase("")) {
                     SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
                     SharedPreferences.Editor editor = shared.edit();
-                    editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
+                    editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "0");
                     editor.commit();
                     MusicService.ToRepeat(true);
+                    IsRepeat = "0";
+                    binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
+                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                } else if (IsRepeat.equalsIgnoreCase("0")) {
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
+                    editor.commit();
+                    MusicService.ToRepeat(false);
                     IsRepeat = "1";
                     binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
                 } else if (IsRepeat.equalsIgnoreCase("1")) {
@@ -280,13 +289,20 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             @Override
             public void onClick(View view) {
                 if (IsShuffle.equalsIgnoreCase("")) {
+                    IsShuffle = "1";
                     SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
                     SharedPreferences.Editor editor = shared.edit();
                     editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "1");
+                    if (IsRepeat.equalsIgnoreCase("0")) {
+                        editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
+                    }
                     editor.commit();
-                    IsShuffle = "1";
+                    MusicService.ToRepeat(false);
+                    IsRepeat = "";
+                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+
                     binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-                    Collections.shuffle(mainPlayModelList, new Random(System.nanoTime()));
+//                    Collections.shuffle(mainPlayModelList, new Random(System.nanoTime()));
                 } else if (IsShuffle.equalsIgnoreCase("1")) {
                     SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
                     SharedPreferences.Editor editor = shared.edit();
@@ -378,31 +394,51 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
         binding.llnext.setOnClickListener(view -> {
             MusicService.stopMedia();
-            if (position < listSize - 1) {
-                position = position + 1;
+            if (IsRepeat.equalsIgnoreCase("1")) {
+                // repeat is on play same song again
+                getPrepareShowData(position);
+            } else if (IsShuffle.equalsIgnoreCase("1")) {
+                // shuffle is on - play a random song
+                Random random = new Random();
+                position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                getPrepareShowData(position);
             } else {
-                position = 0;
+                if (position < listSize - 1) {
+                    position = position + 1;
+                } else {
+                    position = 0;
+                }
+                getPrepareShowData(position);
             }
-            getPrepareShowData(position);
         });
 
         binding.llprev.setOnClickListener(view -> {
             MusicService.stopMedia();
-            if (position > 0) {
-                position = position - 1;
+            if (IsRepeat.equalsIgnoreCase("1")) {
+                // repeat is on play same song again
+                getPrepareShowData(position);
+            } else if (IsShuffle.equalsIgnoreCase("1")) {
+                // shuffle is on - play a random song
+                Random random = new Random();
+                position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                getPrepareShowData(position);
             } else {
-                position = 0;
+                if (position > 0) {
+                    position = position - 1;
+                } else {
+                    position = 0;
+                }
+                getPrepareShowData(position);
             }
-            getPrepareShowData(position);
         });
     }
 
     private void getPrepareShowData(int position) {
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         binding.tvName.setText(mainPlayModelList.get(position).getName());
-        if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")){
+        if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
             binding.llDirection.setVisibility(View.GONE);
-        }else {
+        } else {
             binding.llDirection.setVisibility(View.VISIBLE);
             binding.tvDireDesc.setText(mainPlayModelList.get(position).getAudioDirection());
         }
@@ -501,12 +537,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         if (IsRepeat.equalsIgnoreCase("1")) {
             // repeat is on play same song again
             getPrepareShowData(position);
-        }/* else if (IsShuffle.equalsIgnoreCase("1")) {
+        } else if (IsShuffle.equalsIgnoreCase("1")) {
             // shuffle is on - play a random song
-            Random rand = new Random();
-            position = rand.nextInt((listSize - 1) - 0 + 1) + 0;
+            Random random = new Random();
+            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
             getPrepareShowData(position);
-        }*/ else {
+        } else {
             if (position < (listSize - 1)) {
                 position = position + 1;
             } else {

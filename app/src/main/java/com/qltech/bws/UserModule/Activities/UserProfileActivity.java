@@ -452,15 +452,10 @@ public class UserProfileActivity extends AppCompatActivity {
                             new retrofit.Callback<AddProfileModel>() {
                                 @Override
                                 public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
-                                    if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                     if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                         hideProgressBar();
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
-                                        Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .centerCrop()
-                                                .placeholder(R.color.dark_blue)
-                                                .error(R.color.dark_blue)
-                                                .crossFade()
-                                                .dontAnimate().into(binding.civProfile);
+
                                         Toast.makeText(getApplicationContext(), addProfileModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 }

@@ -135,7 +135,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                         binding.tlNumber.setError(getString(R.string.blank_card_no_error));
                         binding.txtError.setText("");
                         binding.tlName.setError("");
-                    } else if (binding.etNumber.getText().toString().length() < 15) {
+                    } else if (binding.etNumber.getText().toString().length() < 16) {
                         binding.tlName.setError("");
                         binding.tlNumber.setError(getString(R.string.valid_card_no_error));
                         binding.txtError.setText("");
