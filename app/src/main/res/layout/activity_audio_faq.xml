@@ -30,12 +30,12 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
-                android:text="@string/Audio"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp" />
 

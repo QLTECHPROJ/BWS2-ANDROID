@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BillingOrderModule.Activities.CancelMembershipActivity;
+import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.BillingOrderModule.Models.CurrentPlanVieViewModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
@@ -142,7 +143,12 @@ public class CurrentPlanFragment extends Fragment {
         binding.btnPayNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
+                Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                startActivity(i);
             }
         });
 

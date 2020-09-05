@@ -75,6 +75,7 @@ public class FaqActivity extends AppCompatActivity {
                     }
                 }
                 Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
+                i.putExtra("Flag","Audio");
                 i.putParcelableArrayListExtra("faqListModel", modelList);
                 startActivity(i);
             }
@@ -91,6 +92,7 @@ public class FaqActivity extends AppCompatActivity {
                     }
                 }
                 Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
+                i.putExtra("Flag","Help");
                 i.putExtra("faqListModel", modelList);
                 startActivity(i);
             }
@@ -107,6 +109,7 @@ public class FaqActivity extends AppCompatActivity {
                     }
                 }
                 Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
+                i.putExtra("Flag","Playlist");
                 i.putExtra("faqListModel", modelList);
                 startActivity(i);
             }

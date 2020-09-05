@@ -21,8 +21,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Models.PlanListBillingModel;
-import com.qltech.bws.MembershipModule.Activities.MembershipActivity;
-import com.qltech.bws.MembershipModule.Activities.OrderSummaryActivity;
 import com.qltech.bws.MembershipModule.Adapters.MembershipPlanAdapter;
 import com.qltech.bws.MembershipModule.Adapters.SubscriptionAdapter;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
@@ -61,6 +59,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvPlanList.setLayoutManager(mLayoutManager1);
         binding.rvPlanList.setItemAnimator(new DefaultItemAnimator());
+
     }
 
     private void prepareMembershipData() {
@@ -78,9 +77,9 @@ public class MembershipChangeActivity extends AppCompatActivity {
                             binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
 
                             membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan()
-                                    ,ctx,binding.btnFreeJoin, membershipPlanListModel.getResponseData().getTrialPeriod());
-                            binding.rvPlanList.setAdapter(membershipPlanAdapter);
+                                    ,ctx, binding.btnFreeJoin, membershipPlanListModel.getResponseData().getTrialPeriod());
 
+                            binding.rvPlanList.setAdapter(membershipPlanAdapter);
                         }
                     }
                 }

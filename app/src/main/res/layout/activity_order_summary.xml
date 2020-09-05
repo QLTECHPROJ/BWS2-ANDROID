@@ -149,7 +149,8 @@
                         android:layout_weight="0.5"
                         android:fontFamily="@font/montserrat_medium"
                         android:text="Plan renewal"
-                        android:textColor="@color/light_gray" />
+                        android:textColor="@color/light_gray"
+                        android:textSize="@dimen/_13sdp" />
 
                     <TextView
                         android:id="@+id/tvPlanTenure"

@@ -61,25 +61,25 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
-            binding.navView.setSelectedItemId(R.id.navigation_audio);
-            super.onBackPressed();
-            finish();
-        } else if (binding.navView.getSelectedItemId() == R.id.navigation_playlist) {
+       /* if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
+            binding.navView.setSelectedItemId(R.id.navigation_audio);*/
+        super.onBackPressed();
+        finish();
+        /*} else if (binding.navView.getSelectedItemId() == R.id.navigation_playlist) {
             binding.navView.setSelectedItemId(R.id.navigation_playlist);
-            /*if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            *//*if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 getSupportFragmentManager().popBackStack();
             } else {
                 finishAffinity();
                 return;
-            }*/
+            }*//*
         } else if (binding.navView.getSelectedItemId() == R.id.navigation_search) {
-            binding.navView.setSelectedItemId(R.id.navigation_search);
+            binding.navView.̥setSelectedItemId(R.id.navigation_search);
         } else if (binding.navView.getSelectedItemId() == R.id.navigation_appointment) {
             binding.navView.setSelectedItemId(R.id.navigation_appointment);
         } else if (binding.navView.getSelectedItemId() == R.id.navigation_account) {
             binding.navView.setSelectedItemId(R.id.navigation_account);
-        }
+        }*/
     }
 
     @Override

@@ -31,6 +31,7 @@ public class AudioFaqActivity extends AppCompatActivity {
     Context ctx;
     AudioFaqAdapter adapter;
     ArrayList<FaqListModel.ResponseData> faqListModel;
+    String Flag;
 
 
     @Override
@@ -42,6 +43,7 @@ public class AudioFaqActivity extends AppCompatActivity {
         faqListModel = new ArrayList<>();
         if (getIntent() != null) {
             faqListModel = getIntent().getParcelableArrayListExtra("faqListModel");
+            Flag = getIntent().getStringExtra("Flag");
         }
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +51,14 @@ public class AudioFaqActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        if (Flag.equalsIgnoreCase("Audio")){
+            binding.tvTitle.setText(R.string.Audio);
+        }else if (Flag.equalsIgnoreCase("Help")){
+            binding.tvTitle.setText(R.string.Help);
+        }else if (Flag.equalsIgnoreCase("Playlist")){
+            binding.tvTitle.setText(R.string.Playlist);
+        }
 
         RecyclerView.LayoutManager serachList = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvFaqList.setLayoutManager(serachList);
