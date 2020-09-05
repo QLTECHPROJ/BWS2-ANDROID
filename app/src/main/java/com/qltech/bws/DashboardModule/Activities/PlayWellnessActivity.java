@@ -78,7 +78,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         }.getType();
         mainPlayModelList = gson.fromJson(json, type);
         listSize = mainPlayModelList.size();
-        getPrepareShowData();
+        getPrepareShowData(position);
 
         /*if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
@@ -262,6 +262,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                     editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
                     editor.commit();
                     MusicService.ToRepeat(true);
+                    IsRepeat = "1";
                     binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
                 } else if (IsRepeat.equalsIgnoreCase("1")) {
                     SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
@@ -269,6 +270,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                     editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
                     editor.commit();
                     MusicService.ToRepeat(false);
+                    IsRepeat = "";
                     binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                 }
             }
@@ -282,6 +284,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                     SharedPreferences.Editor editor = shared.edit();
                     editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "1");
                     editor.commit();
+                    IsShuffle = "1";
                     binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
                     Collections.shuffle(mainPlayModelList, new Random(System.nanoTime()));
                 } else if (IsShuffle.equalsIgnoreCase("1")) {
@@ -289,6 +292,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                     SharedPreferences.Editor editor = shared.edit();
                     editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
                     editor.commit();
+                    IsShuffle = "";
                     binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                 }
             }
@@ -349,7 +353,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.llplay.setOnClickListener(v -> {
             binding.llplay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.VISIBLE);
-            MusicService.stopMedia();
+            MusicService.resumeMedia();
         });
 
         binding.llPause.setOnClickListener(view -> {
@@ -379,7 +383,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             } else {
                 position = 0;
             }
-            getPrepareShowData();
+            getPrepareShowData(position);
         });
 
         binding.llprev.setOnClickListener(view -> {
@@ -389,11 +393,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             } else {
                 position = 0;
             }
-            getPrepareShowData();
+            getPrepareShowData(position);
         });
     }
 
-    private void getPrepareShowData() {
+    private void getPrepareShowData(int position) {
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         binding.tvName.setText(mainPlayModelList.get(position).getName());
         if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")){
@@ -462,7 +466,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MusicService.releasePlayer();
+//        MusicService.releasePlayer();
     }
 
     private Runnable UpdateSongTime = new Runnable() {
@@ -471,7 +475,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             startTime = MusicService.getStartTime();
             binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
                     TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
-            Time t = Time.valueOf("00:"+mainPlayModelList.get(position).getAudioDuration());
+            Time t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
             long totalDuration = t.getTime();
             long currentDuration = MusicService.getStartTime();
 
@@ -487,12 +491,31 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        if (position < listSize - 1) {
+/*   if (position < listSize - 1) {
             position = position + 1;
             getPrepareShowData();
         } else {
             position = 0;
             getPrepareShowData();
+        }*/
+        if (IsRepeat.equalsIgnoreCase("1")) {
+            // repeat is on play same song again
+            getPrepareShowData(position);
+        }/* else if (IsShuffle.equalsIgnoreCase("1")) {
+            // shuffle is on - play a random song
+            Random rand = new Random();
+            position = rand.nextInt((listSize - 1) - 0 + 1) + 0;
+            getPrepareShowData(position);
+        }*/ else {
+            // no repeat or shuffle ON - play next song
+            if (position < (listSize - 1)) {
+                getPrepareShowData(position + 1);
+                position = position + 1;
+            } else {
+                // play first song
+                position = 0;
+                getPrepareShowData(position);
+            }
         }
     }
 

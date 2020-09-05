@@ -29,6 +29,8 @@ import com.qltech.bws.databinding.BigBoxLayoutBinding;
 
 import java.util.ArrayList;
 
+import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+
 public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.MyViewHolder> {
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
@@ -62,6 +64,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                player = 1;
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                 fragmentManager1.beginTransaction()

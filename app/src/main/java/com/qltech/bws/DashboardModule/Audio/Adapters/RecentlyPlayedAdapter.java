@@ -28,6 +28,8 @@ import com.qltech.bws.databinding.SmallBoxLayoutBinding;
 
 import java.util.ArrayList;
 
+import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+
 public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder> {
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
@@ -61,6 +63,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                player = 1;
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                 fragmentManager1.beginTransaction()

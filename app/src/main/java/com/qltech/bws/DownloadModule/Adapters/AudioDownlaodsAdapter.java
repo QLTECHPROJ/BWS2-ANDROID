@@ -40,6 +40,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
     private ArrayList<DownloadlistModel.Audio> listModelList;
     FragmentActivity ctx;
@@ -80,7 +82,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                player = 1;
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
                 fragmentManager1.beginTransaction()

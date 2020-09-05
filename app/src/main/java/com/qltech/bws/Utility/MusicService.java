@@ -32,10 +32,6 @@ public class MusicService extends Service {
     public static boolean isPause = false;
     private static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
 
-    public MusicService(Handler handler) {
-        this.handler = handler;
-    }
-
     private static void initMediaPlayer() {
         if (null == mediaPlayer) {
             mediaPlayer = new MediaPlayer();

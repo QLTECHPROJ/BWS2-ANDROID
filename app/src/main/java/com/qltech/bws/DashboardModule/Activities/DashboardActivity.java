@@ -15,6 +15,7 @@ import com.qltech.bws.DashboardModule.Audio.AudioFragment;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityDashboardBinding;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,7 +46,6 @@ public class DashboardActivity extends AppCompatActivity {
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
-        player = 1;
         if (!AudioFlag.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getSupportFragmentManager();
@@ -80,5 +80,11 @@ public class DashboardActivity extends AppCompatActivity {
         } else if (binding.navView.getSelectedItemId() == R.id.navigation_account) {
             binding.navView.setSelectedItemId(R.id.navigation_account);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MusicService.releasePlayer();
     }
 }

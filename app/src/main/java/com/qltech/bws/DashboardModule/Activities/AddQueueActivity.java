@@ -137,7 +137,7 @@ public class AddQueueActivity extends AppCompatActivity {
         }
 
         int lineCount = binding.tvSubDec.getLineCount();
-        if (lineCount < 4 || lineCount == 4) {
+        if (lineCount <= 4) {
         } else {
             makeTextViewResizable(binding.tvSubDec, 4, "Read More...", true);
         }

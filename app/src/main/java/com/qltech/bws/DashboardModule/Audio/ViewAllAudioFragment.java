@@ -38,6 +38,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+
 public class ViewAllAudioFragment extends Fragment {
     FragmentViewAllAudioBinding binding;
     String ID, Name, UserID;
@@ -144,6 +146,7 @@ public class ViewAllAudioFragment extends Fragment {
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    player = 1;
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
