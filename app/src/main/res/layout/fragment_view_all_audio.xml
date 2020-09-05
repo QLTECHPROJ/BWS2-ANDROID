@@ -52,7 +52,7 @@
                 android:layout_below="@id/rlLayout"
                 android:layout_marginHorizontal="@dimen/_4sdp"
                 android:layout_marginTop="@dimen/_6sdp"
-                android:paddingBottom="121dp"
+                android:paddingBottom="124dp"
                 android:overScrollMode="never" />
 
             <ImageView

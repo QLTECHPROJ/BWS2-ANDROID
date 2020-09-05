@@ -84,6 +84,7 @@ public class SearchFragment extends Fragment {
                     .addToBackStack("TransparentPlayerFragment")
                     .commit();
         }
+
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.gray));
