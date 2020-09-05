@@ -56,9 +56,8 @@
                 android:layout_marginTop="@dimen/_6sdp"
                 android:ellipsize="end"
                 android:fontFamily="@font/montserrat_semi_bold"
-                android:gravity="left"
+                android:gravity="start"
                 android:maxLines="1"
-                android:text="Motivation Program"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp" />
 
@@ -69,16 +68,16 @@
                 android:layout_marginTop="@dimen/_2sdp"
                 android:ellipsize="end"
                 android:fontFamily="@font/montserrat_regular"
-                android:gravity="left"
+                android:gravity="start"
                 android:maxLines="2"
-                android:text="Listen this one before emotional empowerment program session 1"
                 android:textColor="@color/extra_light_gray"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_12sdp" />
 
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/llDownload"
             android:layout_width="@dimen/_0sdp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

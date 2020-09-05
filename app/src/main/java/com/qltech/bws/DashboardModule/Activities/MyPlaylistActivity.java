@@ -50,8 +50,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.qltech.bws.DashboardModule.Activities.AddQueueActivity.makeTextViewResizable;
-
 public class MyPlaylistActivity extends AppCompatActivity {
     ActivityMyPlaylistBinding binding;
     String UserID, PlaylistID, Download, Like;
@@ -97,22 +95,22 @@ public class MyPlaylistActivity extends AppCompatActivity {
                         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
                         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
                         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-                        if (!model.getResponseData().getPlaylistImage().equalsIgnoreCase("")){
+                        if (!model.getResponseData().getPlaylistImage().equalsIgnoreCase("")) {
                             Glide.with(ctx).load(model.getResponseData().getPlaylistImage())
                                     .thumbnail(0.05f)
                                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                        }else {
+                        } else {
                             binding.ivRestaurantImage.setImageResource(R.drawable.ic_playlist_bg);
                         }
 
                         Download = model.getResponseData().getDownload();
 
-                        if (model.getResponseData().getCreated().equalsIgnoreCase("1")){
+                        if (model.getResponseData().getCreated().equalsIgnoreCase("1")) {
                             binding.llOptions.setVisibility(View.GONE);
                             binding.llRename.setVisibility(View.VISIBLE);
                             binding.llDelete.setVisibility(View.VISIBLE);
                             binding.llFind.setVisibility(View.GONE);
-                        }else if (model.getResponseData().getCreated().equalsIgnoreCase("0")) {
+                        } else if (model.getResponseData().getCreated().equalsIgnoreCase("0")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRename.setVisibility(View.GONE);
                             binding.llDelete.setVisibility(View.GONE);
@@ -135,39 +133,47 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             binding.tvDesc.setText(model.getResponseData().getTotalAudio() + " Audio | "
                                     + model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
                         }
+
+                        if (model.getResponseData().getPlaylistDesc().equalsIgnoreCase("")){
+                            binding.tvTitleDec.setVisibility(View.GONE);
+                            binding.tvSubDec.setVisibility(View.GONE);
+                        }else {
+                            binding.tvTitleDec.setVisibility(View.VISIBLE);
+                            binding.tvSubDec.setVisibility(View.VISIBLE);
+                        }
+
                         binding.tvSubDec.setText(model.getResponseData().getPlaylistDesc());
-                        binding.tvSubDec.post(() -> {
-                            int lineCount = binding.tvSubDec.getLineCount();
-                            if (lineCount < 4 || lineCount == 4) {
+                        int linecount = binding.tvSubDec.getLineCount();
+                        if (linecount >= 4) {
+                            binding.tvReadMore.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.tvReadMore.setVisibility(View.GONE);
+                        }
 
-                            } else {
-                                makeTextViewResizable(binding.tvSubDec, 4, "Read More...", true);
-                                binding.tvSubDec.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        final Dialog dialog = new Dialog(ctx);
-                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                        dialog.setContentView(R.layout.full_desc_layout);
-                                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                                        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                        final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
-                                        final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
-                                        tvDesc.setText(model.getResponseData().getPlaylistDesc());
+                        binding.tvReadMore.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                final Dialog dialog = new Dialog(ctx);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.full_desc_layout);
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
+                                final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
+                                tvDesc.setText(model.getResponseData().getPlaylistDesc());
 
-                                        dialog.setOnKeyListener((v, keyCode, event) -> {
-                                            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                                dialog.dismiss();
-                                                return true;
-                                            }
-                                            return false;
-                                        });
-
-                                        tvClose.setOnClickListener(v -> dialog.dismiss());
-
-                                        dialog.show();
-                                        dialog.setCancelable(false);
+                                dialog.setOnKeyListener((v, keyCode, event) -> {
+                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                        dialog.dismiss();
+                                        return true;
                                     }
+                                    return false;
                                 });
+
+                                tvClose.setOnClickListener(v -> dialog.dismiss());
+
+                                dialog.show();
+                                dialog.setCancelable(false);
                             }
                         });
 
@@ -189,6 +195,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                         }
 
+                        binding.llDownload.setVisibility(View.VISIBLE);
 
                         String[] elements = model.getResponseData().getPlaylistMastercat().split(",");
                         List<String> direction = Arrays.asList(elements);

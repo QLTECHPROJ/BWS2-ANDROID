@@ -81,7 +81,7 @@
                     android:gravity="center_horizontal"
                     android:maxLines="2"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_22sdp" />
+                    android:textSize="@dimen/_21sdp" />
 
                 <TextView
                     android:id="@+id/tvCreator"
@@ -94,19 +94,20 @@
                     android:gravity="center_horizontal"
                     android:maxLines="1"
                     android:textColor="@color/gray_subtitle"
-                    android:textSize="@dimen/_15sdp" />
+                    android:textSize="@dimen/_16sdp" />
 
                 <TextView
                     android:id="@+id/tvSubTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_14sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="start"
-                    android:lineSpacingExtra="@dimen/_2sdp"
+                    android:justificationMode="inter_word"
+                    android:lineSpacingExtra="@dimen/_4sdp"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_14sdp" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 

@@ -206,6 +206,7 @@
             android:paddingHorizontal="@dimen/_16sdp"
             android:paddingBottom="@dimen/_20sdp"
             android:textSize="@dimen/_13sdp"
+            android:justificationMode="inter_word"
             android:textColor="@color/black"
             android:fontFamily="@font/montserrat_italic"
             android:text="@string/disclaimer"/>

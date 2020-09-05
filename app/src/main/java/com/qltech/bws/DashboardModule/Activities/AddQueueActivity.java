@@ -65,59 +65,6 @@ public class AddQueueActivity extends AppCompatActivity {
     Context ctx;
     ArrayList<String> queue;
 
-    public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
-        if (tv.getTag() == null) {
-            tv.setTag(tv.getText());
-        }
-        ViewTreeObserver vto = tv.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                String text;
-                int lineEndIndex;
-                ViewTreeObserver obs = tv.getViewTreeObserver();
-                obs.removeGlobalOnLayoutListener(this);
-                if (maxLine == 0) {
-                    lineEndIndex = tv.getLayout().getLineEnd(0);
-                    text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + "<font   color=\"#F89552\">" + expandText + "</font>";
-                } else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
-                    lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
-                    text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + "<font color=\"#F89552\">" + expandText + "</font>";
-                } else {
-                    lineEndIndex = tv.getLayout().getLineEnd(tv.getLayout().getLineCount() - 1);
-                    text = tv.getText().subSequence(0, lineEndIndex) + " " + "<font color=\"#F89552\">" + expandText + "</font>";
-                }
-                tv.setText(Html.fromHtml(text));
-                tv.setMovementMethod(LinkMovementMethod.getInstance());
-                tv.setText(
-                        addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, lineEndIndex, expandText,
-                                viewMore), TextView.BufferType.SPANNABLE);
-            }
-        });
-    }
-
-    private static SpannableStringBuilder addClickablePartTextViewResizable(final Spanned strSpanned, final TextView tv, final int maxLine, final String spanableText, final boolean viewMore) {
-        String str = strSpanned.toString();
-        SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
-
-        if (str.contains(spanableText)) {
-            ssb.setSpan(new MySpannable(false) {
-                @Override
-                public void onClick(View widget) {
-                    tv.setLayoutParams(tv.getLayoutParams());
-                    tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
-                    tv.invalidate();
-                    if (viewMore) {
-                        makeTextViewResizable(tv, 4, "Read More...", true);
-                    } else {
-                        makeTextViewResizable(tv, 4, "Read More...", true);
-                    }
-                }
-            }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), 0);
-        }
-        return ssb;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,19 +90,18 @@ public class AddQueueActivity extends AppCompatActivity {
         } else {
             play = "";
         }
-
         if (play.equalsIgnoreCase("play")) {
             binding.llOptions.setVisibility(View.VISIBLE);
             binding.llDownload.setVisibility(View.VISIBLE);
             binding.llAddPlaylist.setVisibility(View.VISIBLE);
             binding.llAddQueue.setVisibility(View.VISIBLE);
-            binding.llRemovePlaylist.setVisibility(View.GONE);
+            binding.llRemovePlaylist.setVisibility(View.VISIBLE);
         } else {
             binding.llOptions.setVisibility(View.VISIBLE); /*GONE*/
             binding.llAddPlaylist.setVisibility(View.GONE);
             binding.llDownload.setVisibility(View.VISIBLE);
             binding.llAddQueue.setVisibility(View.VISIBLE);/*GONE*/
-            binding.llRemovePlaylist.setVisibility(View.VISIBLE);
+            binding.llRemovePlaylist.setVisibility(View.GONE);
         }
 
         binding.llLike.setOnClickListener(view -> {
@@ -287,50 +233,52 @@ public class AddQueueActivity extends AppCompatActivity {
                         hideProgressBar();
                         DirectionModel directionModel = response.body();
 
-                        binding.tvSubDec.setText(directionModel.getResponseData().get(0).getAudioDescription());
-                        binding.tvSubDec.post(() -> {
-                            int lineCount = binding.tvSubDec.getLineCount();
-                            if (lineCount >= 4) {
-                                makeTextViewResizable(binding.tvSubDec, 4, "Read More...", true);
-                                binding.tvSubDec.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        final Dialog dialog = new Dialog(ctx);
-                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                        dialog.setContentView(R.layout.full_desc_layout);
-                                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                                        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                        final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
-                                        final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
-                                        tvDesc.setText(directionModel.getResponseData().get(0).getAudioDescription());
-
-                                        dialog.setOnKeyListener((v, keyCode, event) -> {
-                                            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                                dialog.dismiss();
-                                                return true;
-                                            }
-                                            return false;
-                                        });
-
-                                        tvClose.setOnClickListener(v -> dialog.dismiss());
-
-                                        dialog.show();
-                                        dialog.setCancelable(false);
-                                    }
-                                });
-                            } else {
-
-                            }
-                        });
-
-                        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 40,
-                                1, 1, 0.6f, 40);
-                        binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-                        binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-                        binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
                         Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile())
                                 .thumbnail(0.05f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+
+                        if (directionModel.getResponseData().get(0).getAudioDescription().equalsIgnoreCase("")){
+                            binding.tvTitleDec.setVisibility(View.GONE);
+                            binding.tvSubDec.setVisibility(View.GONE);
+                        }else {
+                            binding.tvTitleDec.setVisibility(View.VISIBLE);
+                            binding.tvSubDec.setVisibility(View.VISIBLE);
+                        }
+
+                        binding.tvSubDec.setText(directionModel.getResponseData().get(0).getAudioDescription());
+                        int linecount = binding.tvSubDec.getLineCount();
+                        if (linecount >= 4){
+                            binding.tvReadMore.setVisibility(View.VISIBLE);
+                        }else {
+                            binding.tvReadMore.setVisibility(View.GONE);
+                        }
+
+                        binding.tvReadMore.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                final Dialog dialog = new Dialog(ctx);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.full_desc_layout);
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
+                                final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
+                                tvDesc.setText(directionModel.getResponseData().get(0).getAudioDescription());
+
+                                dialog.setOnKeyListener((v, keyCode, event) -> {
+                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                        dialog.dismiss();
+                                        return true;
+                                    }
+                                    return false;
+                                });
+
+                                tvClose.setOnClickListener(v -> dialog.dismiss());
+
+                                dialog.show();
+                                dialog.setCancelable(false);
+                            }
+                        });
 
                         Like = directionModel.getResponseData().get(0).getLike();
                         Download = directionModel.getResponseData().get(0).getDownload();

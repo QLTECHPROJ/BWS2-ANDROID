@@ -41,6 +41,7 @@
                 android:layout_marginTop="@dimen/_18sdp"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="start"
+                android:justificationMode="inter_word"
                 android:lineSpacingExtra="@dimen/_4sdp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp" />

@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -23,9 +25,13 @@ import com.google.gson.Gson;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity;
 import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
+import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+
 import com.qltech.bws.R;
+import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.AudioAptListLayoutBinding;
@@ -33,9 +39,14 @@ import com.qltech.bws.databinding.FragmentAptAudioBinding;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AptAudioFragment extends Fragment {
     FragmentAptAudioBinding binding;
     public FragmentManager f_manager;
+    String PlaylistId, UserID;
     ArrayList<AppointmentDetailModel.Audio> appointmentDetail;
 
     @Override
@@ -43,13 +54,17 @@ public class AptAudioFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_audio, container, false);
         View view = binding.getRoot();
+
+        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         appointmentDetail = new ArrayList<>();
         if (getArguments() != null) {
             appointmentDetail = getArguments().getParcelableArrayList("AppointmentDetailList");
         }
-        if(appointmentDetail.size() == 0){
+        if (appointmentDetail.size() == 0) {
 
-        }else{
+        } else {
             AudioListAdapter appointmentsAdapter = new AudioListAdapter(appointmentDetail, getActivity(), f_manager);
             RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             binding.rvAudioList.setLayoutManager(recentlyPlayed);
@@ -59,7 +74,29 @@ public class AptAudioFragment extends Fragment {
 
         return view;
     }
-    public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.MyViewHolder>{
+
+    private void hideProgressBar() {
+        try {
+            binding.progressBarHolder.setVisibility(View.GONE);
+            binding.ImgV.setVisibility(View.GONE);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showProgressBar() {
+        try {
+            binding.progressBarHolder.setVisibility(View.VISIBLE);
+            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.ImgV.setVisibility(View.VISIBLE);
+            binding.ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.MyViewHolder> {
         private ArrayList<AppointmentDetailModel.Audio> listModelList;
         Context ctx;
         public FragmentManager f_manager;
@@ -81,7 +118,7 @@ public class AptAudioFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             AppointmentDetailModel.Audio audiolist = listModelList.get(position);
-             holder.binding.tvTitle.setText(audiolist.getName());
+            holder.binding.tvTitle.setText(audiolist.getName());
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.13f, 0);
@@ -115,6 +152,34 @@ public class AptAudioFragment extends Fragment {
                     editor.putInt(CONSTANTS.PREF_KEY_position, position);
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
                     editor.commit();
+                }
+            });
+
+            holder.binding.llDownload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        showProgressBar();
+                        Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, audiolist.getID(), PlaylistId);
+                        listCall.enqueue(new Callback<DownloadPlaylistModel>() {
+                            @Override
+                            public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
+                                if (response.isSuccessful()) {
+                                    hideProgressBar();
+                                    DownloadPlaylistModel model = response.body();
+                                    Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
+                                hideProgressBar();
+                            }
+                        });
+
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
