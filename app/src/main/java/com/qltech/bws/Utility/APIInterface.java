@@ -288,7 +288,7 @@ public interface APIInterface {
     /* TODO AddQueueActivity */
     @POST("audiodetail")
     @FormUrlEncoded
-    Call<List<DirectionModel.ResponseData>> getAudioDetailLists(@Field("AudioId") String audioId);
+    Call<DirectionModel> getAudioDetailLists(@Field("AudioId") String audioId);
 
     /* TODO AddPaymentActivity */
     @POST("cardadd")

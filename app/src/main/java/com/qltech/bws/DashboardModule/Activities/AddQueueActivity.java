@@ -279,15 +279,15 @@ public class AddQueueActivity extends AppCompatActivity {
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             showProgressBar();
-            Call<List<DirectionModel.ResponseData>> listCall = APIClient.getClient().getAudioDetailLists(AudioId);
-            listCall.enqueue(new Callback<List<DirectionModel.ResponseData>>() {
+            Call<DirectionModel> listCall = APIClient.getClient().getAudioDetailLists(AudioId);
+            listCall.enqueue(new Callback<DirectionModel>() {
                 @Override
-                public void onResponse(Call<List<DirectionModel.ResponseData>> call, Response<List<DirectionModel.ResponseData>> response) {
+                public void onResponse(Call<DirectionModel> call, Response<DirectionModel> response) {
                     if (response.isSuccessful()) {
                         hideProgressBar();
-                        List<DirectionModel.ResponseData> directionModel = response.body();
+                        DirectionModel directionModel = response.body();
 
-                        binding.tvSubDec.setText(directionModel.get(0).getAudioDescription());
+                        binding.tvSubDec.setText(directionModel.getResponseData().get(0).getAudioDescription());
                         binding.tvSubDec.post(() -> {
                             int lineCount = binding.tvSubDec.getLineCount();
                             if (lineCount >= 4) {
@@ -302,7 +302,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                                         final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
                                         final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
-                                        tvDesc.setText(directionModel.get(0).getAudioDescription());
+                                        tvDesc.setText(directionModel.getResponseData().get(0).getAudioDescription());
 
                                         dialog.setOnKeyListener((v, keyCode, event) -> {
                                             if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -328,43 +328,43 @@ public class AddQueueActivity extends AppCompatActivity {
                         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
                         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
                         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-                        Glide.with(ctx).load(directionModel.get(0).getImageFile())
+                        Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile())
                                 .thumbnail(0.05f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
-                        Like = directionModel.get(0).getLike();
-                        Download = directionModel.get(0).getDownload();
+                        Like = directionModel.getResponseData().get(0).getLike();
+                        Download = directionModel.getResponseData().get(0).getDownload();
 
-                        binding.tvName.setText(directionModel.get(0).getName());
-                        binding.tvDesc.setText(directionModel.get(0).getAudioSubCategory());
-                        binding.tvDuration.setText(directionModel.get(0).getAudioDuration());
+                        binding.tvName.setText(directionModel.getResponseData().get(0).getName());
+                        binding.tvDesc.setText(directionModel.getResponseData().get(0).getAudioSubCategory());
+                        binding.tvDuration.setText(directionModel.getResponseData().get(0).getAudioDuration());
 
-                        if (directionModel.get(0).getAudioDirection().equalsIgnoreCase("")) {
+                        if (directionModel.getResponseData().get(0).getAudioDirection().equalsIgnoreCase("")) {
                             binding.tvSubDire.setText("");
                             binding.tvSubDire.setVisibility(View.GONE);
                             binding.tvDire.setVisibility(View.GONE);
                             binding.rvDirlist.setVisibility(View.GONE);
                         } else {
-                            binding.tvSubDire.setText(directionModel.get(0).getAudioDirection());
+                            binding.tvSubDire.setText(directionModel.getResponseData().get(0).getAudioDirection());
                             binding.tvSubDire.setVisibility(View.VISIBLE);
                             binding.tvDire.setVisibility(View.VISIBLE);
                             binding.rvDirlist.setVisibility(View.VISIBLE);
                         }
 
 
-                        if (directionModel.get(0).getLike().equalsIgnoreCase("1")) {
+                        if (directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")) {
                             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                        } else if (!directionModel.get(0).getLike().equalsIgnoreCase("0")) {
+                        } else if (!directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("0")) {
                             binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
                         }
 
-                        if (directionModel.get(0).getDownload().equalsIgnoreCase("1")) {
+                        if (directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("1")) {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                             binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
                             binding.ivDownloads.setAlpha(255);
                             binding.llDownload.setClickable(false);
                             binding.llDownload.setEnabled(false);
-                        } else if (!directionModel.get(0).getDownload().equalsIgnoreCase("")) {
+                        } else if (!directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("")) {
                             binding.llDownload.setClickable(true);
                             binding.llDownload.setEnabled(true);
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
@@ -387,7 +387,7 @@ public class AddQueueActivity extends AppCompatActivity {
                             }
                         });
 
-                        String[] elements = directionModel.get(0).getAudiomastercat().split(",");
+                        String[] elements = directionModel.getResponseData().get(0).getAudiomastercat().split(",");
                         List<String> direction = Arrays.asList(elements);
 
                         DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
@@ -407,7 +407,7 @@ public class AddQueueActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<List<DirectionModel.ResponseData>> call, Throwable t) {
+                public void onFailure(Call<DirectionModel> call, Throwable t) {
                     hideProgressBar();
                     Toast.makeText(ctx, t.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("getMessagegetMessage", "" + t.getMessage());
