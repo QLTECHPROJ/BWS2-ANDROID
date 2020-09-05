@@ -356,7 +356,8 @@ public class SearchFragment extends Fragment {
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            holder.binding.ivRestaurantImage.setImageResource(R.drawable.square_logo);
+            Glide.with(getActivity()).load(modelList.get(position).getImageFile()).thumbnail(0.1f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
 
             holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {

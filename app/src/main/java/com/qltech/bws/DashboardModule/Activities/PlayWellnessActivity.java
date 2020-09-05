@@ -396,7 +396,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     private void getPrepareShowData() {
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         binding.tvName.setText(mainPlayModelList.get(position).getName());
-        binding.tvDireDesc.setText(mainPlayModelList.get(position).getAudioDirection());
+        if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")){
+            binding.llDirection.setVisibility(View.GONE);
+        }else {
+            binding.llDirection.setVisibility(View.VISIBLE);
+            binding.tvDireDesc.setText(mainPlayModelList.get(position).getAudioDirection());
+        }
         binding.tvTitle.setText(mainPlayModelList.get(position).getAudioSubCategory());
         binding.tvDesc.setText(mainPlayModelList.get(position).getAudiomastercat());
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
@@ -431,6 +436,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
             MusicService.playMedia();
         }
+
         binding.simpleSeekbar.setClickable(false);
 
         startTime = MusicService.getStartTime();

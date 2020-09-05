@@ -16,10 +16,12 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.MediaController;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -59,6 +61,13 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+
+        MediaController mediaController= new MediaController(this);
+        mediaController.setAnchorView(binding.ivBackground);
+        binding.ivBackground.setMediaController(null);
+        binding.ivBackground.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.splash_video));
+        binding.ivBackground.requestFocus();
+        binding.ivBackground.start();
 
         if (UserID.equalsIgnoreCase("")) {
             new Handler().postDelayed(() -> {

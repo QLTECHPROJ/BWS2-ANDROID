@@ -56,6 +56,7 @@ public class FaqActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
         }
+
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,10 +79,10 @@ public class FaqActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
         binding.llHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 modelList.clear();
                 modelList = new ArrayList<>();
                 for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
@@ -94,10 +95,10 @@ public class FaqActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
         binding.llPlaylists.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 modelList.clear();
                 modelList = new ArrayList<>();
                 for (int i = 0; i < faqListModel.getResponseData().size(); i++) {

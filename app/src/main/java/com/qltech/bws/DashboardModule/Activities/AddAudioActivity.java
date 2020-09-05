@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.SuggestedModel;
@@ -235,7 +236,8 @@ public class AddAudioActivity extends AppCompatActivity {
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            holder.binding.ivRestaurantImage.setImageResource(R.drawable.square_logo);
+            Glide.with(ctx).load(modelList.get(position).getImageFile()).thumbnail(0.1f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
             holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -320,7 +322,8 @@ public class AddAudioActivity extends AppCompatActivity {
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            holder.binding.ivRestaurantImage.setImageResource(R.drawable.square_logo);
+            Glide.with(ctx).load(listModel.get(position).getImageFile()).thumbnail(0.1f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
             holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
                 @Override

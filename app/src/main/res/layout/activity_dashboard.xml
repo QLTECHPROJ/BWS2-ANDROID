@@ -60,8 +60,7 @@
                         android:layout_marginTop="@dimen/_8sdp"
                         android:layout_marginBottom="@dimen/_8sdp"
                         android:layout_weight="0.13"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/square_logo" />
+                        android:scaleType="fitXY" />
 
 
                     <LinearLayout

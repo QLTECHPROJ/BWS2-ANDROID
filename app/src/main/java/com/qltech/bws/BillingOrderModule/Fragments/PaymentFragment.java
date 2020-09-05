@@ -65,7 +65,7 @@ public class PaymentFragment extends Fragment {
     }
 
     public static void updateCardList() {
-        Toast.makeText(context, "Changedd", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "Changedd", Toast.LENGTH_SHORT).show();
 //        prepareCardList();
     }
 
