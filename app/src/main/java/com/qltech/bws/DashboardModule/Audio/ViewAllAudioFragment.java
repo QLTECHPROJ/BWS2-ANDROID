@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.ViewAllAudioListModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
@@ -163,11 +164,15 @@ public class ViewAllAudioFragment extends Fragment {
                             .add(R.id.rlAudiolist, fragment)
                             .addToBackStack("TransparentPlayerFragment")
                             .commit();
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList("modelList", listModelList);
-                    bundle.putInt("position", position);
-                    bundle.putString("AudioFlag","ViewAllAudioList");
-                    fragment.setArguments(bundle);
+
+                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(listModelList);
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
+                    editor.commit();
                 }
             });
 
