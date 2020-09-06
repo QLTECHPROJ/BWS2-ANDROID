@@ -116,7 +116,7 @@ public class MusicService extends Service {
         startTime = mediaPlayer.getCurrentPosition();
     }
 
-    static void showToast(String message, Context conext) {
+   public static void showToast(String message, Context conext) {
         Toast toast = new Toast(conext);
         View view = LayoutInflater.from(conext).inflate(R.layout.toast_layout, null);
         TextView tvMessage = view.findViewById(R.id.tvMessage);

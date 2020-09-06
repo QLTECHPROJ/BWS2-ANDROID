@@ -83,16 +83,20 @@ public class AddQueueActivity extends AppCompatActivity {
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-        position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+        String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
         }.getType();
         mainPlayModelList = gson.fromJson(json, type);
+        Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
+        }.getType();
+        addToQueueModelList = gson.fromJson(json1, type1);
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);
+            position = getIntent().getIntExtra(CONSTANTS.position, 0);
         }
 
         prepareData();
@@ -192,6 +196,7 @@ public class AddQueueActivity extends AppCompatActivity {
             public void onClick(View view) {
                 addToQueueModel = new AddToQueueModel();
                 int i = position;
+
                 addToQueueModel.setID(mainPlayModelList.get(i).getID());
                 addToQueueModel.setName(mainPlayModelList.get(i).getName());
                 addToQueueModel.setAudioFile(mainPlayModelList.get(i).getAudioFile());
@@ -202,8 +207,16 @@ public class AddQueueActivity extends AppCompatActivity {
                 addToQueueModel.setLike(mainPlayModelList.get(i).getLike());
                 addToQueueModel.setDownload(mainPlayModelList.get(i).getDownload());
                 addToQueueModel.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
-                addToQueueModelList.add(addToQueueModel);
-
+                for (int x = 0; x < addToQueueModelList.size(); x++) {
+                    if (addToQueueModelList.get(x).equals(addToQueueModel)) {
+                        addToQueueModel = new AddToQueueModel();
+                        BWSApplication.showToast("Already in Queue", ctx);
+                        break;
+                    } else if (x == (addToQueueModelList.size() - 1)) {
+                        BWSApplication.showToast("Add ton Queue Successfully", ctx);
+                        addToQueueModelList.add(addToQueueModel);
+                    }
+                }
                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();

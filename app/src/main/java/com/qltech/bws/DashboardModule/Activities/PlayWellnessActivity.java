@@ -22,7 +22,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
@@ -186,60 +185,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             finish();
         });
 
-        //callStateListener();
-
-        binding.llLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (BWSApplication.isNetworkConnected(ctx)) {
-                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                    Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(mainPlayModelList.get(position).getID(), UserID);
-                    listCall.enqueue(new Callback<AudioLikeModel>() {
-                        @Override
-                        public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
-                            if (response.isSuccessful()) {
-                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                                AudioLikeModel model = response.body();
-                                if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
-                                    binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-                                } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                    binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                                }
-                                BWSApplication.showToast(model.getResponseMessage(), ctx);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<AudioLikeModel> call, Throwable t) {
-                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                        }
-                    });
-                } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                }
-            }
+        binding.llLike.setOnClickListener(view -> {
+            callLike();
         });
 
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(mainPlayModelList.get(position).getID(), UserID);
-            listCall.enqueue(new Callback<SucessModel>() {
-                @Override
-                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                        SucessModel model = response.body();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<SucessModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-        }
+        addToRecentPlay();
 
         if (IsShuffle.equalsIgnoreCase("")) {
             binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -253,112 +203,17 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         }
 
-        binding.llRepeat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (IsRepeat.equalsIgnoreCase("")) {
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "0");
-                    editor.commit();
-                    MusicService.ToRepeat(true);
-                    IsRepeat = "0";
-                    binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
-                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-                } else if (IsRepeat.equalsIgnoreCase("0")) {
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
-                    editor.commit();
-                    MusicService.ToRepeat(false);
-                    IsRepeat = "1";
-                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-                } else if (IsRepeat.equalsIgnoreCase("1")) {
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
-                    editor.commit();
-                    MusicService.ToRepeat(false);
-                    IsRepeat = "";
-                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-                }
-            }
-        });
+        binding.llRepeat.setOnClickListener(view -> callRepeat());
 
-        binding.llShuffle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (IsShuffle.equalsIgnoreCase("")) {
-                    IsShuffle = "1";
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "1");
-                    if (IsRepeat.equalsIgnoreCase("0")) {
-                        editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
-                    }
-                    editor.commit();
-                    MusicService.ToRepeat(false);
-                    IsRepeat = "";
-                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+        binding.llShuffle.setOnClickListener(view -> callShuffle());
 
-                    binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-//                    Collections.shuffle(mainPlayModelList, new Random(System.nanoTime()));
-                } else if (IsShuffle.equalsIgnoreCase("1")) {
-                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
-                    editor.commit();
-                    IsShuffle = "";
-                    binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-                }
-            }
-        });
-
-        binding.llDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (BWSApplication.isNetworkConnected(ctx)) {
-                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                    Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, mainPlayModelList.get(position).getID(), PlaylistId);
-                    listCall.enqueue(new Callback<DownloadPlaylistModel>() {
-                        @Override
-                        public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
-                            if (response.isSuccessful()) {
-                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                                DownloadPlaylistModel model = response.body();
-                                if (model.getResponseData().getFlag().equalsIgnoreCase("0")
-                                        || model.getResponseData().getFlag().equalsIgnoreCase("")) {
-                                    binding.llDownload.setClickable(true);
-                                    binding.llDownload.setEnabled(true);
-                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                                } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                                    binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-                                    binding.ivDownloads.setAlpha(255);
-                                    binding.llDownload.setClickable(false);
-                                    binding.llDownload.setEnabled(false);
-                                }
-                                BWSApplication.showToast(model.getResponseMessage(), ctx);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                        }
-                    });
-
-                } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                }
-            }
-        });
+        binding.llDownload.setOnClickListener(view -> callDownload());
 
         binding.llMore.setOnClickListener(view -> {
             Intent i = new Intent(ctx, AddQueueActivity.class);
             i.putExtra("play", "play");
             i.putExtra("ID", mainPlayModelList.get(position).getID());
-            i.putExtra("positon", position);
+            i.putExtra("position", position);
             startActivity(i);
         });
 
@@ -439,7 +294,159 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         });
     }
 
+    private void callDownload() {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, mainPlayModelList.get(position).getID(), PlaylistId);
+            listCall.enqueue(new Callback<DownloadPlaylistModel>() {
+                @Override
+                public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        DownloadPlaylistModel model = response.body();
+                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")
+                                || model.getResponseData().getFlag().equalsIgnoreCase("")) {
+                            binding.llDownload.setClickable(true);
+                            binding.llDownload.setEnabled(true);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                            binding.ivDownloads.setAlpha(255);
+                            binding.llDownload.setClickable(false);
+                            binding.llDownload.setEnabled(false);
+                        }
+                        BWSApplication.showToast(model.getResponseMessage(), ctx);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                }
+            });
+
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+    }
+
+    private void callShuffle() {
+        if (IsShuffle.equalsIgnoreCase("")) {
+            if (listSize == 1) {
+
+            } else {
+                IsShuffle = "1";
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "1");
+                if (IsRepeat.equalsIgnoreCase("0")) {
+                    editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
+                }
+                editor.commit();
+                MusicService.ToRepeat(false);
+                IsRepeat = "";
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+//                    Collections.shuffle(mainPlayModelList, new Random(System.nanoTime()));
+            }
+        } else if (IsShuffle.equalsIgnoreCase("1")) {
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
+            editor.commit();
+            IsShuffle = "";
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+    }
+
+    private void callRepeat() {
+
+        if (IsRepeat.equalsIgnoreCase("")) {
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "0");
+            editor.commit();
+            MusicService.ToRepeat(true);
+            IsRepeat = "0";
+            binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+        } else if (IsRepeat.equalsIgnoreCase("0")) {
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
+            editor.commit();
+            MusicService.ToRepeat(false);
+            IsRepeat = "1";
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+        } else if (IsRepeat.equalsIgnoreCase("1")) {
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
+            editor.commit();
+            MusicService.ToRepeat(false);
+            IsRepeat = "";
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+    }
+
+    private void callLike() {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(mainPlayModelList.get(position).getID(), UserID);
+            listCall.enqueue(new Callback<AudioLikeModel>() {
+                @Override
+                public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        AudioLikeModel model = response.body();
+                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
+                            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                            binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                        }
+                        BWSApplication.showToast(model.getResponseMessage(), ctx);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AudioLikeModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+    }
+
+    private void addToRecentPlay() {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(mainPlayModelList.get(position).getID(), UserID);
+            listCall.enqueue(new Callback<SucessModel>() {
+                @Override
+                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        SucessModel model = response.body();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SucessModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+    }
+
     private void getPrepareShowData(int position) {
+        if(listSize == 1){
+            position = 0;
+        }
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         binding.tvName.setText(mainPlayModelList.get(position).getName());
         if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
@@ -545,9 +552,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             getPrepareShowData(position);
         } else if (IsShuffle.equalsIgnoreCase("1")) {
             // shuffle is on - play a random song
-            Random random = new Random();
-            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-            getPrepareShowData(position);
+            if (listSize == 1) {
+
+            } else {
+                Random random = new Random();
+                position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                getPrepareShowData(position);
+            }
         } else {
             if (position < (listSize - 1)) {
                 position = position + 1;
