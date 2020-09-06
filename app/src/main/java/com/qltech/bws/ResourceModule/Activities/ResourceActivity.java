@@ -52,6 +52,7 @@ public class ResourceActivity extends AppCompatActivity {
     String UserID, Category ="";
     Activity activity;
     private long mLastClickTime = 0;
+    int CurruntTab = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class ResourceActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 binding.viewPager.setCurrentItem(tab.getPosition());
+                CurruntTab = tab.getPosition();
             }
 
             @Override
@@ -149,6 +151,7 @@ public class ResourceActivity extends AppCompatActivity {
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), this, binding.tabLayout.getTabCount());
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
+        binding.viewPager.setCurrentItem(CurruntTab);
     }
 
     void prepareData(Context ctx, RecyclerView rvFilterList, Dialog dialogBox) {
