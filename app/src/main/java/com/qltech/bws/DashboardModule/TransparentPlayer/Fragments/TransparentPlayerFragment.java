@@ -170,6 +170,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             playmedia();
         }
 
+        listSize = mainPlayModelList.size();
         if (listSize == 1) {
             SharedPreferences sharedxx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedxx.edit();
@@ -302,6 +303,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         } else if (IsShuffle.equalsIgnoreCase("1")) {
             // shuffle is on - play a random song
             if (listSize == 1) {
+                position = 0;
 
             } else {
                 Random random = new Random();
