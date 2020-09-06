@@ -203,6 +203,7 @@ public class AppointmentFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("appointmentMainName", listModel.get(position).getCategory());
                     bundle.putString("appointmentName", listModel.get(position).getCatMenual());
+                    bundle.putString("appointmentImage", listModel.get(position).getImage());
                     sessionsFragment.setArguments(bundle);
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()

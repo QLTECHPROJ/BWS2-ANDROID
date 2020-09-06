@@ -232,7 +232,6 @@
                             android:fontFamily="@font/montserrat_regular"
                             android:paddingHorizontal="@dimen/_13sdp"
                             android:paddingBottom="@dimen/_13sdp"
-                            android:text="Visa ending **** 4242 \njsmith@email.com"
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_12sdp" />
 

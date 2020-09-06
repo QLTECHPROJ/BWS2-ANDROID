@@ -209,7 +209,8 @@ public interface APIInterface {
     /* TODO SearchFragment */
     @POST("searchonsuggestedlist")
     @FormUrlEncoded
-    Call<SearchBothModel> getSearchBoth(@Field("SuggestedName") String suggestedName);
+    Call<SearchBothModel> getSearchBoth(@Field("UserID") String userID,
+                                        @Field("SuggestedName") String suggestedName);
 
     /* TODO MyPlaylistsFragment */
     @POST("addaudiotoplaylist")
@@ -298,7 +299,7 @@ public interface APIInterface {
     Call<AddCardModel> getAddCard(@Field("UserID") String userID,
                                   @Field("TokenId") String tokenId);
 
-    /* TODO AddPaymentActivity */
+    /* TODO MembershipChangeActivity */
     @POST("planlistonbilling")
     @FormUrlEncoded
     Call<PlanListBillingModel> getPlanListBilling(@Field("UserID") String userID);

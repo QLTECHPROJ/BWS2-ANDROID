@@ -58,6 +58,9 @@ public class SessionListModel {
         @SerializedName("Name")
         @Expose
         private String name;
+        @SerializedName("Image")
+        @Expose
+        private String image;
         @SerializedName("Category")
         @Expose
         private String category;
@@ -70,9 +73,6 @@ public class SessionListModel {
         @SerializedName("Desc")
         @Expose
         private String desc;
-        @SerializedName("Image")
-        @Expose
-        private String image;
         @SerializedName("Date")
         @Expose
         private String date;
@@ -96,6 +96,7 @@ public class SessionListModel {
         public void setId(String id) {
             this.id = id;
         }
+
 
         public String getName() {
             return name;

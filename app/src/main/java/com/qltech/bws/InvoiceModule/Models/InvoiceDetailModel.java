@@ -83,6 +83,12 @@ public class InvoiceDetailModel {
         @SerializedName("Email")
         @Expose
         private String email;
+        @SerializedName("CardBrand")
+        @Expose
+        private String cardBrand;
+        @SerializedName("CardDigit")
+        @Expose
+        private String cardDigit;
         @SerializedName("GSTAmount")
         @Expose
         private String gstAmount;
@@ -92,6 +98,22 @@ public class InvoiceDetailModel {
         @SerializedName("InvoiceFrom")
         @Expose
         private String invoiceFrom;
+
+        public String getCardBrand() {
+            return cardBrand;
+        }
+
+        public void setCardBrand(String cardBrand) {
+            this.cardBrand = cardBrand;
+        }
+
+        public String getCardDigit() {
+            return cardDigit;
+        }
+
+        public void setCardDigit(String cardDigit) {
+            this.cardDigit = cardDigit;
+        }
 
         public String getQty() {
             return qty;

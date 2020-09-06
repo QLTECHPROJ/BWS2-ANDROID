@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.SessionListModel;
 import com.qltech.bws.R;
@@ -36,7 +38,7 @@ public class SessionsFragment extends Fragment {
     FragmentSessionsBinding binding;
     public FragmentManager f_manager;
     Activity activity;
-    String UserId, appointmentName, appointmentMainName;
+    String UserId, appointmentName, appointmentMainName, appointmentImage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +51,7 @@ public class SessionsFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             appointmentName = bundle.getString("appointmentName");
+            appointmentImage = bundle.getString("appointmentImage");
             appointmentMainName = bundle.getString("appointmentMainName");
         }
         binding.llBack.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +62,9 @@ public class SessionsFragment extends Fragment {
                 fm.popBackStack("SessionsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
+        Glide.with(getActivity()).load(appointmentImage).thumbnail(0.05f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvSessionList.setLayoutManager(recentlyPlayed);
         binding.rvSessionList.setItemAnimator(new DefaultItemAnimator());
@@ -78,7 +84,9 @@ public class SessionsFragment extends Fragment {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         SessionListModel listModel = response.body();
                         if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            binding.tvSessionTitle.setText(appointmentMainName);
+                            binding.tvSessionTitle.setText(listModel.getResponseData().get(0).getName());
+                            Glide.with(getActivity()).load(listModel.getResponseData().get(0).getImage()).thumbnail(0.05f)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                             SessionListAdapter appointmentsAdapter = new SessionListAdapter(listModel.getResponseData(), getActivity(), f_manager);
                             binding.rvSessionList.setAdapter(appointmentsAdapter);
                         } else {
@@ -129,13 +137,18 @@ public class SessionsFragment extends Fragment {
                 holder.binding.llDateTime.setVisibility(View.VISIBLE);
             }
             holder.binding.tvDate.setText(listModel.getDate());
-            holder.binding.tvStatus.setText(listModel.getStatus());
+
             holder.binding.tvTime.setText(listModel.getTime());
             holder.binding.tvHourGlass.setText(listModel.getDuration());
 
             if (listModel.getStatus().equalsIgnoreCase("Booked")) {
+                holder.binding.tvStatus.setText(listModel.getStatus());
                 holder.binding.tvStatus.setBackgroundResource(R.drawable.text_background);
-            } else if (listModel.getStatus().equalsIgnoreCase("Arrived")) {
+            } else if (listModel.getStatus().equalsIgnoreCase("Arrive")) {
+                holder.binding.tvStatus.setText(listModel.getStatus());
+                holder.binding.tvStatus.setBackgroundResource(R.drawable.green_text_background);
+            }else if (listModel.getStatus().equalsIgnoreCase("Did_Not_Arrive")) {
+                holder.binding.tvStatus.setText("Did Not Arrive");
                 holder.binding.tvStatus.setBackgroundResource(R.drawable.green_text_background);
             }
 

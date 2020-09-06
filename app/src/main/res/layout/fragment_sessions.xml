@@ -25,6 +25,7 @@
                     android:layout_height="@dimen/_200sdp">
 
                     <ImageView
+                        android:id="@+id/ivRestaurantImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="fitXY"
@@ -74,7 +75,6 @@
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
                         android:maxLines="2"
-                        android:text="Emotional empowerment program"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_22sdp" />
 

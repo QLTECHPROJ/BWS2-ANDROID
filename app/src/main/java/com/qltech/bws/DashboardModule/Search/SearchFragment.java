@@ -131,7 +131,7 @@ public class SearchFragment extends Fragment {
     private void prepareSearchData(String search, EditText searchEditText) {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<SearchBothModel> listCall = APIClient.getClient().getSearchBoth(search);
+            Call<SearchBothModel> listCall = APIClient.getClient().getSearchBoth(UserID, search);
             listCall.enqueue(new Callback<SearchBothModel>() {
                 @Override
                 public void onResponse(Call<SearchBothModel> call, Response<SearchBothModel> response) {

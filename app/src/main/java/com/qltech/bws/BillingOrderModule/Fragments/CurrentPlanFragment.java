@@ -90,27 +90,31 @@ public class CurrentPlanFragment extends Fragment {
                         if (listModel.getResponseData().getStatus().equalsIgnoreCase("1")){
                             binding.tvRecommended.setBackgroundResource(R.drawable.green_background);
                             binding.tvRecommended.setText(R.string.Active);
+                            binding.btnCancelSubscrible.setVisibility(View.VISIBLE);
                             binding.btnPayNow.setVisibility(View.GONE);
                             binding.tvPayUsing.setVisibility(View.GONE);
                             binding.tvChangeCard.setVisibility(View.GONE);
                         }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("2")){
                             binding.tvRecommended.setBackgroundResource(R.drawable.dark_blue_background);
                             binding.tvRecommended.setText(R.string.InActive);
-                            binding.btnPayNow.setVisibility(View.GONE);
-                            binding.btnPayNow.setVisibility(View.GONE);
-                            binding.btnPayNow.setVisibility(View.GONE);
+                            binding.btnCancelSubscrible.setVisibility(View.GONE);
+                            binding.btnPayNow.setVisibility(View.VISIBLE); /*membership-ordersummary - payment */
+                            binding.tvPayUsing.setVisibility(View.VISIBLE);
+                            binding.tvChangeCard.setVisibility(View.VISIBLE);
                         }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("3")){
                             binding.tvRecommended.setBackgroundResource(R.drawable.yellow_background);
                             binding.tvRecommended.setText(R.string.Suspended);
-                            binding.btnPayNow.setVisibility(View.VISIBLE);
-                            binding.btnPayNow.setVisibility(View.VISIBLE);
-                            binding.btnPayNow.setVisibility(View.VISIBLE);
+                            binding.btnCancelSubscrible.setVisibility(View.GONE);
+                            binding.btnPayNow.setVisibility(View.VISIBLE);/*payment screen api call*/
+                            binding.tvPayUsing.setVisibility(View.VISIBLE);
+                            binding.tvChangeCard.setVisibility(View.VISIBLE);
                         }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("4")){
                             binding.tvRecommended.setBackgroundResource(R.drawable.dark_blue_background);
                             binding.tvRecommended.setText(R.string.Cancelled);
-                            binding.btnPayNow.setVisibility(View.GONE);
-                            binding.btnPayNow.setVisibility(View.GONE);
-                            binding.btnPayNow.setVisibility(View.GONE);
+                            binding.btnCancelSubscrible.setVisibility(View.GONE);
+                            binding.btnPayNow.setVisibility(View.VISIBLE);
+                            binding.tvPayUsing.setVisibility(View.VISIBLE);
+                            binding.tvChangeCard.setVisibility(View.VISIBLE);
                         }
 
                         adpater = new FeaturedListAdpater(listModel.getResponseData().getFeature());
@@ -154,7 +158,9 @@ public class CurrentPlanFragment extends Fragment {
         binding.tvChangeCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PaymentFragment.updateCardList();
+                PaymentFragment paymentFragment = new PaymentFragment();
+                Bundle bundle = new Bundle();
+                paymentFragment.setArguments(bundle);
             }
         });
         return view;
@@ -215,6 +221,5 @@ public class CurrentPlanFragment extends Fragment {
                 this.binding = binding;
             }
         }
-
     }
 }

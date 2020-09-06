@@ -63,11 +63,6 @@ public class PaymentFragment extends Fragment {
         return view;
     }
 
-    public static void updateCardList() {
-//        BWSApplication.showToast("Changedd", context);
-        //        prepareCardList();
-    }
-
     private void prepareCardList() {
         if (BWSApplication.isNetworkConnected(context)) {
             showProgressBar();

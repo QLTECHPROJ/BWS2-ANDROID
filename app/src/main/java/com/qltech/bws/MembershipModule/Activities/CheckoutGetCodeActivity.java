@@ -129,16 +129,21 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         if (response.isSuccessful()) {
                             LoginModel loginModel = response.body();
-                            Intent i = new Intent(ctx, CheckoutOtpActivity.class);
+                            if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                Intent i = new Intent(ctx, CheckoutOtpActivity.class);
 //                            i.putParcelableArrayListExtra("PlanData",listModelList);
 //                            i.putExtra("TrialPeriod",TrialPeriod);
 //                            i.putExtra("position",position);
-                            i.putExtra("MobileNo", binding.edtNumber.getText().toString());
-                            i.putExtra("Name", binding.tvCountry.getText().toString());
-                            i.putExtra("Code", binding.tvCountryCode.getText().toString());
-                            BWSApplication.showToast(loginModel.getResponseMessage(), ctx);
-                            startActivity(i);
-                            finish();
+                                i.putExtra("MobileNo", binding.edtNumber.getText().toString());
+                                i.putExtra("Name", binding.tvCountry.getText().toString());
+                                i.putExtra("Code", binding.tvCountryCode.getText().toString());
+                                BWSApplication.showToast(loginModel.getResponseMessage(), ctx);
+                                startActivity(i);
+                                finish();
+                            }else if(loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))){
+                                binding.txtError.setVisibility(View.VISIBLE);
+                                binding.txtError.setText(loginModel.getResponseMessage());
+                            }
                         } else {
                             BWSApplication.showToast(response.message(), ctx);
                         }
@@ -147,8 +152,6 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<LoginModel> call, Throwable t) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                        binding.txtError.setVisibility(View.VISIBLE);
-                        binding.txtError.setText(getString(R.string.notvalid_number));
                     }
                 });
             } else {

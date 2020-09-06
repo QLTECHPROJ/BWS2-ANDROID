@@ -78,15 +78,18 @@ public class InvoiceReceiptFragment extends DialogFragment {
 
                         if (Flag.equalsIgnoreCase("1")) {
                             binding.tvSession.setVisibility(View.GONE);
+                            binding.tvPaymentDetails.setText(listModel.getResponseData().getCardBrand() +" ending **** "+
+                                    listModel.getResponseData().getCardDigit() +"\n"+listModel.getResponseData().getEmail());
                         } else if (Flag.equalsIgnoreCase("2")) {
                             binding.tvSession.setVisibility(View.VISIBLE);
+                            binding.tvPaymentDetails.setText(listModel.getResponseData().getEmail());
                         }
 
                         binding.tvOrderId.setText(listModel.getResponseData().getInvoiceNumber());
                         binding.tvDate.setText(listModel.getResponseData().getInvoiceDate());
                         binding.tvTotal.setText("$" + listModel.getResponseData().getTotalAmount());
                         binding.tvOrderTotal.setText("$" + listModel.getResponseData().getAmount());
-                        binding.tvPaymentDetails.setText(listModel.getResponseData().getEmail());
+
                         binding.tvTitle.setText(listModel.getResponseData().getName());
                         binding.tvQty.setText("Qty: " + listModel.getResponseData().getQty());
                         binding.tvSession.setText("Session: " + listModel.getResponseData().getSession());
