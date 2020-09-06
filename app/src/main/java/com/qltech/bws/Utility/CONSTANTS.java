@@ -65,6 +65,7 @@ public class CONSTANTS {
     public static final String PREF_KEY_MobileNo = "MobileNo";
     public static final String PREF_KEY_modelList = "modelList";
     public static final String PREF_KEY_audioList = "audioList";
+    public static final String PREF_KEY_queueList = "queueList";
     public static final String PREF_KEY_position = "position";
     public static final String PREF_KEY_AudioFlag = "AudioFlag";
     public static final String PREF_KEY_CardID = "CardID";

@@ -3,6 +3,7 @@ package com.qltech.bws.DashboardModule.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,36 +17,42 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.DashboardModule.Adapters.QueueAdapter;
+import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.QueueModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.ItemMoveCallback;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityViewQueueBinding;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViewQueueActivity extends AppCompatActivity {
     ActivityViewQueueBinding binding;
-    List<QueueModel> listModelList = new ArrayList<>();
-    String AudioFlag;
     int position;
     Context ctx;
+    ArrayList<AddToQueueModel> addToQueueModels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_view_queue);
         ctx = ViewQueueActivity.this;
+        addToQueueModels = new ArrayList<>();
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+        String json = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
+         Type type = new TypeToken<ArrayList<AddToQueueModel>>() {
+        }.getType();
+        addToQueueModels = gson.fromJson(json, type);
         binding.rvQueueList.setFocusable(false);
         binding.nestedScroll.requestFocus();
 
@@ -71,13 +78,16 @@ public class ViewQueueActivity extends AppCompatActivity {
         }*/
 
         binding.simpleSeekbar.setClickable(false);
-//        QueueAdapter adapter = new QueueAdapter(listModelList, ViewQueueActivity.this, mPlayer, endTime);
+
+        QueueAdapter adapter = new QueueAdapter(addToQueueModels, ViewQueueActivity.this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ViewQueueActivity.this);
         binding.rvQueueList.setLayoutManager(mLayoutManager);
         binding.rvQueueList.setItemAnimator(new DefaultItemAnimator());
-//        binding.rvQueueList.setAdapter(adapter);
-
-        prepareQueueData();
+        ItemTouchHelper.Callback callback =
+                new ItemMoveCallback(adapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(binding.rvQueueList);
+        binding.rvQueueList.setAdapter(adapter);
 
         binding.llPause.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,23 +108,6 @@ public class ViewQueueActivity extends AppCompatActivity {
 //                MusicService.resumeMedia();
             }
         });
-    }
-
-    private void prepareQueueData() {
-        QueueModel list = new QueueModel("Motivation Program", "12:37", "https://brainwellnessspa.com.au/Bws-consumer-panel/html/audio_file/Brain_Wellness_Spa_The_Happiness_Promise.mp3");
-        listModelList.add(list);
-        list = new QueueModel("Self-Discipline Program", "12:37", "http://brainwellnessspa.com.au/Bws-consumer-panel/html/audio_file/Brain_Wellness_Spa_Abolishing_Hunger_Pains.mp3");
-        listModelList.add(list);
-        list = new QueueModel("Love Thy Self", "12:37", "https://brainwellnessspa.com.au/Bws-consumer-panel/html/audio_file/Brain_Wellness_Spa_Anger.mp3");
-        listModelList.add(list);
-        list = new QueueModel("I Can Attitude and Mind...", "12:37", "https://brainwellnessspa.com.au/Bws-consumer-panel/html/audio_file/Brain_Wellness_Spa_Anxiety.mp3");
-        listModelList.add(list);
-        list = new QueueModel("Motivation Program", "12:37", "https://brainwellnessspa.com.au/Bws-consumer-panel/html/audio_file/Brain_Wellness_Spa_Home_Maintenance.mp3");
-        listModelList.add(list);
-        list = new QueueModel("Self-Discipline Program", "12:37", "");
-        listModelList.add(list);
-        list = new QueueModel("Love Thy Self", "12:37", "");
-        listModelList.add(list);
     }
 
 }

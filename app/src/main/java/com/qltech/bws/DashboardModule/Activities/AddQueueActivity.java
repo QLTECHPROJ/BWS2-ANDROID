@@ -37,11 +37,15 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.DashboardModule.Adapters.DirectionAdapter;
+import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.DirectionModel;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -51,6 +55,7 @@ import com.qltech.bws.Utility.MySpannable;
 import com.qltech.bws.databinding.ActivityQueueBinding;
 import com.stripe.android.net.RequestOptions;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,6 +69,10 @@ public class AddQueueActivity extends AppCompatActivity {
     String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle;
     Context ctx;
     ArrayList<String> queue;
+    ArrayList<AddToQueueModel> addToQueueModelList;
+    ArrayList<MainPlayModel> mainPlayModelList;
+    AddToQueueModel addToQueueModel;
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +80,19 @@ public class AddQueueActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_queue);
         ctx = AddQueueActivity.this;
 
+        addToQueueModelList = new ArrayList<>();
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
+        mainPlayModelList = new ArrayList<>();
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+        position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+        }.getType();
+        mainPlayModelList = gson.fromJson(json, type);
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
@@ -172,6 +190,31 @@ public class AddQueueActivity extends AppCompatActivity {
 
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            }
+        });
+        binding.llAddQueue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addToQueueModel = new AddToQueueModel();
+                int i = position;
+                addToQueueModel.setID(mainPlayModelList.get(i).getID());
+                addToQueueModel.setName(mainPlayModelList.get(i).getName());
+                addToQueueModel.setAudioFile(mainPlayModelList.get(i).getAudioFile());
+                addToQueueModel.setAudioDirection(mainPlayModelList.get(i).getAudioDirection());
+                addToQueueModel.setAudiomastercat(mainPlayModelList.get(i).getAudiomastercat());
+                addToQueueModel.setAudioSubCategory(mainPlayModelList.get(i).getAudioSubCategory());
+                addToQueueModel.setImageFile(mainPlayModelList.get(i).getImageFile());
+                addToQueueModel.setLike(mainPlayModelList.get(i).getLike());
+                addToQueueModel.setDownload(mainPlayModelList.get(i).getDownload());
+                addToQueueModel.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
+                addToQueueModelList.add(addToQueueModel);
+
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(addToQueueModelList);
+                editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+                editor.commit();
             }
         });
 
@@ -344,12 +387,6 @@ public class AddQueueActivity extends AppCompatActivity {
                         binding.rvDirlist.setItemAnimator(new DefaultItemAnimator());
                         binding.rvDirlist.setAdapter(directionAdapter);
 
-                        binding.llAddQueue.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                finish();
-                            }
-                        });
                     } else {
                     }
                 }

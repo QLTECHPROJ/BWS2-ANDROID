@@ -23,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
@@ -358,6 +359,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             Intent i = new Intent(ctx, AddQueueActivity.class);
             i.putExtra("play", "play");
             i.putExtra("ID", mainPlayModelList.get(position).getID());
+            i.putExtra("positon", position);
             startActivity(i);
         });
 
@@ -370,13 +372,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
         });
-
-//        mPlayer.setOnCompletionListener(mediaPlayer -> {
-//            if (position < mainAudioList.size() - 1) {
-//                position = position + 1;
-//                prepareData();
-//            }
-//        });
 
         binding.llplay.setOnClickListener(v -> {
             binding.llplay.setVisibility(View.GONE);
