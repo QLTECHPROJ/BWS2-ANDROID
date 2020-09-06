@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -90,7 +89,7 @@ public class AudioBooksFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 
@@ -102,7 +101,6 @@ public class AudioBooksFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void showProgressBar() {

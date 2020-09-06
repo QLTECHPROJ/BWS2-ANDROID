@@ -75,6 +75,7 @@ public class RequestPermissionHandler {
 
     public interface RequestPermissionListener {
         void onSuccess();
+
         void onFailed();
     }
 }

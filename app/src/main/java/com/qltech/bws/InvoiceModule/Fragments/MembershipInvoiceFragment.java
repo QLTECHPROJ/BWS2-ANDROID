@@ -29,8 +29,8 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.UserModule.Activities.RequestPermissionHandler;
@@ -89,7 +89,7 @@ public class MembershipInvoiceFragment extends Fragment {
         }
     }
 
-    public class MembershipInvoiceAdapter  extends RecyclerView.Adapter<MembershipInvoiceAdapter.MyViewHolder> {
+    public class MembershipInvoiceAdapter extends RecyclerView.Adapter<MembershipInvoiceAdapter.MyViewHolder> {
         private List<InvoiceListModel.MemberShip> listModelList;
         Context ctx;
 
@@ -108,10 +108,10 @@ public class MembershipInvoiceFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.binding.tvInvoiceID.setText("Invoice #"+listModelList.get(position).getInvoiceId());
+            holder.binding.tvInvoiceID.setText("Invoice #" + listModelList.get(position).getInvoiceId());
             holder.binding.tvTitle.setText(listModelList.get(position).getName());
             holder.binding.tvDate.setText(listModelList.get(position).getDate());
-            holder.binding.tvDoller.setText("$"+listModelList.get(position).getAmount());
+            holder.binding.tvDoller.setText("$" + listModelList.get(position).getAmount());
             holder.binding.llViewReceipt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -119,7 +119,7 @@ public class MembershipInvoiceFragment extends Fragment {
                     InvoiceReceiptFragment receiptFragment = new InvoiceReceiptFragment();
                     receiptFragment.setCancelable(true);
                     receiptFragment.setValues(listModelList.get(position).getInvoiceId(), "1");
-                    receiptFragment.show(fragmentManager,"receipt");
+                    receiptFragment.show(fragmentManager, "receipt");
                 }
             });
 
@@ -147,6 +147,7 @@ public class MembershipInvoiceFragment extends Fragment {
             }
         }
     }
+
     public class CheckForSDCard {
         //Check If SD Card is present or not method
         public boolean isSDCardPresent() {
@@ -215,7 +216,7 @@ public class MembershipInvoiceFragment extends Fragment {
         try {
             startActivity(pdfIntent);
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "No Application available to viewPDF", Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast("No Application available to viewPDF", getActivity());
         }
     }
 
@@ -259,7 +260,7 @@ public class MembershipInvoiceFragment extends Fragment {
                     alert11.show();
 
                     alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.dark_blue_gray));
-//                    Toast.makeText(context, "Document Downloaded Successfully", Toast.LENGTH_SHORT).show();
+//                    BWSApplication.showToast( "Document Downloaded Successfully", context);
                 } else {
 
                     new Handler().postDelayed(new Runnable() {
@@ -308,7 +309,7 @@ public class MembershipInvoiceFragment extends Fragment {
                 if (new CheckForSDCard().isSDCardPresent()) {
                     apkStorage = new File(Environment.getExternalStorageDirectory() + "/" + "BWS");
                 } else
-                    Toast.makeText(getActivity(), "Oops!! There is no SD Card.", Toast.LENGTH_SHORT).show();
+                    BWSApplication.showToast("Oops!! There is no SD Card.", getActivity());
 
                 //If File is not present create directory
                 if (!apkStorage.exists()) {
@@ -332,14 +333,9 @@ public class MembershipInvoiceFragment extends Fragment {
                 while ((len1 = is.read(buffer)) != -1) {
                     fos.write(buffer, 0, len1);//Write new file
                 }
-
-                //Close all connection after doing task
                 fos.close();
                 is.close();
-
             } catch (Exception e) {
-
-                //Read exception if something went wrong
                 e.printStackTrace();
                 outputFile = null;
                 Log.e(TAG, "Download Error Exception " + e.getMessage());

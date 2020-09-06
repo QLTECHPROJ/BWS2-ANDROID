@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -100,7 +99,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                                     rvCardList.setAdapter(adapter);
                                 }
                             } else {
-                                Toast.makeText(activity, cardListModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                BWSApplication.showToast(cardListModel.getResponseMessage(), activity);
                             }
 
                         }
@@ -113,7 +112,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
                 });
             } else {
-                Toast.makeText(activity, activity.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                BWSApplication.showToast(activity.getString(R.string.no_server_found), activity);
                 BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
             }
 
@@ -131,7 +130,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                             if (cardModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
                                 getCardList();
                             } else {
-                                Toast.makeText(activity, cardModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                BWSApplication.showToast(cardModel.getResponseMessage(), activity);
                             }
                         }
                     }
@@ -140,16 +139,12 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                     public void onFailure(Call<CardModel> call, Throwable t) {
                         BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
                     }
-
                 });
             } else {
-                Toast.makeText(activity, activity.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                BWSApplication.showToast(activity.getString(R.string.no_server_found), activity);
                 BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
             }
-
         });
-
-
     }
 
     @Override
@@ -198,9 +193,8 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
             });
         } else {
-            Toast.makeText(activity, activity.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(activity.getString(R.string.no_server_found), activity);
         }
-
     }
 }
 

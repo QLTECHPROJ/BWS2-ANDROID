@@ -17,7 +17,7 @@
     <string name="get_the_code">Get SMS code</string>
     <string name="choose_your_country">Choose your country</string>
     <string name="enter_otp">Enter OTP</string>
-    <string name="resent_sms">Resent SMS</string>
+    <string name="resent_sms">Resend SMS</string>
     <string name="edit_phone_number">Edit phone number</string>
     <string name="t_n_c">Terms &amp; Conditions</string>
     <string name="title_activity_dashboard">MainActivity</string>

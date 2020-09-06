@@ -21,7 +21,6 @@ import androidx.annotation.Nullable;
 
 import com.qltech.bws.R;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
 
 public class MusicService extends Service {

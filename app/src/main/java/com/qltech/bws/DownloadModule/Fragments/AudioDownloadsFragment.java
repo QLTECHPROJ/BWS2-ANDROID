@@ -14,23 +14,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter;
-import com.qltech.bws.DownloadModule.Models.AudioListModel;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
-import com.qltech.bws.InvoiceModule.Fragments.MembershipInvoiceFragment;
-import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.FragmentDownloadsBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AudioDownloadsFragment extends Fragment {
     FragmentDownloadsBinding binding;
@@ -69,9 +64,7 @@ public class AudioDownloadsFragment extends Fragment {
         } else {
             binding.llError.setVisibility(View.VISIBLE);
             binding.rvDownloadsList.setVisibility(View.GONE);
-
         }
-
         return view;
     }
 

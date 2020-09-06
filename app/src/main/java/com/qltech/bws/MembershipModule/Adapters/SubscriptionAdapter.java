@@ -3,7 +3,6 @@ package com.qltech.bws.MembershipModule.Adapters;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -11,10 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.qltech.bws.BWSApplication;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
-import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.SubscribeBoxLayoutBinding;
 
 import java.util.ArrayList;
@@ -57,5 +54,4 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
             this.binding = binding;
         }
     }
-
 }

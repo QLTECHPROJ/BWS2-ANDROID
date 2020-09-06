@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -145,7 +144,7 @@ public class OtpActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        Toast.makeText(OtpActivity.this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                        BWSApplication.showToast(getString(R.string.no_server_found), OtpActivity.this);
                     }
                 }
             }
@@ -203,7 +202,7 @@ public class OtpActivity extends AppCompatActivity {
                             binding.edtOTP3.setText("");
                             binding.edtOTP4.setText("");
                             tvSendOTPbool = true;
-                            Toast.makeText(getApplicationContext(), loginModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast(loginModel.getResponseMessage(), OtpActivity.this);
                         } else {
                             binding.txtError.setVisibility(View.VISIBLE);
                             binding.txtError.setText(loginModel.getResponseMessage());
@@ -214,11 +213,11 @@ public class OtpActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<LoginModel> call, Throwable t) {
                     hideProgressBar();
-                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    BWSApplication.showToast(t.getMessage(), OtpActivity.this);
                 }
             });
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), OtpActivity.this);
         }
     }
 

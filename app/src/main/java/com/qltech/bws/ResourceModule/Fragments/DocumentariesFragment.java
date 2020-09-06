@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -89,7 +88,7 @@ public class DocumentariesFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 
@@ -101,7 +100,6 @@ public class DocumentariesFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void showProgressBar() {
@@ -150,11 +148,11 @@ public class DocumentariesFragment extends Fragment {
                 public void onClick(View view) {
                     Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
                     i.putExtra("documentaries", documentaries);
-                    i.putExtra("title",listModelList.get(position).getTitle());
-                    i.putExtra("linkOne",listModelList.get(position).getResourceLink1());
-                    i.putExtra("linkTwo",listModelList.get(position).getResourceLink2());
-                    i.putExtra("image",listModelList.get(position).getImage());
-                    i.putExtra("description",listModelList.get(position).getDescription());
+                    i.putExtra("title", listModelList.get(position).getTitle());
+                    i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
+                    i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
+                    i.putExtra("image", listModelList.get(position).getImage());
+                    i.putExtra("description", listModelList.get(position).getDescription());
                     startActivity(i);
                 }
             });

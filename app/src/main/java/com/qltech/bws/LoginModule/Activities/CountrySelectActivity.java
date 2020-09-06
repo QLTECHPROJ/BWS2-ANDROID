@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,12 +41,12 @@ import retrofit2.Response;
 public class CountrySelectActivity extends AppCompatActivity {
     ActivityCountrySelectBinding binding;
     CountrySelectAdapter adapter;
-//    String TrialPeriod;
+    //    String TrialPeriod;
 //    private ArrayList<MembershipPlanListModel.Plan> listModelList;
 //    int position;
     Context ctx;
     Activity activity;
-    String  Name, Code, MobileNo,Check;
+    String Name, Code, MobileNo, Check;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +67,14 @@ public class CountrySelectActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Check.equalsIgnoreCase("0")){
+                if (Check.equalsIgnoreCase("0")) {
                     Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
                     i.putExtra("Name", Name);
                     i.putExtra("Code", Code);
                     i.putExtra("MobileNo", MobileNo);
                     startActivity(i);
                     finish();
-                }else if (Check.equalsIgnoreCase("1")){
+                } else if (Check.equalsIgnoreCase("1")) {
                     Intent i = new Intent(ctx, LoginActivity.class);
                     i.putExtra("Name", Name);
                     i.putExtra("Code", Code);
@@ -122,14 +121,14 @@ public class CountrySelectActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         binding.rvCountryList.setLayoutManager(mLayoutManager);
         binding.rvCountryList.setItemAnimator(new DefaultItemAnimator());
-        BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (BWSApplication.isNetworkConnected(this)) {
             Call<CountryListModel> listCall = APIClient.getClient().getCountryLists();
             listCall.enqueue(new Callback<CountryListModel>() {
                 @Override
                 public void onResponse(Call<CountryListModel> call, Response<CountryListModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         CountryListModel listModel = response.body();
                         if (listModel != null) {
                             adapter = new CountrySelectAdapter(listModel.getResponseData());
@@ -140,24 +139,24 @@ public class CountrySelectActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<CountryListModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 }
             });
         } else {
-            Toast.makeText(this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), this);
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (Check.equalsIgnoreCase("0")){
+        if (Check.equalsIgnoreCase("0")) {
             Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
             i.putExtra("Name", Name);
             i.putExtra("Code", Code);
             i.putExtra("MobileNo", MobileNo);
             startActivity(i);
             finish();
-        }else if (Check.equalsIgnoreCase("1")){
+        } else if (Check.equalsIgnoreCase("1")) {
             Intent i = new Intent(ctx, LoginActivity.class);
             i.putExtra("Name", Name);
             i.putExtra("Code", Code);
@@ -191,14 +190,14 @@ public class CountrySelectActivity extends AppCompatActivity {
             holder.binding.tvCountryCode.setText("+" + mData.getCode());
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 String conutry = "+" + mData.getCode();
-                if (Check.equalsIgnoreCase("0")){
+                if (Check.equalsIgnoreCase("0")) {
                     Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
                     i.putExtra("Name", mData.getName());
                     i.putExtra("Code", conutry);
                     i.putExtra("MobileNo", MobileNo);
                     ctx.startActivity(i);
                     finish();
-                }else if (Check.equalsIgnoreCase("1")){
+                } else if (Check.equalsIgnoreCase("1")) {
                     Intent i = new Intent(ctx, LoginActivity.class);
                     i.putExtra("Name", mData.getName());
                     i.putExtra("Code", conutry);

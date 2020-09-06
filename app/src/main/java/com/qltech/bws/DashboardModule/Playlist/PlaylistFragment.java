@@ -2,7 +2,6 @@ package com.qltech.bws.DashboardModule.Playlist;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -110,7 +108,7 @@ public class PlaylistFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                            Toast.makeText(getActivity(), "Please enter playlist name", Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast("Please enter playlist name", getActivity());
                         } else {
                             if (BWSApplication.isNetworkConnected(getActivity())) {
                                 Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
@@ -140,7 +138,7 @@ public class PlaylistFragment extends Fragment {
                                     }
                                 });
                             } else {
-                                Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                             }
                         }
                     }
@@ -188,7 +186,7 @@ public class PlaylistFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 

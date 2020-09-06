@@ -1,17 +1,10 @@
 package com.qltech.bws.DashboardModule.Activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.gson.Gson;
-import com.qltech.bws.DashboardModule.Audio.AudioFragment;
+
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -22,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -55,8 +47,6 @@ public class DashboardActivity extends AppCompatActivity {
                     .commit();
 
         }
-
-//        TransparentPlayerFragment.binding.llPlayearMain.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -64,7 +54,7 @@ public class DashboardActivity extends AppCompatActivity {
        /* if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);*/
         super.onBackPressed();
-        finish();
+        finishAffinity();
         /*} else if (binding.navView.getSelectedItemId() == R.id.navigation_playlist) {
             binding.navView.setSelectedItemId(R.id.navigation_playlist);
             *//*if (getSupportFragmentManager().getBackStackEntryCount() > 0) {

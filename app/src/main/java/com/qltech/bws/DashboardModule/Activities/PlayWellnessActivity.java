@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -206,7 +205,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                                 } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                                     binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                                 }
-                                Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                BWSApplication.showToast(model.getResponseMessage(), ctx);
                             }
                         }
 
@@ -216,7 +215,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                         }
                     });
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                 }
             }
         });
@@ -239,7 +238,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 }
             });
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
 
         if (IsShuffle.equalsIgnoreCase("")) {
@@ -339,7 +338,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                                     binding.llDownload.setClickable(false);
                                     binding.llDownload.setEnabled(false);
                                 }
-                                Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                BWSApplication.showToast(model.getResponseMessage(), ctx);
                             }
                         }
 
@@ -350,7 +349,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                     });
 
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                 }
             }
         });

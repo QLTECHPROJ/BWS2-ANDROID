@@ -7,17 +7,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.FaqModule.Adapters.AudioFaqAdapter;
 import com.qltech.bws.FaqModule.Models.FaqListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.databinding.ActivityFaqBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,7 +51,7 @@ public class FaqActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), this);
         }
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +72,7 @@ public class FaqActivity extends AppCompatActivity {
                     }
                 }
                 Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
-                i.putExtra("Flag","Audio");
+                i.putExtra("Flag", "Audio");
                 i.putParcelableArrayListExtra("faqListModel", modelList);
                 startActivity(i);
             }
@@ -92,7 +89,7 @@ public class FaqActivity extends AppCompatActivity {
                     }
                 }
                 Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
-                i.putExtra("Flag","Help");
+                i.putExtra("Flag", "Help");
                 i.putExtra("faqListModel", modelList);
                 startActivity(i);
             }
@@ -109,7 +106,7 @@ public class FaqActivity extends AppCompatActivity {
                     }
                 }
                 Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
-                i.putExtra("Flag","Playlist");
+                i.putExtra("Flag", "Playlist");
                 i.putExtra("faqListModel", modelList);
                 startActivity(i);
             }

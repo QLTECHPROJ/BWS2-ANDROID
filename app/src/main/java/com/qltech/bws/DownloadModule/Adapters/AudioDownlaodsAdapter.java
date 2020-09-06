@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -23,8 +22,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
-import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
-import com.qltech.bws.DownloadModule.Models.AudioListModel;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
@@ -34,7 +31,6 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.DownloadsLayoutBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -114,8 +110,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                             if (response.isSuccessful()) {
                                 hideProgressBar();
                                 SucessModel listModel = response.body();
-                                Toast.makeText(ctx, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
-
+                                BWSApplication.showToast(listModel.getResponseMessage(), ctx);
                             }
                         }
 
@@ -125,7 +120,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                         }
                     });
                 } else {
-                    Toast.makeText(ctx, ctx.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    BWSApplication.showToast(ctx.getString(R.string.no_server_found),ctx);
                 }
             }
         });

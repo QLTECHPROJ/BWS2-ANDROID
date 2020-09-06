@@ -13,21 +13,16 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Models.PreviousAppointmentsModel;
 import com.qltech.bws.DashboardModule.Models.SessionListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.FragmentSessionsBinding;
-import com.qltech.bws.databinding.PreviousAppointmentsLayoutBinding;
 import com.qltech.bws.databinding.SessionListLayoutBinding;
 
 import java.util.ArrayList;
@@ -38,7 +33,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SessionsFragment extends Fragment {
-    List<SessionListModel> sessionList = new ArrayList<>();
     FragmentSessionsBinding binding;
     public FragmentManager f_manager;
     Activity activity;
@@ -88,7 +82,7 @@ public class SessionsFragment extends Fragment {
                             SessionListAdapter appointmentsAdapter = new SessionListAdapter(listModel.getResponseData(), getActivity(), f_manager);
                             binding.rvSessionList.setAdapter(appointmentsAdapter);
                         } else {
-                            Toast.makeText(activity, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast(listModel.getResponseMessage(), activity);
                         }
                     }
                 }
@@ -99,7 +93,7 @@ public class SessionsFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 

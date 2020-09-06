@@ -20,10 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -95,7 +93,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                            Toast.makeText(ctx, "Please enter playlist name", Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast("Please enter playlist name", ctx);
                         } else {
                             if (BWSApplication.isNetworkConnected(ctx)) {
                                 Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
@@ -104,7 +102,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
                                         if (response.isSuccessful()) {
                                             CreatePlaylistModel listModel = response.body();
-                                            Toast.makeText(ctx, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                            BWSApplication.showToast(listModel.getResponseMessage(), ctx);
                                             dialog.dismiss();
                                             prepareData(ctx);
                                         }
@@ -115,7 +113,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     }
                                 });
                             } else {
-                                Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                             }
                         }
                     }
@@ -141,13 +139,13 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
     private void prepareData(Context ctx) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<PlaylistingModel> listCall = APIClient.getClient().getPlaylisting(UserID);
             listCall.enqueue(new Callback<PlaylistingModel>() {
                 @Override
                 public void onResponse(Call<PlaylistingModel> call, Response<PlaylistingModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         PlaylistingModel model = response.body();
                         AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
                         binding.rvPlayLists.setAdapter(addPlaylistAdapter);
@@ -156,11 +154,12 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<PlaylistingModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);                }
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                }
             });
 
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
 
@@ -195,40 +194,30 @@ public class AddPlaylistActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     String PlaylistID = listModel.get(position).getID();
-                    BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID);
                         listCall.enqueue(new Callback<SucessModel>() {
                             @Override
                             public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                                 if (response.isSuccessful()) {
-                                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                                     SucessModel listModel = response.body();
-                                    showToast(listModel.getResponseMessage());
+                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
                                     finish();
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<SucessModel> call, Throwable t) {
-                                BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                             }
                         });
                     } else {
-                        Toast.makeText(ctx, ctx.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                     }
                 }
             });
-        }
-
-        void showToast(String message) {
-            Toast toast = new Toast(ctx);
-            View view = LayoutInflater.from(ctx).inflate(R.layout.toast_layout, null);
-            TextView tvMessage = view.findViewById(R.id.tvMessage);
-            tvMessage.setText(message);
-            toast.setGravity(Gravity.BOTTOM|Gravity.CENTER, 0, 35);
-            toast.setView(view);
-            toast.show();
         }
 
         @Override

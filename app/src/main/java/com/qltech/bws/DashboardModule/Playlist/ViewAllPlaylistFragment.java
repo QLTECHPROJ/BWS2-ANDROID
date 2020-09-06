@@ -13,19 +13,16 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Parcelable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Appointment.AppointmentFragment;
 import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
 import com.qltech.bws.DashboardModule.Models.ViewAllPlayListModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
@@ -127,7 +124,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 

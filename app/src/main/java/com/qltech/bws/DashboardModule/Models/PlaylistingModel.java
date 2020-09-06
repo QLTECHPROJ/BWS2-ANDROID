@@ -50,11 +50,11 @@ public class PlaylistingModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
-    public class ResponseData {
 
+    public class ResponseData {
         @SerializedName("ID")
         @Expose
-        private String iD;
+        private String ID;
         @SerializedName("Name")
         @Expose
         private String name;
@@ -63,11 +63,11 @@ public class PlaylistingModel {
         private String image;
 
         public String getID() {
-            return iD;
+            return ID;
         }
 
-        public void setID(String iD) {
-            this.iD = iD;
+        public void setID(String ID) {
+            this.ID = ID;
         }
 
         public String getName() {

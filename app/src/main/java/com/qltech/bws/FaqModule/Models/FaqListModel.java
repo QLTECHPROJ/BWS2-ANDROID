@@ -85,7 +85,7 @@ public class FaqListModel implements Parcelable {
         parcel.writeString(responseStatus);
     }
 
-    public static class ResponseData implements Parcelable{
+    public static class ResponseData implements Parcelable {
         @SerializedName("ID")
         @Expose
         private String iD;

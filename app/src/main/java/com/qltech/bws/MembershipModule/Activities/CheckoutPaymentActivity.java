@@ -24,14 +24,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.AddPayment.AddPaymentActivity;
 import com.qltech.bws.AddPayment.Model.AddCardModel;
-import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
-import com.qltech.bws.BillingOrderModule.Models.CardModel;
-import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -71,7 +67,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_checkout_payment);
         context = CheckoutPaymentActivity.this;
         activity = CheckoutPaymentActivity.this;
-        if(getIntent() !=null){
+        if (getIntent() != null) {
             MobileNo = getIntent().getStringExtra("MobileNo");
         }
         Glide.with(activity).load(R.drawable.loading).asGif().into(binding.ImgV);
@@ -174,7 +170,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                             @Override
                             public void onError(Exception error) {
                                 Log.e("error.........", "" + error.toString());
-                                Toast.makeText(getApplicationContext(), "Invalid Card Details", Toast.LENGTH_LONG).show();
+                                BWSApplication.showToast("Invalid Card Details", getApplicationContext());
                                 hideProgressBar();
                             }
 
@@ -186,7 +182,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                     if (BWSApplication.isNetworkConnected(context)) {
                                         showProgressBar();
 
-                                        Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag,strToken, MobileNo);
+                                        Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo);
                                         listCall.enqueue(new Callback<AddCardModel>() {
                                             @Override
                                             public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {
@@ -206,12 +202,12 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                                             startActivity(i);
                                                             finish();
                                                         } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                                            Toast.makeText(context, cardModel.getResponseMessage(), Toast.LENGTH_LONG).show();
+                                                            BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                                         } else {
-                                                            Toast.makeText(getApplicationContext(), cardModel.getResponseMessage(), Toast.LENGTH_LONG).show();
+                                                            BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                                         }
                                                     } else {
-                                                        Toast.makeText(context, cardModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                                        BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                                     }
                                                 }
                                             }
@@ -223,10 +219,9 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
 
                                         });
                                     } else {
-                                        Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_LONG).show();
+                                        BWSApplication.showToast(getString(R.string.no_server_found), context);
                                         hideProgressBar();
                                     }
-
                                 }
                             }
                         });

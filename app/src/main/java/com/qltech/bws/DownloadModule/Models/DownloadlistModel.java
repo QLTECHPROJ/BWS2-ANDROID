@@ -468,7 +468,6 @@ public class DownloadlistModel {
             public void setAudioDuration(String audioDuration) {
                 this.audioDuration = audioDuration;
             }
-
         }
     }
 }

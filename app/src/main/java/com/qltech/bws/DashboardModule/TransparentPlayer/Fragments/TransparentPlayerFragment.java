@@ -39,7 +39,7 @@ import java.util.Random;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
-public class TransparentPlayerFragment extends Fragment implements MediaPlayer.OnCompletionListener,SeekBar.OnSeekBarChangeListener {
+public class TransparentPlayerFragment extends Fragment implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle;
     int position = 0, startTime, oTime, listSize;
@@ -67,9 +67,9 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 
-        if(AudioFlag.equalsIgnoreCase("OnlyOne")){
+        if (AudioFlag.equalsIgnoreCase("OnlyOne")) {
 
-        }else if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
+        } else if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
@@ -209,7 +209,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         }
         binding.simpleSeekbar.setClickable(false);
 
-        if(isMediaStart){
+        if (isMediaStart) {
             MusicService.mediaPlayer.setOnCompletionListener(this);
         }
         startTime = MusicService.getStartTime();
@@ -219,7 +219,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         binding.llPlayearMain.setOnClickListener(view -> {
             if (player == 0) {
                 player = 1;
-            }else{
+            } else {
                 if (MusicService.isPlaying()) {
                     MusicService.pauseMedia();
                 }

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
@@ -123,13 +122,13 @@ public class LoginActivity extends AppCompatActivity {
                                 i.putExtra("Code", binding.tvCountryCode.getText().toString());
                                 startActivity(i);
                                 finish();
-                                Toast.makeText(ctx, loginModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                BWSApplication.showToast(loginModel.getResponseMessage(), ctx);
                             }else if(loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))){
                                 binding.txtError.setVisibility(View.VISIBLE);
                                 binding.txtError.setText(loginModel.getResponseMessage());
                             }
                         } else {
-                            Toast.makeText(ctx, response.message(), Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast(response.message(), ctx);
                         }
                     }
 
@@ -139,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
             } else {
-                Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
         }
     }

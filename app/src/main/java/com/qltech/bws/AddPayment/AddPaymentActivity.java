@@ -13,14 +13,12 @@ import android.text.Spannable;
 import android.text.TextWatcher;
 import android.text.style.ReplacementSpan;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,9 +28,6 @@ import com.bumptech.glide.Glide;
 import com.qltech.bws.AddPayment.Model.AddCardModel;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
-import com.qltech.bws.BillingOrderModule.Fragments.PaymentFragment;
-import com.qltech.bws.BillingOrderModule.Models.CardListModel;
-import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -157,7 +152,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                     @Override
                     public void onError(Exception error) {
                         Log.e("error.........", "" + error.toString());
-                        Toast.makeText(getApplicationContext(), "Invalid Card Details", Toast.LENGTH_LONG).show();
+                        BWSApplication.showToast("Invalid Card Details", AddPaymentActivity.this);
                         hideProgressBar();
                     }
 
@@ -180,17 +175,17 @@ public class AddPaymentActivity extends AppCompatActivity {
                                                 keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
                                                 if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                     Intent i = new Intent(activity, BillingOrderActivity.class);
-                                                    i.putExtra("payment",1);
+                                                    i.putExtra("payment", 1);
                                                     startActivity(i);
                                                     finish();
-                                                     Toast.makeText(getApplicationContext(), cardModel.getResponseMessage(), Toast.LENGTH_LONG).show();
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), AddPaymentActivity.this);
                                                 } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                                    Toast.makeText(context, cardModel.getResponseMessage(), Toast.LENGTH_LONG).show();
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), AddPaymentActivity.this);
                                                 } else {
-                                                    Toast.makeText(getApplicationContext(), cardModel.getResponseMessage(), Toast.LENGTH_LONG).show();
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), AddPaymentActivity.this);
                                                 }
                                             } else {
-                                                Toast.makeText(context, cardModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), AddPaymentActivity.this);
                                             }
                                         }
                                     }
@@ -202,10 +197,9 @@ public class AddPaymentActivity extends AppCompatActivity {
 
                                 });
                             } else {
-                                Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_LONG).show();
+                                BWSApplication.showToast(getString(R.string.no_server_found), AddPaymentActivity.this);
                                 hideProgressBar();
                             }
-
                         }
                     }
                 });
@@ -213,8 +207,7 @@ public class AddPaymentActivity extends AppCompatActivity {
         });
     }
 
-/*
-    private TextWatcher addCardTextWatcher = new TextWatcher() {
+/*    private TextWatcher addCardTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }

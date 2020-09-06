@@ -25,7 +25,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,12 +37,9 @@ import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
 import com.qltech.bws.FaqModule.Activities.FaqActivity;
 import com.qltech.bws.InvoiceModule.Activities.InvoiceActivity;
 import com.qltech.bws.LoginModule.Activities.LoginActivity;
-import com.qltech.bws.LoginModule.Models.LoginModel;
-import com.qltech.bws.MembershipModule.Activities.CheckoutOtpActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
 import com.qltech.bws.ResourceModule.Activities.ResourceActivity;
-import com.qltech.bws.SplashModule.SplashScreenActivity;
 import com.qltech.bws.UserModule.Activities.UserProfileActivity;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.UserModule.Models.ProfileViewModel;
@@ -56,7 +52,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
 
 public class AccountFragment extends Fragment {
     FragmentAccountBinding binding;
@@ -227,7 +222,7 @@ public class AccountFragment extends Fragment {
                         edit1.clear();
                         edit1.commit();
 
-                        SharedPreferences shareds = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_CardID, MODE_PRIVATE);
+                        SharedPreferences shareds = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_CardID, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shareds.edit();
                         editor.remove(CONSTANTS.PREF_KEY_CardID);
                         editor.clear();
@@ -248,7 +243,7 @@ public class AccountFragment extends Fragment {
                                         getActivity().overridePendingTransition(0, 0);
                                         dialog.dismiss();
                                     } else {
-                                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                                        BWSApplication.showToast(response.message(), getActivity());
                                     }
                                 }
 
@@ -258,7 +253,7 @@ public class AccountFragment extends Fragment {
                                 }
                             });
                         } else {
-                            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                         }
                     }
                 });

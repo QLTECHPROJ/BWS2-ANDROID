@@ -23,8 +23,6 @@
                 android:layout_height="match_parent"
                 android:gravity="center|start"
                 android:textSize="@dimen/_13sdp"
-                android:maxLines="1"
-                android:ellipsize="end"
                 android:fontFamily="@font/montserrat_regular"
                 android:layout_marginHorizontal="@dimen/_16sdp"
                 android:textColor="@color/white" />

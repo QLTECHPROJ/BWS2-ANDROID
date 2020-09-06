@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -56,18 +55,12 @@ public class AptDetailsFragment extends Fragment {
         binding.btnComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Book Now", Toast.LENGTH_SHORT).show();
+                BWSApplication.showToast("Book Now", getActivity());
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(appointmentDetail.getBookUrl()));
                 startActivity(i);
-//                Fragment sessionsFragment = new SessionsFragment();
-//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                fragmentManager.beginTransaction()
-//                        .replace(R.id.flSession, sessionsFragment)
-//                        .commit();
             }
         });
-
         return view;
     }
 }

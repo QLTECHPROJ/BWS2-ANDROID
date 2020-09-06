@@ -48,8 +48,8 @@ public class VersionModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
-    public class ResponseData {
 
+    public class ResponseData {
         @SerializedName("IsForce")
         @Expose
         private String isForce;
@@ -61,6 +61,5 @@ public class VersionModel {
         public void setIsForce(String isForce) {
             this.isForce = isForce;
         }
-
     }
 }

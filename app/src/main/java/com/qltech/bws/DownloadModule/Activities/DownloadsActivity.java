@@ -13,18 +13,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Fragments.AudioDownloadsFragment;
 import com.qltech.bws.DownloadModule.Fragments.PlaylistsDownlaodsFragment;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
-import com.qltech.bws.DownloadModule.Models.DownloadsHistoryModel;
-import com.qltech.bws.InvoiceModule.Activities.InvoiceActivity;
-import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -110,7 +105,7 @@ public class DownloadsActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast( getString(R.string.no_server_found), this);
         }
     }
 
@@ -118,7 +113,6 @@ public class DownloadsActivity extends AppCompatActivity {
     public class TabAdapter extends FragmentStatePagerAdapter {
         int totalTabs;
         private Context myContext;
-        Callback<DownloadsHistoryModel> downloadsHistoryModelCallback;
         String UserID;
         FrameLayout progressBarHolder;
         ImageView ImgV;
@@ -130,12 +124,6 @@ public class DownloadsActivity extends AppCompatActivity {
             this.UserID = UserID;
             this.progressBarHolder = progressBarHolder;
             this.ImgV = ImgV;
-        }
-
-        public TabAdapter(FragmentManager fm, Callback<DownloadsHistoryModel> transactionHistoryModelCallback, int totalTabs) {
-            super(fm);
-            this.downloadsHistoryModelCallback = transactionHistoryModelCallback;
-            this.totalTabs = totalTabs;
         }
 
         @Override

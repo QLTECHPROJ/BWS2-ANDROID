@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -29,8 +28,8 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.UserModule.Activities.RequestPermissionHandler;
@@ -108,10 +107,10 @@ public class AppointmentInvoiceFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.binding.tvInvoiceID.setText("Invoice #"+listModelList.get(position).getInvoiceNumber());
+            holder.binding.tvInvoiceID.setText("Invoice #" + listModelList.get(position).getInvoiceNumber());
             holder.binding.tvTitle.setText(listModelList.get(position).getName());
             holder.binding.tvDate.setText(listModelList.get(position).getDate());
-            holder.binding.tvDoller.setText("$"+listModelList.get(position).getNetAmount());
+            holder.binding.tvDoller.setText("$" + listModelList.get(position).getNetAmount());
 
             holder.binding.llViewReceipt.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,8 +118,8 @@ public class AppointmentInvoiceFragment extends Fragment {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     InvoiceReceiptFragment receiptFragment = new InvoiceReceiptFragment();
                     receiptFragment.setCancelable(true);
-                    receiptFragment.setValues(listModelList.get(position).getInvoiceNumber(),"2");
-                    receiptFragment.show(fragmentManager,"receipt");
+                    receiptFragment.setValues(listModelList.get(position).getInvoiceNumber(), "2");
+                    receiptFragment.show(fragmentManager, "receipt");
                 }
             });
 
@@ -217,7 +216,7 @@ public class AppointmentInvoiceFragment extends Fragment {
         try {
             startActivity(pdfIntent);
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "No Application available to viewPDF", Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast("No Application available to viewPDF", getActivity());
         }
     }
 
@@ -261,7 +260,7 @@ public class AppointmentInvoiceFragment extends Fragment {
                     alert11.show();
 
                     alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.dark_blue_gray));
-//                    Toast.makeText(context, "Document Downloaded Successfully", Toast.LENGTH_SHORT).show();
+//                    BWSApplication.showToast("Document Downloaded Successfully", context);
                 } else {
 
                     new Handler().postDelayed(new Runnable() {
@@ -303,16 +302,13 @@ public class AppointmentInvoiceFragment extends Fragment {
                 if (c.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     Log.e(TAG, "Server returned HTTP " + c.getResponseCode()
                             + " " + c.getResponseMessage());
-
                 }
 
-                //Get File if SD card is present
                 if (new CheckForSDCard().isSDCardPresent()) {
                     apkStorage = new File(Environment.getExternalStorageDirectory() + "/" + "Yupit");
                 } else
-                    Toast.makeText(getActivity(), "Oops!! There is no SD Card.", Toast.LENGTH_SHORT).show();
+                    BWSApplication.showToast("Oops!! There is no SD Card.", getActivity());
 
-                //If File is not present create directory
                 if (!apkStorage.exists()) {
                     apkStorage.mkdir();
                     Log.e(TAG, "Directory Created.");
@@ -320,7 +316,6 @@ public class AppointmentInvoiceFragment extends Fragment {
 
                 outputFile = new File(apkStorage, downloadFileName + ".pdf");//Create Output file in Main File
 
-                //Create New File if not present
                 if (!outputFile.exists()) {
                     outputFile.createNewFile();
                     Log.e(TAG, "File Created");
@@ -334,14 +329,9 @@ public class AppointmentInvoiceFragment extends Fragment {
                 while ((len1 = is.read(buffer)) != -1) {
                     fos.write(buffer, 0, len1);//Write new file
                 }
-
-                //Close all connection after doing task
                 fos.close();
                 is.close();
-
             } catch (Exception e) {
-
-                //Read exception if something went wrong
                 e.printStackTrace();
                 outputFile = null;
                 Log.e(TAG, "Download Error Exception " + e.getMessage());

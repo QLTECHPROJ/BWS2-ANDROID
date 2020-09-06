@@ -9,22 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.qltech.bws.BWSApplication;
 import com.qltech.bws.FaqModule.Adapters.AudioFaqAdapter;
 import com.qltech.bws.FaqModule.Models.FaqListModel;
 import com.qltech.bws.R;
-import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.databinding.ActivityAudioFaqBinding;
 
 import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AudioFaqActivity extends AppCompatActivity {
     ActivityAudioFaqBinding binding;
@@ -32,7 +23,6 @@ public class AudioFaqActivity extends AppCompatActivity {
     AudioFaqAdapter adapter;
     ArrayList<FaqListModel.ResponseData> faqListModel;
     String Flag;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +42,11 @@ public class AudioFaqActivity extends AppCompatActivity {
             }
         });
 
-        if (Flag.equalsIgnoreCase("Audio")){
+        if (Flag.equalsIgnoreCase("Audio")) {
             binding.tvTitle.setText(R.string.Audio);
-        }else if (Flag.equalsIgnoreCase("Help")){
+        } else if (Flag.equalsIgnoreCase("Help")) {
             binding.tvTitle.setText(R.string.Help);
-        }else if (Flag.equalsIgnoreCase("Playlist")){
+        } else if (Flag.equalsIgnoreCase("Playlist")) {
             binding.tvTitle.setText(R.string.Playlist);
         }
 
@@ -65,12 +55,10 @@ public class AudioFaqActivity extends AppCompatActivity {
         binding.rvFaqList.setItemAnimator(new DefaultItemAnimator());
         adapter = new AudioFaqAdapter(faqListModel, ctx, binding.rvFaqList, binding.tvFound);
         binding.rvFaqList.setAdapter(adapter);
-
     }
 
     @Override
     public void onBackPressed() {
         finish();
     }
-
 }

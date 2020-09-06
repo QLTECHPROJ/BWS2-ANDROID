@@ -24,13 +24,10 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -50,10 +47,7 @@ import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
-import com.qltech.bws.Utility.MeasureRatio;
-import com.qltech.bws.Utility.MySpannable;
 import com.qltech.bws.databinding.ActivityQueueBinding;
-import com.stripe.android.net.RequestOptions;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -140,7 +134,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                                 Like = "1";
                             }
-                            Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast(model.getResponseMessage(), ctx);
                         }
                     }
 
@@ -150,7 +144,7 @@ public class AddQueueActivity extends AppCompatActivity {
                     }
                 });
             } else {
-                Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
         });
 
@@ -178,7 +172,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                 binding.llDownload.setEnabled(false);
                                 Download = "1";
                             }
-                            Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast(model.getResponseMessage(), ctx);
                         }
                     }
 
@@ -189,9 +183,10 @@ public class AddQueueActivity extends AppCompatActivity {
                 });
 
             } else {
-                Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
         });
+
         binding.llAddQueue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -240,7 +235,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         }
                     });
                 } else {
-                    Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                 }
             }
         });
@@ -280,19 +275,19 @@ public class AddQueueActivity extends AppCompatActivity {
                                 .thumbnail(0.05f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
-                        if (directionModel.getResponseData().get(0).getAudioDescription().equalsIgnoreCase("")){
+                        if (directionModel.getResponseData().get(0).getAudioDescription().equalsIgnoreCase("")) {
                             binding.tvTitleDec.setVisibility(View.GONE);
                             binding.tvSubDec.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             binding.tvTitleDec.setVisibility(View.VISIBLE);
                             binding.tvSubDec.setVisibility(View.VISIBLE);
                         }
 
                         binding.tvSubDec.setText(directionModel.getResponseData().get(0).getAudioDescription());
                         int linecount = binding.tvSubDec.getLineCount();
-                        if (linecount >= 4){
+                        if (linecount >= 4) {
                             binding.tvReadMore.setVisibility(View.VISIBLE);
-                        }else {
+                        } else {
                             binding.tvReadMore.setVisibility(View.GONE);
                         }
 
@@ -394,12 +389,11 @@ public class AddQueueActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<DirectionModel> call, Throwable t) {
                     hideProgressBar();
-                    Toast.makeText(ctx, t.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("getMessagegetMessage", "" + t.getMessage());
+                    BWSApplication.showToast(t.getMessage(), ctx);
                 }
             });
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
 

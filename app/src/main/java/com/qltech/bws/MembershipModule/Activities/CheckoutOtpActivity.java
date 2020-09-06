@@ -14,22 +14,18 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.LoginModule.Models.LoginModel;
-import com.qltech.bws.LoginModule.Models.OtpModel;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.SplashModule.SplashScreenActivity;
@@ -88,7 +84,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
-                i.putExtra("MobileNo",MobileNo);
+                i.putExtra("MobileNo", MobileNo);
                 i.putExtra("Name", Name);
                 i.putExtra("Code", Code);
                 startActivity(i);
@@ -100,7 +96,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
-                i.putExtra("MobileNo",MobileNo);
+                i.putExtra("MobileNo", MobileNo);
                 i.putExtra("Name", Name);
                 i.putExtra("Code", Code);
                 startActivity(i);
@@ -134,23 +130,23 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                     binding.txtError.setText("Wait a sec! We need to exchange digits to get started");
                     binding.txtError.setVisibility(View.VISIBLE);
                 } else {
-                    BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                     if (BWSApplication.isNetworkConnected(CheckoutOtpActivity.this)) {
                         String deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                         Call<CardModel> listCall = APIClient.getClient().getAuthOtps1(
                                 binding.edtOTP1.getText().toString() + "" +
                                         binding.edtOTP2.getText().toString() + "" +
                                         binding.edtOTP3.getText().toString() + "" +
-                                        binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE,deviceid
+                                        binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE, deviceid
                                 , MobileNo, CONSTANTS.FLAG_ONE);
                         listCall.enqueue(new Callback<CardModel>() {
                             @Override
                             public void onResponse(Call<CardModel> call, Response<CardModel> response) {
                                 if (response.isSuccessful()) {
-                                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                                     CardModel otpModel = response.body();
                                     Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
-                                    i.putExtra("MobileNo",MobileNo);
+                                    i.putExtra("MobileNo", MobileNo);
                                     startActivity(i);
                                     finish();
                                 }
@@ -158,12 +154,12 @@ public class CheckoutOtpActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<CardModel> call, Throwable t) {
-                                BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
 
                             }
                         });
                     } else {
-                        Toast.makeText(CheckoutOtpActivity.this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                        BWSApplication.showToast(getString(R.string.no_server_found), getApplicationContext());
                     }
                 }
             }
@@ -182,7 +178,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
-        i.putExtra("MobileNo",MobileNo);
+        i.putExtra("MobileNo", MobileNo);
         i.putExtra("Name", Name);
         i.putExtra("Code", Code);
         startActivity(i);
@@ -192,13 +188,13 @@ public class CheckoutOtpActivity extends AppCompatActivity {
     void prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             tvSendOTPbool = false;
-            BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<LoginModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
             listCall.enqueue(new Callback<LoginModel>() {
                 @Override
                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         LoginModel loginModel = response.body();
                         if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             countDownTimer = new CountDownTimer(30000, 1000) {
@@ -221,7 +217,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                             binding.edtOTP3.setText("");
                             binding.edtOTP4.setText("");
                             tvSendOTPbool = true;
-                            Toast.makeText(getApplicationContext(), loginModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast(loginModel.getResponseMessage(), getApplicationContext());
                         } else {
                             binding.txtError.setVisibility(View.VISIBLE);
                             binding.txtError.setText(loginModel.getResponseMessage());
@@ -231,12 +227,12 @@ public class CheckoutOtpActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<LoginModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
-                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.showToast(t.getMessage(), getApplicationContext());
                 }
             });
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getApplicationContext());
         }
     }
 

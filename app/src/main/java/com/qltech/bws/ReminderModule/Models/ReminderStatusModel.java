@@ -50,6 +50,7 @@ public class ReminderStatusModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
+
     public class ResponseData {
         @SerializedName("Day")
         @Expose

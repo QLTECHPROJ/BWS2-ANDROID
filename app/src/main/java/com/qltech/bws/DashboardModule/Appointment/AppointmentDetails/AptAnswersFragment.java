@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.FragmentAptAnswersBinding;
@@ -19,6 +19,7 @@ import com.qltech.bws.databinding.FragmentAptAnswersBinding;
 public class AptAnswersFragment extends Fragment {
     FragmentAptAnswersBinding binding;
     AppointmentDetailModel.ResponseData appointmentDetail;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class AptAnswersFragment extends Fragment {
         binding.btnComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Download PDF", Toast.LENGTH_SHORT).show();
+                BWSApplication.showToast("Download PDF", getActivity());
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(appointmentDetail.getMyAnswers()));
                 startActivity(i);

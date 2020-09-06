@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class NextSessionViewModel {
-
     @SerializedName("ResponseData")
     @Expose
     private ResponseData responseData;
@@ -51,7 +50,6 @@ public class NextSessionViewModel {
     }
 
     public class ResponseData {
-
         @SerializedName("Id")
         @Expose
         private String id;

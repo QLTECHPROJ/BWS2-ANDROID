@@ -31,13 +31,13 @@ import java.util.ArrayList;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 
-public class TopCategoriesAdapter  extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
+public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
     FragmentActivity activity;
     String ComeFrom;
 
-    public TopCategoriesAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,String ComeFrom) {
+    public TopCategoriesAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity, String ComeFrom) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;

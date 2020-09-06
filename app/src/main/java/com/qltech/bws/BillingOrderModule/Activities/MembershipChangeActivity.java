@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
@@ -91,7 +90,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast( getString(R.string.no_server_found), this);
         }
     }
 

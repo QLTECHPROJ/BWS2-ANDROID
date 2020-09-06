@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
@@ -102,7 +101,7 @@ public class InvoiceActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), this);
         }
     }
 

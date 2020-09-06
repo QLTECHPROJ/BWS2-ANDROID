@@ -15,7 +15,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -131,7 +130,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
             public void onClick(View view) {
                 if (CancelId.equalsIgnoreCase("4") &&
                         binding.edtCancelBox.getText().toString().equalsIgnoreCase("")) {
-                    Toast.makeText(ctx, "Please enter reason", Toast.LENGTH_SHORT).show();
+                    BWSApplication.showToast("Please enter reason", ctx);
                 } else {
                     final Dialog dialog = new Dialog(ctx);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -161,7 +160,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                                     public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
                                         if (response.isSuccessful()) {
                                             CancelPlanModel model = response.body();
-                                            Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                            BWSApplication.showToast(model.getResponseMessage(), ctx);
                                             dialog.dismiss();
                                             hideProgressBar();
                                             finish();
@@ -174,7 +173,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                                     }
                                 });
                             } else {
-                                Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                             }
                         }
                     });
@@ -233,7 +232,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         } else {
             String errorMessage = String.format(
                     getString(R.string.error_player), errorReason.toString());
-            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+            BWSApplication.showToast(errorMessage,this);
         }
     }
 

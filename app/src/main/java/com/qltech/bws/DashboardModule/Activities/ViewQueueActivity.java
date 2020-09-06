@@ -9,9 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,19 +17,15 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.DashboardModule.Adapters.QueueAdapter;
 import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
-import com.qltech.bws.DashboardModule.Models.QueueModel;
-import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.ItemMoveCallback;
 import com.qltech.bws.Utility.MeasureRatio;
-import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityViewQueueBinding;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ViewQueueActivity extends AppCompatActivity {
     ActivityViewQueueBinding binding;
@@ -50,7 +43,7 @@ public class ViewQueueActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-         Type type = new TypeToken<ArrayList<AddToQueueModel>>() {
+        Type type = new TypeToken<ArrayList<AddToQueueModel>>() {
         }.getType();
         addToQueueModels = gson.fromJson(json, type);
         binding.rvQueueList.setFocusable(false);

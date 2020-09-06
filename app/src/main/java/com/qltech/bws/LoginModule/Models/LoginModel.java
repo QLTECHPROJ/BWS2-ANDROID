@@ -50,7 +50,6 @@ public class LoginModel {
     }
 
     public class ResponseData {
-
         @SerializedName("MobileNo")
         @Expose
         private String mobileNo;
@@ -73,6 +72,5 @@ public class LoginModel {
         public void setOTP(String oTP) {
             this.oTP = oTP;
         }
-
     }
 }

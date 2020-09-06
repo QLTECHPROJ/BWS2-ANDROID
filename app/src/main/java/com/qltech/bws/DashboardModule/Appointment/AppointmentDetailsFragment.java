@@ -14,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
@@ -25,7 +24,6 @@ import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptBookletF
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptDetailsFragment;
 import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
-import com.qltech.bws.DownloadModule.Models.DownloadsHistoryModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -174,7 +172,7 @@ public class AppointmentDetailsFragment extends Fragment {
                                 }
                             });
                         } else {
-                            Toast.makeText(activity, appointmentDetailModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast(appointmentDetailModel.getResponseMessage(), getActivity());
                         }
                     }
                 }
@@ -185,25 +183,17 @@ public class AppointmentDetailsFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 
     public class TabAdapter extends FragmentStatePagerAdapter {
-
         int totalTabs;
-        private Context myContext;
-        Callback<DownloadsHistoryModel> downloadsHistoryModelCallback;
+        Context myContext;
 
         public TabAdapter(FragmentManager fm, Context myContext, int totalTabs) {
             super(fm);
             this.myContext = myContext;
-            this.totalTabs = totalTabs;
-        }
-
-        public TabAdapter(FragmentManager fm, Callback<DownloadsHistoryModel> transactionHistoryModelCallback, int totalTabs) {
-            super(fm);
-            this.downloadsHistoryModelCallback = transactionHistoryModelCallback;
             this.totalTabs = totalTabs;
         }
 
@@ -311,5 +301,4 @@ public class AppointmentDetailsFragment extends Fragment {
             return totalTabs;
         }
     }
-
 }

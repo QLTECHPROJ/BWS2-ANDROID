@@ -4,15 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,23 +20,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity;
 import com.qltech.bws.DashboardModule.Models.SearchBothModel;
 import com.qltech.bws.DashboardModule.Models.SearchPlaylistModel;
-import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.SuggestedModel;
-import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
-import com.qltech.bws.DashboardModule.Models.ViewAllPlayListModel;
-import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
-import com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
@@ -50,7 +40,6 @@ import com.qltech.bws.databinding.FragmentSearchBinding;
 import com.qltech.bws.databinding.GlobalSearchLayoutBinding;
 import com.qltech.bws.databinding.PlaylistCustomLayoutBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -153,7 +142,7 @@ public class SearchFragment extends Fragment {
                             if (listModel.getResponseData().size() == 0) {
                                 binding.rvSerachList.setVisibility(View.GONE);
                                 binding.llError.setVisibility(View.VISIBLE);
-                                binding.tvFound.setText("Couldn't find '" + searchEditText.getText().toString()+ "'");
+                                binding.tvFound.setText("Couldn't find '" + searchEditText.getText().toString() + "'");
                             } else {
                                 binding.llError.setVisibility(View.GONE);
                                 binding.rvSerachList.setVisibility(View.VISIBLE);
@@ -174,7 +163,7 @@ public class SearchFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 
@@ -200,7 +189,7 @@ public class SearchFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 
@@ -225,7 +214,7 @@ public class SearchFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 
@@ -302,16 +291,6 @@ public class SearchFragment extends Fragment {
             });
         }
 
-        void showToast(String message) {
-            Toast toast = new Toast(ctx);
-            View view = LayoutInflater.from(ctx).inflate(R.layout.toast_layout, null);
-            TextView tvMessage = view.findViewById(R.id.tvMessage);
-            tvMessage.setText(message);
-            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
-            toast.setView(view);
-            toast.show();
-        }
-
         @Override
         public int getItemCount() {
             return modelList.size();
@@ -369,16 +348,6 @@ public class SearchFragment extends Fragment {
                     startActivity(i);
                 }
             });
-        }
-
-        void showToast(String message) {
-            Toast toast = new Toast(ctx);
-            View view = LayoutInflater.from(ctx).inflate(R.layout.toast_layout, null);
-            TextView tvMessage = view.findViewById(R.id.tvMessage);
-            tvMessage.setText(message);
-            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
-            toast.setView(view);
-            toast.show();
         }
 
         @Override

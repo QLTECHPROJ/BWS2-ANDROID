@@ -19,8 +19,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -126,7 +124,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             if (listModel.getResponseData().size() == 0) {
                                 binding.rvSerachList.setVisibility(View.GONE);
                                 binding.llError.setVisibility(View.VISIBLE);
-                                binding.tvFound.setText("Couldn't find '" + searchEditText.getText().toString()+ "'");
+                                binding.tvFound.setText("Couldn't find '" + searchEditText.getText().toString() + "'");
                             } else {
                                 binding.llError.setVisibility(View.GONE);
                                 binding.rvSerachList.setVisibility(View.VISIBLE);
@@ -148,7 +146,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
 
@@ -173,7 +171,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
 
@@ -252,8 +250,7 @@ public class AddAudioActivity extends AppCompatActivity {
                                 if (response.isSuccessful()) {
                                     hideProgressBar();
                                     SucessModel listModel = response.body();
-//                                    showToast("Added to My Playlist.");
-                                    showToast(listModel.getResponseMessage());
+                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
                                 }
                             }
 
@@ -263,21 +260,10 @@ public class AddAudioActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        Toast.makeText(ctx, ctx.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                     }
                 }
             });
-
-        }
-
-        void showToast(String message) {
-            Toast toast = new Toast(ctx);
-            View view = LayoutInflater.from(ctx).inflate(R.layout.toast_layout, null);
-            TextView tvMessage = view.findViewById(R.id.tvMessage);
-            tvMessage.setText(message);
-            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
-            toast.setView(view);
-            toast.show();
         }
 
         @Override
@@ -338,8 +324,7 @@ public class AddAudioActivity extends AppCompatActivity {
                                 if (response.isSuccessful()) {
                                     hideProgressBar();
                                     SucessModel listModel = response.body();
-//                                    showToast("Added to My Playlist.");
-                                    showToast(listModel.getResponseMessage());
+                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
                                 }
                             }
 
@@ -349,7 +334,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        Toast.makeText(ctx, ctx.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                     }
                 }
             });
@@ -359,17 +344,6 @@ public class AddAudioActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return listModel.size();
-        }
-
-        void showToast(String message) {
-            Toast toast = new Toast(ctx);
-            View view = LayoutInflater.from(ctx).inflate(R.layout.toast_layout, null);
-            TextView tvMessage = view.findViewById(R.id.tvMessage);
-            tvMessage.setText(message);
-            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
-            toast.setView(view);
-            toast.show();
-
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {

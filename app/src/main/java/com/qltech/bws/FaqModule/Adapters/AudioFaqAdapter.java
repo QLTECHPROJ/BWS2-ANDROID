@@ -22,7 +22,8 @@ public class AudioFaqAdapter extends RecyclerView.Adapter<AudioFaqAdapter.MyView
     RecyclerView rvFaqList;
     TextView tvFound;
 
-    public AudioFaqAdapter(List<FaqListModel.ResponseData> modelList, Context ctx, RecyclerView rvFaqList, TextView tvFound) {
+    public AudioFaqAdapter(List<FaqListModel.ResponseData> modelList, Context ctx, RecyclerView rvFaqList,
+                           TextView tvFound) {
         this.modelList = modelList;
         this.ctx = ctx;
         this.rvFaqList = rvFaqList;
@@ -41,8 +42,6 @@ public class AudioFaqAdapter extends RecyclerView.Adapter<AudioFaqAdapter.MyView
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(modelList.get(position).getTitle());
         holder.binding.tvDesc.setText(modelList.get(position).getDesc());
-
-
         holder.binding.ivClickRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

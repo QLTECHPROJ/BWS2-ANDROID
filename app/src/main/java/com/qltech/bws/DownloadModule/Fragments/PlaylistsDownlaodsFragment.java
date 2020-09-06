@@ -11,20 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter;
 import com.qltech.bws.DownloadModule.Adapters.PlaylistsDownloadsAdapter;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
-import com.qltech.bws.DownloadModule.Models.PlaylistListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.FragmentDownloadsBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PlaylistsDownlaodsFragment extends Fragment {
     FragmentDownloadsBinding binding;

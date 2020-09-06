@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -16,9 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
-import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
-import com.qltech.bws.DownloadModule.Models.PlaylistListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -58,8 +55,8 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(listModelList.get(position).getPlaylistName());
-        holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio()+
-                " Audios | "+listModelList.get(position).getTotalhour()+"h "+listModelList.get(position).getTotalminute()+"m");
+        holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio() +
+                " Audios | " + listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
 
         Glide.with(ctx).load(R.drawable.loading).asGif().into(ImgV);
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
@@ -83,8 +80,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                             if (response.isSuccessful()) {
                                 hideProgressBar();
                                 SucessModel listModel = response.body();
-                                Toast.makeText(ctx, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
-
+                                BWSApplication.showToast(listModel.getResponseMessage(), ctx);
                             }
                         }
 
@@ -94,7 +90,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                         }
                     });
                 } else {
-                    Toast.makeText(ctx, ctx.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                 }
             }
         });

@@ -36,7 +36,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
     FragmentActivity activity;
     String ComeFrom;
 
-    public RecentlyPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,String ComeFrom) {
+    public RecentlyPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity, String ComeFrom) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;

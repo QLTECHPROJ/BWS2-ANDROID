@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
@@ -52,32 +51,32 @@ public class BillingAddressFragment extends Fragment {
                 binding.tlCity.setError("");
                 binding.tlState.setError("");
                 binding.tlPostCode.setError("");
-                if (binding.etName.getText().toString().equalsIgnoreCase("")){
+                if (binding.etName.getText().toString().equalsIgnoreCase("")) {
                     binding.tlName.setError(getString(R.string.valid_name));
-                }else if(binding.etEmail.getText().toString().equalsIgnoreCase("")) {
+                } else if (binding.etEmail.getText().toString().equalsIgnoreCase("")) {
                     binding.tlEmail.setError("Please enter email address");
-                }else if(!binding.etEmail.getText().toString().equalsIgnoreCase("")
+                } else if (!binding.etEmail.getText().toString().equalsIgnoreCase("")
                         && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
                     binding.tlEmail.setError("Please enter valid email address");
-                }else if(binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
+                } else if (binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
                     binding.tlMobileNumber.setError("please enter mobile number");
-                }else if(binding.etCountry.getText().toString().equalsIgnoreCase("")) {
+                } else if (binding.etCountry.getText().toString().equalsIgnoreCase("")) {
                     binding.tlCountry.setError("please enter country");
-                }else if(binding.etAddressLine1.getText().toString().equalsIgnoreCase("")) {
+                } else if (binding.etAddressLine1.getText().toString().equalsIgnoreCase("")) {
                     binding.tlAddressLine1.setError("please enter address");
-                }else if(binding.etCity.getText().toString().equalsIgnoreCase("")) {
+                } else if (binding.etCity.getText().toString().equalsIgnoreCase("")) {
                     binding.tlCity.setError("please enter suburb / town / city");
-                }else if(binding.etState.getText().toString().equalsIgnoreCase("")) {
+                } else if (binding.etState.getText().toString().equalsIgnoreCase("")) {
                     binding.tlState.setError("please enter state");
-                }else if(binding.etPostCode.getText().toString().equalsIgnoreCase("")) {
+                } else if (binding.etPostCode.getText().toString().equalsIgnoreCase("")) {
                     binding.tlPostCode.setError("please enter postcode");
-                }else {
+                } else {
                     if (BWSApplication.isNetworkConnected(getActivity())) {
                         showProgressBar();
                         Call<BillingAddressSaveModel> listCall = APIClient.getClient().getBillingAddressSave(UserID,
                                 binding.etName.getText().toString(), binding.etEmail.getText().toString(),
-                                binding.etCountry.getText().toString(),binding.etAddressLine1.getText().toString(),
-                                binding.etAddressLine2.getText().toString(),binding.etCity.getText().toString(),
+                                binding.etCountry.getText().toString(), binding.etAddressLine1.getText().toString(),
+                                binding.etAddressLine2.getText().toString(), binding.etCity.getText().toString(),
                                 binding.etState.getText().toString(),
                                 binding.etPostCode.getText().toString());
                         listCall.enqueue(new Callback<BillingAddressSaveModel>() {
@@ -86,7 +85,7 @@ public class BillingAddressFragment extends Fragment {
                                 if (response.isSuccessful()) {
                                     hideProgressBar();
                                     BillingAddressSaveModel listModel = response.body();
-                                    Toast.makeText(getActivity(), listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                    BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                                     getActivity().finish();
                                 }
                             }
@@ -97,7 +96,7 @@ public class BillingAddressFragment extends Fragment {
                             }
                         });
                     } else {
-                        Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                        BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                     }
                 }
             }
@@ -118,9 +117,9 @@ public class BillingAddressFragment extends Fragment {
                         BillingAddressViewModel listModel = response.body();
                         if (listModel.getResponseData().getName().equalsIgnoreCase("") ||
                                 listModel.getResponseData().getName().equalsIgnoreCase(" ") ||
-                                listModel.getResponseData().getName() == null){
+                                listModel.getResponseData().getName() == null) {
                             binding.etName.setText("");
-                        }else {
+                        } else {
                             binding.etName.setText(listModel.getResponseData().getName());
                         }
                         binding.etEmail.setText(listModel.getResponseData().getEmail());
@@ -142,7 +141,7 @@ public class BillingAddressFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 

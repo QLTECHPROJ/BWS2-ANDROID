@@ -50,8 +50,8 @@ public class ProfileUpdateModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
-    public class ResponseData {
 
+    public class ResponseData {
         @SerializedName("Name")
         @Expose
         private String name;

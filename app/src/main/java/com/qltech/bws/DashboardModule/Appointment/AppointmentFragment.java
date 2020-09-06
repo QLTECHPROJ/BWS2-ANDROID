@@ -21,13 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.qltech.bws.BillingOrderModule.Models.CurrentPlanVieViewModel;
 import com.qltech.bws.DashboardModule.Models.NextSessionViewModel;
 import com.qltech.bws.DashboardModule.Models.PreviousAppointmentsModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
@@ -39,7 +36,6 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentAppointmentBinding;
 import com.qltech.bws.databinding.PreviousAppointmentsLayoutBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -103,7 +99,7 @@ public class AppointmentFragment extends Fragment {
     }
 
     private void preparePreviousAppointmentsData() {
-         BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (BWSApplication.isNetworkConnected(getActivity())) {
 
             Call<PreviousAppointmentsModel> listCall1 = APIClient.getClient().getAppointmentVIew(UserID);
@@ -111,7 +107,7 @@ public class AppointmentFragment extends Fragment {
                 @Override
                 public void onResponse(Call<PreviousAppointmentsModel> call, Response<PreviousAppointmentsModel> response) {
                     if (response.isSuccessful()) {
-                         BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         PreviousAppointmentsModel listModel = response.body();
                         PreviousAppointmentsAdapter appointmentsAdapter = new PreviousAppointmentsAdapter(listModel.getResponseData(), getActivity(), f_manager);
                         binding.rvPreviousData.setAdapter(appointmentsAdapter);
@@ -120,7 +116,7 @@ public class AppointmentFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<PreviousAppointmentsModel> call, Throwable t) {
-                     BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 }
             });
             Call<NextSessionViewModel> listCall = APIClient.getClient().getNextSessionVIew(UserID);
@@ -128,7 +124,7 @@ public class AppointmentFragment extends Fragment {
                 @Override
                 public void onResponse(Call<NextSessionViewModel> call, Response<NextSessionViewModel> response) {
                     if (response.isSuccessful()) {
-                         BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         NextSessionViewModel listModel = response.body();
                         if (listModel.getResponseData().getResponse().equalsIgnoreCase("")) {
                             binding.cvShowSession.setVisibility(View.GONE);
@@ -164,11 +160,11 @@ public class AppointmentFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<NextSessionViewModel> call, Throwable t) {
-                     BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 }
             });
         } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 
@@ -205,8 +201,8 @@ public class AppointmentFragment extends Fragment {
                 public void onClick(View view) {
                     Fragment sessionsFragment = new SessionsFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("appointmentMainName",listModel.get(position).getCategory());
-                    bundle.putString("appointmentName",listModel.get(position).getCatMenual());
+                    bundle.putString("appointmentMainName", listModel.get(position).getCategory());
+                    bundle.putString("appointmentName", listModel.get(position).getCatMenual());
                     sessionsFragment.setArguments(bundle);
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
@@ -231,5 +227,4 @@ public class AppointmentFragment extends Fragment {
             }
         }
     }
-
 }

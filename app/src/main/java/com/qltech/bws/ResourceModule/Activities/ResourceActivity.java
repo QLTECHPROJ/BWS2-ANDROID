@@ -24,11 +24,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DownloadModule.Models.DownloadsHistoryModel;
 import com.qltech.bws.R;
 import com.qltech.bws.ResourceModule.Fragments.AppsFragment;
 import com.qltech.bws.ResourceModule.Fragments.AudioBooksFragment;
@@ -49,7 +47,7 @@ import retrofit2.Response;
 
 public class ResourceActivity extends AppCompatActivity {
     ActivityResourceBinding binding;
-    String UserID, Category ="";
+    String UserID, Category = "";
     Activity activity;
     private long mLastClickTime = 0;
     int CurruntTab = 0;
@@ -59,12 +57,7 @@ public class ResourceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_resource);
         activity = ResourceActivity.this;
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        binding.llBack.setOnClickListener(view -> finish());
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -85,7 +78,6 @@ public class ResourceActivity extends AppCompatActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
 
             @Override
@@ -162,7 +154,7 @@ public class ResourceActivity extends AppCompatActivity {
                 public void onResponse(Call<ResourceFilterModel> call, Response<ResourceFilterModel> response) {
                     if (response.isSuccessful()) {
                         ResourceFilterModel listModel = response.body();
-                        ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx,dialogBox);
+                        ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx, dialogBox);
                         rvFilterList.setAdapter(adapter);
                         dialogBox.show();
                     }
@@ -170,11 +162,11 @@ public class ResourceActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ResourceFilterModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 }
             });
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getApplicationContext());
         }
     }
 
@@ -226,7 +218,6 @@ public class ResourceActivity extends AppCompatActivity {
     public class TabAdapter extends FragmentStatePagerAdapter {
         int totalTabs;
         private Context myContext;
-        Callback<DownloadsHistoryModel> downloadsHistoryModelCallback;
 
         public TabAdapter(FragmentManager fm, Context myContext, int totalTabs) {
             super(fm);
@@ -242,7 +233,7 @@ public class ResourceActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString("audio_books", "audio_books");
                     bundle.putString("UserID", UserID);
-                    bundle.putString("Category",Category);
+                    bundle.putString("Category", Category);
                     audioBooksFragment.setArguments(bundle);
                     return audioBooksFragment;
                 case 1:
@@ -250,7 +241,7 @@ public class ResourceActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     bundle.putString("podcasts", "podcasts");
                     bundle.putString("UserID", UserID);
-                    bundle.putString("Category",Category);
+                    bundle.putString("Category", Category);
                     podcastsFragment.setArguments(bundle);
                     return podcastsFragment;
                 case 2:
@@ -258,7 +249,7 @@ public class ResourceActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     bundle.putString("apps", "apps");
                     bundle.putString("UserID", UserID);
-                    bundle.putString("Category",Category);
+                    bundle.putString("Category", Category);
                     appsFragment.setArguments(bundle);
                     return appsFragment;
                 case 3:
@@ -266,7 +257,7 @@ public class ResourceActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     bundle.putString("website", "website");
                     bundle.putString("UserID", UserID);
-                    bundle.putString("Category",Category);
+                    bundle.putString("Category", Category);
                     websiteFragment.setArguments(bundle);
                     return websiteFragment;
                 case 4:
@@ -274,7 +265,7 @@ public class ResourceActivity extends AppCompatActivity {
                     bundle = new Bundle();
                     bundle.putString("documentaries", "documentaries");
                     bundle.putString("UserID", UserID);
-                    bundle.putString("Category",Category);
+                    bundle.putString("Category", Category);
                     documentariesFragment.setArguments(bundle);
                     return documentariesFragment;
                 default:

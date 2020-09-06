@@ -18,7 +18,7 @@ import com.qltech.bws.databinding.MembershipPlanBinding;
 
 import java.util.ArrayList;
 
-public class MembershipPlanAdapter extends RecyclerView.Adapter<com.qltech.bws.MembershipModule.Adapters.MembershipPlanAdapter.MyViewHolder> {
+public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAdapter.MyViewHolder> {
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     Context ctx;
     private int row_index = -1, pos = 0;
@@ -36,14 +36,14 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<com.qltech.bws.M
 
     @NonNull
     @Override
-    public com.qltech.bws.MembershipModule.Adapters.MembershipPlanAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         MembershipPlanBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
                 , R.layout.membership_plan, parent, false);
-        return new MembershipPlanAdapter.MyViewHolder(v);
+        return new MyViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull com.qltech.bws.MembershipModule.Adapters.MembershipPlanAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         MembershipPlanListModel.Plan listModel = listModelList.get(position);
 //        holder.binding.tvTitle.setText(listModel.getTitle());
 
@@ -80,7 +80,7 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<com.qltech.bws.M
         } else {
             if (listModel.getRecommendedFlag().equalsIgnoreCase("1") && pos == 0) {
                 holder.binding.tvRecommended.setVisibility(View.VISIBLE);
-                ChangeFunction(holder,listModel,position);
+                ChangeFunction(holder, listModel, position);
             } else {
                 holder.binding.llPlanSub.setBackground(ctx.getResources().getDrawable(R.drawable.rounded_light_gray));
                 holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.black));

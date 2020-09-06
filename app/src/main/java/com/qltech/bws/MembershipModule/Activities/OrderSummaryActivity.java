@@ -14,7 +14,6 @@ import com.qltech.bws.databinding.ActivityOrderSummaryBinding;
 import java.util.ArrayList;
 
 public class OrderSummaryActivity extends AppCompatActivity {
-
     ActivityOrderSummaryBinding binding;
     String TrialPeriod;
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
@@ -28,15 +27,15 @@ public class OrderSummaryActivity extends AppCompatActivity {
         if (getIntent() != null) {
             TrialPeriod = getIntent().getStringExtra("TrialPeriod");
             listModelList = getIntent().getParcelableArrayListExtra("PlanData");
-            position = getIntent().getIntExtra("position",0);
+            position = getIntent().getIntExtra("position", 0);
         }
         binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval() + " Membership");
         binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
         binding.tvPlanNextRenewal.setText(listModelList.get(position).getPlanNextRenewal());
         binding.tvSubName.setText(listModelList.get(position).getSubName());
         binding.tvTrialPeriod.setText(TrialPeriod);
-        binding.tvPlanAmount.setText("$"+listModelList.get(position).getPlanAmount());
-        binding.tvTotalAmount.setText("$"+listModelList.get(position).getPlanAmount());
+        binding.tvPlanAmount.setText("$" + listModelList.get(position).getPlanAmount());
+        binding.tvTotalAmount.setText("$" + listModelList.get(position).getPlanAmount());
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,9 +46,9 @@ public class OrderSummaryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(OrderSummaryActivity.this, CheckoutGetCodeActivity.class);
-                i.putParcelableArrayListExtra("PlanData",listModelList);
-                i.putExtra("TrialPeriod",TrialPeriod);
-                i.putExtra("position",position);
+                i.putParcelableArrayListExtra("PlanData", listModelList);
+                i.putExtra("TrialPeriod", TrialPeriod);
+                i.putExtra("position", position);
                 startActivity(i);
             }
         });

@@ -8,15 +8,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.CONSTANTS;
-import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityResourceDetailsBinding;
 
 public class ResourceDetailsActivity extends AppCompatActivity {
@@ -68,11 +65,6 @@ public class ResourceDetailsActivity extends AppCompatActivity {
             binding.tvCreator.setText(author);
             binding.tvSubTitle.setText(description);
 
-          /*  MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.4f, 0);
-            binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);*/
             Glide.with(ctx).load(image).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
@@ -80,7 +72,7 @@ public class ResourceDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (linkOne.equalsIgnoreCase("")) {
-                        Toast.makeText(ctx, "Not Available", Toast.LENGTH_SHORT).show();
+                        BWSApplication.showToast("Not Available", ctx);
                     } else {
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(linkOne));
@@ -93,7 +85,7 @@ public class ResourceDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (linkOne.equalsIgnoreCase("")) {
-                        Toast.makeText(ctx, "Not Available", Toast.LENGTH_SHORT).show();
+                        BWSApplication.showToast("Not Available", ctx);
                     } else {
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(linkOne));
@@ -105,7 +97,7 @@ public class ResourceDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (linkTwo.equalsIgnoreCase("")) {
-                        Toast.makeText(ctx, "Not Available", Toast.LENGTH_SHORT).show();
+                        BWSApplication.showToast("Not Available", ctx);
                     } else {
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(linkTwo));

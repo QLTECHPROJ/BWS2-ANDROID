@@ -7,15 +7,18 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.Utility.CryptLib;
 import com.qltech.bws.Utility.MeasureRatio;
-import com.qltech.bws.databinding.ActivityCountrySelectBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,6 +61,15 @@ public class BWSApplication extends Application {
         return new MeasureRatio(widthImg, height, displayMetrics.density, proportion);
     }
 
+    public static void showToast(String message, Context conext) {
+        Toast toast = new Toast(conext);
+        View view = LayoutInflater.from(conext).inflate(R.layout.toast_layout, null);
+        TextView tvMessage = view.findViewById(R.id.tvMessage);
+        tvMessage.setText(message);
+        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
+        toast.setView(view);
+        toast.show();
+    }
 
     public static synchronized BWSApplication getInstance() {
         return BWSApplication;
@@ -72,6 +84,7 @@ public class BWSApplication extends Application {
             e.printStackTrace();
         }
     }
+
     public static void showProgressBar(ImageView ImgV, FrameLayout progressBarHolder, Activity ctx) {
         try {
             Glide.with(ctx).load(R.drawable.loading).asGif().into(ImgV);
@@ -103,6 +116,7 @@ public class BWSApplication extends Application {
         mContext = this;
         BWSApplication = this;
     }
+
     public static boolean isNetworkConnected(Context context) {
         try {
             ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -123,6 +137,7 @@ public class BWSApplication extends Application {
             return false;
         }
     }
+
     public static String securityKey() {
         String key;
         String DeviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -162,6 +177,7 @@ public class BWSApplication extends Application {
         }
         return finalKey;
     }
+
     public static String ProgramForAES(String baseString) {
         String cipher = "";
         try {

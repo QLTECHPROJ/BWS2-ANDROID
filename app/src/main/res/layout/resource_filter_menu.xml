@@ -28,7 +28,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:textColor="@color/black"
                 android:text="All"
-                android:textSize="@dimen/_18sdp" />
+                android:textSize="@dimen/_16sdp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvFilterList"

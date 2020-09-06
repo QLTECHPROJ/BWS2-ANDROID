@@ -25,7 +25,6 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -190,7 +189,7 @@ public class MyPlaylistsFragment extends Fragment {
                                     binding.llDownloads.setClickable(false);
                                     binding.llDownloads.setEnabled(false);
                                 }
-                                Toast.makeText(getActivity(), model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                BWSApplication.showToast(model.getResponseMessage(), getActivity());
                             }
                         }
 
@@ -200,7 +199,7 @@ public class MyPlaylistsFragment extends Fragment {
                         }
                     });
                 } else {
-                    Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                 }
             }
         });
@@ -332,7 +331,7 @@ public class MyPlaylistsFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 
@@ -484,7 +483,7 @@ public class MyPlaylistsFragment extends Fragment {
                                         binding.llDownloads.setClickable(false);
                                         binding.llDownloads.setEnabled(false);
                                     }
-                                    Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                    BWSApplication.showToast(model.getResponseMessage(), getActivity());
                                 }
                             }
 
@@ -495,7 +494,7 @@ public class MyPlaylistsFragment extends Fragment {
                         });
 
                     } else {
-                        Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                        BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                     }
                 }
             });
@@ -514,8 +513,7 @@ public class MyPlaylistsFragment extends Fragment {
                                     hideProgressBar();
                                     SucessModel listModel = response.body();
                                     prepareData(UserID, PlaylistID);
-                                    Toast.makeText(getActivity(), listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
-
+                                    BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                                 }
                             }
 
@@ -525,7 +523,7 @@ public class MyPlaylistsFragment extends Fragment {
                             }
                         });
                     } else {
-                        Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                        BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                     }
                 }
             });

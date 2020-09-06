@@ -87,7 +87,6 @@ public class AppointmentDetailModel implements Parcelable {
     }
 
     public static class ResponseData implements Parcelable {
-
         @SerializedName("Id")
         @Expose
         private String id;

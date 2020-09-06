@@ -50,8 +50,8 @@ public class ResourceFilterModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
-    public class ResponseData {
 
+    public class ResponseData {
         @SerializedName("CategoryName")
         @Expose
         private String categoryName;
@@ -63,6 +63,5 @@ public class ResourceFilterModel {
         public void setCategoryName(String categoryName) {
             this.categoryName = categoryName;
         }
-
     }
 }

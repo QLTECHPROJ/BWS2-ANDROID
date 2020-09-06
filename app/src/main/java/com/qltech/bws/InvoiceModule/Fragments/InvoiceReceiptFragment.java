@@ -16,20 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.InvoiceModule.Activities.InvoiceActivity;
 import com.qltech.bws.InvoiceModule.Models.InvoiceDetailModel;
-import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.FragmentInvoiceReceiptBinding;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,7 +31,7 @@ import retrofit2.Response;
 
 public class InvoiceReceiptFragment extends DialogFragment {
     FragmentInvoiceReceiptBinding binding;
-    String UserID,InvoiceID, Flag;
+    String UserID, InvoiceID, Flag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,7 +57,6 @@ public class InvoiceReceiptFragment extends DialogFragment {
             }
             return false;
         });
-
         return view;
     }
 
@@ -83,25 +76,25 @@ public class InvoiceReceiptFragment extends DialogFragment {
                         hideProgressBar();
                         InvoiceDetailModel listModel = response.body();
 
-                        if (Flag.equalsIgnoreCase("1")){
+                        if (Flag.equalsIgnoreCase("1")) {
                             binding.tvSession.setVisibility(View.GONE);
-                        }else if (Flag.equalsIgnoreCase("2")) {
+                        } else if (Flag.equalsIgnoreCase("2")) {
                             binding.tvSession.setVisibility(View.VISIBLE);
                         }
 
                         binding.tvOrderId.setText(listModel.getResponseData().getInvoiceNumber());
                         binding.tvDate.setText(listModel.getResponseData().getInvoiceDate());
-                        binding.tvTotal.setText("$"+listModel.getResponseData().getTotalAmount());
-                        binding.tvOrderTotal.setText("$"+listModel.getResponseData().getAmount());
+                        binding.tvTotal.setText("$" + listModel.getResponseData().getTotalAmount());
+                        binding.tvOrderTotal.setText("$" + listModel.getResponseData().getAmount());
                         binding.tvPaymentDetails.setText(listModel.getResponseData().getEmail());
                         binding.tvTitle.setText(listModel.getResponseData().getName());
                         binding.tvQty.setText("Qty: " + listModel.getResponseData().getQty());
                         binding.tvSession.setText("Session: " + listModel.getResponseData().getSession());
-                        binding.tvItems.setText("$"+listModel.getResponseData().getAmount());
+                        binding.tvItems.setText("$" + listModel.getResponseData().getAmount());
                         binding.tvFromAddress.setText(listModel.getResponseData().getInvoiceFrom());
                         binding.tvBilledTo.setText(listModel.getResponseData().getInvoiceTo());
-                        binding.tvGst.setText("$"+listModel.getResponseData().getGstAmount());
-                        binding.tvOrderTotalAmount.setText("$"+listModel.getResponseData().getTotalAmount());
+                        binding.tvGst.setText("$" + listModel.getResponseData().getGstAmount());
+                        binding.tvOrderTotalAmount.setText("$" + listModel.getResponseData().getTotalAmount());
                     }
                 }
 
@@ -111,7 +104,7 @@ public class InvoiceReceiptFragment extends DialogFragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 

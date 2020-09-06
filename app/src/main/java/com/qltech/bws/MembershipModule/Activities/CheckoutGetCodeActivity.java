@@ -8,15 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.LoginModule.Activities.CountrySelectActivity;
-import com.qltech.bws.LoginModule.Activities.LoginActivity;
-import com.qltech.bws.LoginModule.Activities.OtpActivity;
 import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
@@ -33,7 +29,7 @@ import retrofit2.Response;
 
 public class CheckoutGetCodeActivity extends AppCompatActivity {
     ActivityCheckoutGetCodeBinding binding;
-    String Name = "", Code = "",MobileNo = "";
+    String Name = "", Code = "", MobileNo = "";
     Context ctx;
     Activity activity;
     String TrialPeriod;
@@ -64,9 +60,9 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             binding.tvCountryCode.setText(Code);
             binding.tvCountry.setText(Name);
         }
-        if (MobileNo.equalsIgnoreCase("")){
+        if (MobileNo.equalsIgnoreCase("")) {
             binding.edtNumber.setText("");
-        }else {
+        } else {
             binding.edtNumber.setText(MobileNo);
         }
 
@@ -89,9 +85,9 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
 //                i.putParcelableArrayListExtra("PlanData",listModelList);
 //                i.putExtra("TrialPeriod",TrialPeriod);
 //                i.putExtra("position",position);
-                i.putExtra("Name",binding.tvCountry.getText().toString());
-                i.putExtra("Code",binding.tvCountryCode.getText().toString());
-                i.putExtra("MobileNo",binding.edtNumber.getText().toString());
+                i.putExtra("Name", binding.tvCountry.getText().toString());
+                i.putExtra("Code", binding.tvCountryCode.getText().toString());
+                i.putExtra("MobileNo", binding.edtNumber.getText().toString());
                 i.putExtra("Check", "0");
                 startActivity(i);
                 finish();
@@ -125,12 +121,12 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             binding.txtError.setVisibility(View.GONE);
             if (BWSApplication.isNetworkConnected(ctx)) {
 
-                BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 Call<LoginModel> listCall = APIClient.getClient().getSignUpDatas(binding.edtNumber.getText().toString(), binding.tvCountryCode.getText().toString(), CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
                 listCall.enqueue(new Callback<LoginModel>() {
                     @Override
                     public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
-                        BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         if (response.isSuccessful()) {
                             LoginModel loginModel = response.body();
                             Intent i = new Intent(ctx, CheckoutOtpActivity.class);
@@ -140,23 +136,23 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                             i.putExtra("MobileNo", binding.edtNumber.getText().toString());
                             i.putExtra("Name", binding.tvCountry.getText().toString());
                             i.putExtra("Code", binding.tvCountryCode.getText().toString());
-                            Toast.makeText(ctx, loginModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast(loginModel.getResponseMessage(), ctx);
                             startActivity(i);
                             finish();
                         } else {
-                            Toast.makeText(ctx, response.message(), Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast(response.message(), ctx);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<LoginModel> call, Throwable t) {
-                        BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,activity);
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         binding.txtError.setVisibility(View.VISIBLE);
                         binding.txtError.setText(getString(R.string.notvalid_number));
                     }
                 });
             } else {
-                Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
         }
     }

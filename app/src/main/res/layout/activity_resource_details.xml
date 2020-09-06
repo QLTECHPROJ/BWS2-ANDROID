@@ -45,7 +45,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/rlLayout"
-            android:layout_marginBottom="@dimen/_85sdp"
             android:overScrollMode="never">
 
             <LinearLayout
@@ -104,6 +103,7 @@
                     android:layout_marginTop="@dimen/_14sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="start"
+                    android:paddingBottom="@dimen/_85sdp"
                     android:justificationMode="inter_word"
                     android:lineSpacingExtra="@dimen/_4sdp"
                     android:textColor="@color/black"

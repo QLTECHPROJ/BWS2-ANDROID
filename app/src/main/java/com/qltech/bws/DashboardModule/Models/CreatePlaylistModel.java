@@ -48,6 +48,7 @@ public class CreatePlaylistModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
+
     public class ResponseData {
         @SerializedName("id")
         @Expose

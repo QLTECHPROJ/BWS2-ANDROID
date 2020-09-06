@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -136,8 +135,7 @@ public class ReminderActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                                 SetReminderModel listModel = response.body();
-                                Toast.makeText(activity, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
-
+                                BWSApplication.showToast(listModel.getResponseMessage(), activity);
                             }
                         }
 
@@ -147,7 +145,7 @@ public class ReminderActivity extends AppCompatActivity {
                         }
                     });
                 } else {
-                    Toast.makeText(context, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    BWSApplication.showToast(getString(R.string.no_server_found), context);
                 }
             }
         });
@@ -178,7 +176,7 @@ public class ReminderActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(context, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), context);
         }
     }
 

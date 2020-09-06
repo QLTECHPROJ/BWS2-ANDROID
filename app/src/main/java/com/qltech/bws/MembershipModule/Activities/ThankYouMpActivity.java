@@ -16,7 +16,6 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityThankYouMembershipBinding;
 
 public class ThankYouMpActivity extends AppCompatActivity {
-
     ActivityThankYouMembershipBinding binding;
 
     @Override
@@ -31,7 +30,6 @@ public class ThankYouMpActivity extends AppCompatActivity {
         binding.ivLogo.setScaleType(ImageView.ScaleType.FIT_XY);
         binding.ivLogo.setImageResource(R.drawable.ic_mp_thanku);
 
-
         binding.btnExplore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -40,6 +38,7 @@ public class ThankYouMpActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         binding.tvViewInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

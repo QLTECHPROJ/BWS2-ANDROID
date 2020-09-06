@@ -15,7 +15,7 @@
             android:layout_marginBottom="@dimen/_4sdp"
             android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/black"
-            android:textSize="@dimen/_18sdp" />
+            android:textSize="@dimen/_16sdp" />
 
     </LinearLayout>
 </layout>

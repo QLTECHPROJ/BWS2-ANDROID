@@ -55,7 +55,7 @@ public class InvoiceListModel {
         this.responseStatus = responseStatus;
     }
 
-    public static class ResponseData  implements Parcelable {
+    public static class ResponseData implements Parcelable {
 
         @SerializedName("Appointment")
         @Expose

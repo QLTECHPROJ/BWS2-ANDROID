@@ -14,11 +14,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BillingOrderModule.Fragments.BillingAddressFragment;
 import com.qltech.bws.BillingOrderModule.Fragments.CurrentPlanFragment;
 import com.qltech.bws.BillingOrderModule.Fragments.PaymentFragment;
-import com.qltech.bws.DownloadModule.Models.DownloadsHistoryModel;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.ActivityBillingOrderBinding;
-
-import retrofit2.Callback;
 
 public class BillingOrderActivity extends AppCompatActivity {
     ActivityBillingOrderBinding binding;
@@ -80,20 +77,12 @@ public class BillingOrderActivity extends AppCompatActivity {
     }
 
     public class TabAdapter extends FragmentStatePagerAdapter {
-
         int totalTabs;
-        private Context myContext;
-        Callback<DownloadsHistoryModel> downloadsHistoryModelCallback;
+        Context myContext;
 
         public TabAdapter(FragmentManager fm, Context myContext, int totalTabs) {
             super(fm);
             this.myContext = myContext;
-            this.totalTabs = totalTabs;
-        }
-
-        public TabAdapter(FragmentManager fm, Callback<DownloadsHistoryModel> transactionHistoryModelCallback, int totalTabs) {
-            super(fm);
-            this.downloadsHistoryModelCallback = transactionHistoryModelCallback;
             this.totalTabs = totalTabs;
         }
 

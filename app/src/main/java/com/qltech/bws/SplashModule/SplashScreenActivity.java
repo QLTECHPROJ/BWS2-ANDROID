@@ -3,28 +3,18 @@ package com.qltech.bws.SplashModule;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import android.Manifest;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.MediaController;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BuildConfig;
 import com.qltech.bws.DashboardModule.Activities.DashboardActivity;
@@ -35,8 +25,6 @@ import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.AppSignatureHashHelper;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivitySplashScreenBinding;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,13 +44,12 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         AppSignatureHashHelper appSignatureHashHelper = new AppSignatureHashHelper(this);
         key = appSignatureHashHelper.getAppSignatures().get(0);
-//        Glide.with(SplashScreenActivity.this).load(R.drawable.splash).asGif().into(binding.ivBackground);
         getLatasteUpdate(SplashScreenActivity.this);
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        MediaController mediaController= new MediaController(this);
+        MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(binding.ivBackground);
         binding.ivBackground.setMediaController(null);
         binding.ivBackground.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.splash_video));
@@ -122,7 +109,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                             alertDialog.setCanceledOnTouchOutside(false);
                         } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("")) {
                         }
-
                     }
                 }
 
@@ -131,7 +117,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(context, context.getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(context.getString(R.string.no_server_found), context);
         }
     }
 }

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -72,7 +71,6 @@ public class AptAudioFragment extends Fragment {
             binding.rvAudioList.setItemAnimator(new DefaultItemAnimator());
             binding.rvAudioList.setAdapter(appointmentsAdapter);
         }
-
         return view;
     }
 
@@ -180,7 +178,7 @@ public class AptAudioFragment extends Fragment {
                                         holder.binding.llDownload.setClickable(false);
                                         holder.binding.llDownload.setEnabled(false);
                                     }
-                                    Toast.makeText(ctx, model.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                    BWSApplication.showToast(model.getResponseMessage(), getActivity());
                                 }
                             }
 
@@ -191,7 +189,7 @@ public class AptAudioFragment extends Fragment {
                         });
 
                     } else {
-                        Toast.makeText(getActivity(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                        BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                     }
                 }
             });

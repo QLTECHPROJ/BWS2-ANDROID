@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -32,8 +31,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Adapters.DirectionAdapter;
-import com.qltech.bws.DashboardModule.Models.DirectionModel;
-import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.RenamePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
@@ -134,10 +131,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                     + model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
                         }
 
-                        if (model.getResponseData().getPlaylistDesc().equalsIgnoreCase("")){
+                        if (model.getResponseData().getPlaylistDesc().equalsIgnoreCase("")) {
                             binding.tvTitleDec.setVisibility(View.GONE);
                             binding.tvSubDec.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             binding.tvTitleDec.setVisibility(View.VISIBLE);
                             binding.tvSubDec.setVisibility(View.VISIBLE);
                         }
@@ -239,7 +236,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(View view) {
                                         if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                                            Toast.makeText(ctx, "Please enter playlist name", Toast.LENGTH_SHORT).show();
+                                            BWSApplication.showToast("Please enter playlist name", ctx);
                                         } else {
                                             showProgressBar();
                                             if (BWSApplication.isNetworkConnected(ctx)) {
@@ -250,7 +247,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                                         if (response.isSuccessful()) {
                                                             hideProgressBar();
                                                             RenamePlaylistModel listModel = response.body();
-                                                            Toast.makeText(MyPlaylistActivity.this, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                                            BWSApplication.showToast(listModel.getResponseMessage(), ctx);
                                                             dialog.dismiss();
                                                             finish();
                                                         }
@@ -262,7 +259,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                                     }
                                                 });
                                             } else {
-                                                Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                                                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                                             }
                                         }
                                     }
@@ -309,7 +306,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                                         hideProgressBar();
                                                         SucessModel listModel = response.body();
                                                         dialog.dismiss();
-                                                        Toast.makeText(MyPlaylistActivity.this, listModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                                        BWSApplication.showToast(listModel.getResponseMessage(), ctx);
                                                         finish();
                                                     }
                                                 }
@@ -320,7 +317,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                                 }
                                             });
                                         } else {
-                                            Toast.makeText(ctx, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                                            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                                         }
                                     }
                                 });
@@ -344,11 +341,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<SubPlayListModel> call, Throwable t) {
                     hideProgressBar();
-                    Toast.makeText(ctx, t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
 

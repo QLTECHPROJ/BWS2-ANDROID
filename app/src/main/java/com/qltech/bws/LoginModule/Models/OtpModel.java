@@ -50,7 +50,6 @@ public class OtpModel {
     }
 
     public class ResponseData {
-
         @SerializedName("UserID")
         @Expose
         private String userID;
@@ -150,6 +149,5 @@ public class OtpModel {
         public void setProfileImg(String profileImg) {
             this.profileImg = profileImg;
         }
-
     }
 }

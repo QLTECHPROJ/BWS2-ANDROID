@@ -2,8 +2,6 @@ package com.qltech.bws.DashboardModule.Audio.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +35,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
     FragmentActivity activity;
     String ComeFrom;
 
-    public RecommendedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,String ComeFrom) {
+    public RecommendedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity, String ComeFrom) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;

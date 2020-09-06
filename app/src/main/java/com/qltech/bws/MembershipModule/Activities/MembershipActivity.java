@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.FaqModule.Adapters.AudioFaqAdapter;
 import com.qltech.bws.FaqModule.Models.FaqListModel;
 import com.qltech.bws.MembershipModule.Adapters.MembershipPlanAdapter;
 import com.qltech.bws.MembershipModule.Adapters.SubscriptionAdapter;
@@ -96,7 +94,7 @@ public class MembershipActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), this);
         }
         prepareMembershipData();
     }
@@ -132,7 +130,7 @@ public class MembershipActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), this);
         }
     }
 

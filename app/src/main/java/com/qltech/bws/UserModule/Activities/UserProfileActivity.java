@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.app.Activity;
@@ -24,13 +22,9 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.DatePicker;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BuildConfig;
-import com.qltech.bws.DashboardModule.Account.AccountFragment;
-import com.qltech.bws.DashboardModule.Appointment.SessionsFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.UserModule.Models.AddProfileModel;
@@ -39,7 +33,6 @@ import com.qltech.bws.UserModule.Models.ProfileViewModel;
 import com.qltech.bws.UserModule.Models.RemoveProfileModel;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.APIClientProfile;
-import com.qltech.bws.Utility.APIInterfaceProfile;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityUserProfileBinding;
@@ -50,7 +43,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 
 import retrofit.RetrofitError;
@@ -69,7 +61,6 @@ public class UserProfileActivity extends AppCompatActivity {
     public int BirthYear;
     private static final int CONTENT_REQUEST = 100;
     RequestPermissionHandler mRequestPermissionHandler;
-    private long mLastClickTime = 0;
     private int mYear, mMonth, mDay;
     int ageYear, ageMonth, ageDate;
 
@@ -163,7 +154,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             hideProgressBar();
                             ProfileUpdateModel viewModel = response.body();
                             finish();
-                            Toast.makeText(ctx, viewModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
                         } else {
                             hideProgressBar();
                         }
@@ -401,7 +392,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                     if (response.isSuccessful()) {
                                         hideProgressBar();
                                         RemoveProfileModel viewModel = response.body();
-                                        Toast.makeText(ctx, viewModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                        BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
 
                                     }
                                 }
@@ -452,19 +443,18 @@ public class UserProfileActivity extends AppCompatActivity {
                                     if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                         hideProgressBar();
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
-
-                                        Toast.makeText(getApplicationContext(), addProfileModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                        BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                     }
                                 }
 
                                 @Override
                                 public void failure(RetrofitError e) {
                                     hideProgressBar();
-                                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    BWSApplication.showToast(e.getMessage(), ctx);
                                 }
                             });
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -493,18 +483,18 @@ public class UserProfileActivity extends AppCompatActivity {
                                                 .placeholder(R.drawable.default_profile)
                                                 .thumbnail(1f)
                                                 .dontAnimate().into(binding.civProfile);
-                                        Toast.makeText(getApplicationContext(), addProfileModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                        BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                     }
                                 }
 
                                 @Override
                                 public void failure(RetrofitError e) {
                                     hideProgressBar();
-                                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    BWSApplication.showToast(e.getMessage(), ctx);
                                 }
                             });
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                 }
             }
         } else if (requestCode == RESULT_CANCELED) {

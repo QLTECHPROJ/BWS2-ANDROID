@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -65,8 +64,8 @@ public class PaymentFragment extends Fragment {
     }
 
     public static void updateCardList() {
-//        Toast.makeText(context, "Changedd", Toast.LENGTH_SHORT).show();
-//        prepareCardList();
+//        BWSApplication.showToast("Changedd", context);
+        //        prepareCardList();
     }
 
     private void prepareCardList() {
@@ -86,13 +85,13 @@ public class PaymentFragment extends Fragment {
                                 binding.rvCardList.setVisibility(View.GONE);
                             } else {
                                 binding.rvCardList.setVisibility(View.VISIBLE);
-                                adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.ImgV, binding.progressBarHolder,binding.rvCardList);
+                                adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.ImgV, binding.progressBarHolder, binding.rvCardList);
                                 binding.rvCardList.setAdapter(adapter);
                             }
 
 
                         } else {
-                            Toast.makeText(context, cardListModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            BWSApplication.showToast(cardListModel.getResponseMessage(), context);
                         }
                     }
                 }
@@ -104,7 +103,7 @@ public class PaymentFragment extends Fragment {
 
             });
         } else {
-            Toast.makeText(context, getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+            BWSApplication.showToast(getString(R.string.no_server_found), context);
         }
 
     }

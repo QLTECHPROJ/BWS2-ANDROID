@@ -87,7 +87,7 @@ public class MainAudioModel implements Parcelable {
         parcel.writeString(responseStatus);
     }
 
-    public static class ResponseData implements Parcelable{
+    public static class ResponseData implements Parcelable {
         @SerializedName("HomeID")
         @Expose
         private String homeID;
