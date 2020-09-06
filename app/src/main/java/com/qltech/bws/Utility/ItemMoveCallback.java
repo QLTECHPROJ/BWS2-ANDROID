@@ -49,9 +49,9 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
 
 
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-            if (viewHolder instanceof QueueAdapter.MyViewHolder) {
-                QueueAdapter.MyViewHolder myViewHolder =
-                        (QueueAdapter.MyViewHolder) viewHolder;
+            if (viewHolder instanceof RecyclerView.ViewHolder) {
+                RecyclerView.ViewHolder myViewHolder =
+                        (RecyclerView.ViewHolder) viewHolder;
                 mAdapter.onRowSelected(myViewHolder);
             }
 
@@ -65,9 +65,9 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
                           RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
 
-        if (viewHolder instanceof QueueAdapter.MyViewHolder) {
-            QueueAdapter.MyViewHolder myViewHolder =
-                    (QueueAdapter.MyViewHolder) viewHolder;
+        if (viewHolder instanceof RecyclerView.ViewHolder) {
+            RecyclerView.ViewHolder myViewHolder =
+                    (RecyclerView.ViewHolder) viewHolder;
             mAdapter.onRowClear(myViewHolder);
         }
     }
@@ -76,9 +76,9 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
 
         void onRowMoved(int fromPosition, int toPosition);
 
-        void onRowSelected(QueueAdapter.MyViewHolder myViewHolder);
+        void onRowSelected(RecyclerView.ViewHolder myViewHolder);
 
-        void onRowClear(QueueAdapter.MyViewHolder myViewHolder);
+        void onRowClear(RecyclerView.ViewHolder myViewHolder);
 
     }
 

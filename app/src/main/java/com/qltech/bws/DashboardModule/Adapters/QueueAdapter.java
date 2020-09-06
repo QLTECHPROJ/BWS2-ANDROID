@@ -1,22 +1,29 @@
 package com.qltech.bws.DashboardModule.Adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.MotionEventCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.ItemMoveCallback;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.OnStartDragListener;
 import com.qltech.bws.databinding.QueueListLayoutBinding;
 
 import java.util.ArrayList;
@@ -25,10 +32,13 @@ import java.util.Collections;
 public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
     ArrayList<AddToQueueModel> listModelList;
     Context ctx;
+    int fromPosition, toPosition;
+
 
     public QueueAdapter(ArrayList<AddToQueueModel> listModelList, Context ctx) {
         this.listModelList = listModelList;
         this.ctx = ctx;
+
     }
 
     @NonNull
@@ -54,6 +64,35 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.MyViewHolder
         Glide.with(ctx).load(listModel.getImageFile()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
+        holder.binding.llRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callRemoveList(position);
+            }
+        });
+/*        holder.binding.llArrange.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                    if (MotionEventCompat.getActionMasked(event) ==
+                            MotionEvent.ACTION_DOWN) {
+                        mDragStartListener.onStartDrag(holder);
+                    }
+                return false;
+            }
+        });*/
+
+    }
+
+    private void callRemoveList(int position) {
+        listModelList.remove(position);
+        notifyDataSetChanged();
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(listModelList);
+        editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+        editor.commit();
     }
 
     @Override
@@ -73,19 +112,25 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.MyViewHolder
             }
         }
         notifyItemMoved(fromPosition, toPosition);
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(listModelList);
+        editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+        editor.commit();
+
     }
 
     @Override
-    public void onRowSelected(MyViewHolder myViewHolder) {
-//        myViewHolder.binding.setBackgroundColor(Color.GRAY);
+    public void onRowSelected(RecyclerView.ViewHolder myViewHolder) {
 
     }
 
     @Override
-    public void onRowClear(MyViewHolder myViewHolder) {
-//        myViewHolder.rowView.setBackgroundColor(Color.WHITE);
+    public void onRowClear(RecyclerView.ViewHolder myViewHolder) {
 
     }
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         QueueListLayoutBinding binding;

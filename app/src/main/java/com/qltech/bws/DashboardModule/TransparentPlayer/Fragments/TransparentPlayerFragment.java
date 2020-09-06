@@ -181,13 +181,12 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             public void onClick(View view) {
                 binding.ivPause.setVisibility(View.GONE);
                 binding.ivPlay.setVisibility(View.VISIBLE);
-                if (player == 1) {
+                if (!isMediaStart) {
                     MusicService.play(getActivity(), Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                     MusicService.playMedia();
                 } else {
                     MusicService.pauseMedia();
                 }
-
             }
         });
 
@@ -196,7 +195,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             public void onClick(View view) {
                 binding.ivPlay.setVisibility(View.GONE);
                 binding.ivPause.setVisibility(View.VISIBLE);
-                if (player == 1) {
+                if (!isMediaStart) {
                     MusicService.play(getActivity(), Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                     MusicService.playMedia();
                 } else {
@@ -220,15 +219,18 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         binding.tvSubTitle.setText("Play the " + mainPlayModelList.get(position).getName() + " every night on a low volume.");
         if (player == 1) {
             if (MusicService.isPause) {
-                binding.ivPlay.setVisibility(View.GONE);
-                binding.ivPause.setVisibility(View.VISIBLE);
-                MusicService.resumeMedia();
-            } else {
                 binding.ivPause.setVisibility(View.GONE);
                 binding.ivPlay.setVisibility(View.VISIBLE);
+                MusicService.resumeMedia();
+            } else {
+                binding.ivPlay.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.VISIBLE);
                 MusicService.play(getActivity(), Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
             }
+        }else{
+            binding.ivPause.setVisibility(View.GONE);
+            binding.ivPlay.setVisibility(View.VISIBLE);
         }
         binding.simpleSeekbar.setClickable(false);
 

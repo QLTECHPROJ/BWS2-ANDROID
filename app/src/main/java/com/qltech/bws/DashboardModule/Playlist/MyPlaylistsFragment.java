@@ -59,6 +59,7 @@ public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
     String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage;
     PlayListsAdpater adpater;
+    PlayListsAdpater2 adpater2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -319,8 +320,13 @@ public class MyPlaylistsFragment extends Fragment {
                             binding.llReminder.setVisibility(View.VISIBLE);
                             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
                             binding.llListing.setVisibility(View.VISIBLE);
-                            adpater = new PlayListsAdpater(listModel.getResponseData().getPlaylistSongs(), getActivity(), UserID, listModel.getResponseData().getCreated());
-                            binding.rvPlayLists.setAdapter(adpater);
+                            if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
+                                adpater = new PlayListsAdpater(listModel.getResponseData().getPlaylistSongs(), getActivity(), UserID, listModel.getResponseData().getCreated());
+                                binding.rvPlayLists.setAdapter(adpater);
+                            } else {
+                                adpater2 = new PlayListsAdpater2(listModel.getResponseData().getPlaylistSongs(), getActivity(), UserID, listModel.getResponseData().getCreated());
+                                binding.rvPlayLists.setAdapter(adpater2);
+                            }
                         }
                     }
                 }
@@ -395,6 +401,26 @@ public class MyPlaylistsFragment extends Fragment {
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
+            binding.ivPlaylistStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    player = 1;
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.rlPlaylist, fragment)
+                            .addToBackStack("TransparentPlayerFragment")
+                            .commit();
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(listModelList);
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                    editor.commit();
+                }
+            });
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -461,70 +487,15 @@ public class MyPlaylistsFragment extends Fragment {
             holder.binding.llDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        showProgressBar();
-                        String AudioId = mData.get(position).getID();
-                        Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistID);
-                        listCall.enqueue(new Callback<DownloadPlaylistModel>() {
-                            @Override
-                            public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
-                                if (response.isSuccessful()) {
-                                    hideProgressBar();
-                                    DownloadPlaylistModel model = response.body();
-                                    if (model.getResponseData().getFlag().equalsIgnoreCase("0")
-                                            || model.getResponseData().getFlag().equalsIgnoreCase("")) {
-                                        binding.llDownloads.setClickable(true);
-                                        binding.llDownloads.setEnabled(true);
-                                        binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                                    } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                        binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                                        binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-                                        binding.ivDownloads.setAlpha(255);
-                                        binding.llDownloads.setClickable(false);
-                                        binding.llDownloads.setEnabled(false);
-                                    }
-                                    BWSApplication.showToast(model.getResponseMessage(), getActivity());
-                                }
-                            }
+                    callDownload(mData.get(position).getID());
 
-                            @Override
-                            public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                                hideProgressBar();
-                            }
-                        });
-
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-                    }
                 }
             });
 
             holder.binding.llRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showProgressBar();
-                    String AudioId = mData.get(position).getID();
-                    if (BWSApplication.isNetworkConnected(getActivity())) {
-                        Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistID);
-                        listCall.enqueue(new Callback<SucessModel>() {
-                            @Override
-                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                                if (response.isSuccessful()) {
-                                    hideProgressBar();
-                                    SucessModel listModel = response.body();
-                                    prepareData(UserID, PlaylistID);
-                                    BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<SucessModel> call, Throwable t) {
-                                hideProgressBar();
-                            }
-                        });
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-                    }
+                    callRemove(mData.get(position).getID());
                 }
             });
         }
@@ -583,4 +554,263 @@ public class MyPlaylistsFragment extends Fragment {
             }
         }
     }
+
+    public class PlayListsAdpater2 extends RecyclerView.Adapter<PlayListsAdpater2.MyViewHolder> implements Filterable {
+        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
+        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
+        Context ctx;
+        String UserID, Created;
+
+        public PlayListsAdpater2(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
+                                 String Created) {
+            this.listModelList = listModelList;
+            this.listFilterData = listModelList;
+            this.ctx = ctx;
+            this.UserID = UserID;
+            this.Created = Created;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            MyPlaylistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.my_playlist_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            final List<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
+            holder.binding.tvTitleA.setText(mData.get(position).getName());
+            holder.binding.tvTitleB.setText(mData.get(position).getName());
+            holder.binding.tvTimeA.setText(mData.get(position).getAudioDuration());
+            holder.binding.tvTimeB.setText(mData.get(position).getAudioDuration());
+
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                    1, 1, 0.12f, 0);
+            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+            Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+
+            binding.ivPlaylistStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    player = 1;
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.rlPlaylist, fragment)
+                            .addToBackStack("TransparentPlayerFragment")
+                            .commit();
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(listModelList);
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                    editor.commit();
+                }
+            });
+            holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    player = 1;
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.rlPlaylist, fragment)
+                            .addToBackStack("TransparentPlayerFragment")
+                            .commit();
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(listModelList);
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                    editor.commit();
+                }
+            });
+
+            if (Created.equalsIgnoreCase("1")) {
+                holder.binding.llMore.setVisibility(View.GONE);
+                holder.binding.llCenterLayoutA.setVisibility(View.GONE);
+                holder.binding.llCenterLayoutB.setVisibility(View.VISIBLE);
+                holder.binding.llDownload.setVisibility(View.VISIBLE);
+                holder.binding.llRemove.setVisibility(View.VISIBLE);
+                holder.binding.llSort.setVisibility(View.VISIBLE);
+                binding.tvSearch.setVisibility(View.VISIBLE);
+                binding.searchView.setVisibility(View.GONE);
+            } else if (Created.equalsIgnoreCase("0")) {
+                holder.binding.llMore.setVisibility(View.VISIBLE);
+                holder.binding.llCenterLayoutA.setVisibility(View.VISIBLE);
+                holder.binding.llCenterLayoutB.setVisibility(View.GONE);
+                holder.binding.llDownload.setVisibility(View.GONE);
+                holder.binding.llRemove.setVisibility(View.GONE);
+                holder.binding.llSort.setVisibility(View.GONE);
+                binding.tvSearch.setVisibility(View.GONE);
+                binding.searchView.setVisibility(View.VISIBLE);
+            }
+
+            if (mData.get(position).getDownload().equalsIgnoreCase("1")) {
+                holder.binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                holder.binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                holder.binding.ivDownloads.setAlpha(255);
+                holder.binding.llDownload.setClickable(false);
+                holder.binding.llDownload.setEnabled(false);
+            } else if (!mData.get(position).getDownload().equalsIgnoreCase("")) {
+                holder.binding.llDownload.setClickable(true);
+                holder.binding.llDownload.setEnabled(true);
+                holder.binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            }
+
+            holder.binding.llMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(ctx, AddQueueActivity.class);
+                    i.putExtra("play", "");
+                    i.putExtra("ID", mData.get(position).getID());
+                    startActivity(i);
+                }
+            });
+
+            holder.binding.llDownload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callDownload(mData.get(position).getID());
+
+                }
+            });
+
+            holder.binding.llRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callRemove(mData.get(position).getID());
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            if (listFilterData != null) {
+                return listFilterData.size();
+            }
+            return 0;
+        }
+
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence charSequence) {
+                    final FilterResults filterResults = new FilterResults();
+                    String charString = charSequence.toString();
+                    if (charString.isEmpty()) {
+                        listFilterData = listModelList;
+                    } else {
+                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> filteredList = new ArrayList<>();
+                        for (SubPlayListModel.ResponseData.PlaylistSong row : listModelList) {
+                            if (row.getName().toLowerCase().contains(charString.toLowerCase())) {
+                                filteredList.add(row);
+                            }
+                        }
+                        listFilterData = filteredList;
+                    }
+                    filterResults.values = listFilterData;
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                    if (listFilterData.size() == 0) {
+                        binding.tvFound.setVisibility(View.VISIBLE);
+                        binding.rvPlayLists.setVisibility(View.GONE);
+                    } else {
+                        binding.tvFound.setVisibility(View.GONE);
+                        binding.rvPlayLists.setVisibility(View.VISIBLE);
+                        listFilterData = (ArrayList<SubPlayListModel.ResponseData.PlaylistSong>) filterResults.values;
+                        notifyDataSetChanged();
+                    }
+                }
+            };
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            MyPlaylistLayoutBinding binding;
+
+            public MyViewHolder(MyPlaylistLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+    }
+
+    private void callRemove(String id) {
+
+        showProgressBar();
+        String AudioId = id;
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistID);
+            listCall.enqueue(new Callback<SucessModel>() {
+                @Override
+                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                    if (response.isSuccessful()) {
+                        hideProgressBar();
+                        SucessModel listModel = response.body();
+                        prepareData(UserID, PlaylistID);
+                        BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SucessModel> call, Throwable t) {
+                    hideProgressBar();
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+        }
+    }
+
+    private void callDownload(String id) {
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            showProgressBar();
+            String AudioId = id;
+            Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistID);
+            listCall.enqueue(new Callback<DownloadPlaylistModel>() {
+                @Override
+                public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
+                    if (response.isSuccessful()) {
+                        hideProgressBar();
+                        DownloadPlaylistModel model = response.body();
+                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")
+                                || model.getResponseData().getFlag().equalsIgnoreCase("")) {
+                            binding.llDownloads.setClickable(true);
+                            binding.llDownloads.setEnabled(true);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                            binding.ivDownloads.setAlpha(255);
+                            binding.llDownloads.setClickable(false);
+                            binding.llDownloads.setEnabled(false);
+                        }
+                        BWSApplication.showToast(model.getResponseMessage(), getActivity());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
+                    hideProgressBar();
+                }
+            });
+
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+        }
+    }
+
 }

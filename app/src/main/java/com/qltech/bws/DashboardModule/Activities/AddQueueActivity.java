@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -62,9 +63,11 @@ public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
     String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle;
     Context ctx;
+    Activity activity;
     ArrayList<String> queue;
     ArrayList<AddToQueueModel> addToQueueModelList;
     ArrayList<MainPlayModel> mainPlayModelList;
+    MainPlayModel mainPlayMode;
     AddToQueueModel addToQueueModel;
     int position;
 
@@ -73,13 +76,13 @@ public class AddQueueActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_queue);
         ctx = AddQueueActivity.this;
+        activity = AddQueueActivity.this;
 
         addToQueueModelList = new ArrayList<>();
-        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
+        mainPlayModelList = new ArrayList<>();
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        mainPlayModelList = new ArrayList<>();
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
@@ -98,9 +101,6 @@ public class AddQueueActivity extends AppCompatActivity {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);
             position = getIntent().getIntExtra(CONSTANTS.position, 0);
         }
-
-        prepareData();
-
         if (getIntent().hasExtra("play")) {
             play = getIntent().getStringExtra("play");
         } else {
@@ -120,148 +120,170 @@ public class AddQueueActivity extends AppCompatActivity {
             binding.llRemovePlaylist.setVisibility(View.GONE);
         }
 
-        binding.llLike.setOnClickListener(view -> {
-            if (BWSApplication.isNetworkConnected(ctx)) {
-                showProgressBar();
-                Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(AudioId, UserID);
-                listCall.enqueue(new Callback<AudioLikeModel>() {
-                    @Override
-                    public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
-                        if (response.isSuccessful()) {
+        binding.llLike.setOnClickListener(view ->
+                callLike());
+
+
+        binding.llDownload.setOnClickListener(view ->
+                callDownload());
+
+
+        binding.llAddQueue.setOnClickListener(view ->
+                callAddToQueue());
+
+        binding.llRemovePlaylist.setOnClickListener(view -> callRemoveFromPlayList());
+        binding.llBack.setOnClickListener(view -> {
+          /*  Intent i = new Intent(ctx, PlayWellnessActivity.class);
+            i.putExtra("Like", Like);
+            i.putExtra("Download", Download);
+            startActivity(i);*/
+            Intent i = new Intent(ctx, PlayWellnessActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+            SharedPreferences shared11 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared11.edit();
+            Gson gson11 = new Gson();
+            String json11 = gson11.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, json11);
+            editor.commit();
+            finish();
+        });
+        prepareData();
+    }
+
+    private void callAddToQueue() {
+        addToQueueModel = new AddToQueueModel();
+        int i = position;
+
+        addToQueueModel.setID(mainPlayModelList.get(i).getID());
+        addToQueueModel.setName(mainPlayModelList.get(i).getName());
+        addToQueueModel.setAudioFile(mainPlayModelList.get(i).getAudioFile());
+        addToQueueModel.setAudioDirection(mainPlayModelList.get(i).getAudioDirection());
+        addToQueueModel.setAudiomastercat(mainPlayModelList.get(i).getAudiomastercat());
+        addToQueueModel.setAudioSubCategory(mainPlayModelList.get(i).getAudioSubCategory());
+        addToQueueModel.setImageFile(mainPlayModelList.get(i).getImageFile());
+        addToQueueModel.setLike(mainPlayModelList.get(i).getLike());
+        addToQueueModel.setDownload(mainPlayModelList.get(i).getDownload());
+        addToQueueModel.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
+        if(addToQueueModelList.size() == 0){
+            BWSApplication.showToast("Add to Queue Successfully", ctx);
+            addToQueueModelList.add(addToQueueModel);
+        }else{
+            for (int x = 0; x < addToQueueModelList.size(); x++) {
+                if (addToQueueModelList.get(x).getAudioFile().equals(addToQueueModel.getAudioFile())) {
+                    addToQueueModel = new AddToQueueModel();
+                    BWSApplication.showToast("Already in Queue", ctx);
+                    break;
+                } else if (x == (addToQueueModelList.size() - 1)) {
+                    BWSApplication.showToast("Add to Queue Successfully", ctx);
+                    addToQueueModelList.add(addToQueueModel);
+                }
+            }
+        }
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(addToQueueModelList);
+        editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+        editor.commit();
+    }
+
+    private void callRemoveFromPlayList() {
+        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistId);
+            listCall.enqueue(new Callback<SucessModel>() {
+                @Override
+                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        SucessModel listModel = response.body();
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SucessModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+    }
+
+    private void callDownload() {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistId);
+            listCall.enqueue(new Callback<DownloadPlaylistModel>() {
+                @Override
+                public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        DownloadPlaylistModel model = response.body();
+                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")
+                                || model.getResponseData().getFlag().equalsIgnoreCase("")) {
+                            binding.llDownload.setClickable(true);
+                            binding.llDownload.setEnabled(true);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                            Download = "0";
+                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                            binding.ivDownloads.setAlpha(255);
+                            binding.llDownload.setClickable(false);
+                            binding.llDownload.setEnabled(false);
+                            Download = "1";
+                        }
+                        mainPlayModelList.get(position).setDownload(Download);
+
+                        BWSApplication.showToast(model.getResponseMessage(), ctx);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                }
+            });
+
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+    }
+
+    private void callLike() {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(AudioId, UserID);
+            listCall.enqueue(new Callback<AudioLikeModel>() {
+                @Override
+                public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
+                    if (response.isSuccessful()) {
+                        binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        AudioLikeModel model = response.body();
+                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
+                            binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
+                            Like = "0";
+                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                            hideProgressBar();
-                            AudioLikeModel model = response.body();
-                            if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
-                                binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
-                                Like = "0";
-                            } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                                Like = "1";
-                            }
-                            BWSApplication.showToast(model.getResponseMessage(), ctx);
+                            Like = "1";
                         }
-                    }
-
-                    @Override
-                    public void onFailure(Call<AudioLikeModel> call, Throwable t) {
-                        hideProgressBar();
-                    }
-                });
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-            }
-        });
-
-        binding.llDownload.setOnClickListener(view -> {
-            if (BWSApplication.isNetworkConnected(ctx)) {
-                showProgressBar();
-                Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistId);
-                listCall.enqueue(new Callback<DownloadPlaylistModel>() {
-                    @Override
-                    public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
-                        if (response.isSuccessful()) {
-                            hideProgressBar();
-                            DownloadPlaylistModel model = response.body();
-                            if (model.getResponseData().getFlag().equalsIgnoreCase("0")
-                                    || model.getResponseData().getFlag().equalsIgnoreCase("")) {
-                                binding.llDownload.setClickable(true);
-                                binding.llDownload.setEnabled(true);
-                                binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                                Download = "0";
-                            } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                                binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-                                binding.ivDownloads.setAlpha(255);
-                                binding.llDownload.setClickable(false);
-                                binding.llDownload.setEnabled(false);
-                                Download = "1";
-                            }
-                            BWSApplication.showToast(model.getResponseMessage(), ctx);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                        hideProgressBar();
-                    }
-                });
-
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-            }
-        });
-
-        binding.llAddQueue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addToQueueModel = new AddToQueueModel();
-                int i = position;
-
-                addToQueueModel.setID(mainPlayModelList.get(i).getID());
-                addToQueueModel.setName(mainPlayModelList.get(i).getName());
-                addToQueueModel.setAudioFile(mainPlayModelList.get(i).getAudioFile());
-                addToQueueModel.setAudioDirection(mainPlayModelList.get(i).getAudioDirection());
-                addToQueueModel.setAudiomastercat(mainPlayModelList.get(i).getAudiomastercat());
-                addToQueueModel.setAudioSubCategory(mainPlayModelList.get(i).getAudioSubCategory());
-                addToQueueModel.setImageFile(mainPlayModelList.get(i).getImageFile());
-                addToQueueModel.setLike(mainPlayModelList.get(i).getLike());
-                addToQueueModel.setDownload(mainPlayModelList.get(i).getDownload());
-                addToQueueModel.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
-                for (int x = 0; x < addToQueueModelList.size(); x++) {
-                    if (addToQueueModelList.get(x).equals(addToQueueModel)) {
-                        addToQueueModel = new AddToQueueModel();
-                        BWSApplication.showToast("Already in Queue", ctx);
-                        break;
-                    } else if (x == (addToQueueModelList.size() - 1)) {
-                        BWSApplication.showToast("Add ton Queue Successfully", ctx);
-                        addToQueueModelList.add(addToQueueModel);
+                        mainPlayModelList.get(position).setLike(Like);
+                        BWSApplication.showToast(model.getResponseMessage(), ctx);
                     }
                 }
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                Gson gson = new Gson();
-                String json = gson.toJson(addToQueueModelList);
-                editor.putString(CONSTANTS.PREF_KEY_queueList, json);
-                editor.commit();
-            }
-        });
 
-        binding.llRemovePlaylist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showProgressBar();
-                if (BWSApplication.isNetworkConnected(ctx)) {
-                    Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistId);
-                    listCall.enqueue(new Callback<SucessModel>() {
-                        @Override
-                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                            if (response.isSuccessful()) {
-                                hideProgressBar();
-                                SucessModel listModel = response.body();
-                                finish();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<SucessModel> call, Throwable t) {
-                            hideProgressBar();
-                        }
-                    });
-                } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                @Override
+                public void onFailure(Call<AudioLikeModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 }
-            }
-        });
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              /*  Intent i = new Intent(ctx, PlayWellnessActivity.class);
-                i.putExtra("Like", Like);
-                i.putExtra("Download", Download);
-                startActivity(i);*/
-                finish();
-            }
-        });
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
     }
 
     @Override
@@ -270,18 +292,27 @@ public class AddQueueActivity extends AppCompatActivity {
         i.putExtra("Like", Like);
         i.putExtra("Download", Download);
         startActivity(i);*/
+        Intent i = new Intent(ctx, PlayWellnessActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(i);
+        SharedPreferences shared11 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared11.edit();
+        Gson gson11 = new Gson();
+        String json11 = gson11.toJson(mainPlayModelList);
+        editor.putString(CONSTANTS.PREF_KEY_audioList, json11);
+        editor.commit();
         finish();
     }
 
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<DirectionModel> listCall = APIClient.getClient().getAudioDetailLists(AudioId);
             listCall.enqueue(new Callback<DirectionModel>() {
                 @Override
                 public void onResponse(Call<DirectionModel> call, Response<DirectionModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         DirectionModel directionModel = response.body();
 
                         Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile())
@@ -401,7 +432,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<DirectionModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                     BWSApplication.showToast(t.getMessage(), ctx);
                 }
             });
@@ -410,24 +441,4 @@ public class AddQueueActivity extends AppCompatActivity {
         }
     }
 
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

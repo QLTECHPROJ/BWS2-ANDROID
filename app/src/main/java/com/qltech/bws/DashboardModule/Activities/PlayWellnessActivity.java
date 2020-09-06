@@ -215,6 +215,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             i.putExtra("ID", mainPlayModelList.get(position).getID());
             i.putExtra("position", position);
             startActivity(i);
+            finish();
         });
 
         binding.llViewQueue.setOnClickListener(view -> {
@@ -537,6 +538,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             hdlr.postDelayed(this, 60);
         }
     };
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+    }
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {

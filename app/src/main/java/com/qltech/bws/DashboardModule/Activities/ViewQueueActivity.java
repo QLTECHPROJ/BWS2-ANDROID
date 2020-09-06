@@ -22,6 +22,7 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.ItemMoveCallback;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityViewQueueBinding;
 
 import java.lang.reflect.Type;
@@ -88,7 +89,7 @@ public class ViewQueueActivity extends AppCompatActivity {
                 binding.llPause.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.ivPause.setImageResource(R.drawable.ic_play_white_icon);
-//                MusicService.pauseMedia();
+                MusicService.pauseMedia();
             }
         });
 
@@ -98,7 +99,7 @@ public class ViewQueueActivity extends AppCompatActivity {
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.ivPlay.setImageResource(R.drawable.ic_pause_icon);
-//                MusicService.resumeMedia();
+                MusicService.resumeMedia();
             }
         });
     }
