@@ -169,8 +169,6 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             }
             playmedia();
         }
-
-        listSize = mainPlayModelList.size();
         if (listSize == 1) {
             SharedPreferences sharedxx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedxx.edit();
@@ -211,7 +209,8 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
     }
 
     private void playmedia() {
-        if(listSize == 1){
+        listSize = mainPlayModelList.size();
+        if (listSize == 1) {
             position = 0;
         }
         Glide.with(getActivity()).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
