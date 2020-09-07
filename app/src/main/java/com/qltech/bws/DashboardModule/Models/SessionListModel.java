@@ -58,6 +58,9 @@ public class SessionListModel {
         @SerializedName("Name")
         @Expose
         private String name;
+        @SerializedName("CatName")
+        @Expose
+        private String catName;
         @SerializedName("Image")
         @Expose
         private String image;
@@ -88,6 +91,14 @@ public class SessionListModel {
         @SerializedName("Session")
         @Expose
         private String session;
+
+        public String getCatName() {
+            return catName;
+        }
+
+        public void setCatName(String catName) {
+            this.catName = catName;
+        }
 
         public String getId() {
             return id;

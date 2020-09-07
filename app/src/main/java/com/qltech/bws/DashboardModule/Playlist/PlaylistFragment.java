@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -69,7 +70,6 @@ public class PlaylistFragment extends Fragment {
         }
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
         if (!AudioFlag.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -77,7 +77,19 @@ public class PlaylistFragment extends Fragment {
                     .add(R.id.rlPlaylist, fragment)
                     .addToBackStack("TransparentPlayerFragment")
                     .commit();
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(13, 6, 13, 121);
+            binding.llSpace.setLayoutParams(params);
+
+//            with space
+        } else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(13, 6, 13, 20);
+            binding.llSpace.setLayoutParams(params);
+//            without space
         }
+
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
         binding.rvMainPlayList.setItemAnimator(new DefaultItemAnimator());

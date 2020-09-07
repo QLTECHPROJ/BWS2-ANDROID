@@ -84,7 +84,7 @@ public class SessionsFragment extends Fragment {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         SessionListModel listModel = response.body();
                         if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            binding.tvSessionTitle.setText(listModel.getResponseData().get(0).getName());
+                            binding.tvSessionTitle.setText(listModel.getResponseData().get(0).getCatName());
                             Glide.with(getActivity()).load(listModel.getResponseData().get(0).getImage()).thumbnail(0.05f)
                                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                             SessionListAdapter appointmentsAdapter = new SessionListAdapter(listModel.getResponseData(), getActivity(), f_manager);

@@ -40,6 +40,8 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:text=""
+                android:ellipsize="end"
+                android:maxLines="3"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp" />
 

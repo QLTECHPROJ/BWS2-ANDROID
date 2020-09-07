@@ -30,6 +30,7 @@ import com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity;
 import com.qltech.bws.DashboardModule.Models.SearchBothModel;
 import com.qltech.bws.DashboardModule.Models.SearchPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SuggestedModel;
+import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
@@ -401,7 +402,17 @@ public class SearchFragment extends Fragment {
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Bundle bundle = new Bundle();
+                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    bundle.putString("New", "0");
+                    bundle.putString("PlaylistID", listModelList.get(position).getID());
+                    bundle.putString("PlaylistName", listModelList.get(position).getName());
+                    myPlaylistsFragment.setArguments(bundle);
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.rlSearchList, myPlaylistsFragment).
+                            addToBackStack("MyPlaylistsFragment")
+                            .commit();
                 }
             });
         }

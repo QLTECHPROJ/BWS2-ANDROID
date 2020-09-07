@@ -306,6 +306,9 @@ public class AppointmentDetailModel implements Parcelable {
         @SerializedName("AudioFile")
         @Expose
         private String audioFile;
+        @SerializedName("AudioDescription")
+        @Expose
+        private String audioDescription;
         @SerializedName("ImageFile")
         @Expose
         private String imageFile;
@@ -339,6 +342,7 @@ public class AppointmentDetailModel implements Parcelable {
             audioDirection = in.readString();
             like = in.readString();
             download = in.readString();
+            audioDescription = in.readString();
         }
 
         public static final Creator<Audio> CREATOR = new Creator<Audio>() {
@@ -433,6 +437,14 @@ public class AppointmentDetailModel implements Parcelable {
             this.download = download;
         }
 
+        public String getAudioDescription() {
+            return audioDescription;
+        }
+
+        public void setAudioDescription(String audioDescription) {
+            this.audioDescription = audioDescription;
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -450,6 +462,7 @@ public class AppointmentDetailModel implements Parcelable {
             parcel.writeString(audioDirection);
             parcel.writeString(like);
             parcel.writeString(download);
+            parcel.writeString(audioDescription);
         }
     }
 }
