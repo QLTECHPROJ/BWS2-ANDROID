@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,13 +68,14 @@ public class MyPlaylistsFragment extends Fragment {
     PlayListsAdpater adpater;
     PlayListsAdpater2 adpater2;
     String SearchFlag;
+    ArrayList<String> changedAudio;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
         View view = binding.getRoot();
-
+        changedAudio = new ArrayList<>();
         if (getArguments() != null) {
             New = getArguments().getString("New");
             PlaylistID = getArguments().getString("PlaylistID");
@@ -476,8 +478,13 @@ public class MyPlaylistsFragment extends Fragment {
                     Collections.swap(listModelList, i, i - 1);
                 }
             }
+
             notifyItemMoved(fromPosition, toPosition);
-//            callDragApi(listModelList.get(toPosition).getID(),toPosition);
+            changedAudio.clear();
+            for (int i = 0; i < listModelList.size(); i++) {
+                changedAudio.add(listModelList.get(i).getID());
+            }
+            callDragApi();
          /* SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -486,17 +493,16 @@ public class MyPlaylistsFragment extends Fragment {
             editor.commit();*/
 
         }
-        private void callDragApi(String AudioId, int toPosition) {
+
+        private void callDragApi() {
             if (BWSApplication.isNetworkConnected(getActivity())) {
-                Call<CardModel> listCall = APIClient.getClient().setShortedAudio(UserID, PlaylistID, AudioId, String.valueOf(toPosition));
+                Call<CardModel> listCall = APIClient.getClient().setShortedAudio(UserID, PlaylistID, TextUtils.join(",", changedAudio));
                 listCall.enqueue(new Callback<CardModel>() {
                     @Override
                     public void onResponse(Call<CardModel> call, Response<CardModel> response) {
                         if (response.isSuccessful()) {
                             hideProgressBar();
                             CardModel listModel = response.body();
-                            prepareData(UserID, PlaylistID);
-                            BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                         }
                     }
 

@@ -358,12 +358,11 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<PlaylistingModel> getPlaylisting(@Field("UserID") String userID);
     /* TODO set Shorted Audio from created Playlist */
-    @POST("playlist1")
+    @POST("sortingplaylistaudio")
     @FormUrlEncoded
     Call<CardModel> setShortedAudio(@Field("UserID") String userID,
-                                    @Field("PlayListId") String playListId,
-                                    @Field("AudioId") String audioId,
-                                    @Field("Index") String index);
+                                    @Field("PlaylistId") String playListId,
+                                    @Field("PlaylistAudioId") String audioId);
 
     /* TODO AddQueueActivity & PlayWellnessActivity */
     @POST("downloads")
