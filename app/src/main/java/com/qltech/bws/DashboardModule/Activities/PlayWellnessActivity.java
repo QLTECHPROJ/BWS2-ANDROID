@@ -399,15 +399,20 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 binding.llDownload.setEnabled(true);
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
-            if (MusicService.isPause) {
-                binding.ivPause.setVisibility(View.GONE);
-                binding.ivplay.setVisibility(View.VISIBLE);
-                MusicService.resumeMedia();
-            } else {
-                binding.ivplay.setVisibility(View.GONE);
-                binding.ivPause.setVisibility(View.VISIBLE);
+            if (!MusicService.isMediaStart) {
                 MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
+            } else {
+                if (MusicService.isPause) {
+                    binding.ivPause.setVisibility(View.GONE);
+                    binding.ivplay.setVisibility(View.VISIBLE);
+                    MusicService.resumeMedia();
+                } else {
+                    binding.ivplay.setVisibility(View.GONE);
+                    binding.ivPause.setVisibility(View.VISIBLE);
+                    MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                    MusicService.playMedia();
+                }
             }
             binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
         } else if (audioPlay) {
@@ -439,15 +444,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 binding.llDownload.setEnabled(true);
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
-            if (MusicService.isPause) {
-                binding.ivPause.setVisibility(View.GONE);
-                binding.ivplay.setVisibility(View.VISIBLE);
-                MusicService.resumeMedia();
-            } else {
-                binding.ivplay.setVisibility(View.GONE);
-                binding.ivPause.setVisibility(View.VISIBLE);
+            if (!MusicService.isMediaStart) {
                 MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
+            } else {
+                if (MusicService.isPause) {
+                    MusicService.resumeMedia();
+                } else {
+                    MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                    MusicService.playMedia();
+                }
             }
             binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
         }

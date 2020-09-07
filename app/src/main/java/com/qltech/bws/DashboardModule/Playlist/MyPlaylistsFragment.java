@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
@@ -281,7 +282,6 @@ public class MyPlaylistsFragment extends Fragment {
                             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
                             binding.llListing.setVisibility(View.VISIBLE);
                             if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
-
                                 adpater = new PlayListsAdpater(listModel.getResponseData().getPlaylistSongs(), getActivity(), UserID, listModel.getResponseData().getCreated());
                                 ItemTouchHelper.Callback callback =
                                         new ItemMoveCallback(adpater);
@@ -327,7 +327,7 @@ public class MyPlaylistsFragment extends Fragment {
         }
     }
 
-    public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable , ItemMoveCallback.ItemTouchHelperContract {
+    public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable, ItemMoveCallback.ItemTouchHelperContract {
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
         Context ctx;
@@ -475,6 +475,7 @@ public class MyPlaylistsFragment extends Fragment {
                 }
             }
             notifyItemMoved(fromPosition, toPosition);
+//            callDragApi(listModelList.get(toPosition).getID(),toPosition);
          /* SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -482,6 +483,27 @@ public class MyPlaylistsFragment extends Fragment {
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);
             editor.commit();*/
 
+        }
+        private void callDragApi(String AudioId, int toPosition) {
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                Call<CardModel> listCall = APIClient.getClient().setShortedAudio(UserID, PlaylistID, AudioId, String.valueOf(toPosition));
+                listCall.enqueue(new Callback<CardModel>() {
+                    @Override
+                    public void onResponse(Call<CardModel> call, Response<CardModel> response) {
+                        if (response.isSuccessful()) {
+                            hideProgressBar();
+                            CardModel listModel = response.body();
+                            prepareData(UserID, PlaylistID);
+                            BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CardModel> call, Throwable t) {
+                        hideProgressBar();
+                    }
+                });
+            }
         }
 
         @Override
@@ -542,7 +564,7 @@ public class MyPlaylistsFragment extends Fragment {
         }
     }
 
-    public class PlayListsAdpater2 extends RecyclerView.Adapter<PlayListsAdpater2.MyViewHolder> implements Filterable {
+    public class PlayListsAdpater2 extends RecyclerView.Adapter<PlayListsAdpater2.MyViewHolder2> implements Filterable {
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
         Context ctx;
@@ -559,14 +581,14 @@ public class MyPlaylistsFragment extends Fragment {
 
         @NonNull
         @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public MyViewHolder2 onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             MyPlaylistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
                     , R.layout.my_playlist_layout, parent, false);
-            return new MyViewHolder(v);
+            return new MyViewHolder2(v);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull MyViewHolder2 holder, int position) {
             final List<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
             holder.binding.tvTitleA.setText(mData.get(position).getName());
             holder.binding.tvTitleB.setText(mData.get(position).getName());
@@ -635,7 +657,7 @@ public class MyPlaylistsFragment extends Fragment {
                 holder.binding.llSort.setVisibility(View.VISIBLE);
                 binding.tvSearch.setVisibility(View.VISIBLE);
                 binding.searchView.setVisibility(View.GONE);
-            } else if ( Created.equalsIgnoreCase("0")) {
+            } else if (Created.equalsIgnoreCase("0")) {
                 holder.binding.llMore.setVisibility(View.VISIBLE);
                 holder.binding.llCenterLayoutA.setVisibility(View.VISIBLE);
                 holder.binding.llCenterLayoutB.setVisibility(View.GONE);
@@ -729,10 +751,10 @@ public class MyPlaylistsFragment extends Fragment {
             };
         }
 
-        public class MyViewHolder extends RecyclerView.ViewHolder {
+        public class MyViewHolder2 extends RecyclerView.ViewHolder {
             MyPlaylistLayoutBinding binding;
 
-            public MyViewHolder(MyPlaylistLayoutBinding binding) {
+            public MyViewHolder2(MyPlaylistLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
             }
