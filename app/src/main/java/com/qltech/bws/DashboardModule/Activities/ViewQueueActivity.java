@@ -65,11 +65,11 @@ public class ViewQueueActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-        Type type = new TypeToken<ArrayList<AddToQueueModel>>() {
-        }.getType();
-        if(!json.equalsIgnoreCase(""))
-        addToQueueModelList = gson.fromJson(json, type);
-
+        if(!json.equalsIgnoreCase("")){
+            Type type = new TypeToken<ArrayList<AddToQueueModel>>() {
+            }.getType();
+            addToQueueModelList = gson.fromJson(json, type);
+        }
         String json2 = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         Type type2 = new TypeToken<ArrayList<MainPlayModel>>() {

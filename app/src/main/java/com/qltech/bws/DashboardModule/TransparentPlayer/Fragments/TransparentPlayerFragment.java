@@ -64,10 +64,11 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
-        Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
-        }.getType();
-        if(!json1.equalsIgnoreCase(""))
-        addToQueueModelList = gson.fromJson(json1, type1);
+        if (!json1.equalsIgnoreCase("")) {
+            Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
+            }.getType();
+            addToQueueModelList = gson.fromJson(json1, type1);
+        }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);

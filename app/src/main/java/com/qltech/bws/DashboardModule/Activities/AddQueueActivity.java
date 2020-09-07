@@ -90,10 +90,11 @@ public class AddQueueActivity extends AppCompatActivity {
         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
         }.getType();
         mainPlayModelList = gson.fromJson(json, type);
-        Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
-        }.getType();
-        if(!json1.equalsIgnoreCase(""))
-        addToQueueModelList = gson.fromJson(json1, type1);
+        if (!json1.equalsIgnoreCase("")) {
+            Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
+            }.getType();
+            addToQueueModelList = gson.fromJson(json1, type1);
+        }
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
