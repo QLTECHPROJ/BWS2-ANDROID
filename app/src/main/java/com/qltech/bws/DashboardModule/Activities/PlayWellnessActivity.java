@@ -303,6 +303,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             editor.commit();
             MusicService.ToRepeat(false);
             IsRepeat = "1";
+            binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         } else if (IsRepeat.equalsIgnoreCase("1")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
@@ -311,6 +312,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             editor.commit();
             MusicService.ToRepeat(false);
             IsRepeat = "";
+            binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
@@ -417,6 +419,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                     MusicService.playMedia();
                 }
             }
+            addToQueueModelList.remove(position);
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(addToQueueModelList);
+            editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+            editor.commit();
             binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
         } else if (audioPlay) {
             listSize = mainPlayModelList.size();
