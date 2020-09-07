@@ -272,6 +272,24 @@ public class SearchFragment extends Fragment {
             } else if (modelList.get(position).getIscategory().equalsIgnoreCase("0")) {
                 holder.binding.tvPart.setText(R.string.Playlist);
                 holder.binding.llRemoveAudio.setVisibility(View.INVISIBLE);
+
+                holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Bundle bundle = new Bundle();
+                        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                        bundle.putString("New", "0");
+                        bundle.putString("PlaylistID", modelList.get(position).getID());
+                        bundle.putString("PlaylistName", modelList.get(position).getName());
+                        myPlaylistsFragment.setArguments(bundle);
+                        fragmentManager1.beginTransaction()
+                                .replace(R.id.rlSearchList, myPlaylistsFragment).
+                                addToBackStack("MyPlaylistsFragment")
+                                .commit();
+                    }
+                });
+
             }
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
