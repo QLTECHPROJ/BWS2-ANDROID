@@ -20,9 +20,11 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.BillingOrderModule.Activities.CancelMembershipActivity;
 import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.BillingOrderModule.Models.CurrentPlanVieViewModel;
+import com.qltech.bws.MembershipModule.Activities.OrderSummaryActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -150,9 +152,10 @@ public class CurrentPlanFragment extends Fragment {
         });
 
         binding.tvChangeCard.setOnClickListener(view12 -> {
-            PaymentFragment paymentFragment = new PaymentFragment();
-            Bundle bundle = new Bundle();
-            paymentFragment.setArguments(bundle);
+            Intent i = new Intent(getActivity(), BillingOrderActivity.class);
+            i.putExtra("payment", 1);
+            startActivity(i);
+            getActivity().finish();
         });
         return view;
     }
