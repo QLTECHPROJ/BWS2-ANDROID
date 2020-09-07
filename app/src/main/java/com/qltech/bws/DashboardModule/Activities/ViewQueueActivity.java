@@ -65,7 +65,7 @@ public class ViewQueueActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-        if(!json.equalsIgnoreCase("")){
+        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
             Type type = new TypeToken<ArrayList<AddToQueueModel>>() {
             }.getType();
             addToQueueModelList = gson.fromJson(json, type);

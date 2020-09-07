@@ -1,5 +1,6 @@
 package com.qltech.bws.DashboardModule.TransparentPlayer.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -64,7 +65,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
-        if (!json1.equalsIgnoreCase("")) {
+        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
             Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
             }.getType();
             addToQueueModelList = gson.fromJson(json1, type1);

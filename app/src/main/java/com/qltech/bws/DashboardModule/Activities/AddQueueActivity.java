@@ -90,7 +90,7 @@ public class AddQueueActivity extends AppCompatActivity {
         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
         }.getType();
         mainPlayModelList = gson.fromJson(json, type);
-        if (!json1.equalsIgnoreCase("")) {
+        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
             Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
             }.getType();
             addToQueueModelList = gson.fromJson(json1, type1);
