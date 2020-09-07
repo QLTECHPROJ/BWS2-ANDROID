@@ -400,8 +400,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
             if (MusicService.isPause) {
+                binding.ivPause.setVisibility(View.GONE);
+                binding.ivplay.setVisibility(View.VISIBLE);
                 MusicService.resumeMedia();
             } else {
+                binding.ivplay.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.VISIBLE);
                 MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
             }
@@ -436,8 +440,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
             if (MusicService.isPause) {
+                binding.ivPause.setVisibility(View.GONE);
+                binding.ivplay.setVisibility(View.VISIBLE);
                 MusicService.resumeMedia();
             } else {
+                binding.ivplay.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.VISIBLE);
                 MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
             }

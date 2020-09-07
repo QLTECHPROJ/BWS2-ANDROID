@@ -18,7 +18,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
-                android:layout_weight="0.58"
+                android:layout_weight="0.55"
                 android:gravity="center_horizontal">
 
                 <ImageView
@@ -33,7 +33,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
-                android:layout_weight="0.82"
+                android:layout_weight="0.85"
                 android:layout_marginTop="@dimen/_38sdp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">

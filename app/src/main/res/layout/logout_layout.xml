@@ -62,7 +62,7 @@
                     android:id="@+id/Btn"
                     android:layout_width="120dp"
                     android:layout_height="@dimen/_35sdp"
-                    android:background="@drawable/rounded_gray_corner"
+                    android:background="@drawable/extra_blue_corner"
                     android:layout_gravity="center"
                     android:layout_centerInParent="true"
                     android:fontFamily="@font/montserrat_medium"

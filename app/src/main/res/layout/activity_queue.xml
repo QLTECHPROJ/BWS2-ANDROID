@@ -348,7 +348,7 @@
                         android:layout_width="@dimen/_56sdp"
                         android:layout_height="@dimen/_50sdp"
                         android:padding="@dimen/_15sdp"
-                        android:src="@drawable/ic_queue_white_icon" />
+                        android:src="@drawable/ic_add_queue_icon" />
 
                     <TextView
                         android:id="@+id/tvAddQueue"

@@ -232,7 +232,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                 if (MusicService.isPause) {
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
-                    MusicService.resumeMedia();
+//                    MusicService.resumeMedia();
                 } else {
                     binding.ivPlay.setVisibility(View.GONE);
                     binding.ivPause.setVisibility(View.VISIBLE);
@@ -257,7 +257,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                 if (MusicService.isPause) {
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
-                    MusicService.resumeMedia();
+//                    MusicService.resumeMedia();
                 } else {
                     binding.ivPlay.setVisibility(View.GONE);
                     binding.ivPause.setVisibility(View.VISIBLE);
