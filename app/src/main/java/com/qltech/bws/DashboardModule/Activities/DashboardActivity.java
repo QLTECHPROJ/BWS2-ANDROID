@@ -50,11 +50,16 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onBackPressed() {
        /* if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);*/
         super.onBackPressed();
-        finishAffinity();
+//        finishAffinity();
         /*} else if (binding.navView.getSelectedItemId() == R.id.navigation_playlist) {
             binding.navView.setSelectedItemId(R.id.navigation_playlist);
             *//*if (getSupportFragmentManager().getBackStackEntryCount() > 0) {

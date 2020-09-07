@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -28,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
     String Name = "", Code = "", MobileNo = "";
     Context ctx;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,10 @@ public class LoginActivity extends AppCompatActivity {
         Glide.with(getApplicationContext()).load(R.drawable.loading).asGif().into(binding.ImgV);
 
         binding.rlCountrySelect.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(ctx, CountrySelectActivity.class);
             i.putExtra(CONSTANTS.Name, binding.tvCountry.getText().toString());
             i.putExtra(CONSTANTS.Code, binding.tvCountryCode.getText().toString());
@@ -78,6 +84,10 @@ public class LoginActivity extends AppCompatActivity {
         binding.tvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(ctx, MembershipActivity.class);
                 startActivity(i);
             }
@@ -116,6 +126,10 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             LoginModel loginModel = response.body();
                             if(loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))){
+                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                    return;
+                                }
+                                mLastClickTime = SystemClock.elapsedRealtime();
                                 Intent i = new Intent(ctx, OtpActivity.class);
                                 i.putExtra("MobileNo", binding.edtNumber.getText().toString());
                                 i.putExtra("Name", binding.tvCountry.getText().toString());

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_190sdp"
+        android:layout_height="@dimen/_230sdp"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/llMainLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/_4sdp"
-            android:paddingRight="@dimen/_10sdp"
             android:orientation="vertical"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingRight="@dimen/_12sdp"
             android:weightSum="1">
 
             <RelativeLayout
@@ -26,15 +26,22 @@
                     android:id="@+id/rlBackground"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/layout_bg"/>
+                    android:background="@drawable/layout_bg" />
 
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/ivRestaurantImage"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"/>
+                    android:layout_height="match_parent">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/ivRestaurantImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center"
+                        app:layout_constraintDimensionRatio="1:1" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </RelativeLayout>
 
@@ -43,12 +50,12 @@
                 android:layout_height="0dp"
                 android:layout_gravity="bottom"
                 android:layout_marginTop="8dp"
-                android:paddingRight="@dimen/_2sdp"
-                android:paddingLeft="@dimen/_2sdp"
                 android:layout_marginBottom="8dp"
                 android:layout_weight="0.15"
                 android:gravity="bottom"
                 android:orientation="horizontal"
+                android:paddingLeft="@dimen/_2sdp"
+                android:paddingRight="@dimen/_2sdp"
                 android:weightSum="1">
 
                 <TextView
@@ -58,8 +65,8 @@
                     android:layout_centerHorizontal="true"
                     android:layout_weight="0.7"
                     android:ellipsize="end"
-                    android:gravity="center_horizontal"
                     android:fontFamily="@font/montserrat_semi_bold"
+                    android:gravity="center_horizontal"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp" />
