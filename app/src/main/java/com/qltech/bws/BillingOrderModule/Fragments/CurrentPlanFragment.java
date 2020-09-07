@@ -131,16 +131,13 @@ public class CurrentPlanFragment extends Fragment {
             BWSApplication.showToast( getString(R.string.no_server_found), getActivity());
         }
 
-        binding.btnCancelSubscrible.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(getActivity(), CancelMembershipActivity.class);
-                startActivity(i);
+        binding.btnCancelSubscrible.setOnClickListener(view13 -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), CancelMembershipActivity.class);
+            startActivity(i);
         });
 
         binding.btnPayNow.setOnClickListener(view1 -> {

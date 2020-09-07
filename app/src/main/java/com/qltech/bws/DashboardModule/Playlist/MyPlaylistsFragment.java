@@ -66,6 +66,7 @@ public class MyPlaylistsFragment extends Fragment {
     String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage;
     PlayListsAdpater adpater;
     PlayListsAdpater2 adpater2;
+    String SearchFlag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -135,8 +136,9 @@ public class MyPlaylistsFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String search) {
                 try {
-                    if (adpater != null) {
-                        adpater.getFilter().filter(search);
+                    if (adpater2 != null) {
+                        adpater2.getFilter().filter(search);
+                        SearchFlag = search;
                         Log.e("searchsearch", "" + search);
                     }
                 } catch (Exception e) {
@@ -542,10 +544,10 @@ public class MyPlaylistsFragment extends Fragment {
                 @Override
                 protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                     if (listFilterData.size() == 0) {
-                        binding.tvFound.setVisibility(View.VISIBLE);
+                        binding.llError.setVisibility(View.VISIBLE);
                         binding.rvPlayLists.setVisibility(View.GONE);
                     } else {
-                        binding.tvFound.setVisibility(View.GONE);
+                        binding.llError.setVisibility(View.GONE);
                         binding.rvPlayLists.setVisibility(View.VISIBLE);
                         listFilterData = (ArrayList<SubPlayListModel.ResponseData.PlaylistSong>) filterResults.values;
                         notifyDataSetChanged();
@@ -739,10 +741,11 @@ public class MyPlaylistsFragment extends Fragment {
                 @Override
                 protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                     if (listFilterData.size() == 0) {
-                        binding.tvFound.setVisibility(View.VISIBLE);
+                        binding.llError.setVisibility(View.VISIBLE);
+                        binding.tvFound.setText("Couldn't find '" + SearchFlag + "'");
                         binding.rvPlayLists.setVisibility(View.GONE);
                     } else {
-                        binding.tvFound.setVisibility(View.GONE);
+                        binding.llError.setVisibility(View.GONE);
                         binding.rvPlayLists.setVisibility(View.VISIBLE);
                         listFilterData = (ArrayList<SubPlayListModel.ResponseData.PlaylistSong>) filterResults.values;
                         notifyDataSetChanged();

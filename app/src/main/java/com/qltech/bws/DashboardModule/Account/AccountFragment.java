@@ -232,7 +232,7 @@ public class AccountFragment extends Fragment {
         profileViewData(getActivity());
     }
 
-    void clearData(Dialog dialog){
+    void clearData(Dialog dialog) {
         DeleteCall();
         SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
         String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
@@ -280,7 +280,7 @@ public class AccountFragment extends Fragment {
         }
     }
 
-    void DeleteCall(){
+    void DeleteCall() {
         SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREF_KEY_UserID);
@@ -302,7 +302,18 @@ public class AccountFragment extends Fragment {
         editor.remove(CONSTANTS.PREF_KEY_CardID);
         editor.clear();
         editor.commit();
+
+        SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editorr = sharedm.edit();
+        editorr.remove(CONSTANTS.PREF_KEY_modelList);
+        editorr.remove(CONSTANTS.PREF_KEY_position);
+        editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
+        editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
+        editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
+        editorr.clear();
+        editorr.commit();
     }
+
     private void hideProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.GONE);
