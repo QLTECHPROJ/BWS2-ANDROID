@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
                 android:layout_weight="0.82"
-                android:layout_marginTop="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_38sdp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -164,6 +164,7 @@
                     android:layout_marginRight="@dimen/_10sdp"
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
+                    android:maxLines="2"
                     android:textColor="@color/red"
                     android:textSize="@dimen/_12sdp"
                     android:visibility="gone" />
@@ -172,7 +173,7 @@
                     android:id="@+id/tvSendCodeText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_18sdp"
                     android:fontFamily="@font/montserrat_light"
                     android:gravity="center"
                     android:text="@string/send_code_text"

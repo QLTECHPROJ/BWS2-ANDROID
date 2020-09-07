@@ -234,7 +234,12 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
 
     }
 
-  /*  private TextWatcher addCardTextWatcher = new TextWatcher() {
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    /*  private TextWatcher addCardTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }

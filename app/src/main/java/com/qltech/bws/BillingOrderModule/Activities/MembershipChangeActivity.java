@@ -49,6 +49,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
+
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

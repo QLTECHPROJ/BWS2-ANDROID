@@ -1,9 +1,11 @@
 package com.qltech.bws.DashboardModule.Account;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
@@ -19,10 +21,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -162,106 +166,50 @@ public class AccountFragment extends Fragment {
         });
 
         binding.llLogout.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public void onClick(View view) {
                 final Dialog dialog = new Dialog(getActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.cancel_membership);
+                dialog.setContentView(R.layout.logout_layout);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-                final TextView tvSubTitle = dialog.findViewById(R.id.tvSubTitle);
                 final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+                final Button Btn = dialog.findViewById(R.id.Btn);
 
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss();
+                        dialog.hide();
                         return true;
                     }
                     return false;
                 });
 
-                tvTitle.setText(R.string.logout);
-                tvSubTitle.setText(R.string.logout_quotes);
-
-                tvconfirm.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
-                        String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
-                        if (TextUtils.isEmpty(fcm_id)) {
-                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), new OnSuccessListener<InstanceIdResult>() {
-                                @Override
-                                public void onSuccess(InstanceIdResult instanceIdResult) {
-                                    String newToken = instanceIdResult.getToken();
-                                    Log.e("newToken", newToken);
-                                    SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
-                                    editor.putString(CONSTANTS.Token, newToken); //Friend
-                                    editor.apply();
-                                    editor.commit();
-                                }
-                            });
-                            fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+                Btn.setOnTouchListener((view1, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN: {
+                            Button views = (Button) view1;
+                            views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
+                            view1.invalidate();
+                            break;
                         }
-
-                        SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor edit = preferences.edit();
-                        edit.remove(CONSTANTS.PREF_KEY_UserID);
-                        edit.remove(CONSTANTS.PREF_KEY_MobileNo);
-                        edit.remove(CONSTANTS.PREF_KEY_IsRepeat);
-                        edit.remove(CONSTANTS.PREF_KEY_IsShuffle);
-                        edit.clear();
-                        edit.commit();
-
-                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_ReminderStatus, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor edit1 = shared.edit();
-                        edit1.remove(CONSTANTS.PREF_KEY_ReminderStatus);
-                        edit1.remove(CONSTANTS.PREF_KEY_MobileNo);
-                        edit1.clear();
-                        edit1.commit();
-
-                        SharedPreferences shareds = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_CardID, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shareds.edit();
-                        editor.remove(CONSTANTS.PREF_KEY_CardID);
-                        editor.clear();
-                        editor.commit();
-
-                        if (BWSApplication.isNetworkConnected(getActivity())) {
-                            showProgressBar();
-                            Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID, fcm_id, CONSTANTS.FLAG_ONE);
-                            listCall.enqueue(new Callback<LogoutModel>() {
-                                @Override
-                                public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
-                                    hideProgressBar();
-                                    if (response.isSuccessful()) {
-                                        LogoutModel loginModel = response.body();
-                                        Intent i = new Intent(getActivity(), LoginActivity.class);
-                                        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                        startActivity(i);
-                                        getActivity().overridePendingTransition(0, 0);
-                                        dialog.dismiss();
-                                    } else {
-                                        BWSApplication.showToast(response.message(), getActivity());
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<LogoutModel> call, Throwable t) {
-                                    hideProgressBar();
-                                }
-                            });
-                        } else {
-                            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+                        case MotionEvent.ACTION_UP:
+                            clearData(dialog);
+                        case MotionEvent.ACTION_CANCEL: {
+                            Button views = (Button) view1;
+                            views.getBackground().clearColorFilter();
+                            views.invalidate();
+                            break;
                         }
                     }
+                    return true;
                 });
 
                 tvGoBack.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog.dismiss();
+                        dialog.hide();
                     }
                 });
                 dialog.show();
@@ -272,6 +220,7 @@ public class AccountFragment extends Fragment {
         accountViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
+
             }
         });
         return view;
@@ -283,6 +232,77 @@ public class AccountFragment extends Fragment {
         profileViewData(getActivity());
     }
 
+    void clearData(Dialog dialog){
+        DeleteCall();
+        SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
+        String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+        if (TextUtils.isEmpty(fcm_id)) {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(getActivity(), new OnSuccessListener<InstanceIdResult>() {
+                @Override
+                public void onSuccess(InstanceIdResult instanceIdResult) {
+                    String newToken = instanceIdResult.getToken();
+                    Log.e("newToken", newToken);
+                    SharedPreferences.Editor editor = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
+                    editor.putString(CONSTANTS.Token, newToken); //Friend
+                    editor.apply();
+                    editor.commit();
+                }
+            });
+            fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+        }
+
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID, fcm_id, CONSTANTS.FLAG_ONE);
+            listCall.enqueue(new Callback<LogoutModel>() {
+                @Override
+                public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
+                    if (response.isSuccessful()) {
+                        LogoutModel loginModel = response.body();
+                        dialog.hide();
+                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                            return;
+                        }
+                        mLastClickTime = SystemClock.elapsedRealtime();
+                        Intent i = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(i);
+                    } else {
+                        BWSApplication.showToast(response.message(), getActivity());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LogoutModel> call, Throwable t) {
+                    hideProgressBar();
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+        }
+    }
+
+    void DeleteCall(){
+        SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.remove(CONSTANTS.PREF_KEY_UserID);
+        edit.remove(CONSTANTS.PREF_KEY_MobileNo);
+        edit.remove(CONSTANTS.PREF_KEY_IsRepeat);
+        edit.remove(CONSTANTS.PREF_KEY_IsShuffle);
+        edit.clear();
+        edit.commit();
+
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_ReminderStatus, Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit1 = shared.edit();
+        edit1.remove(CONSTANTS.PREF_KEY_ReminderStatus);
+        edit1.remove(CONSTANTS.PREF_KEY_MobileNo);
+        edit1.clear();
+        edit1.commit();
+
+        SharedPreferences shareds = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_CardID, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shareds.edit();
+        editor.remove(CONSTANTS.PREF_KEY_CardID);
+        editor.clear();
+        editor.commit();
+    }
     private void hideProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.GONE);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.Html;
@@ -43,6 +44,7 @@ public class OtpActivity extends AppCompatActivity {
     boolean tvSendOTPbool = true;
     Activity activity;
     CountDownTimer countDownTimer;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,10 @@ public class OtpActivity extends AppCompatActivity {
         binding.llEditNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(OtpActivity.this, LoginActivity.class);
                 i.putExtra("Name",Name);
                 i.putExtra("Code",Code);
