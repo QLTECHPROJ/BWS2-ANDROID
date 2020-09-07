@@ -143,25 +143,19 @@ public class CurrentPlanFragment extends Fragment {
             }
         });
 
-        binding.btnPayNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                startActivity(i);
+        binding.btnPayNow.setOnClickListener(view1 -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+            startActivity(i);
         });
 
-        binding.tvChangeCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PaymentFragment paymentFragment = new PaymentFragment();
-                Bundle bundle = new Bundle();
-                paymentFragment.setArguments(bundle);
-            }
+        binding.tvChangeCard.setOnClickListener(view12 -> {
+            PaymentFragment paymentFragment = new PaymentFragment();
+            Bundle bundle = new Bundle();
+            paymentFragment.setArguments(bundle);
         });
         return view;
     }

@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +33,8 @@ import com.google.gson.Gson;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
+import com.qltech.bws.DashboardModule.Activities.ViewQueueActivity;
+import com.qltech.bws.DashboardModule.Adapters.QueueAdapter;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
@@ -41,11 +44,13 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.ItemMoveCallback;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentMyPlaylistsBinding;
 import com.qltech.bws.databinding.MyPlaylistLayoutBinding;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -93,7 +98,6 @@ public class MyPlaylistsFragment extends Fragment {
                     .getSupportFragmentManager();
             fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
         });
-
         binding.llMore.setOnClickListener(view13 -> {
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
             i.putExtra("PlaylistID", PlaylistID);
@@ -277,7 +281,12 @@ public class MyPlaylistsFragment extends Fragment {
                             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
                             binding.llListing.setVisibility(View.VISIBLE);
                             if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
+
                                 adpater = new PlayListsAdpater(listModel.getResponseData().getPlaylistSongs(), getActivity(), UserID, listModel.getResponseData().getCreated());
+                                ItemTouchHelper.Callback callback =
+                                        new ItemMoveCallback(adpater);
+                                ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+                                touchHelper.attachToRecyclerView(binding.rvPlayLists);
                                 binding.rvPlayLists.setAdapter(adpater);
                             } else {
                                 adpater2 = new PlayListsAdpater2(listModel.getResponseData().getPlaylistSongs(), getActivity(), UserID, listModel.getResponseData().getCreated());
@@ -318,7 +327,7 @@ public class MyPlaylistsFragment extends Fragment {
         }
     }
 
-    public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable {
+    public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable , ItemMoveCallback.ItemTouchHelperContract {
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
         Context ctx;
@@ -467,6 +476,38 @@ public class MyPlaylistsFragment extends Fragment {
             }
             return 0;
         }
+
+        @Override
+        public void onRowMoved(int fromPosition, int toPosition) {
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(listModelList, i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(listModelList, i, i - 1);
+                }
+            }
+            notifyItemMoved(fromPosition, toPosition);
+         /* SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(listModelList);
+            editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+            editor.commit();*/
+
+        }
+
+        @Override
+        public void onRowSelected(RecyclerView.ViewHolder myViewHolder) {
+
+        }
+
+        @Override
+        public void onRowClear(RecyclerView.ViewHolder myViewHolder) {
+
+        }
+
 
         @Override
         public Filter getFilter() {
