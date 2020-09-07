@@ -44,6 +44,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
+
 public class PlayWellnessActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id;
@@ -382,7 +384,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             }
             binding.tvTitle.setText(addToQueueModelList.get(position).getAudioSubCategory());
             binding.tvDesc.setText(addToQueueModelList.get(position).getAudiomastercat());
-            Glide.with(getApplicationContext()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f).into(binding.ivRestaurantImage);
+            Glide.with(getApplicationContext()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("1")) {
                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
             } else if (!addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
@@ -399,7 +402,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 binding.llDownload.setEnabled(true);
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
-            if (!MusicService.isMediaStart) {
+            if (!isMediaStart) {
                 MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
             } else {
@@ -427,7 +430,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             }
             binding.tvTitle.setText(mainPlayModelList.get(position).getAudioSubCategory());
             binding.tvDesc.setText(mainPlayModelList.get(position).getAudiomastercat());
-            Glide.with(getApplicationContext()).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f).into(binding.ivRestaurantImage);
+            Glide.with(getApplicationContext()).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
             } else if (!mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
@@ -444,7 +448,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 binding.llDownload.setEnabled(true);
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
-            if (!MusicService.isMediaStart) {
+            if (!isMediaStart) {
                 MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
             } else {

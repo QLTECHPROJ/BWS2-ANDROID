@@ -107,6 +107,7 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAd
         i.putParcelableArrayListExtra("PlanData", listModelList);
         i.putExtra("TrialPeriod", TrialPeriod);
         i.putExtra("position", position);
+
     }
 
     @Override

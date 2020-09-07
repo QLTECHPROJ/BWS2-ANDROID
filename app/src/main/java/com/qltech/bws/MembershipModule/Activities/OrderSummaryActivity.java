@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.ActivityOrderSummaryBinding;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 
 public class OrderSummaryActivity extends AppCompatActivity {
     ActivityOrderSummaryBinding binding;
-    String TrialPeriod;
+    String TrialPeriod, comeFrom = "";
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     int position;
 
@@ -28,6 +29,12 @@ public class OrderSummaryActivity extends AppCompatActivity {
             TrialPeriod = getIntent().getStringExtra("TrialPeriod");
             listModelList = getIntent().getParcelableArrayListExtra("PlanData");
             position = getIntent().getIntExtra("position", 0);
+            if (getIntent().hasExtra("comeFrom")) {
+                comeFrom = getIntent().getStringExtra("comeFrom");
+            }
+        }
+        if (!comeFrom.equalsIgnoreCase("")) {
+            binding.tvTrialPeriod.setVisibility(View.GONE);
         }
         binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval() + " Membership");
         binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
@@ -45,11 +52,18 @@ public class OrderSummaryActivity extends AppCompatActivity {
         binding.btnCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(OrderSummaryActivity.this, CheckoutGetCodeActivity.class);
-                i.putParcelableArrayListExtra("PlanData", listModelList);
-                i.putExtra("TrialPeriod", TrialPeriod);
-                i.putExtra("position", position);
-                startActivity(i);
+                if (!comeFrom.equalsIgnoreCase("")) {
+                    Intent i = new Intent(OrderSummaryActivity.this, BillingOrderActivity.class);
+                    i.putExtra("payment", 1);
+                    startActivity(i);
+                    finish();
+                } else {
+                    Intent i = new Intent(OrderSummaryActivity.this, CheckoutGetCodeActivity.class);
+                    i.putParcelableArrayListExtra("PlanData", listModelList);
+                    i.putExtra("TrialPeriod", TrialPeriod);
+                    i.putExtra("position", position);
+                    startActivity(i);
+                }
             }
         });
     }

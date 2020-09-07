@@ -37,6 +37,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
     ActivityMembershipChangeBinding binding;
     Context ctx;
     String UserID;
+    public static String planFlag, planId;
     MembershipPlanAdapter membershipPlanAdapter;
 
     @Override
@@ -102,7 +103,6 @@ public class MembershipChangeActivity extends AppCompatActivity {
         Button btnFreeJoin;
         String TrialPeriod;
         Intent i;
-        public String planFlag, planId;
 
         public MembershipPlanAdapter(ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList, Context ctx, Button btnFreeJoin,
                                      String TrialPeriod) {
@@ -182,6 +182,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
             planFlag = listModel.getPlanFlag();
             planId = listModel.getPlanID();
             i = new Intent(ctx, OrderSummaryActivity.class);
+            i.putExtra("comeFrom","membership");
             i.putParcelableArrayListExtra("PlanData", listModelList);
             i.putExtra("TrialPeriod", TrialPeriod);
             i.putExtra("position", position);
