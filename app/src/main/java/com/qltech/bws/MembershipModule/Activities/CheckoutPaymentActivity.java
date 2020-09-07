@@ -181,7 +181,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                 if (!strToken.equalsIgnoreCase("")) {
                                     if (BWSApplication.isNetworkConnected(context)) {
                                         showProgressBar();
-
                                         Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo);
                                         listCall.enqueue(new Callback<AddCardModel>() {
                                             @Override
@@ -226,8 +225,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                             }
                         });
                     }
-
-
                 }
             }
         });

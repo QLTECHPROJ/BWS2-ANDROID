@@ -421,6 +421,7 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        profileViewData(ctx);
     }
 
     @Override

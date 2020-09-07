@@ -62,6 +62,8 @@ public class MembershipChangeActivity extends AppCompatActivity {
         binding.rvPlanList.setLayoutManager(mLayoutManager1);
         binding.rvPlanList.setItemAnimator(new DefaultItemAnimator());
 
+        prepareMembershipData();
+
     }
 
     private void prepareMembershipData() {

@@ -100,14 +100,24 @@ public class CurrentPlanFragment extends Fragment {
                             binding.tvRecommended.setBackgroundResource(R.drawable.dark_blue_background);
                             binding.tvRecommended.setText(R.string.InActive);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
-                            binding.btnPayNow.setVisibility(View.VISIBLE); /*membership-ordersummary - payment */
+                            binding.btnPayNow.setVisibility(View.VISIBLE); /* membership-ordersummary - payment */
                             binding.tvPayUsing.setVisibility(View.VISIBLE);
                             binding.tvChangeCard.setVisibility(View.VISIBLE);
+
+                            binding.btnPayNow.setOnClickListener(view1 -> {
+                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                    return;
+                                }
+                                mLastClickTime = SystemClock.elapsedRealtime();
+                                Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                                startActivity(i);
+                            });
+
                         }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("3")){
                             binding.tvRecommended.setBackgroundResource(R.drawable.yellow_background);
                             binding.tvRecommended.setText(R.string.Suspended);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
-                            binding.btnPayNow.setVisibility(View.VISIBLE);/*payment screen api call*/
+                            binding.btnPayNow.setVisibility(View.VISIBLE); /*payment screen api call*/
                             binding.tvPayUsing.setVisibility(View.VISIBLE);
                             binding.tvChangeCard.setVisibility(View.VISIBLE);
                         }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("4")){
@@ -115,8 +125,19 @@ public class CurrentPlanFragment extends Fragment {
                             binding.tvRecommended.setText(R.string.Cancelled);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
                             binding.btnPayNow.setVisibility(View.VISIBLE);
-                            binding.tvPayUsing.setVisibility(View.VISIBLE);
+                            binding.tvPayUsing.setVisibility(View.VISIBLE);/*Pay now and cancel both payment listing */
                             binding.tvChangeCard.setVisibility(View.VISIBLE);
+
+                            binding.btnPayNow.setOnClickListener(view1 -> {
+                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                    return;
+                                }
+                                mLastClickTime = SystemClock.elapsedRealtime();
+                                Intent i = new Intent(getActivity(), BillingOrderActivity.class);
+                                i.putExtra("payment", 1);
+                                startActivity(i);
+                                getActivity().finish();
+                            });
                         }
 
                         adpater = new FeaturedListAdpater(listModel.getResponseData().getFeature());
@@ -139,15 +160,6 @@ public class CurrentPlanFragment extends Fragment {
             }
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(getActivity(), CancelMembershipActivity.class);
-            startActivity(i);
-        });
-
-        binding.btnPayNow.setOnClickListener(view1 -> {
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return;
-            }
-            mLastClickTime = SystemClock.elapsedRealtime();
-            Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
             startActivity(i);
         });
 

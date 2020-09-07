@@ -43,12 +43,14 @@ public class OrderSummaryActivity extends AppCompatActivity {
         binding.tvTrialPeriod.setText(TrialPeriod);
         binding.tvPlanAmount.setText("$" + listModelList.get(position).getPlanAmount());
         binding.tvTotalAmount.setText("$" + listModelList.get(position).getPlanAmount());
+
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
+
         binding.btnCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
