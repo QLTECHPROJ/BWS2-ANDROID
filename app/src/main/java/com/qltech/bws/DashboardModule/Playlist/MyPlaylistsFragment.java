@@ -443,30 +443,16 @@ public class MyPlaylistsFragment extends Fragment {
                 holder.binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
 
-            holder.binding.llMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(ctx, AddQueueActivity.class);
-                    i.putExtra("play", "");
-                    i.putExtra("ID", mData.get(position).getID());
-                    startActivity(i);
-                }
+            holder.binding.llMore.setOnClickListener(view -> {
+                Intent i = new Intent(ctx, AddQueueActivity.class);
+                i.putExtra("play", "");
+                i.putExtra("ID", mData.get(position).getID());
+                startActivity(i);
             });
 
-            holder.binding.llDownload.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    callDownload(mData.get(position).getID());
+            holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID()));
 
-                }
-            });
-
-            holder.binding.llRemove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    callRemove(mData.get(position).getID());
-                }
-            });
+            holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID()));
         }
 
         @Override
