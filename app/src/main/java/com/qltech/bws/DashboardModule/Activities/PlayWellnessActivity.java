@@ -82,6 +82,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
         }.getType();
+
+        if(!json1.equalsIgnoreCase(""))
         addToQueueModelList = gson.fromJson(json1, type1);
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
