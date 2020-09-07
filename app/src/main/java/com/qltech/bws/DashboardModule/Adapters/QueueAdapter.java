@@ -69,6 +69,8 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.MyViewHolder
             SharedPreferences.Editor editor = shared.edit();
             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, true);
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
             editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, false);
             editor.commit();
         });
@@ -107,6 +109,8 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.MyViewHolder
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
         String json = gson.toJson(listModelList);
+        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
         editor.putString(CONSTANTS.PREF_KEY_queueList, json);
         editor.commit();
 

@@ -1,5 +1,17 @@
 package com.qltech.bws.DashboardModule.Activities;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -7,26 +19,15 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
-import android.widget.ImageView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Adapters.QueueAdapter;
 import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.R;
-import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.ItemMoveCallback;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -37,9 +38,8 @@ import java.lang.reflect.Type;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
-public class ViewQueueActivity extends AppCompatActivity {
+public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
     String IsRepeat, IsShuffle;
@@ -48,8 +48,33 @@ public class ViewQueueActivity extends AppCompatActivity {
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     SharedPreferences shared;
+    Boolean queuePlay, audioPlay;
 
     private Handler hdlr;
+
+    private Runnable UpdateSongTime = new Runnable() {
+        @Override
+        public void run() {
+            startTime = MusicService.getStartTime();
+            Time t = Time.valueOf("00:00:00");
+            if (queuePlay) {
+                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+            } else if (audioPlay) {
+                t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+            }
+            long totalDuration = t.getTime();
+            long currentDuration = MusicService.getStartTime();
+
+            int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            binding.simpleSeekbar.setProgress(progress);
+            binding.simpleSeekbar.setMax(100);
+
+            // Running this thread after 100 milliseconds
+            hdlr.postDelayed(this, 60);
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +109,9 @@ public class ViewQueueActivity extends AppCompatActivity {
         binding.rvQueueList.setFocusable(false);
         binding.nestedScroll.requestFocus();
 
+        queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+        audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+
         binding.llBack.setOnClickListener(view -> {
             Intent i = new Intent(ctx, PlayWellnessActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -96,7 +124,7 @@ public class ViewQueueActivity extends AppCompatActivity {
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         getPrepareShowData(position);
-        binding.simpleSeekbar.setClickable(false);
+        binding.simpleSeekbar.setOnSeekBarChangeListener(this);
 
         if (addToQueueModelList.size() != 0) {
             QueueAdapter adapter = new QueueAdapter(addToQueueModelList, ViewQueueActivity.this);
@@ -170,8 +198,6 @@ public class ViewQueueActivity extends AppCompatActivity {
             position = 0;
         }
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-        Boolean queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-        Boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         if (audioPlay) {
             binding.tvName.setText(mainPlayModelList.get(position).getName());
 //        binding.tvTitle.setText(mainPlayModelList.get(position).getAudioSubCategory());
@@ -179,8 +205,12 @@ public class ViewQueueActivity extends AppCompatActivity {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTime.setText(mainPlayModelList.get(position).getAudioDuration());
             if (MusicService.isPause) {
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
                 MusicService.resumeMedia();
             } else {
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
                 MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
             }
@@ -191,17 +221,22 @@ public class ViewQueueActivity extends AppCompatActivity {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTime.setText(addToQueueModelList.get(position).getAudioDuration());
             if (MusicService.isPause) {
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
                 MusicService.resumeMedia();
             } else {
-                MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
+                MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
             }
         }
-        binding.simpleSeekbar.setClickable(false);
+        binding.simpleSeekbar.setClickable(true);
         startTime = MusicService.getStartTime();
         hdlr.postDelayed(UpdateSongTime, 60);
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -210,21 +245,56 @@ public class ViewQueueActivity extends AppCompatActivity {
         startActivity(i);
         finish();
     }
-    private Runnable UpdateSongTime = new Runnable() {
-        @Override
-        public void run() {
-            startTime = MusicService.getStartTime();
-            Time t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
-            long totalDuration = t.getTime();
-            long currentDuration = MusicService.getStartTime();
 
-            int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
-            binding.simpleSeekbar.setProgress(progress);
-            binding.simpleSeekbar.setMax(100);
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        if (IsRepeat.equalsIgnoreCase("1")) {
+            // repeat is on play same song again
+            getPrepareShowData(position);
+        } else if (IsShuffle.equalsIgnoreCase("1")) {
+            // shuffle is on - play a random song
+            if (listSize == 1) {
 
-            // Running this thread after 100 milliseconds
-            hdlr.postDelayed(this, 60);
+            } else {
+                Random random = new Random();
+                position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                getPrepareShowData(position);
+            }
+        } else {
+            if (position < (listSize - 1)) {
+                position = position + 1;
+            } else {
+                position = 0;
+            }
+            getPrepareShowData(position);
         }
-    };
+    }
+
+    public void updateProgressBar() {
+        hdlr.postDelayed(UpdateSongTime, 100);
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        hdlr.removeCallbacks(UpdateSongTime);
+        int totalDuration = MusicService.getEndTime();
+
+        int currentPosition = MusicService.progressToTimer(seekBar.getProgress(), totalDuration);
+
+        // forward or backward to certain seconds
+        MusicService.SeekTo(currentPosition);
+
+        // update timer progress again
+        updateProgressBar();
+    }
 }

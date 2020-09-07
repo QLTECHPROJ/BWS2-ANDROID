@@ -3,6 +3,12 @@ package com.qltech.bws.DashboardModule.Audio;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -11,13 +17,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -43,6 +42,8 @@ import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player
 public class ViewAllAudioFragment extends Fragment {
     FragmentViewAllAudioBinding binding;
     String ID, Name, UserID;
+    public static boolean viewallAudio = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,7 +60,16 @@ public class ViewAllAudioFragment extends Fragment {
             Name = getArguments().getString("Name");
 
         }
-
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if( keyCode == KeyEvent.KEYCODE_BACK )
+            {
+                callBack();
+                return true;
+            }
+            return false;
+        });
         if (!AudioFlag.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -68,30 +78,18 @@ public class ViewAllAudioFragment extends Fragment {
                     .addToBackStack("TransparentPlayerFragment")
                     .commit();
         }
-
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                FragmentManager fm = getActivity()
-                        .getSupportFragmentManager();
-                fm.popBackStack ("ViewAllPlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                return true;
-            }
-            return false;
-        });
-
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager fm = getActivity()
-                        .getSupportFragmentManager();
-                fm.popBackStack ("ViewAllAudioFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            }
-        });
+        binding.llBack.setOnClickListener(view1 -> callBack());
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
         binding.rvMainAudio.setLayoutManager(manager);
         prepareData();
         return view;
+    }
+
+    private void callBack() {
+        FragmentManager fm = getActivity()
+                .getSupportFragmentManager();
+        fm.popBackStack("ViewAllAudioFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override
@@ -126,7 +124,7 @@ public class ViewAllAudioFragment extends Fragment {
         }
     }
 
-    public class AudiolistAdapter  extends RecyclerView.Adapter<AudiolistAdapter.MyViewHolder>  {
+    public class AudiolistAdapter extends RecyclerView.Adapter<AudiolistAdapter.MyViewHolder> {
         private ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList;
 
         public AudiolistAdapter(ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList) {
@@ -172,6 +170,8 @@ public class ViewAllAudioFragment extends Fragment {
                     editor.putInt(CONSTANTS.PREF_KEY_position, position);
                     editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                     editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
                     editor.commit();
                 }

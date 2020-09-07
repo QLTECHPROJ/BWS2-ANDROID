@@ -80,6 +80,8 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                 editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                 editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
                 editor.commit();
             }

@@ -44,6 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class PlayWellnessActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
@@ -52,10 +53,34 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     int oTime = 0, startTime = 0, endTime = 0, position, listSize;
     Context ctx;
     Activity activity;
-    private Handler hdlr;
     Boolean queuePlay, audioPlay;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
+    private Handler hdlr;
+    private Runnable UpdateSongTime = new Runnable() {
+        @Override
+        public void run() {
+            startTime = MusicService.getStartTime();
+            binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
+                    TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
+            Time t = Time.valueOf("00:00:00");
+            if (queuePlay) {
+                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+            } else if (audioPlay) {
+                t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+            }
+            long totalDuration = t.getTime();
+            long currentDuration = MusicService.getStartTime();
+
+            int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            binding.simpleSeekbar.setProgress(progress);
+            binding.simpleSeekbar.setMax(100);
+
+            // Running this thread after 100 milliseconds
+            hdlr.postDelayed(this, 60);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +125,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         MusicService.mediaPlayer.setOnCompletionListener(this);
 
         binding.llBack.setOnClickListener(view -> {
+            player = 1;
             MusicService.pauseMedia();
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared2.edit();
@@ -142,6 +168,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         });
 
         binding.llViewQueue.setOnClickListener(view -> {
+            MusicService.pauseMedia();
             Intent i = new Intent(ctx, ViewQueueActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
@@ -458,7 +485,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
             if (!isMediaStart) {
-                MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                MusicService.play(getApplicationContext(), Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
             } else {
                 if (MusicService.isPause) {
@@ -471,7 +498,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
         }
 
-        binding.simpleSeekbar.setClickable(false);
+        binding.simpleSeekbar.setClickable(true);
         startTime = MusicService.getStartTime();
         binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
                 TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
@@ -479,9 +506,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
 
-
     @Override
     public void onBackPressed() {
+        player = 1;
         MusicService.pauseMedia();
         SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared2.edit();
@@ -495,31 +522,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         super.onDestroy();
 //        MusicService.releasePlayer();
     }
-
-    private Runnable UpdateSongTime = new Runnable() {
-        @Override
-        public void run() {
-            startTime = MusicService.getStartTime();
-            binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
-                    TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
-            Time t = Time.valueOf("00:00:00");
-            if (queuePlay) {
-                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
-            } else if (audioPlay) {
-                t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
-            }
-            long totalDuration = t.getTime();
-            long currentDuration = MusicService.getStartTime();
-
-            int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
-            binding.simpleSeekbar.setProgress(progress);
-            binding.simpleSeekbar.setMax(100);
-
-            // Running this thread after 100 milliseconds
-            hdlr.postDelayed(this, 60);
-        }
-    };
 
     @Override
     protected void onResume() {
@@ -568,9 +570,21 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
     }
 
+    public void updateProgressBar() {
+        hdlr.postDelayed(UpdateSongTime, 100);
+    }
+
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        hdlr.removeCallbacks(UpdateSongTime);
+        int totalDuration = MusicService.getEndTime();
+        int currentPosition = MusicService.progressToTimer(seekBar.getProgress(), totalDuration);
 
+        // forward or backward to certain seconds
+        MusicService.SeekTo(currentPosition);
+
+        // update timer progress again
+        updateProgressBar();
     }
 
     @Override

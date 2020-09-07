@@ -49,10 +49,10 @@ import retrofit2.Response;
 
 public class SearchFragment extends Fragment {
     FragmentSearchBinding binding;
-    private SearchViewModel searchViewModel;
     String UserID;
     EditText searchEditText;
     SerachListAdpater adpater;
+    private SearchViewModel searchViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -130,14 +130,14 @@ public class SearchFragment extends Fragment {
     }
 
     private void prepareSearchData(String search, EditText searchEditText) {
-        showProgressBar();
+        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
         if (BWSApplication.isNetworkConnected(getActivity())) {
             Call<SearchBothModel> listCall = APIClient.getClient().getSearchBoth(UserID, search);
             listCall.enqueue(new Callback<SearchBothModel>() {
                 @Override
                 public void onResponse(Call<SearchBothModel> call, Response<SearchBothModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                         SearchBothModel listModel = response.body();
                         if (!searchEditText.getText().toString().equalsIgnoreCase("")) {
                             if (listModel.getResponseData().size() == 0) {
@@ -160,7 +160,7 @@ public class SearchFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<SearchBothModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                 }
             });
         } else {
@@ -169,14 +169,14 @@ public class SearchFragment extends Fragment {
     }
 
     private void prepareSuggestedAudioData() {
-        showProgressBar();
+        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
         if (BWSApplication.isNetworkConnected(getActivity())) {
             Call<SuggestedModel> listCall = APIClient.getClient().getSuggestedLists();
             listCall.enqueue(new Callback<SuggestedModel>() {
                 @Override
                 public void onResponse(Call<SuggestedModel> call, Response<SuggestedModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                         SuggestedModel listModel = response.body();
                         SuggestionAudiosAdpater suggestedAdpater = new SuggestionAudiosAdpater(listModel.getResponseData(), getActivity(),
                                 binding.rvDownloadsList);
@@ -186,7 +186,7 @@ public class SearchFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<SuggestedModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                 }
             });
         } else {
@@ -195,14 +195,14 @@ public class SearchFragment extends Fragment {
     }
 
     private void prepareSuggestedPlaylistData() {
-        showProgressBar();
+        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
         if (BWSApplication.isNetworkConnected(getActivity())) {
             Call<SearchPlaylistModel> listCall = APIClient.getClient().getSuggestedPlayLists();
             listCall.enqueue(new Callback<SearchPlaylistModel>() {
                 @Override
                 public void onResponse(Call<SearchPlaylistModel> call, Response<SearchPlaylistModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                         SearchPlaylistModel listModel = response.body();
                         SearchPlaylistAdapter suggestedAdpater = new SearchPlaylistAdapter(listModel.getResponseData());
                         binding.rvPlayList.setAdapter(suggestedAdpater);
@@ -211,7 +211,7 @@ public class SearchFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<SearchPlaylistModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                 }
             });
         } else {
@@ -219,32 +219,11 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public class SerachListAdpater extends RecyclerView.Adapter<SerachListAdpater.MyViewHolder> {
-        private List<SearchBothModel.ResponseData> modelList;
         Context ctx;
         String UserID;
         RecyclerView rvSerachList;
+        private List<SearchBothModel.ResponseData> modelList;
 
         public SerachListAdpater(List<SearchBothModel.ResponseData> modelList, Context ctx,
                                  RecyclerView rvSerachList, String UserID) {
@@ -273,21 +252,18 @@ public class SearchFragment extends Fragment {
                 holder.binding.tvPart.setText(R.string.Playlist);
                 holder.binding.llRemoveAudio.setVisibility(View.INVISIBLE);
 
-                holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Bundle bundle = new Bundle();
-                        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                        bundle.putString("New", "0");
-                        bundle.putString("PlaylistID", modelList.get(position).getID());
-                        bundle.putString("PlaylistName", modelList.get(position).getName());
-                        myPlaylistsFragment.setArguments(bundle);
-                        fragmentManager1.beginTransaction()
-                                .replace(R.id.rlSearchList, myPlaylistsFragment).
-                                addToBackStack("MyPlaylistsFragment")
-                                .commit();
-                    }
+                holder.binding.llMainLayout.setOnClickListener(view -> {
+                    Bundle bundle = new Bundle();
+                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    bundle.putString("New", "0");
+                    bundle.putString("PlaylistID", modelList.get(position).getID());
+                    bundle.putString("PlaylistName", modelList.get(position).getName());
+                    myPlaylistsFragment.setArguments(bundle);
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.rlPlaylist, myPlaylistsFragment)
+                            .addToBackStack("MyPlaylistsFragment")
+                            .commit();
                 });
 
             }
@@ -326,9 +302,9 @@ public class SearchFragment extends Fragment {
     }
 
     public class SuggestionAudiosAdpater extends RecyclerView.Adapter<SuggestionAudiosAdpater.MyViewHolder> {
-        private List<SuggestedModel.ResponseData> modelList;
         Context ctx;
         RecyclerView rvDownloadsList;
+        private List<SuggestedModel.ResponseData> modelList;
 
         public SuggestionAudiosAdpater(List<SuggestedModel.ResponseData> modelList, Context ctx,
                                        RecyclerView rvDownloadsList) {
@@ -428,7 +404,7 @@ public class SearchFragment extends Fragment {
                     bundle.putString("PlaylistName", listModelList.get(position).getName());
                     myPlaylistsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
-                            .replace(R.id.rlSearchList, myPlaylistsFragment).
+                            .replace(R.id.rlPlaylist, myPlaylistsFragment).
                             addToBackStack("MyPlaylistsFragment")
                             .commit();
                 }

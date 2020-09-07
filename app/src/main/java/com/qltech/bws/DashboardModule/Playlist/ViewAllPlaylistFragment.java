@@ -3,16 +3,6 @@ package com.qltech.bws.DashboardModule.Playlist;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +10,19 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
 import com.qltech.bws.DashboardModule.Models.ViewAllPlayListModel;
-import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -44,6 +41,7 @@ public class ViewAllPlaylistFragment extends Fragment {
     FragmentViewAllPlaylistBinding binding;
     String GetLibraryID, Name, UserID;
     ArrayList<MainPlayListModel.ResponseData.Detail> Audiolist;
+    public static boolean viewallPlayList = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,39 +59,30 @@ public class ViewAllPlaylistFragment extends Fragment {
             GetLibraryID = getArguments().getString("GetLibraryID");
             Name = getArguments().getString("Name");
         }
-
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlPlaylist, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
-                    .commit();
-        }
-
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                FragmentManager fm = getActivity()
-                        .getSupportFragmentManager();
-                fm.popBackStack ("ViewAllPlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            if( keyCode == KeyEvent.KEYCODE_BACK )
+            {
+              callBack();
                 return true;
             }
             return false;
         });
-
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager fm = getActivity()
-                        .getSupportFragmentManager();
-                fm.popBackStack ("ViewAllPlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            }
+        binding.llBack.setOnClickListener(view1 -> {
+          callBack();
         });
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
         binding.rvMainAudio.setLayoutManager(manager);
         prepareData();
         return view;
+    }
+
+    private void callBack() {
+        FragmentManager fm = getActivity()
+                .getSupportFragmentManager();
+        fm.popBackStack("ViewAllPlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override
@@ -149,7 +138,7 @@ public class ViewAllPlaylistFragment extends Fragment {
         }
     }
 
-    public class PlaylistAdapter  extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder>  {
+    public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
         private List<ViewAllPlayListModel.ResponseData.Detail> listModelList;
 
         public PlaylistAdapter(List<ViewAllPlayListModel.ResponseData.Detail> listModelList) {
@@ -197,7 +186,7 @@ public class ViewAllPlaylistFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-                return listModelList.size();
+            return listModelList.size();
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {

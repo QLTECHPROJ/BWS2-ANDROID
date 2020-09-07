@@ -109,13 +109,9 @@ public class MusicService extends Service {
         } else {
             showToast("Please wait", conext);
         }
+    } public static void SeekTo(int CurruntTime) {
+             mediaPlayer.seekTo(CurruntTime);
     }
-
-    public static void ToSeek(int endTime, int startTime) {
-        endTime = mediaPlayer.getDuration();
-        startTime = mediaPlayer.getCurrentPosition();
-    }
-
    public static void showToast(String message, Context conext) {
         Toast toast = new Toast(conext);
         View view = LayoutInflater.from(conext).inflate(R.layout.toast_layout, null);

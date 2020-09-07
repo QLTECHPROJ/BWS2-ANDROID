@@ -116,42 +116,29 @@ public class PlaylistFragment extends Fragment {
                     return false;
                 });
 
-                rlCreate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                            BWSApplication.showToast("Please enter playlist name", getActivity());
-                        } else {
-                            if (BWSApplication.isNetworkConnected(getActivity())) {
-                                Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
-                                listCall.enqueue(new Callback<CreatePlaylistModel>() {
-                                    @Override
-                                    public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
-                                        if (response.isSuccessful()) {
-                                            CreatePlaylistModel listModel = response.body();
-                                            Bundle bundle = new Bundle();
-                                            Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                                            bundle.putString("New", "1");
-                                            bundle.putString("PlaylistID", listModel.getResponseData().getId());
-                                            bundle.putString("PlaylistName", listModel.getResponseData().getName());
-                                            myPlaylistsFragment.setArguments(bundle);
-                                            fragmentManager1.beginTransaction()
-                                                    .replace(R.id.rlPlaylist, myPlaylistsFragment).
-                                                    addToBackStack("MyPlaylistsFragment")
-                                                    .commit();
-                                            dialog.dismiss();
-                                        }
+                rlCreate.setOnClickListener(view1 -> {
+                    if (edtCreate.getText().toString().equalsIgnoreCase("")) {
+                        BWSApplication.showToast("Please enter playlist name", getActivity());
+                    } else {
+                        if (BWSApplication.isNetworkConnected(getActivity())) {
+                            Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
+                            listCall.enqueue(new Callback<CreatePlaylistModel>() {
+                                @Override
+                                public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
+                                    if (response.isSuccessful()) {
+                                        CreatePlaylistModel listModel = response.body();
+                                        callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(),"");
+                                        dialog.dismiss();
                                     }
+                                }
 
-                                    @Override
-                                    public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
-                                        hideProgressBar();
-                                    }
-                                });
-                            } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-                            }
+                                @Override
+                                public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
+                                    hideProgressBar();
+                                }
+                            });
+                        } else {
+                            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                         }
                     }
                 });
@@ -169,6 +156,21 @@ public class PlaylistFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void callMyPlaylistsFragment(String s, String id, String name, String playlistImage) {
+        Bundle bundle = new Bundle();
+        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        bundle.putString("New", s);
+        bundle.putString("PlaylistID",id);
+        bundle.putString("PlaylistName",name);
+        bundle.putString("PlaylistImage",playlistImage);
+        myPlaylistsFragment.setArguments(bundle);
+        fragmentManager1.beginTransaction()
+                .replace(R.id.rlPlaylist, myPlaylistsFragment).
+                addToBackStack("MyPlaylistsFragment")
+                .commit();
     }
 
     @Override
@@ -316,23 +318,10 @@ public class PlaylistFragment extends Fragment {
             Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Bundle bundle = new Bundle();
-                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    bundle.putString("New", "0");
-                    bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
-                    bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
-                    bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                    myPlaylistsFragment.setArguments(bundle);
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.rlPlaylist, myPlaylistsFragment).
-                            addToBackStack("MyPlaylistsFragment")
-                            .commit();
-                }
-            });
+            holder.binding.rlMainLayout.setOnClickListener(view -> callMyPlaylistsFragment("0",
+                    listModelList.get(position).getPlaylistID(),
+                    listModelList.get(position).getPlaylistName(),
+                    listModelList.get(position).getPlaylistImage()));
         }
 
         @Override

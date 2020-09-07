@@ -269,7 +269,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                 binding.ivPlay.setVisibility(View.VISIBLE);
             }
         }
-        binding.simpleSeekbar.setClickable(false);
+        binding.simpleSeekbar.setClickable(true);
 
         if (isMediaStart) {
             MusicService.mediaPlayer.setOnCompletionListener(this);
@@ -321,6 +321,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         }
     };
 
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 
@@ -331,9 +332,21 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
 
     }
 
+    public void updateProgressBar() {
+        hdlr.postDelayed(UpdateSongTime, 100);
+    }
+
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        hdlr.removeCallbacks(UpdateSongTime);
+        int totalDuration = MusicService.getEndTime();
+        int currentPosition = MusicService.progressToTimer(seekBar.getProgress(), totalDuration);
 
+        // forward or backward to certain seconds
+        MusicService.SeekTo(currentPosition);
+
+        // update timer progress again
+        updateProgressBar();
     }
 
     @Override

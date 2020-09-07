@@ -81,140 +81,115 @@ public class AccountFragment extends Fragment {
 
         binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
 
-        binding.llUserProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(getActivity(), UserProfileActivity.class);
-                startActivity(i);
+        binding.llUserProfile.setOnClickListener(view13 -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), UserProfileActivity.class);
+            startActivity(i);
         });
 
-        binding.llDownloads.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(getActivity(), DownloadsActivity.class);
-                startActivity(i);
+        binding.llDownloads.setOnClickListener(view12 -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), DownloadsActivity.class);
+            startActivity(i);
         });
 
-        binding.llInvoices.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(getActivity(), InvoiceActivity.class);
-                startActivity(i);
+        binding.llInvoices.setOnClickListener(view14 -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), InvoiceActivity.class);
+            startActivity(i);
         });
 
-        binding.llBillingOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(getActivity(), BillingOrderActivity.class);
-                startActivity(i);
+        binding.llBillingOrder.setOnClickListener(view15 -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), BillingOrderActivity.class);
+            startActivity(i);
         });
 
-        binding.llReminder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(getActivity(), ReminderActivity.class);
-                startActivity(i);
+        binding.llReminder.setOnClickListener(view16 -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), ReminderActivity.class);
+            startActivity(i);
         });
 
-        binding.llResource.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(getActivity(), ResourceActivity.class);
-                startActivity(i);
+        binding.llResource.setOnClickListener(view17 -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), ResourceActivity.class);
+            startActivity(i);
         });
 
-        binding.llFaq.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(getActivity(), FaqActivity.class);
-                startActivity(i);
+        binding.llFaq.setOnClickListener(view18 -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), FaqActivity.class);
+            startActivity(i);
         });
 
-        binding.llLogout.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ClickableViewAccessibility")
-            @Override
-            public void onClick(View view) {
-                final Dialog dialog = new Dialog(getActivity());
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.logout_layout);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        binding.llLogout.setOnClickListener(view19 -> {
+            final Dialog dialog = new Dialog(getActivity());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.logout_layout);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                final Button Btn = dialog.findViewById(R.id.Btn);
+            final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+            final Button Btn = dialog.findViewById(R.id.Btn);
 
-                dialog.setOnKeyListener((v, keyCode, event) -> {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.hide();
-                        return true;
-                    }
-                    return false;
-                });
-
-                Btn.setOnTouchListener((view1, event) -> {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN: {
-                            Button views = (Button) view1;
-                            views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
-                            view1.invalidate();
-                            break;
-                        }
-                        case MotionEvent.ACTION_UP:
-                            clearData(dialog);
-                        case MotionEvent.ACTION_CANCEL: {
-                            Button views = (Button) view1;
-                            views.getBackground().clearColorFilter();
-                            views.invalidate();
-                            break;
-                        }
-                    }
+            dialog.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.hide();
                     return true;
-                });
+                }
+                return false;
+            });
 
-                tvGoBack.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.hide();
+            Btn.setOnTouchListener((view1, event) -> {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        Button views = (Button) view1;
+                        views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
+                        view1.invalidate();
+                        break;
                     }
-                });
-                dialog.show();
-                dialog.setCancelable(false);
-            }
+                    case MotionEvent.ACTION_UP:
+                        clearData(dialog);
+                    case MotionEvent.ACTION_CANCEL: {
+                        Button views = (Button) view1;
+                        views.getBackground().clearColorFilter();
+                        views.invalidate();
+                        break;
+                    }
+                }
+                return true;
+            });
+
+            tvGoBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.hide();
+                }
+            });
+            dialog.show();
+            dialog.setCancelable(false);
         });
 
         accountViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -310,6 +285,8 @@ public class AccountFragment extends Fragment {
         editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
         editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
         editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
+        editor.remove(CONSTANTS.PREF_KEY_PlaylistId);
+        editor.remove(CONSTANTS.PREF_KEY_myPlaylist);
         editorr.clear();
         editorr.commit();
     }

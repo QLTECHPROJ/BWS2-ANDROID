@@ -5,6 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -17,32 +28,19 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.ImageView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
-import com.qltech.bws.DashboardModule.Activities.ViewQueueActivity;
-import com.qltech.bws.DashboardModule.Adapters.QueueAdapter;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
-import com.qltech.bws.BWSApplication;
 import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -98,9 +96,16 @@ public class MyPlaylistsFragment extends Fragment {
                     .commit();
         }
         binding.llBack.setOnClickListener(view12 -> {
-            FragmentManager fm = getActivity()
-                    .getSupportFragmentManager();
-            fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            callBack();
+        });
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                callBack();
+                return true;
+            }
+            return false;
         });
         binding.llMore.setOnClickListener(view13 -> {
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
@@ -195,14 +200,17 @@ public class MyPlaylistsFragment extends Fragment {
         return view;
     }
 
+    private void callBack() {
+        FragmentManager fm = getActivity()
+                .getSupportFragmentManager();
+        fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         if (deleteFrg == 1) {
-            FragmentManager fm = getActivity()
-                    .getSupportFragmentManager();
-            fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
+            callBack();
             deleteFrg = 0;
         } else {
             prepareData(UserID, PlaylistID);
@@ -210,14 +218,14 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     private void prepareData(String UserID, String PlaylistID) {
-        showProgressBar();
+         BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
         if (BWSApplication.isNetworkConnected(getActivity())) {
             Call<SubPlayListModel> listCall = APIClient.getClient().getSubPlayLists(UserID, PlaylistID);
             listCall.enqueue(new Callback<SubPlayListModel>() {
                 @Override
                 public void onResponse(Call<SubPlayListModel> call, Response<SubPlayListModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                         BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
                         SubPlayListModel listModel = response.body();
 
                         if (listModel.getResponseData().getPlaylistName().equalsIgnoreCase("") ||
@@ -302,7 +310,57 @@ public class MyPlaylistsFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<SubPlayListModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+        }
+    }
+ 
+    private void callTransparentFrag(int position, Context ctx, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList,
+                                     String myPlaylist) {
+        player = 1;
+        Fragment fragment = new TransparentPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.rlPlaylist, fragment)
+                .addToBackStack("TransparentPlayerFragment")
+                .commit();
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(listModelList);
+        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistID);
+        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, myPlaylist);
+        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+        editor.commit();
+    }
+
+    private void callRemove(String id) {
+
+         BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+        String AudioId = id;
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistID);
+            listCall.enqueue(new Callback<SucessModel>() {
+                @Override
+                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                    if (response.isSuccessful()) {
+                         BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+                        SucessModel listModel = response.body();
+                        prepareData(UserID, PlaylistID);
+                        BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SucessModel> call, Throwable t) {
+                     BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
                 }
             });
         } else {
@@ -310,32 +368,49 @@ public class MyPlaylistsFragment extends Fragment {
         }
     }
 
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    private void callDownload(String id) {
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+             BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+            String AudioId = id;
+            Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistID);
+            listCall.enqueue(new Callback<DownloadPlaylistModel>() {
+                @Override
+                public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
+                    if (response.isSuccessful()) {
+                         BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+                        DownloadPlaylistModel model = response.body();
+                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")
+                                || model.getResponseData().getFlag().equalsIgnoreCase("")) {
+                            binding.llDownloads.setClickable(true);
+                            binding.llDownloads.setEnabled(true);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                            binding.ivDownloads.setAlpha(255);
+                            binding.llDownloads.setClickable(false);
+                            binding.llDownloads.setEnabled(false);
+                        }
+                        BWSApplication.showToast(model.getResponseMessage(), getActivity());
+                    }
+                }
 
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
+                @Override
+                public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
+                     BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+                }
+            });
+
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable, ItemMoveCallback.ItemTouchHelperContract {
-        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
-        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
         Context ctx;
         String UserID, Created;
+        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
+        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
 
         public PlayListsAdpater(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
                                 String Created) {
@@ -370,50 +445,10 @@ public class MyPlaylistsFragment extends Fragment {
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            binding.ivPlaylistStatus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    player = 1;
-                    Fragment fragment = new TransparentPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.rlPlaylist, fragment)
-                            .addToBackStack("TransparentPlayerFragment")
-                            .commit();
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(listModelList);
-                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                    editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
-                    editor.commit();
-                }
-            });
-            holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    player = 1;
-                    Fragment fragment = new TransparentPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.rlPlaylist, fragment)
-                            .addToBackStack("TransparentPlayerFragment")
-                            .commit();
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(listModelList);
-                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
-                    editor.commit();
-                }
-            });
+            binding.ivPlaylistStatus.setOnClickListener(view ->
+                    callTransparentFrag(0, ctx, listModelList,"myPlaylist"));
+            holder.binding.llMainLayout.setOnClickListener(view ->
+                    callTransparentFrag(position, ctx, listModelList,"myPlaylist"));
 
             if (Created.equalsIgnoreCase("1")) {
                 holder.binding.llMore.setVisibility(View.GONE);
@@ -501,14 +536,14 @@ public class MyPlaylistsFragment extends Fragment {
                     @Override
                     public void onResponse(Call<CardModel> call, Response<CardModel> response) {
                         if (response.isSuccessful()) {
-                            hideProgressBar();
+                             BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
                             CardModel listModel = response.body();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<CardModel> call, Throwable t) {
-                        hideProgressBar();
+                         BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
                     }
                 });
             }
@@ -573,10 +608,10 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     public class PlayListsAdpater2 extends RecyclerView.Adapter<PlayListsAdpater2.MyViewHolder2> implements Filterable {
-        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
-        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
         Context ctx;
         String UserID, Created;
+        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
+        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
 
         public PlayListsAdpater2(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
                                  String Created) {
@@ -611,50 +646,8 @@ public class MyPlaylistsFragment extends Fragment {
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            binding.ivPlaylistStatus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    player = 1;
-                    Fragment fragment = new TransparentPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.rlPlaylist, fragment)
-                            .addToBackStack("TransparentPlayerFragment")
-                            .commit();
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(listModelList);
-                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                    editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
-                    editor.commit();
-                }
-            });
-            holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    player = 1;
-                    Fragment fragment = new TransparentPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.rlPlaylist, fragment)
-                            .addToBackStack("TransparentPlayerFragment")
-                            .commit();
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(listModelList);
-                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
-                    editor.commit();
-                }
-            });
+            binding.ivPlaylistStatus.setOnClickListener(view -> callTransparentFrag(0, ctx, listModelList,""));
+            holder.binding.llMainLayout.setOnClickListener(view -> callTransparentFrag(0, ctx, listModelList,""));
 
             if (Created.equalsIgnoreCase("1")) {
                 holder.binding.llMore.setVisibility(View.GONE);
@@ -767,71 +760,6 @@ public class MyPlaylistsFragment extends Fragment {
                 super(binding.getRoot());
                 this.binding = binding;
             }
-        }
-    }
-
-    private void callRemove(String id) {
-
-        showProgressBar();
-        String AudioId = id;
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistID);
-            listCall.enqueue(new Callback<SucessModel>() {
-                @Override
-                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                    if (response.isSuccessful()) {
-                        hideProgressBar();
-                        SucessModel listModel = response.body();
-                        prepareData(UserID, PlaylistID);
-                        BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<SucessModel> call, Throwable t) {
-                    hideProgressBar();
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-        }
-    }
-
-    private void callDownload(String id) {
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            showProgressBar();
-            String AudioId = id;
-            Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistID);
-            listCall.enqueue(new Callback<DownloadPlaylistModel>() {
-                @Override
-                public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
-                    if (response.isSuccessful()) {
-                        hideProgressBar();
-                        DownloadPlaylistModel model = response.body();
-                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")
-                                || model.getResponseData().getFlag().equalsIgnoreCase("")) {
-                            binding.llDownloads.setClickable(true);
-                            binding.llDownloads.setEnabled(true);
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-                            binding.ivDownloads.setAlpha(255);
-                            binding.llDownloads.setClickable(false);
-                            binding.llDownloads.setEnabled(false);
-                        }
-                        BWSApplication.showToast(model.getResponseMessage(), getActivity());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                    hideProgressBar();
-                }
-            });
-
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 
