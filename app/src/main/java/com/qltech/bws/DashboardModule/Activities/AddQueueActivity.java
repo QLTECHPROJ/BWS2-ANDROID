@@ -92,6 +92,7 @@ public class AddQueueActivity extends AppCompatActivity {
         mainPlayModelList = gson.fromJson(json, type);
         Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
         }.getType();
+        if(!json1.equalsIgnoreCase(""))
         addToQueueModelList = gson.fromJson(json1, type1);
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
@@ -177,6 +178,7 @@ public class AddQueueActivity extends AppCompatActivity {
                 } else if (x == (addToQueueModelList.size() - 1)) {
                     BWSApplication.showToast("Add to Queue Successfully", ctx);
                     addToQueueModelList.add(addToQueueModel);
+                    break;
                 }
             }
         }

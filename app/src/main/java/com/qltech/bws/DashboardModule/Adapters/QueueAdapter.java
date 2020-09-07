@@ -2,15 +2,13 @@ package com.qltech.bws.DashboardModule.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.view.DragEvent;
+import android.net.Uri;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.MotionEventCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,7 +21,7 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.ItemMoveCallback;
 import com.qltech.bws.Utility.MeasureRatio;
-import com.qltech.bws.Utility.OnStartDragListener;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.QueueListLayoutBinding;
 
 import java.util.ArrayList;
@@ -32,7 +30,6 @@ import java.util.Collections;
 public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
     ArrayList<AddToQueueModel> listModelList;
     Context ctx;
-    int fromPosition, toPosition;
 
 
     public QueueAdapter(ArrayList<AddToQueueModel> listModelList, Context ctx) {
@@ -64,23 +61,17 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.MyViewHolder
         Glide.with(ctx).load(listModel.getImageFile()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-        holder.binding.llRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callRemoveList(position);
-            }
+        holder.binding.llRemove.setOnClickListener(view -> callRemoveList(position));
+        holder.binding.llMainLayout.setOnClickListener(view -> {
+            MusicService.play(ctx, Uri.parse(listModel.getAudioFile()));
+            MusicService.playMedia();
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, true);
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, false);
+            editor.commit();
         });
-/*        holder.binding.llArrange.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                    if (MotionEventCompat.getActionMasked(event) ==
-                            MotionEvent.ACTION_DOWN) {
-                        mDragStartListener.onStartDrag(holder);
-                    }
-                return false;
-            }
-        });*/
 
     }
 

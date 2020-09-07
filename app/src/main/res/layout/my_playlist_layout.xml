@@ -97,8 +97,6 @@
                 android:gravity="start"
                 android:textColor="@color/extra_light_gray"
                 android:textSize="@dimen/_13sdp" />
-
-
         </LinearLayout>
 
         <LinearLayout

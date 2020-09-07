@@ -128,6 +128,7 @@ public class SessionsFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             SessionListModel.ResponseData listModel = listModelList.get(position);
             holder.binding.tvTitle.setText(listModel.getName());
+            holder.binding.tvSubTitle.setText(listModel.getDesc());
             if (listModel.getDate().equalsIgnoreCase("") &&
                     listModel.getStatus().equalsIgnoreCase("") &&
                     listModel.getDuration().equalsIgnoreCase("") &&

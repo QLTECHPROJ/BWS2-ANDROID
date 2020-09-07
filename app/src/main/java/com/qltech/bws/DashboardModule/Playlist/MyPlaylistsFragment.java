@@ -88,31 +88,22 @@ public class MyPlaylistsFragment extends Fragment {
                     .addToBackStack("TransparentPlayerFragment")
                     .commit();
         }
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager fm = getActivity()
-                        .getSupportFragmentManager();
-                fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            }
+        binding.llBack.setOnClickListener(view12 -> {
+            FragmentManager fm = getActivity()
+                    .getSupportFragmentManager();
+            fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
         });
 
-        binding.llMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
-                i.putExtra("PlaylistID", PlaylistID);
-                startActivity(i);
-            }
+        binding.llMore.setOnClickListener(view13 -> {
+            Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
+            i.putExtra("PlaylistID", PlaylistID);
+            startActivity(i);
         });
 
-        binding.tvSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), AddAudioActivity.class);
-                i.putExtra("PlaylistID", PlaylistID);
-                startActivity(i);
-            }
+        binding.tvSearch.setOnClickListener(view14 -> {
+            Intent i = new Intent(getActivity(), AddAudioActivity.class);
+            i.putExtra("PlaylistID", PlaylistID);
+            startActivity(i);
         });
 
         binding.searchView.onActionViewExpanded();
@@ -166,43 +157,8 @@ public class MyPlaylistsFragment extends Fragment {
             }
         });
 
-        binding.llDownloads.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (BWSApplication.isNetworkConnected(getActivity())) {
-                    showProgressBar();
-                    Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
-                    listCall.enqueue(new Callback<DownloadPlaylistModel>() {
-                        @Override
-                        public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
-                            if (response.isSuccessful()) {
-                                hideProgressBar();
-                                DownloadPlaylistModel model = response.body();
-                                if (model.getResponseData().getFlag().equalsIgnoreCase("0")
-                                        || model.getResponseData().getFlag().equalsIgnoreCase("")) {
-                                    binding.llDownloads.setClickable(true);
-                                    binding.llDownloads.setEnabled(true);
-                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                                } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                                    binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-                                    binding.ivDownloads.setAlpha(255);
-                                    binding.llDownloads.setClickable(false);
-                                    binding.llDownloads.setEnabled(false);
-                                }
-                                BWSApplication.showToast(model.getResponseMessage(), getActivity());
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                            hideProgressBar();
-                        }
-                    });
-                } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-                }
-            }
+        binding.llDownloads.setOnClickListener(view1 -> {
+            callDownload("");
         });
 
         if (New.equalsIgnoreCase("1")) {
@@ -417,6 +373,8 @@ public class MyPlaylistsFragment extends Fragment {
                     String json = gson.toJson(listModelList);
                     editor.putString(CONSTANTS.PREF_KEY_modelList, json);
                     editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                     editor.commit();
                 }
@@ -437,6 +395,8 @@ public class MyPlaylistsFragment extends Fragment {
                     String json = gson.toJson(listModelList);
                     editor.putString(CONSTANTS.PREF_KEY_modelList, json);
                     editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                     editor.commit();
                 }
@@ -610,6 +570,8 @@ public class MyPlaylistsFragment extends Fragment {
                     String json = gson.toJson(listModelList);
                     editor.putString(CONSTANTS.PREF_KEY_modelList, json);
                     editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                     editor.commit();
                 }
@@ -630,6 +592,8 @@ public class MyPlaylistsFragment extends Fragment {
                     String json = gson.toJson(listModelList);
                     editor.putString(CONSTANTS.PREF_KEY_modelList, json);
                     editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                     editor.commit();
                 }
@@ -644,7 +608,7 @@ public class MyPlaylistsFragment extends Fragment {
                 holder.binding.llSort.setVisibility(View.VISIBLE);
                 binding.tvSearch.setVisibility(View.VISIBLE);
                 binding.searchView.setVisibility(View.GONE);
-            } else if (Created.equalsIgnoreCase("0")) {
+            } else if ( Created.equalsIgnoreCase("0")) {
                 holder.binding.llMore.setVisibility(View.VISIBLE);
                 holder.binding.llCenterLayoutA.setVisibility(View.VISIBLE);
                 holder.binding.llCenterLayoutB.setVisibility(View.GONE);

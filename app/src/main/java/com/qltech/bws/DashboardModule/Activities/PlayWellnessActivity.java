@@ -22,6 +22,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
@@ -45,12 +46,14 @@ import retrofit2.Response;
 
 public class PlayWellnessActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     ActivityPlayWellnessBinding binding;
-    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag;
+    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id;
     int oTime = 0, startTime = 0, endTime = 0, position, listSize;
     Context ctx;
     Activity activity;
     private Handler hdlr;
+    Boolean queuePlay, audioPlay;
     ArrayList<MainPlayModel> mainPlayModelList;
+    ArrayList<AddToQueueModel> addToQueueModelList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         hdlr = new Handler();
         ctx = PlayWellnessActivity.this;
         activity = PlayWellnessActivity.this;
+        addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -75,106 +79,21 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
         }.getType();
         mainPlayModelList = gson.fromJson(json, type);
-        listSize = mainPlayModelList.size();
+        String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
+        Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
+        }.getType();
+        addToQueueModelList = gson.fromJson(json1, type1);
+        queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+        audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                1, 1, 1f, 30);
+        binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         getPrepareShowData(position);
 
         MusicService.mediaPlayer.setOnCompletionListener(this);
-        /*if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
-            Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
-            }.getType();
-            ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-            listSize = arrayList.size();
-            for (int i = 0; i < listSize; i++) {
-                mainPlayModel.setID(arrayList.get(position).getID());
-                mainPlayModel.setName(arrayList.get(position).getName());
-                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
-                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
-                mainPlayModel.setLike(arrayList.get(position).getLike());
-                mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-            }
-            getPrepareShowData();
-        } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
-            Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
-            }.getType();
-            ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-            listSize = arrayList.size();
-            for (int i = 0; i < listSize; i++) {
-                mainPlayModel.setID(arrayList.get(position).getID());
-                mainPlayModel.setName(arrayList.get(position).getName());
-                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
-                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
-                mainPlayModel.setLike(arrayList.get(position).getLike());
-                mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-            }
-            getPrepareShowData();
-        } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
-            Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
-            }.getType();
-            ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
-            listSize = arrayList.size();
-            for (int i = 0; i < listSize; i++) {
-                mainPlayModel.setID(arrayList.get(position).getID());
-                mainPlayModel.setName(arrayList.get(position).getName());
-                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
-                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
-                mainPlayModel.setLike(arrayList.get(position).getLike());
-                mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-            }
-            getPrepareShowData();
-        } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
-            Type type = new TypeToken<ArrayList<DownloadlistModel.Audio>>() {
-            }.getType();
-            ArrayList<DownloadlistModel.Audio> arrayList = gson.fromJson(json, type);
-            listSize = arrayList.size();
-            for (int i = 0; i < listSize; i++) {
-                mainPlayModel.setID(arrayList.get(position).getAudioID());
-                mainPlayModel.setName(arrayList.get(position).getName());
-                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
-                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
-                mainPlayModel.setLike(arrayList.get(position).getLike());
-                mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-            }
-            getPrepareShowData();
-        } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
-            Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
-            }.getType();
-            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
-            listSize = arrayList.size();
-            for (int i = 0; i < listSize; i++) {
-                mainPlayModel.setID(arrayList.get(position).getID());
-                mainPlayModel.setName(arrayList.get(position).getName());
-                mainPlayModel.setAudioFile(arrayList.get(position).getAudioFile());
-                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
-                mainPlayModel.setLike(arrayList.get(position).getLike());
-                mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-            }
-            getPrepareShowData();
-        }*/
 
         binding.llBack.setOnClickListener(view -> {
             MusicService.pauseMedia();
@@ -212,7 +131,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.llMore.setOnClickListener(view -> {
             Intent i = new Intent(ctx, AddQueueActivity.class);
             i.putExtra("play", "play");
-            i.putExtra("ID", mainPlayModelList.get(position).getID());
+            i.putExtra("ID", id);
             i.putExtra("position", position);
             startActivity(i);
             finish();
@@ -222,6 +141,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             Intent i = new Intent(ctx, ViewQueueActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
+            finish();
             SharedPreferences ViewQueue = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = ViewQueue.edit();
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
@@ -298,7 +218,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     private void callDownload() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, mainPlayModelList.get(position).getID(), PlaylistId);
+            Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, id, PlaylistId);
             listCall.enqueue(new Callback<DownloadPlaylistModel>() {
                 @Override
                 public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
@@ -350,7 +270,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
 
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-//                    Collections.shuffle(mainPlayModelList, new Random(System.nanoTime()));
             }
         } else if (IsShuffle.equalsIgnoreCase("1")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
@@ -395,7 +314,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     private void callLike() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(mainPlayModelList.get(position).getID(), UserID);
+            Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(id, UserID);
             listCall.enqueue(new Callback<AudioLikeModel>() {
                 @Override
                 public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
@@ -424,7 +343,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     private void addToRecentPlay() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(mainPlayModelList.get(position).getID(), UserID);
+            Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(id, UserID);
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
@@ -445,57 +364,86 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     }
 
     private void getPrepareShowData(int position) {
-        if(listSize == 1){
+        if (listSize == 1) {
             position = 0;
         }
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-        binding.tvName.setText(mainPlayModelList.get(position).getName());
-        if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
-            binding.llDirection.setVisibility(View.GONE);
-        } else {
-            binding.llDirection.setVisibility(View.VISIBLE);
-            binding.tvDireDesc.setText(mainPlayModelList.get(position).getAudioDirection());
-        }
-        binding.tvTitle.setText(mainPlayModelList.get(position).getAudioSubCategory());
-        binding.tvDesc.setText(mainPlayModelList.get(position).getAudiomastercat());
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                1, 1, 1f, 30);
-        binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-
-        if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
-            binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-        } else if (!mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
-            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-        }
-
-        if (mainPlayModelList.get(position).getDownload().equalsIgnoreCase("1")) {
-            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-            binding.ivDownloads.setAlpha(255);
-            binding.llDownload.setClickable(false);
-            binding.llDownload.setEnabled(false);
-        } else if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) {
-            binding.llDownload.setClickable(true);
-            binding.llDownload.setEnabled(true);
-            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-        }
-
-        if (MusicService.isPause) {
-            MusicService.resumeMedia();
-        } else {
-            MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-            MusicService.playMedia();
+        if (queuePlay) {
+            listSize = addToQueueModelList.size();
+            id = addToQueueModelList.get(position).getID();
+            binding.tvName.setText(addToQueueModelList.get(position).getName());
+            if (addToQueueModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
+                binding.llDirection.setVisibility(View.GONE);
+            } else {
+                binding.llDirection.setVisibility(View.VISIBLE);
+                binding.tvDireDesc.setText(addToQueueModelList.get(position).getAudioDirection());
+            }
+            binding.tvTitle.setText(addToQueueModelList.get(position).getAudioSubCategory());
+            binding.tvDesc.setText(addToQueueModelList.get(position).getAudiomastercat());
+            Glide.with(ctx).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f).into(binding.ivRestaurantImage);
+            if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("1")) {
+                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+            } else if (!addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
+                binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+            }
+            if (addToQueueModelList.get(position).getDownload().equalsIgnoreCase("1")) {
+                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                binding.ivDownloads.setAlpha(255);
+                binding.llDownload.setClickable(false);
+                binding.llDownload.setEnabled(false);
+            } else if (!addToQueueModelList.get(position).getDownload().equalsIgnoreCase("")) {
+                binding.llDownload.setClickable(true);
+                binding.llDownload.setEnabled(true);
+                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            }
+            if (MusicService.isPause) {
+                MusicService.resumeMedia();
+            } else {
+                MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                MusicService.playMedia();
+            }
+            binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
+        } else if (audioPlay) {
+            listSize = mainPlayModelList.size();
+            id = mainPlayModelList.get(position).getID();
+            binding.tvName.setText(mainPlayModelList.get(position).getName());
+            if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
+                binding.llDirection.setVisibility(View.GONE);
+            } else {
+                binding.llDirection.setVisibility(View.VISIBLE);
+                binding.tvDireDesc.setText(mainPlayModelList.get(position).getAudioDirection());
+            }
+            binding.tvTitle.setText(mainPlayModelList.get(position).getAudioSubCategory());
+            binding.tvDesc.setText(mainPlayModelList.get(position).getAudiomastercat());
+            Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f).into(binding.ivRestaurantImage);
+            if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
+                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+            } else if (!mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
+                binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+            }
+            if (mainPlayModelList.get(position).getDownload().equalsIgnoreCase("1")) {
+                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                binding.ivDownloads.setAlpha(255);
+                binding.llDownload.setClickable(false);
+                binding.llDownload.setEnabled(false);
+            } else if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) {
+                binding.llDownload.setClickable(true);
+                binding.llDownload.setEnabled(true);
+                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            }
+            if (MusicService.isPause) {
+                MusicService.resumeMedia();
+            } else {
+                MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                MusicService.playMedia();
+            }
+            binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
         }
 
         binding.simpleSeekbar.setClickable(false);
-
         startTime = MusicService.getStartTime();
-
-        binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
         binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
                 TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
         hdlr.postDelayed(UpdateSongTime, 60);
@@ -525,7 +473,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             startTime = MusicService.getStartTime();
             binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
                     TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
-            Time t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+            Time t = Time.valueOf("00:00:00");
+            if (queuePlay) {
+                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+            } else if (audioPlay) {
+                t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+            }
             long totalDuration = t.getTime();
             long currentDuration = MusicService.getStartTime();
 
