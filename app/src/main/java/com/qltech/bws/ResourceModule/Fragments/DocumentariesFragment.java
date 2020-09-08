@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ import retrofit2.Response;
 public class DocumentariesFragment extends Fragment {
     FragmentDocumentariesBinding binding;
     String documentaries, UserID, Category;
+    private long mLastClickTime = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -146,6 +148,10 @@ public class DocumentariesFragment extends Fragment {
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
                     Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
                     i.putExtra("documentaries", documentaries);
                     i.putExtra("title", listModelList.get(position).getTitle());

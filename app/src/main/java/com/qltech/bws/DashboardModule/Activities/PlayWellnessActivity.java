@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -57,6 +58,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     Boolean queuePlay, audioPlay;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
+    private long mLastClickTime = 0;
     private Handler hdlr;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
@@ -160,6 +162,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.llDownload.setOnClickListener(view -> callDownload());
 
         binding.llMore.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(ctx, AddQueueActivity.class);
             i.putExtra("play", "play");
             i.putExtra("ID", id);
@@ -169,6 +175,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         });
 
         binding.llViewQueue.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
 //            MusicService.pauseMedia();
             Intent i = new Intent(ctx, ViewQueueActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

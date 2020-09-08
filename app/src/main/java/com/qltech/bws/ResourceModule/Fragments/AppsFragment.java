@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import retrofit2.Response;
 public class AppsFragment extends Fragment {
     FragmentAppsBinding binding;
     String apps, UserID, Category;
+    private long mLastClickTime = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -136,6 +138,10 @@ public class AppsFragment extends Fragment {
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
                     Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
                     i.putExtra("apps", apps);
                     i.putExtra("title", listModelList.get(position).getTitle());

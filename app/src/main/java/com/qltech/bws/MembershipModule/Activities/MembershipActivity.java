@@ -40,6 +40,7 @@ public class MembershipActivity extends AppCompatActivity {
     MembershipPlanAdapter membershipPlanAdapter;
     Context ctx;
     MembershipFaqAdapter adapter;
+    private long mLastClickTime = 0;
 //    String PlanPosition, PlanID, PlanAmount, PlanCurrency, PlanInterval, PlanImage, PlanTenure, PlanNextRenewal, SubName;
 
     @Override

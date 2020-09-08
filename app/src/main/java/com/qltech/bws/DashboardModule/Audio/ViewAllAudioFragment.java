@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -72,6 +74,7 @@ public class ViewAllAudioFragment extends Fragment {
             }
             return false;
         });
+
         if (!AudioFlag.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -79,7 +82,16 @@ public class ViewAllAudioFragment extends Fragment {
                     .add(R.id.rlAudiolist, fragment)
                     .addToBackStack("TransparentPlayerFragment")
                     .commit();
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(4, 6, 4, 210);
+            binding.llSpace.setLayoutParams(params);
+        }else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(4, 6, 4, 96);
+            binding.llSpace.setLayoutParams(params);
         }
+
         binding.llBack.setOnClickListener(view1 -> callBack());
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());

@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -23,6 +25,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
 import com.qltech.bws.DashboardModule.Models.ViewAllPlayListModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -42,6 +45,7 @@ public class ViewAllPlaylistFragment extends Fragment {
     String GetLibraryID, Name, UserID;
     ArrayList<MainPlayListModel.ResponseData.Detail> Audiolist;
     public static boolean viewallPlayList = false;
+    String AudioFlag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,10 +55,8 @@ public class ViewAllPlaylistFragment extends Fragment {
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (getArguments() != null) {
             GetLibraryID = getArguments().getString("GetLibraryID");
             Name = getArguments().getString("Name");
@@ -92,8 +94,25 @@ public class ViewAllPlaylistFragment extends Fragment {
     }
 
     private void prepareData() {
-        showProgressBar();
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.rlPlaylist, fragment)
+                    .addToBackStack("TransparentPlayerFragment")
+                    .commit();
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(4, 6, 4, 224);
+            binding.llSpace.setLayoutParams(params);
+        }else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(4, 6, 4, 120);
+            binding.llSpace.setLayoutParams(params);
+        }
+
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            showProgressBar();
             Call<ViewAllPlayListModel> listCall = APIClient.getClient().getViewAllPlayLists(UserID, GetLibraryID);
             listCall.enqueue(new Callback<ViewAllPlayListModel>() {
                 @Override
@@ -156,7 +175,7 @@ public class ViewAllPlaylistFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
-                    1, 1, 0.44f, 0);
+                    1, 1, 0.46f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);

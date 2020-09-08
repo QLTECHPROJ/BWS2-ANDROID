@@ -66,8 +66,27 @@ public class AudioFragment extends Fragment {
     }
 
     private void prepareData() {
-        showProgressBar();
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.rlAudiolist, fragment)
+                    .addToBackStack("TransparentPlayerFragment")
+                    .commit();
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(13, 6, 13, 160);
+            binding.llSpace.setLayoutParams(params);
+        } else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(13, 6, 13, 84);
+            binding.llSpace.setLayoutParams(params);
+        }
+
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            showProgressBar();
             Call<MainAudioModel> listCall = APIClient.getClient().getMainAudioLists(UserID);
             listCall.enqueue(new Callback<MainAudioModel>() {
                 @Override
@@ -213,24 +232,7 @@ public class AudioFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlAudiolist, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
-                    .commit();
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 6, 13, 160);
-            binding.llSpace.setLayoutParams(params);
-        }else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 6, 13, 84);
-            binding.llSpace.setLayoutParams(params);
-        }
         prepareData();
     }
 
