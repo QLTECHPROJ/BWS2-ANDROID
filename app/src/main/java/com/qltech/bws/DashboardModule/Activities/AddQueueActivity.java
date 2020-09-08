@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ public class AddQueueActivity extends AppCompatActivity {
     AddToQueueModel addToQueueModel;
     int position, listSize;
     Boolean queuePlay, audioPlay;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +158,10 @@ public class AddQueueActivity extends AppCompatActivity {
             if (!comefrom.equalsIgnoreCase("")) {
                 finish();
             } else {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(ctx, PlayWellnessActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
@@ -380,6 +386,10 @@ public class AddQueueActivity extends AppCompatActivity {
         if (!comefrom.equalsIgnoreCase("")) {
             finish();
         } else {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(ctx, PlayWellnessActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
@@ -492,6 +502,10 @@ public class AddQueueActivity extends AppCompatActivity {
                         binding.llAddPlaylist.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                    return;
+                                }
+                                mLastClickTime = SystemClock.elapsedRealtime();
                                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
                                 i.putExtra("AudioId", AudioId);
                                 startActivity(i);
@@ -501,6 +515,10 @@ public class AddQueueActivity extends AppCompatActivity {
                         binding.llViewQueue.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                    return;
+                                }
+                                mLastClickTime = SystemClock.elapsedRealtime();
                                 Intent i = new Intent(ctx, ViewQueueActivity.class);
                                 startActivity(i);
                             }

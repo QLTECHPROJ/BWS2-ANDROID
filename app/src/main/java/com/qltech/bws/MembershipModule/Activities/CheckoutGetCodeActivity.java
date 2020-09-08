@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -35,6 +36,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
     String TrialPeriod;
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     int position;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,10 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         binding.rlCountrySelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(ctx, CountrySelectActivity.class);
 //                i.putParcelableArrayListExtra("PlanData",listModelList);
 //                i.putExtra("TrialPeriod",TrialPeriod);

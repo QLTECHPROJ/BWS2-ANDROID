@@ -5,6 +5,7 @@ import androidx.databinding.DataBindingUtil;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -17,6 +18,7 @@ import com.qltech.bws.databinding.ActivityThankYouMembershipBinding;
 
 public class ThankYouMpActivity extends AppCompatActivity {
     ActivityThankYouMembershipBinding binding;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,10 @@ public class ThankYouMpActivity extends AppCompatActivity {
         binding.btnExplore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(ThankYouMpActivity.this, DashboardActivity.class);
                 startActivity(i);
                 finish();
@@ -42,6 +48,10 @@ public class ThankYouMpActivity extends AppCompatActivity {
         binding.tvViewInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(ThankYouMpActivity.this, InvoiceActivity.class);
                 startActivity(i);
                 finish();

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.Html;
@@ -50,6 +51,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
     int position;
     ActivityCheckoutOtpBinding binding;
     CountDownTimer countDownTimer;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,10 @@ public class CheckoutOtpActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
                 i.putExtra("MobileNo", MobileNo);
                 i.putExtra("Name", Name);
@@ -95,6 +101,10 @@ public class CheckoutOtpActivity extends AppCompatActivity {
         binding.llEditNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
                 i.putExtra("MobileNo", MobileNo);
                 i.putExtra("Name", Name);

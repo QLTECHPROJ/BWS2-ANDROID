@@ -5,6 +5,7 @@ import androidx.databinding.DataBindingUtil;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
@@ -19,6 +20,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
     String TrialPeriod, comeFrom = "";
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     int position;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +57,19 @@ public class OrderSummaryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!comeFrom.equalsIgnoreCase("")) {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
                     Intent i = new Intent(OrderSummaryActivity.this, BillingOrderActivity.class);
                     i.putExtra("payment", 1);
                     startActivity(i);
                     finish();
                 } else {
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                        return;
+                    }
+                    mLastClickTime = SystemClock.elapsedRealtime();
                     Intent i = new Intent(OrderSummaryActivity.this, CheckoutGetCodeActivity.class);
                     i.putParcelableArrayListExtra("PlanData", listModelList);
                     i.putExtra("TrialPeriod", TrialPeriod);

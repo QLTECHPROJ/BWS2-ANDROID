@@ -59,7 +59,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
     int year, month;
     YeardialogBinding binding1;
     String strToken;
-
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
