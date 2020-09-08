@@ -79,15 +79,12 @@ public class PlaylistFragment extends Fragment {
                     .commit();
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 6, 13, 121);
+            params.setMargins(13, 6, 13, 190);
             binding.llSpace.setLayoutParams(params);
-
-//            with space
         } else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(13, 6, 13, 84);
             binding.llSpace.setLayoutParams(params);
-//            without space
         }
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);

@@ -202,7 +202,6 @@
                                 android:layout_marginRight="@dimen/_16sdp"
                                 android:fontFamily="@font/montserrat_semi_bold"
                                 android:gravity="start"
-                                android:text="Tasks to be completed before the Next Session"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_17sdp" />
 
@@ -232,7 +231,6 @@
                                     android:layout_marginLeft="@dimen/_2sdp"
                                     android:fontFamily="@font/montserrat_medium"
                                     android:gravity="start"
-                                    android:text="Listen to Pre Session 1 Audio"
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/_12sdp" />
                             </LinearLayout>
