@@ -283,6 +283,7 @@
                         android:gravity="center">
 
                         <ImageView
+                            android:id="@+id/ivprev"
                             android:layout_width="@dimen/_31sdp"
                             android:layout_height="@dimen/_31sdp"
                             android:src="@drawable/ic_backword_icon" />
@@ -327,6 +328,7 @@
                         android:gravity="center">
 
                         <ImageView
+                            android:id="@+id/ivnext"
                             android:layout_width="@dimen/_31sdp"
                             android:layout_height="@dimen/_31sdp"
                             android:src="@drawable/ic_forward_icon" />

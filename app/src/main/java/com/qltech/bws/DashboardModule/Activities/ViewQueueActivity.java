@@ -206,16 +206,16 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
             binding.llnext.setEnabled(false);
             binding.llprev.setClickable(false);
             binding.llprev.setClickable(false);
-            binding.llprev.setBackgroundColor(ContextCompat.getColor(ctx, R.color.gray));
-            binding.llnext.setBackgroundColor(ContextCompat.getColor(ctx, R.color.gray));
+            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
             position = 0;
         } else {
             binding.llnext.setEnabled(true);
             binding.llnext.setEnabled(true);
             binding.llprev.setClickable(true);
             binding.llprev.setClickable(true);
-            binding.llprev.setBackgroundColor(ContextCompat.getColor(ctx, R.color.black));
-            binding.llnext.setBackgroundColor(ContextCompat.getColor(ctx, R.color.black));
+            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (audioPlay) {
@@ -296,16 +296,16 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
             binding.llnext.setEnabled(false);
             binding.llprev.setClickable(false);
             binding.llprev.setClickable(false);
-            binding.llprev.setBackgroundColor(ContextCompat.getColor(ctx, R.color.gray));
-            binding.llnext.setBackgroundColor(ContextCompat.getColor(ctx, R.color.gray));
+            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
             position = 0;
         } else {
             binding.llnext.setEnabled(true);
             binding.llnext.setEnabled(true);
             binding.llprev.setClickable(true);
             binding.llprev.setClickable(true);
-            binding.llprev.setBackgroundColor(ContextCompat.getColor(ctx, R.color.black));
-            binding.llnext.setBackgroundColor(ContextCompat.getColor(ctx, R.color.black));
+            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
 
@@ -320,6 +320,7 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
+        hdlr.removeCallbacks(UpdateSongTime);
 
     }
 
