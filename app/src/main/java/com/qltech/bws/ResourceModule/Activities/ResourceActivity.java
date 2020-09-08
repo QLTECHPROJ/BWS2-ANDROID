@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.Gravity;
@@ -174,6 +175,7 @@ public class ResourceActivity extends AppCompatActivity {
         private List<ResourceFilterModel.ResponseData> listModel;
         Context ctx;
         Dialog dialogBox;
+        int row_index = -1;
 
         public ResourceFilterAdapter(List<ResourceFilterModel.ResponseData> listModel, Context ctx, Dialog dialogBox) {
             this.listModel = listModel;
@@ -193,11 +195,20 @@ public class ResourceActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModel.get(position).getCategoryName());
             holder.binding.llMainLayout.setOnClickListener(view -> {
+                row_index=position;
+                notifyDataSetChanged();
                 Category = listModel.get(position).getCategoryName();
                 setAdapter();
                 dialogBox.dismiss();
             });
 
+            if (row_index == position) {
+                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
+                holder.binding.ivFilter.setVisibility(View.VISIBLE);
+            } else {
+                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.black));
+                holder.binding.ivFilter.setVisibility(View.GONE);
+            }
         }
 
         @Override
