@@ -130,7 +130,7 @@ public class ResourceActivity extends AppCompatActivity {
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ResourceActivity.this);
             rvFilterList.setLayoutManager(mLayoutManager);
             rvFilterList.setItemAnimator(new DefaultItemAnimator());
-            prepareData(ResourceActivity.this, rvFilterList, dialogBox);
+            prepareData(ResourceActivity.this, rvFilterList, dialogBox,tvAll);
         });
     }
 
@@ -146,7 +146,7 @@ public class ResourceActivity extends AppCompatActivity {
         binding.viewPager.setCurrentItem(CurruntTab);
     }
 
-    void prepareData(Context ctx, RecyclerView rvFilterList, Dialog dialogBox) {
+    void prepareData(Context ctx, RecyclerView rvFilterList, Dialog dialogBox, TextView tvAll) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             Call<ResourceFilterModel> listCall = APIClient.getClient().getResourcFilterLists(UserID);
             listCall.enqueue(new Callback<ResourceFilterModel>() {
@@ -154,7 +154,7 @@ public class ResourceActivity extends AppCompatActivity {
                 public void onResponse(Call<ResourceFilterModel> call, Response<ResourceFilterModel> response) {
                     if (response.isSuccessful()) {
                         ResourceFilterModel listModel = response.body();
-                        ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx, dialogBox);
+                        ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx, dialogBox,tvAll);
                         rvFilterList.setAdapter(adapter);
                         dialogBox.show();
                     }
@@ -175,11 +175,13 @@ public class ResourceActivity extends AppCompatActivity {
         Dialog dialogBox;
         int row_index = -1, pos = 0;
         private List<ResourceFilterModel.ResponseData> listModel;
+        private TextView tvAll;
 
-        public ResourceFilterAdapter(List<ResourceFilterModel.ResponseData> listModel, Context ctx, Dialog dialogBox) {
+        public ResourceFilterAdapter(List<ResourceFilterModel.ResponseData> listModel, Context ctx, Dialog dialogBox, TextView tvAll) {
             this.listModel = listModel;
             this.ctx = ctx;
             this.dialogBox = dialogBox;
+            this.tvAll = tvAll;
         }
 
         @NonNull
@@ -206,8 +208,8 @@ public class ResourceActivity extends AppCompatActivity {
             if(listModel.get(position).getCategoryName().equalsIgnoreCase(Category)){
                 holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
                 holder.binding.ivFilter.setVisibility(View.VISIBLE);
-            }else if(Category.equalsIgnoreCase("") && position == 0){
-                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
+            }else if(Category.equalsIgnoreCase("")){
+                tvAll.setTextColor(getResources().getColor(R.color.blue));
                 holder.binding.ivFilter.setVisibility(View.VISIBLE);
             }
            /* if (row_index == position) {
