@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,6 +37,7 @@ import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityQueueBinding;
 
 import java.lang.reflect.Type;
@@ -49,7 +51,7 @@ import retrofit2.Response;
 
 public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
-    String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "";
+    String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comefrom;
     Context ctx;
     Activity activity;
     ArrayList<String> queue;
@@ -57,7 +59,8 @@ public class AddQueueActivity extends AppCompatActivity {
     ArrayList<MainPlayModel> mainPlayModelList;
     MainPlayModel mainPlayMode;
     AddToQueueModel addToQueueModel;
-    int position;
+    int position,listSize;
+    Boolean queuePlay, audioPlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +91,8 @@ public class AddQueueActivity extends AppCompatActivity {
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
+        queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+        audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
 
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);
@@ -98,17 +103,24 @@ public class AddQueueActivity extends AppCompatActivity {
         } else {
             play = "";
         }
+        if (getIntent().hasExtra("comefrom")) {
+            comefrom = getIntent().getStringExtra("comefromm");
+        }
         if (play.equalsIgnoreCase("play")) {
             binding.llOptions.setVisibility(View.VISIBLE);
             binding.llDownload.setVisibility(View.VISIBLE);
             binding.llAddPlaylist.setVisibility(View.VISIBLE);
             binding.llAddQueue.setVisibility(View.VISIBLE);
+            binding.llRepeat.setVisibility(View.VISIBLE);/*GONE*/
+            binding.llShuffle.setVisibility(View.VISIBLE);/*GONE*/
             binding.llRemovePlaylist.setVisibility(View.VISIBLE);
         } else {
             binding.llOptions.setVisibility(View.VISIBLE); /*GONE*/
             binding.llAddPlaylist.setVisibility(View.GONE);
             binding.llDownload.setVisibility(View.VISIBLE);
-            binding.llAddQueue.setVisibility(View.VISIBLE);/*GONE*/
+            binding.llAddQueue.setVisibility(View.GONE);/*GONE*/
+            binding.llRepeat.setVisibility(View.GONE);/*GONE*/
+            binding.llShuffle.setVisibility(View.GONE);/*GONE*/
             binding.llRemovePlaylist.setVisibility(View.GONE);
         }
         if (myPlaylist.equalsIgnoreCase("myPlaylist")) {
@@ -128,28 +140,98 @@ public class AddQueueActivity extends AppCompatActivity {
         binding.llAddQueue.setOnClickListener(view ->
                 callAddToQueue());
 
+        binding.llRepeat.setOnClickListener(view -> callRepeat());
+
+        binding.llShuffle.setOnClickListener(view -> callShuffle());
         binding.llRemovePlaylist.setOnClickListener(view -> callRemoveFromPlayList());
         binding.llBack.setOnClickListener(view -> {
           /*  Intent i = new Intent(ctx, PlayWellnessActivity.class);
             i.putExtra("Like", Like);
             i.putExtra("Download", Download);
             startActivity(i);*/
-            Intent i = new Intent(ctx, PlayWellnessActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(i);
-            SharedPreferences shared11 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-            SharedPreferences.Editor editor = shared11.edit();
-            Gson gson11 = new Gson();
-            String json11 = gson11.toJson(mainPlayModelList);
-            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-            editor.putString(CONSTANTS.PREF_KEY_audioList, json11);
-            editor.commit();
-            finish();
+            if (!comefrom.equalsIgnoreCase("")) {
+                finish();
+            } else {
+                Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(i);
+                SharedPreferences shared11 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared11.edit();
+                Gson gson11 = new Gson();
+                String json11 = gson11.toJson(mainPlayModelList);
+                editor.putString(CONSTANTS.PREF_KEY_audioList, json11);
+                editor.commit();
+                finish();
+            }
         });
         prepareData();
     }
 
+    private void callShuffle() {
+        if (IsShuffle.equalsIgnoreCase("")) {
+            if(queuePlay){
+               listSize= addToQueueModelList.size();
+            }else if(audioPlay){
+               listSize= mainPlayModelList.size();
+            }
+            if (listSize == 1) {
+
+            } else {
+                IsShuffle = "1";
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "1");
+                if (IsRepeat.equalsIgnoreCase("0")) {
+                    editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
+                }
+                editor.commit();
+                MusicService.ToRepeat(false);
+                IsRepeat = "";
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
+        } else if (IsShuffle.equalsIgnoreCase("1")) {
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
+            editor.commit();
+            IsShuffle = "";
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+    }
+
+    private void callRepeat() {
+
+        if (IsRepeat.equalsIgnoreCase("")) {
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "0");
+            editor.commit();
+            MusicService.ToRepeat(true);
+            IsRepeat = "0";
+            binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+        } else if (IsRepeat.equalsIgnoreCase("0")) {
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
+            editor.commit();
+            MusicService.ToRepeat(false);
+            IsRepeat = "1";
+            binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+        } else if (IsRepeat.equalsIgnoreCase("1")) {
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
+            editor.commit();
+            MusicService.ToRepeat(false);
+            IsRepeat = "";
+            binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+    }
     private void callAddToQueue() {
         addToQueueModel = new AddToQueueModel();
         int i = position;
@@ -290,22 +372,20 @@ public class AddQueueActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-       /* Intent i = new Intent(ctx, PlayWellnessActivity.class);
-        i.putExtra("Like", Like);
-        i.putExtra("Download", Download);
-        startActivity(i);*/
-        Intent i = new Intent(ctx, PlayWellnessActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(i);
-        SharedPreferences shared11 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-        SharedPreferences.Editor editor = shared11.edit();
-        Gson gson11 = new Gson();
-        String json11 = gson11.toJson(mainPlayModelList);
-        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-        editor.putString(CONSTANTS.PREF_KEY_audioList, json11);
-        editor.commit();
-        finish();
+        if (!comefrom.equalsIgnoreCase("")) {
+            finish();
+        } else {
+            Intent i = new Intent(ctx, PlayWellnessActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+            SharedPreferences shared11 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared11.edit();
+            Gson gson11 = new Gson();
+            String json11 = gson11.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, json11);
+            editor.commit();
+            finish();
+        }
     }
 
     private void prepareData() {

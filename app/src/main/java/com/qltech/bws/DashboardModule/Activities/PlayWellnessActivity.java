@@ -209,6 +209,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             MusicService.stopMedia();
             if (IsRepeat.equalsIgnoreCase("1")) {
                 // repeat is on play same song again
+                if (position < listSize - 1) {
+                    position = position + 1;
+                }
+                getPrepareShowData(position);
+            } else if (IsRepeat.equalsIgnoreCase("0")) {
                 getPrepareShowData(position);
             } else if (IsShuffle.equalsIgnoreCase("1")) {
                 // shuffle is on - play a random song
@@ -218,10 +223,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             } else {
                 if (position < listSize - 1) {
                     position = position + 1;
-                } else {
-                    position = 0;
+                    getPrepareShowData(position);
                 }
-                getPrepareShowData(position);
             }
         });
 
@@ -229,6 +232,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             MusicService.stopMedia();
             if (IsRepeat.equalsIgnoreCase("1")) {
                 // repeat is on play same song again
+                if (position > 0) {
+                    position = position - 1;
+                    getPrepareShowData(position);
+                }
+            } else if (IsRepeat.equalsIgnoreCase("0")) {
                 getPrepareShowData(position);
             } else if (IsShuffle.equalsIgnoreCase("1")) {
                 // shuffle is on - play a random song
@@ -238,10 +246,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             } else {
                 if (position > 0) {
                     position = position - 1;
-                } else {
-                    position = 0;
+
+                    getPrepareShowData(position);
                 }
-                getPrepareShowData(position);
             }
         });
     }
@@ -398,7 +405,20 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
     private void getPrepareShowData(int position) {
         if (listSize == 1) {
+            binding.llnext.setEnabled(false);
+            binding.llnext.setEnabled(false);
+            binding.llprev.setClickable(false);
+            binding.llprev.setClickable(false);
+            binding.llprev.setBackgroundColor(ContextCompat.getColor(ctx, R.color.gray));
+            binding.llnext.setBackgroundColor(ContextCompat.getColor(ctx, R.color.gray));
             position = 0;
+        }else{
+            binding.llnext.setEnabled(true);
+            binding.llnext.setEnabled(true);
+            binding.llprev.setClickable(true);
+            binding.llprev.setClickable(true);
+            binding.llprev.setBackgroundColor(ContextCompat.getColor(ctx, R.color.black));
+            binding.llnext.setBackgroundColor(ContextCompat.getColor(ctx, R.color.black));
         }
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (queuePlay) {
@@ -539,12 +559,17 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             getPrepareShowData();
         }*/
         if (IsRepeat.equalsIgnoreCase("1")) {
-            // repeat is on play same song again
+            if (position < (listSize - 1)) {
+                position = position + 1;
+                getPrepareShowData(position);
+            }
+        } else if (IsRepeat.equalsIgnoreCase("0")) {
             getPrepareShowData(position);
+            binding.llnext.setEnabled(false);
         } else if (IsShuffle.equalsIgnoreCase("1")) {
             // shuffle is on - play a random song
             if (listSize == 1) {
-
+                binding.llnext.setEnabled(false);
             } else {
                 Random random = new Random();
                 position = random.nextInt((listSize - 1) - 0 + 1) + 0;
@@ -553,10 +578,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         } else {
             if (position < (listSize - 1)) {
                 position = position + 1;
-            } else {
-                position = 0;
+                getPrepareShowData(position);
             }
-            getPrepareShowData(position);
         }
     }
 

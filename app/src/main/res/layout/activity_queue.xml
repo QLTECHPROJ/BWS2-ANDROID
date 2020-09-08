@@ -49,12 +49,14 @@
                     android:gravity="center_horizontal">
 
                     <LinearLayout
+                        android:id="@+id/llShuffle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical">
 
                         <ImageView
+                            android:id="@+id/ivShuffle"
                             android:layout_width="@dimen/_56sdp"
                             android:layout_height="@dimen/_50sdp"
                             android:padding="@dimen/_16sdp"
@@ -73,6 +75,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llRepeat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_16sdp"
@@ -80,10 +83,11 @@
                         android:orientation="vertical">
 
                         <ImageView
+                            android:id="@+id/ivRepeat"
                             android:layout_width="@dimen/_56sdp"
                             android:layout_height="@dimen/_50sdp"
                             android:padding="@dimen/_16sdp"
-                            android:src="@drawable/ic_repeat_white_icon" />
+                                android:src="@drawable/ic_repeat_white_icon" />
 
                         <TextView
                             android:layout_width="wrap_content"

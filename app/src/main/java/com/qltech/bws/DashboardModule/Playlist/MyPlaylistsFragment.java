@@ -218,14 +218,14 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     private void prepareData(String UserID, String PlaylistID) {
-         BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
         if (BWSApplication.isNetworkConnected(getActivity())) {
             Call<SubPlayListModel> listCall = APIClient.getClient().getSubPlayLists(UserID, PlaylistID);
             listCall.enqueue(new Callback<SubPlayListModel>() {
                 @Override
                 public void onResponse(Call<SubPlayListModel> call, Response<SubPlayListModel> response) {
                     if (response.isSuccessful()) {
-                         BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                         SubPlayListModel listModel = response.body();
 
                         if (listModel.getResponseData().getPlaylistName().equalsIgnoreCase("") ||
@@ -310,14 +310,14 @@ public class MyPlaylistsFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<SubPlayListModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                 }
             });
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
- 
+
     private void callTransparentFrag(int position, Context ctx, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList,
                                      String myPlaylist) {
         player = 1;
@@ -343,7 +343,7 @@ public class MyPlaylistsFragment extends Fragment {
 
     private void callRemove(String id) {
 
-         BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
         String AudioId = id;
         if (BWSApplication.isNetworkConnected(getActivity())) {
             Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistID);
@@ -351,7 +351,7 @@ public class MyPlaylistsFragment extends Fragment {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                     if (response.isSuccessful()) {
-                         BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                         SucessModel listModel = response.body();
                         prepareData(UserID, PlaylistID);
                         BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
@@ -360,7 +360,7 @@ public class MyPlaylistsFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<SucessModel> call, Throwable t) {
-                     BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                 }
             });
         } else {
@@ -370,14 +370,14 @@ public class MyPlaylistsFragment extends Fragment {
 
     private void callDownload(String id) {
         if (BWSApplication.isNetworkConnected(getActivity())) {
-             BWSApplication.showProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
             String AudioId = id;
             Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistID);
             listCall.enqueue(new Callback<DownloadPlaylistModel>() {
                 @Override
                 public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
                     if (response.isSuccessful()) {
-                         BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                         DownloadPlaylistModel model = response.body();
                         if (model.getResponseData().getFlag().equalsIgnoreCase("0")
                                 || model.getResponseData().getFlag().equalsIgnoreCase("")) {
@@ -397,7 +397,7 @@ public class MyPlaylistsFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                     BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                 }
             });
 
@@ -446,9 +446,9 @@ public class MyPlaylistsFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             binding.ivPlaylistStatus.setOnClickListener(view ->
-                    callTransparentFrag(0, ctx, listModelList,"myPlaylist"));
+                    callTransparentFrag(0, ctx, listModelList, "myPlaylist"));
             holder.binding.llMainLayout.setOnClickListener(view ->
-                    callTransparentFrag(position, ctx, listModelList,"myPlaylist"));
+                    callTransparentFrag(position, ctx, listModelList, "myPlaylist"));
 
             if (Created.equalsIgnoreCase("1")) {
                 holder.binding.llMore.setVisibility(View.GONE);
@@ -486,6 +486,7 @@ public class MyPlaylistsFragment extends Fragment {
                 Intent i = new Intent(ctx, AddQueueActivity.class);
                 i.putExtra("play", "");
                 i.putExtra("ID", mData.get(position).getID());
+                i.putExtra("comeFrom", "myPlayList");
                 startActivity(i);
             });
 
@@ -536,14 +537,14 @@ public class MyPlaylistsFragment extends Fragment {
                     @Override
                     public void onResponse(Call<CardModel> call, Response<CardModel> response) {
                         if (response.isSuccessful()) {
-                             BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                             CardModel listModel = response.body();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<CardModel> call, Throwable t) {
-                         BWSApplication.hideProgressBar(binding.ImgV,binding.progressBarHolder,getActivity());
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                     }
                 });
             }
@@ -646,8 +647,8 @@ public class MyPlaylistsFragment extends Fragment {
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            binding.ivPlaylistStatus.setOnClickListener(view -> callTransparentFrag(0, ctx, listModelList,""));
-            holder.binding.llMainLayout.setOnClickListener(view -> callTransparentFrag(0, ctx, listModelList,""));
+            binding.ivPlaylistStatus.setOnClickListener(view -> callTransparentFrag(0, ctx, listModelList, ""));
+            holder.binding.llMainLayout.setOnClickListener(view -> callTransparentFrag(0, ctx, listModelList, ""));
 
             if (Created.equalsIgnoreCase("1")) {
                 holder.binding.llMore.setVisibility(View.GONE);
@@ -687,6 +688,7 @@ public class MyPlaylistsFragment extends Fragment {
                     Intent i = new Intent(ctx, AddQueueActivity.class);
                     i.putExtra("play", "");
                     i.putExtra("ID", mData.get(position).getID());
+                    i.putExtra("comeFrom", "myPlayList");
                     startActivity(i);
                 }
             });
