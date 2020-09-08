@@ -138,18 +138,8 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
             touchHelper.attachToRecyclerView(binding.rvQueueList);
             binding.rvQueueList.setAdapter(adapter);
         }
-        binding.llPause.setOnClickListener(view -> {        Time t = Time.valueOf("00:00:00");
-            if (queuePlay) {
-                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
-            } else if (audioPlay) {
-                t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
-            }
-            long totalDuration = t.getTime();
-            long currentDuration = MusicService.getStartTime();
-
-            int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
-            binding.simpleSeekbar.setProgress(progress);
+        binding.llPause.setOnClickListener(view -> {
+            binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
             binding.llPause.setVisibility(View.GONE);
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.ivPause.setImageResource(R.drawable.ic_play_white_icon);

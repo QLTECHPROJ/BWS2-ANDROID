@@ -2,6 +2,7 @@ package com.qltech.bws.DashboardModule.Activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,9 +20,11 @@ import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityDashboardBinding;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener {
     public static int player = 0;
     ActivityDashboardBinding binding;
+    private AudioManager mAudioManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,9 @@ public class DashboardActivity extends AppCompatActivity {
 
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
         if (!AudioFlag.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getSupportFragmentManager();
@@ -58,7 +63,7 @@ public class DashboardActivity extends AppCompatActivity {
         if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);
             finishAffinity();
-        }else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -67,5 +72,24 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         MusicService.releasePlayer();
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @Override
+    public void onAudioFocusChange(int i) {
+        switch (i) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                MusicService.resumeMedia(); // Resume your media player here
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                MusicService.pauseMedia();// Pause your media player here
+                break;
+        }
     }
 }

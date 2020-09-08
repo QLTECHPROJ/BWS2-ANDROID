@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,7 +48,7 @@ import retrofit2.Response;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
-public class PlayWellnessActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
+public class PlayWellnessActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener, AudioManager.OnAudioFocusChangeListener {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id;
     int oTime = 0, startTime = 0, endTime = 0, position, listSize;
@@ -195,21 +196,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         });
 
         binding.llPause.setOnClickListener(view -> {
-            Time t = Time.valueOf("00:00:00");
-            if (queuePlay) {
-                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
-            } else if (audioPlay) {
-                t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
-            }
-            long totalDuration = t.getTime();
-            long currentDuration = MusicService.getStartTime();
-
-            int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
-            binding.simpleSeekbar.setProgress(progress);
+            MusicService.pauseMedia();
+            binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
             binding.llplay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
-            MusicService.pauseMedia();
         });
 
         binding.llForwardSec.setOnClickListener(v -> {
@@ -652,6 +642,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @Override
+    public void onAudioFocusChange(int i) {
 
     }
 }

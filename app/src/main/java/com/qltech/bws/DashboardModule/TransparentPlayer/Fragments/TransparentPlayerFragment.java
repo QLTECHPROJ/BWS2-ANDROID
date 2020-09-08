@@ -108,7 +108,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                 }.getType();
                 ViewAllAudioListModel.ResponseData.Detail arrayList = gson.fromJson(json, type);
 //            listSize = arrayList.size();
-                for (int i = 0; i < listSize; i++) {
+//                for (int i = 0; i < listSize; i++) {
                     mainPlayModel = new MainPlayModel();
                     mainPlayModel.setID(arrayList.getID());
                     mainPlayModel.setName(arrayList.getName());
@@ -121,14 +121,14 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                     mainPlayModel.setDownload(arrayList.getDownload());
                     mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                     mainPlayModelList.add(mainPlayModel);
-                }
+//                }
                 playmedia();
             } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 Type type = new TypeToken<AppointmentDetailModel.Audio>() {
                 }.getType();
                 AppointmentDetailModel.Audio arrayList = gson.fromJson(json, type);
 //            listSize = arrayList.size();
-                for (int i = 0; i < listSize; i++) {
+//                for (int i = 0; i < listSize; i++) {
                     mainPlayModel = new MainPlayModel();
                     mainPlayModel.setID(arrayList.getID());
                     mainPlayModel.setName(arrayList.getName());
@@ -141,7 +141,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                     mainPlayModel.setDownload(arrayList.getDownload());
                     mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                     mainPlayModelList.add(mainPlayModel);
-                }
+//                }
                 playmedia();
             } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
                 Type type = new TypeToken<ArrayList<DownloadlistModel.Audio>>() {
