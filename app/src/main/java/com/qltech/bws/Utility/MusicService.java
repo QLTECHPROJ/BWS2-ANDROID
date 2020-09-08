@@ -77,7 +77,7 @@ public class MusicService extends Service {
 
     public static int getStartTime() {
         try {
-            if (!mediaPlayer.isPlaying()) {
+            if (!mediaPlayer.isPlaying() || !isMediaStart) {
                 startTime = 0;
             } else {
                 startTime = mediaPlayer.getCurrentPosition();
