@@ -159,7 +159,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:fontFamily="@font/poppins_medium"
+                    android:fontFamily="@font/montserrat_semi_bold"
                     android:gravity="center"
                     android:textColor="@color/red"
                     android:textSize="@dimen/_12sdp"

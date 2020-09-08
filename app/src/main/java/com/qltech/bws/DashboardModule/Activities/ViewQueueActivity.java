@@ -115,12 +115,13 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
 
-        binding.llBack.setOnClickListener(view ->{
-        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-            return;
-        }
-        mLastClickTime = SystemClock.elapsedRealtime();
-        callBack();});
+        binding.llBack.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            callBack();
+        });
         MeasureRatio measureRatio = BWSApplication.measureRatio(ViewQueueActivity.this, 0,
                 1, 1, 0.1f, 0);
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -220,8 +221,9 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
         }
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (audioPlay) {
+            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
             binding.tvName.setText(mainPlayModelList.get(position).getName());
-//        binding.tvTitle.setText(mainPlayModelList.get(position).getAudioSubCategory());
+//        binding.tvCategory.setText(mainPlayModelList.get(position).getAudioSubCategory());
             Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTime.setText(mainPlayModelList.get(position).getAudioDuration());
@@ -241,8 +243,9 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
                 }
             }
         } else if (queuePlay) {
+            binding.tvTitle.setText(addToQueueModelList.get(position).getName());
             binding.tvName.setText(addToQueueModelList.get(position).getName());
-//        binding.tvTitle.setText(mainPlayModelList.get(position).getAudioSubCategory());
+//            binding.tvCategory.setText(addToQueueModelList.get(position).getAudioSubCategory());
             Glide.with(ctx).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTime.setText(addToQueueModelList.get(position).getAudioDuration());
@@ -265,7 +268,7 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
             }
         }
         binding.llNowPlaying.setOnClickListener(view ->
-            callBack());
+                callBack());
         binding.simpleSeekbar.setClickable(true);
         startTime = MusicService.getStartTime();
         hdlr.postDelayed(UpdateSongTime, 60);
@@ -281,8 +284,8 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
 
     @Override
     protected void onResume() {
-        if(isMediaStart){
-            if(MusicService.isPlaying()){
+        if (isMediaStart) {
+            if (MusicService.isPlaying()) {
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);
             }

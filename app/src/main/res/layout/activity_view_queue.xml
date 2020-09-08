@@ -37,6 +37,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_6sdp"
@@ -53,7 +54,6 @@
                     android:layout_marginTop="@dimen/_6sdp"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="center"
-                    android:text="Love Thy Self"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_15sdp" />
 
@@ -137,7 +137,6 @@
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
                                 android:maxLines="1"
-                                android:text="Motivation Program"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_17sdp" />
 
@@ -150,7 +149,6 @@
                                 android:fontFamily="@font/montserrat_medium"
                                 android:gravity="start"
                                 android:maxLines="1"
-                                android:text="12:37"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_14sdp" />
 
@@ -253,7 +251,7 @@
                         android:id="@+id/ivPause"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_pause_icon" />
+                        android:src="@drawable/ic_pause_white_icon" />
                 </LinearLayout>
 
                 <LinearLayout

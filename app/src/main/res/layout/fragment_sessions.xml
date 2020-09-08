@@ -28,8 +28,7 @@
                         android:id="@+id/ivRestaurantImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/session_bg" />
+                        android:scaleType="fitXY"/>
 
                     <RelativeLayout
                         android:id="@+id/rlLayout"

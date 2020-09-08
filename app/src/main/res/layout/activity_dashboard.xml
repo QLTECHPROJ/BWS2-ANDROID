@@ -31,7 +31,7 @@
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_4sdp"
-                    android:fontFamily="@font/poppins_medium"
+                    android:fontFamily="@font/montserrat_bold"
                     android:gravity="center|center_vertical|bottom"
                     android:indeterminate="false"
                     android:progress="60"

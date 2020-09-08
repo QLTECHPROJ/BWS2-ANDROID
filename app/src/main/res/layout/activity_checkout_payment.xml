@@ -352,6 +352,7 @@
             android:paddingVertical="@dimen/_4sdp"
             android:text="@string/Complete_Payment"
             android:textColor="@color/white" />
+
         <ImageView
             android:id="@+id/ImgV"
             android:layout_width="match_parent"
