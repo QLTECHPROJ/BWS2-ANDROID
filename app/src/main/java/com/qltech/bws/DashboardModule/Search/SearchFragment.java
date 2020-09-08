@@ -76,7 +76,7 @@ public class SearchFragment extends Fragment {
                     .commit();
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(4, 6, 4, 121);
+            params.setMargins(4, 6, 4, 190);
             binding.llSpace.setLayoutParams(params);
         }else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

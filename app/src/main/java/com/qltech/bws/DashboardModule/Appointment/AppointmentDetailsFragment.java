@@ -72,11 +72,11 @@ public class AppointmentDetailsFragment extends Fragment {
                     .addToBackStack("TransparentPlayerFragment")
                     .commit();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, 0, 121);
+            params.setMargins(0, 0, 0, 196);
             binding.llSpace.setLayoutParams(params);
         }else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, 0, 84);
+            params.setMargins(0, 0, 0, 92);
             binding.llSpace.setLayoutParams(params);
         }
         binding.llBack.setOnClickListener(view1 -> callBack());

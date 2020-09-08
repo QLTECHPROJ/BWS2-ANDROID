@@ -127,11 +127,9 @@ public class NextSessionViewModel {
         public void setTask(Task task) {
             this.task = task;
         }
-
     }
 
     public class Task {
-
         @SerializedName("title")
         @Expose
         private String title;

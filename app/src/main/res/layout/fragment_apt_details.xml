@@ -32,7 +32,6 @@
                         android:layout_marginTop="@dimen/_20sdp"
                         android:fontFamily="@font/montserrat_semi_bold"
                         android:gravity="start"
-                        android:text="Emotional empowerment program session 1"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_17sdp" />
 
@@ -56,6 +55,7 @@
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.5"
+                                android:layout_marginRight="@dimen/_10sdp"
                                 android:gravity="center_vertical">
 
                                 <de.hdodenhof.circleimageview.CircleImageView
@@ -89,7 +89,6 @@
                                         android:layout_marginLeft="@dimen/_2sdp"
                                         android:fontFamily="@font/montserrat_semi_bold"
                                         android:gravity="start"
-                                        android:text="Kylie Butler"
                                         android:textColor="@color/black"
                                         android:textSize="@dimen/_13sdp" />
                                 </LinearLayout>
@@ -122,7 +121,6 @@
                                         android:layout_marginLeft="@dimen/_2sdp"
                                         android:fontFamily="@font/montserrat_medium"
                                         android:gravity="start"
-                                        android:text="4 November, 2019"
                                         android:textColor="@color/black"
                                         android:textSize="@dimen/_11sdp" />
                                 </LinearLayout>
@@ -147,7 +145,6 @@
                                         android:layout_marginLeft="@dimen/_2sdp"
                                         android:fontFamily="@font/montserrat_medium"
                                         android:gravity="start"
-                                        android:text="11:00 am"
                                         android:textColor="@color/black"
                                         android:textSize="@dimen/_11sdp" />
                                 </LinearLayout>
@@ -164,8 +161,8 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="start"
+                        android:justificationMode="inter_word"
                         android:lineSpacingExtra="@dimen/_4sdp"
-                        android:text="We begin your journey towards emotional empowerment by helping you to strengthen your foundations. By doing so, you may be able to better cope with the conditions of your current reality, without feeling distressed or overwhelmed by daily challenges and problems. Your natural emotional reality may begin to shift from suffering to inner-peace, and you may experience more control over your thoughts, feelings and emotions. Like any journey worth completing, there may be times in this initial session where you could feel uncomfortable or challenged as you let go of past, ineffective, habitual ways of thinking. The reward of a happier, healthier and more fulfilling life could be possible if you are willing to allow our Brain Wellness Spa facilitator to help guide you past any initial resistance. Our Emotional Empowerment Program is on average 12 - 16 sessions."
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 

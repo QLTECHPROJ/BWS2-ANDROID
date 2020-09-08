@@ -139,7 +139,7 @@ public class AppointmentFragment extends Fragment {
                         if (listModel.getResponseData().getResponse().equalsIgnoreCase("")) {
                             binding.cvShowSession.setVisibility(View.GONE);
                             binding.cvSetSession.setVisibility(View.VISIBLE);
-                        } else {
+                        } else if (listModel.getResponseData().getResponse().equalsIgnoreCase("1")){
                             binding.cvShowSession.setVisibility(View.VISIBLE);
                             binding.cvSetSession.setVisibility(View.GONE);
                             binding.tvTitle.setText(listModel.getResponseData().getName());
