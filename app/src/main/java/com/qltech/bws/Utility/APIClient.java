@@ -1,6 +1,9 @@
 package com.qltech.bws.Utility;
 
 import android.provider.Settings;
+
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -20,6 +23,11 @@ public class APIClient {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+        httpClient.connectTimeout(5, TimeUnit.HOURS)
+                .writeTimeout(5, TimeUnit.HOURS)
+                .readTimeout(5, TimeUnit.HOURS);
+
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();
             Request request = original.newBuilder()
