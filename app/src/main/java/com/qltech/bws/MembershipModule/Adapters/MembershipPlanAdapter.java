@@ -71,7 +71,6 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAd
         holder.binding.llPlanMain.setOnClickListener(view -> {
             row_index = position;
             pos++;
-
             notifyDataSetChanged();
         });
 

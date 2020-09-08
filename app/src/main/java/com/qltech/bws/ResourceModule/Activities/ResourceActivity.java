@@ -1,20 +1,9 @@
 package com.qltech.bws.ResourceModule.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.Gravity;
@@ -25,6 +14,16 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BWSApplication;
@@ -50,8 +49,8 @@ public class ResourceActivity extends AppCompatActivity {
     ActivityResourceBinding binding;
     String UserID, Category = "";
     Activity activity;
-    private long mLastClickTime = 0;
     int CurruntTab = 0;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,10 +171,10 @@ public class ResourceActivity extends AppCompatActivity {
     }
 
     public class ResourceFilterAdapter extends RecyclerView.Adapter<ResourceFilterAdapter.MyViewHolder> {
-        private List<ResourceFilterModel.ResponseData> listModel;
         Context ctx;
         Dialog dialogBox;
-        int row_index = -1;
+        int row_index = -1, pos = 0;
+        private List<ResourceFilterModel.ResponseData> listModel;
 
         public ResourceFilterAdapter(List<ResourceFilterModel.ResponseData> listModel, Context ctx, Dialog dialogBox) {
             this.listModel = listModel;
@@ -195,20 +194,37 @@ public class ResourceActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModel.get(position).getCategoryName());
             holder.binding.llMainLayout.setOnClickListener(view -> {
-                row_index=position;
+             /*   row_index = position;
                 notifyDataSetChanged();
+                pos++;*/
+                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
+                holder.binding.ivFilter.setVisibility(View.VISIBLE);
                 Category = listModel.get(position).getCategoryName();
                 setAdapter();
                 dialogBox.dismiss();
             });
-
-            if (row_index == position) {
+            if(listModel.get(position).getCategoryName().equalsIgnoreCase(Category)){
                 holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
                 holder.binding.ivFilter.setVisibility(View.VISIBLE);
-            } else {
-                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.black));
-                holder.binding.ivFilter.setVisibility(View.GONE);
+            }else if(Category.equalsIgnoreCase("") && position == 0){
+                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
+                holder.binding.ivFilter.setVisibility(View.VISIBLE);
             }
+           /* if (row_index == position) {
+                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
+                holder.binding.ivFilter.setVisibility(View.VISIBLE);
+                Category = listModel.get(position).getCategoryName();
+                setAdapter();
+                dialogBox.dismiss();
+            } else {
+                if (listModel.get(position).getCategoryName().equalsIgnoreCase(Category) && pos == 0) {
+                    holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
+                    holder.binding.ivFilter.setVisibility(View.VISIBLE);
+                } else {
+                    holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.black));
+                    holder.binding.ivFilter.setVisibility(View.GONE);
+                }
+            }*/
         }
 
         @Override
