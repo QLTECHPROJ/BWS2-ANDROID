@@ -137,10 +137,10 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="@dimen/_16sdp"
                                 android:layout_marginTop="@dimen/_6sdp"
+                                android:ellipsize="end"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
                                 android:maxLines="1"
-                                android:ellipsize="end"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_22sdp" />
 
@@ -176,9 +176,9 @@
                         android:id="@+id/llAddAudio"
                         android:layout_width="match_parent"
                         android:layout_height="310dp"
-                        android:gravity="center"
-                        android:layout_marginTop="@dimen/_51sdp"
                         android:layout_below="@id/llMainLayout"
+                        android:layout_marginTop="@dimen/_51sdp"
+                        android:gravity="center"
                         android:orientation="vertical"
                         android:visibility="gone">
 
@@ -225,8 +225,8 @@
                             android:layout_marginTop="@dimen/_16sdp"
                             android:layout_marginRight="@dimen/_16sdp"
                             android:layout_weight="2"
-                            android:visibility="visible"
-                            android:background="@drawable/rounded_extra_gray_corner">
+                            android:background="@drawable/rounded_extra_gray_corner"
+                            android:visibility="visible">
 
                             <ImageView
                                 android:id="@+id/button1"
@@ -248,10 +248,10 @@
                                 android:layout_toRightOf="@id/button1"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
-                                android:visibility="gone"
                                 android:text="@string/Search_for_audio"
                                 android:textColor="@color/light_gray"
-                                android:textSize="@dimen/_16sdp" />
+                                android:textSize="@dimen/_16sdp"
+                                android:visibility="gone" />
 
                             <androidx.appcompat.widget.SearchView
                                 android:id="@+id/searchView"
@@ -293,16 +293,18 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/_16sdp" />
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rvPlayLists"
+                        <LinearLayout
+                            android:id="@+id/llSpace"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginRight="@dimen/_10sdp"
-                            android:overScrollMode="never"
-                            android:visibility="visible"
-                            android:paddingBottom="120dp"
-                            android:paddingTop="@dimen/_8sdp" />
+                            android:layout_height="wrap_content">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvPlayLists"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:overScrollMode="never"
+                                android:visibility="visible" />
+                        </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/llError"

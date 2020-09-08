@@ -281,16 +281,18 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvPreviousData"
+                    <LinearLayout
+                        android:id="@+id/llSpace"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_10sdp"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:nestedScrollingEnabled="true"
-                        android:overScrollMode="never"
-                        android:paddingBottom="121dp" />
+                        android:layout_height="wrap_content">
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvPreviousData"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="true"
+                            android:overScrollMode="never" />
+                    </LinearLayout>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
 

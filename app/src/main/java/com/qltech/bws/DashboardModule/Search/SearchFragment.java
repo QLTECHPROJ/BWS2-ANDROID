@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -73,6 +74,14 @@ public class SearchFragment extends Fragment {
                     .add(R.id.rlSearchList, fragment)
                     .addToBackStack("TransparentPlayerFragment")
                     .commit();
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(4, 6, 4, 121);
+            binding.llSpace.setLayoutParams(params);
+        }else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(4, 6, 4, 84);
+            binding.llSpace.setLayoutParams(params);
         }
 
         binding.searchView.onActionViewExpanded();
@@ -118,8 +127,7 @@ public class SearchFragment extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         binding.rvPlayList.setItemAnimator(new DefaultItemAnimator());
         binding.rvPlayList.setLayoutManager(manager);
-        prepareSuggestedAudioData();
-        prepareSuggestedPlaylistData();
+        prepareSuggestedData();
         searchViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -168,10 +176,16 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    private void prepareSuggestedAudioData() {
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareSuggestedData();
+    }
+    private void prepareSuggestedData() {
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<SuggestedModel> listCall = APIClient.getClient().getSuggestedLists();
+            Call<SuggestedModel> listCall = APIClient.getClient().getSuggestedLists(UserID);
             listCall.enqueue(new Callback<SuggestedModel>() {
                 @Override
                 public void onResponse(Call<SuggestedModel> call, Response<SuggestedModel> response) {
@@ -192,12 +206,10 @@ public class SearchFragment extends Fragment {
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
-    }
 
-    private void prepareSuggestedPlaylistData() {
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            Call<SearchPlaylistModel> listCall = APIClient.getClient().getSuggestedPlayLists();
+            Call<SearchPlaylistModel> listCall = APIClient.getClient().getSuggestedPlayLists(UserID);
             listCall.enqueue(new Callback<SearchPlaylistModel>() {
                 @Override
                 public void onResponse(Call<SearchPlaylistModel> call, Response<SearchPlaylistModel> response) {
@@ -360,7 +372,6 @@ public class SearchFragment extends Fragment {
         }
     }
 
-
     public class SearchPlaylistAdapter extends RecyclerView.Adapter<SearchPlaylistAdapter.MyViewHolder> {
         private List<SearchPlaylistModel.ResponseData> listModelList;
 
@@ -404,7 +415,7 @@ public class SearchFragment extends Fragment {
                     bundle.putString("PlaylistName", listModelList.get(position).getName());
                     myPlaylistsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
-                            .replace(R.id.rlPlaylist, myPlaylistsFragment).
+                            .replace(R.id.rlSearchList, myPlaylistsFragment).
                             addToBackStack("MyPlaylistsFragment")
                             .commit();
                 }

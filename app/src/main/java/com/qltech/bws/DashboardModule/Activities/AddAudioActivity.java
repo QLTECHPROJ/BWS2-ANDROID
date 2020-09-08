@@ -153,7 +153,7 @@ public class AddAudioActivity extends AppCompatActivity {
     private void prepareSuggestedData() {
         showProgressBar();
         if (BWSApplication.isNetworkConnected(ctx)) {
-            Call<SuggestedModel> listCall = APIClient.getClient().getSuggestedLists();
+            Call<SuggestedModel> listCall = APIClient.getClient().getSuggestedLists(UserID);
             listCall.enqueue(new Callback<SuggestedModel>() {
                 @Override
                 public void onResponse(Call<SuggestedModel> call, Response<SuggestedModel> response) {

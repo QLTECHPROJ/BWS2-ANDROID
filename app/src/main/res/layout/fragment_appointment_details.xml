@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -52,15 +53,17 @@
 
                 <RelativeLayout
                     android:id="@+id/rlTabs"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/rlLayout"
-                    android:elevation="@dimen/_2sdp">
+                    android:elevation="@dimen/_2sdp"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tabLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:tabBackground="@color/white"
@@ -70,21 +73,24 @@
                         app:tabMode="fixed"
                         app:tabSelectedTextColor="@color/blue"
                         app:tabTextAppearance="@style/TabLayoutTextStyle"
-                        app:tabTextColor="@color/black"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        app:tabTextColor="@color/black" />
 
                 </RelativeLayout>
             </RelativeLayout>
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/viewPager"
+            <LinearLayout
+                android:id="@+id/llSpace"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/rlMainLayout"
-                android:paddingBottom="121dp"/>
+                android:layout_height="wrap_content">
 
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="121dp" />
+            </LinearLayout>
         </LinearLayout>
+
         <ImageView
             android:id="@+id/ImgV"
             android:layout_width="match_parent"

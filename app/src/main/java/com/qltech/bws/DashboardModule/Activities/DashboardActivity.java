@@ -20,9 +20,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import static com.qltech.bws.DashboardModule.Audio.ViewAllAudioFragment.viewallAudio;
-import static com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment.viewallPlayList;
-
 public class DashboardActivity extends AppCompatActivity {
     ActivityDashboardBinding binding;
     public static int player = 0;
@@ -59,35 +56,8 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-      /*  if(viewallPlayList){
-            FragmentManager fm = getSupportFragmentManager();
-            fm.popBackStack("ViewAllPlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }else if(viewallAudio){
-            FragmentManager fm = getSupportFragmentManager();
-            fm.popBackStack("ViewAllPlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }*/
-       /* if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
-            binding.navView.setSelectedItemId(R.id.navigation_audio);*/
-        finishAffinity();
         super.onBackPressed();
-        /*} else if (binding.navView.getSelectedItemId() == R.id.navigation_playlist) {
-            binding.navView.setSelectedItemId(R.id.navigation_playlist);
-            *//*if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStack();
-            } else {
-                finishAffinity();
-                return;
-            }*//*
-        } else if (binding.navView.getSelectedItemId() == R.id.navigation_search) {
-            binding.navView.̥setSelectedItemId(R.id.navigation_search);
-        } else if (binding.navView.getSelectedItemId() == R.id.navigation_appointment) {
-            binding.navView.setSelectedItemId(R.id.navigation_appointment);
-        } else if (binding.navView.getSelectedItemId() == R.id.navigation_account) {
-            binding.navView.setSelectedItemId(R.id.navigation_account);
-        }*/
-
-
+//        finishAffinity();
     }
 
     @Override

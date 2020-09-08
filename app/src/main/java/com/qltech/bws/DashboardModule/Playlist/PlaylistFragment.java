@@ -85,7 +85,7 @@ public class PlaylistFragment extends Fragment {
 //            with space
         } else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 6, 13, 20);
+            params.setMargins(13, 6, 13, 84);
             binding.llSpace.setLayoutParams(params);
 //            without space
         }

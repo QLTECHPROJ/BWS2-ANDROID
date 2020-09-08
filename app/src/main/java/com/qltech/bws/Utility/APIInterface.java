@@ -199,12 +199,14 @@ public interface APIInterface {
                                                   @Field("PlaylistId") String playlistId);
 
     /* TODO AddAudioActivity & SearchFragment */
-    @GET("suggestedaudio")
-    Call<SuggestedModel> getSuggestedLists();
+    @POST("suggestedaudio")
+    @FormUrlEncoded
+    Call<SuggestedModel> getSuggestedLists(@Field("UserID") String userID);
 
     /* TODO SearchFragment */
-    @GET("suggestedplaylist")
-    Call<SearchPlaylistModel> getSuggestedPlayLists();
+    @POST("suggestedplaylist")
+    @FormUrlEncoded
+    Call<SearchPlaylistModel> getSuggestedPlayLists(@Field("UserID") String userID);
 
     /* TODO SearchFragment */
     @POST("searchonsuggestedlist")
@@ -291,7 +293,8 @@ public interface APIInterface {
     /* TODO AddQueueActivity */
     @POST("audiodetail")
     @FormUrlEncoded
-    Call<DirectionModel> getAudioDetailLists(@Field("AudioId") String audioId);
+    Call<DirectionModel> getAudioDetailLists(@Field("UserID") String userID,
+                                             @Field("AudioId") String audioId);
 
     /* TODO AddPaymentActivity */
     @POST("cardadd")

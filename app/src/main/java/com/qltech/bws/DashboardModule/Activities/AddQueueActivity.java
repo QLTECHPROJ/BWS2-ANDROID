@@ -396,7 +396,7 @@ public class AddQueueActivity extends AppCompatActivity {
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<DirectionModel> listCall = APIClient.getClient().getAudioDetailLists(AudioId);
+            Call<DirectionModel> listCall = APIClient.getClient().getAudioDetailLists(UserID, AudioId);
             listCall.enqueue(new Callback<DirectionModel>() {
                 @Override
                 public void onResponse(Call<DirectionModel> call, Response<DirectionModel> response) {

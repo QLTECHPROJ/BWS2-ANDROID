@@ -120,6 +120,18 @@ public class CurrentPlanFragment extends Fragment {
                             binding.btnPayNow.setVisibility(View.VISIBLE); /*payment screen api call*/
                             binding.tvPayUsing.setVisibility(View.VISIBLE);
                             binding.tvChangeCard.setVisibility(View.VISIBLE);
+
+                            binding.btnPayNow.setOnClickListener(view1 -> {
+                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                    return;
+                                }
+                                mLastClickTime = SystemClock.elapsedRealtime();
+                                Intent i = new Intent(getActivity(), BillingOrderActivity.class);
+                                i.putExtra("payment", 1);
+                                startActivity(i);
+                                getActivity().finish();
+                            });
+
                         }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("4")){
                             binding.tvRecommended.setBackgroundResource(R.drawable.dark_blue_background);
                             binding.tvRecommended.setText(R.string.Cancelled);

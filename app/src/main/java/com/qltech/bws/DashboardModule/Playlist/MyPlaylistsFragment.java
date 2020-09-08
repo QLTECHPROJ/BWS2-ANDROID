@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -94,6 +95,14 @@ public class MyPlaylistsFragment extends Fragment {
                     .add(R.id.rlPlaylist, fragment)
                     .addToBackStack("TransparentPlayerFragment")
                     .commit();
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10, 8, 10, 121);
+            binding.llSpace.setLayoutParams(params);
+        }else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10, 8, 10, 84);
+            binding.llSpace.setLayoutParams(params);
         }
         binding.llBack.setOnClickListener(view12 -> {
             callBack();
