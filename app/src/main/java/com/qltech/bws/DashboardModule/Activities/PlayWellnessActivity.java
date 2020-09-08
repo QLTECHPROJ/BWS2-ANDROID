@@ -412,7 +412,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             binding.llprev.setBackgroundColor(ContextCompat.getColor(ctx, R.color.gray));
             binding.llnext.setBackgroundColor(ContextCompat.getColor(ctx, R.color.gray));
             position = 0;
-        }else{
+        } else {
             binding.llnext.setEnabled(true);
             binding.llnext.setEnabled(true);
             binding.llprev.setClickable(true);
@@ -565,11 +565,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             }
         } else if (IsRepeat.equalsIgnoreCase("0")) {
             getPrepareShowData(position);
-            binding.llnext.setEnabled(false);
         } else if (IsShuffle.equalsIgnoreCase("1")) {
             // shuffle is on - play a random song
             if (listSize == 1) {
-                binding.llnext.setEnabled(false);
             } else {
                 Random random = new Random();
                 position = random.nextInt((listSize - 1) - 0 + 1) + 0;
@@ -580,6 +578,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 position = position + 1;
                 getPrepareShowData(position);
             }
+        }
+        if (listSize == 1 || position < listSize - 1) {
+            binding.llnext.setEnabled(false);
+            binding.llnext.setEnabled(false);
+            binding.llprev.setClickable(false);
+            binding.llprev.setClickable(false);
+            binding.llprev.setBackgroundColor(ContextCompat.getColor(ctx, R.color.gray));
+            binding.llnext.setBackgroundColor(ContextCompat.getColor(ctx, R.color.gray));
+            position = 0;
+        } else {
+            binding.llnext.setEnabled(true);
+            binding.llnext.setEnabled(true);
+            binding.llprev.setClickable(true);
+            binding.llprev.setClickable(true);
+            binding.llprev.setBackgroundColor(ContextCompat.getColor(ctx, R.color.black));
+            binding.llnext.setBackgroundColor(ContextCompat.getColor(ctx, R.color.black));
         }
     }
 

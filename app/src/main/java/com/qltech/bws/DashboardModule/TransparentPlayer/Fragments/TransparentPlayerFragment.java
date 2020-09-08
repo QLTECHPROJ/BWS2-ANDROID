@@ -352,25 +352,25 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         if (IsRepeat.equalsIgnoreCase("1")) {
-            // repeat is on play same song again
-            playmedia();
+            if (position < (listSize - 1)) {
+                position = position + 1;
+               playmedia();
+            }
+        } else if (IsRepeat.equalsIgnoreCase("0")) {
+           playmedia();
         } else if (IsShuffle.equalsIgnoreCase("1")) {
             // shuffle is on - play a random song
             if (listSize == 1) {
-                position = 0;
-
             } else {
                 Random random = new Random();
                 position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+               playmedia();
             }
-            playmedia();
         } else {
             if (position < (listSize - 1)) {
                 position = position + 1;
-            } else {
-                position = 0;
+               playmedia();
             }
-            playmedia();
         }
     }
 }

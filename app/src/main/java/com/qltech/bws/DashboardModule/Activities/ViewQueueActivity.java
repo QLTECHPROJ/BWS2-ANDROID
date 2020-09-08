@@ -291,6 +291,22 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
                 getPrepareShowData(position);
             }
         }
+        if (listSize == 1 || position < listSize - 1) {
+            binding.llnext.setEnabled(false);
+            binding.llnext.setEnabled(false);
+            binding.llprev.setClickable(false);
+            binding.llprev.setClickable(false);
+            binding.llprev.setBackgroundColor(ContextCompat.getColor(ctx, R.color.gray));
+            binding.llnext.setBackgroundColor(ContextCompat.getColor(ctx, R.color.gray));
+            position = 0;
+        } else {
+            binding.llnext.setEnabled(true);
+            binding.llnext.setEnabled(true);
+            binding.llprev.setClickable(true);
+            binding.llprev.setClickable(true);
+            binding.llprev.setBackgroundColor(ContextCompat.getColor(ctx, R.color.black));
+            binding.llnext.setBackgroundColor(ContextCompat.getColor(ctx, R.color.black));
+        }
     }
 
     public void updateProgressBar() {
