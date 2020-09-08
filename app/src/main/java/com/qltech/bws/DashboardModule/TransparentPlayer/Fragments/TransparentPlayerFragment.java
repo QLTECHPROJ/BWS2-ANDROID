@@ -329,6 +329,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
+        hdlr.removeCallbacks(UpdateSongTime);
 
     }
 
