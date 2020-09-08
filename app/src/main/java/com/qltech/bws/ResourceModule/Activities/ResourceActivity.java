@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -111,6 +112,7 @@ public class ResourceActivity extends AppCompatActivity {
             window.setAttributes(wlp);
 
             RecyclerView rvFilterList = promptsView.findViewById(R.id.rvFilterList);
+            ImageView ivFilter = promptsView.findViewById(R.id.ivFilter);
             TextView tvAll = promptsView.findViewById(R.id.tvAll);
             dialogBox.setOnKeyListener((dialog, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -130,7 +132,7 @@ public class ResourceActivity extends AppCompatActivity {
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ResourceActivity.this);
             rvFilterList.setLayoutManager(mLayoutManager);
             rvFilterList.setItemAnimator(new DefaultItemAnimator());
-            prepareData(ResourceActivity.this, rvFilterList, dialogBox,tvAll);
+            prepareData(ResourceActivity.this, rvFilterList, dialogBox,tvAll, ivFilter);
         });
     }
 
@@ -146,7 +148,7 @@ public class ResourceActivity extends AppCompatActivity {
         binding.viewPager.setCurrentItem(CurruntTab);
     }
 
-    void prepareData(Context ctx, RecyclerView rvFilterList, Dialog dialogBox, TextView tvAll) {
+    void prepareData(Context ctx, RecyclerView rvFilterList, Dialog dialogBox, TextView tvAll, ImageView ivFilter) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             Call<ResourceFilterModel> listCall = APIClient.getClient().getResourcFilterLists(UserID);
             listCall.enqueue(new Callback<ResourceFilterModel>() {
@@ -154,7 +156,7 @@ public class ResourceActivity extends AppCompatActivity {
                 public void onResponse(Call<ResourceFilterModel> call, Response<ResourceFilterModel> response) {
                     if (response.isSuccessful()) {
                         ResourceFilterModel listModel = response.body();
-                        ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx, dialogBox,tvAll);
+                        ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx, dialogBox,tvAll, ivFilter);
                         rvFilterList.setAdapter(adapter);
                         dialogBox.show();
                     }
@@ -176,12 +178,15 @@ public class ResourceActivity extends AppCompatActivity {
         int row_index = -1, pos = 0;
         private List<ResourceFilterModel.ResponseData> listModel;
         private TextView tvAll;
+        ImageView ivFilter;
 
-        public ResourceFilterAdapter(List<ResourceFilterModel.ResponseData> listModel, Context ctx, Dialog dialogBox, TextView tvAll) {
+        public ResourceFilterAdapter(List<ResourceFilterModel.ResponseData> listModel, Context ctx, Dialog dialogBox, TextView tvAll,
+                                     ImageView ivFilter) {
             this.listModel = listModel;
             this.ctx = ctx;
             this.dialogBox = dialogBox;
             this.tvAll = tvAll;
+            this.ivFilter = ivFilter;
         }
 
         @NonNull
@@ -194,22 +199,25 @@ public class ResourceActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            ivFilter.setVisibility(View.INVISIBLE);
             holder.binding.tvTitle.setText(listModel.get(position).getCategoryName());
             holder.binding.llMainLayout.setOnClickListener(view -> {
              /*   row_index = position;
                 notifyDataSetChanged();
                 pos++;*/
                 holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
-                holder.binding.ivFilter.setVisibility(View.VISIBLE);
+                holder.binding.ivFiltered.setVisibility(View.VISIBLE);
                 Category = listModel.get(position).getCategoryName();
                 setAdapter();
                 dialogBox.dismiss();
             });
             if(listModel.get(position).getCategoryName().equalsIgnoreCase(Category)){
+                ivFilter.setVisibility(View.INVISIBLE);
                 holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
-                holder.binding.ivFilter.setVisibility(View.VISIBLE);
+                holder.binding.ivFiltered.setVisibility(View.VISIBLE);
             }else if(Category.equalsIgnoreCase("")){
                 tvAll.setTextColor(getResources().getColor(R.color.blue));
+                ivFilter.setVisibility(View.VISIBLE);
             }
            /* if (row_index == position) {
                 holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));

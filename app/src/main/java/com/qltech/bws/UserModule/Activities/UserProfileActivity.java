@@ -393,7 +393,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         hideProgressBar();
                                         RemoveProfileModel viewModel = response.body();
                                         BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
-
+                                        profileViewData(ctx);
                                     }
                                 }
 

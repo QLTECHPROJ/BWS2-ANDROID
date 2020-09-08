@@ -28,9 +28,9 @@
                 <ImageView
                     android:id="@+id/ivFilter"
                     android:layout_width="@dimen/_20sdp"
-                    android:layout_height="@dimen/_20sdp"
+                    android:layout_height="@dimen/_18sdp"
                     android:layout_gravity="center"
-                    android:visibility="gone"
+                    android:visibility="invisible"
                     android:src="@drawable/ic_arrow_blue_icon" />
 
                 <TextView
