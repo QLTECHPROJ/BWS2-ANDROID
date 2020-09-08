@@ -210,7 +210,6 @@ public class ResourceActivity extends AppCompatActivity {
                 holder.binding.ivFilter.setVisibility(View.VISIBLE);
             }else if(Category.equalsIgnoreCase("")){
                 tvAll.setTextColor(getResources().getColor(R.color.blue));
-                holder.binding.ivFilter.setVisibility(View.VISIBLE);
             }
            /* if (row_index == position) {
                 holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
