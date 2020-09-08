@@ -225,9 +225,9 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTime.setText(mainPlayModelList.get(position).getAudioDuration());
             if (MusicService.isPause) {
-                binding.llPlay.setVisibility(View.GONE);
-                binding.llPause.setVisibility(View.VISIBLE);
-                MusicService.resumeMedia();
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+//                MusicService.resumeMedia();
             } else {
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);
@@ -241,9 +241,9 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTime.setText(addToQueueModelList.get(position).getAudioDuration());
             if (MusicService.isPause) {
-                binding.llPlay.setVisibility(View.GONE);
-                binding.llPause.setVisibility(View.VISIBLE);
-                MusicService.resumeMedia();
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+//                MusicService.resumeMedia();
             } else {
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);

@@ -4,13 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-
-import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
-import com.qltech.bws.R;
-import com.qltech.bws.Utility.CONSTANTS;
-import com.qltech.bws.Utility.MusicService;
-import com.qltech.bws.databinding.ActivityDashboardBinding;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -20,9 +13,15 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.qltech.bws.R;
+import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.MusicService;
+import com.qltech.bws.databinding.ActivityDashboardBinding;
+
 public class DashboardActivity extends AppCompatActivity {
-    ActivityDashboardBinding binding;
     public static int player = 0;
+    ActivityDashboardBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,10 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-//        finishAffinity();
+        if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
+            binding.navView.setSelectedItemId(R.id.navigation_audio);
+            finishAffinity();
+        }
     }
 
     @Override

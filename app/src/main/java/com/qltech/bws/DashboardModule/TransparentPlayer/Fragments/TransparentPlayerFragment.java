@@ -281,10 +281,6 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         binding.llPlayearMain.setOnClickListener(view -> {
             if (player == 0) {
                 player = 1;
-            } else {
-                if (MusicService.isPlaying()) {
-                    MusicService.pauseMedia();
-                }
             }
             Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

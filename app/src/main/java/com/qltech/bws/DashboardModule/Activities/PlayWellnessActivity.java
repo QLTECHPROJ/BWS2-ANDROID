@@ -126,7 +126,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
         binding.llBack.setOnClickListener(view -> {
             player = 1;
-            MusicService.pauseMedia();
+//            MusicService.pauseMedia();
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared2.edit();
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
@@ -189,6 +189,18 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             binding.llplay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
             MusicService.pauseMedia();
+            Time t = Time.valueOf("00:00:00");
+            if (queuePlay) {
+                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+            } else if (audioPlay) {
+                t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+            }
+            long totalDuration = t.getTime();
+            long currentDuration = MusicService.getStartTime();
+
+            int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            binding.simpleSeekbar.setProgress(progress);
         });
 
         binding.llForwardSec.setOnClickListener(v -> {
@@ -458,7 +470,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 if (MusicService.isPause) {
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivplay.setVisibility(View.VISIBLE);
-                    MusicService.resumeMedia();
+//                    MusicService.resumeMedia();
                 } else {
                     binding.ivplay.setVisibility(View.GONE);
                     binding.ivPause.setVisibility(View.VISIBLE);
@@ -509,8 +521,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 MusicService.playMedia();
             } else {
                 if (MusicService.isPause) {
-                    MusicService.resumeMedia();
+                    binding.ivPause.setVisibility(View.GONE);
+                    binding.ivplay.setVisibility(View.VISIBLE);
                 } else {
+                    binding.ivplay.setVisibility(View.GONE);
+                    binding.ivPause.setVisibility(View.VISIBLE);
                     MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                     MusicService.playMedia();
                 }
@@ -529,7 +544,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     @Override
     public void onBackPressed() {
         player = 1;
-        MusicService.pauseMedia();
+//        MusicService.pauseMedia();
         SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared2.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
