@@ -52,14 +52,16 @@ public class AptDetailsFragment extends Fragment {
         Glide.with(getActivity()).load(appointmentDetail.getImage()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile);
 
-        binding.btnComplete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BWSApplication.showToast("Book Now", getActivity());
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(appointmentDetail.getBookUrl()));
-                startActivity(i);
-            }
+        if(appointmentDetail.getBookUrl().equalsIgnoreCase("")){
+            binding.btnComplete.setVisibility(View.GONE);
+        }else{
+            binding.btnComplete.setVisibility(View.VISIBLE);
+        }
+        binding.btnComplete.setOnClickListener(view1 -> {
+            BWSApplication.showToast("Book Now", getActivity());
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(appointmentDetail.getBookUrl()));
+            startActivity(i);
         });
         return view;
     }

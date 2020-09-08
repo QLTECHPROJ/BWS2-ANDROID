@@ -332,8 +332,8 @@ public class MyPlaylistsFragment extends Fragment {
     private void callTransparentFrag(int position, Context ctx, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList,
                                      String myPlaylist) {
         player = 1;
-        if(isMediaStart){
-            MusicService.pauseMedia();
+        if(isMediaStart || MusicService.isPause){
+            MusicService.stopMedia();
         }
         Fragment fragment = new TransparentPlayerFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -662,7 +662,7 @@ public class MyPlaylistsFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             binding.ivPlaylistStatus.setOnClickListener(view -> callTransparentFrag(0, ctx, listModelList, ""));
-            holder.binding.llMainLayout.setOnClickListener(view -> callTransparentFrag(0, ctx, listModelList, ""));
+            holder.binding.llMainLayout.setOnClickListener(view -> callTransparentFrag(position, ctx, listModelList, ""));
 
             if (Created.equalsIgnoreCase("1")) {
                 holder.binding.llMore.setVisibility(View.GONE);

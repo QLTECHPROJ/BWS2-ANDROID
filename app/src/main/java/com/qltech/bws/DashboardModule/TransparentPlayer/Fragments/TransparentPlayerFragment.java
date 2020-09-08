@@ -248,7 +248,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             Glide.with(getActivity()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTitle.setText(addToQueueModelList.get(position).getName());
-            binding.tvSubTitle.setText("Play the " + addToQueueModelList.get(position).getName() + " every night on a low volume.");
+            binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
             audioFile = addToQueueModelList.get(position).getAudioFile();
             if (player == 1) {
                 if (MusicService.isPause) {
@@ -258,6 +258,8 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                 }else if (!isMediaStart) {
                     binding.ivPause.setVisibility(View.VISIBLE);
                     binding.ivPlay.setVisibility(View.GONE);
+                    MusicService.play(getActivity(), Uri.parse(audioFile));
+                    MusicService.playMedia();
                 }else {
                     binding.ivPlay.setVisibility(View.GONE);
                     binding.ivPause.setVisibility(View.VISIBLE);
@@ -286,6 +288,8 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                 } else if (!isMediaStart) {
                     binding.ivPause.setVisibility(View.VISIBLE);
                     binding.ivPlay.setVisibility(View.GONE);
+                    MusicService.play(getActivity(), Uri.parse(audioFile));
+                    MusicService.playMedia();
                 } else {
                     binding.ivPause.setVisibility(View.VISIBLE);
                     binding.ivPlay.setVisibility(View.GONE);
@@ -367,8 +371,10 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         if (IsRepeat.equalsIgnoreCase("1")) {
             if (position < (listSize - 1)) {
                 position = position + 1;
-                playmedia();
+            } else {
+                position = 0;
             }
+            playmedia();
         } else if (IsRepeat.equalsIgnoreCase("0")) {
             playmedia();
         } else if (IsShuffle.equalsIgnoreCase("1")) {

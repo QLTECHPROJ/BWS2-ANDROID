@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -25,12 +24,12 @@ import java.io.IOException;
 
 public class MusicService extends Service {
     public static MediaPlayer mediaPlayer;
-    static private Handler handler;
-    static boolean isPLAYING;
-    public static boolean isPrepare = false, songComplete = false,isMediaStart = false;
+    public static boolean isPrepare = false, songComplete = false, isMediaStart = false;
     public static boolean isPause = false;
     public static boolean isResume = false;
     public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
+    static boolean isPLAYING;
+    static private Handler handler;
 
     private static void initMediaPlayer() {
         if (null == mediaPlayer) {
@@ -110,10 +109,13 @@ public class MusicService extends Service {
         } else {
             showToast("Please wait", conext);
         }
-    } public static void SeekTo(int CurruntTime) {
-             mediaPlayer.seekTo(CurruntTime);
     }
-   public static void showToast(String message, Context conext) {
+
+    public static void SeekTo(int CurruntTime) {
+        mediaPlayer.seekTo(CurruntTime);
+    }
+
+    public static void showToast(String message, Context conext) {
         Toast toast = new Toast(conext);
         View view = LayoutInflater.from(conext).inflate(R.layout.toast_layout, null);
         TextView tvMessage = view.findViewById(R.id.tvMessage);
@@ -133,12 +135,6 @@ public class MusicService extends Service {
         }
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
     public static void playMedia() {
         if (!mediaPlayer.isPlaying()) {
             mediaPlayer.setOnPreparedListener(mp -> {
@@ -155,6 +151,7 @@ public class MusicService extends Service {
             if (mediaPlayer.isPlaying()) {
                 Log.e("Playinggggg", "stoppppp");
                 mediaPlayer.stop();
+                isMediaStart = false;
             }
         } catch (IllegalStateException e) {
             e.printStackTrace();
@@ -181,11 +178,13 @@ public class MusicService extends Service {
     }
 
     public static void resumeMedia() {
-        if (!mediaPlayer.isPlaying()) {
-            Log.e("Playinggggg", "resumeeeeeee");
+        if (isMediaStart) {
+            if (!mediaPlayer.isPlaying()) {
+                Log.e("Playinggggg", "resumeeeeeee");
 //            mediaPlayer.seekTo(resumePosition);
-            isResume = true;
-            mediaPlayer.start();
+                isResume = true;
+                mediaPlayer.start();
+            }
         }
     }
 
@@ -193,6 +192,34 @@ public class MusicService extends Service {
         if (null != mediaPlayer) {
             mediaPlayer.release();
         }
+    }
+
+    public static int getProgressPercentage(long currentDuration, long totalDuration) {
+        Double percentage = (double) 0;
+
+        long currentSeconds = (int) (currentDuration / 1000);
+        long totalSeconds = (int) (totalDuration / 1000);
+
+        // calculating percentage
+        percentage = (((double) currentSeconds) / totalSeconds) * 100;
+
+        // return percentage
+        return percentage.intValue();
+    }
+
+    public static int progressToTimer(int progress, int totalDuration) {
+        int currentDuration = 0;
+        totalDuration = (int) (totalDuration / 1000);
+        currentDuration = (int) ((((double) progress) / 100) * totalDuration);
+
+        // return current duration in milliseconds
+        return currentDuration * 1000;
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     public void destroyPlayer() {
@@ -225,28 +252,6 @@ public class MusicService extends Service {
 
         // return timer string
         return finalTimerString;
-    }
-
-    public static int getProgressPercentage(long currentDuration, long totalDuration) {
-        Double percentage = (double) 0;
-
-        long currentSeconds = (int) (currentDuration / 1000);
-        long totalSeconds = (int) (totalDuration / 1000);
-
-        // calculating percentage
-        percentage = (((double) currentSeconds) / totalSeconds) * 100;
-
-        // return percentage
-        return percentage.intValue();
-    }
-
-    public static int progressToTimer(int progress, int totalDuration) {
-        int currentDuration = 0;
-        totalDuration = (int) (totalDuration / 1000);
-        currentDuration = (int) ((((double) progress) / 100) * totalDuration);
-
-        // return current duration in milliseconds
-        return currentDuration * 1000;
     }
 
 }

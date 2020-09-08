@@ -571,8 +571,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
     @Override
     protected void onResume() {
-        if(isMediaStart){
-            if(MusicService.isPlaying()){
+        if (isMediaStart) {
+            if (MusicService.isPlaying()) {
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);
             }
@@ -592,8 +592,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         if (IsRepeat.equalsIgnoreCase("1")) {
             if (position < (listSize - 1)) {
                 position = position + 1;
-                getPrepareShowData(position);
+            } else {
+                position = 0;
             }
+            getPrepareShowData(position);
         } else if (IsRepeat.equalsIgnoreCase("0")) {
             getPrepareShowData(position);
         } else if (IsShuffle.equalsIgnoreCase("1")) {

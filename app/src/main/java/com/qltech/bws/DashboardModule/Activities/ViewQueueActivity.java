@@ -304,8 +304,10 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
         if (IsRepeat.equalsIgnoreCase("1")) {
             if (position < (listSize - 1)) {
                 position = position + 1;
-                getPrepareShowData(position);
+            } else {
+                position = 0;
             }
+            getPrepareShowData(position);
         } else if (IsRepeat.equalsIgnoreCase("0")) {
             getPrepareShowData(position);
             binding.llnext.setEnabled(false);
