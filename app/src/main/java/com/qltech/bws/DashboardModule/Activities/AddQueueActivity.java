@@ -51,7 +51,7 @@ import retrofit2.Response;
 
 public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
-    String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comefrom;
+    String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comefrom = "";
     Context ctx;
     Activity activity;
     ArrayList<String> queue;
@@ -59,7 +59,7 @@ public class AddQueueActivity extends AppCompatActivity {
     ArrayList<MainPlayModel> mainPlayModelList;
     MainPlayModel mainPlayMode;
     AddToQueueModel addToQueueModel;
-    int position,listSize;
+    int position, listSize;
     Boolean queuePlay, audioPlay;
 
     @Override
@@ -80,9 +80,11 @@ public class AddQueueActivity extends AppCompatActivity {
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         myPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
         PlaylistId = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-        }.getType();
-        mainPlayModelList = gson.fromJson(json, type);
+        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+            }.getType();
+            mainPlayModelList = gson.fromJson(json, type);
+        }
         if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
             Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
             }.getType();
@@ -105,6 +107,8 @@ public class AddQueueActivity extends AppCompatActivity {
         }
         if (getIntent().hasExtra("comefrom")) {
             comefrom = getIntent().getStringExtra("comefromm");
+        } else {
+            comefrom = "";
         }
         if (play.equalsIgnoreCase("play")) {
             binding.llOptions.setVisibility(View.VISIBLE);
@@ -169,10 +173,10 @@ public class AddQueueActivity extends AppCompatActivity {
 
     private void callShuffle() {
         if (IsShuffle.equalsIgnoreCase("")) {
-            if(queuePlay){
-               listSize= addToQueueModelList.size();
-            }else if(audioPlay){
-               listSize= mainPlayModelList.size();
+            if (queuePlay) {
+                listSize = addToQueueModelList.size();
+            } else if (audioPlay) {
+                listSize = mainPlayModelList.size();
             }
             if (listSize == 1) {
 
@@ -232,6 +236,7 @@ public class AddQueueActivity extends AppCompatActivity {
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
+
     private void callAddToQueue() {
         addToQueueModel = new AddToQueueModel();
         int i = position;
