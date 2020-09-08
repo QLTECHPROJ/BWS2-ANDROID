@@ -55,10 +55,11 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);
             finishAffinity();
+        }else{
+            super.onBackPressed();
         }
     }
 

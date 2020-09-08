@@ -212,6 +212,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             } else {
                 MusicService.resumeMedia();
             }
+            player = 1;
         });
 
         return view;
