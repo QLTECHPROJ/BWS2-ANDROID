@@ -28,6 +28,7 @@ import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.AudiolistCustomLayoutBinding;
 import com.qltech.bws.databinding.FragmentViewAllAudioBinding;
 
@@ -38,6 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class ViewAllAudioFragment extends Fragment {
     FragmentViewAllAudioBinding binding;
@@ -155,6 +157,9 @@ public class ViewAllAudioFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     player = 1;
+                    if(isMediaStart){
+                        MusicService.pauseMedia();
+                    }
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()

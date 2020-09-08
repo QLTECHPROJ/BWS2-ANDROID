@@ -40,6 +40,8 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
+
 public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
@@ -113,12 +115,8 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
 
-        binding.llBack.setOnClickListener(view -> {
-            Intent i = new Intent(ctx, PlayWellnessActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(i);
-            finish();
-        });
+        binding.llBack.setOnClickListener(view ->
+            callBack());
         MeasureRatio measureRatio = BWSApplication.measureRatio(ViewQueueActivity.this, 0,
                 1, 1, 0.1f, 0);
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -140,17 +138,14 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
         }
         binding.llPause.setOnClickListener(view -> {
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
-            binding.llPause.setVisibility(View.GONE);
             binding.llPlay.setVisibility(View.VISIBLE);
-            binding.ivPause.setImageResource(R.drawable.ic_play_white_icon);
+            binding.llPause.setVisibility(View.GONE);
             MusicService.pauseMedia();
         });
 
         binding.llPlay.setOnClickListener(view -> {
-
             binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.VISIBLE);
-            binding.ivPlay.setImageResource(R.drawable.ic_pause_icon);
             MusicService.resumeMedia();
         });
 
@@ -226,15 +221,20 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
             Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTime.setText(mainPlayModelList.get(position).getAudioDuration());
-            if (MusicService.isPause) {
-                binding.llPlay.setVisibility(View.VISIBLE);
-                binding.llPause.setVisibility(View.GONE);
-//                MusicService.resumeMedia();
-            } else {
-                binding.llPlay.setVisibility(View.GONE);
-                binding.llPause.setVisibility(View.VISIBLE);
-                MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+            if (!isMediaStart) {
+                MusicService.play(getApplicationContext(), Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
+            } else {
+                if (MusicService.isPause) {
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+//                    MusicService.resumeMedia();
+                } else {
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
+                    MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                    MusicService.playMedia();
+                }
             }
         } else if (queuePlay) {
             binding.tvName.setText(addToQueueModelList.get(position).getName());
@@ -242,30 +242,54 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
             Glide.with(ctx).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTime.setText(addToQueueModelList.get(position).getAudioDuration());
-            if (MusicService.isPause) {
-                binding.llPlay.setVisibility(View.VISIBLE);
-                binding.llPause.setVisibility(View.GONE);
-//                MusicService.resumeMedia();
-            } else {
-                binding.llPlay.setVisibility(View.GONE);
-                binding.llPause.setVisibility(View.VISIBLE);
+
+            if (!isMediaStart) {
                 MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
+            } else {
+                if (MusicService.isPause) {
+
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+//                    MusicService.resumeMedia();
+                } else {
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
+                    MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                    MusicService.playMedia();
+                }
             }
         }
+        binding.llNowPlaying.setOnClickListener(view ->
+            callBack());
         binding.simpleSeekbar.setClickable(true);
         startTime = MusicService.getStartTime();
         hdlr.postDelayed(UpdateSongTime, 60);
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    private void callBack() {
         Intent i = new Intent(ctx, PlayWellnessActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(i);
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        if(isMediaStart){
+            if(MusicService.isPlaying()){
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
+            }
+        }
+        super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        callBack();
+        super.onBackPressed();
     }
 
     @Override

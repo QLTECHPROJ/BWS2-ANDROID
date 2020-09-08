@@ -51,7 +51,7 @@ import retrofit2.Response;
 
 public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
-    String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comefrom = "";
+    String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comeFrom = "";
     Context ctx;
     Activity activity;
     ArrayList<String> queue;
@@ -105,10 +105,10 @@ public class AddQueueActivity extends AppCompatActivity {
         } else {
             play = "";
         }
-        if (getIntent().hasExtra("comefrom")) {
-            comefrom = getIntent().getStringExtra("comefromm");
+        if (getIntent().hasExtra("comeFrom")) {
+            comeFrom = getIntent().getStringExtra("comeFrom");
         } else {
-            comefrom = "";
+            comeFrom = "";
         }
         if (play.equalsIgnoreCase("play")) {
             binding.llOptions.setVisibility(View.VISIBLE);
@@ -153,7 +153,7 @@ public class AddQueueActivity extends AppCompatActivity {
             i.putExtra("Like", Like);
             i.putExtra("Download", Download);
             startActivity(i);*/
-            if (!comefrom.equalsIgnoreCase("")) {
+            if (!comeFrom.equalsIgnoreCase("")) {
                 finish();
             } else {
                 Intent i = new Intent(ctx, PlayWellnessActivity.class);
@@ -377,7 +377,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!comefrom.equalsIgnoreCase("")) {
+        if (!comeFrom.equalsIgnoreCase("")) {
             finish();
         } else {
             Intent i = new Intent(ctx, PlayWellnessActivity.class);

@@ -169,7 +169,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         });
 
         binding.llViewQueue.setOnClickListener(view -> {
-            MusicService.pauseMedia();
+//            MusicService.pauseMedia();
             Intent i = new Intent(ctx, ViewQueueActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
@@ -180,8 +180,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             editor.commit();
         });
 
-        binding.llplay.setOnClickListener(v -> {
-            binding.llplay.setVisibility(View.GONE);
+        binding.llPlay.setOnClickListener(v -> {
+            binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.VISIBLE);
             if (!isMediaStart) {
                 if (queuePlay) {
@@ -198,21 +198,21 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.llPause.setOnClickListener(view -> {
             MusicService.pauseMedia();
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
-            binding.llplay.setVisibility(View.VISIBLE);
+            binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
         });
 
         binding.llForwardSec.setOnClickListener(v -> {
             MusicService.ToForward(ctx);
-            if (!binding.llplay.isEnabled()) {
-                binding.llplay.setEnabled(true);
+            if (!binding.llPlay.isEnabled()) {
+                binding.llPlay.setEnabled(true);
             }
         });
 
         binding.llBackWordSec.setOnClickListener(v -> {
             MusicService.ToBackward(ctx);
-            if (!binding.llplay.isEnabled()) {
-                binding.llplay.setEnabled(true);
+            if (!binding.llPlay.isEnabled()) {
+                binding.llPlay.setEnabled(true);
             }
         });
 
@@ -468,12 +468,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             } else {
                 if (MusicService.isPause) {
 
-                    binding.llplay.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.VISIBLE);
                     binding.llPause.setVisibility(View.GONE);
 //                    MusicService.resumeMedia();
                 } else {
                     binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llplay.setVisibility(View.GONE);
+                    binding.llPlay.setVisibility(View.GONE);
                     MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
                     MusicService.playMedia();
                 }
@@ -521,12 +521,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 MusicService.playMedia();
             } else {
                 if (MusicService.isPause) {
-                    binding.llplay.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.VISIBLE);
                     binding.llPause.setVisibility(View.GONE);
 //                    MusicService.resumeMedia();
                 } else {
                     binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llplay.setVisibility(View.GONE);
+                    binding.llPlay.setVisibility(View.GONE);
                     MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                     MusicService.playMedia();
                 }
@@ -561,7 +561,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
     @Override
     protected void onResume() {
-
+        if(isMediaStart){
+            if(MusicService.isPlaying()){
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
+            }
+        }
         super.onResume();
     }
 

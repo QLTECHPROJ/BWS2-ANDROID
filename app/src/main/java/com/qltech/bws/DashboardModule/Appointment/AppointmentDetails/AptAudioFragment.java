@@ -29,11 +29,13 @@ import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.AudioAptListLayoutBinding;
 import com.qltech.bws.databinding.FragmentAptAudioBinding;
 
@@ -142,6 +144,9 @@ public class AptAudioFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     player = 1;
+                    if(isMediaStart){
+                        MusicService.pauseMedia();
+                    }
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()

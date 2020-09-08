@@ -29,6 +29,7 @@ public class MusicService extends Service {
     static boolean isPLAYING;
     public static boolean isPrepare = false, songComplete = false,isMediaStart = false;
     public static boolean isPause = false;
+    public static boolean isResume = false;
     public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
 
     private static void initMediaPlayer() {
@@ -183,6 +184,7 @@ public class MusicService extends Service {
         if (!mediaPlayer.isPlaying()) {
             Log.e("Playinggggg", "resumeeeeeee");
 //            mediaPlayer.seekTo(resumePosition);
+            isResume = true;
             mediaPlayer.start();
         }
     }

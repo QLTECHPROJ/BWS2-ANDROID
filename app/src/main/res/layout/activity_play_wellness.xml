@@ -290,7 +290,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/llplay"
+                        android:id="@+id/ll_play"
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.24"

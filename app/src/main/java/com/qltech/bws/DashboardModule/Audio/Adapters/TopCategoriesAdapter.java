@@ -25,11 +25,13 @@ import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.RoundBoxLayoutBinding;
 
 import java.util.ArrayList;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
@@ -61,6 +63,9 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
             @Override
             public void onClick(View view) {
                 player = 1;
+                if(isMediaStart){
+                    MusicService.pauseMedia();
+                }
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                 fragmentManager1.beginTransaction()

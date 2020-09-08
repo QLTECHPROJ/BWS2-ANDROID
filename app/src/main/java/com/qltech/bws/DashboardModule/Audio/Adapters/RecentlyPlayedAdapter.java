@@ -2,7 +2,6 @@ package com.qltech.bws.DashboardModule.Audio.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,17 +23,19 @@ import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPla
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.SmallBoxLayoutBinding;
 
 import java.util.ArrayList;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder> {
-    private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
     FragmentActivity activity;
     String ComeFrom;
+    private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
     public RecentlyPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity, String ComeFrom) {
         this.listModelList = listModelList;
@@ -66,6 +67,9 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             @Override
             public void onClick(View view) {
                 player = 1;
+                if (isMediaStart) {
+                    MusicService.pauseMedia();
+                }
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                 fragmentManager1.beginTransaction()

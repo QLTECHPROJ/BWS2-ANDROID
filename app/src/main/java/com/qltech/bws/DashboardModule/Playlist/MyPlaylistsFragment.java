@@ -47,6 +47,7 @@ import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.ItemMoveCallback;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.FragmentMyPlaylistsBinding;
 import com.qltech.bws.databinding.MyPlaylistLayoutBinding;
 
@@ -60,6 +61,7 @@ import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.deleteFrg;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
@@ -330,6 +332,9 @@ public class MyPlaylistsFragment extends Fragment {
     private void callTransparentFrag(int position, Context ctx, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList,
                                      String myPlaylist) {
         player = 1;
+        if(isMediaStart){
+            MusicService.pauseMedia();
+        }
         Fragment fragment = new TransparentPlayerFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()

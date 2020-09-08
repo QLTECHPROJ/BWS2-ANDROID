@@ -1,6 +1,5 @@
 package com.qltech.bws.DashboardModule.TransparentPlayer.Fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -43,13 +42,35 @@ import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class TransparentPlayerFragment extends Fragment implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     public FragmentTransparentPlayerBinding binding;
-    String UserID, AudioFlag, IsRepeat, IsShuffle,audioFile;
+    String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile;
     int position = 0, startTime, oTime, listSize;
-    private Handler hdlr;
     MainPlayModel mainPlayModel;
     Boolean queuePlay, audioPlay;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
+    private Handler hdlr;
+    private Runnable UpdateSongTime = new Runnable() {
+        @Override
+        public void run() {
+            startTime = MusicService.getStartTime();
+            binding.simpleSeekbar.setMax(100);
+            Time t = Time.valueOf("00:00:00");
+            if (queuePlay) {
+                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+            } else if (audioPlay) {
+                t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+            }
+            long totalDuration = t.getTime();
+            long currentDuration = MusicService.getStartTime();
+
+            int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            binding.simpleSeekbar.setProgress(progress);
+
+            // Running this thread after 100 milliseconds
+            hdlr.postDelayed(this, 60);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,18 +130,18 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                 ViewAllAudioListModel.ResponseData.Detail arrayList = gson.fromJson(json, type);
 //            listSize = arrayList.size();
 //                for (int i = 0; i < listSize; i++) {
-                    mainPlayModel = new MainPlayModel();
-                    mainPlayModel.setID(arrayList.getID());
-                    mainPlayModel.setName(arrayList.getName());
-                    mainPlayModel.setAudioFile(arrayList.getAudioFile());
-                    mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
-                    mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
-                    mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
-                    mainPlayModel.setImageFile(arrayList.getImageFile());
-                    mainPlayModel.setLike(arrayList.getLike());
-                    mainPlayModel.setDownload(arrayList.getDownload());
-                    mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
-                    mainPlayModelList.add(mainPlayModel);
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.getID());
+                mainPlayModel.setName(arrayList.getName());
+                mainPlayModel.setAudioFile(arrayList.getAudioFile());
+                mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.getImageFile());
+                mainPlayModel.setLike(arrayList.getLike());
+                mainPlayModel.setDownload(arrayList.getDownload());
+                mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
 //                }
                 playmedia();
             } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
@@ -129,18 +150,18 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                 AppointmentDetailModel.Audio arrayList = gson.fromJson(json, type);
 //            listSize = arrayList.size();
 //                for (int i = 0; i < listSize; i++) {
-                    mainPlayModel = new MainPlayModel();
-                    mainPlayModel.setID(arrayList.getID());
-                    mainPlayModel.setName(arrayList.getName());
-                    mainPlayModel.setAudioFile(arrayList.getAudioFile());
-                    mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
-                    mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
-                    mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
-                    mainPlayModel.setImageFile(arrayList.getImageFile());
-                    mainPlayModel.setLike(arrayList.getLike());
-                    mainPlayModel.setDownload(arrayList.getDownload());
-                    mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
-                    mainPlayModelList.add(mainPlayModel);
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.getID());
+                mainPlayModel.setName(arrayList.getName());
+                mainPlayModel.setAudioFile(arrayList.getAudioFile());
+                mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.getImageFile());
+                mainPlayModel.setLike(arrayList.getLike());
+                mainPlayModel.setDownload(arrayList.getDownload());
+                mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
 //                }
                 playmedia();
             } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
@@ -219,7 +240,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
     }
 
     private void playmedia() {
-        if(queuePlay){
+        if (queuePlay) {
             listSize = addToQueueModelList.size();
             if (listSize == 1) {
                 position = 0;
@@ -234,7 +255,10 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
 //                    MusicService.resumeMedia();
-                } else {
+                }else if (!isMediaStart) {
+                    binding.ivPause.setVisibility(View.VISIBLE);
+                    binding.ivPlay.setVisibility(View.GONE);
+                }else {
                     binding.ivPlay.setVisibility(View.GONE);
                     binding.ivPause.setVisibility(View.VISIBLE);
                     MusicService.play(getActivity(), Uri.parse(audioFile));
@@ -244,7 +268,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                 binding.ivPause.setVisibility(View.GONE);
                 binding.ivPlay.setVisibility(View.VISIBLE);
             }
-        }else if(audioPlay){
+        } else if (audioPlay) {
             listSize = mainPlayModelList.size();
             if (listSize == 1) {
                 position = 0;
@@ -259,9 +283,12 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
 //                    MusicService.resumeMedia();
-                } else {
-                    binding.ivPlay.setVisibility(View.GONE);
+                } else if (!isMediaStart) {
                     binding.ivPause.setVisibility(View.VISIBLE);
+                    binding.ivPlay.setVisibility(View.GONE);
+                } else {
+                    binding.ivPause.setVisibility(View.VISIBLE);
+                    binding.ivPlay.setVisibility(View.GONE);
                     MusicService.play(getActivity(), Uri.parse(audioFile));
                     MusicService.playMedia();
                 }
@@ -296,29 +323,6 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         });
     }
 
-    private Runnable UpdateSongTime = new Runnable() {
-        @Override
-        public void run() {
-            startTime = MusicService.getStartTime();
-            binding.simpleSeekbar.setMax(100);
-            Time t = Time.valueOf("00:00:00");
-            if (queuePlay) {
-                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
-            } else if (audioPlay) {
-                t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
-            }            long totalDuration = t.getTime();
-            long currentDuration = MusicService.getStartTime();
-
-            int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
-            binding.simpleSeekbar.setProgress(progress);
-
-            // Running this thread after 100 milliseconds
-            hdlr.postDelayed(this, 60);
-        }
-    };
-
-
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 
@@ -348,26 +352,37 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
     }
 
     @Override
+    public void onResume() {
+        if(isMediaStart){
+            if(MusicService.isPlaying()){
+                binding.ivPlay.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.VISIBLE);
+            }
+        }
+        super.onResume();
+    }
+
+    @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         if (IsRepeat.equalsIgnoreCase("1")) {
             if (position < (listSize - 1)) {
                 position = position + 1;
-               playmedia();
+                playmedia();
             }
         } else if (IsRepeat.equalsIgnoreCase("0")) {
-           playmedia();
+            playmedia();
         } else if (IsShuffle.equalsIgnoreCase("1")) {
             // shuffle is on - play a random song
             if (listSize == 1) {
             } else {
                 Random random = new Random();
                 position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-               playmedia();
+                playmedia();
             }
         } else {
             if (position < (listSize - 1)) {
                 position = position + 1;
-               playmedia();
+                playmedia();
             }
         }
     }

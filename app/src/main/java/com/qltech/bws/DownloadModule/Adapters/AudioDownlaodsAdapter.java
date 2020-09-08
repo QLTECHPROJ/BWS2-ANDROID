@@ -28,6 +28,7 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.DownloadsLayoutBinding;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
     private ArrayList<DownloadlistModel.Audio> listModelList;
@@ -79,6 +81,9 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             @Override
             public void onClick(View view) {
                 player = 1;
+                if(isMediaStart){
+                    MusicService.pauseMedia();
+                }
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
                 fragmentManager1.beginTransaction()

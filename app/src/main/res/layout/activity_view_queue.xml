@@ -99,6 +99,7 @@
                         android:textSize="@dimen/_15sdp" />
 
                     <LinearLayout
+                        android:id="@+id/llNowPlaying"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_60sdp"
                         android:layout_marginHorizontal="@dimen/_16sdp"
@@ -237,7 +238,7 @@
                         android:id="@+id/ivPlay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_pause_icon" />
+                        android:src="@drawable/ic_play_white_icon"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -245,14 +246,14 @@
                     android:layout_width="@dimen/_0sdp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.2"
-                    android:gravity="center_horizontal"
-                    android:visibility="gone">
+                        android:gravity="center_horizontal"
+                        android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/ivPause"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_play_white_icon"/>
+                        android:src="@drawable/ic_pause_icon" />
                 </LinearLayout>
 
                 <LinearLayout
