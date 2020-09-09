@@ -50,6 +50,7 @@ public class NextSessionViewModel {
     }
 
     public class ResponseData {
+
         @SerializedName("Id")
         @Expose
         private String id;
@@ -62,15 +63,15 @@ public class NextSessionViewModel {
         @SerializedName("Duration")
         @Expose
         private String duration;
-        @SerializedName("Response")
-        @Expose
-        private String Response;
         @SerializedName("Time")
         @Expose
         private String time;
         @SerializedName("Task")
         @Expose
         private Task task;
+        @SerializedName("Response")
+        @Expose
+        private String response;
 
         public String getId() {
             return id;
@@ -104,14 +105,6 @@ public class NextSessionViewModel {
             this.duration = duration;
         }
 
-        public String getResponse() {
-            return Response;
-        }
-
-        public void setResponse(String response) {
-            Response = response;
-        }
-
         public String getTime() {
             return time;
         }
@@ -127,41 +120,50 @@ public class NextSessionViewModel {
         public void setTask(Task task) {
             this.task = task;
         }
-    }
 
-    public class Task {
-        @SerializedName("title")
-        @Expose
-        private String title;
-        @SerializedName("AudioTask")
-        @Expose
-        private String audioTask;
-        @SerializedName("BookletTask")
-        @Expose
-        private String bookletTask;
-
-        public String getTitle() {
-            return title;
+        public String getResponse() {
+            return response;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
+        public void setResponse(String response) {
+            this.response = response;
         }
 
-        public String getAudioTask() {
-            return audioTask;
-        }
+        public class Task {
 
-        public void setAudioTask(String audioTask) {
-            this.audioTask = audioTask;
-        }
+            @SerializedName("title")
+            @Expose
+            private String title;
+            @SerializedName("AudioTask")
+            @Expose
+            private String audioTask;
+            @SerializedName("BookletTask")
+            @Expose
+            private String bookletTask;
 
-        public String getBookletTask() {
-            return bookletTask;
-        }
+            public String getTitle() {
+                return title;
+            }
 
-        public void setBookletTask(String bookletTask) {
-            this.bookletTask = bookletTask;
+            public void setTitle(String title) {
+                this.title = title;
+            }
+
+            public String getAudioTask() {
+                return audioTask;
+            }
+
+            public void setAudioTask(String audioTask) {
+                this.audioTask = audioTask;
+            }
+
+            public String getBookletTask() {
+                return bookletTask;
+            }
+
+            public void setBookletTask(String bookletTask) {
+                this.bookletTask = bookletTask;
+            }
         }
     }
 }

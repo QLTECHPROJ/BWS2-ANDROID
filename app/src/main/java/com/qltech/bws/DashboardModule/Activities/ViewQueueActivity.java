@@ -73,11 +73,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             long currentDuration = MusicService.getStartTime();
 
             int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
             binding.simpleSeekbar.setProgress(progress);
             binding.simpleSeekbar.setMax(100);
-
-            // Running this thread after 100 milliseconds
             hdlr.postDelayed(this, 60);
         }
     };

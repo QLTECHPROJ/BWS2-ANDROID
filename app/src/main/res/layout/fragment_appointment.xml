@@ -80,7 +80,7 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:layout_marginRight="@dimen/_16sdp"
                         android:elevation="3.6dp"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:cardCornerRadius="@dimen/_4sdp">
 
                         <LinearLayout

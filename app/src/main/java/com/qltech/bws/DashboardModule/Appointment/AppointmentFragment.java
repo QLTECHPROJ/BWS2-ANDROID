@@ -150,7 +150,7 @@ public class AppointmentFragment extends Fragment {
                             binding.tvTitle.setText(listModel.getResponseData().getName());
                             binding.tvDate.setText(listModel.getResponseData().getDate());
                             binding.tvTime.setText(listModel.getResponseData().getTime());
-                            binding.tvHourGlass.setText(listModel.getResponseData().getDate());
+                            binding.tvHourGlass.setText(listModel.getResponseData().getDuration());
 
                             if (listModel.getResponseData().getTask().getAudioTask().equalsIgnoreCase("")) {
                                 binding.cbTask1.setVisibility(View.GONE);
