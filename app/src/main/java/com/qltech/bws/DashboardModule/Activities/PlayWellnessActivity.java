@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,8 +48,8 @@ import retrofit2.Response;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
-public class PlayWellnessActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener,
-        SeekBar.OnSeekBarChangeListener{
+public class PlayWellnessActivity extends AppCompatActivity implements
+        SeekBar.OnSeekBarChangeListener {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id;
     int oTime = 0, startTime = 0, endTime = 0, position, listSize;
@@ -65,9 +64,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         @Override
         public void run() {
             Time t = Time.valueOf("00:00:00");
+            String endtimetext = "";
             if (queuePlay) {
-                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                if (listSize != 0) {
+                    endtimetext = addToQueueModelList.get(position).getAudioDuration();
+                    t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                    MusicService.stopMedia();
+                }
             } else if (audioPlay) {
+                endtimetext = mainPlayModelList.get(position).getAudioDuration();
                 t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
             }
             long totalDuration = t.getTime();
@@ -75,10 +80,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
 
             int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
             //Log.d("Progress", ""+progress);
-            if (currentDuration <= totalDuration) {
-                startTime = MusicService.getStartTime();
-                binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
-                        TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
+            startTime = MusicService.getStartTime();
+            binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
+                    TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
+
+            if (currentDuration == totalDuration) {
+                binding.tvStartTime.setText(endtimetext);
             }
             binding.simpleSeekbar.setProgress(progress);
             binding.simpleSeekbar.setMax(100);
@@ -128,7 +135,77 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         getPrepareShowData(position);
 
-        MusicService.mediaPlayer.setOnCompletionListener(this);
+        MusicService.mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+            if (queuePlay) {
+                addToQueueModelList.remove(position);
+                listSize = addToQueueModelList.size();
+                if (position < listSize - 1) {
+                    position = position + 1;
+                } else {
+                    if (listSize == 0) {
+                        MusicService.stopMedia();
+                    } else {
+                        position = 0;
+                    }
+                }
+            } else if (IsRepeat.equalsIgnoreCase("1")) {
+                if (position < (listSize - 1)) {
+                    position = position + 1;
+                } else {
+                    position = 0;
+                }
+                getPrepareShowData(position);
+            } else if (IsRepeat.equalsIgnoreCase("0")) {
+                getPrepareShowData(position);
+            } else if (IsShuffle.equalsIgnoreCase("1")) {
+                // shuffle is on - play a random song
+                if (listSize == 1) {
+                } else {
+                    Random random = new Random();
+                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                    getPrepareShowData(position);
+                }
+            } else {
+                if (position < (listSize - 1)) {
+                    position = position + 1;
+                    getPrepareShowData(position);
+                } else {
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+                    MusicService.stopMedia();
+                }
+            }
+            if (listSize == 1) {
+                binding.llnext.setEnabled(false);
+                binding.llprev.setEnabled(false);
+                binding.llShuffle.setEnabled(false);
+                binding.llnext.setClickable(false);
+                binding.llprev.setClickable(false);
+                binding.llShuffle.setClickable(false);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                position = 0;
+            }else if(position == listSize - 1){
+                binding.llnext.setEnabled(false);
+                binding.llnext.setClickable(false);
+                binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else if(position == 0){
+                binding.llprev.setEnabled(false);
+                binding.llprev.setClickable(false);
+                binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llnext.setEnabled(true);
+                binding.llprev.setEnabled(true);
+                binding.llShuffle.setEnabled(true);
+                binding.llnext.setClickable(true);
+                binding.llprev.setClickable(true);
+                binding.llShuffle.setClickable(true);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
+        });
 
         binding.llBack.setOnClickListener(view -> {
             callBack();
@@ -428,78 +505,99 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
     private void getPrepareShowData(int position) {
         if (listSize == 1) {
             binding.llnext.setEnabled(false);
-            binding.llnext.setEnabled(false);
+            binding.llprev.setEnabled(false);
+            binding.llShuffle.setEnabled(false);
+            binding.llnext.setClickable(false);
             binding.llprev.setClickable(false);
-            binding.llprev.setClickable(false);
+            binding.llShuffle.setClickable(false);
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             position = 0;
+        }else if(position == listSize - 1){
+            binding.llnext.setEnabled(false);
+            binding.llnext.setClickable(false);
+            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+        } else if(position == 0){
+            binding.llprev.setEnabled(false);
+            binding.llprev.setClickable(false);
+            binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
             binding.llnext.setEnabled(true);
-            binding.llnext.setEnabled(true);
+            binding.llprev.setEnabled(true);
+            binding.llShuffle.setEnabled(true);
+            binding.llnext.setClickable(true);
             binding.llprev.setClickable(true);
-            binding.llprev.setClickable(true);
+            binding.llShuffle.setClickable(true);
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (queuePlay) {
             listSize = addToQueueModelList.size();
-            id = addToQueueModelList.get(position).getID();
-            binding.tvName.setText(addToQueueModelList.get(position).getName());
-            if (addToQueueModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
-                binding.llDirection.setVisibility(View.GONE);
+            if (listSize == 1) {
+                position = 0;
+            } else if (listSize == 0) {
             } else {
-                binding.llDirection.setVisibility(View.VISIBLE);
-                binding.tvDireDesc.setText(addToQueueModelList.get(position).getAudioDirection());
-            }
-            binding.tvTitle.setText(addToQueueModelList.get(position).getAudioSubCategory());
-            binding.tvDesc.setText(addToQueueModelList.get(position).getAudiomastercat());
-            Glide.with(getApplicationContext()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-            if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("1")) {
-                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-            } else if (!addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
-                binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-            }
-            if (addToQueueModelList.get(position).getDownload().equalsIgnoreCase("1")) {
-                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-                binding.ivDownloads.setAlpha(255);
-                binding.llDownload.setClickable(false);
-                binding.llDownload.setEnabled(false);
-            } else if (!addToQueueModelList.get(position).getDownload().equalsIgnoreCase("")) {
-                binding.llDownload.setClickable(true);
-                binding.llDownload.setEnabled(true);
-                binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            }
-            if (!isMediaStart) {
-                MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-                MusicService.playMedia();
-            } else {
-                if (MusicService.isPause) {
-
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-//                    MusicService.resumeMedia();
-                } else if (MusicService.isPlaying()) {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
+                id = addToQueueModelList.get(position).getID();
+                binding.tvName.setText(addToQueueModelList.get(position).getName());
+                if (addToQueueModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
+                    binding.llDirection.setVisibility(View.GONE);
                 } else {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
+                    binding.llDirection.setVisibility(View.VISIBLE);
+                    binding.tvDireDesc.setText(addToQueueModelList.get(position).getAudioDirection());
+                }
+                binding.tvTitle.setText(addToQueueModelList.get(position).getAudioSubCategory());
+                binding.tvDesc.setText(addToQueueModelList.get(position).getAudiomastercat());
+                Glide.with(getApplicationContext()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("1")) {
+                    binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                } else if (!addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
+                    binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                }
+                if (addToQueueModelList.get(position).getDownload().equalsIgnoreCase("1")) {
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                    binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                    binding.ivDownloads.setAlpha(255);
+                    binding.llDownload.setClickable(false);
+                    binding.llDownload.setEnabled(false);
+                } else if (!addToQueueModelList.get(position).getDownload().equalsIgnoreCase("")) {
+                    binding.llDownload.setClickable(true);
+                    binding.llDownload.setEnabled(true);
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                }
+                if (!isMediaStart) {
                     MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
                     MusicService.playMedia();
+                } else {
+                    if (MusicService.isPause) {
+
+                        binding.llPlay.setVisibility(View.VISIBLE);
+                        binding.llPause.setVisibility(View.GONE);
+//                    MusicService.resumeMedia();
+                    } else if (MusicService.isPlaying()) {
+                        binding.llPause.setVisibility(View.VISIBLE);
+                        binding.llPlay.setVisibility(View.GONE);
+                    } else {
+                        binding.llPause.setVisibility(View.VISIBLE);
+                        binding.llPlay.setVisibility(View.GONE);
+                        MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                        MusicService.playMedia();
+                    }
                 }
+                binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
+
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(addToQueueModelList);
+                editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                editor.commit();
+                startTime = MusicService.getStartTime();
             }
-            addToQueueModelList.remove(position);
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = shared.edit();
-            Gson gson = new Gson();
-            String json = gson.toJson(addToQueueModelList);
-            editor.putString(CONSTANTS.PREF_KEY_queueList, json);
-            editor.commit();
-            binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
         } else if (audioPlay) {
             listSize = mainPlayModelList.size();
             id = mainPlayModelList.get(position).getID();
@@ -546,10 +644,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
                 }
             }
             binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
+            startTime = MusicService.getStartTime();
         }
 
         binding.simpleSeekbar.setClickable(true);
-        startTime = MusicService.getStartTime();
         hdlr.postDelayed(UpdateSongTime, 60);
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
@@ -587,60 +685,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements MediaPlay
             }
         }
         super.onResume();
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mediaPlayer) {
-/*   if (position < listSize - 1) {
-            position = position + 1;
-            getPrepareShowData();
-        } else {
-            position = 0;
-            getPrepareShowData();
-        }*/
-        if (IsRepeat.equalsIgnoreCase("1")) {
-            if (position < (listSize - 1)) {
-                position = position + 1;
-            } else {
-                position = 0;
-            }
-            getPrepareShowData(position);
-        } else if (IsRepeat.equalsIgnoreCase("0")) {
-            getPrepareShowData(position);
-        } else if (IsShuffle.equalsIgnoreCase("1")) {
-            // shuffle is on - play a random song
-            if (listSize == 1) {
-            } else {
-                Random random = new Random();
-                position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                getPrepareShowData(position);
-            }
-        } else {
-            if (position < (listSize - 1)) {
-                position = position + 1;
-                getPrepareShowData(position);
-            } else {
-                binding.llPlay.setVisibility(View.VISIBLE);
-                binding.llPause.setVisibility(View.GONE);
-                MusicService.stopMedia();
-            }
-        }
-        if (listSize == 1 || position < listSize - 1) {
-            binding.llnext.setEnabled(false);
-            binding.llnext.setEnabled(false);
-            binding.llprev.setClickable(false);
-            binding.llprev.setClickable(false);
-            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            position = 0;
-        } else {
-            binding.llnext.setEnabled(true);
-            binding.llnext.setEnabled(true);
-            binding.llprev.setClickable(true);
-            binding.llprev.setClickable(true);
-            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-            binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-        }
     }
 
     @Override

@@ -84,11 +84,13 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         switch (i) {
             case AudioManager.AUDIOFOCUS_GAIN:
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                MusicService.resumeMedia(); // Resume your media player here
+                if (MusicService.isMediaStart) {
+                    MusicService.resumeMedia();
+                }// Resume your media player here
                 break;
             case AudioManager.AUDIOFOCUS_LOSS:
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                MusicService.pauseMedia();// Pause your media player here
+//                MusicService.pauseMedia();// Pause your media player here
                 break;
         }
     }

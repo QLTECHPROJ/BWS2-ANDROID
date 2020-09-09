@@ -197,8 +197,6 @@ public class AddQueueActivity extends AppCompatActivity {
                 editor.commit();
                 MusicService.ToRepeat(false);
                 IsRepeat = "";
-                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else if (IsShuffle.equalsIgnoreCase("1")) {

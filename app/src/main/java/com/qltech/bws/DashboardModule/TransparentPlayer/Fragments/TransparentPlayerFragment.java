@@ -56,6 +56,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             binding.simpleSeekbar.setMax(100);
             Time t = Time.valueOf("00:00:00");
             if (queuePlay) {
+                if(listSize != 0)
                 t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
             } else if (audioPlay) {
                 t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
@@ -244,32 +245,36 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             listSize = addToQueueModelList.size();
             if (listSize == 1) {
                 position = 0;
-            }
-            Glide.with(getActivity()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-            binding.tvTitle.setText(addToQueueModelList.get(position).getName());
-            binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
-            audioFile = addToQueueModelList.get(position).getAudioFile();
-            if (player == 1) {
-                if (MusicService.isPause) {
+            } else if (listSize == 0) {
+
+            } else {
+                Glide.with(getActivity()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                binding.tvTitle.setText(addToQueueModelList.get(position).getName());
+                binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
+                audioFile = addToQueueModelList.get(position).getAudioFile();
+                if (player == 1) {
+                    if (MusicService.isPause) {
+                        binding.ivPause.setVisibility(View.GONE);
+                        binding.ivPlay.setVisibility(View.VISIBLE);
+//                    MusicService.resumeMedia();
+                    } else if (!isMediaStart) {
+                        binding.ivPause.setVisibility(View.VISIBLE);
+                        binding.ivPlay.setVisibility(View.GONE);
+                        MusicService.play(getActivity(), Uri.parse(audioFile));
+                        MusicService.playMedia();
+                    } else {
+                        binding.ivPlay.setVisibility(View.GONE);
+                        binding.ivPause.setVisibility(View.VISIBLE);
+                        MusicService.play(getActivity(), Uri.parse(audioFile));
+                        MusicService.playMedia();
+                    }
+                } else {
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
-//                    MusicService.resumeMedia();
-                } else if (!isMediaStart) {
-                    binding.ivPause.setVisibility(View.VISIBLE);
-                    binding.ivPlay.setVisibility(View.GONE);
-                    MusicService.play(getActivity(), Uri.parse(audioFile));
-                    MusicService.playMedia();
-                } else {
-                    binding.ivPlay.setVisibility(View.GONE);
-                    binding.ivPause.setVisibility(View.VISIBLE);
-                    MusicService.play(getActivity(), Uri.parse(audioFile));
-                    MusicService.playMedia();
                 }
-            } else {
-                binding.ivPause.setVisibility(View.GONE);
-                binding.ivPlay.setVisibility(View.VISIBLE);
             }
+
         } else if (audioPlay) {
             listSize = mainPlayModelList.size();
             if (listSize == 1) {
@@ -371,7 +376,17 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        if (IsRepeat.equalsIgnoreCase("1")) {
+        if (queuePlay) {
+            addToQueueModelList.remove(position);
+            listSize = addToQueueModelList.size();
+            if (position < listSize - 1) {
+                if (listSize == 0) {
+                    MusicService.stopMedia();
+                } else {
+                    position = 0;
+                }
+            }
+        } else if (IsRepeat.equalsIgnoreCase("1")) {
             if (position < (listSize - 1)) {
                 position = position + 1;
             } else {
