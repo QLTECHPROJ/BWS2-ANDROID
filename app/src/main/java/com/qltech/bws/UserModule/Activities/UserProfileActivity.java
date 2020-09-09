@@ -19,11 +19,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BuildConfig;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
@@ -43,6 +46,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 import retrofit.RetrofitError;
@@ -427,15 +431,16 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
                 Glide.with(this).load(imageFilePath)
                         .placeholder(R.drawable.default_profile)
-                        .thumbnail(1f)
+                        .thumbnail(0.1f)
                         .dontAnimate().into(binding.civProfile);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(CONSTANTS.PREF_KEY_UserID, UserID);
                     TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, image);
                     APIClientProfile.getApiService().getAddProfile(UserID, typedFile,
                             new retrofit.Callback<AddProfileModel>() {
@@ -443,7 +448,6 @@ public class UserProfileActivity extends AppCompatActivity {
                                 public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
                                     if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                         hideProgressBar();
-                                        profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                     }
                                 }
@@ -465,11 +469,14 @@ public class UserProfileActivity extends AppCompatActivity {
                 Uri selectedImageUri = data.getData();
                 Glide.with(this).load(selectedImageUri)
                         .placeholder(R.drawable.default_profile)
-                        .thumbnail(1f)
+                        .thumbnail(1f).diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .skipMemoryCache(true)
                         .dontAnimate().into(binding.civProfile);
 
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(CONSTANTS.PREF_KEY_UserID, UserID);
                     File file = new File(FileUtil.getPath(selectedImageUri, this));
 
                     TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, file);
@@ -479,11 +486,6 @@ public class UserProfileActivity extends AppCompatActivity {
                                 public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
                                     if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                         hideProgressBar();
-                                        profilePicPath = addProfileModel.getResponseData().getProfileImage();
-                                        Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .placeholder(R.drawable.default_profile)
-                                                .thumbnail(1f)
-                                                .dontAnimate().into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                     }
                                 }
