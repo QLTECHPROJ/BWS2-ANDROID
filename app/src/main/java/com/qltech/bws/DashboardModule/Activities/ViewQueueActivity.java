@@ -9,10 +9,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -26,7 +29,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Adapters.QueueAdapter;
 import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.R;
@@ -35,10 +37,12 @@ import com.qltech.bws.Utility.ItemMoveCallback;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityViewQueueBinding;
+import com.qltech.bws.databinding.QueueListLayoutBinding;
 
 import java.lang.reflect.Type;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
@@ -129,6 +133,8 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         getPrepareShowData(position);
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
+
+        MusicService.mediaPlayer.setOnCompletionListener(this);
 
         if (addToQueueModelList.size() != 0) {
             QueueAdapter adapter = new QueueAdapter(addToQueueModelList, ViewQueueActivity.this);
@@ -276,6 +282,9 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
     }
 
     private void callBack() {
+        if(binding.llPause.getVisibility() == View.VISIBLE){
+            MusicService.isPause = true;
+        }
         Intent i = new Intent(ctx, PlayWellnessActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(i);
@@ -310,11 +319,9 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
             getPrepareShowData(position);
         } else if (IsRepeat.equalsIgnoreCase("0")) {
             getPrepareShowData(position);
-            binding.llnext.setEnabled(false);
         } else if (IsShuffle.equalsIgnoreCase("1")) {
             // shuffle is on - play a random song
             if (listSize == 1) {
-                binding.llnext.setEnabled(false);
             } else {
                 Random random = new Random();
                 position = random.nextInt((listSize - 1) - 0 + 1) + 0;
@@ -324,6 +331,10 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
             if (position < (listSize - 1)) {
                 position = position + 1;
                 getPrepareShowData(position);
+            }else{
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                MusicService.stopMedia();
             }
         }
         if (listSize == 1 || position < listSize - 1) {
@@ -371,5 +382,127 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
 
         // update timer progress again
         updateProgressBar();
+    }
+
+    public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
+        ArrayList<AddToQueueModel> listModelList;
+        Context ctx;
+
+
+        public QueueAdapter(ArrayList<AddToQueueModel> listModelList, Context ctx) {
+            this.listModelList = listModelList;
+            this.ctx = ctx;
+
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            QueueListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.queue_list_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            AddToQueueModel listModel = listModelList.get(position);
+
+            holder.binding.tvTitle.setText(listModel.getName());
+            holder.binding.tvTime.setText(listModel.getAudioDuration());
+
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                    1, 1, 0.1f, 0);
+            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+            Glide.with(ctx).load(listModel.getImageFile()).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+
+            holder.binding.llRemove.setOnClickListener(view -> callRemoveList(position));
+            holder.binding.llMainLayout.setOnClickListener(view -> {
+                if (isMediaStart || MusicService.isPause) {
+                    MusicService.stopMedia();
+                }
+                MusicService.play(ctx, Uri.parse(listModel.getAudioFile()));
+                MusicService.playMedia();
+                binding.tvTitle.setText(listModel.getName());
+                binding.tvName.setText(listModel.getName());
+//            binding.tvCategory.setText(addToQueueModelList.get(position).getAudioSubCategory());
+                Glide.with(ctx).load(listModel.getImageFile()).thumbnail(0.05f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                binding.tvTime.setText(listModel.getAudioDuration());
+
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, true);
+                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, false);
+                editor.commit();
+            });
+
+        }
+
+        private void callRemoveList(int position) {
+            listModelList.remove(position);
+            notifyDataSetChanged();
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(listModelList);
+            editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+            editor.commit();
+        }
+
+        @Override
+        public int getItemCount() {
+            return listModelList.size();
+        }
+
+        @Override
+        public void onRowMoved(int fromPosition, int toPosition) {
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(listModelList, i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(listModelList, i, i - 1);
+                }
+            }
+            notifyItemMoved(fromPosition, toPosition);
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(listModelList);
+            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+            editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+            editor.commit();
+
+        }
+
+        @Override
+        public void onRowSelected(RecyclerView.ViewHolder myViewHolder) {
+
+        }
+
+        @Override
+        public void onRowClear(RecyclerView.ViewHolder myViewHolder) {
+
+        }
+
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            QueueListLayoutBinding binding;
+
+            public MyViewHolder(QueueListLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
     }
 }

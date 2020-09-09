@@ -448,6 +448,11 @@ public class UserProfileActivity extends AppCompatActivity {
                                 public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
                                     if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                         hideProgressBar();
+                                        profilePicPath = addProfileModel.getResponseData().getProfileImage();
+                                        Glide.with(getApplicationContext()).load(profilePicPath)
+                                                .placeholder(R.drawable.default_profile)
+                                                .thumbnail(1f)
+                                                .dontAnimate().into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                     }
                                 }
@@ -486,6 +491,11 @@ public class UserProfileActivity extends AppCompatActivity {
                                 public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
                                     if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                         hideProgressBar();
+                                        profilePicPath = addProfileModel.getResponseData().getProfileImage();
+                                        Glide.with(getApplicationContext()).load(profilePicPath)
+                                                .placeholder(R.drawable.default_profile)
+                                                .thumbnail(1f)
+                                                .dontAnimate().into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                     }
                                 }

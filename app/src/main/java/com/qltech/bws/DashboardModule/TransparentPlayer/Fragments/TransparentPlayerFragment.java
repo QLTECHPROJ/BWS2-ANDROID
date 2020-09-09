@@ -255,12 +255,12 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
 //                    MusicService.resumeMedia();
-                }else if (!isMediaStart) {
+                } else if (!isMediaStart) {
                     binding.ivPause.setVisibility(View.VISIBLE);
                     binding.ivPlay.setVisibility(View.GONE);
                     MusicService.play(getActivity(), Uri.parse(audioFile));
                     MusicService.playMedia();
-                }else {
+                } else {
                     binding.ivPlay.setVisibility(View.GONE);
                     binding.ivPause.setVisibility(View.VISIBLE);
                     MusicService.play(getActivity(), Uri.parse(audioFile));
@@ -278,7 +278,7 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             Glide.with(getActivity()).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-            binding.tvSubTitle.setText("Play the " + mainPlayModelList.get(position).getName() + " every night on a low volume.");
+            binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
             audioFile = mainPlayModelList.get(position).getAudioFile();
             if (player == 1) {
                 if (MusicService.isPause) {
@@ -313,6 +313,9 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
         binding.llPlayearMain.setOnClickListener(view -> {
             if (player == 0) {
                 player = 1;
+            }
+            if (binding.ivPause.getVisibility() == View.VISIBLE) {
+                MusicService.isPause = true;
             }
             Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -357,8 +360,8 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
 
     @Override
     public void onResume() {
-        if(isMediaStart){
-            if(MusicService.isPlaying()){
+        if (isMediaStart) {
+            if (MusicService.isPlaying()) {
                 binding.ivPlay.setVisibility(View.GONE);
                 binding.ivPause.setVisibility(View.VISIBLE);
             }
@@ -389,6 +392,10 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             if (position < (listSize - 1)) {
                 position = position + 1;
                 playmedia();
+            } else {
+                binding.ivPlay.setVisibility(View.VISIBLE);
+                binding.ivPause.setVisibility(View.GONE);
+                MusicService.stopMedia();
             }
         }
     }
