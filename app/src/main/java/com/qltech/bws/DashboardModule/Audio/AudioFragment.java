@@ -3,6 +3,7 @@ package com.qltech.bws.DashboardModule.Audio;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,13 +24,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Audio.Adapters.RecentlyPlayedAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.RecommendedAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.TopCategoriesAdapter;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
-import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.FragmentAudioBinding;
@@ -41,10 +42,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Audio.ViewAllAudioFragment.viewallAudio;
+
 public class AudioFragment extends Fragment {
+    public static boolean exit = false;
     FragmentAudioBinding binding;
-    private AudioViewModel audioViewModel;
     String UserID, AudioFlag;
+    boolean doubleBackToExitPressedOnce = false;
+    private AudioViewModel audioViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +57,8 @@ public class AudioFragment extends Fragment {
                 ViewModelProviders.of(this).get(AudioViewModel.class);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_audio, container, false);
         View view = binding.getRoot();
+        viewallAudio = false;
+
         audioViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -77,7 +84,36 @@ public class AudioFragment extends Fragment {
     }
 
     private void callBack() {
-        getActivity().finish();
+      /*  if (!doubleBackToExitPressedOnce) {
+            this.doubleBackToExitPressedOnce = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
+        } else {
+            getActivity().finishAffinity();
+            return;
+        }*/
+
+//        if (doubleBackToExitPressedOnce) {
+            getActivity().finishAffinity();
+//            return;
+//        }
+
+   /*     this.doubleBackToExitPressedOnce = true;
+//        BWSApplication.showToast("Press again to exit.", getActivity());
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        },2000);*/
+//        exit = true;
+//        getActivity().finish();
     }
 
 
@@ -129,10 +165,37 @@ public class AudioFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareData();
+    }
+
+    private void hideProgressBar() {
+        try {
+            binding.progressBarHolder.setVisibility(View.GONE);
+            binding.ImgV.setVisibility(View.GONE);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showProgressBar() {
+        try {
+            binding.progressBarHolder.setVisibility(View.VISIBLE);
+            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.ImgV.setVisibility(View.VISIBLE);
+            binding.ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public class MainAudioListAdapter extends RecyclerView.Adapter<MainAudioListAdapter.MyViewHolder> {
-        private List<MainAudioModel.ResponseData> listModelList;
         Context ctx;
         FragmentActivity activity;
+        private List<MainAudioModel.ResponseData> listModelList;
 
         public MainAudioListAdapter(List<MainAudioModel.ResponseData> listModelList, Context ctx, FragmentActivity activity) {
             this.listModelList = listModelList;
@@ -240,33 +303,6 @@ public class AudioFragment extends Fragment {
                 super(binding.getRoot());
                 this.binding = binding;
             }
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        prepareData();
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

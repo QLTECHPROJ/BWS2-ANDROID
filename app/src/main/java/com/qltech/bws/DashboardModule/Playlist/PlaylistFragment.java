@@ -70,7 +70,6 @@ public class PlaylistFragment extends Fragment {
         if (getArguments() != null) {
             Check = getArguments().getString("Check");
         }
-
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
         binding.rvMainPlayList.setItemAnimator(new DefaultItemAnimator());
@@ -151,6 +150,7 @@ public class PlaylistFragment extends Fragment {
         myPlaylistsFragment.setArguments(bundle);
         fragmentManager1.beginTransaction()
                 .replace(R.id.rlPlaylist, myPlaylistsFragment)
+                .addToBackStack(null)
                 .commit();
     }
 

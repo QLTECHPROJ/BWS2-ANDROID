@@ -97,6 +97,14 @@ public class MyPlaylistsFragment extends Fragment {
             }
             return false;
         });
+        /*OnBackPressedCallback callback = new OnBackPressedCallback(true *//* enabled by default *//*) {
+            @Override
+            public void handleOnBackPressed() {
+                callBack();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+*/
         binding.llBack.setOnClickListener(view1 -> callBack());
 
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
