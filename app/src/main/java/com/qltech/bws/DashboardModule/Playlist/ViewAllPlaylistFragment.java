@@ -64,15 +64,14 @@ public class ViewAllPlaylistFragment extends Fragment {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
-            if( keyCode == KeyEvent.KEYCODE_BACK )
-            {
-              callBack();
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                callBack();
                 return true;
             }
             return false;
         });
         binding.llBack.setOnClickListener(view1 -> {
-          callBack();
+            callBack();
         });
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
@@ -82,9 +81,13 @@ public class ViewAllPlaylistFragment extends Fragment {
     }
 
     private void callBack() {
-        FragmentManager fm = getActivity()
-                .getSupportFragmentManager();
-        fm.popBackStack("ViewAllPlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Fragment playlistFragment = new PlaylistFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.rlPlaylist, playlistFragment)
+                .commit();
+        Bundle bundle = new Bundle();
+        playlistFragment.setArguments(bundle);
     }
 
     @Override
@@ -105,7 +108,7 @@ public class ViewAllPlaylistFragment extends Fragment {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(4, 6, 4, 224);
             binding.llSpace.setLayoutParams(params);
-        }else {
+        } else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(4, 6, 4, 120);
             binding.llSpace.setLayoutParams(params);

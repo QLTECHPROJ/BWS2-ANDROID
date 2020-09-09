@@ -222,7 +222,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_4sdp"
                         android:layout_marginBottom="@dimen/_4sdp"
-                        android:progressDrawable="@drawable/seek_bar"
+                        android:progressDrawable="@drawable/seek_bars"
                         android:thumb="@drawable/ic_dot_icon" />
 
                     <TextView

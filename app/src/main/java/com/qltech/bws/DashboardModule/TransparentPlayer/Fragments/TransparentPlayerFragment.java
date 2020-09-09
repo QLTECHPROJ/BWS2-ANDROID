@@ -56,8 +56,8 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             binding.simpleSeekbar.setMax(100);
             Time t = Time.valueOf("00:00:00");
             if (queuePlay) {
-                if(listSize != 0)
-                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                if (listSize != 0)
+                    t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
             } else if (audioPlay) {
                 t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
             }

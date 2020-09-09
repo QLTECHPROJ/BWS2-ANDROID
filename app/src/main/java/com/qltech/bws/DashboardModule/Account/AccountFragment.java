@@ -50,6 +50,7 @@ import com.qltech.bws.UserModule.Models.ProfileViewModel;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.FragmentAccountBinding;
 
 import retrofit2.Call;
@@ -209,6 +210,7 @@ public class AccountFragment extends Fragment {
 
     void clearData(Dialog dialog) {
         DeleteCall();
+        MusicService.stopMedia();
         SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
         String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
         if (TextUtils.isEmpty(fcm_id)) {

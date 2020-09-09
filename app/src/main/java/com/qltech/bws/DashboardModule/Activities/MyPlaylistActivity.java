@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,6 +35,7 @@ import com.qltech.bws.DashboardModule.Adapters.DirectionAdapter;
 import com.qltech.bws.DashboardModule.Models.RenamePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
+import com.qltech.bws.DashboardModule.Playlist.PlaylistFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -285,8 +287,13 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 dialog.setOnKeyListener((v, keyCode, event) -> {
                                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                                         dialog.dismiss();
-                                        FragmentManager fm = getSupportFragmentManager();
-                                        fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                        Fragment playlistFragment = new PlaylistFragment();
+                                        FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                        fragmentManager1.beginTransaction()
+                                                .add(R.id.rlPlaylist, playlistFragment)
+                                                .commit();
+                                        Bundle bundle = new Bundle();
+                                        playlistFragment.setArguments(bundle);
                                         return true;
                                     }
                                     return false;

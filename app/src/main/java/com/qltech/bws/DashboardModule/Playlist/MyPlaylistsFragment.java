@@ -37,6 +37,7 @@ import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
+import com.qltech.bws.DashboardModule.Audio.AudioFragment;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
@@ -76,6 +77,10 @@ public class MyPlaylistsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
         View view = binding.getRoot();
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         changedAudio = new ArrayList<>();
         if (getArguments() != null) {
             New = getArguments().getString("New");
@@ -84,11 +89,19 @@ public class MyPlaylistsFragment extends Fragment {
             PlaylistImage = getArguments().getString("PlaylistImage");
         }
 
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                callBack();
+                return true;
+            }
+            return false;
+        });
+        binding.llBack.setOnClickListener(view1 -> callBack());
+
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+
 
         if (!AudioFlag.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
@@ -101,24 +114,12 @@ public class MyPlaylistsFragment extends Fragment {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(10, 8, 10, 190);
             binding.llSpace.setLayoutParams(params);
-        }else {
+        } else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(10, 8, 10, 84);
             binding.llSpace.setLayoutParams(params);
         }
-        binding.llBack.setOnClickListener(view12 -> {
-            callBack();
-        });
 
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                callBack();
-                return true;
-            }
-            return false;
-        });
         binding.llMore.setOnClickListener(view13 -> {
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
             i.putExtra("PlaylistID", PlaylistID);
@@ -213,9 +214,13 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     private void callBack() {
-        FragmentManager fm = getActivity()
-                .getSupportFragmentManager();
-        fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Fragment playlistFragment = new PlaylistFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.rlPlaylist, playlistFragment)
+                .commit();
+        Bundle bundle = new Bundle();
+        playlistFragment.setArguments(bundle);
     }
 
     @Override
@@ -333,7 +338,7 @@ public class MyPlaylistsFragment extends Fragment {
     private void callTransparentFrag(int position, Context ctx, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList,
                                      String myPlaylist) {
         player = 1;
-        if(isMediaStart || MusicService.isPause){
+        if (isMediaStart || MusicService.isPause) {
             MusicService.stopMedia();
         }
         Fragment fragment = new TransparentPlayerFragment();

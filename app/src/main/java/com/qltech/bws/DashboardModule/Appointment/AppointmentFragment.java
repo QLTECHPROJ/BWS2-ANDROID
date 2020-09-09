@@ -217,9 +217,7 @@ public class AppointmentFragment extends Fragment {
                     sessionsFragment.setArguments(bundle);
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .replace(R.id.flMainLayout, sessionsFragment).
-                            addToBackStack("SessionsFragment")
-                            .commit();
+                            .replace(R.id.flMainLayout, sessionsFragment).commit();
                 }
             });
         }

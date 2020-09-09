@@ -72,11 +72,11 @@ public class AppointmentDetailsFragment extends Fragment {
                     .addToBackStack("TransparentPlayerFragment")
                     .commit();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, 0, 196);
+            params.setMargins(0, 0, 0, 234);
             binding.llSpace.setLayoutParams(params);
-        }else {
+        } else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, 0, 92);
+            params.setMargins(0, 0, 0, 98);
             binding.llSpace.setLayoutParams(params);
         }
         binding.llBack.setOnClickListener(view1 -> callBack());
@@ -86,9 +86,13 @@ public class AppointmentDetailsFragment extends Fragment {
     }
 
     private void callBack() {
-        FragmentManager fm = getActivity()
-                .getSupportFragmentManager();
-        fm.popBackStack("AppointmentDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Fragment sessionsFragment = new SessionsFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flMainLayout, sessionsFragment)
+                .commit();
+        Bundle bundle = new Bundle();
+        sessionsFragment.setArguments(bundle);
     }
 
     private void getAppointmentData() {

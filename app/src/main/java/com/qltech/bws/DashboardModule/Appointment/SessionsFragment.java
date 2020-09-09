@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.DashboardModule.Audio.AudioFragment;
 import com.qltech.bws.DashboardModule.Models.SessionListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
@@ -58,8 +59,7 @@ public class SessionsFragment extends Fragment {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
-            if( keyCode == KeyEvent.KEYCODE_BACK )
-            {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
                 callBack();
                 return true;
             }
@@ -78,9 +78,16 @@ public class SessionsFragment extends Fragment {
     }
 
     private void callBack() {
-        FragmentManager fm = getActivity()
+        Fragment appointmentFragment = new AppointmentFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flMainLayout, appointmentFragment)
+                .commit();
+        Bundle bundle = new Bundle();
+        appointmentFragment.setArguments(bundle);
+        /*FragmentManager fm = getActivity()
                 .getSupportFragmentManager();
-        fm.popBackStack("SessionsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        fm.popBackStack("SessionsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);*/
     }
 
     private void prepareSessionList() {
@@ -158,7 +165,7 @@ public class SessionsFragment extends Fragment {
             } else if (listModel.getStatus().equalsIgnoreCase("Arrive")) {
                 holder.binding.tvStatus.setText(listModel.getStatus());
                 holder.binding.tvStatus.setBackgroundResource(R.drawable.green_text_background);
-            }else if (listModel.getStatus().equalsIgnoreCase("Did_Not_Arrive")) {
+            } else if (listModel.getStatus().equalsIgnoreCase("Did_Not_Arrive")) {
                 holder.binding.tvStatus.setText("Did Not Arrive");
                 holder.binding.tvStatus.setBackgroundResource(R.drawable.green_text_background);
             }
@@ -172,9 +179,7 @@ public class SessionsFragment extends Fragment {
                     bundle.putString("appointmentId", listModel.getId());
                     appointmentDetailsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
-                            .replace(R.id.flSession, appointmentDetailsFragment).
-                            addToBackStack("AppointmentDetailsFragment")
-                            .commit();
+                            .replace(R.id.flSession, appointmentDetailsFragment).commit();
                 }
             });
         }

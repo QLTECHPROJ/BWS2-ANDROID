@@ -124,7 +124,7 @@ public class PlaylistFragment extends Fragment {
                                 public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
                                     if (response.isSuccessful()) {
                                         CreatePlaylistModel listModel = response.body();
-                                        callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(),"");
+                                        callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "");
                                         dialog.dismiss();
                                     }
                                 }
@@ -160,13 +160,12 @@ public class PlaylistFragment extends Fragment {
         Fragment myPlaylistsFragment = new MyPlaylistsFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         bundle.putString("New", s);
-        bundle.putString("PlaylistID",id);
-        bundle.putString("PlaylistName",name);
-        bundle.putString("PlaylistImage",playlistImage);
+        bundle.putString("PlaylistID", id);
+        bundle.putString("PlaylistName", name);
+        bundle.putString("PlaylistImage", playlistImage);
         myPlaylistsFragment.setArguments(bundle);
         fragmentManager1.beginTransaction()
-                .replace(R.id.rlPlaylist, myPlaylistsFragment).
-                addToBackStack("MyPlaylistsFragment")
+                .replace(R.id.rlPlaylist, myPlaylistsFragment)
                 .commit();
     }
 
