@@ -52,24 +52,24 @@ public class BillingAddressFragment extends Fragment {
                 binding.tlState.setError("");
                 binding.tlPostCode.setError("");
                 if (binding.etName.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlName.setError(getString(R.string.valid_name));
+                    binding.tlName.setError("Please enter your full name");
                 } else if (binding.etEmail.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlEmail.setError("Please enter email address");
+                    binding.tlEmail.setError("Please enter your email address");
                 } else if (!binding.etEmail.getText().toString().equalsIgnoreCase("")
                         && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
-                    binding.tlEmail.setError("Please enter valid email address");
+                    binding.tlEmail.setError("Please provide a valid email address");
                 } else if (binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
                     binding.tlMobileNumber.setError("please enter mobile number");
                 } else if (binding.etCountry.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlCountry.setError("please enter country");
+                    binding.tlCountry.setError("Please provide valid country details");
                 } else if (binding.etAddressLine1.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlAddressLine1.setError("please enter address");
+                    binding.tlAddressLine1.setError("Please provide the address details");
                 } else if (binding.etCity.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlCity.setError("please enter suburb / town / city");
+                    binding.tlCity.setError("Please provide suburb/town/city details");
                 } else if (binding.etState.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlState.setError("please enter state");
+                    binding.tlState.setError("Please provide the state you reside in");
                 } else if (binding.etPostCode.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlPostCode.setError("please enter postcode");
+                    binding.tlPostCode.setError("Please provide a postal code");
                 } else {
                     if (BWSApplication.isNetworkConnected(getActivity())) {
                         showProgressBar();

@@ -241,7 +241,7 @@ public class AppointmentInvoiceFragment extends Fragment {
                     ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.AppTheme);
                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
                     alertDialogBuilder.setTitle("Invoice Data Downloaded Successfully");
-                    alertDialogBuilder.setMessage("Your invoice is in Storage/Yupit");
+                    alertDialogBuilder.setMessage("Your invoice is in Storage/BWS");
                     alertDialogBuilder.setCancelable(false);
                     alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {

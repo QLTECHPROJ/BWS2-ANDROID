@@ -143,7 +143,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                     binding.tlName.setError("");
                     binding.tlNumber.setError("");
                 } else if (binding.textMonth.getText().toString().equalsIgnoreCase("Expiry Date") || a == 0) {
-                    binding.txtError.setText("Hey! I'll need you to add expiry details");
+                    binding.txtError.setText("Please provide the expiry date");
                     binding.tlName.setError("");
                     binding.tlNumber.setError("");
                 } else if (binding.etCvv.getText().toString().matches("")) {
