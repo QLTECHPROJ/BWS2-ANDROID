@@ -223,15 +223,15 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
             position = 0;
-        }else if(position == listSize - 1){
+        } else if (position == listSize - 1) {
             binding.llnext.setEnabled(false);
             binding.llnext.setClickable(false);
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-        } else if(position == 0){
+        } else if (position == 0) {
             binding.llprev.setEnabled(false);
             binding.llprev.setClickable(false);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-        }  else {
+        } else {
             binding.llnext.setEnabled(true);
             binding.llnext.setEnabled(true);
             binding.llprev.setClickable(true);
@@ -243,7 +243,7 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
         if (audioPlay) {
             binding.tvTitle.setText(mainPlayModelList.get(position).getName());
             binding.tvName.setText(mainPlayModelList.get(position).getName());
-//        binding.tvCategory.setText(mainPlayModelList.get(position).getAudioSubCategory());
+            binding.tvCategory.setText(mainPlayModelList.get(position).getAudioSubCategory());
             Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTime.setText(mainPlayModelList.get(position).getAudioDuration());
@@ -269,7 +269,7 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
             } else {
                 binding.tvTitle.setText(addToQueueModelList.get(position).getName());
                 binding.tvName.setText(addToQueueModelList.get(position).getName());
-//            binding.tvCategory.setText(addToQueueModelList.get(position).getAudioSubCategory());
+                binding.tvCategory.setText(addToQueueModelList.get(position).getAudioSubCategory());
                 Glide.with(ctx).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                 binding.tvTime.setText(addToQueueModelList.get(position).getAudioDuration());
@@ -385,11 +385,11 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
             position = 0;
-        } else if(position == listSize - 1){
+        } else if (position == listSize - 1) {
             binding.llnext.setEnabled(false);
             binding.llnext.setClickable(false);
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-        } else if(position == 0){
+        } else if (position == 0) {
             binding.llprev.setEnabled(false);
             binding.llprev.setClickable(false);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
