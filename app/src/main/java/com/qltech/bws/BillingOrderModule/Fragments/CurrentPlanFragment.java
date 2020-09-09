@@ -85,7 +85,7 @@ public class CurrentPlanFragment extends Fragment {
                             binding.tvPlan.setText("Active Since: "+listModel.getResponseData().getActivate());
                         }
                         binding.tvSubName.setText(listModel.getResponseData().getSubtitle());
-                        binding.tvPlanAmount.setText(listModel.getResponseData().getOrderTotal());
+                        binding.tvPlanAmount.setText("$"+listModel.getResponseData().getOrderTotal()+" ");
                         binding.tvPlanInterval.setText(listModel.getResponseData().getPlanStr());
                         binding.tvPayUsing.setText(listModel.getResponseData().getCardDigit());
 

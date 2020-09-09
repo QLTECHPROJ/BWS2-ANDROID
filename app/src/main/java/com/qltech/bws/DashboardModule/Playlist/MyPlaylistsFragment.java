@@ -227,7 +227,7 @@ public class MyPlaylistsFragment extends Fragment {
                     .commit();
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 8, 10, 213);
+            params.setMargins(10, 8, 10, 224);
             binding.llSpace.setLayoutParams(params);
         } else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
