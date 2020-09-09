@@ -59,8 +59,8 @@ public class AppsFragment extends Fragment {
     }
 
     void prepareData() {
-        showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            showProgressBar();
             Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_FIVE, Category);
             listCall.enqueue(new Callback<ResourceListModel>() {
                 @Override

@@ -106,8 +106,8 @@ public class BillingAddressFragment extends Fragment {
     }
 
     private void getPrepareData() {
-        showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            showProgressBar();
             Call<BillingAddressViewModel> listCall = APIClient.getClient().getBillingAddressView(UserID);
             listCall.enqueue(new Callback<BillingAddressViewModel>() {
                 @Override

@@ -125,8 +125,8 @@ public class ReminderActivity extends AppCompatActivity {
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 if (BWSApplication.isNetworkConnected(context)) {
+                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                     Call<SetReminderModel> listCall = APIClient.getClient().SetReminder(PlaylistID, UserId, ReminderStatus,
                             binding.tvTime.getText().toString(), reminderDay);
                     listCall.enqueue(new Callback<SetReminderModel>() {
@@ -152,8 +152,8 @@ public class ReminderActivity extends AppCompatActivity {
     }
 
     private void prepareData(String reminderStatus) {
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (BWSApplication.isNetworkConnected(context)) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserId, reminderStatus);
             listCall.enqueue(new Callback<ReminderStatusModel>() {
                 @Override

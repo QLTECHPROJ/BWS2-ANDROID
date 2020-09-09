@@ -32,8 +32,8 @@ public class FaqActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_faq);
         activity = FaqActivity.this;
         modelList = new ArrayList<>();
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (BWSApplication.isNetworkConnected(this)) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<FaqListModel> listCall = APIClient.getClient().getFaqLists();
             listCall.enqueue(new Callback<FaqListModel>() {
                 @Override

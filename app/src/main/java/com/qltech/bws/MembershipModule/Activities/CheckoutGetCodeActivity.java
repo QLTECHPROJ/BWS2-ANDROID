@@ -126,7 +126,6 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         } else {
             binding.txtError.setVisibility(View.GONE);
             if (BWSApplication.isNetworkConnected(ctx)) {
-
                 BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 Call<LoginModel> listCall = APIClient.getClient().getSignUpDatas(binding.edtNumber.getText().toString(), binding.tvCountryCode.getText().toString(), CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
                 listCall.enqueue(new Callback<LoginModel>() {

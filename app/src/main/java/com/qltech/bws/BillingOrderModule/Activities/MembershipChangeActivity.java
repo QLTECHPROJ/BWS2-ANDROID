@@ -67,8 +67,8 @@ public class MembershipChangeActivity extends AppCompatActivity {
     }
 
     private void prepareMembershipData() {
-        showProgressBar();
         if (BWSApplication.isNetworkConnected(this)) {
+            showProgressBar();
             Call<PlanListBillingModel> listCall = APIClient.getClient().getPlanListBilling(UserID);
             listCall.enqueue(new Callback<PlanListBillingModel>() {
                 @Override

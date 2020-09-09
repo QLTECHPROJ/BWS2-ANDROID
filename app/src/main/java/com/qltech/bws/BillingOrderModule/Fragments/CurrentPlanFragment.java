@@ -66,8 +66,8 @@ public class CurrentPlanFragment extends Fragment {
         binding.rvFeatured.setLayoutManager(serachList);
         binding.rvFeatured.setItemAnimator(new DefaultItemAnimator());
 
-        showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            showProgressBar();
             Call<CurrentPlanVieViewModel> listCall = APIClient.getClient().getCurrentPlanView(UserID);
             listCall.enqueue(new Callback<CurrentPlanVieViewModel>() {
                 @Override

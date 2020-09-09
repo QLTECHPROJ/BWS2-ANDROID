@@ -91,8 +91,8 @@ public class SessionsFragment extends Fragment {
     }
 
     private void prepareSessionList() {
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<SessionListModel> listCall = APIClient.getClient().getAppointmentSession(UserId, appointmentName);
             listCall.enqueue(new Callback<SessionListModel>() {
                 @Override

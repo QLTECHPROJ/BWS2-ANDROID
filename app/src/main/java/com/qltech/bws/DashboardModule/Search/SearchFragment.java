@@ -138,8 +138,8 @@ public class SearchFragment extends Fragment {
     }
 
     private void prepareSearchData(String search, EditText searchEditText) {
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
             Call<SearchBothModel> listCall = APIClient.getClient().getSearchBoth(UserID, search);
             listCall.enqueue(new Callback<SearchBothModel>() {
                 @Override
@@ -183,8 +183,8 @@ public class SearchFragment extends Fragment {
         prepareSuggestedData();
     }
     private void prepareSuggestedData() {
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
             Call<SuggestedModel> listCall = APIClient.getClient().getSuggestedLists(UserID);
             listCall.enqueue(new Callback<SuggestedModel>() {
                 @Override
@@ -207,8 +207,8 @@ public class SearchFragment extends Fragment {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
 
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
             Call<SearchPlaylistModel> listCall = APIClient.getClient().getSuggestedPlayLists(UserID);
             listCall.enqueue(new Callback<SearchPlaylistModel>() {
                 @Override

@@ -234,8 +234,8 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     void profileViewData(Context ctx) {
-        showProgressBar();
         if (BWSApplication.isNetworkConnected(ctx)) {
+            showProgressBar();
             Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
             listCall.enqueue(new Callback<ProfileViewModel>() {
                 @Override
@@ -387,8 +387,8 @@ public class UserProfileActivity extends AppCompatActivity {
                         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         startActivityForResult(intent, 2);
                     } else if (options[item].equals(getString(R.string.removeProfilePicture))) {
-                        showProgressBar();
                         if (BWSApplication.isNetworkConnected(ctx)) {
+                            showProgressBar();
                             Call<RemoveProfileModel> listCall = APIClient.getClient().getRemoveProfile(UserID);
                             listCall.enqueue(new Callback<RemoveProfileModel>() {
                                 @Override

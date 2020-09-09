@@ -66,8 +66,8 @@ public class InvoiceReceiptFragment extends DialogFragment {
     }
 
     private void prepareData() {
-        showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            showProgressBar();
             Call<InvoiceDetailModel> listCall = APIClient.getClient().getInvoiceDetailPlaylist(UserID, InvoiceID, "1"); /*Flag = 0 Stagging Flag = 1 Live*/
             listCall.enqueue(new Callback<InvoiceDetailModel>() {
                 @Override

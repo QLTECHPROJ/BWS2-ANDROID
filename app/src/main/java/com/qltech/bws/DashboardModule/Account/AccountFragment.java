@@ -315,8 +315,8 @@ public class AccountFragment extends Fragment {
     }
 
     void profileViewData(Context ctx) {
-        showProgressBar();
         if (BWSApplication.isNetworkConnected(ctx)) {
+            showProgressBar();
             Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
             listCall.enqueue(new Callback<ProfileViewModel>() {
                 @Override

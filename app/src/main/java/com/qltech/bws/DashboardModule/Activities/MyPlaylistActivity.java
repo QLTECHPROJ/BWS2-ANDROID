@@ -240,8 +240,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                         if (edtCreate.getText().toString().equalsIgnoreCase("")) {
                                             BWSApplication.showToast("Please enter playlist name", ctx);
                                         } else {
-                                            showProgressBar();
                                             if (BWSApplication.isNetworkConnected(ctx)) {
+                                                showProgressBar();
                                                 Call<RenamePlaylistModel> listCall = APIClient.getClient().getRenamePlaylist(UserID, PlaylistID, edtCreate.getText().toString());
                                                 listCall.enqueue(new Callback<RenamePlaylistModel>() {
                                                     @Override
@@ -302,8 +302,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 tvconfirm.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        showProgressBar();
                                         if (BWSApplication.isNetworkConnected(ctx)) {
+                                            showProgressBar();
                                             Call<SucessModel> listCall = APIClient.getClient().getDeletePlaylist(UserID, PlaylistID);
                                             listCall.enqueue(new Callback<SucessModel>() {
                                                 @Override

@@ -75,8 +75,8 @@ public class MembershipActivity extends AppCompatActivity {
         binding.rvFaqList.setLayoutManager(serachList);
         binding.rvFaqList.setItemAnimator(new DefaultItemAnimator());
 
-        showProgressBar();
         if (BWSApplication.isNetworkConnected(this)) {
+            showProgressBar();
             Call<FaqListModel> listCall = APIClient.getClient().getFaqLists();
             listCall.enqueue(new Callback<FaqListModel>() {
                 @Override
@@ -101,8 +101,8 @@ public class MembershipActivity extends AppCompatActivity {
     }
 
     private void prepareMembershipData() {
-        showProgressBar();
         if (BWSApplication.isNetworkConnected(this)) {
+            showProgressBar();
             Call<MembershipPlanListModel> listCall = APIClient.getClient().getMembershipPlanList();
             listCall.enqueue(new Callback<MembershipPlanListModel>() {
                 @Override

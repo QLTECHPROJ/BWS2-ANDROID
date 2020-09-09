@@ -109,8 +109,8 @@ public class AddAudioActivity extends AppCompatActivity {
     }
 
     private void prepareSearchData(String search, EditText searchEditText, String PlaylistID) {
-        showProgressBar();
         if (BWSApplication.isNetworkConnected(ctx)) {
+            showProgressBar();
             Call<SuggestionAudiosModel> listCall = APIClient.getClient().getAddSearchAudio(search, PlaylistID);
             listCall.enqueue(new Callback<SuggestionAudiosModel>() {
                 @Override
@@ -149,8 +149,8 @@ public class AddAudioActivity extends AppCompatActivity {
     }
 
     private void prepareSuggestedData() {
-        showProgressBar();
         if (BWSApplication.isNetworkConnected(ctx)) {
+            showProgressBar();
             Call<SuggestedModel> listCall = APIClient.getClient().getSuggestedLists(UserID);
             listCall.enqueue(new Callback<SuggestedModel>() {
                 @Override
@@ -239,8 +239,8 @@ public class AddAudioActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     String AudioID = modelList.get(position).getID();
-                    showProgressBar();
                     if (BWSApplication.isNetworkConnected(ctx)) {
+                        showProgressBar();
                         Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID);
                         listCall.enqueue(new Callback<SucessModel>() {
                             @Override
@@ -313,8 +313,8 @@ public class AddAudioActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     String AudioID = listModel.get(position).getID();
-                    showProgressBar();
                     if (BWSApplication.isNetworkConnected(ctx)) {
+                        showProgressBar();
                         Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID);
                         listCall.enqueue(new Callback<SucessModel>() {
                             @Override

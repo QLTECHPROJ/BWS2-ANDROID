@@ -152,8 +152,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                     tvconfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            showProgressBar();
                             if (BWSApplication.isNetworkConnected(ctx)) {
+                                showProgressBar();
                                 Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, binding.edtCancelBox.getText().toString());
                                 listCall.enqueue(new Callback<CancelPlanModel>() {
                                     @Override

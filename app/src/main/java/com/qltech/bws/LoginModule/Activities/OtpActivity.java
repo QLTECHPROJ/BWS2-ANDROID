@@ -114,8 +114,8 @@ public class OtpActivity extends AppCompatActivity {
                     binding.txtError.setText("Wait a sec! We need to exchange digits to get started");
                     binding.txtError.setVisibility(View.VISIBLE);
                 } else {
-                    showProgressBar();
                     if (BWSApplication.isNetworkConnected(OtpActivity.this)) {
+                        showProgressBar();
                         Call<OtpModel> listCall = APIClient.getClient().getAuthOtps(
                                 binding.edtOTP1.getText().toString() + "" +
                                         binding.edtOTP2.getText().toString() + "" +

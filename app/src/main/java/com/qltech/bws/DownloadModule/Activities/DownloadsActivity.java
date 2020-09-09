@@ -57,8 +57,8 @@ public class DownloadsActivity extends AppCompatActivity {
     }
 
     public void prepareData() {
-        showProgressBar();
         if (BWSApplication.isNetworkConnected(this)) {
+            showProgressBar();
             Call<DownloadlistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID);
             listCall.enqueue(new Callback<DownloadlistModel>() {
                 @Override

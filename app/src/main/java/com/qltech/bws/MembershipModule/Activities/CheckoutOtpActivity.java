@@ -140,8 +140,8 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                     binding.txtError.setText("Wait a sec! We need to exchange digits to get started");
                     binding.txtError.setVisibility(View.VISIBLE);
                 } else {
-                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                     if (BWSApplication.isNetworkConnected(CheckoutOtpActivity.this)) {
+                        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         String deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                         Call<CardModel> listCall = APIClient.getClient().getAuthOtps1(
                                 binding.edtOTP1.getText().toString() + "" +

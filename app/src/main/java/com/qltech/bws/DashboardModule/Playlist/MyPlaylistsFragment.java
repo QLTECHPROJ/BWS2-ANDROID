@@ -235,8 +235,8 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     private void prepareData(String UserID, String PlaylistID) {
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
             Call<SubPlayListModel> listCall = APIClient.getClient().getSubPlayLists(UserID, PlaylistID);
             listCall.enqueue(new Callback<SubPlayListModel>() {
                 @Override
@@ -362,10 +362,9 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     private void callRemove(String id) {
-
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
         String AudioId = id;
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
             Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistID);
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override

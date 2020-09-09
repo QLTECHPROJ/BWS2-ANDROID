@@ -194,8 +194,8 @@ public class AddPlaylistActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     String PlaylistID = listModel.get(position).getID();
-                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                     if (BWSApplication.isNetworkConnected(ctx)) {
+                        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID);
                         listCall.enqueue(new Callback<SucessModel>() {
                             @Override

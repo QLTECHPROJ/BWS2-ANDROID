@@ -96,8 +96,8 @@ public class AppointmentDetailsFragment extends Fragment {
     }
 
     private void getAppointmentData() {
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<AppointmentDetailModel> listCall = APIClient.getClient().getAppointmentDetails(UserId, appointmentTypeId);
             listCall.enqueue(new Callback<AppointmentDetailModel>() {
                 @Override

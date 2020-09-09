@@ -176,8 +176,8 @@ public class PlaylistFragment extends Fragment {
     }
 
     private void prepareData() {
-        showProgressBar();
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            showProgressBar();
             Call<MainPlayListModel> listCall = APIClient.getClient().getMainPlayLists(UserID);
             listCall.enqueue(new Callback<MainPlayListModel>() {
                 @Override

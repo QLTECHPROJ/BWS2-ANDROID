@@ -282,8 +282,8 @@ public class AddQueueActivity extends AppCompatActivity {
     }
 
     private void callRemoveFromPlayList() {
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistId);
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override
