@@ -89,7 +89,6 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
                         .add(R.id.flAccount, fragment)
-                        .addToBackStack("TransparentPlayerFragment")
                         .commit();
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();

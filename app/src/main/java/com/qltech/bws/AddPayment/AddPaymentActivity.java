@@ -108,21 +108,21 @@ public class AddPaymentActivity extends AppCompatActivity {
                     && a == 0 && binding.etNumber.getText().toString().equalsIgnoreCase("")
                     && binding.etCvv.getText().toString().equalsIgnoreCase("")
                     && binding.etName.getText().toString().equalsIgnoreCase("")) {
-                binding.txtError.setText(getString(R.string.blank_all_fields));
+                binding.txtError.setText("I'll need your inputs");
             } else if (binding.etNumber.getText().toString().equalsIgnoreCase("")) {
-                binding.tlNumber.setError(getString(R.string.blank_card_no_error));
+                binding.tlNumber.setError("Please provide your card number");
                 binding.txtError.setText("");
                 binding.tlName.setError("");
             } else if (binding.etNumber.getText().toString().length() < 16) {
                 binding.tlName.setError("");
-                binding.tlNumber.setError(getString(R.string.valid_card_no_error));
+                binding.tlNumber.setError("Please use the correct card number");
                 binding.txtError.setText("");
             } else if (binding.etName.getText().toString().equalsIgnoreCase("")) {
-                binding.tlName.setError(getString(R.string.blank_card_holder_name_error));
+                binding.tlName.setError("Please provide the card holder's name");
                 binding.tlNumber.setError("");
                 binding.txtError.setText("");
             } else if (binding1.MonthPicker.getValue() < month && binding1.YearPicker.getValue() == year) {
-                binding.txtError.setText(getString(R.string.invalid_expiry_date));
+                binding.txtError.setText("The expiry date that you have used is incorrect");
                 binding.tlName.setError("");
                 binding.tlNumber.setError("");
             } else if (binding.textMonth.getText().toString().equalsIgnoreCase("Expiry Date") || a == 0) {
@@ -132,11 +132,11 @@ public class AddPaymentActivity extends AppCompatActivity {
             } else if (binding.etCvv.getText().toString().matches("")) {
                 binding.tlName.setError("");
                 binding.tlNumber.setError("");
-                binding.txtError.setText(getString(R.string.valid_cvv_error));
+                binding.txtError.setText("Please provide the CVV");
             } else if (binding.etCvv.getText().toString().length() < 3) {
                 binding.tlName.setError("");
                 binding.tlNumber.setError("");
-                binding.txtError.setText(getString(R.string.invalid_cvv_error));
+                binding.txtError.setText("The CVV you have used is incorrect");
             } else {
                 binding.tlName.setError("");
                 binding.tlNumber.setError("");

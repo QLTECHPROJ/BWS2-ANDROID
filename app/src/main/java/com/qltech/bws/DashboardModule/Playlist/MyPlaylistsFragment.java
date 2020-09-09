@@ -779,7 +779,7 @@ public class MyPlaylistsFragment extends Fragment {
                 protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                     if (listFilterData.size() == 0) {
                         binding.llError.setVisibility(View.VISIBLE);
-                        binding.tvFound.setText("Couldn't find '" + SearchFlag + "'");
+                        binding.tvFound.setText("Search term not found please use another one");
                         binding.rvPlayLists.setVisibility(View.GONE);
                     } else {
                         binding.llError.setVisibility(View.GONE);

@@ -69,7 +69,6 @@ public class AppointmentDetailsFragment extends Fragment {
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .add(R.id.flMainLayout, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
                     .commit();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 0, 0, 234);

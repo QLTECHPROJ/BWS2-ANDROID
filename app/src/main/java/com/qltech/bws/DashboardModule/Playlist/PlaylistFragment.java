@@ -99,7 +99,7 @@ public class PlaylistFragment extends Fragment {
 
                 rlCreate.setOnClickListener(view1 -> {
                     if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                        BWSApplication.showToast("Please enter playlist name", getActivity());
+                        BWSApplication.showToast("Please provide the playlist's name", getActivity());
                     } else {
                         if (BWSApplication.isNetworkConnected(getActivity())) {
                             Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
@@ -168,7 +168,6 @@ public class PlaylistFragment extends Fragment {
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .add(R.id.rlPlaylist, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
                     .commit();
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

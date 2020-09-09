@@ -111,7 +111,7 @@ public class OtpActivity extends AppCompatActivity {
                         binding.edtOTP2.getText().toString().equalsIgnoreCase("") ||
                         binding.edtOTP3.getText().toString().equalsIgnoreCase("") ||
                         binding.edtOTP4.getText().toString().equalsIgnoreCase("")) {
-                    binding.txtError.setText("Wait a sec! We need to exchange digits to get started");
+                    binding.txtError.setText("Please enter the OTP");
                     binding.txtError.setVisibility(View.VISIBLE);
                 } else {
                     if (BWSApplication.isNetworkConnected(OtpActivity.this)) {

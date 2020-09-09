@@ -71,7 +71,6 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
                 FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
                         .add(R.id.rlAudiolist, fragment)
-                        .addToBackStack("TransparentPlayerFragment")
                         .commit();
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();

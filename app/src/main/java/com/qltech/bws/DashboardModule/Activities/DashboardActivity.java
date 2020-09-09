@@ -47,7 +47,6 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
             FragmentManager fragmentManager1 = getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .add(R.id.rlAudiolist, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
                     .commit();
 
         }

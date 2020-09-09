@@ -106,7 +106,6 @@ public class ViewAllAudioFragment extends Fragment {
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .add(R.id.rlAudiolist, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
                     .commit();
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -182,7 +181,6 @@ public class ViewAllAudioFragment extends Fragment {
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
                             .add(R.id.rlAudiolist, fragment)
-                            .addToBackStack("TransparentPlayerFragment")
                             .commit();
 
                     SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

@@ -89,7 +89,6 @@ public class AudioFragment extends Fragment {
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .add(R.id.rlAudiolist, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
                     .commit();
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

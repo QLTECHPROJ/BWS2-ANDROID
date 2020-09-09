@@ -421,8 +421,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                 MusicService.ToRepeat(false);
                 IsRepeat = "";
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                BWSApplication.showToast("Shuffle mode has been turned on",ctx);
             }
         } else if (IsShuffle.equalsIgnoreCase("1")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);

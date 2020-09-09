@@ -116,13 +116,13 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             binding.edtNumber.setFocusable(true);
             binding.edtNumber.requestFocus();
             binding.txtError.setVisibility(View.VISIBLE);
-            binding.txtError.setText(getString(R.string.no_add_digits));
+            binding.txtError.setText(getString(R.string.Please_enter_your_mobile_number));
         } else if (binding.edtNumber.getText().toString().length() == 0 || binding.edtNumber.getText().toString().length() < 8 ||
                 binding.edtNumber.getText().toString().length() > 10) {
             binding.edtNumber.setFocusable(true);
             binding.edtNumber.requestFocus();
             binding.txtError.setVisibility(View.VISIBLE);
-            binding.txtError.setText(getString(R.string.not_valid_number));
+            binding.txtError.setText(getString(R.string.not_valid_mobile_number));
         } else {
             binding.txtError.setVisibility(View.GONE);
             if (BWSApplication.isNetworkConnected(ctx)) {

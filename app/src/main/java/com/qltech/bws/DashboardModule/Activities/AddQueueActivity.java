@@ -265,7 +265,7 @@ public class AddQueueActivity extends AppCompatActivity {
         addToQueueModel.setDownload(mainPlayModelList.get(i).getDownload());
         addToQueueModel.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
         if (addToQueueModelList.size() == 0) {
-            BWSApplication.showToast("Add to Queue Successfully", ctx);
+            BWSApplication.showToast("Audio has been added to queue", ctx);
             addToQueueModelList.add(addToQueueModel);
         } else {
             for (int x = 0; x < addToQueueModelList.size(); x++) {
@@ -274,7 +274,7 @@ public class AddQueueActivity extends AppCompatActivity {
                     BWSApplication.showToast("Already in Queue", ctx);
                     break;
                 } else if (x == (addToQueueModelList.size() - 1)) {
-                    BWSApplication.showToast("Add to Queue Successfully", ctx);
+                    BWSApplication.showToast("Audio has been added to queue", ctx);
                     addToQueueModelList.add(addToQueueModel);
                     break;
                 }

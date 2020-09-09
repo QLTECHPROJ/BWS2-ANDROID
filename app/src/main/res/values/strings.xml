@@ -32,7 +32,7 @@
     <string name="view_invoice"><u>View Invoice</u></string>
     <string name="downloads">Downloads</string>
     <string name="invoices">Invoices</string>
-    <string name="logout">Log Out</string>
+    <string name="logout">Log out</string>
     <string name="faq">FAQ</string>
     <string name="reminder">Reminder</string>
     <string name="billing_and_order">Billing and Order</string>
@@ -124,12 +124,14 @@
     <string name="Description">Description</string>
     <string name="Resource">Resource</string>
     <string name="Select_reason">Select reason</string>
-    <string name="logout_quotes">Are you sure you want to exit app?</string>
+    <string name="logout_quotes">Are you sure you want to log out Brain Wellness Spa?</string>
     <string name="Discover_More">Discover More</string>
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
     <string name="no_server_found">You are not currently connected to internet. Please try again.!</string>
     <string name="not_valid_number">Please enter a valid mobile number</string>
+    <string name="not_valid_mobile_number">Please use a valid mobile number</string>
     <string name="no_add_digits">Wait a sec! We need to exchange digits to get started</string>
+    <string name="Please_enter_your_mobile_number">Please enter your mobile number</string>
     <string name="Australia">Australia</string>
     <string name="code">+61</string>
     <string name="my_download">MyDownload</string>

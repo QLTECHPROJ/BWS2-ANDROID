@@ -50,7 +50,6 @@ public class AudioDownloadsFragment extends Fragment {
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .add(R.id.f_audio, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
                     .commit();
         }
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());

@@ -152,7 +152,6 @@ public class AptAudioFragment extends Fragment {
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
                             .add(R.id.flMainLayout, fragment)
-                            .addToBackStack("TransparentPlayerFragment")
                             .commit();
 
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
