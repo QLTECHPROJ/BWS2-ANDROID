@@ -68,6 +68,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             public void onClick(View view) {
                 player = 1;
                 if(isMediaStart || MusicService.isPause){
+                    MusicService.isPause = false;
                     MusicService.stopMedia();
                 }
                 Fragment fragment = new TransparentPlayerFragment();

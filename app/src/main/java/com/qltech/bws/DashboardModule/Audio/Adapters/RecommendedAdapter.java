@@ -67,7 +67,8 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
             @Override
             public void onClick(View view) {
                 player = 1;
-                if(isMediaStart || MusicService.isPause){
+                if(isMediaStart || MusicService.isPause) {
+                    MusicService.isPause = false;
                     MusicService.stopMedia();
                 }
                 Fragment fragment = new TransparentPlayerFragment();

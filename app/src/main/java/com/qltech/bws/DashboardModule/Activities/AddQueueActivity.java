@@ -135,6 +135,15 @@ public class AddQueueActivity extends AppCompatActivity {
             binding.llRemovePlaylist.setVisibility(View.GONE);
         }
 
+        if (IsShuffle.equalsIgnoreCase("")) {
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+        } else if (IsShuffle.equalsIgnoreCase("1")) {
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+        if (listSize == 1) {
+            binding.llShuffle.setClickable(false);
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
         binding.llLike.setOnClickListener(view ->
                 callLike());
 

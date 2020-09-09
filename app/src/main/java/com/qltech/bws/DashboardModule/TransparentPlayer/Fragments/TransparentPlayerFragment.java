@@ -2,7 +2,6 @@ package com.qltech.bws.DashboardModule.TransparentPlayer.Fragments;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,7 +39,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
-public class TransparentPlayerFragment extends Fragment implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
+public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile;
     int position = 0, startTime, oTime, listSize;
@@ -245,34 +244,31 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             listSize = addToQueueModelList.size();
             if (listSize == 1) {
                 position = 0;
-            } else if (listSize == 0) {
-
-            } else {
-                Glide.with(getActivity()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                binding.tvTitle.setText(addToQueueModelList.get(position).getName());
-                binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
-                audioFile = addToQueueModelList.get(position).getAudioFile();
-                if (player == 1) {
-                    if (MusicService.isPause) {
-                        binding.ivPause.setVisibility(View.GONE);
-                        binding.ivPlay.setVisibility(View.VISIBLE);
-//                    MusicService.resumeMedia();
-                    } else if (!isMediaStart) {
-                        binding.ivPause.setVisibility(View.VISIBLE);
-                        binding.ivPlay.setVisibility(View.GONE);
-                        MusicService.play(getActivity(), Uri.parse(audioFile));
-                        MusicService.playMedia();
-                    } else {
-                        binding.ivPlay.setVisibility(View.GONE);
-                        binding.ivPause.setVisibility(View.VISIBLE);
-                        MusicService.play(getActivity(), Uri.parse(audioFile));
-                        MusicService.playMedia();
-                    }
-                } else {
+            }
+            Glide.with(getActivity()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+            binding.tvTitle.setText(addToQueueModelList.get(position).getName());
+            binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
+            audioFile = addToQueueModelList.get(position).getAudioFile();
+            if (player == 1) {
+                if (MusicService.isPause) {
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
+//                    MusicService.resumeMedia();
+                } else if (!isMediaStart) {
+                    binding.ivPause.setVisibility(View.VISIBLE);
+                    binding.ivPlay.setVisibility(View.GONE);
+                    MusicService.play(getActivity(), Uri.parse(audioFile));
+                    MusicService.playMedia();
+                } else {
+                    binding.ivPlay.setVisibility(View.GONE);
+                    binding.ivPause.setVisibility(View.VISIBLE);
+                    MusicService.play(getActivity(), Uri.parse(audioFile));
+                    MusicService.playMedia();
                 }
+            } else {
+                binding.ivPause.setVisibility(View.GONE);
+                binding.ivPlay.setVisibility(View.VISIBLE);
             }
 
         } else if (audioPlay) {
@@ -307,9 +303,36 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             }
         }
         binding.simpleSeekbar.setClickable(true);
-
         if (isMediaStart) {
-            MusicService.mediaPlayer.setOnCompletionListener(this);
+            MusicService.mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                if (IsRepeat.equalsIgnoreCase("1")) {
+                    if (position < (listSize - 1)) {
+                        position = position + 1;
+                    } else {
+                        position = 0;
+                    }
+                    playmedia();
+                } else if (IsRepeat.equalsIgnoreCase("0")) {
+                    playmedia();
+                } else if (IsShuffle.equalsIgnoreCase("1")) {
+                    // shuffle is on - play a random song
+                    if (listSize == 1) {
+                    } else {
+                        Random random = new Random();
+                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                        playmedia();
+                    }
+                } else {
+                    if (position < (listSize - 1)) {
+                        position = position + 1;
+                        playmedia();
+                    } else {
+                        binding.ivPlay.setVisibility(View.VISIBLE);
+                        binding.ivPause.setVisibility(View.GONE);
+                        MusicService.stopMedia();
+                    }
+                }
+            });
         }
         startTime = MusicService.getStartTime();
 
@@ -369,49 +392,12 @@ public class TransparentPlayerFragment extends Fragment implements MediaPlayer.O
             if (MusicService.isPlaying()) {
                 binding.ivPlay.setVisibility(View.GONE);
                 binding.ivPause.setVisibility(View.VISIBLE);
+            } else {
+                binding.ivPlay.setVisibility(View.VISIBLE);
+                binding.ivPause.setVisibility(View.GONE);
             }
         }
         super.onResume();
     }
 
-    @Override
-    public void onCompletion(MediaPlayer mediaPlayer) {
-        if (queuePlay) {
-            addToQueueModelList.remove(position);
-            listSize = addToQueueModelList.size();
-            if (position < listSize - 1) {
-                if (listSize == 0) {
-                    MusicService.stopMedia();
-                } else {
-                    position = 0;
-                }
-            }
-        } else if (IsRepeat.equalsIgnoreCase("1")) {
-            if (position < (listSize - 1)) {
-                position = position + 1;
-            } else {
-                position = 0;
-            }
-            playmedia();
-        } else if (IsRepeat.equalsIgnoreCase("0")) {
-            playmedia();
-        } else if (IsShuffle.equalsIgnoreCase("1")) {
-            // shuffle is on - play a random song
-            if (listSize == 1) {
-            } else {
-                Random random = new Random();
-                position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                playmedia();
-            }
-        } else {
-            if (position < (listSize - 1)) {
-                position = position + 1;
-                playmedia();
-            } else {
-                binding.ivPlay.setVisibility(View.VISIBLE);
-                binding.ivPause.setVisibility(View.GONE);
-                MusicService.stopMedia();
-            }
-        }
-    }
 }

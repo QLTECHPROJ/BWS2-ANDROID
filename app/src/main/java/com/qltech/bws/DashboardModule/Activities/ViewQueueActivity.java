@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,8 +45,9 @@ import java.util.Collections;
 import java.util.Random;
 
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
 
-public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
+public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
     String IsRepeat, IsShuffle;
@@ -131,9 +131,59 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         getPrepareShowData(position);
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
-
-        MusicService.mediaPlayer.setOnCompletionListener(this);
-
+        MusicService.mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+            if (IsRepeat.equalsIgnoreCase("1")) {
+                if (position < (listSize - 1)) {
+                    position = position + 1;
+                } else {
+                    position = 0;
+                }
+                getPrepareShowData(position);
+            } else if (IsRepeat.equalsIgnoreCase("0")) {
+                getPrepareShowData(position);
+            } else if (IsShuffle.equalsIgnoreCase("1")) {
+                // shuffle is on - play a random song
+                if (listSize == 1) {
+                } else {
+                    Random random = new Random();
+                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                    getPrepareShowData(position);
+                }
+            } else {
+                if (position < (listSize - 1)) {
+                    position = position + 1;
+                    getPrepareShowData(position);
+                } else {
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+                    MusicService.stopMedia();
+                }
+            }
+            if (listSize == 1 || position < listSize - 1) {
+                binding.llnext.setEnabled(false);
+                binding.llnext.setEnabled(false);
+                binding.llprev.setClickable(false);
+                binding.llprev.setClickable(false);
+                binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+                position = 0;
+            } else if (position == listSize - 1 && IsRepeat.equalsIgnoreCase("1")) {
+                binding.llnext.setEnabled(false);
+                binding.llnext.setClickable(false);
+                binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else if (position == 0 && IsRepeat.equalsIgnoreCase("1")) {
+                binding.llprev.setEnabled(false);
+                binding.llprev.setClickable(false);
+                binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llnext.setEnabled(true);
+                binding.llnext.setEnabled(true);
+                binding.llprev.setClickable(true);
+                binding.llprev.setClickable(true);
+                binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
+        });
         if (addToQueueModelList.size() != 0) {
             QueueAdapter adapter = new QueueAdapter(addToQueueModelList, ViewQueueActivity.this);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ViewQueueActivity.this);
@@ -160,6 +210,7 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
 
         binding.llnext.setOnClickListener(view -> {
             MusicService.stopMedia();
+            MusicService.isPause = false;
             if (IsRepeat.equalsIgnoreCase("1")) {
                 // repeat is on play same song again
                 if (position < listSize - 1) {
@@ -183,6 +234,7 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
 
         binding.llprev.setOnClickListener(view -> {
             MusicService.stopMedia();
+            MusicService.isPause = false;
             if (IsRepeat.equalsIgnoreCase("1")) {
                 // repeat is on play same song again
                 if (position > 0) {
@@ -223,11 +275,11 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
             position = 0;
-        } else if (position == listSize - 1) {
+        } else if (position == listSize - 1 && IsRepeat.equalsIgnoreCase("1")) {
             binding.llnext.setEnabled(false);
             binding.llnext.setClickable(false);
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-        } else if (position == 0) {
+        } else if (position == 0 && IsRepeat.equalsIgnoreCase("1")) {
             binding.llprev.setEnabled(false);
             binding.llprev.setClickable(false);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -265,32 +317,31 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
         } else if (queuePlay) {
             if (listSize == 1) {
                 position = 0;
-            } else if (listSize == 0) {
-            } else {
-                binding.tvTitle.setText(addToQueueModelList.get(position).getName());
-                binding.tvName.setText(addToQueueModelList.get(position).getName());
-                binding.tvCategory.setText(addToQueueModelList.get(position).getAudioSubCategory());
-                Glide.with(ctx).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                binding.tvTime.setText(addToQueueModelList.get(position).getAudioDuration());
+            }
+            binding.tvTitle.setText(addToQueueModelList.get(position).getName());
+            binding.tvName.setText(addToQueueModelList.get(position).getName());
+            binding.tvCategory.setText(addToQueueModelList.get(position).getAudioSubCategory());
+            Glide.with(ctx).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+            binding.tvTime.setText(addToQueueModelList.get(position).getAudioDuration());
 
-                if (!isMediaStart) {
+            if (!isMediaStart) {
+                MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                MusicService.playMedia();
+            } else {
+                if (MusicService.isPause) {
+
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+//                    MusicService.resumeMedia();
+                } else {
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
                     MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
                     MusicService.playMedia();
-                } else {
-                    if (MusicService.isPause) {
-
-                        binding.llPlay.setVisibility(View.VISIBLE);
-                        binding.llPause.setVisibility(View.GONE);
-//                    MusicService.resumeMedia();
-                    } else {
-                        binding.llPause.setVisibility(View.VISIBLE);
-                        binding.llPlay.setVisibility(View.GONE);
-                        MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-                        MusicService.playMedia();
-                    }
                 }
             }
+
             binding.llNowPlaying.setOnClickListener(view ->
                     callBack());
 
@@ -326,6 +377,9 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
             if (MusicService.isPlaying()) {
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);
+            }else{
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
             }
         }
         super.onResume();
@@ -335,72 +389,6 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
     public void onBackPressed() {
         callBack();
         super.onBackPressed();
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mediaPlayer) {
-
-        if (queuePlay) {
-            addToQueueModelList.remove(position);
-            listSize = addToQueueModelList.size();
-            if (position < listSize - 1) {
-                if (listSize == 0) {
-                    MusicService.stopMedia();
-                } else {
-                    position = 0;
-                }
-            }
-        } else if (IsRepeat.equalsIgnoreCase("1")) {
-            if (position < (listSize - 1)) {
-                position = position + 1;
-            } else {
-                position = 0;
-            }
-            getPrepareShowData(position);
-        } else if (IsRepeat.equalsIgnoreCase("0")) {
-            getPrepareShowData(position);
-        } else if (IsShuffle.equalsIgnoreCase("1")) {
-            // shuffle is on - play a random song
-            if (listSize == 1) {
-            } else {
-                Random random = new Random();
-                position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                getPrepareShowData(position);
-            }
-        } else {
-            if (position < (listSize - 1)) {
-                position = position + 1;
-                getPrepareShowData(position);
-            } else {
-                binding.llPlay.setVisibility(View.VISIBLE);
-                binding.llPause.setVisibility(View.GONE);
-                MusicService.stopMedia();
-            }
-        }
-        if (listSize == 1 || position < listSize - 1) {
-            binding.llnext.setEnabled(false);
-            binding.llnext.setEnabled(false);
-            binding.llprev.setClickable(false);
-            binding.llprev.setClickable(false);
-            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-            binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-            position = 0;
-        } else if (position == listSize - 1) {
-            binding.llnext.setEnabled(false);
-            binding.llnext.setClickable(false);
-            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-        } else if (position == 0) {
-            binding.llprev.setEnabled(false);
-            binding.llprev.setClickable(false);
-            binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-        } else {
-            binding.llnext.setEnabled(true);
-            binding.llnext.setEnabled(true);
-            binding.llprev.setClickable(true);
-            binding.llprev.setClickable(true);
-            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-            binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-        }
     }
 
     public void updateProgressBar() {
@@ -457,6 +445,7 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
 
             holder.binding.tvTitle.setText(listModel.getName());
             holder.binding.tvTime.setText(listModel.getAudioDuration());
+            binding.tvCategory.setText(listModel.getAudioSubCategory());
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.1f, 0);
@@ -468,6 +457,10 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
 
             holder.binding.llRemove.setOnClickListener(view -> callRemoveList(position));
             holder.binding.llMainLayout.setOnClickListener(view -> {
+                if (isMediaStart || isPause) {
+                    isPause = false;
+                    MusicService.stopMedia();
+                }
                 binding.tvTitle.setText(listModel.getName());
                 binding.tvName.setText(listModel.getName());
 //            binding.tvCategory.setText(addToQueueModelList.get(position).getAudioSubCategory());
@@ -482,6 +475,10 @@ public class ViewQueueActivity extends AppCompatActivity implements MediaPlayer.
                 editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                 editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, false);
                 editor.commit();
+                SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+                SharedPreferences.Editor editor1 = shared1.edit();
+                editor1.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
+                editor1.commit();
                 getPrepareShowData(position);
             });
 
