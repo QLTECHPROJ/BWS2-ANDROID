@@ -109,9 +109,8 @@ public class AppointmentFragment extends Fragment {
     }
 
     private void preparePreviousAppointmentsData() {
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (BWSApplication.isNetworkConnected(getActivity())) {
-
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<PreviousAppointmentsModel> listCall1 = APIClient.getClient().getAppointmentVIew(UserID);
             listCall1.enqueue(new Callback<PreviousAppointmentsModel>() {
                 @Override
@@ -129,6 +128,12 @@ public class AppointmentFragment extends Fragment {
                     BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 }
             });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+        }
+
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<NextSessionViewModel> listCall = APIClient.getClient().getNextSessionVIew(UserID);
             listCall.enqueue(new Callback<NextSessionViewModel>() {
                 @Override
@@ -139,7 +144,7 @@ public class AppointmentFragment extends Fragment {
                         if (listModel.getResponseData().getResponse().equalsIgnoreCase("")) {
                             binding.cvShowSession.setVisibility(View.GONE);
                             binding.cvSetSession.setVisibility(View.VISIBLE);
-                        } else if (listModel.getResponseData().getResponse().equalsIgnoreCase("1")){
+                        } else if (listModel.getResponseData().getResponse().equalsIgnoreCase("1")) {
                             binding.cvShowSession.setVisibility(View.VISIBLE);
                             binding.cvSetSession.setVisibility(View.GONE);
                             binding.tvTitle.setText(listModel.getResponseData().getName());
