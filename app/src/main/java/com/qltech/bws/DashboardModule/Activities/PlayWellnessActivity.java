@@ -421,8 +421,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                 MusicService.ToRepeat(false);
                 IsRepeat = "";
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
                 BWSApplication.showToast("Shuffle mode has been turned on",ctx);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else if (IsShuffle.equalsIgnoreCase("1")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
@@ -430,6 +430,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
             editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
             editor.commit();
             IsShuffle = "";
+            BWSApplication.showToast("Shuffle mode has been turned off",ctx);
             binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
@@ -444,6 +445,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
             MusicService.ToRepeat(true);
             IsRepeat = "0";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
+            BWSApplication.showToast("Repeat mode has been turned on",ctx);
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         } else if (IsRepeat.equalsIgnoreCase("0")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
@@ -453,6 +455,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
             MusicService.ToRepeat(false);
             IsRepeat = "1";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+            BWSApplication.showToast("Repeat mode has been turned on",ctx);
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         } else if (IsRepeat.equalsIgnoreCase("1")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
@@ -462,6 +465,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
             MusicService.ToRepeat(false);
             IsRepeat = "";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+            BWSApplication.showToast("Repeat mode has been turned off",ctx);
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
