@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -68,6 +70,45 @@ public class MusicService extends Service {
 //            isPLAYING = false;
 //            stopPlaying();
 //        }
+    }
+
+    public static void PhoneCall(){
+/*
+        PhoneStateListener phoneStateListener = new PhoneStateListener() {
+            @Override
+            public void onCallStateChanged(int state, String incomingNumber) {
+                if (state == TelephonyManager.CALL_STATE_RINGING) {
+                    //INCOMING call
+                    //do all necessary action to pause the audio
+                    if(mp!=null){//check mp
+                        setPlayerButton(true, false, true);
+
+                        if(mp.isPlaying()){
+
+                            mp.pause();
+                        }
+                    }
+
+                } else if(state == TelephonyManager.CALL_STATE_IDLE) {
+                    //Not IN CALL
+                    //do anything if the phone-state is idle
+                } else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                    //A call is dialing, active or on hold
+                    //do all necessary action to pause the audio
+                    //do something here
+                    if(mp!=null){//check mp
+                        setPlayerButton(true, false, true);
+
+                        if(mp.isPlaying()){
+
+                            mp.pause();
+                        }
+                    }
+                }
+                super.onCallStateChanged(state, incomingNumber);
+            }
+        };
+*/
     }
 
     public static int getEndTime() {

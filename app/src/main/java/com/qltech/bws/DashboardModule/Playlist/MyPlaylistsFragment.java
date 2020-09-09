@@ -79,8 +79,7 @@ public class MyPlaylistsFragment extends Fragment {
         View view = binding.getRoot();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+
         changedAudio = new ArrayList<>();
         if (getArguments() != null) {
             New = getArguments().getString("New");
@@ -101,24 +100,6 @@ public class MyPlaylistsFragment extends Fragment {
         binding.llBack.setOnClickListener(view1 -> callBack());
 
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
-
-
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlPlaylist, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
-                    .commit();
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 8, 10, 190);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 8, 10, 84);
-            binding.llSpace.setLayoutParams(params);
-        }
 
         binding.llMore.setOnClickListener(view13 -> {
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
@@ -235,6 +216,25 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     private void prepareData(String UserID, String PlaylistID) {
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.rlPlaylist, fragment)
+                    .addToBackStack("TransparentPlayerFragment")
+                    .commit();
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10, 8, 10, 213);
+            binding.llSpace.setLayoutParams(params);
+        } else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10, 8, 10, 84);
+            binding.llSpace.setLayoutParams(params);
+        }
+
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
             Call<SubPlayListModel> listCall = APIClient.getClient().getSubPlayLists(UserID, PlaylistID);

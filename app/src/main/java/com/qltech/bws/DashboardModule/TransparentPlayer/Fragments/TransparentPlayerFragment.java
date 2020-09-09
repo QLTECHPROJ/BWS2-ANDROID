@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -206,6 +208,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 playmedia();
             }
         }
+
         if (listSize == 1) {
             SharedPreferences sharedxx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedxx.edit();
