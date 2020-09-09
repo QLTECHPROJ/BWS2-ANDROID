@@ -291,9 +291,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements
         });
 
         binding.llPause.setOnClickListener(view -> {
-            MusicService.pauseMedia();
             hdlr.removeCallbacks(UpdateSongTime);
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
+            MusicService.pauseMedia();
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
         });

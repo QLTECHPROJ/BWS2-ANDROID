@@ -37,7 +37,6 @@ import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
-import com.qltech.bws.DashboardModule.Audio.AudioFragment;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
@@ -62,6 +61,7 @@ import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.deleteFrg;
+import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class MyPlaylistsFragment extends Fragment {
@@ -219,13 +219,21 @@ public class MyPlaylistsFragment extends Fragment {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlPlaylist, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
-                    .commit();
-
+            if (comefrom_search) {
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.rlSearchList, fragment)
+                        .addToBackStack("TransparentPlayerFragment")
+                        .commit();
+            } else {
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.rlPlaylist, fragment)
+                        .addToBackStack("TransparentPlayerFragment")
+                        .commit();
+            }
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(10, 8, 10, 224);
             binding.llSpace.setLayoutParams(params);
@@ -341,12 +349,6 @@ public class MyPlaylistsFragment extends Fragment {
         if (isMediaStart || MusicService.isPause) {
             MusicService.stopMedia();
         }
-        Fragment fragment = new TransparentPlayerFragment();
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .add(R.id.rlPlaylist, fragment)
-                .addToBackStack("TransparentPlayerFragment")
-                .commit();
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
@@ -359,6 +361,21 @@ public class MyPlaylistsFragment extends Fragment {
         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, myPlaylist);
         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
         editor.commit();
+        if (comefrom_search) {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.rlSearchList, fragment)
+                    .addToBackStack("TransparentPlayerFragment")
+                    .commit();
+        } else {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.rlPlaylist, fragment)
+                    .addToBackStack("TransparentPlayerFragment")
+                    .commit();
+        }
     }
 
     private void callRemove(String id) {

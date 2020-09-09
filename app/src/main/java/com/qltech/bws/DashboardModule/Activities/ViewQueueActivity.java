@@ -192,11 +192,19 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             touchHelper.attachToRecyclerView(binding.rvQueueList);
             binding.rvQueueList.setAdapter(adapter);
         }
+        binding.llNowPlaying.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callBack();
+            }
+        });
+
         binding.llPause.setOnClickListener(view -> {
+            hdlr.removeCallbacks(UpdateSongTime);
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
+            MusicService.pauseMedia();
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
-            MusicService.pauseMedia();
         });
 
         binding.llPlay.setOnClickListener(view -> {
@@ -304,6 +312,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     binding.llPlay.setVisibility(View.VISIBLE);
                     binding.llPause.setVisibility(View.GONE);
 //                    MusicService.resumeMedia();
+                }else if (!isMediaStart) {
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
+                    MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                    MusicService.playMedia();
                 } else {
                     binding.llPause.setVisibility(View.VISIBLE);
                     binding.llPlay.setVisibility(View.GONE);
@@ -331,6 +344,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     binding.llPlay.setVisibility(View.VISIBLE);
                     binding.llPause.setVisibility(View.GONE);
 //                    MusicService.resumeMedia();
+                }else if (!isMediaStart) {
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
+                    MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                    MusicService.playMedia();
                 } else {
                     binding.llPause.setVisibility(View.VISIBLE);
                     binding.llPlay.setVisibility(View.GONE);
@@ -338,9 +356,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     MusicService.playMedia();
                 }
             }
-
-            binding.llNowPlaying.setOnClickListener(view ->
-                    callBack());
 
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -353,9 +368,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         binding.simpleSeekbar.setClickable(true);
         hdlr.postDelayed(UpdateSongTime, 60);
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-    }
-
-    private void callnextprev() {
     }
 
     private void callBack() {

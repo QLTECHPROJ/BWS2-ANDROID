@@ -53,6 +53,7 @@ public class SearchFragment extends Fragment {
     String UserID;
     EditText searchEditText;
     SerachListAdpater adpater;
+    public static boolean comefrom_search = false;
     private SearchViewModel searchViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -267,6 +268,7 @@ public class SearchFragment extends Fragment {
                 holder.binding.llRemoveAudio.setVisibility(View.INVISIBLE);
 
                 holder.binding.llMainLayout.setOnClickListener(view -> {
+                    comefrom_search = true;
                     Bundle bundle = new Bundle();
                     Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -406,21 +408,19 @@ public class SearchFragment extends Fragment {
             Glide.with(getActivity()).load(listModelList.get(position).getImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Bundle bundle = new Bundle();
-                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    bundle.putString("New", "0");
-                    bundle.putString("PlaylistID", listModelList.get(position).getID());
-                    bundle.putString("PlaylistName", listModelList.get(position).getName());
-                    myPlaylistsFragment.setArguments(bundle);
-                    fragmentManager1.beginTransaction()
-                            .replace(R.id.rlSearchList, myPlaylistsFragment).
-                            addToBackStack("MyPlaylistsFragment")
-                            .commit();
-                }
+            holder.binding.rlMainLayout.setOnClickListener(view -> {
+                comefrom_search = true;
+                Bundle bundle = new Bundle();
+                Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                bundle.putString("New", "0");
+                bundle.putString("PlaylistID", listModelList.get(position).getID());
+                bundle.putString("PlaylistName", listModelList.get(position).getName());
+                myPlaylistsFragment.setArguments(bundle);
+                fragmentManager1.beginTransaction()
+                        .replace(R.id.rlSearchList, myPlaylistsFragment).
+                        addToBackStack("MyPlaylistsFragment")
+                        .commit();
             });
         }
 

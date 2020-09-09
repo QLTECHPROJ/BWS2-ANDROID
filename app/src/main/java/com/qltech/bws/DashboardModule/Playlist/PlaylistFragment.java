@@ -50,6 +50,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
+
 public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
     private PlaylistViewModel playlistViewModel;
@@ -138,6 +140,7 @@ public class PlaylistFragment extends Fragment {
     }
 
     private void callMyPlaylistsFragment(String s, String id, String name, String playlistImage) {
+        comefrom_search  =false;
         Bundle bundle = new Bundle();
         Fragment myPlaylistsFragment = new MyPlaylistsFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();

@@ -219,6 +219,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         binding.ivPause.setOnClickListener(view1 -> {
             binding.ivPause.setVisibility(View.GONE);
             binding.ivPlay.setVisibility(View.VISIBLE);
+            hdlr.removeCallbacks(UpdateSongTime);
+            binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
             if (!isMediaStart) {
                 MusicService.play(getActivity(), Uri.parse(audioFile));
                 MusicService.playMedia();
