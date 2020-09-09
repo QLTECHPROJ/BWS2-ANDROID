@@ -109,6 +109,7 @@ public class MyPlaylistsFragment extends Fragment {
         binding.llBack.setOnClickListener(view12 -> {
             callBack();
         });
+
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {

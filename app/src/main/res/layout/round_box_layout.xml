@@ -2,8 +2,8 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="@dimen/_190sdp"
-        android:layout_height="@dimen/_230sdp"
+        android:layout_width="@dimen/_150sdp"
+        android:layout_height="@dimen/_190sdp"
         android:orientation="vertical">
 
         <LinearLayout

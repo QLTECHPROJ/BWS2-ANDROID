@@ -3,6 +3,7 @@ package com.qltech.bws.DashboardModule.Audio;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,9 +62,24 @@ public class AudioFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                callBack();
+                return true;
+            }
+            return false;
+        });
+
         prepareData();
         return view;
     }
+
+    private void callBack() {
+        getActivity().finish();
+    }
+
 
     private void prepareData() {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -149,7 +165,6 @@ public class AudioFragment extends Fragment {
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
                             .add(R.id.rlAudiolist, viewAllAudioFragment)
-                            .addToBackStack("ViewAllAudioFragment")
                             .commit();
                     Bundle bundle = new Bundle();
                     bundle.putString("ID", listModelList.get(position).getHomeID());
@@ -232,7 +247,6 @@ public class AudioFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         prepareData();
     }
 

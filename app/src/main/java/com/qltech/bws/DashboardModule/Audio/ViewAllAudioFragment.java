@@ -83,9 +83,17 @@ public class ViewAllAudioFragment extends Fragment {
     }
 
     private void callBack() {
-        FragmentManager fm = getActivity()
+        Fragment audioFragment = new AudioFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.rlAudiolist, audioFragment)
+                .addToBackStack("AudioFragment")
+                .commit();
+        Bundle bundle = new Bundle();
+        audioFragment.setArguments(bundle);
+        /*FragmentManager fm = getActivity()
                 .getSupportFragmentManager();
-        fm.popBackStack("ViewAllAudioFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        fm.popBackStack("ViewAllAudioFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);*/
     }
 
     @Override
