@@ -152,7 +152,7 @@ public class SearchFragment extends Fragment {
                             if (listModel.getResponseData().size() == 0) {
                                 binding.rvSerachList.setVisibility(View.GONE);
                                 binding.llError.setVisibility(View.VISIBLE);
-                                binding.tvFound.setText("Couldn't find '" + searchEditText.getText().toString() + "'");
+                                binding.tvFound.setText("Search term not found please use another one");
                             } else {
                                 binding.llError.setVisibility(View.GONE);
                                 binding.rvSerachList.setVisibility(View.VISIBLE);

@@ -121,14 +121,14 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.tlCalendar.setError("");
         binding.tlEmail.setError("");
         if (binding.etUser.getText().toString().equalsIgnoreCase("")) {
-            binding.flUser.setError(getString(R.string.valid_name));
+            binding.flUser.setError("Please enter your full name");
         } else if (binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
             binding.tlMobileNumber.setError("please enter mobile number");
         } else if (binding.etEmail.getText().toString().equalsIgnoreCase("")) {
-            binding.tlEmail.setError("Please enter email address");
+            binding.tlEmail.setError("Please enter your email address");
         } else if (!binding.etEmail.getText().toString().equalsIgnoreCase("")
                 && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
-            binding.tlEmail.setError("Please enter valid email address");
+            binding.tlEmail.setError("Please provide a valid email address");
         } else {
             binding.flUser.setError("");
             binding.tlCalendar.setError("");
@@ -203,7 +203,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
                         BirthYear = getAge(ageYear, ageMonth, ageDate);
                         if (BirthYear < 18) {
-                            binding.tlCalendar.setError("You should be 18 years or above to use BWS");
+                            binding.tlCalendar.setError("You must be 18 years of age to register");
                             binding.btnSave.setEnabled(false);
                             binding.btnSave.setClickable(false);
                         } else {
