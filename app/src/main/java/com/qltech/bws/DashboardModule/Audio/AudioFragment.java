@@ -98,7 +98,7 @@ public class AudioFragment extends Fragment {
         }*/
 
 //        if (doubleBackToExitPressedOnce) {
-//            getActivity().finishAffinity();
+            getActivity().finishAffinity();
 //            return;
 //        }
 
