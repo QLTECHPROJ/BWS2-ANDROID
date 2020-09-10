@@ -19,15 +19,18 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Activities.PlayWellnessActivity;
 import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
+import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.ViewAllAudioListModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.R;
+import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.FragmentTransparentPlayerBinding;
@@ -37,13 +40,17 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Random;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
     public FragmentTransparentPlayerBinding binding;
-    String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile;
+    String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile,id;
     int position = 0, startTime, oTime, listSize;
     MainPlayModel mainPlayModel;
     Boolean queuePlay, audioPlay;
@@ -208,7 +215,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 playmedia();
             }
         }
-
+        addToRecentPlay();
         if (listSize == 1) {
             SharedPreferences sharedxx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedxx.edit();
@@ -243,13 +250,35 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
         return view;
     }
+    private void addToRecentPlay() {
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+//            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(id, UserID);
+            listCall.enqueue(new Callback<SucessModel>() {
+                @Override
+                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                    if (response.isSuccessful()) {
+//                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        SucessModel model = response.body();
+                    }
+                }
 
+                @Override
+                public void onFailure(Call<SucessModel> call, Throwable t) {
+//                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+        }
+    }
     private void playmedia() {
         if (queuePlay) {
             listSize = addToQueueModelList.size();
             if (listSize == 1) {
                 position = 0;
             }
+            id = addToQueueModelList.get(position).getID();
             Glide.with(getActivity()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTitle.setText(addToQueueModelList.get(position).getName());
@@ -281,6 +310,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             if (listSize == 1) {
                 position = 0;
             }
+            id = mainPlayModelList.get(position).getID();
             Glide.with(getActivity()).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTitle.setText(mainPlayModelList.get(position).getName());

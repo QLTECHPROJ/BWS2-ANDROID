@@ -98,7 +98,7 @@ public class AudioFragment extends Fragment {
         }*/
 
 //        if (doubleBackToExitPressedOnce) {
-            getActivity().finishAffinity();
+//            getActivity().finishAffinity();
 //            return;
 //        }
 
@@ -226,7 +226,7 @@ public class AudioFragment extends Fragment {
                     Fragment viewAllAudioFragment = new ViewAllAudioFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .add(R.id.rlAudiolist, viewAllAudioFragment)
+                            .replace(R.id.rlAudiolist, viewAllAudioFragment)
                             .commit();
                     Bundle bundle = new Bundle();
                     bundle.putString("ID", listModelList.get(position).getHomeID());

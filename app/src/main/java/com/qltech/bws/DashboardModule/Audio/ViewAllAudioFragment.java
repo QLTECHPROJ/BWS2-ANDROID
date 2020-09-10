@@ -86,7 +86,7 @@ public class ViewAllAudioFragment extends Fragment {
         Fragment audioFragment = new AudioFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
-                .add(R.id.rlAudiolist, audioFragment)
+                .replace(R.id.rlAudiolist, audioFragment)
                 .commit();
         Bundle bundle = new Bundle();
         audioFragment.setArguments(bundle);

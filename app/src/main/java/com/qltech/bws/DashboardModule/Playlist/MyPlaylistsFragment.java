@@ -206,7 +206,7 @@ public class MyPlaylistsFragment extends Fragment {
         Fragment playlistFragment = new PlaylistFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
-                .add(R.id.rlPlaylist, playlistFragment)
+                .replace(R.id.rlPlaylist, playlistFragment)
                 .commit();
         Bundle bundle = new Bundle();
         playlistFragment.setArguments(bundle);
