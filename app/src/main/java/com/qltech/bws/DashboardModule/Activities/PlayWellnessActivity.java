@@ -46,6 +46,8 @@ import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 
 public class PlayWellnessActivity extends AppCompatActivity implements
@@ -705,14 +707,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements
 
     @Override
     protected void onResume() {
-        if (isMediaStart) {
-            if (MusicService.isPlaying()) {
-                binding.llPlay.setVisibility(View.GONE);
-                binding.llPause.setVisibility(View.VISIBLE);
-            }else{
-                binding.llPlay.setVisibility(View.VISIBLE);
-                binding.llPause.setVisibility(View.GONE);
-            }
+        if ((isPrepare || isMediaStart || MusicService.isPlaying())&& !isPause) {
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.VISIBLE);
+        } else {
+            binding.llPlay.setVisibility(View.VISIBLE);
+            binding.llPause.setVisibility(View.GONE);
         }
         super.onResume();
     }

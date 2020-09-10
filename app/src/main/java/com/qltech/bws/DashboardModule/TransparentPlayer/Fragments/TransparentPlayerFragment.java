@@ -45,6 +45,7 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 
@@ -379,7 +380,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 player = 1;
             }
             if (binding.ivPause.getVisibility() == View.VISIBLE) {
-                MusicService.isPause = true;
+                MusicService.isPause = false;
             }
             Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -424,7 +425,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onResume() {
-        if (isPrepare || isMediaStart || MusicService.isPlaying()) {
+        if ((isPrepare || isMediaStart || MusicService.isPlaying())&& !isPause) {
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.VISIBLE);
         } else {
