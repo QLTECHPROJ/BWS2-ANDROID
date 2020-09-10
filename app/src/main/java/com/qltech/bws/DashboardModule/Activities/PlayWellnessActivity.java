@@ -46,6 +46,7 @@ import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 
 public class PlayWellnessActivity extends AppCompatActivity implements
         SeekBar.OnSeekBarChangeListener {
@@ -134,7 +135,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         getPrepareShowData(position);
 
-        MusicService.mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+        mediaPlayer.setOnCompletionListener(mediaPlayer -> {
            /* if (queuePlay) {
                 addToQueueModelList.remove(position);
                 listSize = addToQueueModelList.size();
@@ -609,6 +610,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                     MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
                     MusicService.playMedia();
                 }
+                binding.simpleSeekbar.setProgress(mediaPlayer.getDuration());
+
             }
             binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
 
@@ -665,6 +668,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                     MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                     MusicService.playMedia();
                 }
+                binding.simpleSeekbar.setProgress(mediaPlayer.getDuration());
             }
             binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
             startTime = MusicService.getStartTime();

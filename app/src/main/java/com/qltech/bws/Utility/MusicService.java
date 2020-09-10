@@ -30,7 +30,7 @@ public class MusicService extends Service {
     public static boolean isPause = false;
     public static boolean isResume = false;
     public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
-    static boolean isPLAYING;
+    static boolean isPlaying = false;
     static private Handler handler;
 
     private static void initMediaPlayer() {
@@ -80,28 +80,28 @@ public class MusicService extends Service {
                 if (state == TelephonyManager.CALL_STATE_RINGING) {
                     //INCOMING call
                     //do all necessary action to pause the audio
-                    if(mp!=null){//check mp
+                    if (mediaPlayer != null) {//check mp
                         setPlayerButton(true, false, true);
 
-                        if(mp.isPlaying()){
+                        if (mediaPlayer.isPlaying()) {
 
-                            mp.pause();
+                            mediaPlayer.pause();
                         }
                     }
 
-                } else if(state == TelephonyManager.CALL_STATE_IDLE) {
+                } else if (state == TelephonyManager.CALL_STATE_IDLE) {
                     //Not IN CALL
                     //do anything if the phone-state is idle
-                } else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
                     //A call is dialing, active or on hold
                     //do all necessary action to pause the audio
                     //do something here
-                    if(mp!=null){//check mp
+                    if (mediaPlayer != null) {//check mp
                         setPlayerButton(true, false, true);
 
-                        if(mp.isPlaying()){
+                        if (mediaPlayer.isPlaying()) {
 
-                            mp.pause();
+                            mediaPlayer.pause();
                         }
                     }
                 }
@@ -209,13 +209,14 @@ public class MusicService extends Service {
     }
 
     public static boolean isPlaying() {
-        boolean playing;
-        if (mediaPlayer.isPlaying()) {
-            playing = true;
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
+                isPlaying = true;
+            }
         } else {
-            playing = false;
+            isPlaying = false;
         }
-        return playing;
+        return isPlaying;
     }
 
     public static void resumeMedia() {
@@ -250,7 +251,7 @@ public class MusicService extends Service {
 
     public static int progressToTimer(int progress, int totalDuration) {
         int currentDuration = 0;
-        totalDuration = (int) (totalDuration / 1000);
+        totalDuration = totalDuration / 1000;
         currentDuration = (int) ((((double) progress) / 100) * totalDuration);
 
         // return current duration in milliseconds
