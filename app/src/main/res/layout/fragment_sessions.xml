@@ -91,7 +91,10 @@
                     android:text="@string/Session"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp" />
-
+            <LinearLayout
+                android:id="@+id/llSpace"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvSessionList"
                     android:layout_width="match_parent"
@@ -99,7 +102,7 @@
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginBottom="@dimen/_74sdp"
                     android:overScrollMode="never" />
-
+            </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
         <ImageView

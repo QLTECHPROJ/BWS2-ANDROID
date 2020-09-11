@@ -17,12 +17,14 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Audio.AudioFragment;
 import com.qltech.bws.DashboardModule.Models.SessionListModel;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -65,6 +67,25 @@ public class SessionsFragment extends Fragment {
             }
             return false;
         });
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flMainLayout, fragment)
+                    .commit();
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10, 8, 10, 121);
+            binding.llSpace.setLayoutParams(params);
+        } else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10, 8, 10, 84);
+            binding.llSpace.setLayoutParams(params);
+        }
+
         binding.llBack.setOnClickListener(view1 -> callBack());
         Glide.with(getActivity()).load(appointmentImage).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);

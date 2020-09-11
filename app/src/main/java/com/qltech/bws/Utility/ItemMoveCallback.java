@@ -4,13 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ItemMoveCallback extends ItemTouchHelper.Callback {
+public class ItemMoveCallback extends ItemTouchHelper.Callback{
 
     private final ItemTouchHelperContract mAdapter;
 
     public ItemMoveCallback(ItemTouchHelperContract adapter) {
         mAdapter = adapter;
     }
+
 
     @Override
     public boolean isLongPressDragEnabled() {
