@@ -57,6 +57,7 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:layout_marginRight="@dimen/_16sdp"
                         android:elevation="3.6dp"
+                        android:visibility="gone"
                         app:cardCornerRadius="@dimen/_4sdp">
 
                         <TextView
@@ -195,6 +196,7 @@
                             </LinearLayout>
 
                             <TextView
+                                android:id="@+id/tvNextSession"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/_16sdp"
@@ -205,7 +207,21 @@
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_17sdp" />
 
+                            <TextView
+                                android:id="@+id/tvSubTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_20sdp"
+                                android:layout_marginRight="@dimen/_16sdp"
+                                android:layout_marginLeft="@dimen/_16sdp"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:gravity="start"
+                                android:visibility="gone"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_12sdp" />
+
                             <LinearLayout
+                                android:id="@+id/llCheckBox1"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="@dimen/_16sdp"
@@ -236,6 +252,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/llCheckBox2"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginLeft="@dimen/_16sdp"
@@ -249,6 +266,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:button="@drawable/checkbox_btn_background"
+                                    android:checked="true"
                                     android:gravity="center"
                                     android:padding="@dimen/_10sdp"
                                     android:paddingLeft="@dimen/_12sdp" />
@@ -260,7 +278,6 @@
                                     android:layout_marginLeft="@dimen/_2sdp"
                                     android:fontFamily="@font/montserrat_medium"
                                     android:gravity="start"
-                                    android:text="Complete Pre Session 1 eBooklet"
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/_12sdp" />
                             </LinearLayout>
@@ -288,6 +305,7 @@
                             android:id="@+id/rvPreviousData"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/_50sdp"
                             android:nestedScrollingEnabled="true"
                             android:overScrollMode="never" />
                     </LinearLayout>

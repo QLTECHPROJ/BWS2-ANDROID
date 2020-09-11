@@ -65,7 +65,26 @@ public class CurrentPlanFragment extends Fragment {
         RecyclerView.LayoutManager serachList = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvFeatured.setLayoutManager(serachList);
         binding.rvFeatured.setItemAnimator(new DefaultItemAnimator());
+        PrepareData();
+        binding.btnCancelSubscrible.setOnClickListener(view13 -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), CancelMembershipActivity.class);
+            startActivity(i);
+        });
 
+        binding.tvChangeCard.setOnClickListener(view12 -> {
+            Intent i = new Intent(getActivity(), BillingOrderActivity.class);
+            i.putExtra("payment", 1);
+            startActivity(i);
+            getActivity().finish();
+        });
+        return view;
+    }
+
+    private void PrepareData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             showProgressBar();
             Call<CurrentPlanVieViewModel> listCall = APIClient.getClient().getCurrentPlanView(UserID);
@@ -97,7 +116,7 @@ public class CurrentPlanFragment extends Fragment {
                             binding.tvPayUsing.setVisibility(View.GONE);
                             binding.tvChangeCard.setVisibility(View.GONE);
                         }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("2")){
-                            binding.tvRecommended.setBackgroundResource(R.drawable.dark_blue_background);
+                            binding.tvRecommended.setBackgroundResource(R.drawable.dark_brown_background);
                             binding.tvRecommended.setText(R.string.InActive);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
                             binding.btnPayNow.setVisibility(View.VISIBLE); /* membership-ordersummary - payment */
@@ -133,7 +152,7 @@ public class CurrentPlanFragment extends Fragment {
                             });
 
                         }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("4")){
-                            binding.tvRecommended.setBackgroundResource(R.drawable.dark_blue_background);
+                            binding.tvRecommended.setBackgroundResource(R.drawable.dark_red_background);
                             binding.tvRecommended.setText(R.string.Cancelled);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
                             binding.btnPayNow.setVisibility(View.VISIBLE);
@@ -165,23 +184,12 @@ public class CurrentPlanFragment extends Fragment {
         } else {
             BWSApplication.showToast( getString(R.string.no_server_found), getActivity());
         }
+    }
 
-        binding.btnCancelSubscrible.setOnClickListener(view13 -> {
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return;
-            }
-            mLastClickTime = SystemClock.elapsedRealtime();
-            Intent i = new Intent(getActivity(), CancelMembershipActivity.class);
-            startActivity(i);
-        });
-
-        binding.tvChangeCard.setOnClickListener(view12 -> {
-            Intent i = new Intent(getActivity(), BillingOrderActivity.class);
-            i.putExtra("payment", 1);
-            startActivity(i);
-            getActivity().finish();
-        });
-        return view;
+    @Override
+    public void onResume() {
+        super.onResume();
+        PrepareData();
     }
 
     private void hideProgressBar() {

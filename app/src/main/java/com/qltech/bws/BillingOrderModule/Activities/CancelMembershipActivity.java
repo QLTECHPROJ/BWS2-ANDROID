@@ -57,21 +57,6 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
         binding.youtubeView.initialize(AppUtils.DEVELOPER_KEY, this);
 
-    /*    MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 29,
-                5, 3, 1.1f, 29);
-        binding.youtubeView.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        binding.youtubeView.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());*/
-
-       /* getLifecycle().addObserver(binding.youtubeView);
-
-        binding.youtubeView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
-            @Override
-            public void onReady(@NonNull YouTubePlayer youTubePlayer) {
-                String videoId = "S0Q4gqBUs7c";
-                youTubePlayer.loadVideo(videoId, 0);
-            }
-        });*/
-
         binding.cbOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

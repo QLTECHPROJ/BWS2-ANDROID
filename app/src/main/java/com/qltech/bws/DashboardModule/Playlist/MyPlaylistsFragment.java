@@ -40,6 +40,7 @@ import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
+import com.qltech.bws.DashboardModule.Search.SearchFragment;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
@@ -97,14 +98,7 @@ public class MyPlaylistsFragment extends Fragment {
             }
             return false;
         });
-        /*OnBackPressedCallback callback = new OnBackPressedCallback(true *//* enabled by default *//*) {
-            @Override
-            public void handleOnBackPressed() {
-                callBack();
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
-*/
+
         binding.llBack.setOnClickListener(view1 -> callBack());
 
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
@@ -203,13 +197,23 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     private void callBack() {
-        Fragment playlistFragment = new PlaylistFragment();
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .replace(R.id.rlPlaylist, playlistFragment)
-                .commit();
-        Bundle bundle = new Bundle();
-        playlistFragment.setArguments(bundle);
+        if (comefrom_search) {
+            Fragment fragment = new SearchFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .replace(R.id.rlSearchList, fragment)
+                    .commit();
+            Bundle bundle = new Bundle();
+            fragment.setArguments(bundle);
+        } else {
+            Fragment playlistFragment = new PlaylistFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .replace(R.id.rlPlaylist, playlistFragment)
+                    .commit();
+            Bundle bundle = new Bundle();
+            playlistFragment.setArguments(bundle);
+        }
     }
 
     @Override
@@ -243,11 +247,11 @@ public class MyPlaylistsFragment extends Fragment {
                         .commit();
             }
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 8, 10, 224);
+            params.setMargins(10, 8, 10, 260);
             binding.llSpace.setLayoutParams(params);
         } else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 8, 10, 84);
+            params.setMargins(10, 8, 10, 50);
             binding.llSpace.setLayoutParams(params);
         }
 

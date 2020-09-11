@@ -238,7 +238,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(View view) {
                                         if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                                            BWSApplication.showToast("Please enter playlist name", ctx);
+                                            BWSApplication.showToast("Please provide the playlist's name", ctx);
                                         } else {
                                             if (BWSApplication.isNetworkConnected(ctx)) {
                                                 showProgressBar();

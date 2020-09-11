@@ -3,8 +3,6 @@
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/f_audio"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -21,7 +19,7 @@
                 android:layout_marginRight="@dimen/_12sdp"
                 android:overScrollMode="never"
                 android:paddingTop="@dimen/_8sdp"
-                android:paddingBottom="@dimen/_8sdp" />
+                android:paddingBottom="@dimen/_40sdp" />
 
             <ImageView
                 android:id="@+id/ImgV"
@@ -40,6 +38,7 @@
                 android:animateLayoutChanges="true"
                 android:background="#C0000000"
                 android:visibility="gone" />
+
             <LinearLayout
                 android:id="@+id/llError"
                 android:layout_width="match_parent"

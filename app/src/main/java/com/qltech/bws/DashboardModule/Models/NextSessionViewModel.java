@@ -51,6 +51,9 @@ public class NextSessionViewModel {
 
     public class ResponseData {
 
+        @SerializedName("Response")
+        @Expose
+        private String response;
         @SerializedName("Id")
         @Expose
         private String id;
@@ -69,9 +72,14 @@ public class NextSessionViewModel {
         @SerializedName("Task")
         @Expose
         private Task task;
-        @SerializedName("Response")
-        @Expose
-        private String response;
+
+        public String getResponse() {
+            return response;
+        }
+
+        public void setResponse(String response) {
+            this.response = response;
+        }
 
         public String getId() {
             return id;
@@ -121,14 +129,6 @@ public class NextSessionViewModel {
             this.task = task;
         }
 
-        public String getResponse() {
-            return response;
-        }
-
-        public void setResponse(String response) {
-            this.response = response;
-        }
-
         public class Task {
 
             @SerializedName("title")
@@ -137,9 +137,15 @@ public class NextSessionViewModel {
             @SerializedName("AudioTask")
             @Expose
             private String audioTask;
+            @SerializedName("subtitle")
+            @Expose
+            private String subtitle;
             @SerializedName("BookletTask")
             @Expose
             private String bookletTask;
+            @SerializedName("taskflag")
+            @Expose
+            private String taskflag;
 
             public String getTitle() {
                 return title;
@@ -163,6 +169,22 @@ public class NextSessionViewModel {
 
             public void setBookletTask(String bookletTask) {
                 this.bookletTask = bookletTask;
+            }
+
+            public String getTaskflag() {
+                return taskflag;
+            }
+
+            public void setTaskflag(String taskflag) {
+                this.taskflag = taskflag;
+            }
+
+            public String getSubtitle() {
+                return subtitle;
+            }
+
+            public void setSubtitle(String subtitle) {
+                this.subtitle = subtitle;
             }
         }
     }

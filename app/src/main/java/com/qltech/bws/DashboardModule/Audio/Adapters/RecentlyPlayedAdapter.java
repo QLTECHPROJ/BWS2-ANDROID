@@ -94,10 +94,10 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
 
     @Override
     public int getItemCount() {
-        if (4 > listModelList.size()) {
+        if (6 > listModelList.size()) {
             return listModelList.size();
         } else {
-            return 4;
+            return 6;
         }
     }
 

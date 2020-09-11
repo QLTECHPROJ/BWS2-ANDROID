@@ -1,7 +1,13 @@
 package com.qltech.bws.DashboardModule.Audio;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -10,9 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -58,84 +66,24 @@ public class AudioFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_audio, container, false);
         View view = binding.getRoot();
         viewallAudio = false;
+        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        RefreshData();
         audioViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
             }
         });
 
-        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                callBack();
-                return true;
-            }
-            return false;
-        });
-
         prepareData();
         return view;
     }
 
-    private void callBack() {
-      /*  if (!doubleBackToExitPressedOnce) {
-            this.doubleBackToExitPressedOnce = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce = false;
-                }
-            }, 2000);
-        } else {
-            getActivity().finishAffinity();
-            return;
-        }*/
-
-//        if (doubleBackToExitPressedOnce) {
-            getActivity().finishAffinity();
-//            return;
-//        }
-
-   /*     this.doubleBackToExitPressedOnce = true;
-//        BWSApplication.showToast("Press again to exit.", getActivity());
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        },2000);*/
-//        exit = true;
-//        getActivity().finish();
-    }
-
-
     private void prepareData() {
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlAudiolist, fragment)
-                    .commit();
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 6, 13, 213);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 6, 13, 84);
-            binding.llSpace.setLayoutParams(params);
-        }
-
         if (BWSApplication.isNetworkConnected(getActivity())) {
             showProgressBar();
             Call<MainAudioModel> listCall = APIClient.getClient().getMainAudioLists(UserID);
@@ -165,9 +113,27 @@ public class AudioFragment extends Fragment {
         }
     }
 
+    private void RefreshData() {
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.rlAudiolist, fragment)
+                    .commit();
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(13, 6, 13, 260);
+            binding.llSpace.setLayoutParams(params);
+        } else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(13, 6, 13, 50);
+            binding.llSpace.setLayoutParams(params);
+        }
+    }
     @Override
     public void onResume() {
         super.onResume();
+        RefreshData();
         prepareData();
     }
 
@@ -213,13 +179,6 @@ public class AudioFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            if (listModelList.get(position).getDetails() != null &&
-                    listModelList.get(position).getDetails().size() > 4) {
-                holder.binding.tvViewAll.setVisibility(View.VISIBLE);
-            } else {
-                holder.binding.tvViewAll.setVisibility(View.GONE);
-            }
-
             holder.binding.tvViewAll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -246,6 +205,12 @@ public class AudioFragment extends Fragment {
                     holder.binding.rvMainAudio.setLayoutManager(myDownloads);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(myDownloadsAdapter);
+                    if (listModelList.get(position).getDetails() != null &&
+                            listModelList.get(position).getDetails().size() > 4) {
+                        holder.binding.tvViewAll.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.binding.tvViewAll.setVisibility(View.GONE);
+                    }
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.my_like))) {
                     holder.binding.llMainLayout.setVisibility(View.GONE);
                     /*RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModelList.get(position).getDetails(), getActivity());
@@ -259,30 +224,62 @@ public class AudioFragment extends Fragment {
                     holder.binding.rvMainAudio.setLayoutManager(recentlyPlayed);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);
+                    if (listModelList.get(position).getDetails() != null &&
+                            listModelList.get(position).getDetails().size() > 6) {
+                        holder.binding.tvViewAll.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.binding.tvViewAll.setVisibility(View.GONE);
+                    }
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.recommended))) {
                     RecommendedAdapter recommendedAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(), activity, listModelList.get(position).getView());
                     RecyclerView.LayoutManager recommended = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recommended);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recommendedAdapter);
+                    if (listModelList.get(position).getDetails() != null &&
+                            listModelList.get(position).getDetails().size() > 4) {
+                        holder.binding.tvViewAll.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.binding.tvViewAll.setVisibility(View.GONE);
+                    }
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.get_inspired))) {
                     RecommendedAdapter inspiredAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(), activity, listModelList.get(position).getView());
                     RecyclerView.LayoutManager inspired = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(inspired);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(inspiredAdapter);
+                    if (listModelList.get(position).getDetails() != null &&
+                            listModelList.get(position).getDetails().size() > 4) {
+                        holder.binding.tvViewAll.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.binding.tvViewAll.setVisibility(View.GONE);
+                    }
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.popular))) {
                     RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModelList.get(position).getDetails(), getActivity(), activity, listModelList.get(position).getView());
                     RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recentlyPlayed);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);
+
+                    if (listModelList.get(position).getDetails() != null &&
+                            listModelList.get(position).getDetails().size() > 6) {
+                        holder.binding.tvViewAll.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.binding.tvViewAll.setVisibility(View.GONE);
+                    }
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.top_categories))) {
                     TopCategoriesAdapter topCategoriesAdapter = new TopCategoriesAdapter(listModelList.get(position).getDetails(), getActivity(), activity, listModelList.get(position).getView());
                     RecyclerView.LayoutManager topCategories = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(topCategories);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(topCategoriesAdapter);
+
+                    if (listModelList.get(position).getDetails() != null &&
+                            listModelList.get(position).getDetails().size() > 6) {
+                        holder.binding.tvViewAll.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.binding.tvViewAll.setVisibility(View.GONE);
+                    }
                 }
             }
 

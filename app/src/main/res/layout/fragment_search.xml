@@ -93,10 +93,10 @@
                             android:layout_marginTop="@dimen/_4sdp"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center"
-                            android:visibility="gone"
                             android:text="@string/no_data_found"
                             android:textColor="@color/dark_blue_gray"
-                            android:textSize="@dimen/_15sdp" />
+                            android:textSize="@dimen/_15sdp"
+                            android:visibility="gone" />
 
                     </LinearLayout>
 
@@ -164,7 +164,8 @@
                             android:id="@+id/rvPlayList"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:overScrollMode="never" />
+                            android:overScrollMode="never"
+                            android:paddingBottom="@dimen/_34sdp" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>

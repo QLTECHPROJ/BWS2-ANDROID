@@ -55,7 +55,8 @@ public class ViewAllPlaylistFragment extends Fragment {
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (getArguments() != null) {
             GetLibraryID = getArguments().getString("GetLibraryID");
             Name = getArguments().getString("Name");
@@ -69,9 +70,11 @@ public class ViewAllPlaylistFragment extends Fragment {
             }
             return false;
         });
+
         binding.llBack.setOnClickListener(view1 -> {
             callBack();
         });
+        RefreshData();
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
         binding.rvMainAudio.setLayoutManager(manager);
@@ -92,12 +95,11 @@ public class ViewAllPlaylistFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        RefreshData();
         prepareData();
     }
 
-    private void prepareData() {
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+    private void RefreshData() {
         if (!AudioFlag.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -106,14 +108,15 @@ public class ViewAllPlaylistFragment extends Fragment {
                     .commit();
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(4, 6, 4, 224);
+            params.setMargins(4, 6, 4, 260);
             binding.llSpace.setLayoutParams(params);
         } else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(4, 6, 4, 120);
+            params.setMargins(4, 6, 4, 50);
             binding.llSpace.setLayoutParams(params);
         }
-
+    }
+    private void prepareData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             showProgressBar();
             Call<ViewAllPlayListModel> listCall = APIClient.getClient().getViewAllPlayLists(UserID, GetLibraryID);

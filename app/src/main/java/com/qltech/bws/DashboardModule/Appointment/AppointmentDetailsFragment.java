@@ -27,16 +27,17 @@ import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPla
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.OnBackPressed;
 import com.qltech.bws.databinding.FragmentAppointmentDetailsBinding;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentDetailsFragment extends Fragment {
+public class AppointmentDetailsFragment extends Fragment implements OnBackPressed {
     FragmentAppointmentDetailsBinding binding;
     Activity activity;
-    String UserId, appointmentTypeId;
+    String UserId, appointmentTypeId, appointmentName, appointmentMainName, appointmentImage, AudioFlag;
     AppointmentDetailModel global_appointmentDetailModel;
 
     @Override
@@ -45,11 +46,19 @@ public class AppointmentDetailsFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment_details, container, false);
         View view = binding.getRoot();
         activity = getActivity();
+        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
 
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (getArguments() != null) {
             appointmentTypeId = getArguments().getString("appointmentId");
+            appointmentMainName = getArguments().getString("appointmentMainName");
+            appointmentName = getArguments().getString("appointmentName");
+            appointmentImage = getArguments().getString("appointmentImage");
         }
-        view.setFocusableInTouchMode(true);
+        /*view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -57,41 +66,44 @@ public class AppointmentDetailsFragment extends Fragment {
                 return true;
             }
             return false;
-        });
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        });*/
 
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flMainLayout, fragment)
-                    .commit();
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, 0, 234);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, 0, 98);
-            binding.llSpace.setLayoutParams(params);
-        }
         binding.llBack.setOnClickListener(view1 -> callBack());
+        RefreshData();
         getAppointmentData();
 
         return view;
     }
 
     private void callBack() {
+        Bundle bundle = new Bundle();
         Fragment sessionsFragment = new SessionsFragment();
+        bundle.putString("appointmentId", appointmentTypeId);
+        bundle.putString("appointmentMainName", appointmentMainName);
+        bundle.putString("appointmentName", appointmentName);
+        bundle.putString("appointmentImage", appointmentImage);
+        sessionsFragment.setArguments(bundle);
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
-                .add(R.id.flMainLayout, sessionsFragment)
+                .replace(R.id.flSession, sessionsFragment)
                 .commit();
-        Bundle bundle = new Bundle();
-        sessionsFragment.setArguments(bundle);
+    }
+
+    private void RefreshData() {
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flSession, fragment)
+                    .commit();
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 0, 0, 260);
+            binding.llSpace.setLayoutParams(params);
+        } else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 0, 0, 50);
+            binding.llSpace.setLayoutParams(params);
+        }
     }
 
     private void getAppointmentData() {
@@ -107,7 +119,6 @@ public class AppointmentDetailsFragment extends Fragment {
                         global_appointmentDetailModel = appointmentDetailModel;
 
                         if (appointmentDetailModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-
                             if (appointmentDetailModel.getResponseData().getAudio().size() == 0
                                     && appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
                                     && appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
@@ -150,7 +161,6 @@ public class AppointmentDetailsFragment extends Fragment {
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"));
                             }
                             binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
                             TabAdapter adapter = new TabAdapter(getActivity().getSupportFragmentManager(), getActivity(), binding.tabLayout.getTabCount());
                             binding.viewPager.setAdapter(adapter);
                             binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
@@ -185,6 +195,11 @@ public class AppointmentDetailsFragment extends Fragment {
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        callBack();
     }
 
     public class TabAdapter extends FragmentStatePagerAdapter {

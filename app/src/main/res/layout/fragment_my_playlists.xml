@@ -303,7 +303,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:overScrollMode="never"
-                                android:visibility="visible" />
+                                android:visibility="visible"
+                                android:paddingBottom="@dimen/_30sdp"/>
                         </LinearLayout>
 
                         <LinearLayout

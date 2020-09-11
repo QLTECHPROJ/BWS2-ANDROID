@@ -28,7 +28,7 @@
                         android:id="@+id/ivRestaurantImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="fitXY"/>
+                        android:scaleType="fitXY" />
 
                     <RelativeLayout
                         android:id="@+id/rlLayout"
@@ -68,13 +68,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:paddingHorizontal="@dimen/_16sdp"
-                        android:paddingBottom="@dimen/_16sdp"
-                        android:ellipsize="end"
                         android:background="@drawable/transparent_gradient"
+                        android:ellipsize="end"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
                         android:maxLines="2"
+                        android:paddingHorizontal="@dimen/_16sdp"
+                        android:paddingBottom="@dimen/_16sdp"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_22sdp" />
 
@@ -91,20 +91,22 @@
                     android:text="@string/Session"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp" />
-            <LinearLayout
-                android:id="@+id/llSpace"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvSessionList"
+
+                <LinearLayout
+                    android:id="@+id/llSpace"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:layout_marginBottom="@dimen/_74sdp"
-                    android:overScrollMode="never" />
-            </LinearLayout>
+                    android:layout_height="wrap_content">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvSessionList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/_39sdp"
+                        android:overScrollMode="never" />
+                </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
+
         <ImageView
             android:id="@+id/ImgV"
             android:layout_width="match_parent"

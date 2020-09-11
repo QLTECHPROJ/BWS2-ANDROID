@@ -24,5 +24,5 @@ public class AppUtils extends Application {
 
     public static final String DEVELOPER_KEY = "AIzaSyD43ZM6bESb_pdSPzgcuCzKy8yD_45mlT8";
 
-    public static final String YOUTUBE_VIDEO_CODE = "inpok4MKVLM";
+    public static final String YOUTUBE_VIDEO_CODE = "y1rfRW6WX08";
 }

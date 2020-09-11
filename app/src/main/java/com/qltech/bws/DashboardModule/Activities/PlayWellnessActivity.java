@@ -576,8 +576,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                 binding.llDirection.setVisibility(View.VISIBLE);
                 binding.tvDireDesc.setText(addToQueueModelList.get(position).getAudioDirection());
             }
-            binding.tvTitle.setText(addToQueueModelList.get(position).getAudioSubCategory());
-            binding.tvDesc.setText(addToQueueModelList.get(position).getAudiomastercat());
+            binding.tvTitle.setText(addToQueueModelList.get(position).getAudiomastercat());
+            binding.tvDesc.setText(addToQueueModelList.get(position).getAudioSubCategory());
             Glide.with(getApplicationContext()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("1")) {
@@ -638,8 +638,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                 binding.llDirection.setVisibility(View.VISIBLE);
                 binding.tvDireDesc.setText(mainPlayModelList.get(position).getAudioDirection());
             }
-            binding.tvTitle.setText(mainPlayModelList.get(position).getAudioSubCategory());
-            binding.tvDesc.setText(mainPlayModelList.get(position).getAudiomastercat());
+            binding.tvTitle.setText(mainPlayModelList.get(position).getAudiomastercat());
+            binding.tvDesc.setText(mainPlayModelList.get(position).getAudioSubCategory());
             Glide.with(getApplicationContext()).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {

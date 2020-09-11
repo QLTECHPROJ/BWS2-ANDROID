@@ -478,7 +478,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         Download = directionModel.getResponseData().get(0).getDownload();
 
                         binding.tvName.setText(directionModel.getResponseData().get(0).getName());
-                        binding.tvDesc.setText(directionModel.getResponseData().get(0).getAudioSubCategory());
+                        binding.tvDesc.setText(directionModel.getResponseData().get(0).getAudiomastercat());
                         binding.tvDuration.setText(directionModel.getResponseData().get(0).getAudioDuration());
 
                         if (directionModel.getResponseData().get(0).getAudioDirection().equalsIgnoreCase("")) {
@@ -537,7 +537,7 @@ public class AddQueueActivity extends AppCompatActivity {
                             }
                         });
 
-                        String[] elements = directionModel.getResponseData().get(0).getAudiomastercat().split(",");
+                        String[] elements = directionModel.getResponseData().get(0).getAudioSubCategory().split(",");
                         List<String> direction = Arrays.asList(elements);
 
                         DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);

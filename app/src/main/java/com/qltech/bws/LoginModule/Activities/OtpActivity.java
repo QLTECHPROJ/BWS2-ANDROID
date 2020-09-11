@@ -128,7 +128,8 @@ public class OtpActivity extends AppCompatActivity {
                                 if (response.isSuccessful()) {
                                     hideProgressBar();
                                     OtpModel otpModel = response.body();
-                                    if(otpModel.getResponseData().getError().equalsIgnoreCase("")){
+                                    if(otpModel.getResponseData().getError().equalsIgnoreCase("0")||
+                                            otpModel.getResponseData().getError().equalsIgnoreCase("")){
                                         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
                                         SharedPreferences.Editor editor = shared.edit();
                                         editor.putString(CONSTANTS.PREF_KEY_UserID, otpModel.getResponseData().getUserID());

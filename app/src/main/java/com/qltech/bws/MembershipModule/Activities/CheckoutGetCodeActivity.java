@@ -16,6 +16,7 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.LoginModule.Activities.CountrySelectActivity;
 import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
+import com.qltech.bws.MembershipModule.Models.SignUpModel;
 import com.qltech.bws.R;
 import com.qltech.bws.SplashModule.SplashScreenActivity;
 import com.qltech.bws.Utility.APIClient;
@@ -127,13 +128,13 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             binding.txtError.setVisibility(View.GONE);
             if (BWSApplication.isNetworkConnected(ctx)) {
                 BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                Call<LoginModel> listCall = APIClient.getClient().getSignUpDatas(binding.edtNumber.getText().toString(), binding.tvCountryCode.getText().toString(), CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
-                listCall.enqueue(new Callback<LoginModel>() {
+                Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(binding.edtNumber.getText().toString(), binding.tvCountryCode.getText().toString(), CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
+                listCall.enqueue(new Callback<SignUpModel>() {
                     @Override
-                    public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
+                    public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         if (response.isSuccessful()) {
-                            LoginModel loginModel = response.body();
+                            SignUpModel loginModel = response.body();
                             if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                 Intent i = new Intent(ctx, CheckoutOtpActivity.class);
 //                            i.putParcelableArrayListExtra("PlanData",listModelList);
@@ -155,7 +156,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<LoginModel> call, Throwable t) {
+                    public void onFailure(Call<SignUpModel> call, Throwable t) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                     }
                 });

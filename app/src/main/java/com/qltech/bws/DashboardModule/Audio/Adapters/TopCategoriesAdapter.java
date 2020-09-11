@@ -90,10 +90,10 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
 
     @Override
     public int getItemCount() {
-        if (4 > listModelList.size()) {
+        if (6 > listModelList.size()) {
             return listModelList.size();
         } else {
-            return 4;
+            return 6;
         }
     }
 

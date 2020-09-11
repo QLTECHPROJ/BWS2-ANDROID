@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -14,6 +16,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -24,7 +27,7 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
     public static int player = 0;
     ActivityDashboardBinding binding;
     private AudioManager mAudioManager;
-
+    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,6 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
             fragmentManager1.beginTransaction()
                     .add(R.id.rlAudiolist, fragment)
                     .commit();
-
         }
     }
 
@@ -61,9 +63,20 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
     public void onBackPressed() {
         if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
             binding.navView.setSelectedItemId(R.id.navigation_audio);
-            finishAffinity();
-        } else {
-            super.onBackPressed();
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            BWSApplication.showToast("Press again to exit.", DashboardActivity.this);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
         }
     }
 

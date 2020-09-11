@@ -28,6 +28,7 @@ import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPla
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.OnBackPressed;
 import com.qltech.bws.databinding.FragmentSessionsBinding;
 import com.qltech.bws.databinding.SessionListLayoutBinding;
 
@@ -38,11 +39,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SessionsFragment extends Fragment {
+public class SessionsFragment extends Fragment implements OnBackPressed {
     FragmentSessionsBinding binding;
     public FragmentManager f_manager;
     Activity activity;
-    String UserId, appointmentName, appointmentMainName, appointmentImage;
+    String UserId, appointmentName, appointmentMainName, appointmentImage, appointmentTypeId, AudioFlag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,13 +53,15 @@ public class SessionsFragment extends Fragment {
         activity = getActivity();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            appointmentName = bundle.getString("appointmentName");
-            appointmentImage = bundle.getString("appointmentImage");
-            appointmentMainName = bundle.getString("appointmentMainName");
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        if (getArguments() != null) {
+            appointmentTypeId = getArguments().getString("appointmentId");
+            appointmentName = getArguments().getString("appointmentName");
+            appointmentImage = getArguments().getString("appointmentImage");
+            appointmentMainName = getArguments().getString("appointmentMainName");
         }
-        view.setFocusableInTouchMode(true);
+       /* view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -66,10 +69,36 @@ public class SessionsFragment extends Fragment {
                 return true;
             }
             return false;
-        });
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        });*/
+        binding.llBack.setOnClickListener(view1 -> callBack());
+        Glide.with(getActivity()).load(appointmentImage).thumbnail(0.05f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
+        RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        binding.rvSessionList.setLayoutManager(recentlyPlayed);
+        binding.rvSessionList.setItemAnimator(new DefaultItemAnimator());
+        RefreshData();
+        prepareSessionList();
+        return view;
+    }
+
+    private void callBack() {
+        Bundle bundle = new Bundle();
+        Fragment appointmentFragment = new AppointmentFragment();
+        bundle.putString("appointmentMainName", appointmentMainName);
+        bundle.putString("appointmentName", appointmentName);
+        bundle.putString("appointmentImage", appointmentImage);
+        appointmentFragment.setArguments(bundle);
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .replace(R.id.flMainLayout, appointmentFragment)
+                .commit();
+        /*FragmentManager fm = getActivity()
+                .getSupportFragmentManager();
+        fm.popBackStack("SessionsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);*/
+    }
+
+    private void RefreshData() {
         if (!AudioFlag.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -78,69 +107,60 @@ public class SessionsFragment extends Fragment {
                     .commit();
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 8, 10, 121);
+            params.setMargins(0, 10, 0, 260);
             binding.llSpace.setLayoutParams(params);
         } else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 8, 10, 84);
+            params.setMargins(0, 10, 0, 50);
             binding.llSpace.setLayoutParams(params);
         }
-
-        binding.llBack.setOnClickListener(view1 -> callBack());
-        Glide.with(getActivity()).load(appointmentImage).thumbnail(0.05f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-
-        RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        binding.rvSessionList.setLayoutManager(recentlyPlayed);
-        binding.rvSessionList.setItemAnimator(new DefaultItemAnimator());
-
-        prepareSessionList();
-        return view;
-    }
-
-    private void callBack() {
-        Fragment appointmentFragment = new AppointmentFragment();
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .add(R.id.flMainLayout, appointmentFragment)
-                .commit();
-        Bundle bundle = new Bundle();
-        appointmentFragment.setArguments(bundle);
-        /*FragmentManager fm = getActivity()
-                .getSupportFragmentManager();
-        fm.popBackStack("SessionsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);*/
     }
 
     private void prepareSessionList() {
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<SessionListModel> listCall = APIClient.getClient().getAppointmentSession(UserId, appointmentName);
-            listCall.enqueue(new Callback<SessionListModel>() {
-                @Override
-                public void onResponse(Call<SessionListModel> call, Response<SessionListModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                        SessionListModel listModel = response.body();
-                        if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            binding.tvSessionTitle.setText(listModel.getResponseData().get(0).getCatName());
-                            Glide.with(getActivity()).load(listModel.getResponseData().get(0).getImage()).thumbnail(0.05f)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                            SessionListAdapter appointmentsAdapter = new SessionListAdapter(listModel.getResponseData(), getActivity(), f_manager);
-                            binding.rvSessionList.setAdapter(appointmentsAdapter);
-                        } else {
-                            BWSApplication.showToast(listModel.getResponseMessage(), activity);
+        try {
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                Call<SessionListModel> listCall = APIClient.getClient().getAppointmentSession(UserId, appointmentName);
+                listCall.enqueue(new Callback<SessionListModel>() {
+                    @Override
+                    public void onResponse(Call<SessionListModel> call, Response<SessionListModel> response) {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                            SessionListModel listModel = response.body();
+                            if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                binding.tvSessionTitle.setText(listModel.getResponseData().get(0).getCatName());
+                                Glide.with(getActivity()).load(listModel.getResponseData().get(0).getImage()).thumbnail(0.05f)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                                SessionListAdapter appointmentsAdapter = new SessionListAdapter(listModel.getResponseData(), getActivity(), f_manager);
+                                binding.rvSessionList.setAdapter(appointmentsAdapter);
+                            } else {
+                                BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<SessionListModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+                    @Override
+                    public void onFailure(Call<SessionListModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    }
+                });
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        RefreshData();
+    }
+
+    @Override
+    public void onBackPressed() {
+        callBack();
     }
 
     public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.MyViewHolder> {
@@ -198,9 +218,12 @@ public class SessionsFragment extends Fragment {
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     Bundle bundle = new Bundle();
                     bundle.putString("appointmentId", listModel.getId());
+                    bundle.putString("appointmentMainName", appointmentMainName);
+                    bundle.putString("appointmentName", appointmentName);
+                    bundle.putString("appointmentImage", appointmentImage);
                     appointmentDetailsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
-                            .replace(R.id.flSession, appointmentDetailsFragment).commit();
+                            .add(R.id.flSession, appointmentDetailsFragment).commit();
                 }
             });
         }

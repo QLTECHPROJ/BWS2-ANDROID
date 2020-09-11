@@ -1,8 +1,14 @@
 package com.qltech.bws.DashboardModule.TransparentPlayer.Fragments;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -10,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 
+import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
@@ -252,6 +259,31 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         return view;
     }
 
+    private void simpleNotification() {
+        int notificationId = 0;
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity())
+                .setSmallIcon(R.drawable.square_app_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.square_app_icon))
+                .setContentTitle("Brain Wellness Spa")
+                .setContentText("Become an Android Developer.")
+                .setAutoCancel(true)
+                .setDefaults(NotificationCompat.DEFAULT_ALL);
+        Uri path = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        builder.setSound(path);
+
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "10001";
+            NotificationChannel channel = new NotificationChannel(channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+            builder.setChannelId(channelId);
+        }
+        notificationManager.notify(notificationId, builder.build());
+    }
+
     private void addToRecentPlay() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
 //            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
@@ -392,6 +424,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             editor.putString(CONSTANTS.PREF_KEY_audioList, json);
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
+
+//            simpleNotification();
         });
     }
 

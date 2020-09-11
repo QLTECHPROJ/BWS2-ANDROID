@@ -37,6 +37,7 @@ import com.qltech.bws.LoginModule.Models.CountryListModel;
 import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.LoginModule.Models.OtpModel;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
+import com.qltech.bws.MembershipModule.Models.SignUpModel;
 import com.qltech.bws.ReminderModule.Models.ReminderStatusModel;
 import com.qltech.bws.ReminderModule.Models.SetReminderModel;
 import com.qltech.bws.ResourceModule.Models.ResourceFilterModel;
@@ -49,6 +50,7 @@ import com.qltech.bws.UserModule.Models.RemoveProfileModel;
 
 import java.util.List;
 
+import retrofit.Callback;
 import retrofit.mime.TypedFile;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -59,13 +61,25 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public interface APIInterface {
+
+  /*  @Multipart
+    @POST("/addprofileimage")
+    void getAddProfile(@Part("UserID") String UserID,
+                       @Part("ProfileImage") TypedFile Avtar,
+                       Callback<AddProfileModel> addProfileModelCallback);*/
+
+    /*TODO UserProfileActivity */
+    @Multipart
+    @POST("addprofileimage")
+    Call<AddProfileModel> getAddProfile(@Part("UserID") String userID,
+                                        @Part("ProfileImage") TypedFile profileImage);
     /*TODO App Version*/
     @POST("appversion")
     @FormUrlEncoded
     Call<VersionModel> getVersionDatas(@Field("Version") String version,
                                        @Field("AppType") String appType);
 
-    /* TODO LoginActivtiy & OtpActivity & CheckoutGetCodeActivity*/
+    /* TODO LoginActivtiy & OtpActivity */
     @POST("sendotp")
     @FormUrlEncoded
     Call<LoginModel> getLoginDatas(@Field("MobileNo") String mobileNo,
@@ -89,14 +103,14 @@ public interface APIInterface {
             @Field("TokenId") String CardId,
             @Field("MobileNo") String UserId);
 
-    /* TODO CheckoutGetCodeActivity & OtpActivity */
+    /* TODO CheckoutGetCodeActivity */
     @POST("signupcheckout")
     @FormUrlEncoded
-    Call<LoginModel> getSignUpDatas(@Field("MobileNo") String mobileNo,
-                                    @Field("CountryCode") String countryCode,
-                                    @Field("DeviceType") String deviceType,
-                                    @Field("Resend") String resend,
-                                    @Field("key") String key);
+    Call<SignUpModel> getSignUpDatas(@Field("MobileNo") String mobileNo,
+                                     @Field("CountryCode") String countryCode,
+                                     @Field("DeviceType") String deviceType,
+                                     @Field("Resend") String resend,
+                                     @Field("key") String key);
 
     /* TODO OtpActivity */
     @POST("authotp")
@@ -111,7 +125,7 @@ public interface APIInterface {
     /* TODO OtpActivity */
     @POST("authotp")
     @FormUrlEncoded
-    Call<CardModel> getAuthOtps1(@Field("OTP") String otp,
+    Call<OtpModel> getAuthOtps1(@Field("OTP") String otp,
                                  @Field("Token") String token,
                                  @Field("DeviceType") String deviceType,
                                  @Field("DeviceID") String deviceID,
@@ -151,12 +165,6 @@ public interface APIInterface {
     /* TODO Membership Plan List */
     @GET("planlist")
     Call<MembershipPlanListModel> getMembershipPlanList();
-
-    /*TODO UserProfileActivity */
-    @Multipart
-    @POST("addprofileimage")
-    Call<AddProfileModel> getAddProfile(@Part("UserID") String userID,
-                                        @Part("ProfileImage") TypedFile profileImage);
 
     /*TODO UserProfileActivity */
     @POST("removeprofileimage")

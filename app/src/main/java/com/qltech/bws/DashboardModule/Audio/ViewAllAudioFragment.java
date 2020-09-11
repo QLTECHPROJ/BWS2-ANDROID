@@ -45,7 +45,7 @@ import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class ViewAllAudioFragment extends Fragment {
     FragmentViewAllAudioBinding binding;
-    String ID, Name, UserID;
+    String ID, Name, UserID, AudioFlag;
     public static boolean viewallAudio = false;
 
     @Override
@@ -57,7 +57,8 @@ public class ViewAllAudioFragment extends Fragment {
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (getArguments() != null) {
             ID = getArguments().getString("ID");
             Name = getArguments().getString("Name");
@@ -66,14 +67,13 @@ public class ViewAllAudioFragment extends Fragment {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
-            if( keyCode == KeyEvent.KEYCODE_BACK )
-            {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
                 callBack();
                 return true;
             }
             return false;
         });
-
+        RefreshData();
         binding.llBack.setOnClickListener(view1 -> callBack());
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
@@ -95,12 +95,11 @@ public class ViewAllAudioFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        RefreshData();
         prepareData();
     }
 
-    private void prepareData() {
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+    private void RefreshData(){
         if (!AudioFlag.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -109,14 +108,15 @@ public class ViewAllAudioFragment extends Fragment {
                     .commit();
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(4, 6, 4, 213);
+            params.setMargins(4, 6, 4, 260);
             binding.llSpace.setLayoutParams(params);
         }else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(4, 6, 4, 96);
+            params.setMargins(4, 6, 4, 50);
             binding.llSpace.setLayoutParams(params);
         }
-
+    }
+    private void prepareData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             showProgressBar();
             Call<ViewAllAudioListModel> listCall = APIClient.getClient().getViewAllAudioLists(UserID, ID);
@@ -173,16 +173,16 @@ public class ViewAllAudioFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     player = 1;
-                    if(isMediaStart || MusicService.isPause){
+                    if (isMediaStart || MusicService.isPause) {
                         MusicService.isPause = false;
                         MusicService.stopMedia();
                     }
+                    RefreshData();
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
                             .add(R.id.rlAudiolist, fragment)
                             .commit();
-
                     SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = shared.edit();
                     Gson gson = new Gson();

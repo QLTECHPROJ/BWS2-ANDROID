@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.OnBackPressed;
 import com.qltech.bws.databinding.FragmentAppointmentBinding;
 import com.qltech.bws.databinding.PreviousAppointmentsLayoutBinding;
 
@@ -43,11 +45,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentFragment extends Fragment {
+public class AppointmentFragment extends Fragment implements OnBackPressed {
     FragmentAppointmentBinding binding;
     private AppointmentViewModel appointmentViewModel;
-    public FragmentManager f_manager;
-    String UserID;
+    String UserID, appointmentName, appointmentMainName, appointmentImage, AudioFlag;
     Activity activity;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -62,24 +63,14 @@ public class AppointmentFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flMainLayout, fragment)
-                    .commit();
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 8, 10, 121);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 8, 10, 84);
-            binding.llSpace.setLayoutParams(params);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            appointmentName = bundle.getString("appointmentName");
+            appointmentImage = bundle.getString("appointmentImage");
+            appointmentMainName = bundle.getString("appointmentMainName");
         }
-
+        RefreshData();
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPreviousData.setLayoutManager(recentlyPlayed);
         binding.rvPreviousData.setItemAnimator(new DefaultItemAnimator());
@@ -97,6 +88,7 @@ public class AppointmentFragment extends Fragment {
             public void onChanged(@Nullable String s) {
             }
         });
+
         preparePreviousAppointmentsData();
         return view;
     }
@@ -104,93 +96,139 @@ public class AppointmentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        RefreshData();
         preparePreviousAppointmentsData();
     }
 
-    private void preparePreviousAppointmentsData() {
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<PreviousAppointmentsModel> listCall1 = APIClient.getClient().getAppointmentVIew(UserID);
-            listCall1.enqueue(new Callback<PreviousAppointmentsModel>() {
-                @Override
-                public void onResponse(Call<PreviousAppointmentsModel> call, Response<PreviousAppointmentsModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                        PreviousAppointmentsModel listModel = response.body();
-                        PreviousAppointmentsAdapter appointmentsAdapter = new PreviousAppointmentsAdapter(listModel.getResponseData(), getActivity(), f_manager);
-                        binding.rvPreviousData.setAdapter(appointmentsAdapter);
-                    }
-                }
+    private void RefreshData() {
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flMainLayout, fragment)
+                    .commit();
 
-                @Override
-                public void onFailure(Call<PreviousAppointmentsModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                }
-            });
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10, 8, 10, 260);
+            binding.llSpace.setLayoutParams(params);
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10, 8, 10, 50);
+            binding.llSpace.setLayoutParams(params);
         }
+    }
 
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<NextSessionViewModel> listCall = APIClient.getClient().getNextSessionVIew(UserID);
-            listCall.enqueue(new Callback<NextSessionViewModel>() {
-                @Override
-                public void onResponse(Call<NextSessionViewModel> call, Response<NextSessionViewModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                        NextSessionViewModel listModel = response.body();
-                        if (listModel.getResponseData().getResponse().equalsIgnoreCase("")) {
-                            binding.cvShowSession.setVisibility(View.GONE);
-                            binding.cvSetSession.setVisibility(View.VISIBLE);
-                        } else if (listModel.getResponseData().getResponse().equalsIgnoreCase("1")) {
-                            binding.cvShowSession.setVisibility(View.VISIBLE);
-                            binding.cvSetSession.setVisibility(View.GONE);
-                            binding.tvTitle.setText(listModel.getResponseData().getName());
-                            binding.tvDate.setText(listModel.getResponseData().getDate());
-                            binding.tvTime.setText(listModel.getResponseData().getTime());
-                            binding.tvHourGlass.setText(listModel.getResponseData().getDuration());
+    private void preparePreviousAppointmentsData() {
+        try {
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                Call<NextSessionViewModel> listCall = APIClient.getClient().getNextSessionVIew(UserID);
+                listCall.enqueue(new Callback<NextSessionViewModel>() {
+                    @Override
+                    public void onResponse(Call<NextSessionViewModel> call, Response<NextSessionViewModel> response) {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                            NextSessionViewModel listModel = response.body();
+                            if (listModel.getResponseData().getResponse().equalsIgnoreCase("")) {
+                                binding.cvShowSession.setVisibility(View.GONE);
+                                binding.cvSetSession.setVisibility(View.VISIBLE);
+                            } else if (listModel.getResponseData().getResponse().equalsIgnoreCase("1")) {
+                                binding.cvShowSession.setVisibility(View.VISIBLE);
+                                binding.cvSetSession.setVisibility(View.GONE);
+                                binding.tvTitle.setText(listModel.getResponseData().getName());
+                                binding.tvDate.setText(listModel.getResponseData().getDate());
+                                binding.tvTime.setText(listModel.getResponseData().getTime());
+                                binding.tvHourGlass.setText(listModel.getResponseData().getDuration());
 
-                            if (listModel.getResponseData().getTask().getAudioTask().equalsIgnoreCase("")) {
-                                binding.cbTask1.setVisibility(View.GONE);
-                                binding.tvTaskTitle1.setVisibility(View.GONE);
-                            } else {
-                                binding.cbTask1.setVisibility(View.VISIBLE);
-                                binding.tvTaskTitle1.setVisibility(View.VISIBLE);
-                                binding.tvTitle.setText(listModel.getResponseData().getTask().getAudioTask());
-                            }
-                            if (listModel.getResponseData().getTask().getBookletTask().equalsIgnoreCase("")) {
-                                binding.cbTask2.setVisibility(View.GONE);
-                                binding.tvTaskTitle2.setVisibility(View.GONE);
-                            } else {
-                                binding.cbTask2.setVisibility(View.VISIBLE);
-                                binding.tvTaskTitle2.setVisibility(View.VISIBLE);
-                                binding.tvTitle.setText(listModel.getResponseData().getTask().getBookletTask());
+                                if (listModel.getResponseData().getTask().getSubtitle().equalsIgnoreCase("")) {
+                                    binding.tvSubTitle.setVisibility(View.GONE);
+                                } else {
+                                    binding.tvSubTitle.setVisibility(View.VISIBLE);
+                                    binding.tvSubTitle.setText(listModel.getResponseData().getTask().getSubtitle());
+                                }
+                                if (listModel.getResponseData().getTask().getTitle().equalsIgnoreCase("")) {
+                                    binding.tvNextSession.setVisibility(View.GONE);
+                                    binding.llCheckBox1.setVisibility(View.GONE);
+                                    binding.llCheckBox2.setVisibility(View.GONE);
+                                } else {
+                                    binding.tvNextSession.setVisibility(View.VISIBLE);
+                                    binding.llCheckBox1.setVisibility(View.VISIBLE);
+                                    binding.llCheckBox2.setVisibility(View.VISIBLE);
+                                }
+                                binding.tvNextSession.setText(listModel.getResponseData().getTask().getTitle());
+
+                                binding.cbTask1.setEnabled(false);
+                                binding.cbTask1.setClickable(false);
+                                binding.cbTask2.setEnabled(false);
+                                binding.cbTask2.setClickable(false);
+                                if (listModel.getResponseData().getTask().getAudioTask().equalsIgnoreCase("")) {
+                                    binding.cbTask1.setVisibility(View.GONE);
+                                    binding.tvTaskTitle1.setVisibility(View.GONE);
+                                } else {
+                                    binding.cbTask1.setVisibility(View.VISIBLE);
+                                    binding.tvTaskTitle1.setVisibility(View.VISIBLE);
+                                    binding.tvTaskTitle1.setText(listModel.getResponseData().getTask().getAudioTask());
+                                }
+                                if (listModel.getResponseData().getTask().getBookletTask().equalsIgnoreCase("")) {
+                                    binding.cbTask2.setVisibility(View.GONE);
+                                    binding.tvTaskTitle2.setVisibility(View.GONE);
+                                } else {
+                                    binding.cbTask2.setVisibility(View.VISIBLE);
+                                    binding.tvTaskTitle2.setVisibility(View.VISIBLE);
+                                    binding.tvTaskTitle2.setText(listModel.getResponseData().getTask().getBookletTask());
+                                }
                             }
                         }
-
                     }
-                }
 
-                @Override
-                public void onFailure(Call<NextSessionViewModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+                    @Override
+                    public void onFailure(Call<NextSessionViewModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    }
+                });
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
+
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                Call<PreviousAppointmentsModel> listCall1 = APIClient.getClient().getAppointmentVIew(UserID);
+                listCall1.enqueue(new Callback<PreviousAppointmentsModel>() {
+                    @Override
+                    public void onResponse(Call<PreviousAppointmentsModel> call, Response<PreviousAppointmentsModel> response) {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                            PreviousAppointmentsModel listModel = response.body();
+                            PreviousAppointmentsAdapter appointmentsAdapter = new PreviousAppointmentsAdapter(listModel.getResponseData(), getActivity());
+                            binding.rvPreviousData.setAdapter(appointmentsAdapter);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PreviousAppointmentsModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    }
+                });
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+//        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     public class PreviousAppointmentsAdapter extends RecyclerView.Adapter<PreviousAppointmentsAdapter.MyViewHolder> {
         private List<PreviousAppointmentsModel.ResponseData> listModel;
         Context ctx;
-        public FragmentManager f_manager;
 
-        public PreviousAppointmentsAdapter(List<PreviousAppointmentsModel.ResponseData> listModel, Context ctx, FragmentManager f_manager) {
+        public PreviousAppointmentsAdapter(List<PreviousAppointmentsModel.ResponseData> listModel, Context ctx) {
             this.listModel = listModel;
             this.ctx = ctx;
-            this.f_manager = f_manager;
         }
 
         @Override
@@ -213,15 +251,15 @@ public class AppointmentFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Fragment sessionsFragment = new SessionsFragment();
                     Bundle bundle = new Bundle();
+                    Fragment sessionsFragment = new SessionsFragment();
                     bundle.putString("appointmentMainName", listModel.get(position).getCategory());
                     bundle.putString("appointmentName", listModel.get(position).getCatMenual());
                     bundle.putString("appointmentImage", listModel.get(position).getImage());
                     sessionsFragment.setArguments(bundle);
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .replace(R.id.flMainLayout, sessionsFragment).commit();
+                            .add(R.id.flMainLayout, sessionsFragment).commit();
                 }
             });
         }
