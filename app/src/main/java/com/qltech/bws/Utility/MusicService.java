@@ -26,7 +26,7 @@ import java.io.IOException;
 
 public class MusicService extends Service {
     public static MediaPlayer mediaPlayer;
-    public static boolean isPrepare = false, songComplete = false, isMediaStart = false;
+    public static boolean isPrepare = false, songComplete = false, isMediaStart = false,isStop = false;
     public static boolean isPause = false;
     public static boolean isResume = false;
     public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;

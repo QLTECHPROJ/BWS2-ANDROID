@@ -55,11 +55,12 @@ import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
+import static com.qltech.bws.Utility.MusicService.oTime;
 
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id;
-    int position = 0, startTime, oTime, listSize;
+    int position = 0, startTime, listSize;
     MainPlayModel mainPlayModel;
     Boolean queuePlay, audioPlay;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -82,8 +83,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
             int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
             //Log.d("Progress", ""+progress);
-            binding.simpleSeekbar.setProgress(progress);
-
+            if (isPause) {
+                binding.simpleSeekbar.setProgress(oTime);
+            } else {
+                binding.simpleSeekbar.setProgress(progress);
+            }
             // Running this thread after 100 milliseconds
             hdlr.postDelayed(this, 60);
         }
@@ -223,7 +227,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 playmedia();
             }
         }
-//        addToRecentPlay();
         if (listSize == 1) {
             SharedPreferences sharedxx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedxx.edit();
@@ -242,6 +245,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             } else {
                 MusicService.pauseMedia();
             }
+            MusicService.oTime = binding.simpleSeekbar.getProgress();
         });
 
         binding.ivPlay.setOnClickListener(view12 -> {
@@ -252,8 +256,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 MusicService.playMedia();
             } else {
                 MusicService.resumeMedia();
+                isPause = false;
             }
             player = 1;
+            hdlr.postDelayed(UpdateSongTime, 60);
         });
 
         return view;
@@ -323,6 +329,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 if (MusicService.isPause) {
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
+                    binding.simpleSeekbar.setProgress(oTime);
 //                    MusicService.resumeMedia();
                 } else if (!isMediaStart) {
                     binding.ivPause.setVisibility(View.VISIBLE);
@@ -355,6 +362,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 if (MusicService.isPause) {
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
+                    binding.simpleSeekbar.setProgress(oTime);
 //                    MusicService.resumeMedia();
                 } else if (MusicService.isPlaying()) {
                     binding.ivPause.setVisibility(View.VISIBLE);
@@ -401,18 +409,19 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     }
                 }
             });
-            binding.simpleSeekbar.setProgress(mediaPlayer.getDuration());
         }
         startTime = MusicService.getStartTime();
 
         hdlr.postDelayed(UpdateSongTime, 60);
-
+        addToRecentPlay();
         binding.llPlayearMain.setOnClickListener(view -> {
             if (player == 0) {
                 player = 1;
             }
             if (binding.ivPause.getVisibility() == View.VISIBLE) {
-                MusicService.isPause = false;
+                isPause = false;
+            } else if (binding.ivPlay.getVisibility() == View.VISIBLE) {
+                isPause = true;
             }
             Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -447,6 +456,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         hdlr.removeCallbacks(UpdateSongTime);
+
         int totalDuration = MusicService.getEndTime();
         int currentPosition = MusicService.progressToTimer(seekBar.getProgress(), totalDuration);
 
@@ -459,7 +469,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onResume() {
-        if ((isPrepare || isMediaStart || MusicService.isPlaying())&& !isPause) {
+        if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.VISIBLE);
         } else {

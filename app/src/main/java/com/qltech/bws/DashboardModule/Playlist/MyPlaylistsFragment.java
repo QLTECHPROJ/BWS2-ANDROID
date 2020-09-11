@@ -359,6 +359,7 @@ public class MyPlaylistsFragment extends Fragment {
                                      String myPlaylist) {
         player = 1;
         if (isMediaStart || MusicService.isPause) {
+            MusicService.isPause = false;
             MusicService.stopMedia();
         }
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

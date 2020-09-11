@@ -136,13 +136,31 @@ public class AddQueueActivity extends AppCompatActivity {
         }
 
         if (IsShuffle.equalsIgnoreCase("")) {
-            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+            if (listSize == 1 || queuePlay) {
+                binding.llShuffle.setClickable(false);
+                binding.llShuffle.setEnabled(false);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llShuffle.setClickable(true);
+                binding.llShuffle.setEnabled(true);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
         } else if (IsShuffle.equalsIgnoreCase("1")) {
             binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         }
-        if (listSize == 1) {
-            binding.llShuffle.setClickable(false);
-            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+
+        if (IsRepeat.equalsIgnoreCase("")) {
+            if (listSize == 1 || queuePlay) {
+                binding.llRepeat.setClickable(false);
+                binding.llRepeat.setEnabled(false);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llRepeat.setClickable(true);
+                binding.llRepeat.setEnabled(true);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
+        } else if (IsRepeat.equalsIgnoreCase("1")) {
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         binding.llLike.setOnClickListener(view ->
                 callLike());
