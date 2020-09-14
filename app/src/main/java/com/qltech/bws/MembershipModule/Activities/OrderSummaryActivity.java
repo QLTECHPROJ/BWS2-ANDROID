@@ -9,6 +9,7 @@ import android.os.SystemClock;
 import android.view.View;
 
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
+import com.qltech.bws.BillingOrderModule.Models.PlanListBillingModel;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.ActivityOrderSummaryBinding;
@@ -19,6 +20,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
     ActivityOrderSummaryBinding binding;
     String TrialPeriod, comeFrom = "";
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
+    ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
     int position;
     private long mLastClickTime = 0;
 
@@ -29,25 +31,33 @@ public class OrderSummaryActivity extends AppCompatActivity {
 
         if (getIntent() != null) {
             TrialPeriod = getIntent().getStringExtra("TrialPeriod");
-            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
             position = getIntent().getIntExtra("position", 0);
             if (getIntent().hasExtra("comeFrom")) {
                 comeFrom = getIntent().getStringExtra("comeFrom");
+                listModelList2 = getIntent().getParcelableArrayListExtra("PlanData");
+            }else{
+                listModelList = getIntent().getParcelableArrayListExtra("PlanData");
             }
         }
-        if (comeFrom.equalsIgnoreCase("membership")) {
+
+        if (!comeFrom.equalsIgnoreCase("")) {
             binding.tvTrialPeriod.setVisibility(View.GONE);
+            binding.tvPlanInterval.setText(listModelList2.get(position).getPlanInterval() + " Membership");
+            binding.tvPlanTenure.setText(listModelList2.get(position).getPlanTenure());
+            binding.tvPlanNextRenewal.setText(listModelList2.get(position).getPlanNextRenewal());
+            binding.tvSubName.setText(listModelList2.get(position).getSubName());
+            binding.tvPlanAmount.setText("$" + listModelList2.get(position).getPlanAmount());
+            binding.tvTotalAmount.setText("$" + listModelList2.get(position).getPlanAmount());
         }else {
             binding.tvTrialPeriod.setVisibility(View.VISIBLE);
+            binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval() + " Membership");
+            binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
+            binding.tvPlanNextRenewal.setText(listModelList.get(position).getPlanNextRenewal());
+            binding.tvSubName.setText(listModelList.get(position).getSubName());
+            binding.tvTrialPeriod.setText(TrialPeriod);
+            binding.tvPlanAmount.setText("$" + listModelList.get(position).getPlanAmount());
+            binding.tvTotalAmount.setText("$" + listModelList.get(position).getPlanAmount());
         }
-        binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval() + " Membership");
-        binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
-        binding.tvPlanNextRenewal.setText(listModelList.get(position).getPlanNextRenewal());
-        binding.tvSubName.setText(listModelList.get(position).getSubName());
-        binding.tvTrialPeriod.setText(TrialPeriod);
-        binding.tvPlanAmount.setText("$" + listModelList.get(position).getPlanAmount());
-        binding.tvTotalAmount.setText("$" + listModelList.get(position).getPlanAmount());
-
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

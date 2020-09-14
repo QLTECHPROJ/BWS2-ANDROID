@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlanListBillingModel {
+public class PlanListBillingModel  implements Parcelable{
     @SerializedName("ResponseData")
     @Expose
     private ResponseData responseData;
@@ -22,6 +22,25 @@ public class PlanListBillingModel {
     @SerializedName("ResponseStatus")
     @Expose
     private String responseStatus;
+
+    protected PlanListBillingModel(Parcel in) {
+        responseData = in.readParcelable(ResponseData.class.getClassLoader());
+        responseCode = in.readString();
+        responseMessage = in.readString();
+        responseStatus = in.readString();
+    }
+
+    public static final Creator<PlanListBillingModel> CREATOR = new Creator<PlanListBillingModel>() {
+        @Override
+        public PlanListBillingModel createFromParcel(Parcel in) {
+            return new PlanListBillingModel(in);
+        }
+
+        @Override
+        public PlanListBillingModel[] newArray(int size) {
+            return new PlanListBillingModel[size];
+        }
+    };
 
     public ResponseData getResponseData() {
         return responseData;
@@ -54,7 +73,21 @@ public class PlanListBillingModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
-    public class ResponseData {
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeParcelable(responseData, i);
+        parcel.writeString(responseCode);
+        parcel.writeString(responseMessage);
+        parcel.writeString(responseStatus);
+    }
+
+    public static class ResponseData implements Parcelable{
 
         @SerializedName("Image")
         @Expose
@@ -68,6 +101,25 @@ public class PlanListBillingModel {
         @SerializedName("Plan")
         @Expose
         private ArrayList<Plan> plan = null;
+
+        protected ResponseData(Parcel in) {
+            image = in.readString();
+            title = in.readString();
+            desc = in.readString();
+            plan = in.createTypedArrayList(Plan.CREATOR);
+        }
+
+        public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
+            @Override
+            public ResponseData createFromParcel(Parcel in) {
+                return new ResponseData(in);
+            }
+
+            @Override
+            public ResponseData[] newArray(int size) {
+                return new ResponseData[size];
+            }
+        };
 
         public String getImage() {
             return image;
@@ -100,7 +152,21 @@ public class PlanListBillingModel {
         public void setPlan(ArrayList<Plan> plan) {
             this.plan = plan;
         }
-        public class Plan implements Parcelable {
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(image);
+            parcel.writeString(title);
+            parcel.writeString(desc);
+            parcel.writeTypedList(plan);
+        }
+
+        public static class Plan implements Parcelable {
 
             @SerializedName("PlanPosition")
             @Expose
@@ -152,6 +218,19 @@ public class PlanListBillingModel {
                 recommendedFlag = in.readString();
                 planFlag = in.readString();
             }
+
+            public static final Creator<Plan> CREATOR = new Creator<Plan>() {
+                @Override
+                public Plan createFromParcel(Parcel in) {
+                    return new Plan(in);
+                }
+
+                @Override
+                public Plan[] newArray(int size) {
+                    return new Plan[size];
+                }
+            };
+
             public String getPlanPosition() {
                 return planPosition;
             }

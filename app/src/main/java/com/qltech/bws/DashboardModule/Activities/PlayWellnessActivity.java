@@ -143,60 +143,62 @@ public class PlayWellnessActivity extends AppCompatActivity implements
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         getPrepareShowData(position);
-
-        mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-          /*  if (queuePlay) {
-                addToQueueModelList.remove(position);
-                listSize = addToQueueModelList.size();
-                if (position < listSize - 1) {
-                    getPrepareShowData(position);
-                } else {
-                    if (listSize == 0) {
-                        MusicService.stopMedia();
+        if (isMediaStart) {
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                if (IsRepeat.equalsIgnoreCase("1")) {
+                    if (position < (listSize - 1)) {
+                        position = position + 1;
                     } else {
                         position = 0;
+                    }
+                    getPrepareShowData(position);
+                } else if (IsRepeat.equalsIgnoreCase("0")) {
+                    getPrepareShowData(position);
+                } else if (IsShuffle.equalsIgnoreCase("1")) {
+                    // shuffle is on - play a random song
+                    if (listSize == 1) {
+                    } else {
+                        Random random = new Random();
+                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
                         getPrepareShowData(position);
                     }
-                }
-            } else */if (IsRepeat.equalsIgnoreCase("1")) {
-                if (position < (listSize - 1)) {
-                    position = position + 1;
                 } else {
-                    position = 0;
+                    if (queuePlay) {
+                        addToQueueModelList.remove(position);
+                        listSize = addToQueueModelList.size();
+                        if (position < listSize - 1) {
+                            getPrepareShowData(position);
+                        } else {
+                            if (listSize == 0) {
+                                MusicService.stopMedia();
+                            } else {
+                                position = 0;
+                                getPrepareShowData(position);
+                            }
+                        }
+                    } else {
+                        if (position < (listSize - 1)) {
+                            position = position + 1;
+                            getPrepareShowData(position);
+                        } else {
+                            binding.llPlay.setVisibility(View.VISIBLE);
+                            binding.llPause.setVisibility(View.GONE);
+                            MusicService.stopMedia();
+                        }
+                    }
                 }
-                getPrepareShowData(position);
-            } else if (IsRepeat.equalsIgnoreCase("0")) {
-                getPrepareShowData(position);
-            } else if (IsShuffle.equalsIgnoreCase("1")) {
-                // shuffle is on - play a random song
                 if (listSize == 1) {
-                } else {
-                    Random random = new Random();
-                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                    getPrepareShowData(position);
-                }
-            } else {
-                if (position < (listSize - 1)) {
-                    position = position + 1;
-                    getPrepareShowData(position);
-                } else {
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    MusicService.stopMedia();
-                }
-            }
-            if (listSize == 1) {
-                binding.llnext.setEnabled(false);
-                binding.llprev.setEnabled(false);
-                binding.llShuffle.setEnabled(false);
-                binding.llnext.setClickable(false);
-                binding.llprev.setClickable(false);
-                binding.llShuffle.setClickable(false);
-                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-                binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-                binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-                position = 0;
-            } /*else if (position == listSize - 1 && IsRepeat.equalsIgnoreCase("1")) {
+                    binding.llnext.setEnabled(false);
+                    binding.llprev.setEnabled(false);
+                    binding.llShuffle.setEnabled(false);
+                    binding.llnext.setClickable(false);
+                    binding.llprev.setClickable(false);
+                    binding.llShuffle.setClickable(false);
+                    binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                    position = 0;
+                } /*else if (position == listSize - 1 && IsRepeat.equalsIgnoreCase("1")) {
                 binding.llnext.setEnabled(false);
                 binding.llnext.setClickable(false);
                 binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -205,18 +207,18 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                 binding.llprev.setClickable(false);
                 binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             }*/ else {
-                binding.llnext.setEnabled(true);
-                binding.llprev.setEnabled(true);
-                binding.llShuffle.setEnabled(true);
-                binding.llnext.setClickable(true);
-                binding.llprev.setClickable(true);
-                binding.llShuffle.setClickable(true);
-                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-                binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-                binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-            }
-        });
-
+                    binding.llnext.setEnabled(true);
+                    binding.llprev.setEnabled(true);
+                    binding.llShuffle.setEnabled(true);
+                    binding.llnext.setClickable(true);
+                    binding.llprev.setClickable(true);
+                    binding.llShuffle.setClickable(true);
+                    binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                }
+            });
+        }
         binding.llBack.setOnClickListener(view -> {
             callBack();
         });
@@ -688,30 +690,30 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                 binding.llDownload.setEnabled(true);
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
-            if (!isMediaStart) {
+/*            if (!isMediaStart) {
                 MusicService.play(getApplicationContext(), Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
-            } else {
-                if (MusicService.isPause) {
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    binding.simpleSeekbar.setProgress(oTime);
+            } else {*/
+            if (isPause) {
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.simpleSeekbar.setProgress(oTime);
 //                    MusicService.resumeMedia();
-                    int timeeee = MusicService.progressToTimer(oTime, (int) (totalDuration));
-                    binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
-                            TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
-                } else if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                } else {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                    MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-                    MusicService.playMedia();
-                }
+                int timeeee = MusicService.progressToTimer(oTime, (int) (totalDuration));
+                binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
+                        TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
+            } else if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+            } else {
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+                MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                MusicService.playMedia();
             }
+//            }
             binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
             startTime = MusicService.getStartTime();
         }
@@ -775,12 +777,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         hdlr.removeCallbacks(UpdateSongTime);
-        int totalDuration = MusicService.getEndTime();
-        int currentPosition = MusicService.progressToTimer(seekBar.getProgress(), totalDuration);
+        if (isMediaStart) {
+            int totalDuration = MusicService.getEndTime();
+            int currentPosition = MusicService.progressToTimer(seekBar.getProgress(), totalDuration);
 
-        // forward or backward to certain seconds
-        MusicService.SeekTo(currentPosition);
-
+            // forward or backward to certain seconds
+            MusicService.SeekTo(currentPosition);
+        }
         // update timer progress again
         updateProgressBar();
     }
