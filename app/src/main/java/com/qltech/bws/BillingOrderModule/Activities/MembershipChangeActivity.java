@@ -75,7 +75,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
                             binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
 
                             membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan()
-                                    ,ctx,binding.btnFreeJoin, "");
+                                    ,ctx,binding.btnFreeJoin);
                             binding.rvPlanList.setAdapter(membershipPlanAdapter);
 
                         }
@@ -97,14 +97,11 @@ public class MembershipChangeActivity extends AppCompatActivity {
         Context ctx;
         private int row_index = -1, pos = 0;
         Button btnFreeJoin;
-        String TrialPeriod;
         Intent i;
 
-        public MembershipPlanAdapter(ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList, Context ctx, Button btnFreeJoin,
-                                     String TrialPeriod) {
+        public MembershipPlanAdapter(ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList, Context ctx, Button btnFreeJoin) {
             this.listModelList = listModelList;
             this.ctx = ctx;
-            this.TrialPeriod = TrialPeriod;
             this.btnFreeJoin = btnFreeJoin;
         }
 
@@ -180,6 +177,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
             i = new Intent(ctx, OrderSummaryActivity.class);
             i.putExtra("comeFrom","membership");
             i.putParcelableArrayListExtra("PlanData", listModelList);
+            i.putExtra("TrialPeriod", "");
             i.putExtra("position", position);
         }
 

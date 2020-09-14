@@ -89,7 +89,6 @@ public class MembershipPlanListModel implements Parcelable {
     }
 
     public static class ResponseData implements Parcelable {
-
         @SerializedName("Image")
         @Expose
         private String image;
@@ -192,7 +191,6 @@ public class MembershipPlanListModel implements Parcelable {
     }
 
     public static class Plan implements Parcelable {
-
         @SerializedName("PlanPosition")
         @Expose
         private String planPosition;

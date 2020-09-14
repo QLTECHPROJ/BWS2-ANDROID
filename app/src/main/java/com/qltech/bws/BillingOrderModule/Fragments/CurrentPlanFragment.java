@@ -164,10 +164,8 @@ public class CurrentPlanFragment extends Fragment {
                                     return;
                                 }
                                 mLastClickTime = SystemClock.elapsedRealtime();
-                                Intent i = new Intent(getActivity(), BillingOrderActivity.class);
-                                i.putExtra("payment", 1);
+                                Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
                                 startActivity(i);
-                                getActivity().finish();
                             });
                         }
 

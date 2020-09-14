@@ -35,8 +35,10 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 comeFrom = getIntent().getStringExtra("comeFrom");
             }
         }
-        if (!comeFrom.equalsIgnoreCase("")) {
+        if (comeFrom.equalsIgnoreCase("membership")) {
             binding.tvTrialPeriod.setVisibility(View.GONE);
+        }else {
+            binding.tvTrialPeriod.setVisibility(View.VISIBLE);
         }
         binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval() + " Membership");
         binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());

@@ -45,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/rlLayout"
+            android:paddingBottom="@dimen/_60sdp"
             android:overScrollMode="never">
 
             <LinearLayout
@@ -183,20 +184,6 @@
                         android:layout_marginTop="@dimen/_20sdp"
                         android:overScrollMode="never" />
 
-                    <Button
-                        android:id="@+id/btnFreeJoin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="@dimen/_30sdp"
-                        android:layout_marginTop="@dimen/_35sdp"
-                        android:background="@drawable/extra_round_cornor"
-                        android:fontFamily="@font/montserrat_bold"
-                        android:paddingHorizontal="@dimen/_55sdp"
-                        android:paddingVertical="@dimen/_4sdp"
-                        android:text="@string/month_free"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/_13sdp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -270,6 +257,23 @@
                 </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
+
+        <Button
+            android:id="@+id/btnFreeJoin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_35sdp"
+            android:background="@drawable/extra_round_cornor"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingHorizontal="@dimen/_55sdp"
+            android:paddingVertical="@dimen/_4sdp"
+            android:text="@string/month_free"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13sdp" />
 
         <ImageView
             android:id="@+id/ImgV"
