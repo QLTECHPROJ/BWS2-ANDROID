@@ -62,7 +62,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
     Boolean queuePlay, audioPlay;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
-    private long mLastClickTime = 0,totalDuration,currentDuration;
+    private long mLastClickTime = 0, totalDuration, currentDuration;
     private Handler hdlr;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
@@ -89,7 +89,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                 binding.tvStartTime.setText(endtimetext);
             } else if (isPause) {
                 binding.simpleSeekbar.setProgress(oTime);
-                int timeeee = MusicService.progressToTimer(oTime,(int)(totalDuration));
+                int timeeee = MusicService.progressToTimer(oTime, (int) (totalDuration));
                 binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
                         TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
             } else {
@@ -145,20 +145,20 @@ public class PlayWellnessActivity extends AppCompatActivity implements
         getPrepareShowData(position);
 
         mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-           /* if (queuePlay) {
+          /*  if (queuePlay) {
                 addToQueueModelList.remove(position);
                 listSize = addToQueueModelList.size();
                 if (position < listSize - 1) {
-                    position = position + 1;
+                    getPrepareShowData(position);
                 } else {
                     if (listSize == 0) {
                         MusicService.stopMedia();
                     } else {
                         position = 0;
+                        getPrepareShowData(position);
                     }
                 }
-            } else*/
-            if (IsRepeat.equalsIgnoreCase("1")) {
+            } else */if (IsRepeat.equalsIgnoreCase("1")) {
                 if (position < (listSize - 1)) {
                     position = position + 1;
                 } else {
@@ -632,7 +632,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                     binding.llPlay.setVisibility(View.VISIBLE);
                     binding.llPause.setVisibility(View.GONE);
                     binding.simpleSeekbar.setProgress(oTime);
-                    int timeeee = MusicService.progressToTimer(oTime,(int)(totalDuration));
+                    int timeeee = MusicService.progressToTimer(oTime, (int) (totalDuration));
                     binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
                             TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
 //                    MusicService.resumeMedia();
@@ -699,7 +699,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                     binding.llPause.setVisibility(View.GONE);
                     binding.simpleSeekbar.setProgress(oTime);
 //                    MusicService.resumeMedia();
-                    int timeeee = MusicService.progressToTimer(oTime,(int)(totalDuration));
+                    int timeeee = MusicService.progressToTimer(oTime, (int) (totalDuration));
                     binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
                             TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
                 } else if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
