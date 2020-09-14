@@ -27,7 +27,6 @@ import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPla
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
-import com.qltech.bws.Utility.OnBackPressed;
 import com.qltech.bws.databinding.FragmentAppointmentDetailsBinding;
 
 import retrofit2.Call;
@@ -130,6 +129,18 @@ public class AppointmentDetailsFragment extends Fragment {
                                 binding.viewPager.setOffscreenPageLimit(2);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
+                            } else if (appointmentDetailModel.getResponseData().getAudio().size() == 0
+                                    && !appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.viewPager.setOffscreenPageLimit(2);
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"));
+                            } else if (appointmentDetailModel.getResponseData().getAudio().size() == 0
+                                    && appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                                    && !appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.viewPager.setOffscreenPageLimit(2);
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
+                                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"));
                             } else if (appointmentDetailModel.getResponseData().getAudio().size() != 0
                                     && !appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
                                     && appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
@@ -236,6 +247,28 @@ public class AppointmentDetailsFragment extends Fragment {
                     case 1:
                         aptAudioFragment.setArguments(bundle2);
                         return aptAudioFragment;
+                }
+            } else if (global_appointmentDetailModel.getResponseData().getAudio().size() == 0
+                    && !global_appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && global_appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                switch (position) {
+                    case 0:
+                        aptDetailsFragment.setArguments(bundle);
+                        return aptDetailsFragment;
+                    case 1:
+                        aptBookletFragment.setArguments(bundle);
+                        return aptBookletFragment;
+                }
+            } else if (global_appointmentDetailModel.getResponseData().getAudio().size() == 0
+                    && global_appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
+                    && !global_appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                switch (position) {
+                    case 0:
+                        aptDetailsFragment.setArguments(bundle);
+                        return aptDetailsFragment;
+                    case 1:
+                        aptAnswersFragment.setArguments(bundle);
+                        return aptAnswersFragment;
                 }
             } else if (global_appointmentDetailModel.getResponseData().getAudio().size() != 0
                     && !global_appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
