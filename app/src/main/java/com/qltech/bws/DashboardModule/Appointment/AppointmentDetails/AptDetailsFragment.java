@@ -28,14 +28,14 @@ public class AptDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_details, container, false);
         View view = binding.getRoot();
-
+        if (getArguments() != null) {
+            appointmentDetail = getArguments().getParcelable("AppointmentDetail");
+        }
         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 10,
                 1, 1, 0.24f, 10);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        if (getArguments() != null) {
-            appointmentDetail = getArguments().getParcelable("AppointmentDetail");
-        }
+
         if(appointmentDetail.getDate().equalsIgnoreCase("")
                 &&appointmentDetail.getUserName().equalsIgnoreCase("")
                 &&appointmentDetail.getTime().equalsIgnoreCase("")){
@@ -44,6 +44,7 @@ public class AptDetailsFragment extends Fragment {
             binding.llDetails.setVisibility(View.VISIBLE);
         }
         binding.tvTilte.setText(appointmentDetail.getName());
+
         binding.tvFacilitator.setText(appointmentDetail.getFacilitator());
         binding.tvUserName.setText(appointmentDetail.getUserName());
         binding.tvSubTitle.setText(appointmentDetail.getDesc());

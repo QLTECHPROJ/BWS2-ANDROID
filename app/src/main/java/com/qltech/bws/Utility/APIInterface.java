@@ -7,6 +7,7 @@ import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
 import com.qltech.bws.BillingOrderModule.Models.CardListModel;
 import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.BillingOrderModule.Models.CurrentPlanVieViewModel;
+import com.qltech.bws.BillingOrderModule.Models.PayNowDetailsModel;
 import com.qltech.bws.BillingOrderModule.Models.PlanListBillingModel;
 import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
@@ -235,6 +236,16 @@ public interface APIInterface {
     @POST("billingaddress")
     @FormUrlEncoded
     Call<BillingAddressViewModel> getBillingAddressView(@Field("UserID") String userID);
+
+    /* TODO BillingAddressFragment */
+    @POST("billingaddress")
+    @FormUrlEncoded
+    Call<PayNowDetailsModel> getPayNowDetails(@Field("UserID") String userID,
+                                              @Field("CardId") String cardId,
+                                              @Field("PlanId") String planId,
+                                              @Field("PlanType") String planType,
+                                              @Field("invoicePayId") String invoicePayId,
+                                              @Field("PlanStatus") String planStatus);
 
     /* TODO BillingAddressFragment */
     @POST("billingdetailsave")

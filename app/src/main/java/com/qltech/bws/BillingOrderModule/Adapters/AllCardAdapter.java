@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -17,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Models.CardListModel;
 import com.qltech.bws.BillingOrderModule.Models.CardModel;
+import com.qltech.bws.BillingOrderModule.Models.PayNowDetailsModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -38,14 +40,17 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
     FrameLayout progressBarHolder;
     RecyclerView rvCardList;
     AllCardAdapter adapter;
+    Button btnCheckout;
 
-    public AllCardAdapter(List<CardListModel.ResponseData> listModelList, FragmentActivity activity, String userId, ImageView ImgV, FrameLayout progressBarHolder, RecyclerView rvCardList) {
+    public AllCardAdapter(List<CardListModel.ResponseData> listModelList, FragmentActivity activity, String userId, ImageView ImgV,
+                          FrameLayout progressBarHolder, RecyclerView rvCardList, Button btnCheckout) {
         this.listModelList = listModelList;
         this.activity = activity;
         this.userId = userId;
         this.ImgV = ImgV;
         this.progressBarHolder = progressBarHolder;
         this.rvCardList = rvCardList;
+        this.btnCheckout = btnCheckout;
     }
 
     @Override
@@ -95,7 +100,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                                     rvCardList.setVisibility(View.GONE);
                                 } else {
                                     rvCardList.setVisibility(View.VISIBLE);
-                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList);
+                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList, btnCheckout);
                                     rvCardList.setAdapter(adapter);
                                 }
                             } else {
@@ -117,6 +122,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
             }
 
         });
+
         holder.binding.rlRemoveCard.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(activity)) {
                 BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
@@ -143,6 +149,34 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
             } else {
                 BWSApplication.showToast(activity.getString(R.string.no_server_found), activity);
                 BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+            }
+        });
+
+        btnCheckout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (BWSApplication.isNetworkConnected(activity)) {
+                    BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
+                    Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(userId, "", "","","","");
+                    listCall.enqueue(new Callback<PayNowDetailsModel>() {
+                        @Override
+                        public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
+                            if (response.isSuccessful()) {
+                                BWSApplication.hideProgressBar(ImgV, progressBarHolder,activity);
+                                PayNowDetailsModel listModel = response.body();
+                                BWSApplication.showToast(listModel.getResponseMessage(),activity);
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<PayNowDetailsModel> call, Throwable t) {
+                            BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+                        }
+                    });
+                } else {
+                    BWSApplication.showToast(activity.getString(R.string.no_server_found), activity);
+                }
             }
         });
     }
@@ -177,7 +211,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                                 rvCardList.setVisibility(View.GONE);
                             } else {
                                 rvCardList.setVisibility(View.VISIBLE);
-                                adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList);
+                                adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList, btnCheckout);
                                 rvCardList.setAdapter(adapter);
                             }
 

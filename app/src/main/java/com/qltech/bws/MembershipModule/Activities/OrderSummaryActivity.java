@@ -3,22 +3,34 @@ package com.qltech.bws.MembershipModule.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
+import com.qltech.bws.BillingOrderModule.Models.PayNowDetailsModel;
 import com.qltech.bws.BillingOrderModule.Models.PlanListBillingModel;
+import com.qltech.bws.InvoiceModule.Models.InvoiceDetailModel;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
+import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityOrderSummaryBinding;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class OrderSummaryActivity extends AppCompatActivity {
     ActivityOrderSummaryBinding binding;
-    String TrialPeriod, comeFrom = "";
+    String TrialPeriod, comeFrom = "",UserId;
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
     int position;
@@ -28,6 +40,9 @@ public class OrderSummaryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order_summary);
+        Glide.with(OrderSummaryActivity.this).load(R.drawable.loading).asGif().into(binding.ImgV);
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
         if (getIntent() != null) {
             TrialPeriod = getIntent().getStringExtra("TrialPeriod");
@@ -75,6 +90,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                     mLastClickTime = SystemClock.elapsedRealtime();
                     Intent i = new Intent(OrderSummaryActivity.this, BillingOrderActivity.class);
                     i.putExtra("payment", 1);
+                    i.putExtra("BtnVisible","true");
                     startActivity(i);
                     finish();
                 } else {

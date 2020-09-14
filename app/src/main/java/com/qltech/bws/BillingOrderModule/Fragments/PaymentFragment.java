@@ -20,6 +20,8 @@ import com.qltech.bws.AddPayment.AddPaymentActivity;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Adapters.AllCardAdapter;
 import com.qltech.bws.BillingOrderModule.Models.CardListModel;
+import com.qltech.bws.BillingOrderModule.Models.PayNowDetailsModel;
+import com.qltech.bws.MembershipModule.Activities.OrderSummaryActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -35,7 +37,7 @@ public class PaymentFragment extends Fragment {
     FragmentPaymentBinding binding;
     AllCardAdapter adapter;
     static Context context;
-    String userId;
+    String userId, BtnVisible;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,10 +49,18 @@ public class PaymentFragment extends Fragment {
         SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         userId = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
-
+        if (getArguments() != null) {
+            BtnVisible = getArguments().getString("BtnVisible");
+        }
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvCardList.setLayoutManager(mLayoutManager);
         binding.rvCardList.setItemAnimator(new DefaultItemAnimator());
+
+        if (!BtnVisible.equalsIgnoreCase("")){
+            binding.btnCheckout.setVisibility(View.VISIBLE);
+        }else {
+            binding.btnCheckout.setVisibility(View.GONE);
+        }
 
         binding.llAddNewCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +89,8 @@ public class PaymentFragment extends Fragment {
                                 binding.rvCardList.setVisibility(View.GONE);
                             } else {
                                 binding.rvCardList.setVisibility(View.VISIBLE);
-                                adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.ImgV, binding.progressBarHolder, binding.rvCardList);
+                                adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.ImgV,
+                                        binding.progressBarHolder, binding.rvCardList, binding.btnCheckout);
                                 binding.rvCardList.setAdapter(adapter);
                             }
 

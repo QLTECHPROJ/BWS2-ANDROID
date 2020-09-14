@@ -12,104 +12,116 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/llViewReceipt"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.82"
-                android:orientation="vertical"
-                android:paddingVertical="@dimen/_16sdp"
-                android:paddingLeft="@dimen/_16sdp">
-
-                <TextView
-                    android:id="@+id/tvInvoiceID"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:textColor="@color/blue"
-                    android:textSize="@dimen/_12sdp" />
-
-                <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp" />
+                android:orientation="horizontal"
+                android:weightSum="1">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_6sdp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="@dimen/_15sdp"
-                        android:layout_height="@dimen/_15sdp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_calendar_icon" />
+                    android:id="@+id/llViewReceipt"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.82"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/_16sdp"
+                    android:paddingBottom="@dimen/_10sdp"
+                    android:paddingLeft="@dimen/_16sdp">
 
                     <TextView
-                        android:id="@+id/tvDate"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvInvoiceID"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_4sdp"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp" />
-
-                    <ImageView
-                        android:layout_width="@dimen/_29sdp"
-                        android:layout_height="@dimen/_29sdp"
-                        android:padding="@dimen/_6sdp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_payment_cash_icon" />
-
-                    <TextView
-                        android:id="@+id/tvDoller"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_4sdp"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp" />
-
-                    <TextView
-                        android:id="@+id/tvStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_4sdp"
                         android:fontFamily="@font/montserrat_semi_bold"
-                        android:paddingHorizontal="@dimen/_6sdp"
-                        android:paddingVertical="@dimen/_2sdp"
-                        android:visibility="gone"
-                        android:textColor="@color/white"
+                        android:textColor="@color/blue"
                         android:textSize="@dimen/_12sdp" />
 
+                    <TextView
+                        android:id="@+id/tvTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_18sdp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llDownloads"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.18"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_download_icon" />
                 </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/llDownloads"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.18"
-                android:gravity="center">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/_16sdp"
+                android:paddingRight="@dimen/_16sdp"
+                android:paddingBottom="@dimen/_10sdp"
+                android:orientation="horizontal">
 
                 <ImageView
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_calendar_icon" />
+
+                <TextView
+                    android:id="@+id/tvDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_download_icon" />
+                    android:layout_marginLeft="@dimen/_6sdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp" />
+
+                <ImageView
+                    android:layout_width="@dimen/_29sdp"
+                    android:layout_height="@dimen/_29sdp"
+                    android:padding="@dimen/_6sdp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_payment_cash_icon" />
+
+                <TextView
+                    android:id="@+id/tvDoller"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_4sdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp" />
+
+                <TextView
+                    android:id="@+id/tvStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_6sdp"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:paddingHorizontal="@dimen/_6sdp"
+                    android:paddingVertical="@dimen/_2sdp"
+                    android:visibility="gone"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp" />
+
             </LinearLayout>
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 </layout>

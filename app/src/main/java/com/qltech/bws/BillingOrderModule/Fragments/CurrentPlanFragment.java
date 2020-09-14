@@ -159,7 +159,7 @@ public class CurrentPlanFragment extends Fragment {
                             binding.tvRecommended.setBackgroundResource(R.drawable.dark_red_background);
                             binding.tvRecommended.setText(R.string.Cancelled);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
-                            binding.btnPayNow.setVisibility(View.VISIBLE);
+                            binding.btnPayNow.setVisibility(View.GONE);
                             binding.tvPayUsing.setVisibility(View.GONE);
                             binding.tvChangeCard.setVisibility(View.GONE);
 

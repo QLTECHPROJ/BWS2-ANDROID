@@ -68,27 +68,24 @@ public class AppointmentDetailsFragment extends Fragment {
         });
 
         binding.llBack.setOnClickListener(view1 -> callBack());
-        RefreshData();
         getAppointmentData();
-
         return view;
     }
 
     private void callBack() {
         Bundle bundle = new Bundle();
         Fragment sessionsFragment = new SessionsFragment();
-        bundle.putString("appointmentId", appointmentTypeId);
         bundle.putString("appointmentMainName", appointmentMainName);
         bundle.putString("appointmentName", appointmentName);
         bundle.putString("appointmentImage", appointmentImage);
         sessionsFragment.setArguments(bundle);
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
-                .add(R.id.flMainLayout, sessionsFragment)
+                .add(R.id.flSession, sessionsFragment)
                 .commit();
     }
 
-    private void RefreshData() {
+    private void getAppointmentData() {
         if (!AudioFlag.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -103,9 +100,7 @@ public class AppointmentDetailsFragment extends Fragment {
             params.setMargins(0, 0, 0, 50);
             binding.llSpace.setLayoutParams(params);
         }
-    }
 
-    private void getAppointmentData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<AppointmentDetailModel> listCall = APIClient.getClient().getAppointmentDetails(UserId, appointmentTypeId);
@@ -257,7 +252,7 @@ public class AppointmentDetailsFragment extends Fragment {
                         aptDetailsFragment.setArguments(bundle);
                         return aptDetailsFragment;
                     case 1:
-                        aptBookletFragment.setArguments(bundle2);
+                        aptBookletFragment.setArguments(bundle);
                         return aptBookletFragment;
                 }
             }  else if (globalAppointmentDetailModel.getResponseData().getAudio().size() == 0
@@ -268,7 +263,7 @@ public class AppointmentDetailsFragment extends Fragment {
                         aptDetailsFragment.setArguments(bundle);
                         return aptDetailsFragment;
                     case 1:
-                        aptAnswersFragment.setArguments(bundle2);
+                        aptAnswersFragment.setArguments(bundle);
                         return aptAnswersFragment;
                 }
             } else if (globalAppointmentDetailModel.getResponseData().getAudio().size() != 0

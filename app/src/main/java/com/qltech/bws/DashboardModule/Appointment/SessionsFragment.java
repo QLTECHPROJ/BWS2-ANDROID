@@ -57,7 +57,6 @@ public class SessionsFragment extends Fragment {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (getArguments() != null) {
-            appointmentTypeId = getArguments().getString("appointmentId");
             appointmentName = getArguments().getString("appointmentName");
             appointmentImage = getArguments().getString("appointmentImage");
             appointmentMainName = getArguments().getString("appointmentMainName");
@@ -158,6 +157,7 @@ public class SessionsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         RefreshData();
+        prepareSessionList();
     }
 
     public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.MyViewHolder> {
@@ -220,7 +220,7 @@ public class SessionsFragment extends Fragment {
                     bundle.putString("appointmentImage", appointmentImage);
                     appointmentDetailsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
-                            .add(R.id.flMainLayout, appointmentDetailsFragment).commit();
+                            .add(R.id.flSession, appointmentDetailsFragment).commit();
                 }
             });
         }

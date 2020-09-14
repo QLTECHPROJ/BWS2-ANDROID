@@ -81,7 +81,7 @@ public class AppointmentFragment extends Fragment {
             }
         });
 
-        preparePreviousAppointmentsData();
+//        preparePreviousAppointmentsData();
         return view;
     }
 
@@ -246,7 +246,7 @@ public class AppointmentFragment extends Fragment {
                     sessionsFragment.setArguments(bundle);
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .replace(R.id.flMainLayout, sessionsFragment).commit();
+                            .add(R.id.flMainLayout, sessionsFragment).commit();
                 }
             });
         }

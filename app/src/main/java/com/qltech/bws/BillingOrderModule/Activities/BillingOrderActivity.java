@@ -20,6 +20,7 @@ import com.qltech.bws.databinding.ActivityBillingOrderBinding;
 public class BillingOrderActivity extends AppCompatActivity {
     ActivityBillingOrderBinding binding;
     int payment = 0;
+    String BtnVisible = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class BillingOrderActivity extends AppCompatActivity {
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
         if (getIntent().hasExtra("payment")) {
             payment = getIntent().getIntExtra("payment", 0);
+            BtnVisible = getIntent().getStringExtra("BtnVisible");
         }
 
         if (payment != 0) {
@@ -100,6 +102,7 @@ public class BillingOrderActivity extends AppCompatActivity {
                 case 1:
                     PaymentFragment paymentFragment = new PaymentFragment();
                     bundle = new Bundle();
+                    bundle.putString("BtnVisible",BtnVisible);
                     paymentFragment.setArguments(bundle);
                     return paymentFragment;
                 case 2:
