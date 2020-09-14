@@ -60,14 +60,11 @@ import retrofit2.Response;
 
 public class AccountFragment extends Fragment {
     FragmentAccountBinding binding;
-    private AccountViewModel accountViewModel;
     String UserID;
     private long mLastClickTime = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        accountViewModel =
-                ViewModelProviders.of(this).get(AccountViewModel.class);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false);
         View view = binding.getRoot();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -193,12 +190,6 @@ public class AccountFragment extends Fragment {
             dialog.setCancelable(false);
         });
 
-        accountViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-
-            }
-        });
         return view;
     }
 

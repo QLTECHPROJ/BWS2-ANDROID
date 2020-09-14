@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/rlSearchList"
@@ -11,183 +11,190 @@
         tools:context=".DashboardModule.Search.SearchFragment">
 
         <RelativeLayout
-            android:id="@+id/rlSearch"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_48sdp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:layout_marginRight="@dimen/_16sdp"
-            android:layout_weight="2"
-            android:background="@drawable/rounded_extra_gray_corner">
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/button1"
-                android:layout_width="@dimen/_16sdp"
-                android:layout_height="@dimen/_16sdp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/_14sdp"
-                android:src="@drawable/ic_search_icon"
-                app:tint="@color/dark_blue_gray" />
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchView"
+            <RelativeLayout
+                android:id="@+id/rlSearch"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/button1"
-                android:focusable="true"
-                android:iconifiedByDefault="false"
-                android:singleLine="true"
-                android:theme="@style/WallSearchView"
-                app:queryBackground="@null"
-                app:queryHint="Search for audio, playlist..."
-                app:searchHintIcon="@null"
-                app:searchIcon="@null" />
+                android:layout_height="@dimen/_48sdp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginRight="@dimen/_16sdp"
+                android:layout_weight="2"
+                android:background="@drawable/rounded_extra_gray_corner">
 
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/button1"
+                    android:layout_width="@dimen/_16sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/_14sdp"
+                    android:src="@drawable/ic_search_icon"
+                    app:tint="@color/dark_blue_gray" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/rlSearch"
-            android:orientation="vertical">
-
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/rvSerachList"
-                android:overScrollMode="never">
-
-                <LinearLayout
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/searchView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/rlSearch"
-                    android:layout_marginBottom="@dimen/_18sdp"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/button1"
+                    android:focusable="true"
+                    android:iconifiedByDefault="false"
+                    android:singleLine="true"
+                    android:theme="@style/WallSearchView"
+                    app:queryBackground="@null"
+                    app:queryHint="Search for audio, playlist..."
+                    app:searchHintIcon="@null"
+                    app:searchIcon="@null" />
 
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/rlSearch"
+                android:orientation="vertical">
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/rvSerachList"
+                    android:overScrollMode="never">
 
                     <LinearLayout
-                        android:id="@+id/llError"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_22sdp"
-                        android:layout_marginTop="@dimen/_20sdp"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                        android:layout_below="@id/rlSearch"
+                        android:layout_marginBottom="@dimen/_18sdp"
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tvFound"
+
+                        <LinearLayout
+                            android:id="@+id/llError"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_bold"
+                            android:layout_marginHorizontal="@dimen/_22sdp"
+                            android:layout_marginTop="@dimen/_20sdp"
                             android:gravity="center"
-                            android:textColor="@color/dark_blue_gray"
-                            android:textSize="@dimen/_20sdp" />
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
+                            <TextView
+                                android:id="@+id/tvFound"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/montserrat_bold"
+                                android:gravity="center"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_20sdp" />
+
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_4sdp"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="center"
+                                android:text="@string/no_data_found"
+                                android:textColor="@color/dark_blue_gray"
+                                android:textSize="@dimen/_15sdp"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_4sdp"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:gravity="center"
-                            android:text="@string/no_data_found"
-                            android:textColor="@color/dark_blue_gray"
+                            android:layout_marginLeft="@dimen/_16sdp"
+                            android:layout_marginRight="@dimen/_16sdp"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:gravity="start"
+                            android:text=""
+                            android:textColor="@color/black"
                             android:textSize="@dimen/_15sdp"
-                            android:visibility="gone" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_16sdp"
-                        android:layout_marginRight="@dimen/_16sdp"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:gravity="start"
-                        android:text=""
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_15sdp"
-                        android:visibility="invisible" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvSerachList"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_marginRight="@dimen/_10sdp"
-                        android:overScrollMode="never"
-                        android:paddingTop="@dimen/_8sdp"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_16sdp"
-                        android:layout_marginRight="@dimen/_16sdp"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:gravity="start"
-                        android:text="@string/Suggested_Audios"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_15sdp" />
-
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvDownloadsList"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_marginRight="@dimen/_10sdp"
-                        android:overScrollMode="never"
-                        android:paddingTop="@dimen/_8sdp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_16sdp"
-                        android:layout_marginTop="@dimen/_20sdp"
-                        android:layout_marginRight="@dimen/_16sdp"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:gravity="start"
-                        android:text="@string/Suggested_Playlist"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_15sdp" />
-
-                    <LinearLayout
-                        android:id="@+id/llSpace"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                            android:visibility="invisible" />
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rvPlayList"
+                            android:id="@+id/rvSerachList"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
                             android:overScrollMode="never"
-                            android:paddingBottom="@dimen/_34sdp" />
+                            android:paddingTop="@dimen/_8sdp"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_16sdp"
+                            android:layout_marginRight="@dimen/_16sdp"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:gravity="start"
+                            android:text="@string/Suggested_Audios"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvDownloadsList"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
+                            android:overScrollMode="never"
+                            android:paddingTop="@dimen/_8sdp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_16sdp"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:layout_marginRight="@dimen/_16sdp"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:gravity="start"
+                            android:text="@string/Suggested_Playlist"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_15sdp" />
+
+                        <LinearLayout
+                            android:id="@+id/llSpace"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvPlayList"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:overScrollMode="never"
+                                android:paddingBottom="@dimen/_34sdp" />
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
-            </androidx.core.widget.NestedScrollView>
-        </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+            </LinearLayout>
 
-        <ImageView
-            android:id="@+id/ImgV"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:padding="80dp"
-            android:scaleType="centerInside"
-            android:visibility="gone" />
+            <ImageView
+                android:id="@+id/ImgV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="80dp"
+                android:scaleType="centerInside"
+                android:visibility="gone" />
 
-        <FrameLayout
-            android:id="@+id/progressBarHolder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.4"
-            android:animateLayoutChanges="true"
-            android:background="#C0000000"
-            android:visibility="gone" />
+            <FrameLayout
+                android:id="@+id/progressBarHolder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.4"
+                android:animateLayoutChanges="true"
+                android:background="#C0000000"
+                android:visibility="gone" />
+        </RelativeLayout>
 
-    </RelativeLayout>
+
+    </FrameLayout>
 </layout>

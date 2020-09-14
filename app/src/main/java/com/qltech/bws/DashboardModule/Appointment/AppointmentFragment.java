@@ -45,16 +45,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentFragment extends Fragment implements OnBackPressed {
+public class AppointmentFragment extends Fragment {
     FragmentAppointmentBinding binding;
-    private AppointmentViewModel appointmentViewModel;
     String UserID, appointmentName, appointmentMainName, appointmentImage, AudioFlag;
     Activity activity;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        appointmentViewModel =
-                ViewModelProviders.of(this).get(AppointmentViewModel.class);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment, container, false);
         View view = binding.getRoot();
 
@@ -81,11 +78,6 @@ public class AppointmentFragment extends Fragment implements OnBackPressed {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse("https://brainwellnessspa.com.au/bookings/services.php"));
                 startActivity(i);
-            }
-        });
-        appointmentViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
             }
         });
 
@@ -217,11 +209,6 @@ public class AppointmentFragment extends Fragment implements OnBackPressed {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-//        getActivity().getSupportFragmentManager().popBackStack();
-    }
-
     public class PreviousAppointmentsAdapter extends RecyclerView.Adapter<PreviousAppointmentsAdapter.MyViewHolder> {
         private List<PreviousAppointmentsModel.ResponseData> listModel;
         Context ctx;
@@ -259,7 +246,7 @@ public class AppointmentFragment extends Fragment implements OnBackPressed {
                     sessionsFragment.setArguments(bundle);
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .add(R.id.flMainLayout, sessionsFragment).commit();
+                            .replace(R.id.flMainLayout, sessionsFragment).commit();
                 }
             });
         }

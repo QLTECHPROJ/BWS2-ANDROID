@@ -468,7 +468,8 @@ public class UserProfileActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<AddProfileModel> call, Throwable t) {
                         hideProgressBar();
-                        BWSApplication.showToast("Failureeeee", ctx);
+                        Log.e("FailureeeeeFailureeeee", t.getMessage());
+                        BWSApplication.showToast("Failureeeee" + t.getMessage(), ctx);
                     }
                 });
             } else {
@@ -482,7 +483,7 @@ public class UserProfileActivity extends AppCompatActivity {
                         .thumbnail(1f).diskCacheStrategy(DiskCacheStrategy.ALL)
                         .skipMemoryCache(true)
                         .dontAnimate().into(binding.civProfile);
-                /*if (BWSApplication.isNetworkConnected(ctx)) {
+                if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
                     File file = new File(FileUtil.getPath(selectedImageUri, this));
                     TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, file);
@@ -516,8 +517,9 @@ public class UserProfileActivity extends AppCompatActivity {
                     });
                 } else {
                     BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                }*/
-                if (BWSApplication.isNetworkConnected(ctx)) {
+                }
+
+                /*if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
                     HashMap<String, String> map = new HashMap<>();
                     map.put(CONSTANTS.PREF_KEY_UserID, UserID);
@@ -546,7 +548,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             });
                 } else {
                     BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                }
+                }*/
             }
         } else if (requestCode == RESULT_CANCELED) {
             finish();

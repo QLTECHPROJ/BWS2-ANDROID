@@ -122,9 +122,9 @@ public class AddQueueActivity extends AppCompatActivity {
             binding.llRemovePlaylist.setVisibility(View.VISIBLE);
         } else {
             binding.llOptions.setVisibility(View.VISIBLE); /*GONE*/
-            binding.llAddPlaylist.setVisibility(View.GONE);
+            binding.llAddPlaylist.setVisibility(View.VISIBLE);
             binding.llDownload.setVisibility(View.VISIBLE);
-            binding.llAddQueue.setVisibility(View.GONE);/*GONE*/
+            binding.llAddQueue.setVisibility(View.VISIBLE);/*GONE*/
             binding.llRepeat.setVisibility(View.GONE);/*GONE*/
             binding.llShuffle.setVisibility(View.GONE);/*GONE*/
             binding.llRemovePlaylist.setVisibility(View.GONE);

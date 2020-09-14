@@ -34,7 +34,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AppointmentDetailsFragment extends Fragment implements OnBackPressed {
+public class AppointmentDetailsFragment extends Fragment {
     FragmentAppointmentDetailsBinding binding;
     Activity activity;
     String UserId, appointmentTypeId, appointmentName, appointmentMainName, appointmentImage, AudioFlag;
@@ -58,7 +58,7 @@ public class AppointmentDetailsFragment extends Fragment implements OnBackPresse
             appointmentName = getArguments().getString("appointmentName");
             appointmentImage = getArguments().getString("appointmentImage");
         }
-        /*view.setFocusableInTouchMode(true);
+        view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -66,7 +66,7 @@ public class AppointmentDetailsFragment extends Fragment implements OnBackPresse
                 return true;
             }
             return false;
-        });*/
+        });
 
         binding.llBack.setOnClickListener(view1 -> callBack());
         RefreshData();
@@ -85,7 +85,7 @@ public class AppointmentDetailsFragment extends Fragment implements OnBackPresse
         sessionsFragment.setArguments(bundle);
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
-                .replace(R.id.flSession, sessionsFragment)
+                .add(R.id.flMainLayout, sessionsFragment)
                 .commit();
     }
 
@@ -94,7 +94,7 @@ public class AppointmentDetailsFragment extends Fragment implements OnBackPresse
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
-                    .add(R.id.flSession, fragment)
+                    .add(R.id.flMainLayout, fragment)
                     .commit();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 0, 0, 260);
@@ -195,11 +195,6 @@ public class AppointmentDetailsFragment extends Fragment implements OnBackPresse
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        callBack();
     }
 
     public class TabAdapter extends FragmentStatePagerAdapter {

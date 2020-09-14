@@ -50,6 +50,7 @@ public class SuggestedModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
+
     public class ResponseData {
 
         @SerializedName("ID")

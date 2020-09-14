@@ -54,13 +54,11 @@ import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_sear
 
 public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
-    private PlaylistViewModel playlistViewModel;
     String UserID, Check = "", AudioFlag;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        playlistViewModel =
-                ViewModelProviders.of(this).get(PlaylistViewModel.class);
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false);
         View view = binding.getRoot();
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
@@ -74,7 +72,6 @@ public class PlaylistFragment extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
         binding.rvMainPlayList.setItemAnimator(new DefaultItemAnimator());
-        RefreshData();
         prepareData();
 
         binding.rlCreatePlaylist.setOnClickListener(new View.OnClickListener() {
@@ -130,17 +127,11 @@ public class PlaylistFragment extends Fragment {
             }
         });
 
-        playlistViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-            }
-        });
         return view;
     }
 
     private void callMyPlaylistsFragment(String s, String id, String name, String playlistImage) {
-        comefrom_search = false;
+        comefrom_search = 0;
         Bundle bundle = new Bundle();
         Fragment myPlaylistsFragment = new MyPlaylistsFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -150,19 +141,33 @@ public class PlaylistFragment extends Fragment {
         bundle.putString("PlaylistImage", playlistImage);
         myPlaylistsFragment.setArguments(bundle);
         fragmentManager1.beginTransaction()
-                .replace(R.id.rlPlaylist, myPlaylistsFragment)
-                .addToBackStack(null)
+                .add(R.id.rlPlaylist, myPlaylistsFragment)
                 .commit();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        RefreshData();
         prepareData();
     }
 
     private void prepareData() {
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.rlPlaylist, fragment)
+                    .commit();
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(13, 6, 13, 200);
+            binding.llSpace.setLayoutParams(params);
+        } else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(13, 6, 13, 0);
+            binding.llSpace.setLayoutParams(params);
+        }
+
         if (BWSApplication.isNetworkConnected(getActivity())) {
             showProgressBar();
             Call<MainPlayListModel> listCall = APIClient.getClient().getMainPlayLists(UserID);
@@ -184,24 +189,6 @@ public class PlaylistFragment extends Fragment {
             });
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-        }
-    }
-
-    private void RefreshData(){
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlPlaylist, fragment)
-                    .commit();
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 6, 13, 200);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 6, 13, 0);
-            binding.llSpace.setLayoutParams(params);
         }
     }
 

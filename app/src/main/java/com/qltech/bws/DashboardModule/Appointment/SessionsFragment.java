@@ -39,17 +39,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SessionsFragment extends Fragment implements OnBackPressed {
+public class SessionsFragment extends Fragment {
     FragmentSessionsBinding binding;
     public FragmentManager f_manager;
     Activity activity;
+    View view;
     String UserId, appointmentName, appointmentMainName, appointmentImage, appointmentTypeId, AudioFlag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_sessions, container, false);
-        View view = binding.getRoot();
+        view = binding.getRoot();
         activity = getActivity();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -61,7 +62,7 @@ public class SessionsFragment extends Fragment implements OnBackPressed {
             appointmentImage = getArguments().getString("appointmentImage");
             appointmentMainName = getArguments().getString("appointmentMainName");
         }
-       /* view.setFocusableInTouchMode(true);
+        view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -69,7 +70,7 @@ public class SessionsFragment extends Fragment implements OnBackPressed {
                 return true;
             }
             return false;
-        });*/
+        });
         binding.llBack.setOnClickListener(view1 -> callBack());
         Glide.with(getActivity()).load(appointmentImage).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
@@ -93,9 +94,6 @@ public class SessionsFragment extends Fragment implements OnBackPressed {
         fragmentManager1.beginTransaction()
                 .replace(R.id.flMainLayout, appointmentFragment)
                 .commit();
-        /*FragmentManager fm = getActivity()
-                .getSupportFragmentManager();
-        fm.popBackStack("SessionsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);*/
     }
 
     private void RefreshData() {
@@ -125,16 +123,20 @@ public class SessionsFragment extends Fragment implements OnBackPressed {
                     @Override
                     public void onResponse(Call<SessionListModel> call, Response<SessionListModel> response) {
                         if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                            SessionListModel listModel = response.body();
-                            if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                binding.tvSessionTitle.setText(listModel.getResponseData().get(0).getCatName());
-                                Glide.with(getActivity()).load(listModel.getResponseData().get(0).getImage()).thumbnail(0.05f)
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                                SessionListAdapter appointmentsAdapter = new SessionListAdapter(listModel.getResponseData(), getActivity(), f_manager);
-                                binding.rvSessionList.setAdapter(appointmentsAdapter);
-                            } else {
-                                BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                            try {
+                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                SessionListModel listModel = response.body();
+                                if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                    binding.tvSessionTitle.setText(listModel.getResponseData().get(0).getCatName());
+                                    Glide.with(getActivity()).load(listModel.getResponseData().get(0).getImage()).thumbnail(0.05f)
+                                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                                    SessionListAdapter appointmentsAdapter = new SessionListAdapter(listModel.getResponseData(), getActivity(), f_manager);
+                                    binding.rvSessionList.setAdapter(appointmentsAdapter);
+                                } else {
+                                    BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                     }
@@ -156,11 +158,6 @@ public class SessionsFragment extends Fragment implements OnBackPressed {
     public void onResume() {
         super.onResume();
         RefreshData();
-    }
-
-    @Override
-    public void onBackPressed() {
-        callBack();
     }
 
     public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.MyViewHolder> {
@@ -223,7 +220,7 @@ public class SessionsFragment extends Fragment implements OnBackPressed {
                     bundle.putString("appointmentImage", appointmentImage);
                     appointmentDetailsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
-                            .add(R.id.flSession, appointmentDetailsFragment).commit();
+                            .add(R.id.flMainLayout, appointmentDetailsFragment).commit();
                 }
             });
         }

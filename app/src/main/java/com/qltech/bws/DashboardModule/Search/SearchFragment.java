@@ -13,13 +13,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,13 +50,10 @@ public class SearchFragment extends Fragment {
     String UserID;
     EditText searchEditText;
     SerachListAdpater adpater;
-    public static boolean comefrom_search = false;
-    private SearchViewModel searchViewModel;
+    public static int comefrom_search = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        searchViewModel =
-                ViewModelProviders.of(this).get(SearchViewModel.class);
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false);
         View view = binding.getRoot();
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
@@ -110,12 +104,7 @@ public class SearchFragment extends Fragment {
         binding.rvPlayList.setItemAnimator(new DefaultItemAnimator());
         binding.rvPlayList.setLayoutManager(manager);
         prepareSuggestedData();
-        searchViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
 
-            }
-        });
         return view;
     }
 
@@ -267,16 +256,16 @@ public class SearchFragment extends Fragment {
                 holder.binding.llRemoveAudio.setVisibility(View.INVISIBLE);
 
                 holder.binding.llMainLayout.setOnClickListener(view -> {
-                    comefrom_search = true;
-                    Bundle bundle = new Bundle();
+                    comefrom_search = 1;
                     Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    Bundle bundle = new Bundle();
                     bundle.putString("New", "0");
                     bundle.putString("PlaylistID", modelList.get(position).getID());
                     bundle.putString("PlaylistName", modelList.get(position).getName());
                     myPlaylistsFragment.setArguments(bundle);
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .add(R.id.rlSearchList, myPlaylistsFragment)
+                            .replace(R.id.rlSearchList, myPlaylistsFragment)
                             .commit();
                 });
 
@@ -407,7 +396,7 @@ public class SearchFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.rlMainLayout.setOnClickListener(view -> {
-                comefrom_search = true;
+                comefrom_search = 1;
                 Bundle bundle = new Bundle();
                 Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -416,7 +405,7 @@ public class SearchFragment extends Fragment {
                 bundle.putString("PlaylistName", listModelList.get(position).getName());
                 myPlaylistsFragment.setArguments(bundle);
                 fragmentManager1.beginTransaction()
-                        .add(R.id.rlSearchList, myPlaylistsFragment)
+                        .replace(R.id.rlSearchList, myPlaylistsFragment)
                         .commit();
             });
         }

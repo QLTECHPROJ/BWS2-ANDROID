@@ -1,9 +1,11 @@
 package com.qltech.bws.DashboardModule.Playlist;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -67,19 +70,22 @@ import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
-    String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage;
+    String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, ComeFromSearch;
     PlayListsAdpater adpater;
     PlayListsAdpater2 adpater2;
     String SearchFlag;
+    View view;
     ArrayList<String> changedAudio;
+    Activity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
-        View view = binding.getRoot();
+        view = binding.getRoot();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        activity = getActivity();
 
         changedAudio = new ArrayList<>();
         if (getArguments() != null) {
@@ -196,26 +202,6 @@ public class MyPlaylistsFragment extends Fragment {
         return view;
     }
 
-    private void callBack() {
-        if (comefrom_search) {
-            Fragment fragment = new SearchFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .replace(R.id.rlSearchList, fragment)
-                    .commit();
-            Bundle bundle = new Bundle();
-            fragment.setArguments(bundle);
-        } else {
-            Fragment playlistFragment = new PlaylistFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .replace(R.id.rlPlaylist, playlistFragment)
-                    .commit();
-            Bundle bundle = new Bundle();
-            playlistFragment.setArguments(bundle);
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -227,23 +213,38 @@ public class MyPlaylistsFragment extends Fragment {
         }
     }
 
+    private void callBack() {
+        if (comefrom_search == 1) {
+            Fragment fragment = new SearchFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .replace(R.id.rlSearchList, fragment)
+                    .commit();
+            comefrom_search = 0;
+        } else {
+            Fragment playlistFragment = new PlaylistFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .replace(R.id.rlPlaylist, playlistFragment)
+                    .commit();
+        }
+    }
+
     private void prepareData(String UserID, String PlaylistID) {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (!AudioFlag.equalsIgnoreCase("0")) {
-            if (comefrom_search) {
+            if (comefrom_search == 1) {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
                         .add(R.id.rlSearchList, fragment)
-                        .addToBackStack("TransparentPlayerFragment")
                         .commit();
             } else {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
                         .add(R.id.rlPlaylist, fragment)
-                        .addToBackStack("TransparentPlayerFragment")
                         .commit();
             }
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -292,15 +293,16 @@ public class MyPlaylistsFragment extends Fragment {
                             binding.llDownloads.setClickable(true);
                             binding.llDownloads.setEnabled(true);
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                            binding.ivDownloads.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
                         } else if (listModel.getResponseData().getDownload().equalsIgnoreCase("1")) {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                             binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
                             binding.ivDownloads.setAlpha(255);
                             binding.llDownloads.setClickable(false);
                             binding.llDownloads.setEnabled(false);
-                            binding.ivDownloads.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
                         }
+
                         if (listModel.getResponseData().getTotalAudio().equalsIgnoreCase("") &&
                                 listModel.getResponseData().getTotalhour().equalsIgnoreCase("")
                                 && listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
@@ -374,19 +376,17 @@ public class MyPlaylistsFragment extends Fragment {
         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, myPlaylist);
         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
         editor.commit();
-        if (comefrom_search) {
+        if (ComeFromSearch.equalsIgnoreCase("1")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .add(R.id.rlSearchList, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
                     .commit();
-        } else {
+        } else if (ComeFromSearch.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .add(R.id.rlPlaylist, fragment)
-                    .addToBackStack("TransparentPlayerFragment")
                     .commit();
         }
     }
@@ -813,5 +813,4 @@ public class MyPlaylistsFragment extends Fragment {
             }
         }
     }
-
 }

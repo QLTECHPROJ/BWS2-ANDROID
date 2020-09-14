@@ -77,6 +77,8 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
                     doubleBackToExitPressedOnce = false;
                 }
             }, 2000);
+        }else {
+            super.onBackPressed();
         }
     }
 

@@ -69,10 +69,12 @@ public interface APIInterface {
                        Callback<AddProfileModel> addProfileModelCallback);*/
 
     /*TODO UserProfileActivity */
+
     @Multipart
     @POST("addprofileimage")
     Call<AddProfileModel> getAddProfile(@Part("UserID") String userID,
                                         @Part("ProfileImage") TypedFile profileImage);
+
     /*TODO App Version*/
     @POST("appversion")
     @FormUrlEncoded
@@ -126,11 +128,11 @@ public interface APIInterface {
     @POST("authotp")
     @FormUrlEncoded
     Call<OtpModel> getAuthOtps1(@Field("OTP") String otp,
-                                 @Field("Token") String token,
-                                 @Field("DeviceType") String deviceType,
-                                 @Field("DeviceID") String deviceID,
-                                 @Field("MobileNo") String mobileNo,
-                                 @Field("SignupFlag") String signupFlag);
+                                @Field("Token") String token,
+                                @Field("DeviceType") String deviceType,
+                                @Field("DeviceID") String deviceID,
+                                @Field("MobileNo") String mobileNo,
+                                @Field("SignupFlag") String signupFlag);
 
     /* TODO AccountFragment */
     @POST("logout")
@@ -368,6 +370,7 @@ public interface APIInterface {
     @POST("playlist")
     @FormUrlEncoded
     Call<PlaylistingModel> getPlaylisting(@Field("UserID") String userID);
+
     /* TODO set Shorted Audio from created Playlist */
     @POST("sortingplaylistaudio")
     @FormUrlEncoded
