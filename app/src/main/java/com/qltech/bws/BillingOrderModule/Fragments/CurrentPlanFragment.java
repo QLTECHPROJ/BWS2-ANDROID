@@ -24,7 +24,6 @@ import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.BillingOrderModule.Activities.CancelMembershipActivity;
 import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.BillingOrderModule.Models.CurrentPlanVieViewModel;
-import com.qltech.bws.MembershipModule.Activities.OrderSummaryActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -38,6 +37,11 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+/*Active => Cancel button
+remaining 10 days =>cancelled status=> pay now button => => Direct payment
+after complete plan(10days)=>in active => pay now => plan selection
+suspended => paynow => Direct payment*/
 
 public class CurrentPlanFragment extends Fragment {
     FragmentCurrentPlanBinding binding;
@@ -119,7 +123,7 @@ public class CurrentPlanFragment extends Fragment {
                             binding.tvRecommended.setBackgroundResource(R.drawable.dark_brown_background);
                             binding.tvRecommended.setText(R.string.InActive);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
-                            binding.btnPayNow.setVisibility(View.VISIBLE); /* membership-ordersummary - payment */
+                            binding.btnPayNow.setVisibility(View.VISIBLE);
                             binding.tvPayUsing.setVisibility(View.GONE);
                             binding.tvChangeCard.setVisibility(View.GONE);
 
@@ -136,7 +140,7 @@ public class CurrentPlanFragment extends Fragment {
                             binding.tvRecommended.setBackgroundResource(R.drawable.yellow_background);
                             binding.tvRecommended.setText(R.string.Suspended);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
-                            binding.btnPayNow.setVisibility(View.VISIBLE); /*payment screen api call*/
+                            binding.btnPayNow.setVisibility(View.VISIBLE);
                             binding.tvPayUsing.setVisibility(View.VISIBLE);
                             binding.tvChangeCard.setVisibility(View.VISIBLE);
 
@@ -156,7 +160,7 @@ public class CurrentPlanFragment extends Fragment {
                             binding.tvRecommended.setText(R.string.Cancelled);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
                             binding.btnPayNow.setVisibility(View.VISIBLE);
-                            binding.tvPayUsing.setVisibility(View.GONE);/*Pay now and cancel both payment listing */
+                            binding.tvPayUsing.setVisibility(View.GONE);
                             binding.tvChangeCard.setVisibility(View.GONE);
 
                             binding.btnPayNow.setOnClickListener(view1 -> {

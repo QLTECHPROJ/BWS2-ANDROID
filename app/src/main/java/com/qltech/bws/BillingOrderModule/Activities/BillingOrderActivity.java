@@ -44,11 +44,13 @@ public class BillingOrderActivity extends AppCompatActivity {
         if (getIntent().hasExtra("payment")) {
             payment = getIntent().getIntExtra("payment", 0);
         }
+
         if (payment != 0) {
             binding.viewPager.setCurrentItem(1);
         } else {
             binding.viewPager.setCurrentItem(0);
         }
+
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

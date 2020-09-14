@@ -108,6 +108,7 @@ public class MembershipInvoiceFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.binding.tvStatus.setVisibility(View.VISIBLE);
             holder.binding.tvInvoiceID.setText("Invoice #" + listModelList.get(position).getInvoiceId());
             holder.binding.tvTitle.setText(listModelList.get(position).getName());
             holder.binding.tvDate.setText(listModelList.get(position).getDate());
@@ -122,6 +123,14 @@ public class MembershipInvoiceFragment extends Fragment {
                     receiptFragment.show(fragmentManager, "receipt");
                 }
             });
+
+            if (listModelList.get(position).getStatus().equalsIgnoreCase("paid")){
+                holder.binding.tvStatus.setText("Paid");
+                holder.binding.tvStatus.setBackgroundResource(R.drawable.green_background);
+            }else if (listModelList.get(position).getStatus().equalsIgnoreCase("open")){
+                holder.binding.tvStatus.setText("Open");
+                holder.binding.tvStatus.setBackgroundResource(R.drawable.blue_background);
+            }
 
             holder.binding.llDownloads.setOnClickListener(new View.OnClickListener() {
                 @Override
