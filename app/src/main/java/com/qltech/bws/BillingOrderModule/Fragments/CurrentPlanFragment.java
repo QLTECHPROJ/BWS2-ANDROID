@@ -96,26 +96,26 @@ public class CurrentPlanFragment extends Fragment {
                         CurrentPlanVieViewModel listModel = response.body();
 
                         binding.tvHeader.setText(listModel.getResponseData().getPlan());
-                        if (listModel.getResponseData().getActivate().equalsIgnoreCase("")){
+                        if (listModel.getResponseData().getActivate().equalsIgnoreCase("")) {
                             binding.tvPlan.setText("");
                             binding.tvPlan.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             binding.tvPlan.setVisibility(View.VISIBLE);
-                            binding.tvPlan.setText("Active Since: "+listModel.getResponseData().getActivate());
+                            binding.tvPlan.setText("Active Since: " + listModel.getResponseData().getActivate());
                         }
                         binding.tvSubName.setText(listModel.getResponseData().getSubtitle());
-                        binding.tvPlanAmount.setText("$"+listModel.getResponseData().getOrderTotal()+" ");
+                        binding.tvPlanAmount.setText("$" + listModel.getResponseData().getOrderTotal() + " ");
                         binding.tvPlanInterval.setText(listModel.getResponseData().getPlanStr());
                         binding.tvPayUsing.setText(listModel.getResponseData().getCardDigit());
 
-                        if (listModel.getResponseData().getStatus().equalsIgnoreCase("1")){
+                        if (listModel.getResponseData().getStatus().equalsIgnoreCase("1")) {
                             binding.tvRecommended.setBackgroundResource(R.drawable.green_background);
                             binding.tvRecommended.setText(R.string.Active);
                             binding.btnCancelSubscrible.setVisibility(View.VISIBLE);
                             binding.btnPayNow.setVisibility(View.GONE);
                             binding.tvPayUsing.setVisibility(View.GONE);
                             binding.tvChangeCard.setVisibility(View.GONE);
-                        }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("2")){
+                        } else if (listModel.getResponseData().getStatus().equalsIgnoreCase("2")) {
                             binding.tvRecommended.setBackgroundResource(R.drawable.dark_brown_background);
                             binding.tvRecommended.setText(R.string.InActive);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
@@ -132,7 +132,7 @@ public class CurrentPlanFragment extends Fragment {
                                 startActivity(i);
                             });
 
-                        }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("3")){
+                        } else if (listModel.getResponseData().getStatus().equalsIgnoreCase("3")) {
                             binding.tvRecommended.setBackgroundResource(R.drawable.yellow_background);
                             binding.tvRecommended.setText(R.string.Suspended);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
@@ -151,7 +151,7 @@ public class CurrentPlanFragment extends Fragment {
                                 getActivity().finish();
                             });
 
-                        }else if (listModel.getResponseData().getStatus().equalsIgnoreCase("4")){
+                        } else if (listModel.getResponseData().getStatus().equalsIgnoreCase("4")) {
                             binding.tvRecommended.setBackgroundResource(R.drawable.dark_red_background);
                             binding.tvRecommended.setText(R.string.Cancelled);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
@@ -182,7 +182,7 @@ public class CurrentPlanFragment extends Fragment {
                 }
             });
         } else {
-            BWSApplication.showToast( getString(R.string.no_server_found), getActivity());
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 
@@ -190,27 +190,6 @@ public class CurrentPlanFragment extends Fragment {
     public void onResume() {
         super.onResume();
         PrepareData();
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public class FeaturedListAdpater extends RecyclerView.Adapter<FeaturedListAdpater.MyViewHolder> {
@@ -246,6 +225,27 @@ public class CurrentPlanFragment extends Fragment {
                 super(binding.getRoot());
                 this.binding = binding;
             }
+        }
+    }
+
+    private void hideProgressBar() {
+        try {
+            binding.progressBarHolder.setVisibility(View.GONE);
+            binding.ImgV.setVisibility(View.GONE);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showProgressBar() {
+        try {
+            binding.progressBarHolder.setVisibility(View.VISIBLE);
+            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.ImgV.setVisibility(View.VISIBLE);
+            binding.ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
