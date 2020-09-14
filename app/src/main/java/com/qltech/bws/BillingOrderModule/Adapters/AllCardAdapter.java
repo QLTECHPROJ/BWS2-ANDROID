@@ -152,31 +152,28 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
             }
         });
 
-        btnCheckout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (BWSApplication.isNetworkConnected(activity)) {
-                    BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
-                    Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(userId, "", "","","","");
-                    listCall.enqueue(new Callback<PayNowDetailsModel>() {
-                        @Override
-                        public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
-                            if (response.isSuccessful()) {
-                                BWSApplication.hideProgressBar(ImgV, progressBarHolder,activity);
-                                PayNowDetailsModel listModel = response.body();
-                                BWSApplication.showToast(listModel.getResponseMessage(),activity);
+        btnCheckout.setOnClickListener(view -> {
+            if (BWSApplication.isNetworkConnected(activity)) {
+                BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
+                Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(userId, "", "","","","");
+                listCall.enqueue(new Callback<PayNowDetailsModel>() {
+                    @Override
+                    public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(ImgV, progressBarHolder,activity);
+                            PayNowDetailsModel listModel1 = response.body();
+                            BWSApplication.showToast(listModel1.getResponseMessage(),activity);
 
-                            }
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<PayNowDetailsModel> call, Throwable t) {
-                            BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
-                        }
-                    });
-                } else {
-                    BWSApplication.showToast(activity.getString(R.string.no_server_found), activity);
-                }
+                    @Override
+                    public void onFailure(Call<PayNowDetailsModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+                    }
+                });
+            } else {
+                BWSApplication.showToast(activity.getString(R.string.no_server_found), activity);
             }
         });
     }
