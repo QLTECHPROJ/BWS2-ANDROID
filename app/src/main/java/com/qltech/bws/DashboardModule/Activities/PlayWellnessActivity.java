@@ -27,6 +27,7 @@ import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -55,7 +56,7 @@ import static com.qltech.bws.Utility.MusicService.pauseMedia;
 public class PlayWellnessActivity extends AppCompatActivity implements
         SeekBar.OnSeekBarChangeListener {
     ActivityPlayWellnessBinding binding;
-    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id;
+    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id,name,url;
     int startTime = 0, endTime = 0, position, listSize;
     Context ctx;
     Activity activity;
@@ -145,6 +146,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
         getPrepareShowData(position);
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                hdlr.removeCallbacks(UpdateSongTime);
                 if (IsRepeat.equalsIgnoreCase("1")) {
                     if (position < (listSize - 1)) {
                         position = position + 1;
@@ -596,6 +598,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                 position = 0;
             }
             id = addToQueueModelList.get(position).getID();
+            name = addToQueueModelList.get(position).getName();
+            url = addToQueueModelList.get(position).getAudioFile();
             binding.tvName.setText(addToQueueModelList.get(position).getName());
             if (addToQueueModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
                 binding.llDirection.setVisibility(View.GONE);
@@ -623,32 +627,31 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                 binding.llDownload.setEnabled(true);
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
-            if (!isMediaStart) {
+   /*         if (!isMediaStart) {
                 MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
-            } else {
-                if (MusicService.isPause) {
+            } else {*/
+            if (MusicService.isPause) {
 
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    binding.simpleSeekbar.setProgress(oTime);
-                    int timeeee = MusicService.progressToTimer(oTime, (int) (totalDuration));
-                    binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
-                            TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.simpleSeekbar.setProgress(oTime);
+                int timeeee = MusicService.progressToTimer(oTime, (int) (totalDuration));
+                binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
+                        TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
 //                    MusicService.resumeMedia();
-                } else if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                } else {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                    MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-                    MusicService.playMedia();
-                }
-
+            } else if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+            } else {
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+                MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                MusicService.playMedia();
             }
+//            }
             binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
 
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -663,6 +666,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements
         } else if (audioPlay) {
             listSize = mainPlayModelList.size();
             id = mainPlayModelList.get(position).getID();
+            name = mainPlayModelList.get(position).getName();
+            url = mainPlayModelList.get(position).getAudioFile();
             binding.tvName.setText(mainPlayModelList.get(position).getName());
             if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
                 binding.llDirection.setVisibility(View.GONE);
@@ -732,7 +737,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
     private void callBack() {
         player = 1;
         if (binding.llPause.getVisibility() == View.VISIBLE) {
-            MusicService.isPause = false;
+            isPause = false;
         }
 //        MusicService.pauseMedia();
         SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

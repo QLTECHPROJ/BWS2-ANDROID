@@ -319,6 +319,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             if (listSize == 1) {
                 position = 0;
             }
+            if (position == listSize) {
+                position = position - 1;
+            }
             id = addToQueueModelList.get(position).getID();
             Glide.with(getActivity()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
@@ -326,16 +329,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
             audioFile = addToQueueModelList.get(position).getAudioFile();
             if (player == 1) {
-                if (MusicService.isPause) {
+                if (isPause) {
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
                     binding.simpleSeekbar.setProgress(oTime);
-//                    MusicService.resumeMedia();
-                } else if (!isMediaStart) {
+                } else if ((isPrepare || isMediaStart) && !isPause) {
                     binding.ivPause.setVisibility(View.VISIBLE);
                     binding.ivPlay.setVisibility(View.GONE);
-                    MusicService.play(getActivity(), Uri.parse(audioFile));
-                    MusicService.playMedia();
                 } else {
                     binding.ivPlay.setVisibility(View.GONE);
                     binding.ivPause.setVisibility(View.VISIBLE);
@@ -359,17 +359,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
             audioFile = mainPlayModelList.get(position).getAudioFile();
             if (player == 1) {
-                if (MusicService.isPause) {
+                if (isPause) {
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
                     binding.simpleSeekbar.setProgress(oTime);
-//                    MusicService.resumeMedia();
-                } else if (MusicService.isPlaying()) {
+                } else if ((isPrepare || isMediaStart) && !isPause) {
                     binding.ivPause.setVisibility(View.VISIBLE);
                     binding.ivPlay.setVisibility(View.GONE);
                 } else {
-                    binding.ivPause.setVisibility(View.VISIBLE);
                     binding.ivPlay.setVisibility(View.GONE);
+                    binding.ivPause.setVisibility(View.VISIBLE);
                     MusicService.play(getActivity(), Uri.parse(audioFile));
                     MusicService.playMedia();
                 }
@@ -399,13 +398,28 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         playmedia();
                     }
                 } else {
-                    if (position < (listSize - 1)) {
-                        position = position + 1;
-                        playmedia();
+                    if (queuePlay) {
+                        addToQueueModelList.remove(position);
+                        listSize = addToQueueModelList.size();
+                        if (position < listSize - 1) {
+                            playmedia();
+                        } else {
+                            if (listSize == 0) {
+                                MusicService.stopMedia();
+                            } else {
+                                position = 0;
+                                playmedia();
+                            }
+                        }
                     } else {
-                        binding.ivPlay.setVisibility(View.VISIBLE);
-                        binding.ivPause.setVisibility(View.GONE);
-                        MusicService.stopMedia();
+                        if (position < (listSize - 1)) {
+                            position = position + 1;
+                            playmedia();
+                        } else {
+                            binding.ivPlay.setVisibility(View.VISIBLE);
+                            binding.ivPause.setVisibility(View.GONE);
+                            MusicService.stopMedia();
+                        }
                     }
                 }
             });

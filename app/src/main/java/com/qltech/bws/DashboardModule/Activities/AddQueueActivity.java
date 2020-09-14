@@ -281,7 +281,7 @@ public class AddQueueActivity extends AppCompatActivity {
         addToQueueModel.setID(mainPlayModelList.get(i).getID());
         addToQueueModel.setName(mainPlayModelList.get(i).getName());
         addToQueueModel.setAudioFile(mainPlayModelList.get(i).getAudioFile());
-        addToQueueModel.setAudioDirection(mainPlayModelList.get(i).getAudioDirection());
+        addToQueueModel.setAudioDirection( mainPlayModelList.get(i).getAudioDirection());
         addToQueueModel.setAudiomastercat(mainPlayModelList.get(i).getAudiomastercat());
         addToQueueModel.setAudioSubCategory(mainPlayModelList.get(i).getAudioSubCategory());
         addToQueueModel.setImageFile(mainPlayModelList.get(i).getImageFile());

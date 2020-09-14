@@ -58,7 +58,7 @@ import static com.qltech.bws.Utility.MusicService.oTime;
 public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
-    String IsRepeat, IsShuffle,id;
+    String IsRepeat, IsShuffle, id;
     Context ctx;
     Activity activity;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -140,43 +140,59 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         getPrepareShowData(position);
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
-        MusicService.mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-            if (IsRepeat.equalsIgnoreCase("1")) {
-                if (position < (listSize - 1)) {
-                    position = position + 1;
+        if(isMediaStart) {
+            MusicService.mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                if (IsRepeat.equalsIgnoreCase("1")) {
+                    if (position < (listSize - 1)) {
+                        position = position + 1;
+                    } else {
+                        position = 0;
+                    }
+                    getPrepareShowData(position);
+                } else if (IsRepeat.equalsIgnoreCase("0")) {
+                    getPrepareShowData(position);
+                } else if (IsShuffle.equalsIgnoreCase("1")) {
+                    // shuffle is on - play a random song
+                    if (listSize == 1) {
+                    } else {
+                        Random random = new Random();
+                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                        getPrepareShowData(position);
+                    }
                 } else {
+                    if (queuePlay) {
+                        addToQueueModelList.remove(position);
+                        listSize = addToQueueModelList.size();
+                        if (position < listSize - 1) {
+                            getPrepareShowData(position);
+                        } else {
+                            if (listSize == 0) {
+                                MusicService.stopMedia();
+                            } else {
+                                position = 0;
+                                getPrepareShowData(position);
+                            }
+                        }
+                    } else {
+                        if (position < (listSize - 1)) {
+                            position = position + 1;
+                            getPrepareShowData(position);
+                        } else {
+                            binding.llPlay.setVisibility(View.VISIBLE);
+                            binding.llPause.setVisibility(View.GONE);
+                            MusicService.stopMedia();
+                        }
+                    }
+                }
+                if (listSize == 1 || position < listSize - 1) {
+                    binding.llnext.setEnabled(false);
+                    binding.llnext.setEnabled(false);
+                    binding.llprev.setClickable(false);
+                    binding.llprev.setClickable(false);
+                    binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
                     position = 0;
-                }
-                getPrepareShowData(position);
-            } else if (IsRepeat.equalsIgnoreCase("0")) {
-                getPrepareShowData(position);
-            } else if (IsShuffle.equalsIgnoreCase("1")) {
-                // shuffle is on - play a random song
-                if (listSize == 1) {
-                } else {
-                    Random random = new Random();
-                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                    getPrepareShowData(position);
-                }
-            } else {
-                if (position < (listSize - 1)) {
-                    position = position + 1;
-                    getPrepareShowData(position);
-                } else {
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    MusicService.stopMedia();
-                }
-            }
-            if (listSize == 1 || position < listSize - 1) {
-                binding.llnext.setEnabled(false);
-                binding.llnext.setEnabled(false);
-                binding.llprev.setClickable(false);
-                binding.llprev.setClickable(false);
-                binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-                binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-                position = 0;
-            } /*else if (position == listSize - 1 && IsRepeat.equalsIgnoreCase("1")) {
+                } /*else if (position == listSize - 1 && IsRepeat.equalsIgnoreCase("1")) {
                 binding.llnext.setEnabled(false);
                 binding.llnext.setClickable(false);
                 binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -185,14 +201,15 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 binding.llprev.setClickable(false);
                 binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
             }*/ else {
-                binding.llnext.setEnabled(true);
-                binding.llnext.setEnabled(true);
-                binding.llprev.setClickable(true);
-                binding.llprev.setClickable(true);
-                binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-                binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-            }
-        });
+                    binding.llnext.setEnabled(true);
+                    binding.llnext.setEnabled(true);
+                    binding.llprev.setClickable(true);
+                    binding.llprev.setClickable(true);
+                    binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                }
+            });
+        }
         if (addToQueueModelList.size() != 0) {
             QueueAdapter adapter = new QueueAdapter(addToQueueModelList, ViewQueueActivity.this);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ViewQueueActivity.this);
@@ -332,26 +349,26 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTime.setText(mainPlayModelList.get(position).getAudioDuration());
-            if (!isMediaStart) {
+           /* if (!isMediaStart) {
                 MusicService.play(getApplicationContext(), Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
-            } else {
-                if (MusicService.isPause) {
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    binding.simpleSeekbar.setProgress(oTime);
+            } else {*/
+            if (MusicService.isPause) {
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.simpleSeekbar.setProgress(oTime);
 //                    MusicService.resumeMedia();
-                } else if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                } else {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                    MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-                    MusicService.playMedia();
-                }
+            } else if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+            } else {
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+                MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                MusicService.playMedia();
+//                }
             }
         } else if (queuePlay) {
             if (listSize == 1) {
@@ -365,28 +382,27 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTime.setText(addToQueueModelList.get(position).getAudioDuration());
 
-            if (!isMediaStart) {
+         /*   if (!isMediaStart) {
                 MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
                 MusicService.playMedia();
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
-            } else {
-                if (MusicService.isPause) {
-
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    binding.simpleSeekbar.setProgress(oTime);
+            } else {*/
+            if (isPause) {
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.simpleSeekbar.setProgress(oTime);
 //                    MusicService.resumeMedia();
-                } else if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                } else {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                    MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-                    MusicService.playMedia();
-                }
+            } else if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+            } else {
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+                MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                MusicService.playMedia();
             }
+//            }
 
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -430,7 +446,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
     private void callBack() {
         if (binding.llPause.getVisibility() == View.VISIBLE) {
-            MusicService.isPause = true;
+            isPause = false;
         }
         Intent i = new Intent(ctx, PlayWellnessActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -440,14 +456,12 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
     @Override
     protected void onResume() {
-        if (isMediaStart) {
-            if (MusicService.isPlaying()) {
-                binding.llPlay.setVisibility(View.GONE);
-                binding.llPause.setVisibility(View.VISIBLE);
-            } else {
-                binding.llPlay.setVisibility(View.VISIBLE);
-                binding.llPause.setVisibility(View.GONE);
-            }
+        if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.VISIBLE);
+        } else {
+            binding.llPlay.setVisibility(View.VISIBLE);
+            binding.llPause.setVisibility(View.GONE);
         }
         super.onResume();
     }
@@ -530,12 +544,15 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 }
                 binding.tvTitle.setText(listModel.getName());
                 binding.tvName.setText(listModel.getName());
-//            binding.tvCategory.setText(addToQueueModelList.get(position).getAudioSubCategory());
+                binding.tvCategory.setText(listModel.getAudioSubCategory());
                 Glide.with(ctx).load(listModel.getImageFile()).thumbnail(0.05f)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                 binding.tvTime.setText(listModel.getAudioDuration());
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(addToQueueModelList);
+                editor.putString(CONSTANTS.PREF_KEY_queueList, json);
                 editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, true);
                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                 editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
