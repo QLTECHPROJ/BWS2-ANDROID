@@ -110,7 +110,6 @@
                                             android:gravity="right"
                                             android:paddingHorizontal="@dimen/_10sdp"
                                             android:paddingVertical="@dimen/_2sdp"
-                                            android:text="Recommended"
                                             android:textAllCaps="true"
                                             android:textColor="@color/white"
                                             android:textSize="@dimen/_12sdp" />
@@ -209,7 +208,7 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center_horizontal"
                     android:textColor="@color/dark_blue_gray"
-                    android:textSize="@dimen/_15sdp"
+                    android:textSize="@dimen/_12sdp"
                     android:visibility="gone" />
 
                 <TextView
@@ -222,7 +221,7 @@
                     android:paddingBottom="@dimen/_18sdp"
                     android:text="Change Card"
                     android:textColor="#005BAA"
-                    android:textSize="@dimen/_15sdp"
+                    android:textSize="@dimen/_13sdp"
                     android:visibility="gone" />
             </LinearLayout>
         </RelativeLayout>
