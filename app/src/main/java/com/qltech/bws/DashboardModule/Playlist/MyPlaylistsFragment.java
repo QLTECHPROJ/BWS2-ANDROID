@@ -70,7 +70,7 @@ import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
-    String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, ComeFromSearch;
+    String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage;
     PlayListsAdpater adpater;
     PlayListsAdpater2 adpater2;
     String SearchFlag;
@@ -376,13 +376,13 @@ public class MyPlaylistsFragment extends Fragment {
         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, myPlaylist);
         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
         editor.commit();
-        if (ComeFromSearch.equalsIgnoreCase("1")) {
+        if (comefrom_search == 1) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .add(R.id.rlSearchList, fragment)
                     .commit();
-        } else if (ComeFromSearch.equalsIgnoreCase("0")) {
+        } else {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()

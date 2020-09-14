@@ -188,6 +188,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/_30sdp"
                         android:layout_marginTop="@dimen/_35sdp"
                         android:background="@drawable/extra_round_cornor"
                         android:fontFamily="@font/montserrat_bold"

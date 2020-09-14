@@ -120,8 +120,8 @@ public class CurrentPlanFragment extends Fragment {
                             binding.tvRecommended.setText(R.string.InActive);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
                             binding.btnPayNow.setVisibility(View.VISIBLE); /* membership-ordersummary - payment */
-                            binding.tvPayUsing.setVisibility(View.VISIBLE);
-                            binding.tvChangeCard.setVisibility(View.VISIBLE);
+                            binding.tvPayUsing.setVisibility(View.GONE);
+                            binding.tvChangeCard.setVisibility(View.GONE);
 
                             binding.btnPayNow.setOnClickListener(view1 -> {
                                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -156,8 +156,8 @@ public class CurrentPlanFragment extends Fragment {
                             binding.tvRecommended.setText(R.string.Cancelled);
                             binding.btnCancelSubscrible.setVisibility(View.GONE);
                             binding.btnPayNow.setVisibility(View.VISIBLE);
-                            binding.tvPayUsing.setVisibility(View.VISIBLE);/*Pay now and cancel both payment listing */
-                            binding.tvChangeCard.setVisibility(View.VISIBLE);
+                            binding.tvPayUsing.setVisibility(View.GONE);/*Pay now and cancel both payment listing */
+                            binding.tvChangeCard.setVisibility(View.GONE);
 
                             binding.btnPayNow.setOnClickListener(view1 -> {
                                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {

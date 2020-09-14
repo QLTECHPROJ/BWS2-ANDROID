@@ -51,19 +51,13 @@ public class MembershipChangeActivity extends AppCompatActivity {
 
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        binding.llBack.setOnClickListener(view -> finish());
 
         RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvPlanList.setLayoutManager(mLayoutManager1);
         binding.rvPlanList.setItemAnimator(new DefaultItemAnimator());
 
         prepareMembershipData();
-
     }
 
     private void prepareMembershipData() {
@@ -186,7 +180,6 @@ public class MembershipChangeActivity extends AppCompatActivity {
             i = new Intent(ctx, OrderSummaryActivity.class);
             i.putExtra("comeFrom","membership");
             i.putParcelableArrayListExtra("PlanData", listModelList);
-            i.putExtra("TrialPeriod", TrialPeriod);
             i.putExtra("position", position);
         }
 

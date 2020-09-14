@@ -74,7 +74,6 @@ public class PaymentFragment extends Fragment {
                         hideProgressBar();
                         CardListModel cardListModel = response.body();
                         if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-
                             if (cardListModel.getResponseData().size() == 0) {
                                 binding.rvCardList.setAdapter(null);
                                 binding.rvCardList.setVisibility(View.GONE);
