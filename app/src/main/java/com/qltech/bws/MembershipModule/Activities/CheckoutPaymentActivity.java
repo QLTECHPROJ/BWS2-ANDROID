@@ -48,6 +48,7 @@ import retrofit2.Response;
 
 import static com.qltech.bws.MembershipModule.Adapters.MembershipPlanAdapter.planFlag;
 import static com.qltech.bws.MembershipModule.Adapters.MembershipPlanAdapter.planId;
+import static com.qltech.bws.MembershipModule.Adapters.MembershipPlanAdapter.price;
 
 public class CheckoutPaymentActivity extends AppCompatActivity {
     ActivityCheckoutPaymentBinding binding;
@@ -91,6 +92,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         binding.textMonth.addTextChangedListener(addCardTextWatcher);
         binding.etCvv.addTextChangedListener(addCardTextWatcher);*/
 
+       binding.tvDoller.setText("$"+price);
         binding.etNumber.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (binding.etNumber.getText().toString().length() == 16) {

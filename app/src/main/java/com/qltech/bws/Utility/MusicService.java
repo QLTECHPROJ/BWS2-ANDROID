@@ -3,6 +3,7 @@ package com.qltech.bws.Utility;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -20,9 +21,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
+import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.R;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MusicService extends Service {
     public static MediaPlayer mediaPlayer;
@@ -31,9 +35,9 @@ public class MusicService extends Service {
     public static boolean isResume = false;
     public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
     static boolean isPlaying = false;
-    static private Handler handler;
+    static public Handler handler;
 
-    private static void initMediaPlayer() {
+    public static void initMediaPlayer() {
         if (null == mediaPlayer) {
             mediaPlayer = new MediaPlayer();
             Log.e("Playinggggg", "Playinggggg");
@@ -166,7 +170,7 @@ public class MusicService extends Service {
         toast.show();
     }
 
-    private static void stopPlaying() {
+    public static void stopPlaying() {
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.stop();
@@ -218,6 +222,16 @@ public class MusicService extends Service {
             isPlaying = false;
         }
         return isPlaying;
+    }    public static void savePrefQueue(int position, boolean queue, boolean audio, ArrayList<AddToQueueModel> addToQueueModelList,Context ctx) {
+        SharedPreferences shared11 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared11.edit();
+        Gson gson11 = new Gson();
+        String json11 = gson11.toJson(addToQueueModelList);
+        editor.putString(CONSTANTS.PREF_KEY_queueList, json11);
+        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, queue);
+        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, audio);
+        editor.commit();
     }
 
     public static void resumeMedia() {

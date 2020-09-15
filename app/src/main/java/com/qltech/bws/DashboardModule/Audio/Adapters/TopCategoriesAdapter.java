@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.LoginModule.Activities.OtpActivity.IsLocked;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
@@ -70,9 +73,9 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
                 } else if (IsLocked.equalsIgnoreCase("0") || IsLocked.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     player = 1;
-                    if (isMediaStart || MusicService.isPause) {
-                        MusicService.isPause = false;
-                        MusicService.stopMedia();
+                    if (isPrepare||isMediaStart ||isPause) {
+                       isPause = false;
+                       stopMedia();
                     }
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = activity.getSupportFragmentManager();

@@ -25,7 +25,7 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAd
     Button btnFreeJoin;
     String TrialPeriod;
     Intent i;
-    public static String planFlag, planId;
+    public static String planFlag, planId,price;
 
     public MembershipPlanAdapter(ArrayList<MembershipPlanListModel.Plan> listModelList, Context ctx, Button btnFreeJoin, String TrialPeriod) {
         this.listModelList = listModelList;
@@ -101,6 +101,7 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAd
         holder.binding.tvPlanInterval.setTextColor(ctx.getResources().getColor(R.color.white));
         holder.binding.llFeatures.setBackgroundColor(ctx.getResources().getColor(R.color.white));
         planFlag = listModel.getPlanFlag();
+        price = listModel.getPlanAmount();
         planId = listModel.getPlanID();
         i = new Intent(ctx, OrderSummaryActivity.class);
         i.putParcelableArrayListExtra("PlanData", listModelList);

@@ -39,6 +39,9 @@ import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
     private ArrayList<DownloadlistModel.Audio> listModelList;
@@ -81,9 +84,9 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             @Override
             public void onClick(View view) {
                 player = 1;
-                if(isMediaStart || MusicService.isPause){
-                    MusicService.isPause = false;
-                    MusicService.stopMedia();
+                if (isPrepare||isMediaStart ||isPause) {
+                    isPause = false;
+                    stopMedia();
                 }
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();

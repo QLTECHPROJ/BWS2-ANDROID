@@ -27,11 +27,11 @@ import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
-import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityPlayWellnessBinding;
 
 import java.lang.reflect.Type;
@@ -45,17 +45,30 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.Utility.MusicService.SeekTo;
+import static com.qltech.bws.Utility.MusicService.ToBackward;
+import static com.qltech.bws.Utility.MusicService.ToForward;
+import static com.qltech.bws.Utility.MusicService.ToRepeat;
+import static com.qltech.bws.Utility.MusicService.getEndTime;
+import static com.qltech.bws.Utility.MusicService.getProgressPercentage;
+import static com.qltech.bws.Utility.MusicService.getStartTime;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.isPlaying;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
+import static com.qltech.bws.Utility.MusicService.play;
+import static com.qltech.bws.Utility.MusicService.playMedia;
+import static com.qltech.bws.Utility.MusicService.progressToTimer;
+import static com.qltech.bws.Utility.MusicService.resumeMedia;
+import static com.qltech.bws.Utility.MusicService.savePrefQueue;
+import static com.qltech.bws.Utility.MusicService.stopMedia;
 
-public class PlayWellnessActivity extends AppCompatActivity implements
-        SeekBar.OnSeekBarChangeListener {
+public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
     ActivityPlayWellnessBinding binding;
-    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id,name,url;
+    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url;
     int startTime = 0, endTime = 0, position, listSize;
     Context ctx;
     Activity activity;
@@ -73,23 +86,24 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                 if (listSize != 0) {
                     endtimetext = addToQueueModelList.get(position).getAudioDuration();
                     t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
-                    MusicService.stopMedia();
+                } else {
+                    stopMedia();
                 }
             } else if (audioPlay) {
                 endtimetext = mainPlayModelList.get(position).getAudioDuration();
                 t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
             }
             totalDuration = t.getTime();
-            currentDuration = MusicService.getStartTime();
+            currentDuration = getStartTime();
 
-            int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
+            int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
             //Log.d("Progress", ""+progress);
-            startTime = MusicService.getStartTime();
+            startTime = getStartTime();
             if (currentDuration == totalDuration) {
                 binding.tvStartTime.setText(endtimetext);
             } else if (isPause) {
                 binding.simpleSeekbar.setProgress(oTime);
-                int timeeee = MusicService.progressToTimer(oTime, (int) (totalDuration));
+                int timeeee = progressToTimer(oTime, (int) (totalDuration));
                 binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
                         TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
             } else {
@@ -146,6 +160,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 hdlr.removeCallbacks(UpdateSongTime);
+                isPrepare = false;
+                isMediaStart = false;
                 if (IsRepeat.equalsIgnoreCase("1")) {
                     if (position < (listSize - 1)) {
                         position = position + 1;
@@ -171,7 +187,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                             getPrepareShowData(position);
                         } else {
                             if (listSize == 0) {
-                                MusicService.stopMedia();
+                                savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                                stopMedia();
                             } else {
                                 position = 0;
                                 getPrepareShowData(position);
@@ -184,7 +201,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                         } else {
                             binding.llPlay.setVisibility(View.VISIBLE);
                             binding.llPause.setVisibility(View.GONE);
-                            MusicService.stopMedia();
+                            stopMedia();
                         }
                     }
                 }
@@ -280,9 +297,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-//            MusicService.pauseMedia();
+//            pauseMedia();
             if (binding.llPause.getVisibility() == View.VISIBLE) {
-                MusicService.isPause = true;
+                isPause = false;
             }
             Intent i = new Intent(ctx, ViewQueueActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -290,6 +307,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements
             finish();
             SharedPreferences ViewQueue = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = ViewQueue.edit();
+            Gson gsonx = new Gson();
+            String jsonx = gsonx.toJson(addToQueueModelList);
+            if (queuePlay) {
+                editor.putString(CONSTANTS.PREF_KEY_queueList, jsonx);
+            }
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
         });
@@ -299,14 +321,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements
             binding.llPause.setVisibility(View.VISIBLE);
             if (!isMediaStart) {
                 if (queuePlay) {
-                    MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-                    MusicService.playMedia();
+                    play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                    playMedia();
                 } else if (audioPlay) {
-                    MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-                    MusicService.playMedia();
+                    play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                    playMedia();
                 }
             } else {
-                MusicService.resumeMedia();
+                resumeMedia();
                 isPause = false;
             }
             hdlr.postDelayed(UpdateSongTime, 60);
@@ -322,22 +344,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements
         });
 
         binding.llForwardSec.setOnClickListener(v -> {
-            MusicService.ToForward(ctx);
+            ToForward(ctx);
             if (!binding.llPlay.isEnabled()) {
                 binding.llPlay.setEnabled(true);
             }
         });
 
         binding.llBackWordSec.setOnClickListener(v -> {
-            MusicService.ToBackward(ctx);
+            ToBackward(ctx);
             if (!binding.llPlay.isEnabled()) {
                 binding.llPlay.setEnabled(true);
             }
         });
 
         binding.llnext.setOnClickListener(view -> {
-            MusicService.stopMedia();
-            MusicService.isPause = false;
+            stopMedia();
+            isPause = false;
             if (IsRepeat.equalsIgnoreCase("1")) {
                 // repeat is on play same song again
                 if (position < listSize - 1) {
@@ -365,8 +387,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements
         });
 
         binding.llprev.setOnClickListener(view -> {
-            MusicService.stopMedia();
-            MusicService.isPause = false;
+            stopMedia();
+            isPause = false;
             if (IsRepeat.equalsIgnoreCase("1")) {
                 // repeat is on play same song again
                 if (position > 0) {
@@ -397,6 +419,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements
     }
 
     private void callDownload() {
+        DownloadMedia downloadMedia = new DownloadMedia(ctx);
+        downloadMedia.encrypt(url, name, ctx);
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, id, PlaylistId);
@@ -446,7 +470,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                     editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
                 }
                 editor.commit();
-                MusicService.ToRepeat(false);
+                ToRepeat(false);
                 IsRepeat = "";
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                 BWSApplication.showToast("Shuffle mode has been turned on", ctx);
@@ -470,7 +494,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "0");
             editor.commit();
-            MusicService.ToRepeat(true);
+            ToRepeat(true);
             IsRepeat = "0";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
             BWSApplication.showToast("Repeat mode has been turned on", ctx);
@@ -480,7 +504,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
             editor.commit();
-            MusicService.ToRepeat(false);
+            ToRepeat(false);
             IsRepeat = "1";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             BWSApplication.showToast("Repeat mode has been turned on", ctx);
@@ -490,7 +514,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
             editor.commit();
-            MusicService.ToRepeat(false);
+            ToRepeat(false);
             IsRepeat = "";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             BWSApplication.showToast("Repeat mode has been turned off", ctx);
@@ -627,28 +651,28 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
    /*         if (!isMediaStart) {
-                MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-                MusicService.playMedia();
+                play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                playMedia();
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
             } else {*/
-            if (MusicService.isPause) {
+            if (isPause) {
 
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
                 binding.simpleSeekbar.setProgress(oTime);
-                int timeeee = MusicService.progressToTimer(oTime, (int) (totalDuration));
+                int timeeee = progressToTimer(oTime, (int) (totalDuration));
                 binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
                         TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
-//                    MusicService.resumeMedia();
-            } else if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
+//                    resumeMedia();
+            } else if ((isPrepare || isMediaStart || isPlaying()) && !isPause) {
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
             } else {
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
-                MusicService.play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-                MusicService.playMedia();
+                play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                playMedia();
             }
 //            }
             binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
@@ -660,7 +684,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
-            startTime = MusicService.getStartTime();
+            startTime = getStartTime();
 
         } else if (audioPlay) {
             listSize = mainPlayModelList.size();
@@ -694,32 +718,32 @@ public class PlayWellnessActivity extends AppCompatActivity implements
                 binding.llDownload.setEnabled(true);
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
-/*            if (!isMediaStart) {
-                MusicService.play(getApplicationContext(), Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-                MusicService.playMedia();
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
-            } else {*/
-            if (isPause) {
-                binding.llPlay.setVisibility(View.VISIBLE);
-                binding.llPause.setVisibility(View.GONE);
-                binding.simpleSeekbar.setProgress(oTime);
-//                    MusicService.resumeMedia();
-                int timeeee = MusicService.progressToTimer(oTime, (int) (totalDuration));
-                binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
-                        TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
-            } else if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
+            if (!isMediaStart) {
+                play(getApplicationContext(), Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                playMedia();
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
             } else {
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
-                MusicService.play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-                MusicService.playMedia();
+                if (isPause) {
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+                    binding.simpleSeekbar.setProgress(oTime);
+//                    resumeMedia();
+                    int timeeee = progressToTimer(oTime, (int) (totalDuration));
+                    binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
+                            TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
+                } else if (((isPrepare || isMediaStart) || isPlaying()) && !isPause) {
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
+                } else {
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
+                    play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                    playMedia();
+                }
             }
-//            }
             binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
-            startTime = MusicService.getStartTime();
+            startTime = getStartTime();
         }
         addToRecentPlay();
 
@@ -738,9 +762,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements
         if (binding.llPause.getVisibility() == View.VISIBLE) {
             isPause = false;
         }
-//        MusicService.pauseMedia();
+//        pauseMedia();
         SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared2.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(addToQueueModelList);
+        if (queuePlay) {
+            editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+        }
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
         finish();
@@ -749,12 +778,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        MusicService.releasePlayer();
+//        releasePlayer();
     }
 
     @Override
     protected void onResume() {
-        if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
+        if ((isPrepare || isMediaStart || isPlaying()) && !isPause) {
             binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.VISIBLE);
         } else {
@@ -782,11 +811,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements
     public void onStopTrackingTouch(SeekBar seekBar) {
         hdlr.removeCallbacks(UpdateSongTime);
         if (isMediaStart) {
-            int totalDuration = MusicService.getEndTime();
-            int currentPosition = MusicService.progressToTimer(seekBar.getProgress(), totalDuration);
+            int totalDuration = getEndTime();
+            int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
 
             // forward or backward to certain seconds
-            MusicService.SeekTo(currentPosition);
+            SeekTo(currentPosition);
         }
         // update timer progress again
         updateProgressBar();

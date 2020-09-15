@@ -30,6 +30,9 @@ import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPla
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
@@ -144,9 +147,9 @@ public class AptAudioFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     player = 1;
-                    if(isMediaStart || MusicService.isPause){
-                        MusicService.isPause = false;
-                        MusicService.stopMedia();
+                    if (isPrepare||isMediaStart ||isPause) {
+                        isPause = false;
+                        stopMedia();
                     }
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();

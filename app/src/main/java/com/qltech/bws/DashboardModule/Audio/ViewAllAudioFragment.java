@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -30,7 +29,6 @@ import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
-import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.AudiolistCustomLayoutBinding;
 import com.qltech.bws.databinding.FragmentViewAllAudioBinding;
 
@@ -43,6 +41,9 @@ import retrofit2.Response;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.LoginModule.Activities.OtpActivity.IsLocked;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class ViewAllAudioFragment extends Fragment {
     FragmentViewAllAudioBinding binding;
@@ -180,9 +181,9 @@ public class ViewAllAudioFragment extends Fragment {
                     } else if (IsLocked.equalsIgnoreCase("0") || IsLocked.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         player = 1;
-                        if (isMediaStart || MusicService.isPause) {
-                            MusicService.isPause = false;
-                            MusicService.stopMedia();
+                        if (isPrepare||isMediaStart ||isPause) {
+                            isPause = false;
+                            stopMedia();
                         }
                         RefreshData();
                         Fragment fragment = new TransparentPlayerFragment();

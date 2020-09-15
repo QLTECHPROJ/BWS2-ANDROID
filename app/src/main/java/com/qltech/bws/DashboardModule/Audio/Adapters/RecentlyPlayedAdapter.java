@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.LoginModule.Activities.OtpActivity.IsLocked;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.isPrepare;
 
 public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder> {
     Context ctx;
@@ -73,8 +75,8 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 } else if (IsLocked.equalsIgnoreCase("0") || IsLocked.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     player = 1;
-                    if (isMediaStart || MusicService.isPause) {
-                        MusicService.isPause = false;
+                    if (isPrepare||isMediaStart ||isPause) {
+                        isPause = false;
                         MusicService.stopMedia();
                     }
                     Fragment fragment = new TransparentPlayerFragment();

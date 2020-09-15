@@ -37,7 +37,6 @@ import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
-import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.FragmentTransparentPlayerBinding;
 
 import java.lang.reflect.Type;
@@ -51,11 +50,23 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.Utility.MusicService.SeekTo;
+import static com.qltech.bws.Utility.MusicService.getEndTime;
+import static com.qltech.bws.Utility.MusicService.getProgressPercentage;
+import static com.qltech.bws.Utility.MusicService.getStartTime;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.isPlaying;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
+import static com.qltech.bws.Utility.MusicService.pauseMedia;
+import static com.qltech.bws.Utility.MusicService.play;
+import static com.qltech.bws.Utility.MusicService.playMedia;
+import static com.qltech.bws.Utility.MusicService.progressToTimer;
+import static com.qltech.bws.Utility.MusicService.resumeMedia;
+import static com.qltech.bws.Utility.MusicService.savePrefQueue;
+import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
     public FragmentTransparentPlayerBinding binding;
@@ -69,19 +80,22 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
-            startTime = MusicService.getStartTime();
+            startTime = getStartTime();
             binding.simpleSeekbar.setMax(100);
             Time t = Time.valueOf("00:00:00");
             if (queuePlay) {
-                if (listSize != 0)
+                if (listSize != 0) {
                     t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                } else {
+                    stopMedia();
+                }
             } else if (audioPlay) {
                 t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
             }
             long totalDuration = t.getTime();
-            long currentDuration = MusicService.getStartTime();
+            long currentDuration = getStartTime();
 
-            int progress = (int) (MusicService.getProgressPercentage(currentDuration, totalDuration));
+            int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
             //Log.d("Progress", ""+progress);
             if (isPause) {
                 binding.simpleSeekbar.setProgress(oTime);
@@ -122,7 +136,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
         if (queuePlay) {
-            playmedia();
+            getPrepareShowData();
         } else if (audioPlay) {
             if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
                 Type type = new TypeToken<MainAudioModel.ResponseData.Detail>() {
@@ -143,7 +157,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
 //            }
-                playmedia();
+                getPrepareShowData();
 
             } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
                 Type type = new TypeToken<ViewAllAudioListModel.ResponseData.Detail>() {
@@ -164,7 +178,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
 //                }
-                playmedia();
+                getPrepareShowData();
             } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 Type type = new TypeToken<AppointmentDetailModel.Audio>() {
                 }.getType();
@@ -184,7 +198,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
 //                }
-                playmedia();
+                getPrepareShowData();
             } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
                 Type type = new TypeToken<ArrayList<DownloadlistModel.Audio>>() {
                 }.getType();
@@ -204,7 +218,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                     mainPlayModelList.add(mainPlayModel);
                 }
-                playmedia();
+                getPrepareShowData();
             } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
                 Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
                 }.getType();
@@ -224,7 +238,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                     mainPlayModelList.add(mainPlayModel);
                 }
-                playmedia();
+                getPrepareShowData();
             }
         }
         if (listSize == 1) {
@@ -240,22 +254,22 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             hdlr.removeCallbacks(UpdateSongTime);
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
             if (!isMediaStart) {
-                MusicService.play(getActivity(), Uri.parse(audioFile));
-                MusicService.playMedia();
+                play(getActivity(), Uri.parse(audioFile));
+                playMedia();
             } else {
-                MusicService.pauseMedia();
+                pauseMedia();
             }
-            MusicService.oTime = binding.simpleSeekbar.getProgress();
+            oTime = binding.simpleSeekbar.getProgress();
         });
 
         binding.ivPlay.setOnClickListener(view12 -> {
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.VISIBLE);
             if (!isMediaStart) {
-                MusicService.play(getActivity(), Uri.parse(audioFile));
-                MusicService.playMedia();
+                play(getActivity(), Uri.parse(audioFile));
+                playMedia();
             } else {
-                MusicService.resumeMedia();
+                resumeMedia();
                 isPause = false;
             }
             player = 1;
@@ -313,7 +327,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
     }
 
-    private void playmedia() {
+    private void getPrepareShowData() {
         if (queuePlay) {
             listSize = addToQueueModelList.size();
             if (listSize == 1) {
@@ -322,31 +336,32 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             if (position == listSize) {
                 position = position - 1;
             }
-            id = addToQueueModelList.get(position).getID();
-            Glide.with(getActivity()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-            binding.tvTitle.setText(addToQueueModelList.get(position).getName());
-            binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
-            audioFile = addToQueueModelList.get(position).getAudioFile();
-            if (player == 1) {
-                if (isPause) {
+            if(listSize != 0) {
+                id = addToQueueModelList.get(position).getID();
+                Glide.with(getActivity()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                binding.tvTitle.setText(addToQueueModelList.get(position).getName());
+                binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
+                audioFile = addToQueueModelList.get(position).getAudioFile();
+                if (player == 1) {
+                    if (isPause) {
+                        binding.ivPause.setVisibility(View.GONE);
+                        binding.ivPlay.setVisibility(View.VISIBLE);
+                        binding.simpleSeekbar.setProgress(oTime);
+                    } else if ((isPrepare || isMediaStart) && !isPause) {
+                        binding.ivPause.setVisibility(View.VISIBLE);
+                        binding.ivPlay.setVisibility(View.GONE);
+                    } else {
+                        binding.ivPlay.setVisibility(View.GONE);
+                        binding.ivPause.setVisibility(View.VISIBLE);
+                        play(getActivity(), Uri.parse(audioFile));
+                        playMedia();
+                    }
+                } else {
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
-                    binding.simpleSeekbar.setProgress(oTime);
-                } else if ((isPrepare || isMediaStart) && !isPause) {
-                    binding.ivPause.setVisibility(View.VISIBLE);
-                    binding.ivPlay.setVisibility(View.GONE);
-                } else {
-                    binding.ivPlay.setVisibility(View.GONE);
-                    binding.ivPause.setVisibility(View.VISIBLE);
-                    MusicService.play(getActivity(), Uri.parse(audioFile));
-                    MusicService.playMedia();
                 }
-            } else {
-                binding.ivPause.setVisibility(View.GONE);
-                binding.ivPlay.setVisibility(View.VISIBLE);
             }
-
         } else if (audioPlay) {
             listSize = mainPlayModelList.size();
             if (listSize == 1) {
@@ -369,8 +384,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 } else {
                     binding.ivPlay.setVisibility(View.GONE);
                     binding.ivPause.setVisibility(View.VISIBLE);
-                    MusicService.play(getActivity(), Uri.parse(audioFile));
-                    MusicService.playMedia();
+                    play(getActivity(), Uri.parse(audioFile));
+                    playMedia();
                 }
             } else {
                 binding.ivPause.setVisibility(View.GONE);
@@ -380,51 +395,54 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         binding.simpleSeekbar.setClickable(true);
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                isPrepare = false;
+                isMediaStart = false;
                 if (IsRepeat.equalsIgnoreCase("1")) {
                     if (position < (listSize - 1)) {
                         position = position + 1;
                     } else {
                         position = 0;
                     }
-                    playmedia();
+                    getPrepareShowData();
                 } else if (IsRepeat.equalsIgnoreCase("0")) {
-                    playmedia();
+                    getPrepareShowData();
                 } else if (IsShuffle.equalsIgnoreCase("1")) {
                     // shuffle is on - play a random song
                     if (listSize == 1) {
                     } else {
                         Random random = new Random();
                         position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                        playmedia();
+                        getPrepareShowData();
                     }
                 } else {
                     if (queuePlay) {
                         addToQueueModelList.remove(position);
                         listSize = addToQueueModelList.size();
                         if (position < listSize - 1) {
-                            playmedia();
+                            getPrepareShowData();
                         } else {
                             if (listSize == 0) {
-                                MusicService.stopMedia();
+                                savePrefQueue(0,false,true,addToQueueModelList,getActivity());
+                                stopMedia();
                             } else {
                                 position = 0;
-                                playmedia();
+                                getPrepareShowData();
                             }
                         }
                     } else {
                         if (position < (listSize - 1)) {
                             position = position + 1;
-                            playmedia();
+                            getPrepareShowData();
                         } else {
                             binding.ivPlay.setVisibility(View.VISIBLE);
                             binding.ivPause.setVisibility(View.GONE);
-                            MusicService.stopMedia();
+                            stopMedia();
                         }
                     }
                 }
             });
         }
-        startTime = MusicService.getStartTime();
+        startTime = getStartTime();
 
         hdlr.postDelayed(UpdateSongTime, 60);
         addToRecentPlay();
@@ -445,6 +463,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             Gson gson = new Gson();
             String json = gson.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, json);
+            String json1 = gson.toJson(addToQueueModelList);
+            if (queuePlay) {
+                editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
+            }
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
 
@@ -471,11 +493,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     public void onStopTrackingTouch(SeekBar seekBar) {
         hdlr.removeCallbacks(UpdateSongTime);
 
-        int totalDuration = MusicService.getEndTime();
-        int currentPosition = MusicService.progressToTimer(seekBar.getProgress(), totalDuration);
+        int totalDuration = getEndTime();
+        int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
 
         // forward or backward to certain seconds
-        MusicService.SeekTo(currentPosition);
+        SeekTo(currentPosition);
 
         // update timer progress again
         updateProgressBar();
@@ -483,7 +505,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onResume() {
-        if ((isPrepare || isMediaStart || MusicService.isPlaying()) && !isPause) {
+        if ((isPrepare || isMediaStart || isPlaying()) && !isPause) {
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.VISIBLE);
         } else {

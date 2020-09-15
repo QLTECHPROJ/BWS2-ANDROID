@@ -67,6 +67,9 @@ import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.deleteFrg;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
@@ -360,9 +363,9 @@ public class MyPlaylistsFragment extends Fragment {
     private void callTransparentFrag(int position, Context ctx, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList,
                                      String myPlaylist) {
         player = 1;
-        if (isMediaStart || MusicService.isPause) {
-            MusicService.isPause = false;
-            MusicService.stopMedia();
+        if (isPrepare||isMediaStart ||isPause) {
+            isPause = false;
+            stopMedia();
         }
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
