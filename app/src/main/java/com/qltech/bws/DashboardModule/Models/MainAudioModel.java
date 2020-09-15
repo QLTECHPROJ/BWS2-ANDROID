@@ -100,6 +100,9 @@ public class MainAudioModel implements Parcelable {
         @SerializedName("UserID")
         @Expose
         private String userID;
+        @SerializedName("IsLock")
+        @Expose
+        private String IsLock;
         @SerializedName("Details")
         @Expose
         private ArrayList<Detail> details = null;
@@ -137,6 +140,14 @@ public class MainAudioModel implements Parcelable {
 
         public void setView(String view) {
             this.view = view;
+        }
+
+        public String getIsLock() {
+            return IsLock;
+        }
+
+        public void setIsLock(String isLock) {
+            IsLock = isLock;
         }
 
         public String getType() {
@@ -183,6 +194,9 @@ public class MainAudioModel implements Parcelable {
             @SerializedName("Name")
             @Expose
             private String name;
+            @SerializedName("IsPlay")
+            @Expose
+            private String isPlay;
             @SerializedName("AudioFile")
             @Expose
             private String audioFile;
@@ -219,6 +233,7 @@ public class MainAudioModel implements Parcelable {
                 like = in.readString();
                 download = in.readString();
                 audioDuration = in.readString();
+                isPlay = in.readString();
             }
 
             public static final Creator<Detail> CREATOR = new Creator<Detail>() {
@@ -321,6 +336,15 @@ public class MainAudioModel implements Parcelable {
                 this.audioDuration = audioDuration;
             }
 
+            public String getIsPlay() {
+                return isPlay;
+            }
+
+            public void setIsPlay(String isPlay) {
+                this.isPlay = isPlay;
+            }
+
+
             @Override
             public int describeContents() {
                 return 0;
@@ -338,6 +362,7 @@ public class MainAudioModel implements Parcelable {
                 parcel.writeString(like);
                 parcel.writeString(download);
                 parcel.writeString(audioDuration);
+                parcel.writeString(isPlay);
             }
         }
     }

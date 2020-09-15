@@ -73,7 +73,7 @@ public class PaymentFragment extends Fragment {
         return view;
     }
 
-    private void prepareCardList() {
+    private void prepareCardList(){
         if (BWSApplication.isNetworkConnected(context)) {
             showProgressBar();
             Call<CardListModel> listCall = APIClient.getClient().getCardLists(userId);

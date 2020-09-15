@@ -6,75 +6,87 @@
         android:layout_height="@dimen/_190sdp"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/llMainLayout"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/_4sdp"
-            android:paddingRight="@dimen/_12sdp"
-            android:weightSum="1">
+            android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:layout_marginBottom="@dimen/_2sdp"
-                android:layout_weight="0.85">
+            <LinearLayout
+                android:id="@+id/llMainLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/_4sdp"
+                android:paddingRight="@dimen/_12sdp"
+                android:weightSum="1">
 
                 <RelativeLayout
-                    android:id="@+id/rlBackground"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/layout_bg" />
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:layout_weight="0.85">
+
+                    <RelativeLayout
+                        android:id="@+id/rlBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/layout_bg" />
 
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/ivRestaurantImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerHorizontal="true"
+                            android:layout_gravity="center"
+                            app:layout_constraintDimensionRatio="1:1" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </RelativeLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="0dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="0.15"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/_2sdp"
+                    android:paddingRight="@dimen/_2sdp"
+                    android:weightSum="1">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/ivRestaurantImage"
+                    <TextView
+                        android:id="@+id/tvTitle"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_centerHorizontal="true"
-                        android:layout_gravity="center"
-                        app:layout_constraintDimensionRatio="1:1" />
+                        android:layout_weight="0.7"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:gravity="center_horizontal"
+                        android:maxLines="1"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_13sdp" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="bottom"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="0.15"
-                android:gravity="bottom"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/_2sdp"
-                android:paddingRight="@dimen/_2sdp"
-                android:weightSum="1">
-
-                <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:layout_weight="0.7"
-                    android:ellipsize="end"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:gravity="center_horizontal"
-                    android:maxLines="1"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp" />
-
-
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
+            <ImageView
+                android:id="@+id/ivLock"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:src="@drawable/ic_lock_icon"
+                android:visibility="gone" />
+        </RelativeLayout>
     </LinearLayout>
 
 </layout>

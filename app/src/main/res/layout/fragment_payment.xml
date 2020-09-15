@@ -108,7 +108,7 @@
                 android:paddingHorizontal="@dimen/_55sdp"
                 android:paddingVertical="@dimen/_4sdp"
                 android:text="@string/Proceed_to_plan"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 

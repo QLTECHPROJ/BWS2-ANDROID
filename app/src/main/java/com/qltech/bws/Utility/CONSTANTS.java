@@ -63,6 +63,7 @@ public class CONSTANTS {
     public static final String PREF_KEY_Status = "Status";
     public static final String PREF_KEY_IsShuffle = "IsShuffle";
     public static final String PREF_KEY_MobileNo = "MobileNo";
+    public static final String PREF_KEY_IsLock = "IsLock";
     public static final String PREF_KEY_modelList = "modelList";
     public static final String PREF_KEY_audioList = "audioList";
     public static final String PREF_KEY_queueList = "queueList";

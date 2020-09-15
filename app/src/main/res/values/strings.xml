@@ -185,4 +185,6 @@
     <string name="Suspended">Suspended</string>
     <string name="Cancelled">Cancelled</string>
     <string name="Proceed_to_plan">Proceed to plan</string>
+    <string name="Select_Playlist">Select Playlist</string>
+    <string name="Add_New_Reminder">Add New Reminder</string>
 </resources>

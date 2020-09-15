@@ -29,6 +29,7 @@ import com.qltech.bws.databinding.BigBoxLayoutBinding;
 import java.util.ArrayList;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.LoginModule.Activities.OtpActivity.IsLocked;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 
 public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.MyViewHolder> {
@@ -66,29 +67,35 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                player = 1;
-                if(isMediaStart || MusicService.isPause) {
-                    MusicService.isPause = false;
-                    MusicService.stopMedia();
-                }
-                Fragment fragment = new TransparentPlayerFragment();
-                FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.rlAudiolist, fragment)
-                        .commit();
+                if (IsLocked.equalsIgnoreCase("1")){
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                }else if (IsLocked.equalsIgnoreCase("0") || IsLocked.equalsIgnoreCase("")){
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    player = 1;
+                    if(isMediaStart || MusicService.isPause) {
+                        MusicService.isPause = false;
+                        MusicService.stopMedia();
+                    }
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.rlAudiolist, fragment)
+                            .commit();
 
-                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                Gson gson = new Gson();
-                String json = gson.toJson(listModelList.get(position));
-                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
-                editor.commit();
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(listModelList.get(position));
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
+                    editor.commit();
+                }
             }
         });
     }

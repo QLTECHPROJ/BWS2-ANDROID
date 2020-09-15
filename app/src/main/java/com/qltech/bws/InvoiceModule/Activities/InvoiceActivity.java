@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.InvoiceModule.Fragments.AppointmentInvoiceFragment;
 import com.qltech.bws.InvoiceModule.Fragments.MembershipInvoiceFragment;
 import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
+import com.qltech.bws.LoginModule.Activities.LoginActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -56,7 +58,7 @@ public class InvoiceActivity extends AppCompatActivity {
     void prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
             showProgressBar();
-            Call<InvoiceListModel> listCall = APIClient.getClient().getInvoicelistPlaylist(UserID,"1"); /*Flag = 0 Stagging Flag = 1 Live*/
+            Call<InvoiceListModel> listCall = APIClient.getClient().getInvoicelistPlaylist(UserID, "1"); /*Flag = 0 Stagging Flag = 1 Live*/
             listCall.enqueue(new Callback<InvoiceListModel>() {
                 @Override
                 public void onResponse(Call<InvoiceListModel> call, Response<InvoiceListModel> response) {
@@ -103,6 +105,11 @@ public class InvoiceActivity extends AppCompatActivity {
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), this);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     public class TabAdapter extends FragmentStatePagerAdapter {

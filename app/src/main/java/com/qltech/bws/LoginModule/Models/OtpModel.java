@@ -65,6 +65,9 @@ public class OtpModel {
         @SerializedName("Email")
         @Expose
         private String email;
+        @SerializedName("IsLock")
+        @Expose
+        private String isLock;
         @SerializedName("PhoneNumber")
         @Expose
         private String phoneNumber;
@@ -84,6 +87,14 @@ public class OtpModel {
 
         public void setUserID(String userID) {
             this.userID = userID;
+        }
+
+        public String getIsLock() {
+            return isLock;
+        }
+
+        public void setIsLock(String isLock) {
+            this.isLock = isLock;
         }
 
         public String getError() {

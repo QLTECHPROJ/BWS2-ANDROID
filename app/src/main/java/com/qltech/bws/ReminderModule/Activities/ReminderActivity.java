@@ -3,6 +3,7 @@ package com.qltech.bws.ReminderModule.Activities;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -111,6 +112,14 @@ public class ReminderActivity extends AppCompatActivity {
             }
         });
 
+        binding.llSelectPlaylist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ReminderActivity.this, SelectPlaylistActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
         binding.switchStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {

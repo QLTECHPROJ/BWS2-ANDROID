@@ -40,6 +40,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.LoginModule.Activities.OtpActivity.IsLocked;
+
 public class ViewAllPlaylistFragment extends Fragment {
     FragmentViewAllPlaylistBinding binding;
     String GetLibraryID, Name, UserID;
@@ -116,6 +118,7 @@ public class ViewAllPlaylistFragment extends Fragment {
             binding.llSpace.setLayoutParams(params);
         }
     }
+
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             showProgressBar();
@@ -193,18 +196,24 @@ public class ViewAllPlaylistFragment extends Fragment {
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Bundle bundle = new Bundle();
-                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    bundle.putString("New", "0");
-                    bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
-                    bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
-                    bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                    myPlaylistsFragment.setArguments(bundle);
-                    fragmentManager1.beginTransaction()
-                            .replace(R.id.rlPlaylist, myPlaylistsFragment).
-                            addToBackStack("MyPlaylistsFragment")
-                            .commit();
+                    if (IsLocked.equalsIgnoreCase("1")) {
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                    } else if (IsLocked.equalsIgnoreCase("0") || IsLocked.equalsIgnoreCase("")) {
+                        holder.binding.ivLock.setVisibility(View.GONE);
+                        Bundle bundle = new Bundle();
+                        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                        bundle.putString("New", "0");
+                        bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
+                        bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
+                        bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                        myPlaylistsFragment.setArguments(bundle);
+                        fragmentManager1.beginTransaction()
+                                .replace(R.id.rlPlaylist, myPlaylistsFragment).
+                                addToBackStack("MyPlaylistsFragment")
+                                .commit();
+                    }
                 }
             });
         }

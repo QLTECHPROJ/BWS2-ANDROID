@@ -130,6 +130,35 @@
                     android:isScrollContainer="false"
                     android:overScrollMode="never" />
 
+                <LinearLayout
+                    android:id="@+id/llSelectPlaylist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:gravity="start"
+                        android:text="@string/Select_Playlist"
+                        android:textColor="@color/light_black"
+                        android:textSize="@dimen/_14sdp" />
+
+                    <TextView
+                        android:id="@+id/tvPlaylistName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="start"
+                        android:text="@string/Select_Playlist"
+                        android:textColor="#7E7E7E"
+                        android:textSize="@dimen/_14sdp" />
+                </LinearLayout>
+
+
 
                 <Switch
                     android:id="@+id/switchStatus"
@@ -141,7 +170,8 @@
                     android:fontFamily="@font/montserrat_semi_bold"
                     android:text="Reminder Status"
                     android:textColor="@color/light_black"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_13sdp"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout

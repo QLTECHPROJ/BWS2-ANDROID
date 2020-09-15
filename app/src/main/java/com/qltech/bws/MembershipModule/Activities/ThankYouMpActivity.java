@@ -32,30 +32,24 @@ public class ThankYouMpActivity extends AppCompatActivity {
         binding.ivLogo.setScaleType(ImageView.ScaleType.FIT_XY);
         binding.ivLogo.setImageResource(R.drawable.ic_mp_thanku);
 
-        binding.btnExplore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(ThankYouMpActivity.this, DashboardActivity.class);
-                startActivity(i);
-                finish();
+        binding.btnExplore.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(ThankYouMpActivity.this, DashboardActivity.class);
+            startActivity(i);
+            finish();
         });
 
-        binding.tvViewInvoice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(ThankYouMpActivity.this, InvoiceActivity.class);
-                startActivity(i);
-                finish();
+        binding.tvViewInvoice.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(ThankYouMpActivity.this, DashboardActivity.class);
+            startActivity(i);
+            finish();
         });
     }
 }

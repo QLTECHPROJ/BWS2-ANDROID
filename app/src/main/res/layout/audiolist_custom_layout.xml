@@ -34,6 +34,7 @@
 
 
                 <ImageView
+                    android:id="@+id/ivLock"
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_marginLeft="@dimen/_8sdp"

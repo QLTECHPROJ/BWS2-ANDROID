@@ -51,6 +51,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
+import static com.qltech.bws.LoginModule.Activities.OtpActivity.IsLocked;
 
 public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
@@ -306,10 +307,22 @@ public class PlaylistFragment extends Fragment {
             Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            holder.binding.rlMainLayout.setOnClickListener(view -> callMyPlaylistsFragment("0",
-                    listModelList.get(position).getPlaylistID(),
-                    listModelList.get(position).getPlaylistName(),
-                    listModelList.get(position).getPlaylistImage()));
+            holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (IsLocked.equalsIgnoreCase("1")) {
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    } else if (IsLocked.equalsIgnoreCase("0") || IsLocked.equalsIgnoreCase("")) {
+                        holder.binding.ivLock.setVisibility(View.GONE);
+                        callMyPlaylistsFragment("0",
+                                listModelList.get(position).getPlaylistID(),
+                                listModelList.get(position).getPlaylistName(),
+                                listModelList.get(position).getPlaylistImage());
+                    }
+                }
+            });
+
         }
 
         @Override

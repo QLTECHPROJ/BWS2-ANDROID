@@ -43,6 +43,7 @@ import com.qltech.bws.InvoiceModule.Activities.InvoiceActivity;
 import com.qltech.bws.LoginModule.Activities.LoginActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
+import com.qltech.bws.ReminderModule.Activities.ReminderDetailsActivity;
 import com.qltech.bws.ResourceModule.Activities.ResourceActivity;
 import com.qltech.bws.UserModule.Activities.UserProfileActivity;
 import com.qltech.bws.BWSApplication;
@@ -120,7 +121,7 @@ public class AccountFragment extends Fragment {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-            Intent i = new Intent(getActivity(), ReminderActivity.class);
+            Intent i = new Intent(getActivity(), ReminderDetailsActivity.class);
             startActivity(i);
         });
 

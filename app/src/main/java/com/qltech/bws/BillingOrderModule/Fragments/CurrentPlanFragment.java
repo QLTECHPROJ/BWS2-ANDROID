@@ -132,7 +132,7 @@ public class CurrentPlanFragment extends Fragment {
                                     return;
                                 }
                                 mLastClickTime = SystemClock.elapsedRealtime();
-                                Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                                Intent i = new Intent(getActivity(), MembershipChangeActivity.class); /*Membership-order summary- payment cardlisting- btn action- current plan*/
                                 startActivity(i);
                             });
 
@@ -149,7 +149,7 @@ public class CurrentPlanFragment extends Fragment {
                                     return;
                                 }
                                 mLastClickTime = SystemClock.elapsedRealtime();
-                                Intent i = new Intent(getActivity(), BillingOrderActivity.class);
+                                Intent i = new Intent(getActivity(), BillingOrderActivity.class);/*payment - btnaction - current plan*/
                                 i.putExtra("payment", 1);
                                 startActivity(i);
                                 getActivity().finish();
@@ -162,15 +162,6 @@ public class CurrentPlanFragment extends Fragment {
                             binding.btnPayNow.setVisibility(View.GONE);
                             binding.tvPayUsing.setVisibility(View.GONE);
                             binding.tvChangeCard.setVisibility(View.GONE);
-
-                            binding.btnPayNow.setOnClickListener(view1 -> {
-                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                    return;
-                                }
-                                mLastClickTime = SystemClock.elapsedRealtime();
-                                Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                                startActivity(i);
-                            });
                         }
 
                         adpater = new FeaturedListAdpater(listModel.getResponseData().getFeature());
