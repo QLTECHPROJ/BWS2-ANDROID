@@ -76,9 +76,11 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                     holder.binding.ivLock.setVisibility(View.GONE);
                     player = 1;
                     if (isPrepare||isMediaStart ||isPause) {
-                        isPause = false;
                         MusicService.stopMedia();
                     }
+                    isPause = false;
+                    isMediaStart = false;
+                    isPrepare = false;
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                     fragmentManager1.beginTransaction()

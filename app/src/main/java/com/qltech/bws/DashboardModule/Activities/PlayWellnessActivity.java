@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,7 @@ import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityPlayWellnessBinding;
 
 import java.lang.reflect.Type;
@@ -66,7 +68,7 @@ import static com.qltech.bws.Utility.MusicService.resumeMedia;
 import static com.qltech.bws.Utility.MusicService.savePrefQueue;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
-public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
+public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*,AudioManager.OnAudioFocusChangeListener*/ {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url;
     int startTime = 0, endTime = 0, position, listSize;
@@ -76,7 +78,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     private long mLastClickTime = 0, totalDuration, currentDuration;
-    private Handler hdlr;
+    private Handler handler;
+//    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -114,7 +117,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.simpleSeekbar.setMax(100);
 
             // Running this thread after 100 milliseconds
-            hdlr.postDelayed(this, 60);
+            handler.postDelayed(this, 60);
         }
     };
 
@@ -122,7 +125,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_wellness);
-        hdlr = new Handler();
+        handler = new Handler();
         ctx = PlayWellnessActivity.this;
         activity = PlayWellnessActivity.this;
         addToQueueModelList = new ArrayList<>();
@@ -156,10 +159,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        /*mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);*/
         getPrepareShowData(position);
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                hdlr.removeCallbacks(UpdateSongTime);
+                handler.removeCallbacks(UpdateSongTime);
                 isPrepare = false;
                 isMediaStart = false;
                 if (IsRepeat.equalsIgnoreCase("1")) {
@@ -331,11 +337,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 resumeMedia();
                 isPause = false;
             }
-            hdlr.postDelayed(UpdateSongTime, 60);
+            handler.postDelayed(UpdateSongTime, 60);
         });
 
         binding.llPause.setOnClickListener(view -> {
-            hdlr.removeCallbacks(UpdateSongTime);
+            handler.removeCallbacks(UpdateSongTime);
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
             pauseMedia();
             binding.llPlay.setVisibility(View.VISIBLE);
@@ -345,6 +351,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         binding.llForwardSec.setOnClickListener(v -> {
             ToForward(ctx);
+            setProgressBar();
             if (!binding.llPlay.isEnabled()) {
                 binding.llPlay.setEnabled(true);
             }
@@ -352,6 +359,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         binding.llBackWordSec.setOnClickListener(v -> {
             ToBackward(ctx);
+            setProgressBar();
             if (!binding.llPlay.isEnabled()) {
                 binding.llPlay.setEnabled(true);
             }
@@ -416,6 +424,41 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 }
             }
         });
+    }
+
+    private void setProgressBar() {
+        Time t = Time.valueOf("00:00:00");
+        String endtimetext = "";
+        if (queuePlay) {
+            if (listSize != 0) {
+                endtimetext = addToQueueModelList.get(position).getAudioDuration();
+                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+            } else {
+                stopMedia();
+            }
+        } else if (audioPlay) {
+            endtimetext = mainPlayModelList.get(position).getAudioDuration();
+            t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+        }
+        totalDuration = t.getTime();
+        currentDuration = getStartTime();
+
+        int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
+        //Log.d("Progress", ""+progress);
+        startTime = getStartTime();
+        if (currentDuration == totalDuration) {
+            binding.tvStartTime.setText(endtimetext);
+        } else if (isPause) {
+            binding.simpleSeekbar.setProgress(progress);
+            int timeeee = progressToTimer(progress, (int) (totalDuration));
+            binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
+                    TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
+            oTime = binding.simpleSeekbar.getProgress();
+        } else {
+            binding.simpleSeekbar.setProgress(progress);
+            binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
+                    TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
+        }
     }
 
     private void callDownload() {
@@ -575,7 +618,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void getPrepareShowData(int position) {
-        hdlr.postDelayed(UpdateSongTime, 60);
+        handler.postDelayed(UpdateSongTime, 60);
         if (listSize == 1) {
             binding.llnext.setEnabled(false);
             binding.llprev.setEnabled(false);
@@ -748,7 +791,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         addToRecentPlay();
 
         binding.simpleSeekbar.setClickable(true);
-        hdlr.postDelayed(UpdateSongTime, 60);
+        handler.postDelayed(UpdateSongTime, 60);
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
 
@@ -800,16 +843,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        hdlr.removeCallbacks(UpdateSongTime);
+        handler.removeCallbacks(UpdateSongTime);
     }
 
     public void updateProgressBar() {
-        hdlr.postDelayed(UpdateSongTime, 100);
+        handler.postDelayed(UpdateSongTime, 100);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        hdlr.removeCallbacks(UpdateSongTime);
+        handler.removeCallbacks(UpdateSongTime);
         if (isMediaStart) {
             int totalDuration = getEndTime();
             int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
@@ -825,5 +868,25 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
-
+ /*   @Override
+    public void onAudioFocusChange(int i) {
+        switch (i) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                // Resume your media player here
+                resumeMedia();
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                if (isMediaStart) {
+                    pauseMedia();
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+                }
+//                MusicService.pauseMedia();// Pause your media player here
+                break;
+        }
+    }*/
 }

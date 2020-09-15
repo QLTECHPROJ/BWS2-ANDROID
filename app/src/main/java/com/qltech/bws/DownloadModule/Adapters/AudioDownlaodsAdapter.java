@@ -85,9 +85,11 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             public void onClick(View view) {
                 player = 1;
                 if (isPrepare||isMediaStart ||isPause) {
-                    isPause = false;
                     stopMedia();
                 }
+                isPause = false;
+                isMediaStart = false;
+                isPrepare = false;
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
                 fragmentManager1.beginTransaction()

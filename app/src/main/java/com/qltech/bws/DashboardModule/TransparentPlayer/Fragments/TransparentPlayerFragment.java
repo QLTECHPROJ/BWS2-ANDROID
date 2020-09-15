@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -37,6 +38,7 @@ import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.FragmentTransparentPlayerBinding;
 
 import java.lang.reflect.Type;
@@ -68,7 +70,7 @@ import static com.qltech.bws.Utility.MusicService.resumeMedia;
 import static com.qltech.bws.Utility.MusicService.savePrefQueue;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
-public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
+public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener*/ {
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id;
     int position = 0, startTime, listSize;
@@ -76,7 +78,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     Boolean queuePlay, audioPlay;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
-    private Handler hdlr;
+    private Handler handler;
+//    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -103,7 +106,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 binding.simpleSeekbar.setProgress(progress);
             }
             // Running this thread after 100 milliseconds
-            hdlr.postDelayed(this, 60);
+            handler.postDelayed(this, 60);
         }
     };
 
@@ -116,7 +119,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         addToQueueModelList = new ArrayList<>();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        hdlr = new Handler();
+        handler = new Handler();
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
@@ -135,6 +138,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
+//        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+//        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+//                AudioManager.AUDIOFOCUS_GAIN);
         if (queuePlay) {
             getPrepareShowData();
         } else if (audioPlay) {
@@ -251,7 +257,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         binding.ivPause.setOnClickListener(view1 -> {
             binding.ivPause.setVisibility(View.GONE);
             binding.ivPlay.setVisibility(View.VISIBLE);
-            hdlr.removeCallbacks(UpdateSongTime);
+            handler.removeCallbacks(UpdateSongTime);
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
             if (!isMediaStart) {
                 play(getActivity(), Uri.parse(audioFile));
@@ -273,7 +279,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 isPause = false;
             }
             player = 1;
-            hdlr.postDelayed(UpdateSongTime, 60);
+            handler.postDelayed(UpdateSongTime, 60);
         });
 
         return view;
@@ -378,14 +384,14 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
                     binding.simpleSeekbar.setProgress(oTime);
-                } else if ((isPrepare || isMediaStart) && !isPause) {
-                    binding.ivPause.setVisibility(View.VISIBLE);
-                    binding.ivPlay.setVisibility(View.GONE);
-                } else {
+                } else if (!isPrepare && !isMediaStart) {
                     binding.ivPlay.setVisibility(View.GONE);
                     binding.ivPause.setVisibility(View.VISIBLE);
                     play(getActivity(), Uri.parse(audioFile));
                     playMedia();
+                } else {
+                    binding.ivPause.setVisibility(View.VISIBLE);
+                    binding.ivPlay.setVisibility(View.GONE);
                 }
             } else {
                 binding.ivPause.setVisibility(View.GONE);
@@ -444,7 +450,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
         startTime = getStartTime();
 
-        hdlr.postDelayed(UpdateSongTime, 60);
+        handler.postDelayed(UpdateSongTime, 60);
         addToRecentPlay();
         binding.llPlayearMain.setOnClickListener(view -> {
             if (player == 0) {
@@ -481,17 +487,17 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        hdlr.removeCallbacks(UpdateSongTime);
+        handler.removeCallbacks(UpdateSongTime);
 
     }
 
     public void updateProgressBar() {
-        hdlr.postDelayed(UpdateSongTime, 100);
+        handler.postDelayed(UpdateSongTime, 100);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        hdlr.removeCallbacks(UpdateSongTime);
+        handler.removeCallbacks(UpdateSongTime);
 
         int totalDuration = getEndTime();
         int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
@@ -515,4 +521,22 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         super.onResume();
     }
 
+/*    @Override
+    public void onAudioFocusChange(int i) {
+        switch (i) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                // Resume your media player here
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                if (isMediaStart) {
+                    pauseMedia();
+                    binding.ivPlay.setVisibility(View.VISIBLE);
+                    binding.ivPause.setVisibility(View.GONE);
+                }
+//                MusicService.pauseMedia();// Pause your media player here
+                break;
+        }
+    }*/
 }

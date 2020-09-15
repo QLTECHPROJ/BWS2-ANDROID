@@ -364,9 +364,11 @@ public class MyPlaylistsFragment extends Fragment {
                                      String myPlaylist) {
         player = 1;
         if (isPrepare||isMediaStart ||isPause) {
-            isPause = false;
             stopMedia();
         }
+        isPause = false;
+        isMediaStart = false;
+        isPrepare = false;
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
@@ -685,7 +687,7 @@ public class MyPlaylistsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder2 holder, int position) {
-            final List<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
+            final ArrayList<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
             holder.binding.tvTitleA.setText(mData.get(position).getName());
             holder.binding.tvTitleB.setText(mData.get(position).getName());
             holder.binding.tvTimeA.setText(mData.get(position).getAudioDuration());
@@ -740,6 +742,8 @@ public class MyPlaylistsFragment extends Fragment {
                     Intent i = new Intent(ctx, AddQueueActivity.class);
                     i.putExtra("play", "");
                     i.putExtra("ID", mData.get(position).getID());
+                    i.putExtra("position", position);
+                    i.putParcelableArrayListExtra("data", mData);
                     i.putExtra("comeFrom", "myPlayList");
                     startActivity(i);
                 }

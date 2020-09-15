@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +37,7 @@ import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.ItemMoveCallback;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityViewQueueBinding;
 import com.qltech.bws.databinding.QueueListLayoutBinding;
 
@@ -67,7 +69,7 @@ import static com.qltech.bws.Utility.MusicService.resumeMedia;
 import static com.qltech.bws.Utility.MusicService.savePrefQueue;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
-public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
+public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener*/ {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
     String IsRepeat, IsShuffle, id;
@@ -78,7 +80,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     SharedPreferences shared;
     Boolean queuePlay, audioPlay;
     private long mLastClickTime = 0;
-    private Handler hdlr;
+    private Handler handler;
+//    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -104,7 +107,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 binding.simpleSeekbar.setProgress(progress);
             }
             binding.simpleSeekbar.setMax(100);
-            hdlr.postDelayed(this, 60);
+            handler.postDelayed(this, 60);
         }
     };
 
@@ -115,7 +118,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         binding = DataBindingUtil.setContentView(this, R.layout.activity_view_queue);
         ctx = ViewQueueActivity.this;
         activity = ViewQueueActivity.this;
-        hdlr = new Handler();
+        handler = new Handler();
         addToQueueModelList = new ArrayList<>();
 
         mainPlayModelList = new ArrayList<>();
@@ -136,7 +139,9 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
-
+/*        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);*/
         binding.rvQueueList.setFocusable(false);
         binding.nestedScroll.requestFocus();
 
@@ -159,7 +164,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                hdlr.removeCallbacks(UpdateSongTime);
+                handler.removeCallbacks(UpdateSongTime);
                 isPrepare = false;
                 isMediaStart = false;
                 if (IsRepeat.equalsIgnoreCase("1")) {
@@ -241,7 +246,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         });
 
         binding.llPause.setOnClickListener(view -> {
-            hdlr.removeCallbacks(UpdateSongTime);
+            handler.removeCallbacks(UpdateSongTime);
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
             pauseMedia();
             binding.llPlay.setVisibility(View.VISIBLE);
@@ -254,7 +259,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             binding.llPause.setVisibility(View.VISIBLE);
             resumeMedia();
             isPause = false;
-            hdlr.postDelayed(UpdateSongTime, 60);
+            handler.postDelayed(UpdateSongTime, 60);
         });
 
         binding.llnext.setOnClickListener(view -> {
@@ -432,7 +437,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
         addToRecentPlay();
         binding.simpleSeekbar.setClickable(true);
-        hdlr.postDelayed(UpdateSongTime, 60);
+        handler.postDelayed(UpdateSongTime, 60);
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
 
@@ -507,7 +512,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     }
 
     public void updateProgressBar() {
-        hdlr.postDelayed(UpdateSongTime, 100);
+        handler.postDelayed(UpdateSongTime, 100);
     }
 
     @Override
@@ -517,13 +522,13 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        hdlr.removeCallbacks(UpdateSongTime);
+        handler.removeCallbacks(UpdateSongTime);
 
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        hdlr.removeCallbacks(UpdateSongTime);
+        handler.removeCallbacks(UpdateSongTime);
         int totalDuration = getEndTime();
 
         int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
@@ -644,4 +649,25 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             }
         }
     }
+/*    @Override
+    public void onAudioFocusChange(int i) {
+        switch (i) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                // Resume your media player here
+                resumeMedia();
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                if (isMediaStart) {
+                    pauseMedia();
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+                }
+//                MusicService.pauseMedia();// Pause your media player here
+                break;
+        }
+    }*/
 }

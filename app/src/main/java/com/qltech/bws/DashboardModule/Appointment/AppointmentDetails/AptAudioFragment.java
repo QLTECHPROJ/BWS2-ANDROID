@@ -148,9 +148,11 @@ public class AptAudioFragment extends Fragment {
                 public void onClick(View view) {
                     player = 1;
                     if (isPrepare||isMediaStart ||isPause) {
-                        isPause = false;
                         stopMedia();
                     }
+                    isPause = false;
+                    isMediaStart = false;
+                    isPrepare = false;
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()

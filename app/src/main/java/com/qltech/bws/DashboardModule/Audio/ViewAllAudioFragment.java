@@ -182,9 +182,11 @@ public class ViewAllAudioFragment extends Fragment {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         player = 1;
                         if (isPrepare||isMediaStart ||isPause) {
-                            isPause = false;
                             stopMedia();
                         }
+                        isPause = false;
+                        isMediaStart = false;
+                        isPrepare = false;
                         RefreshData();
                         Fragment fragment = new TransparentPlayerFragment();
                         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();

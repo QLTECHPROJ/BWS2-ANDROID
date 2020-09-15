@@ -10,8 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,12 +28,12 @@ import java.util.ArrayList;
 
 public class MusicService extends Service {
     public static MediaPlayer mediaPlayer;
-    public static boolean isPrepare = false, songComplete = false, isMediaStart = false,isStop = false;
+    public static boolean isPrepare = false, songComplete = false, isMediaStart = false, isStop = false;
     public static boolean isPause = false;
     public static boolean isResume = false;
     public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
-    static boolean isPlaying = false;
     static public Handler handler;
+    static boolean isPlaying = false;
 
     public static void initMediaPlayer() {
         if (null == mediaPlayer) {
@@ -76,7 +74,7 @@ public class MusicService extends Service {
 //        }
     }
 
-    public static void PhoneCall(){
+    public static void PhoneCall() {
 /*
         PhoneStateListener phoneStateListener = new PhoneStateListener() {
             @Override
@@ -122,8 +120,14 @@ public class MusicService extends Service {
 
     public static int getStartTime() {
         try {
-            if (!mediaPlayer.isPlaying() || !isMediaStart) {
-                startTime = 0;
+            if (!isMediaStart) {
+                if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+                    startTime = 0;
+                } else {
+                    startTime = 0;
+                }
+            } else if (isPause) {
+                startTime = mediaPlayer.getCurrentPosition();
             } else {
                 startTime = mediaPlayer.getCurrentPosition();
             }
@@ -139,6 +143,7 @@ public class MusicService extends Service {
 
     public static void ToForward(Context conext) {
         endTime = getEndTime();
+        startTime = mediaPlayer.getCurrentPosition();
         if ((startTime + forwardTime) <= endTime) {
             startTime = startTime + forwardTime;
             mediaPlayer.seekTo(startTime);
@@ -148,6 +153,7 @@ public class MusicService extends Service {
     }
 
     public static void ToBackward(Context conext) {
+        startTime = mediaPlayer.getCurrentPosition();
         if ((startTime - backwardTime) > 0) {
             startTime = startTime - backwardTime;
             mediaPlayer.seekTo(startTime);
@@ -222,7 +228,9 @@ public class MusicService extends Service {
             isPlaying = false;
         }
         return isPlaying;
-    }    public static void savePrefQueue(int position, boolean queue, boolean audio, ArrayList<AddToQueueModel> addToQueueModelList,Context ctx) {
+    }
+
+    public static void savePrefQueue(int position, boolean queue, boolean audio, ArrayList<AddToQueueModel> addToQueueModelList, Context ctx) {
         SharedPreferences shared11 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared11.edit();
         Gson gson11 = new Gson();
