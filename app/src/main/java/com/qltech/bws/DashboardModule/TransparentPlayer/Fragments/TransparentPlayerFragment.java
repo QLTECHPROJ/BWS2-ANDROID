@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -38,7 +37,6 @@ import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
-import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.FragmentTransparentPlayerBinding;
 
 import java.lang.reflect.Type;
@@ -79,7 +77,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     private Handler handler;
-//    private AudioManager mAudioManager;
+    //    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -260,7 +258,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             handler.removeCallbacks(UpdateSongTime);
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
             if (!isMediaStart) {
-                play(getActivity(), Uri.parse(audioFile));
+                play(Uri.parse(audioFile));
                 playMedia();
             } else {
                 pauseMedia();
@@ -272,7 +270,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.VISIBLE);
             if (!isMediaStart) {
-                play(getActivity(), Uri.parse(audioFile));
+                play(Uri.parse(audioFile));
                 playMedia();
             } else {
                 resumeMedia();
@@ -342,7 +340,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             if (position == listSize) {
                 position = position - 1;
             }
-            if(listSize != 0) {
+            if (listSize != 0) {
                 id = addToQueueModelList.get(position).getID();
                 Glide.with(getActivity()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
@@ -360,7 +358,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     } else {
                         binding.ivPlay.setVisibility(View.GONE);
                         binding.ivPause.setVisibility(View.VISIBLE);
-                        play(getActivity(), Uri.parse(audioFile));
+                        play(Uri.parse(audioFile));
                         playMedia();
                     }
                 } else {
@@ -387,7 +385,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 } else if (!isPrepare && !isMediaStart) {
                     binding.ivPlay.setVisibility(View.GONE);
                     binding.ivPause.setVisibility(View.VISIBLE);
-                    play(getActivity(), Uri.parse(audioFile));
+                    play(Uri.parse(audioFile));
                     playMedia();
                 } else {
                     binding.ivPause.setVisibility(View.VISIBLE);
@@ -428,7 +426,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                             getPrepareShowData();
                         } else {
                             if (listSize == 0) {
-                                savePrefQueue(0,false,true,addToQueueModelList,getActivity());
+                                savePrefQueue(0, false, true, addToQueueModelList, getActivity());
                                 stopMedia();
                             } else {
                                 position = 0;

@@ -42,19 +42,19 @@ public class MusicService extends Service {
         }
     }
 
-    public static void play(Context context, Uri AudioFile) {
+    public static void play(Uri AudioFile) {
         initMediaPlayer();
         stopMedia();
-        playAudio(context, AudioFile);
+        playAudio( AudioFile);
     }
 
-    public static void playAudio(Context context, Uri AudioFile) {
+    public static void playAudio(Uri AudioFile) {
 //        if (!isPLAYING) {
 //            isPLAYING = true;
         mediaPlayer = new MediaPlayer();
 
         try {
-            mediaPlayer.setDataSource(context, AudioFile);
+            mediaPlayer.setDataSource(String.valueOf(AudioFile));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
                         new AudioAttributes

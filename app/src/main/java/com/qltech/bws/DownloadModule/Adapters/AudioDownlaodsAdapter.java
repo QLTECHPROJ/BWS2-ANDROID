@@ -93,7 +93,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
        /*         DownloadMedia downloadMedia = new DownloadMedia(ctx);
                 try {
                     FileDescriptor fileDescriptor =  FileUtils.getTempFileDescriptor(ctx, downloadMedia.decrypt(listModelList.get(position).getName()+FILE_EXT));
-                    play(ctx,Uri.parse(String.valueOf(fileDescriptor)));
+                    play(Uri.parse(String.valueOf(fileDescriptor)));
                     playMedia();
 
                 } catch (IOException e) {

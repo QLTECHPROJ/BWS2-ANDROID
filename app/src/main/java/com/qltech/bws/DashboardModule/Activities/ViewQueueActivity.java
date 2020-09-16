@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,7 +36,6 @@ import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.ItemMoveCallback;
 import com.qltech.bws.Utility.MeasureRatio;
-import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityViewQueueBinding;
 import com.qltech.bws.databinding.QueueListLayoutBinding;
 
@@ -79,10 +77,10 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     ArrayList<AddToQueueModel> addToQueueModelList;
     SharedPreferences shared;
     Boolean queuePlay, audioPlay;
+    QueueAdapter adapter;
     private long mLastClickTime = 0;
     private Handler handler;
-    QueueAdapter adapter;
-//    private AudioManager mAudioManager;
+    //    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -168,6 +166,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 handler.removeCallbacks(UpdateSongTime);
                 isPrepare = false;
                 isMediaStart = false;
+                isPause = false;
                 if (IsRepeat.equalsIgnoreCase("1")) {
                     if (position < (listSize - 1)) {
                         position = position + 1;
@@ -187,7 +186,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     }
                 } else {
                     if (queuePlay) {
-                        addToQueueModelList.remove(position);
                         adapter.callRemoveList(position);
                         listSize = addToQueueModelList.size();
                         if (position < listSize - 1) {
@@ -195,7 +193,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                         } else {
                             if (listSize == 0) {
                                 stopMedia();
-
                             } else {
                                 position = 0;
                                 getPrepareShowData(position);
@@ -395,7 +392,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             } else {
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
-                play(ctx, Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                play(Uri.parse(mainPlayModelList.get(position).getAudioFile()));
                 playMedia();
 //                }
             }
@@ -407,7 +404,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             setInIt(addToQueueModelList.get(position).getName(), addToQueueModelList.get(position).getAudioSubCategory(),
                     addToQueueModelList.get(position).getImageFile(), addToQueueModelList.get(position).getAudioDuration());
          /*   if (!isMediaStart) {
-                play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                play( Uri.parse(addToQueueModelList.get(position).getAudioFile()));
                 playMedia();
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
@@ -423,11 +420,10 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             } else {
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
-                play(ctx, Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                play(Uri.parse(addToQueueModelList.get(position).getAudioFile()));
                 playMedia();
             }
 //            }
-
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson2 = new Gson();
