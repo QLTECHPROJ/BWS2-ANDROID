@@ -82,8 +82,8 @@
                 android:id="@+id/ivLock"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
-                android:layout_marginLeft="@dimen/_8sdp"
-                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_marginLeft="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_23sdp"
                 android:src="@drawable/ic_lock_icon"
                 android:visibility="gone" />
         </RelativeLayout>

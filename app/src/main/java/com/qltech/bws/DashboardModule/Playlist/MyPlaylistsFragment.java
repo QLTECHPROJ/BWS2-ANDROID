@@ -247,28 +247,32 @@ public class MyPlaylistsFragment extends Fragment {
     private void prepareData(String UserID, String PlaylistID) {
         searchClear(searchEditText);
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            if (comefrom_search == 1) {
-                Fragment fragment = new TransparentPlayerFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.rlSearchList, fragment)
-                        .commit();
+        try {
+            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            if (!AudioFlag.equalsIgnoreCase("0")) {
+                if (comefrom_search == 1) {
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.rlSearchList, fragment)
+                            .commit();
+                } else {
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.rlPlaylist, fragment)
+                            .commit();
+                }
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(10, 8, 10, 260);
+                binding.llSpace.setLayoutParams(params);
             } else {
-                Fragment fragment = new TransparentPlayerFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.rlPlaylist, fragment)
-                        .commit();
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(10, 8, 10, 50);
+                binding.llSpace.setLayoutParams(params);
             }
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 8, 10, 260);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 8, 10, 50);
-            binding.llSpace.setLayoutParams(params);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
@@ -393,18 +397,22 @@ public class MyPlaylistsFragment extends Fragment {
         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, myPlaylist);
         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
         editor.commit();
-        if (comefrom_search == 1) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlSearchList, fragment)
-                    .commit();
-        } else {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlPlaylist, fragment)
-                    .commit();
+        try {
+            if (comefrom_search == 1) {
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.rlSearchList, fragment)
+                        .commit();
+            } else {
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.rlPlaylist, fragment)
+                        .commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

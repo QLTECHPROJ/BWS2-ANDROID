@@ -20,8 +20,6 @@ import com.qltech.bws.AddPayment.AddPaymentActivity;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Adapters.AllCardAdapter;
 import com.qltech.bws.BillingOrderModule.Models.CardListModel;
-import com.qltech.bws.BillingOrderModule.Models.PayNowDetailsModel;
-import com.qltech.bws.MembershipModule.Activities.OrderSummaryActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -56,9 +54,9 @@ public class PaymentFragment extends Fragment {
         binding.rvCardList.setLayoutManager(mLayoutManager);
         binding.rvCardList.setItemAnimator(new DefaultItemAnimator());
 
-        if (!BtnVisible.equalsIgnoreCase("")){
+        if (!BtnVisible.equalsIgnoreCase("")) {
             binding.btnCheckout.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             binding.btnCheckout.setVisibility(View.GONE);
         }
 
@@ -73,7 +71,7 @@ public class PaymentFragment extends Fragment {
         return view;
     }
 
-    private void prepareCardList(){
+    private void prepareCardList() {
         if (BWSApplication.isNetworkConnected(context)) {
             showProgressBar();
             Call<CardListModel> listCall = APIClient.getClient().getCardLists(userId);

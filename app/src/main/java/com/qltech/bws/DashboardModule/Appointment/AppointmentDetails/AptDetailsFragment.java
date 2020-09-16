@@ -36,11 +36,11 @@ public class AptDetailsFragment extends Fragment {
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
 
-        if(appointmentDetail.getDate().equalsIgnoreCase("")
-                &&appointmentDetail.getUserName().equalsIgnoreCase("")
-                &&appointmentDetail.getTime().equalsIgnoreCase("")){
+        if (appointmentDetail.getDate().equalsIgnoreCase("")
+                && appointmentDetail.getUserName().equalsIgnoreCase("")
+                && appointmentDetail.getTime().equalsIgnoreCase("")) {
             binding.llDetails.setVisibility(View.GONE);
-        }else{
+        } else {
             binding.llDetails.setVisibility(View.VISIBLE);
         }
         binding.tvTilte.setText(appointmentDetail.getName());
@@ -53,9 +53,9 @@ public class AptDetailsFragment extends Fragment {
         Glide.with(getActivity()).load(appointmentDetail.getImage()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile);
 
-        if(appointmentDetail.getBookUrl().equalsIgnoreCase("")){
+        if (appointmentDetail.getBookUrl().equalsIgnoreCase("")) {
             binding.btnComplete.setVisibility(View.GONE);
-        }else{
+        } else {
             binding.btnComplete.setVisibility(View.VISIBLE);
         }
         binding.btnComplete.setOnClickListener(view1 -> {

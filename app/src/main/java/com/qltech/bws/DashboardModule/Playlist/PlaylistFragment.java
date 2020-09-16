@@ -47,6 +47,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment.ComeFromPlaylistViewAll;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 
 public class PlaylistFragment extends Fragment {
@@ -71,98 +72,57 @@ public class PlaylistFragment extends Fragment {
         binding.rvMainPlayList.setItemAnimator(new DefaultItemAnimator());
         prepareData();
 
-        binding.rlCreatePlaylist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Dialog dialog = new Dialog(getActivity());
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.create_palylist);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
-                final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-                final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
-                edtCreate.requestFocus();
-                dialog.setOnKeyListener((v, keyCode, event) -> {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss();
-                        return true;
-                    }
-                    return false;
-                });
-
-                rlCreate.setOnClickListener(view1 -> {
-                    if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                        BWSApplication.showToast("Please provide the playlist's name", getActivity());
-                    } else {
-                        if (BWSApplication.isNetworkConnected(getActivity())) {
-                            Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
-                            listCall.enqueue(new Callback<CreatePlaylistModel>() {
-                                @Override
-                                public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
-                                    if (response.isSuccessful()) {
-                                        CreatePlaylistModel listModel = response.body();
-                                        callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "");
-                                        dialog.dismiss();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
-                                    hideProgressBar();
-                                }
-                            });
-                        } else {
-                            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-                        }
-                    }
-                });
-
-                tvCancel.setOnClickListener(v -> dialog.dismiss());
-                dialog.show();
-                dialog.setCancelable(false);
-            }
-        });
-
         return view;
     }
 
     private void callMyPlaylistsFragment(String s, String id, String name, String playlistImage) {
-        comefrom_search = 0;
-        Bundle bundle = new Bundle();
-        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        bundle.putString("New", s);
-        bundle.putString("PlaylistID", id);
-        bundle.putString("PlaylistName", name);
-        bundle.putString("PlaylistImage", playlistImage);
-        myPlaylistsFragment.setArguments(bundle);
-        fragmentManager1.beginTransaction()
-                .add(R.id.rlPlaylist, myPlaylistsFragment)
-                .commit();
+        try {
+            comefrom_search = 0;
+            Bundle bundle = new Bundle();
+            Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            bundle.putString("New", s);
+            bundle.putString("PlaylistID", id);
+            bundle.putString("PlaylistName", name);
+            bundle.putString("PlaylistImage", playlistImage);
+            myPlaylistsFragment.setArguments(bundle);
+            fragmentManager1.beginTransaction()
+                    .add(R.id.rlPlaylist, myPlaylistsFragment)
+                    .commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (ComeFromPlaylistViewAll == 1) {
+            prepareData();
+            ComeFromPlaylistViewAll = 0;
+        }
         prepareData();
     }
 
     private void prepareData() {
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlPlaylist, fragment)
-                    .commit();
+        try {
+            if (!AudioFlag.equalsIgnoreCase("0")) {
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.rlPlaylist, fragment)
+                        .commit();
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 6, 13, 200);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 6, 13, 0);
-            binding.llSpace.setLayoutParams(params);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(13, 6, 13, 200);
+                binding.llSpace.setLayoutParams(params);
+            } else {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(13, 6, 13, 0);
+                binding.llSpace.setLayoutParams(params);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
@@ -220,14 +180,71 @@ public class PlaylistFragment extends Fragment {
                 public void onClick(View view) {
                     Fragment viewAllPlaylistFragment = new ViewAllPlaylistFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
+                    fragmentManager1.beginTransaction().addToBackStack("ViewAllPlaylistFragment")
                             .add(R.id.rlPlaylist, viewAllPlaylistFragment)
-                            .addToBackStack("ViewAllPlaylistFragment")
                             .commit();
                     Bundle bundle = new Bundle();
                     bundle.putString("GetLibraryID", listModelList.get(position).getGetLibraryID());
                     bundle.putString("Name", listModelList.get(position).getView());
                     viewAllPlaylistFragment.setArguments(bundle);
+                }
+            });
+
+            binding.rlCreatePlaylist.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                    } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
+                            || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                        final Dialog dialog = new Dialog(getActivity());
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setContentView(R.layout.create_palylist);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+                        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                        final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
+                        final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+                        final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+                        edtCreate.requestFocus();
+                        dialog.setOnKeyListener((v, keyCode, event) -> {
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                dialog.dismiss();
+                                return true;
+                            }
+                            return false;
+                        });
+
+                        rlCreate.setOnClickListener(view1 -> {
+                            if (edtCreate.getText().toString().equalsIgnoreCase("")) {
+                                BWSApplication.showToast("Please provide the playlist's name", getActivity());
+                            } else {
+                                if (BWSApplication.isNetworkConnected(getActivity())) {
+                                    Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
+                                    listCall.enqueue(new Callback<CreatePlaylistModel>() {
+                                        @Override
+                                        public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
+                                            if (response.isSuccessful()) {
+                                                CreatePlaylistModel listModel = response.body();
+                                                callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "");
+                                                dialog.dismiss();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
+                                            hideProgressBar();
+                                        }
+                                    });
+                                } else {
+                                    BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+                                }
+                            }
+                        });
+
+                        tvCancel.setOnClickListener(v -> dialog.dismiss());
+                        dialog.show();
+                        dialog.setCancelable(false);
+                    }
                 }
             });
 
@@ -308,6 +325,12 @@ public class PlaylistFragment extends Fragment {
             holder.binding.tvPlaylistName.setText(listModelList.get(position).getPlaylistName());
             Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+
+            if (IsLock.equalsIgnoreCase("1")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
 
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

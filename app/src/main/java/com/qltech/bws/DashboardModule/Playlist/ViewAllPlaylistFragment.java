@@ -44,6 +44,7 @@ public class ViewAllPlaylistFragment extends Fragment {
     String GetLibraryID, Name, UserID;
     ArrayList<MainPlayListModel.ResponseData.Detail> Audiolist;
     String AudioFlag;
+    public static int ComeFromPlaylistViewAll = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,13 +82,17 @@ public class ViewAllPlaylistFragment extends Fragment {
     }
 
     private void callBack() {
-        Fragment playlistFragment = new PlaylistFragment();
+        ComeFromPlaylistViewAll = 1;
+        FragmentManager fm = getActivity()
+                .getSupportFragmentManager();
+        fm.popBackStack("ViewAllPlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        /*Fragment playlistFragment = new PlaylistFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
                 .add(R.id.rlPlaylist, playlistFragment)
                 .commit();
         Bundle bundle = new Bundle();
-        playlistFragment.setArguments(bundle);
+        playlistFragment.setArguments(bundle);*/
     }
 
     @Override
@@ -103,7 +108,6 @@ public class ViewAllPlaylistFragment extends Fragment {
             fragmentManager1.beginTransaction()
                     .add(R.id.rlPlaylist, fragment)
                     .commit();
-
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(4, 6, 4, 260);
             binding.llSpace.setLayoutParams(params);
@@ -187,6 +191,12 @@ public class ViewAllPlaylistFragment extends Fragment {
             holder.binding.tvPlaylistName.setText(listModelList.get(position).getPlaylistName());
             Glide.with(getActivity()).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+
+            if (IsLock.equalsIgnoreCase("1")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
 
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

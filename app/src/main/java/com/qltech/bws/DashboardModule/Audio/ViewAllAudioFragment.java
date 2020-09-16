@@ -48,6 +48,7 @@ public class ViewAllAudioFragment extends Fragment {
     FragmentViewAllAudioBinding binding;
     String ID, Name, UserID, AudioFlag;
     public static boolean viewallAudio = false;
+    public static int ComeFromAudioViewAll = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,6 +85,11 @@ public class ViewAllAudioFragment extends Fragment {
     }
 
     private void callBack() {
+        /*ComeFromAudioViewAll = 1;
+        FragmentManager fm = getActivity()
+                .getSupportFragmentManager();
+        fm.popBackStack("ViewAllAudioFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);*/
+
         Fragment audioFragment = new AudioFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
@@ -173,6 +179,11 @@ public class ViewAllAudioFragment extends Fragment {
             Glide.with(getActivity()).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
+            if (IsLock.equalsIgnoreCase("1")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

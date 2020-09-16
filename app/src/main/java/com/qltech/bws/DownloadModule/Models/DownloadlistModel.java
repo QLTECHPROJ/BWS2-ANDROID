@@ -134,6 +134,9 @@ public class DownloadlistModel {
         @SerializedName("Audiomastercat")
         @Expose
         private String audiomastercat;
+        @SerializedName("IsPlay")
+        @Expose
+        private String isPlay;
         @SerializedName("AudioSubCategory")
         @Expose
         private String audioSubCategory;
@@ -160,6 +163,7 @@ public class DownloadlistModel {
             like = in.readString();
             download = in.readString();
             isLock = in.readString();
+            isPlay = in.readString();
         }
 
         public static final Creator<Audio> CREATOR = new Creator<Audio>() {
@@ -262,6 +266,14 @@ public class DownloadlistModel {
             this.isLock = isLock;
         }
 
+        public String getIsPlay() {
+            return isPlay;
+        }
+
+        public void setIsPlay(String isPlay) {
+            this.isPlay = isPlay;
+        }
+
         public String getDownload() {
             return download;
         }
@@ -289,6 +301,7 @@ public class DownloadlistModel {
             parcel.writeString(like);
             parcel.writeString(download);
             parcel.writeString(isLock);
+            parcel.writeString(isPlay);
         }
     }
 

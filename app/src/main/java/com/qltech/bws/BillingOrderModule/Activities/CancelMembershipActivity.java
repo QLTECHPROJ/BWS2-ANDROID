@@ -70,7 +70,6 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
             }
         });
 
-
         binding.cbTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,7 +107,6 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                 binding.edtCancelBox.setVisibility(View.VISIBLE);
             }
         });
-
 
         binding.btnCancelSubscrible.setOnClickListener(new View.OnClickListener() {
             @Override

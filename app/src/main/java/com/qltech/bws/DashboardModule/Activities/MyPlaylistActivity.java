@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -30,6 +31,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Adapters.DirectionAdapter;
+import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.RenamePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
@@ -207,6 +209,35 @@ public class MyPlaylistActivity extends AppCompatActivity {
                         }
 
                         binding.llDownload.setVisibility(View.VISIBLE);
+
+                        binding.llDownload.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (BWSApplication.isNetworkConnected(ctx)) {
+                                    showProgressBar();
+                                    Call<DownloadPlaylistModel> listCall = null;
+                                    listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
+                                    listCall.enqueue(new Callback<DownloadPlaylistModel>() {
+                                        @Override
+                                        public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
+                                            if (response.isSuccessful()) {
+                                                hideProgressBar();
+                                                DownloadPlaylistModel model = response.body();
+                                                BWSApplication.showToast(model.getResponseMessage(), ctx);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
+                                            hideProgressBar();
+                                        }
+                                    });
+
+                                } else {
+                                    Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
 
                         String[] elements = model.getResponseData().getPlaylistSubcat().split(",");
                         List<String> direction = Arrays.asList(elements);

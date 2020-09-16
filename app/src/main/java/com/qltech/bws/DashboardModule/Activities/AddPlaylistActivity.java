@@ -42,6 +42,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
+
 public class AddPlaylistActivity extends AppCompatActivity {
     ActivityAddPlaylistBinding binding;
     String UserID, AudioId;
@@ -65,6 +67,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                comefrom_search = 1;
                 finish();
             }
         });
@@ -129,6 +132,12 @@ public class AddPlaylistActivity extends AppCompatActivity {
         binding.rvPlayLists.setLayoutManager(played);
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
         prepareData(ctx);
+    }
+
+    @Override
+    public void onBackPressed() {
+        comefrom_search = 1;
+        finish();
     }
 
     @Override
@@ -204,7 +213,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                                     SucessModel listModel = response.body();
                                     BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                    finish();
                                 }
                             }
 

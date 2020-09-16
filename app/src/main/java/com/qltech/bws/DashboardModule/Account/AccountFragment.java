@@ -331,7 +331,6 @@ public class AccountFragment extends Fragment {
                                 startActivity(i);
                             }
                         });
-
                     } else {
                         hideProgressBar();
                     }

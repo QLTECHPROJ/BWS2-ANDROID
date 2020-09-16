@@ -392,7 +392,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         if (audioPlay) {
 
             id = mainPlayModelList.get(position).getID();
-            setInIt(mainPlayModelList.get(position).getName(), mainPlayModelList.get(position).getAudioSubCategory(),
+            setInIt(mainPlayModelList.get(position).getName(), mainPlayModelList.get(position).getAudiomastercat(),
                     mainPlayModelList.get(position).getImageFile(), mainPlayModelList.get(position).getAudioDuration());
 
            /* if (!isMediaStart) {
@@ -421,7 +421,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 position = 0;
             }
             id = addToQueueModelList.get(position).getID();
-            setInIt(addToQueueModelList.get(position).getName(), addToQueueModelList.get(position).getAudioSubCategory(),
+            setInIt(addToQueueModelList.get(position).getName(), addToQueueModelList.get(position).getAudiomastercat(),
                     addToQueueModelList.get(position).getImageFile(), addToQueueModelList.get(position).getAudioDuration());
          /*   if (!isMediaStart) {
                 play( Uri.parse(addToQueueModelList.get(position).getAudioFile()));
@@ -458,10 +458,10 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
 
-    private void setInIt(String name, String audioSubCategory, String imageFile, String audioDuration) {
+    private void setInIt(String name, String audiomastercat, String imageFile, String audioDuration) {
         binding.tvTitle.setText(name);
         binding.tvName.setText(name);
-        binding.tvCategory.setText(audioSubCategory);
+        binding.tvCategory.setText(audiomastercat);
         Glide.with(ctx).load(imageFile).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
         binding.tvTime.setText(audioDuration);
@@ -582,7 +582,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
             holder.binding.tvTitle.setText(listModel.getName());
             holder.binding.tvTime.setText(listModel.getAudioDuration());
-            binding.tvCategory.setText(listModel.getAudioSubCategory());
+            binding.tvCategory.setText(listModel.getAudiomastercat());
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.1f, 0);
@@ -601,7 +601,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 isPrepare = false;
                 isMediaStart = false;
 
-                setInIt(listModel.getName(), listModel.getAudioSubCategory(),
+                setInIt(listModel.getName(), listModel.getAudiomastercat(),
                         listModel.getImageFile(), listModel.getAudioDuration());
                 savePrefQueue(position, true, false, listModelList, ctx);
                 getPrepareShowData(position);

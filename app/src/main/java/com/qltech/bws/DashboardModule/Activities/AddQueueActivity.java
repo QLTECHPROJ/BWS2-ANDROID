@@ -51,6 +51,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
+
 public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
     String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comeFrom = "";
@@ -181,9 +183,12 @@ public class AddQueueActivity extends AppCompatActivity {
         binding.llRepeat.setOnClickListener(view -> callRepeat());
 
         binding.llShuffle.setOnClickListener(view -> callShuffle());
+
         binding.llRemovePlaylist.setOnClickListener(view -> callRemoveFromPlayList());
+
         binding.llBack.setOnClickListener(view -> {
-          /*  Intent i = new Intent(ctx, PlayWellnessActivity.class);
+            ComeFindAudio = 1;
+            /*  Intent i = new Intent(ctx, PlayWellnessActivity.class);
             i.putExtra("Like", Like);
             i.putExtra("Download", Download);
             startActivity(i);*/
@@ -431,6 +436,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        ComeFindAudio = 1;
         if (!comeFrom.equalsIgnoreCase("")) {
             finish();
         } else {
@@ -570,9 +576,9 @@ public class AddQueueActivity extends AppCompatActivity {
                             }
                         });
 
-                        if (directionModel.getResponseData().get(0).getAudioSubCategory().equalsIgnoreCase("")){
+                        if (directionModel.getResponseData().get(0).getAudioSubCategory().equalsIgnoreCase("")) {
                             binding.rvDirlist.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             binding.rvDirlist.setVisibility(View.VISIBLE);
                             String[] elements = directionModel.getResponseData().get(0).getAudioSubCategory().split(",");
                             List<String> direction = Arrays.asList(elements);

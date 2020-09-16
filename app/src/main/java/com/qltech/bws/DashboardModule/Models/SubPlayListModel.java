@@ -260,7 +260,7 @@ public class SubPlayListModel {
             parcel.writeString(like);
         }
 
-        public static class PlaylistSong implements Parcelable{
+        public static class PlaylistSong implements Parcelable {
             @SerializedName("ID")
             @Expose
             private String iD;
@@ -324,6 +324,7 @@ public class SubPlayListModel {
                     return new PlaylistSong[size];
                 }
             };
+
             public String getImageFile() {
                 return imageFile;
             }
