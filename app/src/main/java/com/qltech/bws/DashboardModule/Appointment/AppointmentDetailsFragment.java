@@ -36,6 +36,8 @@ import retrofit2.Response;
 public class AppointmentDetailsFragment extends Fragment {
     FragmentAppointmentDetailsBinding binding;
     Activity activity;
+    View view;
+    public static int ComeFromAppointmentDetail = 0;
     String UserId, appointmentTypeId, appointmentName, appointmentMainName, appointmentImage, AudioFlag;
     AppointmentDetailModel globalAppointmentDetailModel;
 
@@ -43,7 +45,7 @@ public class AppointmentDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment_details, container, false);
-        View view = binding.getRoot();
+        view = binding.getRoot();
         activity = getActivity();
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
 
@@ -57,6 +59,15 @@ public class AppointmentDetailsFragment extends Fragment {
             appointmentName = getArguments().getString("appointmentName");
             appointmentImage = getArguments().getString("appointmentImage");
         }
+
+        binding.llBack.setOnClickListener(view1 -> callBack());
+        getAppointmentData();
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
@@ -66,14 +77,14 @@ public class AppointmentDetailsFragment extends Fragment {
             }
             return false;
         });
-
-        binding.llBack.setOnClickListener(view1 -> callBack());
-        getAppointmentData();
-        return view;
     }
 
     private void callBack() {
-        Bundle bundle = new Bundle();
+        ComeFromAppointmentDetail = 1;
+        FragmentManager fm = getActivity()
+                .getSupportFragmentManager();
+        fm.popBackStack("AppointmentDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        /*Bundle bundle = new Bundle();
         Fragment sessionsFragment = new SessionsFragment();
         bundle.putString("appointmentMainName", appointmentMainName);
         bundle.putString("appointmentName", appointmentName);
@@ -81,8 +92,8 @@ public class AppointmentDetailsFragment extends Fragment {
         sessionsFragment.setArguments(bundle);
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
-                .add(R.id.flSession, sessionsFragment)
-                .commit();
+                .replace(R.id.flMainLayout, sessionsFragment)
+                .commit();*/
     }
 
     private void getAppointmentData() {

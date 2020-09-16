@@ -519,12 +519,10 @@ public class AddQueueActivity extends AppCompatActivity {
                             binding.tvSubDire.setText("");
                             binding.tvSubDire.setVisibility(View.GONE);
                             binding.tvDire.setVisibility(View.GONE);
-                            binding.rvDirlist.setVisibility(View.GONE);
                         } else {
                             binding.tvSubDire.setText(directionModel.getResponseData().get(0).getAudioDirection());
                             binding.tvSubDire.setVisibility(View.VISIBLE);
                             binding.tvDire.setVisibility(View.VISIBLE);
-                            binding.rvDirlist.setVisibility(View.VISIBLE);
                         }
 
 
@@ -571,15 +569,19 @@ public class AddQueueActivity extends AppCompatActivity {
                             }
                         });
 
-                        String[] elements = directionModel.getResponseData().get(0).getAudioSubCategory().split(",");
-                        List<String> direction = Arrays.asList(elements);
+                        if (directionModel.getResponseData().get(0).getAudioSubCategory().equalsIgnoreCase("")){
+                            binding.rvDirlist.setVisibility(View.GONE);
+                        }else {
+                            binding.rvDirlist.setVisibility(View.VISIBLE);
+                            String[] elements = directionModel.getResponseData().get(0).getAudioSubCategory().split(",");
+                            List<String> direction = Arrays.asList(elements);
 
-                        DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
-                        RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
-                        binding.rvDirlist.setLayoutManager(recentlyPlayed);
-                        binding.rvDirlist.setItemAnimator(new DefaultItemAnimator());
-                        binding.rvDirlist.setAdapter(directionAdapter);
-
+                            DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
+                            RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
+                            binding.rvDirlist.setLayoutManager(recentlyPlayed);
+                            binding.rvDirlist.setItemAnimator(new DefaultItemAnimator());
+                            binding.rvDirlist.setAdapter(directionAdapter);
+                        }
                     } else {
                     }
                 }

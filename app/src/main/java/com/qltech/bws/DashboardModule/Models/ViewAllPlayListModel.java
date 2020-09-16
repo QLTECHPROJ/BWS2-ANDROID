@@ -58,6 +58,9 @@ public class ViewAllPlayListModel {
         @SerializedName("View")
         @Expose
         private String view;
+        @SerializedName("IsLock")
+        @Expose
+        private String IsLock;
         @SerializedName("UserID")
         @Expose
         private String userID;
@@ -87,6 +90,14 @@ public class ViewAllPlayListModel {
 
         public void setUserID(String userID) {
             this.userID = userID;
+        }
+
+        public String getIsLock() {
+            return IsLock;
+        }
+
+        public void setIsLock(String isLock) {
+            IsLock = isLock;
         }
 
         public List<Detail> getDetails() {

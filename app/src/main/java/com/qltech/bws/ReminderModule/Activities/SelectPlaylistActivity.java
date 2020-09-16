@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
@@ -41,6 +42,13 @@ public class SelectPlaylistActivity extends AppCompatActivity {
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
 
+        binding.llBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         adapter = new SelectPlaylistAdapter(model);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         binding.rvSelectPlaylist.setLayoutManager(mLayoutManager);
@@ -48,6 +56,11 @@ public class SelectPlaylistActivity extends AppCompatActivity {
         binding.rvSelectPlaylist.setAdapter(adapter);
 
         prepareData();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     private void prepareData() {

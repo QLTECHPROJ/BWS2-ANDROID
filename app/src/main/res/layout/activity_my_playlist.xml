@@ -73,6 +73,19 @@
                     android:ellipsize="end"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
+                    android:maxLines="1"
+                    android:visibility="gone"
+                    android:textColor="#838383"
+                    android:textSize="@dimen/_13sdp" />
+
+                <TextView
+                    android:id="@+id/tvTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
                     android:textColor="#838383"
                     android:textSize="@dimen/_13sdp" />
 

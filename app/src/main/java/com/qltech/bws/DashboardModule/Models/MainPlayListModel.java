@@ -64,6 +64,9 @@ public class MainPlayListModel {
         @SerializedName("UserID")
         @Expose
         private String userID;
+        @SerializedName("IsLock")
+        @Expose
+        private String IsLock;
         @SerializedName("Details")
         @Expose
         private ArrayList<Detail> details = null;
@@ -90,6 +93,14 @@ public class MainPlayListModel {
 
         public void setUserID(String userID) {
             this.userID = userID;
+        }
+
+        public String getIsLock() {
+            return IsLock;
+        }
+
+        public void setIsLock(String isLock) {
+            IsLock = isLock;
         }
 
         public ArrayList<Detail> getDetails() {

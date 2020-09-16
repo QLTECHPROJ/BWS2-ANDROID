@@ -436,44 +436,42 @@ public class UserProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
-            Glide.with(this).load(imageFilePath)
-                    .placeholder(R.drawable.default_profile)
-                    .thumbnail(0.1f)
-                    .dontAnimate().into(binding.civProfile);
-            if (BWSApplication.isNetworkConnected(ctx)) {
-                showProgressBar();
-                TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, image);
-                Call<AddProfileModel> listCall = APIClient.getClient().getAddProfile(UserID, typedFile);
-                listCall.enqueue(new Callback<AddProfileModel>() {
-                    @Override
-                    public void onResponse(Call<AddProfileModel> call, Response<AddProfileModel> response) {
-                        hideProgressBar();
-                        if (response.isSuccessful()) {
-                            AddProfileModel model = response.body();
-                            if (model.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                hideProgressBar();
-                                profilePicPath = model.getResponseData().getProfileImage();
-                                Glide.with(getApplicationContext()).load(profilePicPath)
-                                        .placeholder(R.drawable.default_profile)
-                                        .thumbnail(1f)
-                                        .dontAnimate().into(binding.civProfile);
-                                BWSApplication.showToast(model.getResponseMessage(), ctx);
-                            }
-                        } else {
-                            BWSApplication.showToast(response.message(), ctx);
-                        }
+            try {
+                Glide.with(this).load(imageFilePath)
+                        .placeholder(R.drawable.default_profile)
+                        .thumbnail(0.1f)
+                        .dontAnimate().into(binding.civProfile);
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    showProgressBar();
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(CONSTANTS.PREF_KEY_UserID, UserID);
+                    TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, image);
+                    APIClientProfile.getApiService().getAddProfiles(UserID, typedFile,
+                            new retrofit.Callback<AddProfileModel>() {
+                                @Override
+                                public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
+                                    if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                        hideProgressBar();
+                                        profilePicPath = addProfileModel.getResponseData().getProfileImage();
+                                        Glide.with(getApplicationContext()).load(profilePicPath)
+                                                .placeholder(R.drawable.default_profile)
+                                                .thumbnail(1f)
+                                                .dontAnimate().into(binding.civProfile);
+                                        BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
+                                    }
+                                }
 
-                    }
-
-                    @Override
-                    public void onFailure(Call<AddProfileModel> call, Throwable t) {
-                        hideProgressBar();
-                        Log.e("FailureeeeeFailureeeee", t.getMessage());
-                        BWSApplication.showToast("Failureeeee" + t.getMessage(), ctx);
-                    }
-                });
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                                @Override
+                                public void failure(RetrofitError e) {
+                                    hideProgressBar();
+                                    BWSApplication.showToast(e.getMessage(), ctx);
+                                }
+                            });
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
             if (data != null) {
@@ -485,45 +483,10 @@ public class UserProfileActivity extends AppCompatActivity {
                         .dontAnimate().into(binding.civProfile);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
-                    File file = new File(FileUtil.getPath(selectedImageUri, this));
-                    TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, file);
-                    Call<AddProfileModel> listCall = APIClient.getClient().getAddProfile(UserID, typedFile);
-                    listCall.enqueue(new Callback<AddProfileModel>() {
-                        @Override
-                        public void onResponse(Call<AddProfileModel> call, Response<AddProfileModel> response) {
-                            hideProgressBar();
-                            if (response.isSuccessful()) {
-                                AddProfileModel model = response.body();
-                                if (model.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                    hideProgressBar();
-                                    profilePicPath = model.getResponseData().getProfileImage();
-                                    Glide.with(getApplicationContext()).load(profilePicPath)
-                                            .placeholder(R.drawable.default_profile)
-                                            .thumbnail(1f)
-                                            .dontAnimate().into(binding.civProfile);
-                                    BWSApplication.showToast(model.getResponseMessage(), ctx);
-                                }
-                            } else {
-                                BWSApplication.showToast(response.message(), ctx);
-                            }
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<AddProfileModel> call, Throwable t) {
-                            hideProgressBar();
-                            BWSApplication.showToast("Failureeeee", ctx);
-                        }
-                    });
-                } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                }
-
-                /*if (BWSApplication.isNetworkConnected(ctx)) {
-                    showProgressBar();
                     HashMap<String, String> map = new HashMap<>();
                     map.put(CONSTANTS.PREF_KEY_UserID, UserID);
                     File file = new File(FileUtil.getPath(selectedImageUri, this));
+
                     TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, file);
                     APIClientProfile.getApiService().getAddProfiles(UserID, typedFile,
                             new retrofit.Callback<AddProfileModel>() {
@@ -548,7 +511,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             });
                 } else {
                     BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                }*/
+                }
             }
         } else if (requestCode == RESULT_CANCELED) {
             finish();

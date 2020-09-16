@@ -75,7 +75,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_38sdp"
+                    android:layout_marginTop="@dimen/_35sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
                     android:text="What time do you want to set the reminder?"
@@ -87,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/_24sdp"
+                    android:layout_marginTop="@dimen/_22sdp"
                     android:background="@drawable/transparent_bg"
                     android:orientation="horizontal"
                     android:paddingHorizontal="@dimen/_18sdp"
@@ -113,7 +113,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_28sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="start"
                     android:text="@string/Repeat"
@@ -136,15 +136,30 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_30sdp"
-                        android:fontFamily="@font/montserrat_bold"
-                        android:gravity="start"
-                        android:text="@string/Select_Playlist"
-                        android:textColor="@color/light_black"
-                        android:textSize="@dimen/_14sdp" />
+                        android:layout_marginTop="@dimen/_30sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:gravity="start"
+                            android:text="@string/Select_Playlist"
+                            android:textColor="@color/light_black"
+                            android:textSize="@dimen/_14sdp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:rotation="180"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_left_arrow_icon"
+                            app:tint="@color/black" />
+
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/tvPlaylistName"

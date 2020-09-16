@@ -39,7 +39,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
-import static com.qltech.bws.LoginModule.Activities.OtpActivity.IsLocked;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
@@ -130,7 +129,7 @@ public class ViewAllAudioFragment extends Fragment {
                         hideProgressBar();
                         ViewAllAudioListModel listModel = response.body();
                         binding.tvTitle.setText(listModel.getResponseData().getView());
-                        AudiolistAdapter adapter = new AudiolistAdapter(listModel.getResponseData().getDetails());
+                        AudiolistAdapter adapter = new AudiolistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
                         binding.rvMainAudio.setAdapter(adapter);
                     }
                 }
@@ -147,9 +146,11 @@ public class ViewAllAudioFragment extends Fragment {
 
     public class AudiolistAdapter extends RecyclerView.Adapter<AudiolistAdapter.MyViewHolder> {
         private ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList;
+        String IsLock;
 
-        public AudiolistAdapter(ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList) {
+        public AudiolistAdapter(ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList, String IsLock) {
             this.listModelList = listModelList;
+            this.IsLock = IsLock;
         }
 
         @NonNull
@@ -175,10 +176,10 @@ public class ViewAllAudioFragment extends Fragment {
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (IsLocked.equalsIgnoreCase("1")) {
+                    if (IsLock.equalsIgnoreCase("1")) {
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
                         BWSApplication.showToast("Please re-activate your membership plan", getActivity());
-                    } else if (IsLocked.equalsIgnoreCase("0") || IsLocked.equalsIgnoreCase("")) {
+                    } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         player = 1;
                         if (isPrepare||isMediaStart ||isPause) {

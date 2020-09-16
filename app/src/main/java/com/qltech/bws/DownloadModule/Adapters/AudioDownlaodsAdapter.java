@@ -28,7 +28,6 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
-import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.DownloadsLayoutBinding;
 
 import java.util.ArrayList;
@@ -83,30 +82,34 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                player = 1;
-                if (isPrepare||isMediaStart ||isPause) {
-                    stopMedia();
+                if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0") || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                    player = 1;
+                    if (isPrepare || isMediaStart || isPause) {
+                        stopMedia();
+                    }
+                    isPause = false;
+                    isMediaStart = false;
+                    isPrepare = false;
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flAccount, fragment)
+                            .commit();
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(listModelList);
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
+                    editor.commit();
                 }
-                isPause = false;
-                isMediaStart = false;
-                isPrepare = false;
-                Fragment fragment = new TransparentPlayerFragment();
-                FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flAccount, fragment)
-                        .commit();
-                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                Gson gson = new Gson();
-                String json = gson.toJson(listModelList);
-                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
-                editor.commit();
             }
         });
 
@@ -134,7 +137,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                         }
                     });
                 } else {
-                    BWSApplication.showToast(ctx.getString(R.string.no_server_found),ctx);
+                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                 }
             }
         });
@@ -164,7 +167,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     @Override
     public int getItemCount() {
         return listModelList.size();
-}
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         DownloadsLayoutBinding binding;

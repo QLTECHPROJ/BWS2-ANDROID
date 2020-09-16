@@ -57,24 +57,28 @@ public class DashboardActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed() {
-        if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
-            binding.navView.setSelectedItemId(R.id.navigation_audio);
-            if (doubleBackToExitPressedOnce) {
-                super.onBackPressed();
-                return;
-            }
-
-            this.doubleBackToExitPressedOnce = true;
-            BWSApplication.showToast("Press again to exit.", DashboardActivity.this);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce = false;
+        try {
+            if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
+                binding.navView.setSelectedItemId(R.id.navigation_audio);
+                if (doubleBackToExitPressedOnce) {
+                    super.onBackPressed();
+                    return;
                 }
-            }, 2000);
-        }else {
-            super.onBackPressed();
+
+                this.doubleBackToExitPressedOnce = true;
+                BWSApplication.showToast("Press again to exit.", DashboardActivity.this);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        doubleBackToExitPressedOnce = false;
+                    }
+                }, 2000);
+            } else {
+                super.onBackPressed();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

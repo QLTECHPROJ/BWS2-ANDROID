@@ -151,6 +151,7 @@ public class CurrentPlanFragment extends Fragment {
                                 mLastClickTime = SystemClock.elapsedRealtime();
                                 Intent i = new Intent(getActivity(), BillingOrderActivity.class);/*payment - btnaction - current plan*/
                                 i.putExtra("payment", 1);
+                                i.putExtra("BtnVisible","true");
                                 startActivity(i);
                                 getActivity().finish();
                             });

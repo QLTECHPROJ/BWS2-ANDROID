@@ -70,27 +70,31 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String PlaylistId = listModelList.get(position).getPlaylistId();
-                if (BWSApplication.isNetworkConnected(ctx)) {
-                    showProgressBar();
-                    Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, "", PlaylistId);
-                    listCall.enqueue(new Callback<SucessModel>() {
-                        @Override
-                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                            if (response.isSuccessful()) {
-                                hideProgressBar();
-                                SucessModel listModel = response.body();
-                                BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0") || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                    String PlaylistId = listModelList.get(position).getPlaylistId();
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        showProgressBar();
+                        Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, "", PlaylistId);
+                        listCall.enqueue(new Callback<SucessModel>() {
+                            @Override
+                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                if (response.isSuccessful()) {
+                                    hideProgressBar();
+                                    SucessModel listModel = response.body();
+                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<SucessModel> call, Throwable t) {
-                            hideProgressBar();
-                        }
-                    });
-                } else {
-                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                            @Override
+                            public void onFailure(Call<SucessModel> call, Throwable t) {
+                                hideProgressBar();
+                            }
+                        });
+                    } else {
+                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                    }
                 }
             }
         });

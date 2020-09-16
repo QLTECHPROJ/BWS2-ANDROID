@@ -59,6 +59,9 @@ public class ProfileViewModel {
         @SerializedName("Address")
         @Expose
         private String address;
+        @SerializedName("IsLock")
+        @Expose
+        private String isLock;
         @SerializedName("Suburb")
         @Expose
         private String suburb;
@@ -67,7 +70,7 @@ public class ProfileViewModel {
         private String orderTotal;
         @SerializedName("DOB")
         @Expose
-        private String dOB;
+        private String DOB;
         @SerializedName("Ethnicity")
         @Expose
         private String ethnicity;
@@ -90,6 +93,14 @@ public class ProfileViewModel {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public String getIsLock() {
+            return isLock;
+        }
+
+        public void setIsLock(String isLock) {
+            this.isLock = isLock;
         }
 
         public String getOrderTotal() {
@@ -125,11 +136,11 @@ public class ProfileViewModel {
         }
 
         public String getDOB() {
-            return dOB;
+            return DOB;
         }
 
-        public void setDOB(String dOB) {
-            this.dOB = dOB;
+        public void setDOB(String DOB) {
+            this.DOB = DOB;
         }
 
         public String getEthnicity() {

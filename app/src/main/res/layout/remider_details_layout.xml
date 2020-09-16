@@ -4,7 +4,8 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -16,7 +17,7 @@
             <LinearLayout
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginLeft="@dimen/_16sdp"
                 android:layout_weight="0.82"
                 android:orientation="vertical">
 
@@ -27,7 +28,7 @@
                     android:layout_marginRight="@dimen/_25sdp"
                     android:fontFamily="@font/montserrat_medium"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_14sdp" />
 
                 <TextView
                     android:id="@+id/tvDate"
@@ -36,20 +37,18 @@
                     android:layout_marginTop="@dimen/_4sdp"
                     android:layout_marginRight="@dimen/_25sdp"
                     android:fontFamily="@font/montserrat_regular"
-                    android:text="Mon, Tue, Wed, Thu, Fri"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_11sdp" />
+                    android:textSize="@dimen/_12sdp" />
 
                 <TextView
                     android:id="@+id/tvTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="8:30 am"
                     android:layout_marginTop="@dimen/_4sdp"
                     android:layout_marginRight="@dimen/_25sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_16sdp" />
+                    android:textSize="@dimen/_17sdp" />
 
             </LinearLayout>
 
@@ -57,6 +56,7 @@
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginRight="@dimen/_8sdp"
                 android:layout_weight="0.18">
 
                 <Switch
@@ -70,6 +70,11 @@
 
             </LinearLayout>
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.5dp"
+            android:background="#EEEEEE"/>
 
 
     </LinearLayout>

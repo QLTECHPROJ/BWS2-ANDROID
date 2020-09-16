@@ -67,7 +67,6 @@ public class AppointmentFragment extends Fragment {
             appointmentImage = bundle.getString("appointmentImage");
             appointmentMainName = bundle.getString("appointmentMainName");
         }
-        RefreshData();
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPreviousData.setLayoutManager(recentlyPlayed);
         binding.rvPreviousData.setItemAnimator(new DefaultItemAnimator());
@@ -88,11 +87,10 @@ public class AppointmentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        RefreshData();
         preparePreviousAppointmentsData();
     }
 
-    private void RefreshData() {
+    private void preparePreviousAppointmentsData() {
         if (!AudioFlag.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -108,9 +106,6 @@ public class AppointmentFragment extends Fragment {
             params.setMargins(10, 8, 10, 50);
             binding.llSpace.setLayoutParams(params);
         }
-    }
-
-    private void preparePreviousAppointmentsData() {
         try {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);

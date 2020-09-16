@@ -29,7 +29,6 @@ import com.qltech.bws.databinding.SmallBoxLayoutBinding;
 import java.util.ArrayList;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
-import static com.qltech.bws.LoginModule.Activities.OtpActivity.IsLocked;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
@@ -37,14 +36,15 @@ import static com.qltech.bws.Utility.MusicService.isPrepare;
 public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder> {
     Context ctx;
     FragmentActivity activity;
-    String ComeFrom;
+    String ComeFrom, IsLock;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
-    public RecentlyPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity, String ComeFrom) {
+    public RecentlyPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity, String ComeFrom, String IsLock) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
         this.ComeFrom = ComeFrom;
+        this.IsLock = IsLock;
     }
 
     @NonNull
@@ -69,10 +69,10 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (IsLocked.equalsIgnoreCase("1")) {
+                if (IsLock.equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                } else if (IsLocked.equalsIgnoreCase("0") || IsLocked.equalsIgnoreCase("")) {
+                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     player = 1;
                     if (isPrepare||isMediaStart ||isPause) {

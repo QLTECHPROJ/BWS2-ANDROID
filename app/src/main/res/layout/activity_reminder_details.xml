@@ -46,9 +46,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:overScrollMode="never"
+            android:paddingBottom="@dimen/_80sdp"
             android:layout_marginTop="@dimen/_18sdp"
-            android:layout_marginHorizontal="@dimen/_8sdp"
             android:layout_below="@id/rlLayout"/>
+
+        <LinearLayout
+            android:id="@+id/llError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvFound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center"
+                android:text="No result found"
+                android:textColor="@color/dark_blue_gray"
+                android:textSize="@dimen/_16sdp" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnAddReminder"

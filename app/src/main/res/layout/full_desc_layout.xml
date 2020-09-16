@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_24sdp"
-                android:layout_marginTop="@dimen/_33sdp"
+                android:layout_marginTop="@dimen/_25sdp"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
                 android:text="@string/Description"
@@ -38,21 +38,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_24sdp"
-                android:layout_marginTop="@dimen/_18sdp"
+                android:layout_marginTop="@dimen/_13sdp"
                 android:fontFamily="@font/montserrat_medium"
                 android:gravity="start"
+                android:scrollbars="vertical"
                 android:justificationMode="inter_word"
                 android:lineSpacingExtra="@dimen/_4sdp"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_13sdp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_28sdp"
-                android:layout_marginBottom="@dimen/_26sdp"
+                android:layout_marginTop="@dimen/_25sdp"
+                android:layout_marginBottom="@dimen/_24sdp"
                 android:gravity="center"
                 android:orientation="vertical">
 

@@ -31,6 +31,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity.renewPlanFlag;
+import static com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity.renewPlanId;
 
 public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHolder> {
     private List<CardListModel.ResponseData> listModelList;
@@ -155,7 +157,8 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
         btnCheckout.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(activity)) {
                 BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
-                Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(userId, "", "","","","");
+                Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(userId, card_id, renewPlanId, renewPlanFlag,
+                        "","");
                 listCall.enqueue(new Callback<PayNowDetailsModel>() {
                     @Override
                     public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {

@@ -18,12 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -51,7 +48,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
-import static com.qltech.bws.LoginModule.Activities.OtpActivity.IsLocked;
 
 public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
@@ -244,16 +240,20 @@ public class PlaylistFragment extends Fragment {
                 holder.binding.llMainLayout.setVisibility(View.VISIBLE);
                 holder.binding.tvTitle.setText(listModelList.get(position).getView());
                 if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.your_created))) {
-                    PlaylistAdapter adapter1 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity());
+                    PlaylistAdapter adapter1 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
+                            listModelList.get(position).getIsLock());
                     holder.binding.rvMainAudio.setAdapter(adapter1);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase("My Downloads")) {
-                    PlaylistAdapter adapter2 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity());
+                    PlaylistAdapter adapter2 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
+                            listModelList.get(position).getIsLock());
                     holder.binding.rvMainAudio.setAdapter(adapter2);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Recommended))) {
-                    PlaylistAdapter adapter3 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity());
+                    PlaylistAdapter adapter3 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
+                            listModelList.get(position).getIsLock());
                     holder.binding.rvMainAudio.setAdapter(adapter3);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.populars))) {
-                    PlaylistAdapter adapter4 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity());
+                    PlaylistAdapter adapter4 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
+                            listModelList.get(position).getIsLock());
                     holder.binding.rvMainAudio.setAdapter(adapter4);
                 }
             }
@@ -281,10 +281,12 @@ public class PlaylistFragment extends Fragment {
     public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
         private ArrayList<MainPlayListModel.ResponseData.Detail> listModelList;
         Context ctx;
+        String IsLock;
 
-        public PlaylistAdapter(ArrayList<MainPlayListModel.ResponseData.Detail> listModelList, Context ctx) {
+        public PlaylistAdapter(ArrayList<MainPlayListModel.ResponseData.Detail> listModelList, Context ctx, String IsLock) {
             this.listModelList = listModelList;
             this.ctx = ctx;
+            this.IsLock = IsLock;
         }
 
         @NonNull
@@ -310,10 +312,10 @@ public class PlaylistFragment extends Fragment {
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (IsLocked.equalsIgnoreCase("1")) {
+                    if (IsLock.equalsIgnoreCase("1")) {
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
                         BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                    } else if (IsLocked.equalsIgnoreCase("0") || IsLocked.equalsIgnoreCase("")) {
+                    } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         callMyPlaylistsFragment("0",
                                 listModelList.get(position).getPlaylistID(),

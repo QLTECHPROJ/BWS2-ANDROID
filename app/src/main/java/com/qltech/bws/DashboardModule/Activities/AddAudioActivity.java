@@ -309,30 +309,35 @@ public class AddAudioActivity extends AppCompatActivity {
             Glide.with(ctx).load(listModel.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+
             holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String AudioID = listModel.get(position).getID();
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        showProgressBar();
-                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID);
-                        listCall.enqueue(new Callback<SucessModel>() {
-                            @Override
-                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                                if (response.isSuccessful()) {
-                                    hideProgressBar();
-                                    SucessModel listModel = response.body();
-                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                    if (listModel.get(position).getIsLock().equalsIgnoreCase("1")) {
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    } else if (listModel.get(position).getIsLock().equalsIgnoreCase("0") || listModel.get(position).getIsLock().equalsIgnoreCase("")) {
+                        String AudioID = listModel.get(position).getID();
+                        if (BWSApplication.isNetworkConnected(ctx)) {
+                            showProgressBar();
+                            Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID);
+                            listCall.enqueue(new Callback<SucessModel>() {
+                                @Override
+                                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                    if (response.isSuccessful()) {
+                                        hideProgressBar();
+                                        SucessModel listModel = response.body();
+                                        BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                    }
                                 }
-                            }
 
-                            @Override
-                            public void onFailure(Call<SucessModel> call, Throwable t) {
-                                hideProgressBar();
-                            }
-                        });
-                    } else {
-                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                                @Override
+                                public void onFailure(Call<SucessModel> call, Throwable t) {
+                                    hideProgressBar();
+                                }
+                            });
+                        } else {
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                        }
                     }
                 }
             });

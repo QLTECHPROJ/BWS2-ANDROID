@@ -1,6 +1,5 @@
 package com.qltech.bws.DashboardModule.Account;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,11 +9,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -42,7 +38,6 @@ import com.qltech.bws.FaqModule.Activities.FaqActivity;
 import com.qltech.bws.InvoiceModule.Activities.InvoiceActivity;
 import com.qltech.bws.LoginModule.Activities.LoginActivity;
 import com.qltech.bws.R;
-import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
 import com.qltech.bws.ReminderModule.Activities.ReminderDetailsActivity;
 import com.qltech.bws.ResourceModule.Activities.ResourceActivity;
 import com.qltech.bws.UserModule.Activities.UserProfileActivity;
@@ -57,7 +52,6 @@ import com.qltech.bws.databinding.FragmentAccountBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 
 public class AccountFragment extends Fragment {
     FragmentAccountBinding binding;
@@ -116,22 +110,17 @@ public class AccountFragment extends Fragment {
             startActivity(i);
         });
 
-        binding.llReminder.setOnClickListener(view16 -> {
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return;
-            }
-            mLastClickTime = SystemClock.elapsedRealtime();
-            Intent i = new Intent(getActivity(), ReminderDetailsActivity.class);
-            startActivity(i);
-        });
-
         binding.llResource.setOnClickListener(view17 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
+//            if (IsLocked.equalsIgnoreCase("1")) {
+//                BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+//            } else if (IsLocked.equalsIgnoreCase("0") || IsLocked.equalsIgnoreCase("")) {
             Intent i = new Intent(getActivity(), ResourceActivity.class);
             startActivity(i);
+//            }
         });
 
         binding.llFaq.setOnClickListener(view18 -> {
@@ -329,6 +318,20 @@ public class AccountFragment extends Fragment {
                         } else {
                             binding.tvCrtPlan.setText("Current plan: $" + viewModel.getResponseData().getOrderTotal() + " / month");
                         }
+
+                        binding.llReminder.setOnClickListener(view16 -> {
+                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                return;
+                            }
+                            mLastClickTime = SystemClock.elapsedRealtime();
+                            if (viewModel.getResponseData().getIsLock().equalsIgnoreCase("1")) {
+                                BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                            } else if (viewModel.getResponseData().getIsLock().equalsIgnoreCase("0") || viewModel.getResponseData().getIsLock().equalsIgnoreCase("")) {
+                                Intent i = new Intent(getActivity(), ReminderDetailsActivity.class);
+                                startActivity(i);
+                            }
+                        });
+
                     } else {
                         hideProgressBar();
                     }

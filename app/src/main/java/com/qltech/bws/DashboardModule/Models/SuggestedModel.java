@@ -59,6 +59,9 @@ public class SuggestedModel {
         @SerializedName("Name")
         @Expose
         private String name;
+        @SerializedName("IsLock")
+        @Expose
+        private String isLock;
         @SerializedName("AudioFile")
         @Expose
         private String audioFile;
@@ -83,6 +86,14 @@ public class SuggestedModel {
         @SerializedName("Download")
         @Expose
         private String download;
+
+        public String getIsLock() {
+            return isLock;
+        }
+
+        public void setIsLock(String isLock) {
+            this.isLock = isLock;
+        }
 
         public String getID() {
             return iD;

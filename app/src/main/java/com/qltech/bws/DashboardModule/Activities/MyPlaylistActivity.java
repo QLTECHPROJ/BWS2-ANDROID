@@ -52,6 +52,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     String UserID, PlaylistID, Download;
     Context ctx;
     public static int deleteFrg = 0;
+    public static int ComeFindAudio = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +70,18 @@ public class MyPlaylistActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ComeFindAudio = 1;
                 finish();
             }
         });
 
         getPrepareData();
+    }
+
+    @Override
+    public void onBackPressed() {
+        ComeFindAudio = 1;
+        finish();
     }
 
     private void getPrepareData() {
@@ -117,17 +125,23 @@ public class MyPlaylistActivity extends AppCompatActivity {
                         binding.llFind.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                ComeFindAudio = 1;
                                 finish();
                             }
                         });
+                        if (model.getResponseData().getPlaylistMastercat().equalsIgnoreCase("")){
+                            binding.tvDesc.setVisibility(View.GONE);
+                        }else {
+                            binding.tvDesc.setVisibility(View.VISIBLE);
+                            binding.tvDesc.setText(model.getResponseData().getPlaylistMastercat());
+                        }
 
-                        binding.tvName.setText(model.getResponseData().getPlaylistName());
                         if (model.getResponseData().getTotalAudio().equalsIgnoreCase("") &&
                                 model.getResponseData().getTotalhour().equalsIgnoreCase("")
                                 && model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
-                            binding.tvDesc.setText("0 Audio | 0h 0m");
+                            binding.tvTime.setText("0 Audio | 0h 0m");
                         } else {
-                            binding.tvDesc.setText(model.getResponseData().getTotalAudio() + " Audio | "
+                            binding.tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | "
                                     + model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
                         }
 
@@ -194,7 +208,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
                         binding.llDownload.setVisibility(View.VISIBLE);
 
-                        String[] elements = model.getResponseData().getPlaylistMastercat().split(",");
+                        String[] elements = model.getResponseData().getPlaylistSubcat().split(",");
                         List<String> direction = Arrays.asList(elements);
 
                         DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
@@ -280,8 +294,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
                                 final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                                final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
                                 final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
 
+                                tvHeader.setText("Are you sure you want to delete " + model.getResponseData().getPlaylistName() + "  playlist?");
                                 dialog.setOnKeyListener((v, keyCode, event) -> {
                                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                                         dialog.dismiss();

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,9 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Models.RemiderDetailsModel;
+import com.qltech.bws.ReminderModule.Models.ReminderStatusModel;
 import com.qltech.bws.ReminderModule.Models.SelectPlaylistModel;
+import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityReminderDetailsBinding;
 import com.qltech.bws.databinding.ActivityResourceDetailsBinding;
@@ -28,11 +32,15 @@ import com.qltech.bws.databinding.SelectPlaylistLayoutBinding;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ReminderDetailsActivity extends AppCompatActivity {
-    private List<RemiderDetailsModel> model = new ArrayList<>();
     ActivityReminderDetailsBinding binding;
     String UserId;
     Context ctx;
+    Activity activity;
     RemiderDetailsAdapter adapter;
 
     @Override
@@ -40,14 +48,22 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_reminder_details);
         ctx = ReminderDetailsActivity.this;
+        activity = ReminderDetailsActivity.this;
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
-        adapter = new RemiderDetailsAdapter(model);
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         binding.rvReminderDetails.setLayoutManager(mLayoutManager);
         binding.rvReminderDetails.setItemAnimator(new DefaultItemAnimator());
-        binding.rvReminderDetails.setAdapter(adapter);
+
+        binding.llBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         prepareData();
         binding.btnAddReminder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,37 +75,49 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void prepareData() {
-        RemiderDetailsModel list = new RemiderDetailsModel("Ultimate Anger Relief Bundle");
-        model.add(list);
-        list = new RemiderDetailsModel("Ultimate Children’s Bundle");
-        model.add(list);
-        list = new RemiderDetailsModel("Ultimate Communication Bundle");
-        model.add(list);
-        list = new RemiderDetailsModel("Ultimate Executive Performance Bundle");
-        model.add(list);
-        list = new RemiderDetailsModel("Ultimate Fatherhood Stress Bundle -in");
-        model.add(list);
-        list = new RemiderDetailsModel("Ultimate FIFO Workers Survival Bundle");
-        model.add(list);
-        list = new RemiderDetailsModel("Ultimate Insomnia Bundle");
-        model.add(list);
-        list = new RemiderDetailsModel("Ultimate Mental Health Bundle");
-        model.add(list);
-        list = new RemiderDetailsModel("Ultimate Motherhood Stress Bundle");
-        model.add(list);
-        list = new RemiderDetailsModel("Ultimate Peaceful Sleeping Bundle");
-        model.add(list);
-        list = new RemiderDetailsModel("Ultimate Powerful Public Speaking Bundle");
-        model.add(list);
-        list = new RemiderDetailsModel("Ultimate Relationship Breakdown Bundle");
-        model.add(list);
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
-    public class RemiderDetailsAdapter extends RecyclerView.Adapter<RemiderDetailsAdapter.MyViewHolder>{
-        private List<RemiderDetailsModel> model;
+    private void prepareData() {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            Call<RemiderDetailsModel> listCall = APIClient.getClient().getReminderStatus(UserId);
+            listCall.enqueue(new Callback<RemiderDetailsModel>() {
+                @Override
+                public void onResponse(Call<RemiderDetailsModel> call, Response<RemiderDetailsModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        RemiderDetailsModel listModel = response.body();
+                        adapter = new RemiderDetailsAdapter(listModel.getResponseData());
+                        binding.rvReminderDetails.setAdapter(adapter);
 
-        public RemiderDetailsAdapter(List<RemiderDetailsModel> model) {
+                        if (listModel.getResponseData().size() == 0){
+                            binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvReminderDetails.setVisibility(View.GONE);
+                        }else {
+                            binding.llError.setVisibility(View.GONE);
+                            binding.rvReminderDetails.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<RemiderDetailsModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+
+    }
+
+    public class RemiderDetailsAdapter extends RecyclerView.Adapter<RemiderDetailsAdapter.MyViewHolder> {
+        private List<RemiderDetailsModel.ResponseData> model;
+
+        public RemiderDetailsAdapter(List<RemiderDetailsModel.ResponseData> model) {
             this.model = model;
         }
 
@@ -103,8 +131,15 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            RemiderDetailsModel listModel = model.get(position);
-            holder.binding.tvName.setText(listModel.getTitle());
+            holder.binding.tvName.setText(model.get(position).getPlaylistName());
+            holder.binding.tvDate.setText(model.get(position).getReminderDay());
+            holder.binding.tvTime.setText(model.get(position).getReminderTime());
+
+            if (model.get(position).getIsCheck().equalsIgnoreCase("1")) {
+                holder.binding.switchStatus.setChecked(true);
+            } else {
+                holder.binding.switchStatus.setChecked(false);
+            }
         }
 
         @Override

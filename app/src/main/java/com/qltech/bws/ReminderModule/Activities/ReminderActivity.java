@@ -160,6 +160,11 @@ public class ReminderActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
     private void prepareData(String reminderStatus) {
         if (BWSApplication.isNetworkConnected(context)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
@@ -188,7 +193,6 @@ public class ReminderActivity extends AppCompatActivity {
             BWSApplication.showToast(getString(R.string.no_server_found), context);
         }
     }
-
 
     public class ReminderDayAdapter extends RecyclerView.Adapter<ReminderDayAdapter.MyViewHolder> {
         private int row_index = -1, pos = 0;

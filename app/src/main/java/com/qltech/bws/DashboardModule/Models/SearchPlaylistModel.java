@@ -63,6 +63,9 @@ public class SearchPlaylistModel {
         @SerializedName("Image")
         @Expose
         private String image;
+        @SerializedName("IsLock")
+        @Expose
+        private String isLock;
         @SerializedName("MasterCat")
         @Expose
         private String masterCat;
@@ -79,6 +82,14 @@ public class SearchPlaylistModel {
 
         public void setID(String iD) {
             this.iD = iD;
+        }
+
+        public String getIsLock() {
+            return isLock;
+        }
+
+        public void setIsLock(String isLock) {
+            this.isLock = isLock;
         }
 
         public String getName() {

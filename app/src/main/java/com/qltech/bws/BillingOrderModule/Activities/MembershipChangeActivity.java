@@ -37,7 +37,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
     ActivityMembershipChangeBinding binding;
     Context ctx;
     String UserID;
-    public static String planFlag, planId;
+    public static String renewPlanFlag, renewPlanId;
     MembershipPlanAdapter membershipPlanAdapter;
 
     @Override
@@ -172,8 +172,8 @@ public class MembershipChangeActivity extends AppCompatActivity {
             holder.binding.tvSubName.setTextColor(ctx.getResources().getColor(R.color.white));
             holder.binding.tvPlanInterval.setTextColor(ctx.getResources().getColor(R.color.white));
             holder.binding.llFeatures.setBackgroundColor(ctx.getResources().getColor(R.color.white));
-            planFlag = listModel.getPlanFlag();
-            planId = listModel.getPlanID();
+            renewPlanFlag = listModel.getPlanFlag();
+            renewPlanId = listModel.getPlanID();
             i = new Intent(ctx, OrderSummaryActivity.class);
             i.putExtra("comeFrom","membership");
             i.putParcelableArrayListExtra("PlanData", listModelList);

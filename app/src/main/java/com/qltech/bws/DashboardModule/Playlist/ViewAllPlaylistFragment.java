@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -40,13 +39,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.qltech.bws.LoginModule.Activities.OtpActivity.IsLocked;
-
 public class ViewAllPlaylistFragment extends Fragment {
     FragmentViewAllPlaylistBinding binding;
     String GetLibraryID, Name, UserID;
     ArrayList<MainPlayListModel.ResponseData.Detail> Audiolist;
-    public static boolean viewallPlayList = false;
     String AudioFlag;
 
     @Override
@@ -76,7 +72,7 @@ public class ViewAllPlaylistFragment extends Fragment {
         binding.llBack.setOnClickListener(view1 -> {
             callBack();
         });
-        RefreshData();
+
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
         binding.rvMainAudio.setLayoutManager(manager);
@@ -97,11 +93,10 @@ public class ViewAllPlaylistFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        RefreshData();
         prepareData();
     }
 
-    private void RefreshData() {
+    private void prepareData() {
         if (!AudioFlag.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -117,9 +112,7 @@ public class ViewAllPlaylistFragment extends Fragment {
             params.setMargins(4, 6, 4, 50);
             binding.llSpace.setLayoutParams(params);
         }
-    }
 
-    private void prepareData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             showProgressBar();
             Call<ViewAllPlayListModel> listCall = APIClient.getClient().getViewAllPlayLists(UserID, GetLibraryID);
@@ -130,7 +123,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                         hideProgressBar();
                         ViewAllPlayListModel listModel = response.body();
                         binding.tvTitle.setText(listModel.getResponseData().getView());
-                        PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails());
+                        PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
                         binding.rvMainAudio.setAdapter(adapter);
                     }
                 }
@@ -168,9 +161,11 @@ public class ViewAllPlaylistFragment extends Fragment {
 
     public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
         private List<ViewAllPlayListModel.ResponseData.Detail> listModelList;
+        String IsLock;
 
-        public PlaylistAdapter(List<ViewAllPlayListModel.ResponseData.Detail> listModelList) {
+        public PlaylistAdapter(List<ViewAllPlayListModel.ResponseData.Detail> listModelList, String IsLock) {
             this.listModelList = listModelList;
+            this.IsLock = IsLock;
         }
 
         @NonNull
@@ -196,10 +191,10 @@ public class ViewAllPlaylistFragment extends Fragment {
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (IsLocked.equalsIgnoreCase("1")) {
+                    if (IsLock.equalsIgnoreCase("1")) {
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
                         BWSApplication.showToast("Please re-activate your membership plan", getActivity());
-                    } else if (IsLocked.equalsIgnoreCase("0") || IsLocked.equalsIgnoreCase("")) {
+                    } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         Bundle bundle = new Bundle();
                         Fragment myPlaylistsFragment = new MyPlaylistsFragment();

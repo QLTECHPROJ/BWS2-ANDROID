@@ -45,7 +45,6 @@ public class OtpActivity extends AppCompatActivity {
     Activity activity;
     CountDownTimer countDownTimer;
     private long mLastClickTime = 0;
-    public static String IsLocked = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,14 +134,6 @@ public class OtpActivity extends AppCompatActivity {
                                         SharedPreferences.Editor editor = shared.edit();
                                         editor.putString(CONSTANTS.PREF_KEY_UserID, otpModel.getResponseData().getUserID());
                                         editor.putString(CONSTANTS.PREF_KEY_MobileNo, otpModel.getResponseData().getPhoneNumber());
-
-                                        if (otpModel.getResponseData().getIsLock().equalsIgnoreCase("1")) { /*0 = unlock, 1 = locked*/
-                                            IsLocked = "1";
-                                        }else if (otpModel.getResponseData().getIsLock().equalsIgnoreCase("0")) {
-                                            IsLocked = "0";
-                                        }
-
-                                        editor.putString(CONSTANTS.PREF_KEY_IsLock, otpModel.getResponseData().getIsLock());
                                         editor.commit();
                                         BWSApplication.showToast(otpModel.getResponseMessage(), OtpActivity.this);
                                         Intent i = new Intent(OtpActivity.this, DashboardActivity.class);

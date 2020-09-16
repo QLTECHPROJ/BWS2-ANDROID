@@ -30,7 +30,7 @@ import retrofit2.Response;
 
 public class OrderSummaryActivity extends AppCompatActivity {
     ActivityOrderSummaryBinding binding;
-    String TrialPeriod, comeFrom = "",UserId;
+    String TrialPeriod, comeFrom = "",UserId, renewPlanFlag, renewPlanId;
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
     int position;
@@ -46,6 +46,8 @@ public class OrderSummaryActivity extends AppCompatActivity {
 
         if (getIntent() != null) {
             TrialPeriod = getIntent().getStringExtra("TrialPeriod");
+            renewPlanFlag = getIntent().getStringExtra("renewPlanFlag");
+            renewPlanId = getIntent().getStringExtra("renewPlanId");
             position = getIntent().getIntExtra("position", 0);
             if (getIntent().hasExtra("comeFrom")) {
                 comeFrom = getIntent().getStringExtra("comeFrom");

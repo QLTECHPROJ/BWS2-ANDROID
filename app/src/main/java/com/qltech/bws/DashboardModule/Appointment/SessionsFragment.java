@@ -39,6 +39,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Appointment.AppointmentDetailsFragment.ComeFromAppointmentDetail;
+
 public class SessionsFragment extends Fragment {
     FragmentSessionsBinding binding;
     public FragmentManager f_manager;
@@ -61,6 +63,21 @@ public class SessionsFragment extends Fragment {
             appointmentImage = getArguments().getString("appointmentImage");
             appointmentMainName = getArguments().getString("appointmentMainName");
         }
+
+        binding.llBack.setOnClickListener(view1 -> callBack());
+        Glide.with(getActivity()).load(appointmentImage).thumbnail(0.05f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+
+        RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        binding.rvSessionList.setLayoutManager(recentlyPlayed);
+        binding.rvSessionList.setItemAnimator(new DefaultItemAnimator());
+        prepareSessionList();
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
@@ -70,16 +87,11 @@ public class SessionsFragment extends Fragment {
             }
             return false;
         });
-        binding.llBack.setOnClickListener(view1 -> callBack());
-        Glide.with(getActivity()).load(appointmentImage).thumbnail(0.05f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
-        RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        binding.rvSessionList.setLayoutManager(recentlyPlayed);
-        binding.rvSessionList.setItemAnimator(new DefaultItemAnimator());
-        RefreshData();
-        prepareSessionList();
-        return view;
+        if (ComeFromAppointmentDetail == 1){
+            prepareSessionList();
+            ComeFromAppointmentDetail = 0;
+        }
     }
 
     private void callBack() {
@@ -95,7 +107,7 @@ public class SessionsFragment extends Fragment {
                 .commit();
     }
 
-    private void RefreshData() {
+    private void prepareSessionList() {
         if (!AudioFlag.equalsIgnoreCase("0")) {
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -111,9 +123,6 @@ public class SessionsFragment extends Fragment {
             params.setMargins(0, 10, 0, 50);
             binding.llSpace.setLayoutParams(params);
         }
-    }
-
-    private void prepareSessionList() {
         try {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
@@ -151,13 +160,6 @@ public class SessionsFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        RefreshData();
-        prepareSessionList();
     }
 
     public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.MyViewHolder> {
@@ -220,7 +222,8 @@ public class SessionsFragment extends Fragment {
                     bundle.putString("appointmentImage", appointmentImage);
                     appointmentDetailsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
-                            .add(R.id.flSession, appointmentDetailsFragment).commit();
+                            .addToBackStack("AppointmentDetailsFragment")
+                            .replace(R.id.flMainLayout, appointmentDetailsFragment).commit();
                 }
             });
         }

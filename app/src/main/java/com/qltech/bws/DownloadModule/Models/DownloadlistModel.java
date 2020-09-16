@@ -119,6 +119,9 @@ public class DownloadlistModel {
         @SerializedName("Name")
         @Expose
         private String name;
+        @SerializedName("IsLock")
+        @Expose
+        private String isLock;
         @SerializedName("AudioFile")
         @Expose
         private String audioFile;
@@ -156,6 +159,7 @@ public class DownloadlistModel {
             audioDirection = in.readString();
             like = in.readString();
             download = in.readString();
+            isLock = in.readString();
         }
 
         public static final Creator<Audio> CREATOR = new Creator<Audio>() {
@@ -250,6 +254,14 @@ public class DownloadlistModel {
             this.like = like;
         }
 
+        public String getIsLock() {
+            return isLock;
+        }
+
+        public void setIsLock(String isLock) {
+            this.isLock = isLock;
+        }
+
         public String getDownload() {
             return download;
         }
@@ -276,6 +288,7 @@ public class DownloadlistModel {
             parcel.writeString(audioDirection);
             parcel.writeString(like);
             parcel.writeString(download);
+            parcel.writeString(isLock);
         }
     }
 
@@ -292,6 +305,9 @@ public class DownloadlistModel {
         @SerializedName("TotalAudio")
         @Expose
         private String totalAudio;
+        @SerializedName("IsLock")
+        @Expose
+        private String isLock;
         @SerializedName("TotalDuration")
         @Expose
         private String totalDuration;
@@ -313,6 +329,7 @@ public class DownloadlistModel {
             totalDuration = in.readString();
             totalhour = in.readString();
             totalminute = in.readString();
+            isLock = in.readString();
         }
 
         public static final Creator<Playlist> CREATOR = new Creator<Playlist>() {
@@ -333,6 +350,14 @@ public class DownloadlistModel {
 
         public void setPlaylistId(String playlistId) {
             this.playlistId = playlistId;
+        }
+
+        public String getIsLock() {
+            return isLock;
+        }
+
+        public void setIsLock(String isLock) {
+            this.isLock = isLock;
         }
 
         public String getTotalAudio() {
@@ -409,6 +434,7 @@ public class DownloadlistModel {
             parcel.writeString(totalDuration);
             parcel.writeString(totalhour);
             parcel.writeString(totalminute);
+            parcel.writeString(isLock);
         }
 
         public class Audiolist {

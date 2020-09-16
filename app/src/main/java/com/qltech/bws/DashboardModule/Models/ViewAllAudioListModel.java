@@ -62,6 +62,9 @@ public class ViewAllAudioListModel {
         @SerializedName("View")
         @Expose
         private String view;
+        @SerializedName("IsLock")
+        @Expose
+        private String IsLock;
         @SerializedName("UserID")
         @Expose
         private String userID;
@@ -73,6 +76,7 @@ public class ViewAllAudioListModel {
             homeID = in.readString();
             view = in.readString();
             userID = in.readString();
+            IsLock = in.readString();
         }
 
         public static final Creator<MainAudioModel.ResponseData> CREATOR = new Creator<MainAudioModel.ResponseData>() {
@@ -93,6 +97,14 @@ public class ViewAllAudioListModel {
 
         public void setHomeID(String homeID) {
             this.homeID = homeID;
+        }
+
+        public String getIsLock() {
+            return IsLock;
+        }
+
+        public void setIsLock(String isLock) {
+            IsLock = isLock;
         }
 
         public String getView() {
@@ -129,6 +141,7 @@ public class ViewAllAudioListModel {
             parcel.writeString(homeID);
             parcel.writeString(view);
             parcel.writeString(userID);
+            parcel.writeString(IsLock);
         }
 
         public static class Detail  implements Parcelable {

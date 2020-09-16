@@ -39,6 +39,7 @@ import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.LoginModule.Models.OtpModel;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.MembershipModule.Models.SignUpModel;
+import com.qltech.bws.ReminderModule.Models.RemiderDetailsModel;
 import com.qltech.bws.ReminderModule.Models.ReminderStatusModel;
 import com.qltech.bws.ReminderModule.Models.SetReminderModel;
 import com.qltech.bws.ResourceModule.Models.ResourceFilterModel;
@@ -238,7 +239,7 @@ public interface APIInterface {
     Call<BillingAddressViewModel> getBillingAddressView(@Field("UserID") String userID);
 
     /* TODO BillingAddressFragment */
-    @POST("billingaddress")
+    @POST("payonbillingorder")
     @FormUrlEncoded
     Call<PayNowDetailsModel> getPayNowDetails(@Field("UserID") String userID,
                                               @Field("CardId") String cardId,
@@ -426,6 +427,11 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<ResourceFilterModel> getResourcFilterLists(@Field("UserID") String userID);
 
+
+    /* TODO ReminderDetailsActivity */
+    @POST("getreminder")
+    @FormUrlEncoded
+    Call<RemiderDetailsModel> getReminderStatus(@Field("UserID") String userID);
 
     /* TODO ReminderActivity */
     @POST("reminderstatus")

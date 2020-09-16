@@ -60,6 +60,9 @@ public class SearchBothModel {
         @SerializedName("ImageFile")
         @Expose
         private String imageFile;
+        @SerializedName("IsLock")
+        @Expose
+        private String isLock;
         @SerializedName("Iscategory")
         @Expose
         private String iscategory;
@@ -70,6 +73,14 @@ public class SearchBothModel {
 
         public void setID(String iD) {
             this.iD = iD;
+        }
+
+        public String getIsLock() {
+            return isLock;
+        }
+
+        public void setIsLock(String isLock) {
+            this.isLock = isLock;
         }
 
         public String getName() {

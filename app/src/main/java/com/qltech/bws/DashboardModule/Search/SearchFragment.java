@@ -256,6 +256,9 @@ public class SearchFragment extends Fragment {
                 holder.binding.llRemoveAudio.setVisibility(View.INVISIBLE);
 
                 holder.binding.llMainLayout.setOnClickListener(view -> {
+                    if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     comefrom_search = 1;
                     Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                     Bundle bundle = new Bundle();
@@ -267,6 +270,7 @@ public class SearchFragment extends Fragment {
                     fragmentManager1.beginTransaction()
                             .replace(R.id.rlSearchList, myPlaylistsFragment)
                             .commit();
+                    }
                 });
 
             }
@@ -282,9 +286,13 @@ public class SearchFragment extends Fragment {
             holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", modelList.get(position).getID());
                     startActivity(i);
+                    }
                 }
             });
         }
@@ -341,9 +349,13 @@ public class SearchFragment extends Fragment {
             holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                    i.putExtra("AudioId", modelList.get(position).getID());
-                    startActivity(i);
+                    if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                        Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                        i.putExtra("AudioId", modelList.get(position).getID());
+                        startActivity(i);
+                    }
                 }
             });
         }
@@ -396,17 +408,24 @@ public class SearchFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.rlMainLayout.setOnClickListener(view -> {
+                if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0") || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                    holder.binding.ivLock.setVisibility(View.GONE);
                 comefrom_search = 1;
                 Bundle bundle = new Bundle();
                 Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 bundle.putString("New", "0");
+                bundle.putString("ComeFrom", "Search");
                 bundle.putString("PlaylistID", listModelList.get(position).getID());
                 bundle.putString("PlaylistName", listModelList.get(position).getName());
                 myPlaylistsFragment.setArguments(bundle);
                 fragmentManager1.beginTransaction()
                         .replace(R.id.rlSearchList, myPlaylistsFragment)
                         .commit();
+                }
             });
         }
 

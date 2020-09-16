@@ -64,6 +64,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.deleteFrg;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
@@ -78,6 +79,7 @@ public class MyPlaylistsFragment extends Fragment {
     PlayListsAdpater2 adpater2;
     String SearchFlag;
     View view;
+    EditText searchEditText;
     ArrayList<String> changedAudio;
     Activity activity;
 
@@ -98,16 +100,6 @@ public class MyPlaylistsFragment extends Fragment {
             PlaylistImage = getArguments().getString("PlaylistImage");
         }
 
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                callBack();
-                return true;
-            }
-            return false;
-        });
-
         binding.llBack.setOnClickListener(view1 -> callBack());
 
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
@@ -125,11 +117,13 @@ public class MyPlaylistsFragment extends Fragment {
         });
 
         binding.searchView.onActionViewExpanded();
-        EditText searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.gray));
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
         ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
         binding.searchView.clearFocus();
+
+        searchClear(searchEditText);
 
         closeButton.setOnClickListener(v -> {
             binding.searchView.clearFocus();
@@ -207,6 +201,15 @@ public class MyPlaylistsFragment extends Fragment {
 
     @Override
     public void onResume() {
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                callBack();
+                return true;
+            }
+            return false;
+        });
         super.onResume();
         if (deleteFrg == 1) {
             callBack();
@@ -233,7 +236,16 @@ public class MyPlaylistsFragment extends Fragment {
         }
     }
 
+    private void searchClear(EditText searchEditText){
+        if (ComeFindAudio == 1) {
+            binding.searchView.clearFocus();
+            searchEditText.setText("");
+            binding.searchView.setQuery("", false);
+            ComeFindAudio = 0;
+        }
+    }
     private void prepareData(String UserID, String PlaylistID) {
+        searchClear(searchEditText);
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (!AudioFlag.equalsIgnoreCase("0")) {
