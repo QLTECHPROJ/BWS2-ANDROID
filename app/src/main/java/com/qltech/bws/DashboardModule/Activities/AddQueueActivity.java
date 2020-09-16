@@ -292,6 +292,7 @@ public class AddQueueActivity extends AppCompatActivity {
             addToQueueModel.setImageFile(mData.get(i).getImageFile());
             addToQueueModel.setLike(mData.get(i).getLike());
             addToQueueModel.setDownload(mData.get(i).getDownload());
+            addToQueueModel.setAudioDuration(mData.get(i).getAudioDuration());
         } else {
             addToQueueModel.setID(mainPlayModelList.get(i).getID());
             addToQueueModel.setName(mainPlayModelList.get(i).getName());

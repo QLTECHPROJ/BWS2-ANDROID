@@ -252,7 +252,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         });
 
         if (IsShuffle.equalsIgnoreCase("")) {
-            if (listSize == 1 || queuePlay) {
+            if (listSize == 1) {
                 binding.llShuffle.setClickable(false);
                 binding.llShuffle.setEnabled(false);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -265,7 +265,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         if (IsRepeat.equalsIgnoreCase("")) {
-            if (listSize == 1 || queuePlay) {
+            if (listSize == 1) {
                 binding.llRepeat.setClickable(false);
                 binding.llRepeat.setEnabled(false);
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -462,8 +462,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callDownload() {
-        DownloadMedia downloadMedia = new DownloadMedia(ctx);
-        downloadMedia.encrypt(url, name, ctx);
+      /*  DownloadMedia downloadMedia = new DownloadMedia(ctx);
+        downloadMedia.encrypt(url, name);*/
+
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, id, PlaylistId);

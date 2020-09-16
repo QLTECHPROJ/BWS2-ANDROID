@@ -81,6 +81,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     Boolean queuePlay, audioPlay;
     private long mLastClickTime = 0;
     private Handler handler;
+    QueueAdapter adapter;
 //    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
@@ -187,6 +188,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 } else {
                     if (queuePlay) {
                         addToQueueModelList.remove(position);
+                        adapter.callRemoveList(position);
                         listSize = addToQueueModelList.size();
                         if (position < listSize - 1) {
                             getPrepareShowData(position);
@@ -199,7 +201,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                                 getPrepareShowData(position);
                             }
                         }
-                        callAdapterMethod();
                     } else {
                         if (position < (listSize - 1)) {
                             position = position + 1;
@@ -211,7 +212,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                         }
                     }
                 }
-                if (listSize == 1 || position < listSize - 1) {
+                if (listSize == 1) {
                     binding.llnext.setEnabled(false);
                     binding.llnext.setEnabled(false);
                     binding.llprev.setClickable(false);
@@ -325,7 +326,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
     private void callAdapterMethod() {
         if (addToQueueModelList.size() != 0) {
-            QueueAdapter adapter = new QueueAdapter(addToQueueModelList, ViewQueueActivity.this);
+            adapter = new QueueAdapter(addToQueueModelList, ViewQueueActivity.this);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ViewQueueActivity.this);
             binding.rvQueueList.setLayoutManager(mLayoutManager);
             binding.rvQueueList.setItemAnimator(new DefaultItemAnimator());
@@ -512,7 +513,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     }
 
     public void updateProgressBar() {
-        handler.postDelayed(UpdateSongTime, 100);
+        handler.postDelayed(UpdateSongTime, 60);
     }
 
     @Override
@@ -578,9 +579,12 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             holder.binding.llRemove.setOnClickListener(view -> callRemoveList(position));
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 if (isPrepare || isMediaStart || isPause) {
-                    isPause = false;
                     stopMedia();
                 }
+                isPause = false;
+                isPrepare = false;
+                isMediaStart = false;
+
                 setInIt(listModel.getName(), listModel.getAudioSubCategory(),
                         listModel.getImageFile(), listModel.getAudioDuration());
                 savePrefQueue(position, true, false, listModelList, ctx);
@@ -589,7 +593,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
         }
 
-        private void callRemoveList(int position) {
+        public void callRemoveList(int position) {
             listModelList.remove(position);
             notifyDataSetChanged();
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

@@ -2,6 +2,7 @@ package com.qltech.bws.DownloadModule.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,8 @@ import com.google.gson.Gson;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
+import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
+import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -30,6 +33,8 @@ import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.DownloadsLayoutBinding;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -37,9 +42,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.Utility.CONSTANTS.FILE_EXT;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.play;
+import static com.qltech.bws.Utility.MusicService.playMedia;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
@@ -82,7 +90,17 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+       /*         DownloadMedia downloadMedia = new DownloadMedia(ctx);
+                try {
+                    FileDescriptor fileDescriptor =  FileUtils.getTempFileDescriptor(ctx, downloadMedia.decrypt(listModelList.get(position).getName()+FILE_EXT));
+                    play(ctx,Uri.parse(String.valueOf(fileDescriptor)));
+                    playMedia();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+*/
+                /*if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0") || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     player = 1;
@@ -109,7 +127,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
                     editor.commit();
-                }
+                }*/
             }
         });
 

@@ -77,12 +77,12 @@ public class FileUtils {
         return context.getDir(DIR_NAME, Context.MODE_PRIVATE).getAbsolutePath();
     }
 
-    public static final String getFilePath(Context context) {
-        return getDirPath(context) + File.separator + FILE_NAME;
+    public static final String getFilePath(Context context,String FILE_NAME) {
+        return getDirPath(context) + File.separator + FILE_NAME+FILE_EXT;
     }
 
-    public static final void deleteDownloadedFile(Context context) {
-        File file = new File(getFilePath(context));
+    public static final void deleteDownloadedFile(Context context,String FILE_NAME) {
+        File file = new File(getFilePath(context,FILE_NAME+FILE_EXT));
         if (null != file && file.exists()) {
             if (file.delete()) Log.i("FileUtils", "File Deleted.");
         }
