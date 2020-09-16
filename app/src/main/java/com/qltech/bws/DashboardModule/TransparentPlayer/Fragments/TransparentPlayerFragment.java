@@ -412,11 +412,27 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     getPrepareShowData();
                 } else if (IsShuffle.equalsIgnoreCase("1")) {
                     // shuffle is on - play a random song
-                    if (listSize == 1) {
+                    if(queuePlay){
+                        addToQueueModelList.remove(position);
+                        listSize = addToQueueModelList.size();
+                        if(listSize == 0){
+                            stopMedia();
+                        }else if (listSize == 1) {
+                            position = 0;
+                            getPrepareShowData();
+                        }else{
+                            Random random = new Random();
+                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                            getPrepareShowData();
+                        }
                     } else {
-                        Random random = new Random();
-                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                        getPrepareShowData();
+                        if (listSize == 1) {
+
+                        } else {
+                            Random random = new Random();
+                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                            getPrepareShowData();
+                        }
                     }
                 } else {
                     if (queuePlay) {
@@ -509,6 +525,24 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onResume() {
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+        String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
+        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
+            }.getType();
+            addToQueueModelList = gson.fromJson(json1, type1);
+        }
+        queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+        audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+        position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+
+        binding.simpleSeekbar.setOnSeekBarChangeListener(this);
+        SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+        IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
+        IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
         if ((isPrepare || isMediaStart || isPlaying()) && !isPause) {
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.VISIBLE);

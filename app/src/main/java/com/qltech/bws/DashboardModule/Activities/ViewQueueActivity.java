@@ -178,11 +178,27 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     getPrepareShowData(position);
                 } else if (IsShuffle.equalsIgnoreCase("1")) {
                     // shuffle is on - play a random song
-                    if (listSize == 1) {
-                    } else {
-                        Random random = new Random();
-                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                        getPrepareShowData(position);
+                    if (queuePlay) {
+                        adapter.callRemoveList(position);
+                        listSize = addToQueueModelList.size();
+                        if (listSize == 0) {
+                            stopMedia();
+                        } else if (listSize == 1) {
+                            position = 0;
+                            getPrepareShowData(position);
+                        } else {
+                            Random random = new Random();
+                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                            getPrepareShowData(position);
+                        }
+                    }  else {
+                        if (listSize == 1) {
+
+                        } else {
+                            Random random = new Random();
+                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                            getPrepareShowData(position);
+                        }
                     }
                 } else {
                     if (queuePlay) {
@@ -262,6 +278,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
         binding.llnext.setOnClickListener(view -> {
             stopMedia();
+            isMediaStart = false;
+            isPrepare = false;
             isPause = false;
             if (IsRepeat.equalsIgnoreCase("1")) {
                 // repeat is on play same song again
@@ -291,6 +309,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
         binding.llprev.setOnClickListener(view -> {
             stopMedia();
+            isMediaStart = false;
+            isPrepare = false;
             isPause = false;
             if (IsRepeat.equalsIgnoreCase("1")) {
                 // repeat is on play same song again

@@ -176,11 +176,27 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     getPrepareShowData(position);
                 } else if (IsShuffle.equalsIgnoreCase("1")) {
                     // shuffle is on - play a random song
-                    if (listSize == 1) {
+                    if (queuePlay) {
+                        addToQueueModelList.remove(position);
+                        listSize = addToQueueModelList.size();
+                        if (listSize == 0) {
+                            stopMedia();
+                        } else if (listSize == 1) {
+                            position = 0;
+                            getPrepareShowData(position);
+                        } else {
+                            Random random = new Random();
+                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                            getPrepareShowData(position);
+                        }
                     } else {
-                        Random random = new Random();
-                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                        getPrepareShowData(position);
+                        if (listSize == 1) {
+
+                        } else {
+                            Random random = new Random();
+                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                            getPrepareShowData(position);
+                        }
                     }
                 } else {
                     if (queuePlay) {
@@ -272,10 +288,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (binding.llPause.getVisibility() == View.VISIBLE) {
                 isPause = false;
             }
-            Intent i = new Intent(ctx, ViewQueueActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(i);
-            finish();
             SharedPreferences ViewQueue = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = ViewQueue.edit();
             Gson gsonx = new Gson();
@@ -285,6 +297,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
+            Intent i = new Intent(ctx, ViewQueueActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+            finish();
         });
 
         binding.llPlay.setOnClickListener(v -> {
@@ -332,6 +348,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         binding.llnext.setOnClickListener(view -> {
             stopMedia();
+            isMediaStart = false;
+            isPrepare = false;
             isPause = false;
             if (IsRepeat.equalsIgnoreCase("1")) {
                 // repeat is on play same song again
@@ -361,6 +379,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         binding.llprev.setOnClickListener(view -> {
             stopMedia();
+            isMediaStart = false;
+            isPrepare = false;
             isPause = false;
             if (IsRepeat.equalsIgnoreCase("1")) {
                 // repeat is on play same song again
@@ -411,9 +431,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llRepeat.setEnabled(false);
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {*/
-                binding.llRepeat.setClickable(true);
-                binding.llRepeat.setEnabled(true);
-                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.llRepeat.setClickable(true);
+            binding.llRepeat.setEnabled(true);
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
 //            }
         } else if (IsRepeat.equalsIgnoreCase("1")) {
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
