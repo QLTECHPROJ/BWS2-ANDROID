@@ -34,6 +34,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
     int position;
+    public static int BtnVisible = 0;
     private long mLastClickTime = 0;
 
     @Override
@@ -75,6 +76,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
             binding.tvPlanAmount.setText("$" + listModelList.get(position).getPlanAmount());
             binding.tvTotalAmount.setText("$" + listModelList.get(position).getPlanAmount());
         }
+
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,13 +88,13 @@ public class OrderSummaryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!comeFrom.equalsIgnoreCase("")) {
+                    BtnVisible = 1;
                     if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                         return;
                     }
                     mLastClickTime = SystemClock.elapsedRealtime();
                     Intent i = new Intent(OrderSummaryActivity.this, BillingOrderActivity.class);
                     i.putExtra("payment", 1);
-                    i.putExtra("BtnVisible","true");
                     startActivity(i);
                     finish();
                 } else {
