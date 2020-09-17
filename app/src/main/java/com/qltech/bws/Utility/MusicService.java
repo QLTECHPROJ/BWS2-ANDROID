@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.R;
 
@@ -170,24 +171,24 @@ public class MusicService extends Service {
         mediaPlayer.setLooping(Status);
     }
 
-    public static void ToForward(Context conext) {
+    public static void ToForward(Context context) {
         endTime = getEndTime();
         startTime = mediaPlayer.getCurrentPosition();
         if ((startTime + forwardTime) <= endTime) {
             startTime = startTime + forwardTime;
             mediaPlayer.seekTo(startTime);
         } else {
-            showToast("Please wait", conext);
+            BWSApplication.showToast("Please wait", context);
         }
     }
 
-    public static void ToBackward(Context conext) {
+    public static void ToBackward(Context context) {
         startTime = mediaPlayer.getCurrentPosition();
         if ((startTime - backwardTime) > 0) {
             startTime = startTime - backwardTime;
             mediaPlayer.seekTo(startTime);
         } else {
-            showToast("Please wait", conext);
+            BWSApplication.showToast("Please wait", context);
         }
     }
 

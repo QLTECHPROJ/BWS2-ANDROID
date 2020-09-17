@@ -61,9 +61,9 @@ public class BWSApplication extends Application {
         return new MeasureRatio(widthImg, height, displayMetrics.density, proportion);
     }
 
-    public static void showToast(String message, Context conext) {
-        Toast toast = new Toast(conext);
-        View view = LayoutInflater.from(conext).inflate(R.layout.toast_layout, null);
+    public static void showToast(String message, Context context) {
+        Toast toast = new Toast(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.toast_layout, null);
         TextView tvMessage = view.findViewById(R.id.tvMessage);
         tvMessage.setText(message);
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);

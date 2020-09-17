@@ -729,6 +729,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 callComplete();
             });
         }
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+        editor.commit();
         binding.simpleSeekbar.setClickable(true);
         handler.postDelayed(UpdateSongTime, 60);
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);

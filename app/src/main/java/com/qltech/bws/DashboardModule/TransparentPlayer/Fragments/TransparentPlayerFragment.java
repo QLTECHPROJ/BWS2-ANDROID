@@ -255,6 +255,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             handler.removeCallbacks(UpdateSongTime);
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
             if (!isMediaStart) {
+//                callAsyncTask();
                 play(Uri.parse(audioFile));
                 playMedia();
             } else {
@@ -267,6 +268,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.VISIBLE);
             if (!isMediaStart) {
+//                callAsyncTask();
                 play(Uri.parse(audioFile));
                 playMedia();
             } else {
@@ -345,28 +347,22 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
                 audioFile = addToQueueModelList.get(position).getAudioFile();
                 if (player == 1) {
+                    binding.progressBar.setVisibility(View.GONE);
                     if (isPause) {
                         binding.ivPause.setVisibility(View.GONE);
                         binding.ivPlay.setVisibility(View.VISIBLE);
                         binding.simpleSeekbar.setProgress(oTime);
-                    } else if ((isPrepare || isMediaStart) && !isPause) {
-                        binding.ivPause.setVisibility(View.VISIBLE);
-                        binding.ivPlay.setVisibility(View.GONE);
-                    } else {
+                    } else if (!isPrepare && !isMediaStart) {
                         binding.ivPlay.setVisibility(View.GONE);
                         binding.ivPause.setVisibility(View.VISIBLE);
                         play(Uri.parse(audioFile));
                         playMedia();
-                        callAsyncTask();
-                    /*    while (!isPrepare) {
-                            binding.progressBar.setVisibility(View.VISIBLE);
-                            binding.progressBar.animate().setDuration(200).alpha(1).start();
-                        }
-                        binding.progressBar.setVisibility(View.GONE);
-                        binding.progressBar.animate().setDuration(200).alpha(1).start();*/
-
+                    } else {
+                        binding.ivPause.setVisibility(View.VISIBLE);
+                        binding.ivPlay.setVisibility(View.GONE);
                     }
                 } else {
+                    binding.progressBar.setVisibility(View.GONE);
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
                 }
@@ -383,6 +379,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
             audioFile = mainPlayModelList.get(position).getAudioFile();
             if (player == 1) {
+                binding.progressBar.setVisibility(View.GONE);
                 if (isPause) {
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
@@ -397,6 +394,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     binding.ivPlay.setVisibility(View.GONE);
                 }
             } else {
+                binding.progressBar.setVisibility(View.GONE);
                 binding.ivPause.setVisibility(View.GONE);
                 binding.ivPlay.setVisibility(View.VISIBLE);
             }
@@ -404,71 +402,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         binding.simpleSeekbar.setClickable(true);
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                isPrepare = false;
-                isMediaStart = false;
-                if (IsRepeat.equalsIgnoreCase("1")) {
-                    if (position < (listSize - 1)) {
-                        position = position + 1;
-                    } else {
-                        position = 0;
-                    }
-                    getPrepareShowData();
-                } else if (IsRepeat.equalsIgnoreCase("0")) {
-                    getPrepareShowData();
-                } else if (IsShuffle.equalsIgnoreCase("1")) {
-                    // shuffle is on - play a random song
-                    if (queuePlay) {
-                        addToQueueModelList.remove(position);
-                        listSize = addToQueueModelList.size();
-                        if (listSize == 0) {
-                            stopMedia();
-                        } else if (listSize == 1) {
-                            position = 0;
-                            getPrepareShowData();
-                        } else {
-                            Random random = new Random();
-                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                            getPrepareShowData();
-                        }
-                    } else {
-                        if (listSize == 1) {
-
-                        } else {
-                            Random random = new Random();
-                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                            getPrepareShowData();
-                        }
-                    }
-                } else {
-                    if (queuePlay) {
-                        addToQueueModelList.remove(position);
-                        listSize = addToQueueModelList.size();
-                        if (position < listSize - 1) {
-                            getPrepareShowData();
-                        } else {
-                            if (listSize == 0) {
-                                savePrefQueue(0, false, true, addToQueueModelList, getActivity());
-                                stopMedia();
-                            } else {
-                                position = 0;
-                                getPrepareShowData();
-                            }
-                        }
-                    } else {
-                        if (position < (listSize - 1)) {
-                            position = position + 1;
-                            getPrepareShowData();
-                        } else {
-                            binding.ivPlay.setVisibility(View.VISIBLE);
-                            binding.ivPause.setVisibility(View.GONE);
-                            stopMedia();
-                        }
-                    }
-                }
-                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                editor.commit();
+                callComplete();
             });
         }
         startTime = getStartTime();
@@ -503,23 +437,98 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         });
     }
 
+    private void callComplete() {
+        isPrepare = false;
+        isMediaStart = false;
+        if (IsRepeat.equalsIgnoreCase("1")) {
+            if (position < (listSize - 1)) {
+                position = position + 1;
+            } else {
+                position = 0;
+            }
+            getPrepareShowData();
+        } else if (IsRepeat.equalsIgnoreCase("0")) {
+            getPrepareShowData();
+        } else if (IsShuffle.equalsIgnoreCase("1")) {
+            // shuffle is on - play a random song
+            if (queuePlay) {
+                addToQueueModelList.remove(position);
+                listSize = addToQueueModelList.size();
+                if (listSize == 0) {
+                    stopMedia();
+                } else if (listSize == 1) {
+                    position = 0;
+                    getPrepareShowData();
+                } else {
+                    Random random = new Random();
+                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                    getPrepareShowData();
+                }
+            } else {
+                if (listSize == 1) {
+
+                } else {
+                    Random random = new Random();
+                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                    getPrepareShowData();
+                }
+            }
+        } else {
+            if (queuePlay) {
+                addToQueueModelList.remove(position);
+                listSize = addToQueueModelList.size();
+                if (position < listSize - 1) {
+                    getPrepareShowData();
+                } else {
+                    if (listSize == 0) {
+                        savePrefQueue(0, false, true, addToQueueModelList, getActivity());
+                        stopMedia();
+                    } else {
+                        position = 0;
+                        getPrepareShowData();
+                    }
+                }
+            } else {
+                if (position < (listSize - 1)) {
+                    position = position + 1;
+                    getPrepareShowData();
+                } else {
+                    binding.ivPlay.setVisibility(View.VISIBLE);
+                    binding.ivPause.setVisibility(View.GONE);
+                    stopMedia();
+                }
+            }
+        }
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+        editor.commit();
+    }
+
     private void callAsyncTask() {
-//        class AsyncTaskRunner extends AsyncTask<String, String, String> {
-//        @Override protected void onPreExecute() {
-//            progressDialog.show();
-//        }
-//        @Override protected String doInBackground(String... params) {
-//            publishProgress("Sleeping..."); // Calls onProgressUpdate()
-//            return resp;
-//        }
-//        @Override protected void onPostExecute(String result) {
-//// execution of result of Long time consuming operation . progressDialog.dismiss();
-//            updateUIWithResult() ;
-//        }
-//        @Override protected void onProgressUpdate(String... text) {
-//            updateProgressUI();
-//        }
-//    }
+/*        class SaveTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                play(Uri.parse(audioFile));
+                playMedia();
+                binding.progressBar.setVisibility(View.VISIBLE);
+                binding.ivPlay.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.GONE);
+
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                binding.ivPlay.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.VISIBLE);
+            }
+        }
+
+        SaveTask st = new SaveTask();
+        st.execute();*/
     }
 
     @Override
@@ -564,14 +573,14 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if(queuePlay){
+        if (queuePlay) {
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             listSize = addToQueueModelList.size();
-        }else if(audioPlay){
+        } else if (audioPlay) {
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             listSize = mainPlayModelList.size();
         }
-        if(listSize == 1){
+        if (listSize == 1) {
             position = 0;
         }
         SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);

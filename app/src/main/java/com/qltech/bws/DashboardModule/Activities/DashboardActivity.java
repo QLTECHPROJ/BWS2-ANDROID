@@ -3,6 +3,8 @@ package com.qltech.bws.DashboardModule.Activities;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
@@ -22,6 +24,10 @@ import com.qltech.bws.R;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityDashboardBinding;
+
+import static android.net.ConnectivityManager.RESTRICT_BACKGROUND_STATUS_DISABLED;
+import static android.net.ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED;
+import static android.net.ConnectivityManager.RESTRICT_BACKGROUND_STATUS_WHITELISTED;
 
 public class DashboardActivity extends AppCompatActivity{
     public static int player = 0;
@@ -47,6 +53,30 @@ public class DashboardActivity extends AppCompatActivity{
             fragmentManager1.beginTransaction()
                     .add(R.id.rlAudiolist, fragment)
                     .commit();
+        }
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+// Checks if the device is on a metered network
+        if (connMgr.isActiveNetworkMetered()) {
+            // Checks user’s Data Saver settings.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                switch (connMgr.getRestrictBackgroundStatus()) {
+                    case RESTRICT_BACKGROUND_STATUS_ENABLED:
+                        // Background data usage is blocked for this app. Wherever possible,
+                        // the app should also use less data in the foreground.
+
+                    case RESTRICT_BACKGROUND_STATUS_WHITELISTED:
+                        // The app is allowed to bypass Data Saver. Nevertheless, wherever possible,
+                        // the app should use less data in the foreground and background.
+
+                    case RESTRICT_BACKGROUND_STATUS_DISABLED:
+                        // Data Saver is disabled. Since the device is connected to a
+                        // metered network, the app should use less data wherever possible.
+                }
+            }
+        } else {
+            // The device is not on a metered network.
+            // Use data as required to perform syncs, downloads, and updates.
         }
     }
 

@@ -74,7 +74,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     Context ctx;
     Activity activity;
     ArrayList<MainPlayModel> mainPlayModelList;
-    ArrayList<AddToQueueModel> addToQueueModelList;
+    ArrayList<AddToQueueModel> addToQueueModelList, addToQueueModelList2;
     SharedPreferences shared;
     Boolean queuePlay, audioPlay;
     QueueAdapter adapter;
@@ -119,6 +119,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         activity = ViewQueueActivity.this;
         handler = new Handler();
         addToQueueModelList = new ArrayList<>();
+        addToQueueModelList2 = new ArrayList<>();
 
         mainPlayModelList = new ArrayList<>();
         shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -129,6 +130,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             Type type = new TypeToken<ArrayList<AddToQueueModel>>() {
             }.getType();
             addToQueueModelList = gson.fromJson(json, type);
+            addToQueueModelList2 = gson.fromJson(json, type);
         }
         String json2 = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -253,6 +255,14 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
     private void callAdapterMethod() {
         if (addToQueueModelList.size() != 0) {
+          /*  if(queuePlay){
+                for(int i = 0;i<addToQueueModelList.size();i++){
+                    if(addToQueueModelList.get(i).getName().equalsIgnoreCase(binding.tvName.getText().toString())){
+                        addToQueueModelList2.remove(i);
+                    }
+                }
+
+            }*/
             adapter = new QueueAdapter(addToQueueModelList, ViewQueueActivity.this);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ViewQueueActivity.this);
             binding.rvQueueList.setLayoutManager(mLayoutManager);
@@ -369,6 +379,10 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 callComplete();
             });
         }
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+        editor.commit();
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
 
@@ -567,8 +581,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
         ArrayList<AddToQueueModel> listModelList;
         Context ctx;
-        boolean queueClick = false;
-
 
         public QueueAdapter(ArrayList<AddToQueueModel> listModelList, Context ctx) {
             this.listModelList = listModelList;
@@ -601,11 +613,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.llRemove.setOnClickListener(view -> callRemoveList(position));
-            if(queuePlay || !queueClick){
-                if(listModel.getName().equalsIgnoreCase(binding.tvName.getText().toString())){
-                    callRemoveList1(position);
-                }
-            }
+
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 if (isPrepare || isMediaStart || isPause) {
                     stopMedia();
@@ -616,18 +624,16 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
                 setInIt(listModel.getName(), listModel.getAudiomastercat(),
                         listModel.getImageFile(), listModel.getAudioDuration());
-                addToQueueModelList = listModelList;
                 savePrefQueue(position, true, false, addToQueueModelList, ctx);
                 getPrepareShowData(position);
-                queueClick = true;
-                callRemoveList1(position);
+//                callRemoveList1(position);
             });
 
         }
 
         public void callRemoveList1(int position) {
-//            listModelList.remove(position);
-//            notifyDataSetChanged();
+            listModelList.remove(position);
+            notifyDataSetChanged();
         }
    public void callRemoveList(int position) {
             listModelList.remove(position);
