@@ -163,6 +163,9 @@ public class ViewAllAudioListModel {
             @SerializedName("AudioDirection")
             @Expose
             private String audioDirection;
+            @SerializedName("IsPlay")
+            @Expose
+            private String isPlay;
             @SerializedName("Audiomastercat")
             @Expose
             private String audiomastercat;
@@ -187,6 +190,7 @@ public class ViewAllAudioListModel {
                 like = in.readString();
                 download = in.readString();
                 audioDuration = in.readString();
+                isPlay = in.readString();
             }
 
             public static final Creator<MainAudioModel.ResponseData.Detail> CREATOR = new Creator<MainAudioModel.ResponseData.Detail>() {
@@ -265,6 +269,14 @@ public class ViewAllAudioListModel {
                 this.audioSubCategory = audioSubCategory;
             }
 
+            public String getIsPlay() {
+                return isPlay;
+            }
+
+            public void setIsPlay(String isPlay) {
+                this.isPlay = isPlay;
+            }
+
             public String getLike() {
                 return like;
             }
@@ -298,6 +310,7 @@ public class ViewAllAudioListModel {
                 parcel.writeString(like);
                 parcel.writeString(download);
                 parcel.writeString(audioDuration);
+                parcel.writeString(isPlay);
             }
         }
     }

@@ -180,16 +180,27 @@ public class ViewAllAudioFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             if (IsLock.equalsIgnoreCase("1")) {
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
+                if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                        || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                }
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
+
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (IsLock.equalsIgnoreCase("1")) {
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                        if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                            holder.binding.ivLock.setVisibility(View.GONE);
+                        }else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                                || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                            holder.binding.ivLock.setVisibility(View.VISIBLE);
+                            BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                        }
                     } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         player = 1;

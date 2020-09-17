@@ -51,9 +51,9 @@ public class BWSApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        float width = (float) (displayMetrics.widthPixels / displayMetrics.density);
-        float widthImg = (float) (((width - outerMargin) * proportion) - innerMargin);
-        float height = (float) (widthImg * aspectY / aspectX);
+        float width = displayMetrics.widthPixels / displayMetrics.density;
+        float widthImg = ((width - outerMargin) * proportion) - innerMargin;
+        float height = widthImg * aspectY / aspectX;
         //Log.e("width.........", "" + context.getClass().getSimpleName()+","+width);
 //        //Log.e("widthImg.........", "" + context.getClass().getSimpleName()+","+widthImg);
 //        //Log.e("height...........", "" + context.getClass().getSimpleName()+","+height);

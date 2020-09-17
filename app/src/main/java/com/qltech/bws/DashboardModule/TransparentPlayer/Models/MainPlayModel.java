@@ -1,8 +1,5 @@
 package com.qltech.bws.DashboardModule.TransparentPlayer.Models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 public class MainPlayModel {
     private String ID;
     private String name;

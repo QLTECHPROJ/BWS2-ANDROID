@@ -45,12 +45,14 @@ public class MusicService extends Service {
     public static void play(Uri AudioFile) {
         initMediaPlayer();
         stopMedia();
-        playAudio( AudioFile);
-    }public static boolean play1(Uri AudioFile) {
+        playAudio(AudioFile);
+    }
+
+    public static boolean play1(Uri AudioFile) {
         isPrepare = false;
         initMediaPlayer();
         stopMedia();
-       isPrepare = playAudio1( AudioFile);
+        isPrepare = playAudio1(AudioFile);
         return isPrepare;
     }
 
@@ -79,6 +81,7 @@ public class MusicService extends Service {
 //            stopPlaying();
 //        }
     }
+
     public static boolean playAudio1(Uri AudioFile) {
         mediaPlayer = new MediaPlayer();
         isPrepare = false;
@@ -87,9 +90,7 @@ public class MusicService extends Service {
             mediaPlayer.setDataSource(String.valueOf(AudioFile));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
-                        new AudioAttributes
-                                .Builder()
-                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                                 .build());
             }
             mediaPlayer.prepareAsync();

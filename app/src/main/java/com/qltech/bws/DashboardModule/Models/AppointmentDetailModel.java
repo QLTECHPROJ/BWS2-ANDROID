@@ -312,6 +312,12 @@ public class AppointmentDetailModel implements Parcelable {
         @SerializedName("ImageFile")
         @Expose
         private String imageFile;
+        @SerializedName("IsLock")
+        @Expose
+        private String IsLock;
+        @SerializedName("IsPlay")
+        @Expose
+        private String IsPlay;
         @SerializedName("AudioDuration")
         @Expose
         private String audioDuration;
@@ -343,6 +349,8 @@ public class AppointmentDetailModel implements Parcelable {
             like = in.readString();
             download = in.readString();
             audioDescription = in.readString();
+            IsLock = in.readString();
+            IsPlay = in.readString();
         }
 
         public static final Creator<Audio> CREATOR = new Creator<Audio>() {
@@ -405,6 +413,14 @@ public class AppointmentDetailModel implements Parcelable {
             this.audiomastercat = audiomastercat;
         }
 
+        public String getIsLock() {
+            return IsLock;
+        }
+
+        public void setIsLock(String isLock) {
+            IsLock = isLock;
+        }
+
         public String getAudioSubCategory() {
             return audioSubCategory;
         }
@@ -419,6 +435,14 @@ public class AppointmentDetailModel implements Parcelable {
 
         public void setAudioDirection(String audioDirection) {
             this.audioDirection = audioDirection;
+        }
+
+        public String getIsPlay() {
+            return IsPlay;
+        }
+
+        public void setIsPlay(String isPlay) {
+            IsPlay = isPlay;
         }
 
         public String getLike() {
@@ -463,6 +487,8 @@ public class AppointmentDetailModel implements Parcelable {
             parcel.writeString(like);
             parcel.writeString(download);
             parcel.writeString(audioDescription);
+            parcel.writeString(IsLock);
+            parcel.writeString(IsPlay);
         }
     }
 }

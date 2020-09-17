@@ -251,6 +251,7 @@ public class PlaylistFragment extends Fragment {
             GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
             holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
             holder.binding.rvMainAudio.setLayoutManager(manager);
+
             if (listModelList.get(position).getDetails().size() == 0) {
                 holder.binding.llMainLayout.setVisibility(View.GONE);
             } else {

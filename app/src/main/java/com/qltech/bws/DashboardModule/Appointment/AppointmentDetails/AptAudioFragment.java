@@ -123,9 +123,9 @@ public class AptAudioFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             AppointmentDetailModel.Audio audiolist = listModelList.get(position);
             holder.binding.tvTitle.setText(audiolist.getName());
-            if (audiolist.getAudioDescription().equalsIgnoreCase("")){
+            if (audiolist.getAudioDescription().equalsIgnoreCase("")) {
                 holder.binding.tvTime.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.binding.tvTime.setVisibility(View.VISIBLE);
                 holder.binding.tvTime.setText(audiolist.getAudioDescription());
             }
@@ -146,31 +146,65 @@ public class AptAudioFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    player = 1;
-                    if (isPrepare||isMediaStart ||isPause) {
-                        stopMedia();
-                    }
-                    isPause = false;
-                    isMediaStart = false;
-                    isPrepare = false;
-                    Fragment fragment = new TransparentPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flMainLayout, fragment)
-                            .commit();
+                    if (audiolist.getIsLock().equalsIgnoreCase("1")) {
+                        if (audiolist.getIsPlay().equalsIgnoreCase("1")) {
+                            player = 1;
+                            if (isPrepare || isMediaStart || isPause) {
+                                stopMedia();
+                            }
+                            isPause = false;
+                            isMediaStart = false;
+                            isPrepare = false;
+                            Fragment fragment = new TransparentPlayerFragment();
+                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                            fragmentManager1.beginTransaction()
+                                    .add(R.id.flMainLayout, fragment)
+                                    .commit();
 
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(listModelList.get(position));
-                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
-                    editor.commit();
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            Gson gson = new Gson();
+                            String json = gson.toJson(listModelList.get(position));
+                            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
+                            editor.commit();
+                        } else if (audiolist.getIsPlay().equalsIgnoreCase("0")
+                                || audiolist.getIsPlay().equalsIgnoreCase("")) {
+                            BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                        }
+                    } else if (audiolist.getIsLock().equalsIgnoreCase("0")
+                            || audiolist.getIsLock().equalsIgnoreCase("")) {
+                        player = 1;
+                        if (isPrepare || isMediaStart || isPause) {
+                            stopMedia();
+                        }
+                        isPause = false;
+                        isMediaStart = false;
+                        isPrepare = false;
+                        Fragment fragment = new TransparentPlayerFragment();
+                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                        fragmentManager1.beginTransaction()
+                                .add(R.id.flMainLayout, fragment)
+                                .commit();
+
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        Gson gson = new Gson();
+                        String json = gson.toJson(listModelList.get(position));
+                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
+                        editor.commit();
+                    }
                 }
             });
 

@@ -151,18 +151,15 @@ public class AppointmentInvoiceFragment extends Fragment {
     public class CheckForSDCard {
         //Check If SD Card is present or not method
         public boolean isSDCardPresent() {
-            if (Environment.getExternalStorageState().equals(
-                    Environment.MEDIA_MOUNTED)) {
-                return true;
-            }
-            return false;
+            return Environment.getExternalStorageState().equals(
+                    Environment.MEDIA_MOUNTED);
         }
     }
 
     public class FileDownloader {
         public FileDownloader() {
             mRequestPermissionHandler = new RequestPermissionHandler();
-            downloadFileName = downloadUrl.substring(downloadUrl.lastIndexOf('/'), downloadUrl.length());//Create file name by picking download file name from URL
+            downloadFileName = downloadUrl.substring(downloadUrl.lastIndexOf('/'));//Create file name by picking download file name from URL
             Log.e(TAG, downloadFileName);
             isWriteStoragePermissionGranted();
         }

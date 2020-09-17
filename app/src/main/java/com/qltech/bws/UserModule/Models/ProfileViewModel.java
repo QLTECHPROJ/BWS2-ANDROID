@@ -68,6 +68,9 @@ public class ProfileViewModel {
         @SerializedName("OrderTotal")
         @Expose
         private String orderTotal;
+        @SerializedName("planperiod")
+        @Expose
+        private String planperiod;
         @SerializedName("DOB")
         @Expose
         private String DOB;
@@ -109,6 +112,14 @@ public class ProfileViewModel {
 
         public void setOrderTotal(String orderTotal) {
             this.orderTotal = orderTotal;
+        }
+
+        public String getPlanperiod() {
+            return planperiod;
+        }
+
+        public void setPlanperiod(String planperiod) {
+            this.planperiod = planperiod;
         }
 
         public String getPhoneNumber() {

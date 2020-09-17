@@ -58,7 +58,7 @@ public class InvoiceActivity extends AppCompatActivity {
     void prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
             showProgressBar();
-            Call<InvoiceListModel> listCall = APIClient.getClient().getInvoicelistPlaylist(UserID, "1"); /*Flag = 0 Stagging Flag = 1 Live*/
+            Call<InvoiceListModel> listCall = APIClient.getClient().getInvoicelistPlaylist(UserID, "1");
             listCall.enqueue(new Callback<InvoiceListModel>() {
                 @Override
                 public void onResponse(Call<InvoiceListModel> call, Response<InvoiceListModel> response) {

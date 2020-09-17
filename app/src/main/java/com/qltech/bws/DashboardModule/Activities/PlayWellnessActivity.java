@@ -96,7 +96,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             totalDuration = t.getTime();
             currentDuration = getStartTime();
 
-            int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
+            int progress = getProgressPercentage(currentDuration, totalDuration);
             //Log.d("Progress", ""+progress);
             startTime = getStartTime();
             if (currentDuration == totalDuration) {
@@ -121,6 +121,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_wellness);
         handler = new Handler();
         ctx = PlayWellnessActivity.this;
@@ -375,7 +376,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         totalDuration = t.getTime();
         currentDuration = getStartTime();
 
-        int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
+        int progress = getProgressPercentage(currentDuration, totalDuration);
         //Log.d("Progress", ""+progress);
         startTime = getStartTime();
         if (currentDuration == totalDuration) {
@@ -849,6 +850,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
         finish();
+        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
     @Override

@@ -98,7 +98,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             long totalDuration = t.getTime();
             long currentDuration = getStartTime();
 
-            int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
+            int progress = getProgressPercentage(currentDuration, totalDuration);
             if (currentDuration == totalDuration) {
             } else if (isPause) {
                 binding.simpleSeekbar.setProgress(oTime);
@@ -300,7 +300,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (audioPlay) {
-
             id = mainPlayModelList.get(position).getID();
             setInIt(mainPlayModelList.get(position).getName(), mainPlayModelList.get(position).getAudiomastercat(),
                     mainPlayModelList.get(position).getImageFile(), mainPlayModelList.get(position).getAudioDuration());

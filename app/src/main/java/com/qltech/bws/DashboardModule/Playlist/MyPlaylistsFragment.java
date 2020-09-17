@@ -353,8 +353,7 @@ public class MyPlaylistsFragment extends Fragment {
                             binding.llListing.setVisibility(View.VISIBLE);
                             if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
                                 adpater = new PlayListsAdpater(listModel.getResponseData().getPlaylistSongs(), getActivity(), UserID, listModel.getResponseData().getCreated());
-                                ItemTouchHelper.Callback callback =
-                                        new ItemMoveCallback(adpater);
+                                ItemTouchHelper.Callback callback = new ItemMoveCallback(adpater);
                                 ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
                                 touchHelper.attachToRecyclerView(binding.rvPlayLists);
                                 binding.rvPlayLists.setAdapter(adpater);
@@ -626,12 +625,10 @@ public class MyPlaylistsFragment extends Fragment {
 
         @Override
         public void onRowSelected(RecyclerView.ViewHolder myViewHolder) {
-
         }
 
         @Override
         public void onRowClear(RecyclerView.ViewHolder myViewHolder) {
-
         }
 
 

@@ -407,11 +407,19 @@ public class SearchFragment extends Fragment {
             Glide.with(getActivity()).load(listModelList.get(position).getImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
+            if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
+                    || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
+
             holder.binding.rlMainLayout.setOnClickListener(view -> {
                 if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                     BWSApplication.showToast("Please re-activate your membership plan", getActivity());
-                } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0") || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
+                        || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
                 comefrom_search = 1;
                 Bundle bundle = new Bundle();
