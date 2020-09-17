@@ -593,6 +593,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.llRemove.setOnClickListener(view -> callRemoveList(position));
+            if(queuePlay){
+                if(listModel.getName().equalsIgnoreCase(binding.tvName.getText().toString())){
+                    holder.binding.llMainLayout.setVisibility(View.GONE);
+                }
+            }
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 if (isPrepare || isMediaStart || isPause) {
                     stopMedia();

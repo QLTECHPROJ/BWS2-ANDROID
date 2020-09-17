@@ -46,6 +46,12 @@ public class MusicService extends Service {
         initMediaPlayer();
         stopMedia();
         playAudio( AudioFile);
+    }public static boolean play1(Uri AudioFile) {
+        isPrepare = false;
+        initMediaPlayer();
+        stopMedia();
+       isPrepare = playAudio1( AudioFile);
+        return isPrepare;
     }
 
     public static void playAudio(Uri AudioFile) {
@@ -72,6 +78,28 @@ public class MusicService extends Service {
 //            isPLAYING = false;
 //            stopPlaying();
 //        }
+    }
+    public static boolean playAudio1(Uri AudioFile) {
+        mediaPlayer = new MediaPlayer();
+        isPrepare = false;
+
+        try {
+            mediaPlayer.setDataSource(String.valueOf(AudioFile));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mediaPlayer.setAudioAttributes(
+                        new AudioAttributes
+                                .Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .build());
+            }
+            mediaPlayer.prepareAsync();
+            isPrepare = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Failedddddddd", "prepare() failed");
+            isPrepare = false;
+        }
+        return isPrepare;
     }
 
     public static void PhoneCall() {

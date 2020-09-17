@@ -165,6 +165,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 handler.removeCallbacks(UpdateSongTime);
                 isPrepare = false;
                 isMediaStart = false;
+                isPause = false;
                 if (IsRepeat.equalsIgnoreCase("1")) {
                     if (position < (listSize - 1)) {
                         position = position + 1;

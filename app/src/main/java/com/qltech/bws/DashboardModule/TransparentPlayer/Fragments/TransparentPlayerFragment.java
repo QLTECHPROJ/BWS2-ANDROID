@@ -62,6 +62,7 @@ import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
 import static com.qltech.bws.Utility.MusicService.play;
+import static com.qltech.bws.Utility.MusicService.play1;
 import static com.qltech.bws.Utility.MusicService.playMedia;
 import static com.qltech.bws.Utility.MusicService.progressToTimer;
 import static com.qltech.bws.Utility.MusicService.resumeMedia;
@@ -358,7 +359,14 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     } else {
                         binding.ivPlay.setVisibility(View.GONE);
                         binding.ivPause.setVisibility(View.VISIBLE);
+
                         play(Uri.parse(audioFile));
+                    /*    while (!isPrepare) {
+                            binding.progressBar.setVisibility(View.VISIBLE);
+                            binding.progressBar.animate().setDuration(200).alpha(1).start();
+                        }
+                        binding.progressBar.setVisibility(View.GONE);
+                        binding.progressBar.animate().setDuration(200).alpha(1).start();*/
                         playMedia();
                     }
                 } else {
@@ -412,15 +420,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     getPrepareShowData();
                 } else if (IsShuffle.equalsIgnoreCase("1")) {
                     // shuffle is on - play a random song
-                    if(queuePlay){
+                    if (queuePlay) {
                         addToQueueModelList.remove(position);
                         listSize = addToQueueModelList.size();
-                        if(listSize == 0){
+                        if (listSize == 0) {
                             stopMedia();
-                        }else if (listSize == 1) {
+                        } else if (listSize == 1) {
                             position = 0;
                             getPrepareShowData();
-                        }else{
+                        } else {
                             Random random = new Random();
                             position = random.nextInt((listSize - 1) - 0 + 1) + 0;
                             getPrepareShowData();
@@ -527,7 +535,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     public void onResume() {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
             Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
@@ -536,9 +543,17 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-        position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
+        if(queuePlay){
+            position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+            listSize = addToQueueModelList.size();
+        }else if(audioPlay){
+            position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+            listSize = mainPlayModelList.size();
+        }
+        if(listSize == 1){
+            position = 0;
+        }
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
