@@ -726,7 +726,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
-
             });
         }
         binding.simpleSeekbar.setClickable(true);
@@ -822,6 +821,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+        editor.commit();
         callRepeatShuffle();
     }
 

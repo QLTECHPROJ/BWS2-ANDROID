@@ -32,10 +32,10 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 
 public class PaymentFragment extends Fragment {
+    static Context context;
     FragmentPaymentBinding binding;
     AllCardAdapter adapter;
-    static Context context;
-    String userId, BtnVisible;
+    String userId, BtnVisible = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +49,9 @@ public class PaymentFragment extends Fragment {
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         if (getArguments() != null) {
             BtnVisible = getArguments().getString("BtnVisible");
+            if (BtnVisible == null) {
+                BtnVisible = "";
+            }
         }
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvCardList.setLayoutManager(mLayoutManager);

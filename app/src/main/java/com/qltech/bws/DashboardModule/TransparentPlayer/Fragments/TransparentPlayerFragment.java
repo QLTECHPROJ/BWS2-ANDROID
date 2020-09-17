@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -62,7 +63,6 @@ import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
 import static com.qltech.bws.Utility.MusicService.play;
-import static com.qltech.bws.Utility.MusicService.play1;
 import static com.qltech.bws.Utility.MusicService.playMedia;
 import static com.qltech.bws.Utility.MusicService.progressToTimer;
 import static com.qltech.bws.Utility.MusicService.resumeMedia;
@@ -357,13 +357,14 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         binding.ivPause.setVisibility(View.VISIBLE);
                         play(Uri.parse(audioFile));
                         playMedia();
-
+                        callAsyncTask();
                     /*    while (!isPrepare) {
                             binding.progressBar.setVisibility(View.VISIBLE);
                             binding.progressBar.animate().setDuration(200).alpha(1).start();
                         }
                         binding.progressBar.setVisibility(View.GONE);
                         binding.progressBar.animate().setDuration(200).alpha(1).start();*/
+
                     }
                 } else {
                     binding.ivPause.setVisibility(View.GONE);
@@ -464,6 +465,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         }
                     }
                 }
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                editor.commit();
             });
         }
         startTime = getStartTime();
@@ -496,6 +501,25 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
 //            simpleNotification();
         });
+    }
+
+    private void callAsyncTask() {
+//        class AsyncTaskRunner extends AsyncTask<String, String, String> {
+//        @Override protected void onPreExecute() {
+//            progressDialog.show();
+//        }
+//        @Override protected String doInBackground(String... params) {
+//            publishProgress("Sleeping..."); // Calls onProgressUpdate()
+//            return resp;
+//        }
+//        @Override protected void onPostExecute(String result) {
+//// execution of result of Long time consuming operation . progressDialog.dismiss();
+//            updateUIWithResult() ;
+//        }
+//        @Override protected void onProgressUpdate(String... text) {
+//            updateProgressUI();
+//        }
+//    }
     }
 
     @Override
