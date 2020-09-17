@@ -29,39 +29,27 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
+import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
+import static com.qltech.bws.MembershipModule.Activities.OrderSummaryActivity.BtnVisible;
 
 public class PaymentFragment extends Fragment {
     static Context context;
     FragmentPaymentBinding binding;
     AllCardAdapter adapter;
-    String userId, BtnVisible = "";
+    String userId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_payment, container, false);
         View view = binding.getRoot();
-
         context = getActivity();
-        SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         userId = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
-        if (getArguments() != null) {
-            BtnVisible = getArguments().getString("BtnVisible");
-            if (BtnVisible == null) {
-                BtnVisible = "";
-            }
-        }
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvCardList.setLayoutManager(mLayoutManager);
         binding.rvCardList.setItemAnimator(new DefaultItemAnimator());
-
-        if (!BtnVisible.equalsIgnoreCase("")) {
-            binding.btnCheckout.setVisibility(View.VISIBLE);
-        } else {
-            binding.btnCheckout.setVisibility(View.GONE);
-        }
 
         binding.llAddNewCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,8 +58,15 @@ public class PaymentFragment extends Fragment {
                 startActivity(i);
             }
         });
+
         prepareCardList();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareCardList();
     }
 
     private void prepareCardList() {
@@ -85,6 +80,12 @@ public class PaymentFragment extends Fragment {
                         hideProgressBar();
                         CardListModel cardListModel = response.body();
                         if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            if (BtnVisible == 1) {
+                                binding.btnCheckout.setVisibility(View.VISIBLE);
+                            } else {
+                                binding.btnCheckout.setVisibility(View.GONE);
+                            }
+
                             if (cardListModel.getResponseData().size() == 0) {
                                 binding.rvCardList.setAdapter(null);
                                 binding.rvCardList.setVisibility(View.GONE);

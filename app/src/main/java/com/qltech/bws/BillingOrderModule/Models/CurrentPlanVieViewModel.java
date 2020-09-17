@@ -55,12 +55,18 @@ public class CurrentPlanVieViewModel {
         @SerializedName("Plan")
         @Expose
         private String plan;
+        @SerializedName("CardId")
+        @Expose
+        private String cardId;
         @SerializedName("PlanId")
         @Expose
         private String planId;
         @SerializedName("PlanFlag")
         @Expose
         private String planFlag;
+        @SerializedName("invoicePayId")
+        @Expose
+        private String invoicePayId;
         @SerializedName("PlanStr")
         @Expose
         private String planStr;
@@ -92,6 +98,22 @@ public class CurrentPlanVieViewModel {
 
         public void setPlan(String plan) {
             this.plan = plan;
+        }
+
+        public String getCardId() {
+            return cardId;
+        }
+
+        public void setCardId(String cardId) {
+            this.cardId = cardId;
+        }
+
+        public String getInvoicePayId() {
+            return invoicePayId;
+        }
+
+        public void setInvoicePayId(String invoicePayId) {
+            this.invoicePayId = invoicePayId;
         }
 
         public String getIsActive() {

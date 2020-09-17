@@ -99,7 +99,7 @@ public class ResourceActivity extends AppCompatActivity {
             dialogBox = new Dialog(ResourceActivity.this, R.style.AppCompatAlertDialogStyle);
             Window window = dialogBox.getWindow();
             window.setBackgroundDrawableResource(android.R.color.transparent);
-            window.requestFeature(window.FEATURE_NO_TITLE);
+            window.requestFeature(Window.FEATURE_NO_TITLE);
             dialogBox.setContentView(promptsView);
             WindowManager.LayoutParams wlp = window.getAttributes();
             wlp.gravity = Gravity.BOTTOM | Gravity.RIGHT;

@@ -260,9 +260,10 @@
 
         <Button
             android:id="@+id/btnFreeJoin"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/_35sdp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/_30sdp"
@@ -271,7 +272,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:paddingHorizontal="@dimen/_55sdp"
             android:paddingVertical="@dimen/_4sdp"
-            android:text="@string/month_free"
+            android:text="Join Now"
             android:textColor="@color/white"
             android:textSize="@dimen/_13sdp" />
 

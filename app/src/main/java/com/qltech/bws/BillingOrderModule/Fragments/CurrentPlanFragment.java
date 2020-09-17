@@ -24,6 +24,7 @@ import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.BillingOrderModule.Activities.CancelMembershipActivity;
 import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.BillingOrderModule.Models.CurrentPlanVieViewModel;
+import com.qltech.bws.BillingOrderModule.Models.PayNowDetailsModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -38,6 +39,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity.renewPlanId;
+
 /*Active => Cancel button
 remaining 10 days =>cancelled status=> pay now button => => Direct payment
 after complete plan(10days)=>in active => pay now => plan selection
@@ -48,6 +51,7 @@ public class CurrentPlanFragment extends Fragment {
     String UserID;
     private long mLastClickTime = 0;
     FeaturedListAdpater adpater;
+    public static String invoicePayId, PlanStatus = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,8 +102,8 @@ public class CurrentPlanFragment extends Fragment {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         CurrentPlanVieViewModel listModel = response.body();
-
                         binding.tvHeader.setText(listModel.getResponseData().getPlan());
+
                         if (listModel.getResponseData().getActivate().equalsIgnoreCase("")) {
                             binding.tvPlan.setText("");
                             binding.tvPlan.setVisibility(View.GONE);
@@ -107,10 +111,13 @@ public class CurrentPlanFragment extends Fragment {
                             binding.tvPlan.setVisibility(View.VISIBLE);
                             binding.tvPlan.setText("Active Since: " + listModel.getResponseData().getActivate());
                         }
+
                         binding.tvSubName.setText(listModel.getResponseData().getSubtitle());
                         binding.tvPlanAmount.setText("$" + listModel.getResponseData().getOrderTotal() + " ");
                         binding.tvPlanInterval.setText(listModel.getResponseData().getPlanStr());
                         binding.tvPayUsing.setText(listModel.getResponseData().getCardDigit());
+                        invoicePayId = listModel.getResponseData().getInvoicePayId();
+                        PlanStatus = listModel.getResponseData().getStatus();
 
                         if (listModel.getResponseData().getStatus().equalsIgnoreCase("1")) {
                             binding.tvRecommended.setBackgroundResource(R.drawable.green_background);
@@ -132,10 +139,9 @@ public class CurrentPlanFragment extends Fragment {
                                     return;
                                 }
                                 mLastClickTime = SystemClock.elapsedRealtime();
-                                Intent i = new Intent(getActivity(), MembershipChangeActivity.class); /*Membership-order summary- payment cardlisting- btn action- current plan*/
+                                Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
                                 startActivity(i);
                             });
-
                         } else if (listModel.getResponseData().getStatus().equalsIgnoreCase("3")) {
                             binding.tvRecommended.setBackgroundResource(R.drawable.yellow_background);
                             binding.tvRecommended.setText(R.string.Suspended);
@@ -149,13 +155,30 @@ public class CurrentPlanFragment extends Fragment {
                                     return;
                                 }
                                 mLastClickTime = SystemClock.elapsedRealtime();
-                                Intent i = new Intent(getActivity(), BillingOrderActivity.class);/*payment - btnaction - current plan*/
-                                i.putExtra("payment", 1);
-                                i.putExtra("BtnVisible","true");
-                                startActivity(i);
-                                getActivity().finish();
-                            });
+                                if (BWSApplication.isNetworkConnected(getActivity())) {
+                                    showProgressBar();
+                                    Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(UserID, listModel.getResponseData().getCardId(),
+                                            listModel.getResponseData().getPlanId(), listModel.getResponseData().getPlanFlag(),
+                                            listModel.getResponseData().getInvoicePayId(), listModel.getResponseData().getStatus());
+                                    listCall.enqueue(new Callback<PayNowDetailsModel>() {
+                                        @Override
+                                        public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
+                                            if (response.isSuccessful()) {
+                                                hideProgressBar();
+                                                PayNowDetailsModel listModel1 = response.body();
+                                                BWSApplication.showToast(listModel1.getResponseMessage(), getActivity());
+                                            }
+                                        }
 
+                                        @Override
+                                        public void onFailure(Call<PayNowDetailsModel> call, Throwable t) {
+                                            hideProgressBar();
+                                        }
+                                    });
+                                } else {
+                                    BWSApplication.showToast(getActivity().getString(R.string.no_server_found), getActivity());
+                                }
+                            });
                         } else if (listModel.getResponseData().getStatus().equalsIgnoreCase("4")) {
                             binding.tvRecommended.setBackgroundResource(R.drawable.dark_red_background);
                             binding.tvRecommended.setText(R.string.Cancelled);

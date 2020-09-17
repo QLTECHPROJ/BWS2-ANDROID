@@ -39,7 +39,6 @@
                 android:gravity="start"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="Motivation Program"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 
@@ -52,7 +51,6 @@
                 android:gravity="start"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="12:37"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
         </LinearLayout>

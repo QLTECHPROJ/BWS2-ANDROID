@@ -114,17 +114,21 @@
                             android:layout_marginBottom="@dimen/_8sdp"
                             android:layout_weight="0.13"
                             android:padding="@dimen/_13sdp"
+
                             android:scaleType="fitXY"
                             android:src="@drawable/ic_all_pause_icon" />
-                       <!-- <ProgressBar
+
+                        <ProgressBar
                             android:id="@+id/progressBar"
                             android:layout_width="0.00dp"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/_13sdp"
                             android:layout_marginTop="@dimen/_8sdp"
                             android:layout_marginBottom="@dimen/_8sdp"
-                            android:scaleType="fitXY"
-                            android:layout_weight="0.13"/>-->
+                            android:layout_weight="0.13"
+                            android:visibility="gone"
+                            android:scaleType="fitXY" />
+
                         <ImageView
                             android:id="@+id/ivPlay"
                             android:layout_width="@dimen/_0sdp"

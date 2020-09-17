@@ -215,7 +215,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         } else {
             String errorMessage = String.format(
                     getString(R.string.error_player), errorReason.toString());
-            BWSApplication.showToast(errorMessage,this);
+            BWSApplication.showToast(errorMessage, this);
         }
     }
 

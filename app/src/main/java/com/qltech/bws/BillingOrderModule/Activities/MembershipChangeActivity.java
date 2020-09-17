@@ -48,15 +48,12 @@ public class MembershipChangeActivity extends AppCompatActivity {
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
-
         binding.llBack.setOnClickListener(view -> finish());
 
         RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvPlanList.setLayoutManager(mLayoutManager1);
         binding.rvPlanList.setItemAnimator(new DefaultItemAnimator());
-
         prepareMembershipData();
     }
 
@@ -75,7 +72,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
                             binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
 
                             membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan()
-                                    ,ctx,binding.btnFreeJoin);
+                                    , ctx, binding.btnFreeJoin);
                             binding.rvPlanList.setAdapter(membershipPlanAdapter);
 
                         }
@@ -88,7 +85,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
                 }
             });
         } else {
-            BWSApplication.showToast( getString(R.string.no_server_found), this);
+            BWSApplication.showToast(getString(R.string.no_server_found), this);
         }
     }
 
@@ -117,7 +114,6 @@ public class MembershipChangeActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             PlanListBillingModel.ResponseData.Plan listModel = listModelList.get(position);
 //        holder.binding.tvTitle.setText(listModel.getTitle());
-
             holder.binding.tvPlanFeatures01.setText(listModel.getPlanFeatures().get(0).getFeature());
             holder.binding.tvPlanFeatures02.setText(listModel.getPlanFeatures().get(1).getFeature());
             holder.binding.tvPlanFeatures03.setText(listModel.getPlanFeatures().get(2).getFeature());
@@ -151,7 +147,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
             } else {
                 if (listModel.getRecommendedFlag().equalsIgnoreCase("1") && pos == 0) {
                     holder.binding.tvRecommended.setVisibility(View.VISIBLE);
-                    ChangeFunction(holder,listModel,position);
+                    ChangeFunction(holder, listModel, position);
                 } else {
                     holder.binding.llPlanSub.setBackground(ctx.getResources().getDrawable(R.drawable.rounded_light_gray));
                     holder.binding.tvPlanAmount.setTextColor(ctx.getResources().getColor(R.color.black));
@@ -175,7 +171,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
             renewPlanFlag = listModel.getPlanFlag();
             renewPlanId = listModel.getPlanID();
             i = new Intent(ctx, OrderSummaryActivity.class);
-            i.putExtra("comeFrom","membership");
+            i.putExtra("comeFrom", "membership");
             i.putParcelableArrayListExtra("PlanData", listModelList);
             i.putExtra("TrialPeriod", "");
             i.putExtra("position", position);

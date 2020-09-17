@@ -1,5 +1,6 @@
 package com.qltech.bws.BillingOrderModule.Adapters;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.BillingOrderModule.Models.CardListModel;
 import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.BillingOrderModule.Models.PayNowDetailsModel;
@@ -33,6 +35,8 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity.renewPlanFlag;
 import static com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity.renewPlanId;
+import static com.qltech.bws.BillingOrderModule.Fragments.CurrentPlanFragment.PlanStatus;
+import static com.qltech.bws.BillingOrderModule.Fragments.CurrentPlanFragment.invoicePayId;
 
 public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHolder> {
     private List<CardListModel.ResponseData> listModelList;
@@ -58,7 +62,6 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Glide.with(activity).load(R.drawable.loading).asGif().into(ImgV);
-
         CardsListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
                 , R.layout.cards_list_layout, parent, false);
         return new MyViewHolder(v);
@@ -158,15 +161,17 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
             if (BWSApplication.isNetworkConnected(activity)) {
                 BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
                 Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(userId, card_id, renewPlanId, renewPlanFlag,
-                        "","");
+                        invoicePayId, PlanStatus);
                 listCall.enqueue(new Callback<PayNowDetailsModel>() {
                     @Override
                     public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
                         if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(ImgV, progressBarHolder,activity);
+                            BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
                             PayNowDetailsModel listModel1 = response.body();
-                            BWSApplication.showToast(listModel1.getResponseMessage(),activity);
-
+                            BWSApplication.showToast(listModel1.getResponseMessage(), activity);
+                            Intent i = new Intent(activity, BillingOrderActivity.class);
+                            activity.startActivity(i);
+                            activity.finish();
                         }
                     }
 

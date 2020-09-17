@@ -108,9 +108,9 @@
                 android:paddingHorizontal="@dimen/_55sdp"
                 android:paddingVertical="@dimen/_4sdp"
                 android:text="@string/Proceed_to_plan"
-                android:visibility="visible"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_14sdp"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/ImgV"
