@@ -161,96 +161,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         getPrepareShowData(position);
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
-        if (isMediaStart) {
-            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                handler.removeCallbacks(UpdateSongTime);
-                isPrepare = false;
-                isMediaStart = false;
-                isPause = false;
-                if (IsRepeat.equalsIgnoreCase("1")) {
-                    if (position < (listSize - 1)) {
-                        position = position + 1;
-                    } else {
-                        position = 0;
-                    }
-                    getPrepareShowData(position);
-                } else if (IsRepeat.equalsIgnoreCase("0")) {
-                    getPrepareShowData(position);
-                } else if (IsShuffle.equalsIgnoreCase("1")) {
-                    // shuffle is on - play a random song
-                    if (queuePlay) {
-                        adapter.callRemoveList(position);
-                        listSize = addToQueueModelList.size();
-                        if (listSize == 0) {
-                            stopMedia();
-                        } else if (listSize == 1) {
-                            position = 0;
-                            getPrepareShowData(position);
-                        } else {
-                            Random random = new Random();
-                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                            getPrepareShowData(position);
-                        }
-                    }  else {
-                        if (listSize == 1) {
-
-                        } else {
-                            Random random = new Random();
-                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                            getPrepareShowData(position);
-                        }
-                    }
-                } else {
-                    if (queuePlay) {
-                        adapter.callRemoveList(position);
-                        listSize = addToQueueModelList.size();
-                        if (position < listSize - 1) {
-                            getPrepareShowData(position);
-                        } else {
-                            if (listSize == 0) {
-                                stopMedia();
-                            } else {
-                                position = 0;
-                                getPrepareShowData(position);
-                            }
-                        }
-                    } else {
-                        if (position < (listSize - 1)) {
-                            position = position + 1;
-                            getPrepareShowData(position);
-                        } else {
-                            binding.llPlay.setVisibility(View.VISIBLE);
-                            binding.llPause.setVisibility(View.GONE);
-                            stopMedia();
-                        }
-                    }
-                }
-                if (listSize == 1) {
-                    binding.llnext.setEnabled(false);
-                    binding.llnext.setEnabled(false);
-                    binding.llprev.setClickable(false);
-                    binding.llprev.setClickable(false);
-                    binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-                    binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-                    position = 0;
-                } /*else if (position == listSize - 1 && IsRepeat.equalsIgnoreCase("1")) {
-                binding.llnext.setEnabled(false);
-                binding.llnext.setClickable(false);
-                binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-            } else if (position == 0 && IsRepeat.equalsIgnoreCase("1")) {
-                binding.llprev.setEnabled(false);
-                binding.llprev.setClickable(false);
-                binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-            }*/ else {
-                    binding.llnext.setEnabled(true);
-                    binding.llnext.setEnabled(true);
-                    binding.llprev.setClickable(true);
-                    binding.llprev.setClickable(true);
-                    binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-                    binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-                }
-            });
-        }
         callAdapterMethod();
         binding.llNowPlaying.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -455,7 +365,101 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         addToRecentPlay();
         binding.simpleSeekbar.setClickable(true);
         handler.postDelayed(UpdateSongTime, 60);
+        if (isMediaStart) {
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                callComplete();
+            });
+        }
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+    }
+
+    private void callComplete() {
+        handler.removeCallbacks(UpdateSongTime);
+        isPrepare = false;
+        isMediaStart = false;
+        isPause = false;
+        if (IsRepeat.equalsIgnoreCase("1")) {
+            if (position < (listSize - 1)) {
+                position = position + 1;
+            } else {
+                position = 0;
+            }
+            getPrepareShowData(position);
+        } else if (IsRepeat.equalsIgnoreCase("0")) {
+            getPrepareShowData(position);
+        } else if (IsShuffle.equalsIgnoreCase("1")) {
+            // shuffle is on - play a random song
+            if (queuePlay) {
+                adapter.callRemoveList(position);
+                listSize = addToQueueModelList.size();
+                if (listSize == 0) {
+                    stopMedia();
+                } else if (listSize == 1) {
+                    position = 0;
+                    getPrepareShowData(position);
+                } else {
+                    Random random = new Random();
+                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                    getPrepareShowData(position);
+                }
+            }  else {
+                if (listSize == 1) {
+
+                } else {
+                    Random random = new Random();
+                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                    getPrepareShowData(position);
+                }
+            }
+        } else {
+            if (queuePlay) {
+                adapter.callRemoveList(position);
+                listSize = addToQueueModelList.size();
+                if (position < listSize - 1) {
+                    getPrepareShowData(position);
+                } else {
+                    if (listSize == 0) {
+                        stopMedia();
+                    } else {
+                        position = 0;
+                        getPrepareShowData(position);
+                    }
+                }
+            } else {
+                if (position < (listSize - 1)) {
+                    position = position + 1;
+                    getPrepareShowData(position);
+                } else {
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+                    stopMedia();
+                }
+            }
+        }
+        if (listSize == 1) {
+            binding.llnext.setEnabled(false);
+            binding.llnext.setEnabled(false);
+            binding.llprev.setClickable(false);
+            binding.llprev.setClickable(false);
+            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+            position = 0;
+        } /*else if (position == listSize - 1 && IsRepeat.equalsIgnoreCase("1")) {
+                binding.llnext.setEnabled(false);
+                binding.llnext.setClickable(false);
+                binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else if (position == 0 && IsRepeat.equalsIgnoreCase("1")) {
+                binding.llprev.setEnabled(false);
+                binding.llprev.setClickable(false);
+                binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+            }*/ else {
+            binding.llnext.setEnabled(true);
+            binding.llnext.setEnabled(true);
+            binding.llprev.setClickable(true);
+            binding.llprev.setClickable(true);
+            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
     }
 
     private void setInIt(String name, String audiomastercat, String imageFile, String audioDuration) {

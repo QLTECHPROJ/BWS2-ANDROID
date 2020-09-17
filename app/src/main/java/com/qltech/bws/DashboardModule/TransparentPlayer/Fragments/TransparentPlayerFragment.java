@@ -355,15 +355,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     } else {
                         binding.ivPlay.setVisibility(View.GONE);
                         binding.ivPause.setVisibility(View.VISIBLE);
-
                         play(Uri.parse(audioFile));
+                        playMedia();
+
                     /*    while (!isPrepare) {
                             binding.progressBar.setVisibility(View.VISIBLE);
                             binding.progressBar.animate().setDuration(200).alpha(1).start();
                         }
                         binding.progressBar.setVisibility(View.GONE);
                         binding.progressBar.animate().setDuration(200).alpha(1).start();*/
-                        playMedia();
                     }
                 } else {
                     binding.ivPause.setVisibility(View.GONE);
