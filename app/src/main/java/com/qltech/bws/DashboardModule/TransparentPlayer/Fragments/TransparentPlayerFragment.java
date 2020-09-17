@@ -247,10 +247,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
         }
         if (listSize == 1) {
-            SharedPreferences sharedxx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedxx.edit();
-            editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
-            editor.commit();
             IsShuffle = "";
         }
         binding.ivPause.setOnClickListener(view1 -> {
@@ -554,7 +550,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         if(listSize == 1){
             position = 0;
         }
-        binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");

@@ -560,6 +560,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
         ArrayList<AddToQueueModel> listModelList;
         Context ctx;
+        boolean queueClick = false;
 
 
         public QueueAdapter(ArrayList<AddToQueueModel> listModelList, Context ctx) {
@@ -593,9 +594,9 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.llRemove.setOnClickListener(view -> callRemoveList(position));
-            if(queuePlay){
+            if(queuePlay || !queueClick){
                 if(listModel.getName().equalsIgnoreCase(binding.tvName.getText().toString())){
-                    holder.binding.llMainLayout.setVisibility(View.GONE);
+                    callRemoveList1(position);
                 }
             }
             holder.binding.llMainLayout.setOnClickListener(view -> {
@@ -608,13 +609,20 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
                 setInIt(listModel.getName(), listModel.getAudiomastercat(),
                         listModel.getImageFile(), listModel.getAudioDuration());
-                savePrefQueue(position, true, false, listModelList, ctx);
+                addToQueueModelList = listModelList;
+                savePrefQueue(position, true, false, addToQueueModelList, ctx);
                 getPrepareShowData(position);
+                queueClick = true;
+                callRemoveList1(position);
             });
 
         }
 
-        public void callRemoveList(int position) {
+        public void callRemoveList1(int position) {
+//            listModelList.remove(position);
+//            notifyDataSetChanged();
+        }
+   public void callRemoveList(int position) {
             listModelList.remove(position);
             notifyDataSetChanged();
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

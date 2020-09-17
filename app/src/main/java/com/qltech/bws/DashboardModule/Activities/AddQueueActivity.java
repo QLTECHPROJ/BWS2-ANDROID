@@ -444,15 +444,15 @@ public class AddQueueActivity extends AppCompatActivity {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-            Intent i = new Intent(ctx, PlayWellnessActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(i);
-            SharedPreferences shared11 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+//            Intent i = new Intent(ctx, PlayWellnessActivity.class);
+//            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//            startActivity(i);
+      /*      SharedPreferences shared11 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared11.edit();
             Gson gson11 = new Gson();
             String json11 = gson11.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, json11);
-            editor.commit();
+            editor.commit();*/
             finish();
         }
     }
