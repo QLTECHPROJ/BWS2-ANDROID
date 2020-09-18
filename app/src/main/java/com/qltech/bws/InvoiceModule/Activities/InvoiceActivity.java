@@ -39,6 +39,7 @@ public class InvoiceActivity extends AppCompatActivity {
     ArrayList<InvoiceListModel.MemberShip> memberShipList;
     String UserID, ComeFrom= "";
     Context context;
+    public static boolean invoiceToDashboard = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class InvoiceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (ComeFrom.equalsIgnoreCase("1")) {
+                    invoiceToDashboard = true;
                     Intent i = new Intent(context, DashboardActivity.class);
                     startActivity(i);
                     finish();

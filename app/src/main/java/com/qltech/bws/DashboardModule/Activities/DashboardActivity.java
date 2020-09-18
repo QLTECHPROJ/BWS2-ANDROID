@@ -22,6 +22,8 @@ import com.qltech.bws.R;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityDashboardBinding;
 
+import static com.qltech.bws.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
+
 public class DashboardActivity extends AppCompatActivity {
     public static int player = 0;
     ActivityDashboardBinding binding;
@@ -102,6 +104,8 @@ public class DashboardActivity extends AppCompatActivity {
                         doubleBackToExitPressedOnce = false;
                     }
                 }, 2000);
+            }else if(invoiceToDashboard){
+                finishAffinity();
             } else {
                 super.onBackPressed();
             }
