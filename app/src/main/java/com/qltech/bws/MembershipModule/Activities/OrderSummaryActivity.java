@@ -11,26 +11,19 @@ import android.os.SystemClock;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
-import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
-import com.qltech.bws.BillingOrderModule.Models.PayNowDetailsModel;
+import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.BillingOrderModule.Models.PlanListBillingModel;
-import com.qltech.bws.InvoiceModule.Models.InvoiceDetailModel;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
-import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityOrderSummaryBinding;
 
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class OrderSummaryActivity extends AppCompatActivity {
     ActivityOrderSummaryBinding binding;
-    String TrialPeriod, comeFrom = "",UserId, renewPlanFlag, renewPlanId;
+    String TrialPeriod, comeFrom = "", UserId, renewPlanFlag, renewPlanId;
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
     int position;
@@ -53,7 +46,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
             if (getIntent().hasExtra("comeFrom")) {
                 comeFrom = getIntent().getStringExtra("comeFrom");
                 listModelList2 = getIntent().getParcelableArrayListExtra("PlanData");
-            }else{
+            } else {
                 listModelList = getIntent().getParcelableArrayListExtra("PlanData");
             }
         }
@@ -66,7 +59,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
             binding.tvSubName.setText(listModelList2.get(position).getSubName());
             binding.tvPlanAmount.setText("$" + listModelList2.get(position).getPlanAmount());
             binding.tvTotalAmount.setText("$" + listModelList2.get(position).getPlanAmount());
-        }else {
+        } else {
             binding.tvTrialPeriod.setVisibility(View.VISIBLE);
             binding.tvPlanInterval.setText(listModelList.get(position).getPlanInterval() + " Membership");
             binding.tvPlanTenure.setText(listModelList.get(position).getPlanTenure());
@@ -80,7 +73,13 @@ public class OrderSummaryActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                if (!comeFrom.equalsIgnoreCase("")) {
+                    Intent i = new Intent(OrderSummaryActivity.this, MembershipChangeActivity.class);
+                    startActivity(i);
+                    finish();
+                } else {
+                    finish();
+                }
             }
         });
 
@@ -110,5 +109,16 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!comeFrom.equalsIgnoreCase("")) {
+            Intent i = new Intent(OrderSummaryActivity.this, MembershipChangeActivity.class);
+            startActivity(i);
+            finish();
+        } else {
+            finish();
+        }
     }
 }

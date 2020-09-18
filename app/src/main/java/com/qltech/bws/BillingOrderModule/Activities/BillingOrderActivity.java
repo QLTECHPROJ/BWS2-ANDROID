@@ -57,9 +57,7 @@ public class BillingOrderActivity extends AppCompatActivity {
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
                 binding.viewPager.setCurrentItem(tab.getPosition());
-
             }
 
             @Override
@@ -72,8 +70,6 @@ public class BillingOrderActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     @Override

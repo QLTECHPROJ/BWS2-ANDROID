@@ -49,12 +49,27 @@ public class MembershipChangeActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
-        binding.llBack.setOnClickListener(view -> finish());
+
+        binding.llBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MembershipChangeActivity.this, BillingOrderActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
 
         RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvPlanList.setLayoutManager(mLayoutManager1);
         binding.rvPlanList.setItemAnimator(new DefaultItemAnimator());
         prepareMembershipData();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(MembershipChangeActivity.this, BillingOrderActivity.class);
+        startActivity(i);
+        finish();
     }
 
     private void prepareMembershipData() {
@@ -158,6 +173,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
             }
             btnFreeJoin.setOnClickListener(view -> {
                 ctx.startActivity(i);
+                finish();
             });
         }
 

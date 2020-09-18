@@ -168,6 +168,7 @@ public class CurrentPlanFragment extends Fragment {
                                                 hideProgressBar();
                                                 PayNowDetailsModel listModel1 = response.body();
                                                 BWSApplication.showToast(listModel1.getResponseMessage(), getActivity());
+                                                getActivity().finish();
                                             }
                                         }
 
