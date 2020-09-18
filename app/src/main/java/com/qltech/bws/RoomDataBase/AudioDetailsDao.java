@@ -16,4 +16,7 @@ public interface AudioDetailsDao {
     @Query("SELECT * FROM item_table  ORDER BY uid ASC")
     List<DownloadAudioDetails> getbyUIDAll();
 
+    @Insert
+    void insertMedia(DownloadAudioDetails downloadAudioDetails);
+
 }

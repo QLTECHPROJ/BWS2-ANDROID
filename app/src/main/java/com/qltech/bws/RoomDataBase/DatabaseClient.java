@@ -26,7 +26,7 @@ public class DatabaseClient {
         return Instance;
     }
 
-    public AudioDatabase getCart() {
+    public AudioDatabase getaudioDatabase() {
         return cart;
     }
 }

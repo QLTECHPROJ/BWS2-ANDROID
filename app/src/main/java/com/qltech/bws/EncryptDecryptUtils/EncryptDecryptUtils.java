@@ -3,8 +3,10 @@ package com.qltech.bws.EncryptDecryptUtils;
 import android.content.Context;
 import android.util.Base64;
 
+import java.lang.reflect.Array;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -42,10 +44,10 @@ public class EncryptDecryptUtils {
 
     public static byte[] decode(SecretKey yourKey, byte[] fileData)
             throws Exception {
-        byte[] decrypted;
+        byte[] decrypted = null;
         Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM, PROVIDER);
         cipher.init(Cipher.DECRYPT_MODE, yourKey, new IvParameterSpec(new byte[cipher.getBlockSize()]));
-        decrypted = cipher.doFinal(fileData);
+        decrypted = cipher.doFinal(Arrays.toString(fileData).getBytes("utf-8"));
         return decrypted;
     }
 
@@ -70,7 +72,7 @@ public class EncryptDecryptUtils {
             return secretKey;
         }
 
-        byte[] decodedKey = Base64.decode(encodedKey, Base64.NO_WRAP);
+        byte[] decodedKey = Base64.decode(encodedKey,Base64.NO_WRAP);
         SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, KEY_SPEC_ALGORITHM);
         return originalKey;
     }

@@ -5,6 +5,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.qltech.bws.Utility.CONSTANTS;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -15,8 +17,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static com.qltech.bws.Utility.CONSTANTS.DIR_NAME;
-import static com.qltech.bws.Utility.CONSTANTS.FILE_EXT;
-import static com.qltech.bws.Utility.CONSTANTS.FILE_NAME;
 import static com.qltech.bws.Utility.CONSTANTS.TEMP_FILE_NAME;
 
 public class FileUtils {
@@ -59,7 +59,7 @@ public class FileUtils {
 
     @NonNull
     public static File createTempFile(Context context, byte[] decrypted) throws IOException {
-        File tempFile = File.createTempFile(TEMP_FILE_NAME, FILE_EXT, context.getCacheDir());
+        File tempFile = File.createTempFile(TEMP_FILE_NAME, CONSTANTS.FILE_EXT, context.getCacheDir());
         tempFile.deleteOnExit();
         FileOutputStream fos = new FileOutputStream(tempFile);
         fos.write(decrypted);
@@ -78,11 +78,11 @@ public class FileUtils {
     }
 
     public static final String getFilePath(Context context,String FILE_NAME) {
-        return getDirPath(context) + File.separator + FILE_NAME+FILE_EXT;
+        return getDirPath(context) + File.separator + FILE_NAME;
     }
 
     public static final void deleteDownloadedFile(Context context,String FILE_NAME) {
-        File file = new File(getFilePath(context,FILE_NAME+FILE_EXT));
+        File file = new File(getFilePath(context,FILE_NAME));
         if (null != file && file.exists()) {
             if (file.delete()) Log.i("FileUtils", "File Deleted.");
         }

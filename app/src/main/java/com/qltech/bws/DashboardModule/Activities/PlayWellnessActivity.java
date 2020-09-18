@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -28,7 +29,10 @@ import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
+import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
+import com.qltech.bws.RoomDataBase.DatabaseClient;
+import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -396,8 +400,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callDownload() {
-        DownloadMedia downloadMedia = new DownloadMedia(ctx);
-        downloadMedia.encrypt(url, name);
+       /* DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+        byte[] EncodeBytes = downloadMedia.encrypt(url, name);
+       String dirPath = FileUtils.getFilePath(getApplicationContext(),name);
+        saveMedia(EncodeBytes,dirPath);*/
 
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
@@ -433,6 +439,58 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
+    }
+
+    private void saveMedia(byte[] EncodeBytes, String dirPath) {
+        class SaveTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+
+                if (queuePlay) {
+                    downloadAudioDetails.setID(addToQueueModelList.get(position).getID());
+                    downloadAudioDetails.setName(addToQueueModelList.get(position).getName());
+                    downloadAudioDetails.setAudioFile(addToQueueModelList.get(position).getAudioFile());
+                    downloadAudioDetails.setAudioDirection(addToQueueModelList.get(position).getAudioDirection());
+                    downloadAudioDetails.setAudiomastercat(addToQueueModelList.get(position).getAudiomastercat());
+                    downloadAudioDetails.setAudioSubCategory(addToQueueModelList.get(position).getAudioSubCategory());
+                    downloadAudioDetails.setImageFile(addToQueueModelList.get(position).getImageFile());
+                    downloadAudioDetails.setLike(addToQueueModelList.get(position).getLike());
+                    downloadAudioDetails.setDownload(addToQueueModelList.get(position).getDownload());
+                    downloadAudioDetails.setAudioDuration(addToQueueModelList.get(position).getAudioDuration());
+                } else if (audioPlay) {
+                    downloadAudioDetails.setID(mainPlayModelList.get(position).getID());
+                    downloadAudioDetails.setName(mainPlayModelList.get(position).getName());
+                    downloadAudioDetails.setAudioFile(mainPlayModelList.get(position).getAudioFile());
+                    downloadAudioDetails.setAudioDirection(mainPlayModelList.get(position).getAudioDirection());
+                    downloadAudioDetails.setAudiomastercat(mainPlayModelList.get(position).getAudiomastercat());
+                    downloadAudioDetails.setAudioSubCategory(mainPlayModelList.get(position).getAudioSubCategory());
+                    downloadAudioDetails.setImageFile(mainPlayModelList.get(position).getImageFile());
+                    downloadAudioDetails.setLike(mainPlayModelList.get(position).getLike());
+                    downloadAudioDetails.setDownload(mainPlayModelList.get(position).getDownload());
+                    downloadAudioDetails.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
+                }
+                downloadAudioDetails.setEncodedBytes(EncodeBytes);
+                downloadAudioDetails.setDirPath(dirPath);
+
+                DatabaseClient.getInstance(getApplicationContext())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .insertMedia(downloadAudioDetails);
+                return null;
+            }
+
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        SaveTask st = new SaveTask();
+        st.execute();
     }
 
     private void callShuffle() {
@@ -643,7 +701,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
                             TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
 //                    resumeMedia();
-                } else if ((isPrepare || isMediaStart || isPlaying()) && !isPause) {
+                } else if ((isPrepare || isMediaStart) && !isPause) {
                     binding.llPause.setVisibility(View.VISIBLE);
                     binding.llPlay.setVisibility(View.GONE);
                 } else {
@@ -710,7 +768,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     int timeeee = progressToTimer(oTime, (int) (totalDuration));
                     binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
                             TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
-                } else if (((isPrepare || isMediaStart) || isPlaying()) && !isPause) {
+                } else if (((isPrepare || isMediaStart)) && !isPause) {
                     binding.llPause.setVisibility(View.VISIBLE);
                     binding.llPlay.setVisibility(View.GONE);
                 } else {
@@ -877,14 +935,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if(queuePlay){
+        if (queuePlay) {
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             listSize = addToQueueModelList.size();
-        }else if(audioPlay){
+        } else if (audioPlay) {
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             listSize = mainPlayModelList.size();
         }
-        if(listSize == 1){
+        if (listSize == 1) {
             position = 0;
         }
         if ((isPrepare || isMediaStart || isPlaying()) && !isPause) {

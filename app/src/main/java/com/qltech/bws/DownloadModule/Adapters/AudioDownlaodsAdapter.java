@@ -3,7 +3,6 @@ package com.qltech.bws.DownloadModule.Adapters;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +20,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
-import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -42,7 +41,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
-import static com.qltech.bws.Utility.CONSTANTS.FILE_EXT;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
@@ -92,9 +90,9 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             public void onClick(View view) {
                 if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                     if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        /*DownloadMedia downloadMedia = new DownloadMedia(ctx);
+                     /*   DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
                         try {
-                            FileDescriptor fileDescriptor = FileUtils.getTempFileDescriptor(ctx, downloadMedia.decrypt(listModelList.get(position).getName() + FILE_EXT));
+                            FileDescriptor fileDescriptor =  FileUtils.getTempFileDescriptor(ctx.getApplicationContext(), downloadMedia.decrypt(listModelList.get(position).getName()));
                             play(Uri.parse(String.valueOf(fileDescriptor)));
                             playMedia();
 
@@ -137,9 +135,9 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
                 } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
-                    /*DownloadMedia downloadMedia = new DownloadMedia(ctx);
+                 /*   DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
                     try {
-                        FileDescriptor fileDescriptor = FileUtils.getTempFileDescriptor(ctx, downloadMedia.decrypt(listModelList.get(position).getName() + FILE_EXT));
+                        FileDescriptor fileDescriptor =  FileUtils.getTempFileDescriptor(ctx.getApplicationContext(), downloadMedia.decrypt(listModelList.get(position).getName()));
                         play(Uri.parse(String.valueOf(fileDescriptor)));
                         playMedia();
 
@@ -176,36 +174,6 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                         e.printStackTrace();
                     }
                 }
-
-
-                /*if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0") || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
-                    player = 1;
-                    if (isPrepare || isMediaStart || isPause) {
-                        stopMedia();
-                    }
-                    isPause = false;
-                    isMediaStart = false;
-                    isPrepare = false;
-                    Fragment fragment = new TransparentPlayerFragment();
-                    FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flAccount, fragment)
-                            .commit();
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(listModelList);
-                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
-                    editor.commit();
-                }*/
             }
         });
 
