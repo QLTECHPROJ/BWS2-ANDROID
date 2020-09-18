@@ -49,6 +49,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Activities.AddQueueActivity.ComeAddQueue;
 import static com.qltech.bws.Utility.MusicService.SeekTo;
 import static com.qltech.bws.Utility.MusicService.getEndTime;
 import static com.qltech.bws.Utility.MusicService.getProgressPercentage;
@@ -70,7 +71,7 @@ import static com.qltech.bws.Utility.MusicService.stopMedia;
 public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener*/ {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
-    String IsRepeat, IsShuffle, id;
+    String IsRepeat, IsShuffle, id, AudioId = "";
     Context ctx;
     Activity activity;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -117,6 +118,10 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         binding = DataBindingUtil.setContentView(this, R.layout.activity_view_queue);
         ctx = ViewQueueActivity.this;
         activity = ViewQueueActivity.this;
+
+        if (getIntent().getExtras() != null) {
+            AudioId = getIntent().getStringExtra(CONSTANTS.ID);
+        }
         handler = new Handler();
         addToQueueModelList = new ArrayList<>();
         addToQueueModelList2 = new ArrayList<>();
@@ -126,6 +131,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+
         if (!json.equalsIgnoreCase(String.valueOf(gson))) {
             Type type = new TypeToken<ArrayList<AddToQueueModel>>() {
             }.getType();
@@ -515,20 +521,27 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     }
 
     private void callBack() {
-        if (binding.llPause.getVisibility() == View.VISIBLE) {
-            isPause = false;
-        }
-        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shared.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(addToQueueModelList);
-        editor.putString(CONSTANTS.PREF_KEY_queueList, json);
-        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-        editor.commit();
-        Intent i = new Intent(ctx, PlayWellnessActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(i);
-        finish();
+      /*  if (ComeAddQueue == 1){
+            Intent i = new Intent(ctx, AddQueueActivity.class);
+            i.putExtra("ID",AudioId);
+            startActivity(i);
+            finish();
+        }else {*/
+            if (binding.llPause.getVisibility() == View.VISIBLE) {
+                isPause = false;
+            }
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(addToQueueModelList);
+            editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.commit();
+            Intent i = new Intent(ctx, PlayWellnessActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+            finish();
+//        }
     }
 
     @Override
@@ -644,7 +657,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             String json = gson.toJson(listModelList);
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);
             editor.commit();
-            BWSApplication.showToast("The audio has been removed from the queue", ctx);
+//            BWSApplication.showToast("The audio has been removed from the queue", ctx);
             addToQueueModelList = listModelList;
         }
 

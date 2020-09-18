@@ -67,6 +67,7 @@ public class AddQueueActivity extends AppCompatActivity {
     int position, listSize;
     Boolean queuePlay, audioPlay;
     private long mLastClickTime = 0;
+    public static int ComeAddQueue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -567,11 +568,13 @@ public class AddQueueActivity extends AppCompatActivity {
                         binding.llViewQueue.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                ComeAddQueue = 1;
                                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                                     return;
                                 }
                                 mLastClickTime = SystemClock.elapsedRealtime();
                                 Intent i = new Intent(ctx, ViewQueueActivity.class);
+//                                i.putExtra("ID",AudioId);
                                 startActivity(i);
                             }
                         });

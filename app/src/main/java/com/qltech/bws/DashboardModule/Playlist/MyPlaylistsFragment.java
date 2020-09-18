@@ -609,14 +609,12 @@ public class MyPlaylistsFragment extends Fragment {
                     @Override
                     public void onResponse(Call<CardModel> call, Response<CardModel> response) {
                         if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                             CardModel listModel = response.body();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<CardModel> call, Throwable t) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                     }
                 });
             }
@@ -624,10 +622,12 @@ public class MyPlaylistsFragment extends Fragment {
 
         @Override
         public void onRowSelected(RecyclerView.ViewHolder myViewHolder) {
+
         }
 
         @Override
         public void onRowClear(RecyclerView.ViewHolder myViewHolder) {
+
         }
 
 
