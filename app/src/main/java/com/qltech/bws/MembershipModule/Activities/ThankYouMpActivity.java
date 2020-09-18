@@ -48,6 +48,7 @@ public class ThankYouMpActivity extends AppCompatActivity {
             }
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(ThankYouMpActivity.this, InvoiceActivity.class);
+            i.putExtra("ComeFrom","1");
             startActivity(i);
             finish();
         });

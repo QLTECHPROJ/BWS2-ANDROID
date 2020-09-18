@@ -40,6 +40,7 @@ import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 
 import retrofit2.Call;
@@ -92,7 +93,9 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         binding.textMonth.addTextChangedListener(addCardTextWatcher);
         binding.etCvv.addTextChangedListener(addCardTextWatcher);*/
 
-       binding.tvDoller.setText("$"+price);
+//        DecimalFormat precision = new DecimalFormat("#.##");
+        binding.tvDoller.setText("$"+price);
+//        binding.tvDoller.setText("$" + precision.format(price));
         binding.etNumber.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (binding.etNumber.getText().toString().length() == 16) {

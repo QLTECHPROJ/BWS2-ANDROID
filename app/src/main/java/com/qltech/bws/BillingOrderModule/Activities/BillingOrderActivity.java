@@ -14,6 +14,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BillingOrderModule.Fragments.BillingAddressFragment;
 import com.qltech.bws.BillingOrderModule.Fragments.CurrentPlanFragment;
 import com.qltech.bws.BillingOrderModule.Fragments.PaymentFragment;
+import com.qltech.bws.DashboardModule.Account.AccountFragment;
+import com.qltech.bws.DashboardModule.Appointment.SessionsFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.databinding.ActivityBillingOrderBinding;
 
@@ -32,6 +34,7 @@ public class BillingOrderActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         binding.viewPager.setOffscreenPageLimit(3);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Current Plan"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Payment"));

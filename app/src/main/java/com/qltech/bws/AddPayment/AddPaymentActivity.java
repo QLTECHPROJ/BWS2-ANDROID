@@ -53,13 +53,30 @@ public class AddPaymentActivity extends AppCompatActivity {
     int a = 0;
     int year, month;
     YeardialogBinding binding1;
-    String strToken;
+    String strToken, ComePayment = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_payment);
 
+        if (getIntent() != null) {
+            ComePayment = getIntent().getStringExtra("ComePayment");
+        }
+
+        binding.llBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ComePayment.equalsIgnoreCase("1")) {
+                    Intent i = new Intent(context, BillingOrderActivity.class);
+                    i.putExtra("payment", 1);
+                    startActivity(i);
+                    finish();
+                } else {
+                    finish();
+                }
+            }
+        });
         binding.llBack.setOnClickListener(view -> finish());
 
         context = AddPaymentActivity.this;
@@ -152,7 +169,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                     @Override
                     public void onError(Exception error) {
                         Log.e("error.........", "" + error.toString());
-                        BWSApplication.showToast("Invalid Card Details", AddPaymentActivity.this);
+                        BWSApplication.showToast("Invalid Card Details", context);
                         hideProgressBar();
                     }
 
@@ -174,18 +191,15 @@ public class AddPaymentActivity extends AppCompatActivity {
                                                 InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                                 keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
                                                 if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                                    Intent i = new Intent(activity, BillingOrderActivity.class);
-                                                    i.putExtra("payment", 1);
-                                                    startActivity(i);
                                                     finish();
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), AddPaymentActivity.this);
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                                 } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), AddPaymentActivity.this);
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                                 } else {
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), AddPaymentActivity.this);
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                                 }
                                             } else {
-                                                BWSApplication.showToast(cardModel.getResponseMessage(), AddPaymentActivity.this);
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                             }
                                         }
                                     }
@@ -197,7 +211,7 @@ public class AddPaymentActivity extends AppCompatActivity {
 
                                 });
                             } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), AddPaymentActivity.this);
+                                BWSApplication.showToast(getString(R.string.no_server_found), context);
                                 hideProgressBar();
                             }
                         }
@@ -286,7 +300,14 @@ public class AddPaymentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        if (ComePayment.equalsIgnoreCase("1")) {
+            Intent i = new Intent(AddPaymentActivity.this, BillingOrderActivity.class);
+            i.putExtra("payment", 1);
+            startActivity(i);
+            finish();
+        } else {
+            finish();
+        }
     }
 
     @Override

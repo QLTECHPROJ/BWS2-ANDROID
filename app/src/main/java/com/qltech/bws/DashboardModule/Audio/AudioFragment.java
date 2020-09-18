@@ -37,7 +37,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.qltech.bws.DashboardModule.Audio.ViewAllAudioFragment.ComeFromAudioViewAll;
 import static com.qltech.bws.DashboardModule.Audio.ViewAllAudioFragment.viewallAudio;
 
 public class AudioFragment extends Fragment {
@@ -63,20 +62,24 @@ public class AudioFragment extends Fragment {
     }
 
     private void prepareData() {
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlAudiolist, fragment)
-                    .commit();
+        try {
+            if (!AudioFlag.equalsIgnoreCase("0")) {
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.rlAudiolist, fragment)
+                        .commit();
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 6, 13, 260);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 6, 13, 50);
-            binding.llSpace.setLayoutParams(params);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(13, 6, 13, 260);
+                binding.llSpace.setLayoutParams(params);
+            } else {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(13, 6, 13, 50);
+                binding.llSpace.setLayoutParams(params);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
@@ -159,7 +162,7 @@ public class AudioFragment extends Fragment {
                 holder.binding.tvTitle.setText(listModelList.get(position).getView());
                 if (listModelList.get(position).getView().equalsIgnoreCase("My Downloads")) {
                     RecommendedAdapter myDownloadsAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                           listModelList.get(position).getIsLock());
+                            listModelList.get(position).getIsLock());
                     RecyclerView.LayoutManager myDownloads = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(myDownloads);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());

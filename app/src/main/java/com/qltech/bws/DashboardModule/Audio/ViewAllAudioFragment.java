@@ -107,20 +107,24 @@ public class ViewAllAudioFragment extends Fragment {
     }
 
     private void RefreshData() {
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlAudiolist, fragment)
-                    .commit();
+        try {
+            if (!AudioFlag.equalsIgnoreCase("0")) {
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.rlAudiolist, fragment)
+                        .commit();
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(4, 6, 4, 260);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(4, 6, 4, 50);
-            binding.llSpace.setLayoutParams(params);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(4, 6, 4, 260);
+                binding.llSpace.setLayoutParams(params);
+            } else {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(4, 6, 4, 50);
+                binding.llSpace.setLayoutParams(params);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -196,38 +200,42 @@ public class ViewAllAudioFragment extends Fragment {
                     if (IsLock.equalsIgnoreCase("1")) {
                         if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                             holder.binding.ivLock.setVisibility(View.GONE);
-                        }else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                        } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                                 || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                             holder.binding.ivLock.setVisibility(View.VISIBLE);
                             BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                         }
                     } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        player = 1;
-                        if (isPrepare||isMediaStart ||isPause) {
-                            stopMedia();
+                        try {
+                            player = 1;
+                            if (isPrepare || isMediaStart || isPause) {
+                                stopMedia();
+                            }
+                            isPause = false;
+                            isMediaStart = false;
+                            isPrepare = false;
+                            RefreshData();
+                            Fragment fragment = new TransparentPlayerFragment();
+                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                            fragmentManager1.beginTransaction()
+                                    .add(R.id.rlAudiolist, fragment)
+                                    .commit();
+                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            Gson gson = new Gson();
+                            String json = gson.toJson(listModelList.get(position));
+                            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
+                            editor.commit();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        isPause = false;
-                        isMediaStart = false;
-                        isPrepare = false;
-                        RefreshData();
-                        Fragment fragment = new TransparentPlayerFragment();
-                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                        fragmentManager1.beginTransaction()
-                                .add(R.id.rlAudiolist, fragment)
-                                .commit();
-                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        Gson gson = new Gson();
-                        String json = gson.toJson(listModelList.get(position));
-                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
-                        editor.commit();
                     }
                 }
             });

@@ -141,6 +141,7 @@ public class CurrentPlanFragment extends Fragment {
                                 mLastClickTime = SystemClock.elapsedRealtime();
                                 Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
                                 startActivity(i);
+                                getActivity().finish();
                             });
                         } else if (listModel.getResponseData().getStatus().equalsIgnoreCase("3")) {
                             binding.tvRecommended.setBackgroundResource(R.drawable.yellow_background);

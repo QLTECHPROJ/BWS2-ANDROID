@@ -146,7 +146,7 @@ public class AptAudioFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (audiolist.getIsLock().equalsIgnoreCase("1")) {
+                   /* if (audiolist.getIsLock().equalsIgnoreCase("1")) {
                         if (audiolist.getIsPlay().equalsIgnoreCase("1")) {
                             player = 1;
                             if (isPrepare || isMediaStart || isPause) {
@@ -178,7 +178,8 @@ public class AptAudioFragment extends Fragment {
                             BWSApplication.showToast("Please re-activate your membership plan", ctx);
                         }
                     } else if (audiolist.getIsLock().equalsIgnoreCase("0")
-                            || audiolist.getIsLock().equalsIgnoreCase("")) {
+                            || audiolist.getIsLock().equalsIgnoreCase("")) {*/
+                    try {
                         player = 1;
                         if (isPrepare || isMediaStart || isPause) {
                             stopMedia();
@@ -204,8 +205,11 @@ public class AptAudioFragment extends Fragment {
                         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
                         editor.commit();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
+//                }
             });
 
             holder.binding.llDownload.setOnClickListener(new View.OnClickListener() {

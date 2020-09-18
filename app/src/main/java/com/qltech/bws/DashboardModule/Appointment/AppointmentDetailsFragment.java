@@ -84,32 +84,26 @@ public class AppointmentDetailsFragment extends Fragment {
         FragmentManager fm = getActivity()
                 .getSupportFragmentManager();
         fm.popBackStack("AppointmentDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        /*Bundle bundle = new Bundle();
-        Fragment sessionsFragment = new SessionsFragment();
-        bundle.putString("appointmentMainName", appointmentMainName);
-        bundle.putString("appointmentName", appointmentName);
-        bundle.putString("appointmentImage", appointmentImage);
-        sessionsFragment.setArguments(bundle);
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .replace(R.id.flMainLayout, sessionsFragment)
-                .commit();*/
     }
 
     private void getAppointmentData() {
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flMainLayout, fragment)
-                    .commit();
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, 0, 260);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, 0, 50);
-            binding.llSpace.setLayoutParams(params);
+        try {
+            if (!AudioFlag.equalsIgnoreCase("0")) {
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.flMainLayout, fragment)
+                        .commit();
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, 0, 0, 260);
+                binding.llSpace.setLayoutParams(params);
+            } else {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, 0, 0, 50);
+                binding.llSpace.setLayoutParams(params);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
@@ -141,7 +135,7 @@ public class AppointmentDetailsFragment extends Fragment {
                                 binding.viewPager.setOffscreenPageLimit(2);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"));
-                            }  else if (appointmentDetailModel.getResponseData().getAudio().size() == 0
+                            } else if (appointmentDetailModel.getResponseData().getAudio().size() == 0
                                     && appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
                                     && !appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                                 binding.viewPager.setOffscreenPageLimit(2);
@@ -266,7 +260,7 @@ public class AppointmentDetailsFragment extends Fragment {
                         aptBookletFragment.setArguments(bundle);
                         return aptBookletFragment;
                 }
-            }  else if (globalAppointmentDetailModel.getResponseData().getAudio().size() == 0
+            } else if (globalAppointmentDetailModel.getResponseData().getAudio().size() == 0
                     && globalAppointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
                     && !globalAppointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
                 switch (position) {

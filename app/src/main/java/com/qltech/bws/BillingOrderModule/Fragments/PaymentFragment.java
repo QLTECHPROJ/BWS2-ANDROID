@@ -37,6 +37,7 @@ public class PaymentFragment extends Fragment {
     FragmentPaymentBinding binding;
     AllCardAdapter adapter;
     String userId;
+    public static int ComePayment = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,6 +56,7 @@ public class PaymentFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), AddPaymentActivity.class);
+                i.putExtra("ComePayment", "1");
                 startActivity(i);
             }
         });
@@ -70,49 +72,56 @@ public class PaymentFragment extends Fragment {
     }
 
     private void prepareCardList() {
-        if (BWSApplication.isNetworkConnected(context)) {
-            showProgressBar();
-            Call<CardListModel> listCall = APIClient.getClient().getCardLists(userId);
-            listCall.enqueue(new Callback<CardListModel>() {
-                @Override
-                public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
-                    if (response.isSuccessful()) {
-                        hideProgressBar();
-                        CardListModel cardListModel = response.body();
-                        if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            if (BtnVisible == 1) {
-                                binding.btnCheckout.setVisibility(View.VISIBLE);
-                            } else {
-                                binding.btnCheckout.setVisibility(View.GONE);
+        try {
+            if (BWSApplication.isNetworkConnected(context)) {
+                showProgressBar();
+                Call<CardListModel> listCall = APIClient.getClient().getCardLists(userId);
+                listCall.enqueue(new Callback<CardListModel>() {
+                    @Override
+                    public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
+                        if (response.isSuccessful()) {
+                            hideProgressBar();
+                            try {
+                                CardListModel cardListModel = response.body();
+                                if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                    if (BtnVisible == 1) {
+                                        binding.btnCheckout.setVisibility(View.VISIBLE);
+                                    } else {
+                                        binding.btnCheckout.setVisibility(View.GONE);
+                                    }
+
+                                    if (cardListModel.getResponseData().size() == 0) {
+                                        binding.rvCardList.setAdapter(null);
+                                        binding.rvCardList.setVisibility(View.GONE);
+                                    } else {
+                                        binding.rvCardList.setVisibility(View.VISIBLE);
+                                        adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.ImgV,
+                                                binding.progressBarHolder, binding.rvCardList, binding.btnCheckout);
+                                        binding.rvCardList.setAdapter(adapter);
+                                    }
+
+
+                                } else {
+                                    BWSApplication.showToast(cardListModel.getResponseMessage(), context);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-
-                            if (cardListModel.getResponseData().size() == 0) {
-                                binding.rvCardList.setAdapter(null);
-                                binding.rvCardList.setVisibility(View.GONE);
-                            } else {
-                                binding.rvCardList.setVisibility(View.VISIBLE);
-                                adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.ImgV,
-                                        binding.progressBarHolder, binding.rvCardList, binding.btnCheckout);
-                                binding.rvCardList.setAdapter(adapter);
-                            }
-
-
-                        } else {
-                            BWSApplication.showToast(cardListModel.getResponseMessage(), context);
                         }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<CardListModel> call, Throwable t) {
-                    hideProgressBar();
-                }
+                    @Override
+                    public void onFailure(Call<CardListModel> call, Throwable t) {
+                        hideProgressBar();
+                    }
 
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), context);
+                });
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), context);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 
     private void hideProgressBar() {

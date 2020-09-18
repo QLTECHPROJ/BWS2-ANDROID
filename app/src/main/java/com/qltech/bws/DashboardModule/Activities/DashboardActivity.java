@@ -2,12 +2,10 @@ package com.qltech.bws.DashboardModule.Activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -22,14 +20,9 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.CONSTANTS;
-import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityDashboardBinding;
 
-import static android.net.ConnectivityManager.RESTRICT_BACKGROUND_STATUS_DISABLED;
-import static android.net.ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED;
-import static android.net.ConnectivityManager.RESTRICT_BACKGROUND_STATUS_WHITELISTED;
-
-public class DashboardActivity extends AppCompatActivity{
+public class DashboardActivity extends AppCompatActivity {
     public static int player = 0;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
@@ -47,13 +40,18 @@ public class DashboardActivity extends AppCompatActivity{
 
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlAudiolist, fragment)
-                    .commit();
+        try {
+            if (!AudioFlag.equalsIgnoreCase("0")) {
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.rlAudiolist, fragment)
+                        .commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
 // Checks if the device is on a metered network
@@ -61,15 +59,15 @@ public class DashboardActivity extends AppCompatActivity{
             // Checks user’s Data Saver settings.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 switch (connMgr.getRestrictBackgroundStatus()) {
-                    case RESTRICT_BACKGROUND_STATUS_ENABLED:
+                    case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED:
                         // Background data usage is blocked for this app. Wherever possible,
                         // the app should also use less data in the foreground.
 
-                    case RESTRICT_BACKGROUND_STATUS_WHITELISTED:
+                    case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_WHITELISTED:
                         // The app is allowed to bypass Data Saver. Nevertheless, wherever possible,
                         // the app should use less data in the foreground and background.
 
-                    case RESTRICT_BACKGROUND_STATUS_DISABLED:
+                    case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_DISABLED:
                         // Data Saver is disabled. Since the device is connected to a
                         // metered network, the app should use less data wherever possible.
                 }

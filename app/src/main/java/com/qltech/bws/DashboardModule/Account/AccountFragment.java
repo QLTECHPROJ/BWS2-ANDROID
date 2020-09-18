@@ -98,6 +98,7 @@ public class AccountFragment extends Fragment {
             }
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(getActivity(), InvoiceActivity.class);
+            i.putExtra("ComeFrom","");
             startActivity(i);
         });
 
@@ -179,7 +180,6 @@ public class AccountFragment extends Fragment {
             dialog.show();
             dialog.setCancelable(false);
         });
-
         return view;
     }
 

@@ -84,6 +84,43 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                 if (IsLock.equalsIgnoreCase("1")) {
                     if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
+                        try {
+                            player = 1;
+                            if (isPrepare || isMediaStart || isPause) {
+                                stopMedia();
+                            }
+                            isPause = false;
+                            isMediaStart = false;
+                            isPrepare = false;
+                            Fragment fragment = new TransparentPlayerFragment();
+                            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+                            fragmentManager1.beginTransaction()
+                                    .add(R.id.rlAudiolist, fragment)
+                                    .commit();
+
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            Gson gson = new Gson();
+                            String json = gson.toJson(listModelList.get(position));
+                            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
+                            editor.commit();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                            || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    }
+                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    try {
                         player = 1;
                         if (isPrepare || isMediaStart || isPause) {
                             stopMedia();
@@ -109,38 +146,9 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
                         editor.commit();
-                    } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                            || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                    player = 1;
-                    if (isPrepare || isMediaStart || isPause) {
-                        stopMedia();
-                    }
-                    isPause = false;
-                    isMediaStart = false;
-                    isPrepare = false;
-                    Fragment fragment = new TransparentPlayerFragment();
-                    FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.rlAudiolist, fragment)
-                            .commit();
-
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(listModelList.get(position));
-                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
-                    editor.commit();
                 }
             }
         });

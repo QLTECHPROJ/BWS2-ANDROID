@@ -16,6 +16,8 @@ import android.view.WindowManager;
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
+import com.qltech.bws.DashboardModule.Activities.DashboardActivity;
 import com.qltech.bws.InvoiceModule.Fragments.AppointmentInvoiceFragment;
 import com.qltech.bws.InvoiceModule.Fragments.MembershipInvoiceFragment;
 import com.qltech.bws.InvoiceModule.Models.InvoiceListModel;
@@ -35,20 +37,32 @@ public class InvoiceActivity extends AppCompatActivity {
     ActivityInvoiceBinding binding;
     ArrayList<InvoiceListModel.Appointment> appointmentList;
     ArrayList<InvoiceListModel.MemberShip> memberShipList;
-    String UserID;
+    String UserID, ComeFrom= "";
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_invoice);
+        context = InvoiceActivity.this;
         Glide.with(InvoiceActivity.this).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
+        if (getIntent() != null) {
+            ComeFrom = getIntent().getStringExtra("ComeFrom");
+        }
+
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                if (ComeFrom.equalsIgnoreCase("1")) {
+                    Intent i = new Intent(context, DashboardActivity.class);
+                    startActivity(i);
+                    finish();
+                } else {
+                    finish();
+                }
             }
         });
 
@@ -109,7 +123,13 @@ public class InvoiceActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        if (ComeFrom.equalsIgnoreCase("1")) {
+            Intent i = new Intent(context, DashboardActivity.class);
+            startActivity(i);
+            finish();
+        } else {
+            finish();
+        }
     }
 
     public class TabAdapter extends FragmentStatePagerAdapter {

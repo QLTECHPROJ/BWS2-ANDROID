@@ -158,21 +158,26 @@ public class SearchFragment extends Fragment {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.rlSearchList, fragment)
-                    .commit();
+        try {
+            if (!AudioFlag.equalsIgnoreCase("0")) {
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.rlSearchList, fragment)
+                        .commit();
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(4, 6, 4, 260);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(4, 6, 4, 50);
-            binding.llSpace.setLayoutParams(params);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(4, 6, 4, 260);
+                binding.llSpace.setLayoutParams(params);
+            } else {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(4, 6, 4, 50);
+                binding.llSpace.setLayoutParams(params);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
@@ -259,17 +264,17 @@ public class SearchFragment extends Fragment {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
-                    comefrom_search = 1;
-                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("New", "0");
-                    bundle.putString("PlaylistID", modelList.get(position).getID());
-                    bundle.putString("PlaylistName", modelList.get(position).getName());
-                    myPlaylistsFragment.setArguments(bundle);
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .replace(R.id.rlSearchList, myPlaylistsFragment)
-                            .commit();
+                        comefrom_search = 1;
+                        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("New", "0");
+                        bundle.putString("PlaylistID", modelList.get(position).getID());
+                        bundle.putString("PlaylistName", modelList.get(position).getName());
+                        myPlaylistsFragment.setArguments(bundle);
+                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                        fragmentManager1.beginTransaction()
+                                .replace(R.id.rlSearchList, myPlaylistsFragment)
+                                .commit();
                     }
                 });
 
@@ -289,9 +294,9 @@ public class SearchFragment extends Fragment {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
-                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                    i.putExtra("AudioId", modelList.get(position).getID());
-                    startActivity(i);
+                        Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                        i.putExtra("AudioId", modelList.get(position).getID());
+                        startActivity(i);
                     }
                 }
             });
@@ -421,18 +426,18 @@ public class SearchFragment extends Fragment {
                 } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-                comefrom_search = 1;
-                Bundle bundle = new Bundle();
-                Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                bundle.putString("New", "0");
-                bundle.putString("ComeFrom", "Search");
-                bundle.putString("PlaylistID", listModelList.get(position).getID());
-                bundle.putString("PlaylistName", listModelList.get(position).getName());
-                myPlaylistsFragment.setArguments(bundle);
-                fragmentManager1.beginTransaction()
-                        .replace(R.id.rlSearchList, myPlaylistsFragment)
-                        .commit();
+                    comefrom_search = 1;
+                    Bundle bundle = new Bundle();
+                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    bundle.putString("New", "0");
+                    bundle.putString("ComeFrom", "Search");
+                    bundle.putString("PlaylistID", listModelList.get(position).getID());
+                    bundle.putString("PlaylistName", listModelList.get(position).getName());
+                    myPlaylistsFragment.setArguments(bundle);
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.rlSearchList, myPlaylistsFragment)
+                            .commit();
                 }
             });
         }
