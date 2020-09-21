@@ -90,7 +90,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             public void onClick(View view) {
                 if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                     if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                     /*   DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
+             /*           DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
                         try {
                             FileDescriptor fileDescriptor =  FileUtils.getTempFileDescriptor(ctx.getApplicationContext(), downloadMedia.decrypt(listModelList.get(position).getName()));
                             play(Uri.parse(String.valueOf(fileDescriptor)));
@@ -111,7 +111,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                             Fragment fragment = new TransparentPlayerFragment();
                             FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
                             fragmentManager1.beginTransaction()
-                                    .add(R.id.flAccount, fragment)
+                                    .add(R.id.f_audio, fragment)
                                     .commit();
                             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
@@ -156,7 +156,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                         Fragment fragment = new TransparentPlayerFragment();
                         FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
-                                .add(R.id.flAccount, fragment)
+                                .add(R.id.f_audio, fragment)
                                 .commit();
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
