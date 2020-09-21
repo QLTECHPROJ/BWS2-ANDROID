@@ -141,24 +141,20 @@ public class WebsiteFragment extends Fragment {
             }
             Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-            holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                        return;
-                    }
-                    mLastClickTime = SystemClock.elapsedRealtime();
-                    Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
-                    i.putExtra("website", website);
-                    i.putExtra("title", listModelList.get(position).getTitle());
-                    i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
-                    i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
-                    i.putExtra("image", listModelList.get(position).getImage());
-                    i.putExtra("description", listModelList.get(position).getDescription());
-                    startActivity(i);
+            holder.binding.rlMainLayout.setOnClickListener(view -> {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
                 }
+                mLastClickTime = SystemClock.elapsedRealtime();
+                Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
+                i.putExtra("website", website);
+                i.putExtra("title", listModelList.get(position).getTitle());
+                i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
+                i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
+                i.putExtra("image", listModelList.get(position).getImage());
+                i.putExtra("description", listModelList.get(position).getDescription());
+                startActivity(i);
             });
-
         }
 
         @Override

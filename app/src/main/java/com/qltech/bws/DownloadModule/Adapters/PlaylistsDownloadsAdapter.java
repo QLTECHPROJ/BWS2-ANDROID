@@ -55,8 +55,21 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(listModelList.get(position).getPlaylistName());
-        holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio() +
-                " Audios | " + listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
+        if (listModelList.get(position).getTotalAudio().equalsIgnoreCase("") ||
+                listModelList.get(position).getTotalAudio().equalsIgnoreCase("0")&&
+                listModelList.get(position).getTotalhour().equalsIgnoreCase("")
+                && listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
+            holder.binding.tvTime.setText("0 Audio | 0h 0m");
+        } else {
+            if (listModelList.get(position).getTotalminute().equalsIgnoreCase("")) {
+                holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio() + " Audio | "
+                        + listModelList.get(position).getTotalhour() + "h 0m");
+            } else {
+                holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio() +
+                        " Audios | " + listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
+            }
+
+        }
 
         Glide.with(ctx).load(R.drawable.loading).asGif().into(ImgV);
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
@@ -72,8 +85,8 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             public void onClick(View view) {
                 if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                }else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
-                        || listModelList.get(position).getIsLock().equalsIgnoreCase("")){
+                } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
+                        || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
 
                 }
             }

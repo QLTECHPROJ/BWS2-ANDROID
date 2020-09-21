@@ -67,7 +67,6 @@ public class AddQueueActivity extends AppCompatActivity {
     int position, listSize;
     Boolean queuePlay, audioPlay;
     private long mLastClickTime = 0;
-    public static int ComeAddQueue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,16 +124,12 @@ public class AddQueueActivity extends AppCompatActivity {
             binding.llDownload.setVisibility(View.VISIBLE);
             binding.llAddPlaylist.setVisibility(View.VISIBLE);
             binding.llAddQueue.setVisibility(View.VISIBLE);
-            binding.llRepeat.setVisibility(View.VISIBLE);/*GONE*/
-            binding.llShuffle.setVisibility(View.VISIBLE);/*GONE*/
             binding.llRemovePlaylist.setVisibility(View.VISIBLE);
         } else {
-            binding.llOptions.setVisibility(View.VISIBLE); /*GONE*/
+            binding.llOptions.setVisibility(View.VISIBLE);
             binding.llAddPlaylist.setVisibility(View.VISIBLE);
             binding.llDownload.setVisibility(View.VISIBLE);
-            binding.llAddQueue.setVisibility(View.VISIBLE);/*GONE*/
-            binding.llRepeat.setVisibility(View.GONE);/*GONE*/
-            binding.llShuffle.setVisibility(View.GONE);/*GONE*/
+            binding.llAddQueue.setVisibility(View.VISIBLE);
             binding.llRemovePlaylist.setVisibility(View.GONE);
         }
         if (myPlaylist.equalsIgnoreCase("myPlaylist")) {
@@ -251,7 +246,6 @@ public class AddQueueActivity extends AppCompatActivity {
     }
 
     private void callRepeat() {
-
         if (IsRepeat.equalsIgnoreCase("")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -568,14 +562,16 @@ public class AddQueueActivity extends AppCompatActivity {
                         binding.llViewQueue.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                ComeAddQueue = 1;
                                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                                     return;
                                 }
                                 mLastClickTime = SystemClock.elapsedRealtime();
                                 Intent i = new Intent(ctx, ViewQueueActivity.class);
-//                                i.putExtra("ID",AudioId);
+                                i.putExtra("ComeFromQueue", "1");
+                                i.putExtra("ID", AudioId);
+                                i.putExtra("play", play);
                                 startActivity(i);
+                                finish();
                             }
                         });
 

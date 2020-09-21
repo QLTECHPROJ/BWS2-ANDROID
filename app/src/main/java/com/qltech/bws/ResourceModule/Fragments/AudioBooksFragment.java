@@ -53,7 +53,6 @@ public class AudioBooksFragment extends Fragment {
             Category = bundle.getString("Category");
         }
 
-
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvAudioBooksList.setLayoutManager(manager);
         binding.rvAudioBooksList.setItemAnimator(new DefaultItemAnimator());
@@ -175,25 +174,21 @@ public class AudioBooksFragment extends Fragment {
             holder.binding.tvCreator.setText(listModelList.get(position).getAuthor());
             Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-            holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                        return;
-                    }
-                    mLastClickTime = SystemClock.elapsedRealtime();
-                    Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
-                    i.putExtra("audio_books", audio_books);
-                    i.putExtra("title", listModelList.get(position).getTitle());
-                    i.putExtra("author", listModelList.get(position).getAuthor());
-                    i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
-                    i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
-                    i.putExtra("image", listModelList.get(position).getImage());
-                    i.putExtra("description", listModelList.get(position).getDescription());
-                    startActivity(i);
+            holder.binding.rlMainLayout.setOnClickListener(view -> {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
                 }
+                mLastClickTime = SystemClock.elapsedRealtime();
+                Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
+                i.putExtra("audio_books", audio_books);
+                i.putExtra("title", listModelList.get(position).getTitle());
+                i.putExtra("author", listModelList.get(position).getAuthor());
+                i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
+                i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
+                i.putExtra("image", listModelList.get(position).getImage());
+                i.putExtra("description", listModelList.get(position).getDescription());
+                startActivity(i);
             });
-
         }
 
         /*  @Override

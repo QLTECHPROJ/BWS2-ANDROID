@@ -189,7 +189,6 @@ public class CurrentPlanFragment extends Fragment {
                             binding.tvPayUsing.setVisibility(View.GONE);
                             binding.tvChangeCard.setVisibility(View.GONE);
                         }
-
                         adpater = new FeaturedListAdpater(listModel.getResponseData().getFeature());
                         binding.rvFeatured.setAdapter(adpater);
                     }

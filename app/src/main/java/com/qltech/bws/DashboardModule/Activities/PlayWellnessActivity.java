@@ -213,6 +213,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
             Intent i = new Intent(ctx, ViewQueueActivity.class);
+            i.putExtra("ComeFromQueue","0");
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
             finish();

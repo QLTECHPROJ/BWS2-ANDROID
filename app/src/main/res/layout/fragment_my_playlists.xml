@@ -160,15 +160,14 @@
 
                     <ImageView
                         android:id="@+id/ivPlaylistStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_60sdp"
+                        android:layout_height="@dimen/_60sdp"
                         android:layout_below="@id/llMainLayout"
                         android:layout_alignParentRight="true"
-                        android:layout_marginTop="-36dp"
+                        android:layout_marginTop="-33dp"
                         android:layout_marginRight="@dimen/_20sdp"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_blue_play_icon" />
-
 
                     <LinearLayout
                         android:id="@+id/llAddAudio"
@@ -301,8 +300,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:overScrollMode="never"
-                                android:visibility="visible"
-                                android:paddingBottom="@dimen/_30sdp"/>
+                                android:paddingBottom="@dimen/_30sdp"
+                                android:visibility="visible" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -319,10 +318,10 @@
                                 android:id="@+id/tvFound"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/montserrat_bold"
+                                android:fontFamily="@font/montserrat_regular"
                                 android:gravity="center"
                                 android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_20sdp" />
+                                android:textSize="@dimen/_12sdp" />
 
 
                             <TextView
@@ -331,13 +330,12 @@
                                 android:layout_marginTop="@dimen/_4sdp"
                                 android:fontFamily="@font/montserrat_regular"
                                 android:gravity="center"
-                                android:visibility="gone"
                                 android:text="@string/no_data_found"
                                 android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_15sdp" />
+                                android:textSize="@dimen/_11sdp"
+                                android:visibility="gone" />
 
                         </LinearLayout>
-
                     </LinearLayout>
                 </RelativeLayout>
 

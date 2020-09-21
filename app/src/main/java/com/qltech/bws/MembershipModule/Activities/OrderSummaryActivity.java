@@ -70,43 +70,37 @@ public class OrderSummaryActivity extends AppCompatActivity {
             binding.tvTotalAmount.setText("$" + listModelList.get(position).getPlanAmount());
         }
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!comeFrom.equalsIgnoreCase("")) {
-                    Intent i = new Intent(OrderSummaryActivity.this, MembershipChangeActivity.class);
-                    startActivity(i);
-                    finish();
-                } else {
-                    finish();
-                }
+        binding.llBack.setOnClickListener(view -> {
+            if (!comeFrom.equalsIgnoreCase("")) {
+                Intent i = new Intent(OrderSummaryActivity.this, MembershipChangeActivity.class);
+                startActivity(i);
+                finish();
+            } else {
+                finish();
             }
         });
 
-        binding.btnCheckout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!comeFrom.equalsIgnoreCase("")) {
-                    BtnVisible = 1;
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                        return;
-                    }
-                    mLastClickTime = SystemClock.elapsedRealtime();
-                    Intent i = new Intent(OrderSummaryActivity.this, BillingOrderActivity.class);
-                    i.putExtra("payment", 1);
-                    startActivity(i);
-                    finish();
-                } else {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                        return;
-                    }
-                    mLastClickTime = SystemClock.elapsedRealtime();
-                    Intent i = new Intent(OrderSummaryActivity.this, CheckoutGetCodeActivity.class);
-                    i.putParcelableArrayListExtra("PlanData", listModelList);
-                    i.putExtra("TrialPeriod", TrialPeriod);
-                    i.putExtra("position", position);
-                    startActivity(i);
+        binding.btnCheckout.setOnClickListener(view -> {
+            if (!comeFrom.equalsIgnoreCase("")) {
+                BtnVisible = 1;
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
                 }
+                mLastClickTime = SystemClock.elapsedRealtime();
+                Intent i = new Intent(OrderSummaryActivity.this, BillingOrderActivity.class);
+                i.putExtra("payment", 1);
+                startActivity(i);
+                finish();
+            } else {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
+                Intent i = new Intent(OrderSummaryActivity.this, CheckoutGetCodeActivity.class);
+                i.putParcelableArrayListExtra("PlanData", listModelList);
+                i.putExtra("TrialPeriod", TrialPeriod);
+                i.putExtra("position", position);
+                startActivity(i);
             }
         });
     }

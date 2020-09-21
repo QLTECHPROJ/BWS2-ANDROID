@@ -41,7 +41,7 @@ public class ReminderActivity extends AppCompatActivity {
     String am_pm, hourString, minuteSting;
     Activity activity;
     Context context;
-    String UserId, ReminderStatus = "", reminderDay, PlaylistID = "";
+    String UserId, ReminderStatus = "", reminderDay, PlaylistID = "", PlaylistName = "",reminderDayNo = "";
     List<String> reminderDayList;
 
     @Override
@@ -67,95 +67,93 @@ public class ReminderActivity extends AppCompatActivity {
         binding.rvReminderDay.setItemAnimator(new DefaultItemAnimator());
         ReminderDayAdapter reminderDayAdapter = new ReminderDayAdapter();
         binding.rvReminderDay.setAdapter(reminderDayAdapter);
+
         if (getIntent().getExtras() != null) {
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
+            PlaylistName = getIntent().getStringExtra("PlaylistName");
         }
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+
+        binding.llBack.setOnClickListener(view -> finish());
+
+        if (PlaylistName.equalsIgnoreCase("") ||
+                PlaylistName == null) {
+            binding.tvPlaylistName.setText("Select Playlist");
+        } else {
+            binding.tvPlaylistName.setText(PlaylistName);
+        }
+
         if (ReminderStatus.equalsIgnoreCase("1")) {
             binding.switchStatus.setChecked(true);
         } else if (ReminderStatus.equalsIgnoreCase("0")
                 || ReminderStatus.equalsIgnoreCase("")) {
             binding.switchStatus.setChecked(false);
         }
-        binding.llSelectTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Calendar c = Calendar.getInstance();
-                mHour = c.get(Calendar.HOUR_OF_DAY);
-                mMinute = c.get(Calendar.MINUTE);
+        binding.llSelectTime.setOnClickListener(view -> {
+            final Calendar c = Calendar.getInstance();
+            mHour = c.get(Calendar.HOUR_OF_DAY);
+            mMinute = c.get(Calendar.MINUTE);
 
-                TimePickerDialog timePickerDialog = new TimePickerDialog(ReminderActivity.this, R.style.TimePickerTheme,
-                        (view1, hourOfDay, minute) -> {
-                            if (hourOfDay < 10) {
-                                hourString = "0" + hourOfDay;
-                            } else {
-                                hourString = "" + hourOfDay;
-                            }
-                            if (minute < 10)
-                                minuteSting = "0" + minute;
-                            else
-                                minuteSting = "" + minute;
-                            if (hourOfDay > 12) {
-                                am_pm = "PM";
-                                hourOfDay = hourOfDay - 12;
-                            } else {
-                                am_pm = "AM";
-                            }
-                            binding.tvTime.setText(hourString + ":" + minuteSting + " " + am_pm);
-                        }, mHour, mMinute, false);
-                timePickerDialog.show();
-            }
-        });
-
-        binding.llSelectPlaylist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(ReminderActivity.this, SelectPlaylistActivity.class);
-                startActivity(i);
-                finish();
-            }
-        });
-        binding.switchStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                if (checked) {
-                    prepareData("1");
-                } else {
-                    prepareData("0");
-                }
-            }
-        });
-
-        binding.btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (BWSApplication.isNetworkConnected(context)) {
-                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                    Call<SetReminderModel> listCall = APIClient.getClient().SetReminder(PlaylistID, UserId, ReminderStatus,
-                            binding.tvTime.getText().toString(), reminderDay);
-                    listCall.enqueue(new Callback<SetReminderModel>() {
-                        @Override
-                        public void onResponse(Call<SetReminderModel> call, Response<SetReminderModel> response) {
-                            if (response.isSuccessful()) {
-                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                                SetReminderModel listModel = response.body();
-                                BWSApplication.showToast(listModel.getResponseMessage(), activity);
-                            }
+            TimePickerDialog timePickerDialog = new TimePickerDialog(ReminderActivity.this, R.style.TimePickerTheme,
+                    (view1, hourOfDay, minute) -> {
+                        if (hourOfDay < 10) {
+                            hourString = "0" + hourOfDay;
+                        } else {
+                            hourString = "" + hourOfDay;
                         }
+                        if (minute < 10)
+                            minuteSting = "0" + minute;
+                        else
+                            minuteSting = "" + minute;
+                        if (hourOfDay > 12) {
+                            am_pm = "PM";
+                            hourOfDay = hourOfDay - 12;
+                        } else {
+                            am_pm = "AM";
+                        }
+                        binding.tvTime.setText(hourString + ":" + minuteSting + " " + am_pm);
+                    }, mHour, mMinute, false);
+            timePickerDialog.show();
+        });
 
-                        @Override
-                        public void onFailure(Call<SetReminderModel> call, Throwable t) {
+        binding.llSelectPlaylist.setOnClickListener(view -> {
+            Intent i = new Intent(ReminderActivity.this, SelectPlaylistActivity.class);
+            startActivity(i);
+            finish();
+        });
+
+        binding.switchStatus.setOnCheckedChangeListener((compoundButton, checked) -> {
+            if (checked) {
+                prepareData("1");
+            } else {
+                prepareData("0");
+            }
+        });
+
+        binding.btnSave.setOnClickListener(view -> {
+            if (BWSApplication.isNetworkConnected(context)) {
+                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                Call<SetReminderModel> listCall = APIClient.getClient().SetReminder(PlaylistID, UserId, CONSTANTS.FLAG_ONE,
+                        binding.tvTime.getText().toString(), reminderDayNo);
+                listCall.enqueue(new Callback<SetReminderModel>() {
+                    @Override
+                    public void onResponse(Call<SetReminderModel> call, Response<SetReminderModel> response) {
+                        if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                            SetReminderModel listModel = response.body();
+                            BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                            Intent i = new Intent(context, ReminderDetailsActivity.class);
+                            startActivity(i);
+                            finish();
                         }
-                    });
-                } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), context);
-                }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SetReminderModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    }
+                });
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), context);
             }
         });
     }
@@ -241,27 +239,35 @@ public class ReminderActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         reminderDay = "Sunday";
+                        reminderDayNo = "7";
                         break;
                     case 1:
                         reminderDay = "Monday";
+                        reminderDayNo = "1";
                         break;
                     case 2:
                         reminderDay = "Tuesday";
+                        reminderDayNo = "2";
                         break;
                     case 3:
                         reminderDay = "Wednesday";
+                        reminderDayNo = "3";
                         break;
                     case 4:
                         reminderDay = "Thursday";
+                        reminderDayNo = "4";
                         break;
                     case 5:
                         reminderDay = "Friday";
+                        reminderDayNo = "5";
                         break;
                     case 6:
                         reminderDay = "Saturday";
+                        reminderDayNo = "6";
                         break;
                     default:
                         reminderDay = "Monday";
+                        reminderDayNo = "1";
                         break;
                 }
             } else {

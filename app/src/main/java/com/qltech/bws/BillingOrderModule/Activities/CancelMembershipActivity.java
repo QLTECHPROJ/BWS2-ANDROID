@@ -57,118 +57,95 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
         binding.youtubeView.initialize(AppUtils.DEVELOPER_KEY, this);
 
-        binding.cbOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.cbOne.setChecked(true);
-                binding.cbTwo.setChecked(false);
-                binding.cbThree.setChecked(false);
-                binding.cbFour.setChecked(false);
-                CancelId = "1";
-                binding.edtCancelBox.setVisibility(View.GONE);
-                binding.edtCancelBox.setText("");
-            }
+        binding.cbOne.setOnClickListener(view -> {
+            binding.cbOne.setChecked(true);
+            binding.cbTwo.setChecked(false);
+            binding.cbThree.setChecked(false);
+            binding.cbFour.setChecked(false);
+            CancelId = "1";
+            binding.edtCancelBox.setVisibility(View.GONE);
+            binding.edtCancelBox.setText("");
         });
 
-        binding.cbTwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.cbOne.setChecked(false);
-                binding.cbTwo.setChecked(true);
-                binding.cbThree.setChecked(false);
-                binding.cbFour.setChecked(false);
-                CancelId = "2";
-                binding.edtCancelBox.setVisibility(View.GONE);
-                binding.edtCancelBox.setText("");
-            }
+        binding.cbTwo.setOnClickListener(view -> {
+            binding.cbOne.setChecked(false);
+            binding.cbTwo.setChecked(true);
+            binding.cbThree.setChecked(false);
+            binding.cbFour.setChecked(false);
+            CancelId = "2";
+            binding.edtCancelBox.setVisibility(View.GONE);
+            binding.edtCancelBox.setText("");
         });
 
-        binding.cbThree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.cbOne.setChecked(false);
-                binding.cbTwo.setChecked(false);
-                binding.cbThree.setChecked(true);
-                binding.cbFour.setChecked(false);
-                CancelId = "3";
-                binding.edtCancelBox.setVisibility(View.GONE);
-                binding.edtCancelBox.setText("");
-            }
+        binding.cbThree.setOnClickListener(view -> {
+            binding.cbOne.setChecked(false);
+            binding.cbTwo.setChecked(false);
+            binding.cbThree.setChecked(true);
+            binding.cbFour.setChecked(false);
+            CancelId = "3";
+            binding.edtCancelBox.setVisibility(View.GONE);
+            binding.edtCancelBox.setText("");
         });
 
-        binding.cbFour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.cbOne.setChecked(false);
-                binding.cbTwo.setChecked(false);
-                binding.cbThree.setChecked(false);
-                binding.cbFour.setChecked(true);
-                CancelId = "4";
-                binding.edtCancelBox.setVisibility(View.VISIBLE);
-            }
+        binding.cbFour.setOnClickListener(view -> {
+            binding.cbOne.setChecked(false);
+            binding.cbTwo.setChecked(false);
+            binding.cbThree.setChecked(false);
+            binding.cbFour.setChecked(true);
+            CancelId = "4";
+            binding.edtCancelBox.setVisibility(View.VISIBLE);
         });
 
-        binding.btnCancelSubscrible.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (CancelId.equalsIgnoreCase("4") &&
-                        binding.edtCancelBox.getText().toString().equalsIgnoreCase("")) {
-                    BWSApplication.showToast("Please enter reason", ctx);
-                } else {
-                    final Dialog dialog = new Dialog(ctx);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.cancel_membership);
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        binding.btnCancelSubscrible.setOnClickListener(view -> {
+            if (CancelId.equalsIgnoreCase("4") &&
+                    binding.edtCancelBox.getText().toString().equalsIgnoreCase("")) {
+                BWSApplication.showToast("Please enter reason", ctx);
+            } else {
+                final Dialog dialog = new Dialog(ctx);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.cancel_membership);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                    final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                    final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
 
-                    dialog.setOnKeyListener((v, keyCode, event) -> {
-                        if (keyCode == KeyEvent.KEYCODE_BACK) {
-                            dialog.dismiss();
-                            return true;
-                        }
-                        return false;
-                    });
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                        return true;
+                    }
+                    return false;
+                });
 
-                    tvconfirm.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (BWSApplication.isNetworkConnected(ctx)) {
-                                showProgressBar();
-                                Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, binding.edtCancelBox.getText().toString());
-                                listCall.enqueue(new Callback<CancelPlanModel>() {
-                                    @Override
-                                    public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
-                                        if (response.isSuccessful()) {
-                                            CancelPlanModel model = response.body();
-                                            BWSApplication.showToast(model.getResponseMessage(), ctx);
-                                            dialog.dismiss();
-                                            hideProgressBar();
-                                            finish();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<CancelPlanModel> call, Throwable t) {
-                                        hideProgressBar();
-                                    }
-                                });
-                            } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                tvconfirm.setOnClickListener(v -> {
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        showProgressBar();
+                        Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, binding.edtCancelBox.getText().toString());
+                        listCall.enqueue(new Callback<CancelPlanModel>() {
+                            @Override
+                            public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
+                                if (response.isSuccessful()) {
+                                    CancelPlanModel model = response.body();
+                                    BWSApplication.showToast(model.getResponseMessage(), ctx);
+                                    dialog.dismiss();
+                                    hideProgressBar();
+                                    finish();
+                                }
                             }
-                        }
-                    });
-                    tvGoBack.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog.show();
-                    dialog.setCancelable(false);
-                }
+
+                            @Override
+                            public void onFailure(Call<CancelPlanModel> call, Throwable t) {
+                                hideProgressBar();
+                            }
+                        });
+                    } else {
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    }
+                });
+                tvGoBack.setOnClickListener(v -> dialog.dismiss());
+                dialog.show();
+                dialog.setCancelable(false);
             }
         });
     }

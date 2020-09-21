@@ -57,6 +57,7 @@ public class AccountFragment extends Fragment {
     FragmentAccountBinding binding;
     String UserID;
     private long mLastClickTime = 0;
+    public static String IsLock = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -98,7 +99,7 @@ public class AccountFragment extends Fragment {
             }
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(getActivity(), InvoiceActivity.class);
-            i.putExtra("ComeFrom","");
+            i.putExtra("ComeFrom", "");
             startActivity(i);
         });
 
@@ -124,6 +125,14 @@ public class AccountFragment extends Fragment {
 //            }
         });
 
+        binding.llReminder.setOnClickListener(view16 -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), ReminderDetailsActivity.class);
+            startActivity(i);
+        });
         binding.llFaq.setOnClickListener(view18 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -308,6 +317,7 @@ public class AccountFragment extends Fragment {
                         binding.tvName.setText(viewModel.getResponseData().getName());
                         String profilePicPath = viewModel.getResponseData().getImage();
 
+                        IsLock = viewModel.getResponseData().getIsLock();
                         Glide.with(ctx).load(profilePicPath)
                                 .placeholder(R.drawable.default_profile)
                                 .thumbnail(1f)
@@ -324,18 +334,6 @@ public class AccountFragment extends Fragment {
                             }
                         }
 
-                        binding.llReminder.setOnClickListener(view16 -> {
-                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                return;
-                            }
-                            mLastClickTime = SystemClock.elapsedRealtime();
-                            if (viewModel.getResponseData().getIsLock().equalsIgnoreCase("1")) {
-                                BWSApplication.showToast("Please re-activate your membership plan", getActivity());
-                            } else if (viewModel.getResponseData().getIsLock().equalsIgnoreCase("0") || viewModel.getResponseData().getIsLock().equalsIgnoreCase("")) {
-                                Intent i = new Intent(getActivity(), ReminderDetailsActivity.class);
-                                startActivity(i);
-                            }
-                        });
                     } else {
                         hideProgressBar();
                     }

@@ -94,7 +94,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         binding.etCvv.addTextChangedListener(addCardTextWatcher);*/
 
 //        DecimalFormat precision = new DecimalFormat("#.##");
-        binding.tvDoller.setText("$"+price);
+        binding.tvDoller.setText("$" + price);
 //        binding.tvDoller.setText("$" + precision.format(price));
         binding.etNumber.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -123,114 +123,108 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         AddPaymentActivity.CreditCardFormatTextWatcher tv = new AddPaymentActivity.CreditCardFormatTextWatcher(binding.etNumber);
         binding.etNumber.addTextChangedListener(tv);
 
-        binding.btnPayment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (binding.textMonth.getText().toString().equalsIgnoreCase("Expiry Date")
-                        && a == 0 && binding.etNumber.getText().toString().equalsIgnoreCase("")
-                        && binding.etCvv.getText().toString().equalsIgnoreCase("")
-                        && binding.etName.getText().toString().equalsIgnoreCase("")) {
-                    binding.txtError.setText("I'll need your inputs");
-                } else if (binding.etNumber.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlNumber.setError("Please provide your card number");
-                    binding.txtError.setText("");
-                    binding.tlName.setError("");
-                } else if (binding.etNumber.getText().toString().length() < 16) {
-                    binding.tlName.setError("");
-                    binding.tlNumber.setError("Please use the correct card number");
-                    binding.txtError.setText("");
-                } else if (binding.etName.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlName.setError("Please provide the card holder's name");
-                    binding.tlNumber.setError("");
-                    binding.txtError.setText("");
-                } else if (binding1.MonthPicker.getValue() < month && binding1.YearPicker.getValue() == year) {
-                    binding.txtError.setText("The expiry date that you have used is incorrect");
-                    binding.tlName.setError("");
-                    binding.tlNumber.setError("");
-                } else if (binding.textMonth.getText().toString().equalsIgnoreCase("Expiry Date") || a == 0) {
-                    binding.txtError.setText("Please provide the expiry date");
-                    binding.tlName.setError("");
-                    binding.tlNumber.setError("");
-                } else if (binding.etCvv.getText().toString().matches("")) {
-                    binding.tlName.setError("");
-                    binding.tlNumber.setError("");
-                    binding.txtError.setText("Please provide the CVV");
-                } else if (binding.etCvv.getText().toString().length() < 3) {
-                    binding.tlName.setError("");
-                    binding.tlNumber.setError("");
-                    binding.txtError.setText("The CVV you have used is incorrect");
-                } else {
-                    binding.tlName.setError("");
-                    binding.tlNumber.setError("");
-                    binding.txtError.setText("");
-                    final String strCardNo = binding.etNumber.getText().toString().trim().replaceAll("\\s+", "");
-                    int months = binding1.MonthPicker.getValue();
-                    int Years = binding1.YearPicker.getValue();
-                    Card card = new Card(strCardNo, months, Years, binding.etCvv.getText().toString());
+        binding.btnPayment.setOnClickListener(view -> {
+            if (binding.textMonth.getText().toString().equalsIgnoreCase("Expiry Date")
+                    && a == 0 && binding.etNumber.getText().toString().equalsIgnoreCase("")
+                    && binding.etCvv.getText().toString().equalsIgnoreCase("")
+                    && binding.etName.getText().toString().equalsIgnoreCase("")) {
+                binding.txtError.setText("I'll need your inputs");
+            } else if (binding.etNumber.getText().toString().equalsIgnoreCase("")) {
+                binding.tlNumber.setError("Please provide your card number");
+                binding.txtError.setText("");
+                binding.tlName.setError("");
+            } else if (binding.etNumber.getText().toString().length() < 16) {
+                binding.tlName.setError("");
+                binding.tlNumber.setError("Please use the correct card number");
+                binding.txtError.setText("");
+            } else if (binding.etName.getText().toString().equalsIgnoreCase("")) {
+                binding.tlName.setError("Please provide the card holder's name");
+                binding.tlNumber.setError("");
+                binding.txtError.setText("");
+            } else if (binding1.MonthPicker.getValue() < month && binding1.YearPicker.getValue() == year) {
+                binding.txtError.setText("The expiry date that you have used is incorrect");
+                binding.tlName.setError("");
+                binding.tlNumber.setError("");
+            } else if (binding.textMonth.getText().toString().equalsIgnoreCase("Expiry Date") || a == 0) {
+                binding.txtError.setText("Please provide the expiry date");
+                binding.tlName.setError("");
+                binding.tlNumber.setError("");
+            } else if (binding.etCvv.getText().toString().matches("")) {
+                binding.tlName.setError("");
+                binding.tlNumber.setError("");
+                binding.txtError.setText("Please provide the CVV");
+            } else if (binding.etCvv.getText().toString().length() < 3) {
+                binding.tlName.setError("");
+                binding.tlNumber.setError("");
+                binding.txtError.setText("The CVV you have used is incorrect");
+            } else {
+                binding.tlName.setError("");
+                binding.tlNumber.setError("");
+                binding.txtError.setText("");
+                final String strCardNo = binding.etNumber.getText().toString().trim().replaceAll("\\s+", "");
+                int months = binding1.MonthPicker.getValue();
+                int Years = binding1.YearPicker.getValue();
+                Card card = new Card(strCardNo, months, Years, binding.etCvv.getText().toString());
 
-                    new Stripe().createToken(card, getString(R.string.stipe_test_key), new TokenCallback() {
-                        @Override
-                        public void onError(Exception error) {
-                            Log.e("error.........", "" + error.toString());
-                            BWSApplication.showToast("Invalid Card Details", getApplicationContext());
-                            hideProgressBar();
-                        }
+                new Stripe().createToken(card, getString(R.string.stipe_test_key), new TokenCallback() {
+                    @Override
+                    public void onError(Exception error) {
+                        Log.e("error.........", "" + error.toString());
+                        BWSApplication.showToast("Invalid Card Details", getApplicationContext());
+                        hideProgressBar();
+                    }
 
-                        @Override
-                        public void onSuccess(Token token) {
-                            strToken = token.getId();
-                            Log.e("strToken.............", "" + strToken);
-                            if (!strToken.equalsIgnoreCase("")) {
-                                if (BWSApplication.isNetworkConnected(context)) {
-                                    showProgressBar();
-                                    Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo);
-                                    listCall.enqueue(new Callback<AddCardModel>() {
-                                        @Override
-                                        public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {
-                                            hideProgressBar();
-                                            if (response.isSuccessful()) {
-                                                AddCardModel cardModel = response.body();
+                    @Override
+                    public void onSuccess(Token token) {
+                        strToken = token.getId();
+                        Log.e("strToken.............", "" + strToken);
+                        if (!strToken.equalsIgnoreCase("")) {
+                            if (BWSApplication.isNetworkConnected(context)) {
+                                showProgressBar();
+                                Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo);
+                                listCall.enqueue(new Callback<AddCardModel>() {
+                                    @Override
+                                    public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {
+                                        hideProgressBar();
+                                        if (response.isSuccessful()) {
+                                            AddCardModel cardModel = response.body();
+                                            if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                                InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                                keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
                                                 if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                                    InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                                    keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                                    if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                                                        SharedPreferences.Editor editor = shared.edit();
-                                                        editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserId());
-                                                        editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
-                                                        editor.commit();
-                                                        Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
-                                                        startActivity(i);
-                                                        finish();
-                                                    } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                                        BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                                    } else {
-                                                        BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                                    }
+                                                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                                                    SharedPreferences.Editor editor = shared.edit();
+                                                    editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserId());
+                                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
+                                                    editor.commit();
+                                                    Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
+                                                    startActivity(i);
+                                                    finish();
+                                                } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                                 } else {
                                                     BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                                 }
+                                            } else {
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                             }
                                         }
+                                    }
 
-                                        @Override
-                                        public void onFailure(Call<AddCardModel> call, Throwable t) {
-                                            hideProgressBar();
-                                        }
-
-                                    });
-                                } else {
-                                    BWSApplication.showToast(getString(R.string.no_server_found), context);
-                                    hideProgressBar();
-                                }
+                                    @Override
+                                    public void onFailure(Call<AddCardModel> call, Throwable t) {
+                                        hideProgressBar();
+                                    }
+                                });
+                            } else {
+                                BWSApplication.showToast(getString(R.string.no_server_found), context);
+                                hideProgressBar();
                             }
                         }
-                    });
-                }
-
+                    }
+                });
             }
         });
-
     }
 
     @Override

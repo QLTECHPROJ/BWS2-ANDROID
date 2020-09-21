@@ -21,20 +21,18 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Models.RemiderDetailsModel;
 import com.qltech.bws.ReminderModule.Models.ReminderStatusModel;
-import com.qltech.bws.ReminderModule.Models.SelectPlaylistModel;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityReminderDetailsBinding;
-import com.qltech.bws.databinding.ActivityResourceDetailsBinding;
 import com.qltech.bws.databinding.RemiderDetailsLayoutBinding;
-import com.qltech.bws.databinding.SelectPlaylistLayoutBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.qltech.bws.DashboardModule.Account.AccountFragment.IsLock;
 
 public class ReminderDetailsActivity extends AppCompatActivity {
     ActivityReminderDetailsBinding binding;
@@ -65,12 +63,17 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         });
 
         prepareData();
+
         binding.btnAddReminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ctx, ReminderActivity.class);
-                startActivity(i);
-                finish();
+                if (IsLock.equalsIgnoreCase("1")){
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                }else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")){
+                    Intent i = new Intent(ctx, ReminderActivity.class);
+                    startActivity(i);
+                    finish();
+                }
             }
         });
     }
@@ -111,7 +114,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
-
     }
 
     public class RemiderDetailsAdapter extends RecyclerView.Adapter<RemiderDetailsAdapter.MyViewHolder> {
@@ -140,6 +142,15 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             } else {
                 holder.binding.switchStatus.setChecked(false);
             }
+
+            holder.binding.switchStatus.setOnCheckedChangeListener((compoundButton, checked) -> {
+                if (checked) {
+                    prepareSwitchStatus("1");
+                } else {
+                    prepareSwitchStatus("0");
+                }
+            });
+
         }
 
         @Override
@@ -154,6 +165,33 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 super(binding.getRoot());
                 this.binding = binding;
             }
+        }
+    }
+    private void prepareSwitchStatus(String reminderStatus) {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserId, reminderStatus);
+            listCall.enqueue(new Callback<ReminderStatusModel>() {
+                @Override
+                public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        ReminderStatusModel listModel = response.body();
+                        BWSApplication.showToast(listModel.getResponseMessage(),activity);
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_ReminderStatus, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        editor.putString(CONSTANTS.PREF_KEY_ReminderStatus, reminderStatus);
+                        editor.commit();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ReminderStatusModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
 }

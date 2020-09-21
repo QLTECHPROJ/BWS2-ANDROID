@@ -84,110 +84,96 @@ public class CheckoutOtpActivity extends AppCompatActivity {
         binding.txtError.setText("");
         binding.txtError.setVisibility(View.GONE);
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
-                i.putExtra("MobileNo", MobileNo);
-                i.putExtra("Name", Name);
-                i.putExtra("Code", Code);
-                startActivity(i);
-                finish();
+        binding.llBack.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+            i.putExtra("MobileNo", MobileNo);
+            i.putExtra("Name", Name);
+            i.putExtra("Code", Code);
+            startActivity(i);
+            finish();
         });
 
-        binding.llEditNumber.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
-                i.putExtra("MobileNo", MobileNo);
-                i.putExtra("Name", Name);
-                i.putExtra("Code", Code);
-                startActivity(i);
-                finish();
+        binding.llEditNumber.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+            i.putExtra("MobileNo", MobileNo);
+            i.putExtra("Name", Name);
+            i.putExtra("Code", Code);
+            startActivity(i);
+            finish();
         });
 
-        binding.btnSendCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE);
-                String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
-                if (TextUtils.isEmpty(fcm_id)) {
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, new OnSuccessListener<InstanceIdResult>() {
+        binding.btnSendCode.setOnClickListener(view -> {
+            SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE);
+            String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+            if (TextUtils.isEmpty(fcm_id)) {
+                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, new OnSuccessListener<InstanceIdResult>() {
+                    @Override
+                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                        String newToken = instanceIdResult.getToken();
+                        Log.e("newToken", newToken);
+                        SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit();
+                        editor.putString(CONSTANTS.Token, newToken); //Friend
+                        editor.apply();
+                        editor.commit();
+                    }
+                });
+                fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
+            }
+            if (binding.edtOTP1.getText().toString().equalsIgnoreCase("") ||
+                    binding.edtOTP2.getText().toString().equalsIgnoreCase("") ||
+                    binding.edtOTP3.getText().toString().equalsIgnoreCase("") ||
+                    binding.edtOTP4.getText().toString().equalsIgnoreCase("")) {
+                binding.txtError.setText("Please enter the OTP");
+                binding.txtError.setVisibility(View.VISIBLE);
+            } else {
+                if (BWSApplication.isNetworkConnected(CheckoutOtpActivity.this)) {
+                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    String deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                    Call<OtpModel> listCall = APIClient.getClient().getAuthOtps1(
+                            binding.edtOTP1.getText().toString() + "" +
+                                    binding.edtOTP2.getText().toString() + "" +
+                                    binding.edtOTP3.getText().toString() + "" +
+                                    binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE, deviceid
+                            , MobileNo, CONSTANTS.FLAG_ONE);
+                    listCall.enqueue(new Callback<OtpModel>() {
                         @Override
-                        public void onSuccess(InstanceIdResult instanceIdResult) {
-                            String newToken = instanceIdResult.getToken();
-                            Log.e("newToken", newToken);
-                            SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit();
-                            editor.putString(CONSTANTS.Token, newToken); //Friend
-                            editor.apply();
-                            editor.commit();
-                        }
-                    });
-                    fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
-                }
-                if (binding.edtOTP1.getText().toString().equalsIgnoreCase("") ||
-                        binding.edtOTP2.getText().toString().equalsIgnoreCase("") ||
-                        binding.edtOTP3.getText().toString().equalsIgnoreCase("") ||
-                        binding.edtOTP4.getText().toString().equalsIgnoreCase("")) {
-                    binding.txtError.setText("Please enter the OTP");
-                    binding.txtError.setVisibility(View.VISIBLE);
-                } else {
-                    if (BWSApplication.isNetworkConnected(CheckoutOtpActivity.this)) {
-                        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                        String deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                        Call<OtpModel> listCall = APIClient.getClient().getAuthOtps1(
-                                binding.edtOTP1.getText().toString() + "" +
-                                        binding.edtOTP2.getText().toString() + "" +
-                                        binding.edtOTP3.getText().toString() + "" +
-                                        binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE, deviceid
-                                , MobileNo, CONSTANTS.FLAG_ONE);
-                        listCall.enqueue(new Callback<OtpModel>() {
-                            @Override
-                            public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
-                                if (response.isSuccessful()) {
-                                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                                    OtpModel otpModel = response.body();
-                                    if(otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))){
-                                        Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
-                                        i.putExtra("MobileNo", MobileNo);
-                                        startActivity(i);
-                                        finish();
-                                    }else if(otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))){
-                                        binding.txtError.setText(otpModel.getResponseMessage());
-                                        binding.txtError.setVisibility(View.VISIBLE);
-                                    }
+                        public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
+                            if (response.isSuccessful()) {
+                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                OtpModel otpModel = response.body();
+                                if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                    Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
+                                    i.putExtra("MobileNo", MobileNo);
+                                    startActivity(i);
+                                    finish();
+                                } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                    binding.txtError.setText(otpModel.getResponseMessage());
+                                    binding.txtError.setVisibility(View.VISIBLE);
                                 }
                             }
+                        }
 
-                            @Override
-                            public void onFailure(Call<OtpModel> call, Throwable t) {
-                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        @Override
+                        public void onFailure(Call<OtpModel> call, Throwable t) {
+                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
 
-                            }
-                        });
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), getApplicationContext());
-                    }
+                        }
+                    });
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), getApplicationContext());
                 }
             }
         });
 
-        binding.llResendSms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                prepareData();
-            }
-        });
+        binding.llResendSms.setOnClickListener(view -> prepareData());
 
     }
 
@@ -235,10 +221,10 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                             binding.edtOTP4.setText("");
                             tvSendOTPbool = true;
                             BWSApplication.showToast(loginModel.getResponseMessage(), getApplicationContext());
-                        } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))){
+                        } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
                             binding.txtError.setVisibility(View.VISIBLE);
                             binding.txtError.setText(loginModel.getResponseMessage());
-                        }else {
+                        } else {
                             binding.txtError.setVisibility(View.VISIBLE);
                             binding.txtError.setText(loginModel.getResponseMessage());
                         }
@@ -353,5 +339,4 @@ public class CheckoutOtpActivity extends AppCompatActivity {
             return false;
         }
     }
-
 }

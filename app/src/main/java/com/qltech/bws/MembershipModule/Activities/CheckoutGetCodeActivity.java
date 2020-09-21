@@ -69,47 +69,36 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             binding.edtNumber.setText(MobileNo);
         }
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        binding.llBack.setOnClickListener(view -> {
 //                Intent i = new Intent(ctx, OrderSummaryActivity.class);
 //                i.putParcelableArrayListExtra("PlanData",listModelList);
 //                i.putExtra("TrialPeriod",TrialPeriod);
 //                i.putExtra("position",position);
 //                startActivity(i);
-                finish();
-            }
+            finish();
         });
 
-        binding.rlCountrySelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(ctx, CountrySelectActivity.class);
+        binding.rlCountrySelect.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(ctx, CountrySelectActivity.class);
 //                i.putParcelableArrayListExtra("PlanData",listModelList);
 //                i.putExtra("TrialPeriod",TrialPeriod);
 //                i.putExtra("position",position);
-                i.putExtra("Name", binding.tvCountry.getText().toString());
-                i.putExtra("Code", binding.tvCountryCode.getText().toString());
-                i.putExtra("MobileNo", binding.edtNumber.getText().toString());
-                i.putExtra("Check", "0");
-                startActivity(i);
-                finish();
-            }
+            i.putExtra("Name", binding.tvCountry.getText().toString());
+            i.putExtra("Code", binding.tvCountryCode.getText().toString());
+            i.putExtra("MobileNo", binding.edtNumber.getText().toString());
+            i.putExtra("Check", "0");
+            startActivity(i);
+            finish();
         });
 
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInputFromWindow(binding.edtNumber.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
 
-        binding.btnSendCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                prepareData();
-            }
-        });
+        binding.btnSendCode.setOnClickListener(view -> prepareData());
     }
 
     void prepareData() {
@@ -146,7 +135,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                                 BWSApplication.showToast(loginModel.getResponseMessage(), ctx);
                                 startActivity(i);
                                 finish();
-                            }else if(loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))){
+                            } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
                                 binding.txtError.setVisibility(View.VISIBLE);
                                 binding.txtError.setText(loginModel.getResponseMessage());
                             }

@@ -113,7 +113,7 @@
                 android:id="@+id/ivMore"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
-                android:padding="@dimen/_8sdp"
+                android:padding="@dimen/_10sdp"
                 android:src="@drawable/ic_menu_icon"/>
 
         </LinearLayout>
@@ -132,7 +132,7 @@
                 android:id="@+id/ivDownloads"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
-                android:padding="@dimen/_8sdp"
+                android:padding="@dimen/_10sdp"
                 android:src="@drawable/ic_download_icon"/>
 
         </LinearLayout>
@@ -151,7 +151,7 @@
                 android:id="@+id/ivRemove"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
-                android:padding="@dimen/_8sdp"
+                android:padding="@dimen/_10sdp"
                 android:src="@drawable/remove_icon"/>
 
         </LinearLayout>
@@ -170,7 +170,7 @@
                 android:id="@+id/ivSort"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
-                android:padding="@dimen/_8sdp"
+                android:padding="@dimen/_10sdp"
                 android:src="@drawable/ic_sort_icon"/>
 
         </LinearLayout>

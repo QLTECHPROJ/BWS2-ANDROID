@@ -47,6 +47,7 @@ import com.qltech.bws.DashboardModule.Search.SearchFragment;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
+import com.qltech.bws.ReminderModule.Activities.ReminderDetailsActivity;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.ItemMoveCallback;
@@ -160,15 +161,6 @@ public class MyPlaylistsFragment extends Fragment {
         binding.rvPlayLists.setLayoutManager(playList);
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
 
-        binding.llReminder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), ReminderActivity.class);
-                i.putExtra("PlaylistID", PlaylistID);
-                startActivity(i);
-            }
-        });
-
         binding.llDownloads.setOnClickListener(view1 -> {
             callDownload("");
         });
@@ -235,7 +227,7 @@ public class MyPlaylistsFragment extends Fragment {
         }
     }
 
-    private void searchClear(EditText searchEditText){
+    private void searchClear(EditText searchEditText) {
         if (ComeFindAudio == 1) {
             binding.searchView.clearFocus();
             searchEditText.setText("");
@@ -243,6 +235,7 @@ public class MyPlaylistsFragment extends Fragment {
             ComeFindAudio = 0;
         }
     }
+
     private void prepareData(String UserID, String PlaylistID) {
         searchClear(searchEditText);
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -284,6 +277,16 @@ public class MyPlaylistsFragment extends Fragment {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                         SubPlayListModel listModel = response.body();
 
+                        binding.llReminder.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent i = new Intent(getActivity(), ReminderActivity.class);
+                                i.putExtra("PlaylistID", PlaylistID);
+                                i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
+                                startActivity(i);
+                            }
+                        });
+
                         if (listModel.getResponseData().getPlaylistName().equalsIgnoreCase("") ||
                                 listModel.getResponseData().getPlaylistName() == null) {
                             binding.tvLibraryName.setText(R.string.My_Playlist);
@@ -321,13 +324,19 @@ public class MyPlaylistsFragment extends Fragment {
                             binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
                         }
 
-                        if (listModel.getResponseData().getTotalAudio().equalsIgnoreCase("") &&
-                                listModel.getResponseData().getTotalhour().equalsIgnoreCase("")
-                                && listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                        if (listModel.getResponseData().getTotalAudio().equalsIgnoreCase("") ||
+                                listModel.getResponseData().getTotalAudio().equalsIgnoreCase("0") &&
+                                        listModel.getResponseData().getTotalhour().equalsIgnoreCase("")
+                                        && listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
                             binding.tvLibraryDetail.setText("0 Audio | 0h 0m");
                         } else {
-                            binding.tvLibraryDetail.setText(listModel.getResponseData().getTotalAudio() + " Audio | "
-                                    + listModel.getResponseData().getTotalhour() + "h " + listModel.getResponseData().getTotalminute() + "m");
+                            if (listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                binding.tvLibraryDetail.setText(listModel.getResponseData().getTotalAudio() + " Audio | "
+                                        + listModel.getResponseData().getTotalhour() + "h 0m");
+                            } else {
+                                binding.tvLibraryDetail.setText(listModel.getResponseData().getTotalAudio() + " Audio | "
+                                        + listModel.getResponseData().getTotalhour() + "h " + listModel.getResponseData().getTotalminute() + "m");
+                            }
                         }
 
                         if (listModel.getResponseData().getPlaylistSongs().size() == 0) {
@@ -377,7 +386,7 @@ public class MyPlaylistsFragment extends Fragment {
     private void callTransparentFrag(int position, Context ctx, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList,
                                      String myPlaylist) {
         player = 1;
-        if (isPrepare||isMediaStart ||isPause) {
+        if (isPrepare || isMediaStart || isPause) {
             stopMedia();
         }
         isPause = false;

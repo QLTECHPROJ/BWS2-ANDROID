@@ -49,7 +49,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.qltech.bws.DashboardModule.Activities.AddQueueActivity.ComeAddQueue;
 import static com.qltech.bws.Utility.MusicService.SeekTo;
 import static com.qltech.bws.Utility.MusicService.getEndTime;
 import static com.qltech.bws.Utility.MusicService.getProgressPercentage;
@@ -71,7 +70,7 @@ import static com.qltech.bws.Utility.MusicService.stopMedia;
 public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener*/ {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
-    String IsRepeat, IsShuffle, id, AudioId = "";
+    String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "";
     Context ctx;
     Activity activity;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -122,6 +121,13 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);
         }
+
+        if (getIntent().getExtras() != null) {
+            ComeFromQueue = getIntent().getStringExtra("ComeFromQueue");
+        }
+        if (getIntent().getExtras() != null) {
+            play = getIntent().getStringExtra("play");
+        }
         handler = new Handler();
         addToQueueModelList = new ArrayList<>();
         addToQueueModelList2 = new ArrayList<>();
@@ -162,7 +168,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             mLastClickTime = SystemClock.elapsedRealtime();
             callBack();
         });
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ViewQueueActivity.this, 0,
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.1f, 0);
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
@@ -269,8 +275,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 }
 
             }*/
-            adapter = new QueueAdapter(addToQueueModelList, ViewQueueActivity.this);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ViewQueueActivity.this);
+            adapter = new QueueAdapter(addToQueueModelList, ctx);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ctx);
             binding.rvQueueList.setLayoutManager(mLayoutManager);
             binding.rvQueueList.setItemAnimator(new DefaultItemAnimator());
             ItemTouchHelper.Callback callback =
@@ -421,7 +427,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     position = random.nextInt((listSize - 1) - 0 + 1) + 0;
                     getPrepareShowData(position);
                 }
-            }  else {
+            } else {
                 if (listSize == 1) {
 
                 } else {
@@ -521,12 +527,14 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     }
 
     private void callBack() {
-      /*  if (ComeAddQueue == 1){
+        if (ComeFromQueue.equalsIgnoreCase("1")) {
             Intent i = new Intent(ctx, AddQueueActivity.class);
-            i.putExtra("ID",AudioId);
+            i.putExtra("ID", AudioId);
+            i.putExtra("play", play);
             startActivity(i);
             finish();
-        }else {*/
+        } else if (ComeFromQueue.equalsIgnoreCase("0") ||
+                ComeFromQueue.equalsIgnoreCase("")) {
             if (binding.llPause.getVisibility() == View.VISIBLE) {
                 isPause = false;
             }
@@ -541,7 +549,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
             finish();
-//        }
+        }
     }
 
     @Override
@@ -641,14 +649,14 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 getPrepareShowData(position);
 //                callRemoveList1(position);
             });
-
         }
 
         public void callRemoveList1(int position) {
             listModelList.remove(position);
             notifyDataSetChanged();
         }
-   public void callRemoveList(int position) {
+
+        public void callRemoveList(int position) {
             listModelList.remove(position);
             notifyDataSetChanged();
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

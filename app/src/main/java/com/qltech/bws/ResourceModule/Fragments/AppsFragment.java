@@ -87,7 +87,8 @@ public class AppsFragment extends Fragment {
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());        }
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+        }
     }
 
     private void hideProgressBar() {

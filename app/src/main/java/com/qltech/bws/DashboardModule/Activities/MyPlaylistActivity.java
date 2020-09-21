@@ -131,20 +131,26 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 finish();
                             }
                         });
-                        if (model.getResponseData().getPlaylistMastercat().equalsIgnoreCase("")){
+                        if (model.getResponseData().getPlaylistMastercat().equalsIgnoreCase("")) {
                             binding.tvDesc.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             binding.tvDesc.setVisibility(View.VISIBLE);
                             binding.tvDesc.setText(model.getResponseData().getPlaylistMastercat());
                         }
 
-                        if (model.getResponseData().getTotalAudio().equalsIgnoreCase("") &&
-                                model.getResponseData().getTotalhour().equalsIgnoreCase("")
-                                && model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                        if (model.getResponseData().getTotalAudio().equalsIgnoreCase("") ||
+                                model.getResponseData().getTotalAudio().equalsIgnoreCase("0") &&
+                                        model.getResponseData().getTotalhour().equalsIgnoreCase("")
+                                        && model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
                             binding.tvTime.setText("0 Audio | 0h 0m");
                         } else {
-                            binding.tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | "
-                                    + model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
+                            if (model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                binding.tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | "
+                                        + model.getResponseData().getTotalhour() + "h 0m");
+                            } else {
+                                binding.tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | "
+                                        + model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
+                            }
                         }
 
                         if (model.getResponseData().getPlaylistDesc().equalsIgnoreCase("")) {

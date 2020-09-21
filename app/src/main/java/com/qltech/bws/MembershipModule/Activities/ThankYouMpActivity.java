@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.qltech.bws.DashboardModule.Activities.DashboardActivity;
@@ -48,7 +47,7 @@ public class ThankYouMpActivity extends AppCompatActivity {
             }
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(ThankYouMpActivity.this, InvoiceActivity.class);
-            i.putExtra("ComeFrom","1");
+            i.putExtra("ComeFrom", "1");
             startActivity(i);
             finish();
         });

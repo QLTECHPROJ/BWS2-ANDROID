@@ -41,6 +41,7 @@ import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.MembershipModule.Models.SignUpModel;
 import com.qltech.bws.ReminderModule.Models.RemiderDetailsModel;
 import com.qltech.bws.ReminderModule.Models.ReminderStatusModel;
+import com.qltech.bws.ReminderModule.Models.SelectPlaylistModel;
 import com.qltech.bws.ReminderModule.Models.SetReminderModel;
 import com.qltech.bws.ResourceModule.Models.ResourceFilterModel;
 import com.qltech.bws.ResourceModule.Models.ResourceListModel;
@@ -438,4 +439,9 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<ReminderStatusModel> getReminderStatus(@Field("UserID") String userID,
                                                 @Field("ReminderStatus") String reminderStatus);
+
+    /* TODO SelectPlaylistActivity */
+    @POST("allplaylist")
+    @FormUrlEncoded
+    Call<SelectPlaylistModel> getAllPlayListing(@Field("UserID") String userID);
 }

@@ -185,12 +185,10 @@ public class AppointmentDetailsFragment extends Fragment {
 
                                 @Override
                                 public void onTabUnselected(TabLayout.Tab tab) {
-
                                 }
 
                                 @Override
                                 public void onTabReselected(TabLayout.Tab tab) {
-
                                 }
                             });
                         } else {

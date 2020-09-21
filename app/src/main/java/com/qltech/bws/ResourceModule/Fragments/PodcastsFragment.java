@@ -144,22 +144,19 @@ public class PodcastsFragment extends Fragment {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.binding.rlMainLayout.setElevation(10);
             }
-            holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                        return;
-                    }
-                    mLastClickTime = SystemClock.elapsedRealtime();
-                    Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
-                    i.putExtra("podcasts", podcasts);
-                    i.putExtra("title", listModelList.get(position).getTitle());
-                    i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
-                    i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
-                    i.putExtra("image", listModelList.get(position).getImage());
-                    i.putExtra("description", listModelList.get(position).getDescription());
-                    startActivity(i);
+            holder.binding.rlMainLayout.setOnClickListener(view -> {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
                 }
+                mLastClickTime = SystemClock.elapsedRealtime();
+                Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
+                i.putExtra("podcasts", podcasts);
+                i.putExtra("title", listModelList.get(position).getTitle());
+                i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
+                i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
+                i.putExtra("image", listModelList.get(position).getImage());
+                i.putExtra("description", listModelList.get(position).getDescription());
+                startActivity(i);
             });
         }
 

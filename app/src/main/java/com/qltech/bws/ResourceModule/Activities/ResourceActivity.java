@@ -83,7 +83,6 @@ public class ResourceActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
 
@@ -121,18 +120,15 @@ public class ResourceActivity extends AppCompatActivity {
                 return false;
             });
 
-            tvAll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Category = "";
-                    setAdapter();
-                    dialogBox.dismiss();
-                }
+            tvAll.setOnClickListener(view1 -> {
+                Category = "";
+                setAdapter();
+                dialogBox.dismiss();
             });
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ResourceActivity.this);
             rvFilterList.setLayoutManager(mLayoutManager);
             rvFilterList.setItemAnimator(new DefaultItemAnimator());
-            prepareData(ResourceActivity.this, rvFilterList, dialogBox,tvAll, ivFilter);
+            prepareData(ResourceActivity.this, rvFilterList, dialogBox, tvAll, ivFilter);
         });
     }
 
@@ -156,7 +152,7 @@ public class ResourceActivity extends AppCompatActivity {
                 public void onResponse(Call<ResourceFilterModel> call, Response<ResourceFilterModel> response) {
                     if (response.isSuccessful()) {
                         ResourceFilterModel listModel = response.body();
-                        ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx, dialogBox,tvAll, ivFilter);
+                        ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx, dialogBox, tvAll, ivFilter);
                         rvFilterList.setAdapter(adapter);
                         dialogBox.show();
                     }
@@ -175,7 +171,6 @@ public class ResourceActivity extends AppCompatActivity {
     public class ResourceFilterAdapter extends RecyclerView.Adapter<ResourceFilterAdapter.MyViewHolder> {
         Context ctx;
         Dialog dialogBox;
-        int row_index = -1, pos = 0;
         private List<ResourceFilterModel.ResponseData> listModel;
         private TextView tvAll;
         ImageView ivFilter;
@@ -202,38 +197,20 @@ public class ResourceActivity extends AppCompatActivity {
             ivFilter.setVisibility(View.INVISIBLE);
             holder.binding.tvTitle.setText(listModel.get(position).getCategoryName());
             holder.binding.llMainLayout.setOnClickListener(view -> {
-             /*   row_index = position;
-                notifyDataSetChanged();
-                pos++;*/
                 holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
                 holder.binding.ivFiltered.setVisibility(View.VISIBLE);
                 Category = listModel.get(position).getCategoryName();
                 setAdapter();
                 dialogBox.dismiss();
             });
-            if(listModel.get(position).getCategoryName().equalsIgnoreCase(Category)){
+            if (listModel.get(position).getCategoryName().equalsIgnoreCase(Category)) {
                 ivFilter.setVisibility(View.INVISIBLE);
                 holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
                 holder.binding.ivFiltered.setVisibility(View.VISIBLE);
-            }else if(Category.equalsIgnoreCase("")){
+            } else if (Category.equalsIgnoreCase("")) {
                 tvAll.setTextColor(getResources().getColor(R.color.blue));
                 ivFilter.setVisibility(View.VISIBLE);
             }
-           /* if (row_index == position) {
-                holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
-                holder.binding.ivFilter.setVisibility(View.VISIBLE);
-                Category = listModel.get(position).getCategoryName();
-                setAdapter();
-                dialogBox.dismiss();
-            } else {
-                if (listModel.get(position).getCategoryName().equalsIgnoreCase(Category) && pos == 0) {
-                    holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
-                    holder.binding.ivFilter.setVisibility(View.VISIBLE);
-                } else {
-                    holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.black));
-                    holder.binding.ivFilter.setVisibility(View.GONE);
-                }
-            }*/
         }
 
         @Override

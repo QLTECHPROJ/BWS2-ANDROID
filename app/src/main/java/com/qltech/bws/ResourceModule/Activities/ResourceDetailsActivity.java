@@ -68,50 +68,41 @@ public class ResourceDetailsActivity extends AppCompatActivity {
             Glide.with(ctx).load(image).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
-            binding.btnComplete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (linkOne.equalsIgnoreCase("")) {
-                        BWSApplication.showToast("Not Available", ctx);
-                    } else {
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(linkOne));
-                        startActivity(i);
-                    }
+            binding.btnComplete.setOnClickListener(view -> {
+                if (linkOne.equalsIgnoreCase("")) {
+                    BWSApplication.showToast("Not Available", ctx);
+                } else {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(linkOne));
+                    startActivity(i);
                 }
             });
 
-            binding.ivAndroid.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (linkOne.equalsIgnoreCase("")) {
-                        BWSApplication.showToast("Not Available", ctx);
-                    } else {
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(linkOne));
-                        startActivity(i);
-                    }
+            binding.ivAndroid.setOnClickListener(view -> {
+                if (linkOne.equalsIgnoreCase("")) {
+                    BWSApplication.showToast("Not Available", ctx);
+                } else {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(linkOne));
+                    startActivity(i);
                 }
             });
-            binding.ivIos.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (linkTwo.equalsIgnoreCase("")) {
-                        BWSApplication.showToast("Not Available", ctx);
-                    } else {
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(linkTwo));
-                        startActivity(i);
-                    }
+            binding.ivIos.setOnClickListener(view -> {
+                if (linkTwo.equalsIgnoreCase("")) {
+                    BWSApplication.showToast("Not Available", ctx);
+                } else {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(linkTwo));
+                    startActivity(i);
                 }
             });
         }
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        binding.llBack.setOnClickListener(view -> finish());
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

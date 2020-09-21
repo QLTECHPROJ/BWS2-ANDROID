@@ -39,7 +39,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="Monthly"
                         android:textColor="@color/white" />
 
                     <LinearLayout
@@ -75,7 +74,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semi_bold"
-                        android:text="$29.99"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_18sdp" />
 
@@ -85,7 +83,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_6sdp"
                         android:fontFamily="@font/montserrat_medium"
-                        android:text="Per Month"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_15sdp" />
 
@@ -118,8 +115,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_13sdp"
                         android:fontFamily="@font/montserrat_medium"
-                        android:gravity="left"
-                        android:text="Access 65+ Audio Programs"
+                        android:gravity="start"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
                 </LinearLayout>
@@ -143,7 +139,6 @@
                         android:layout_marginLeft="@dimen/_13sdp"
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="start"
-                        android:text="30 Day Free Trial"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
                 </LinearLayout>
@@ -167,7 +162,6 @@
                         android:layout_marginLeft="@dimen/_13sdp"
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="start"
-                        android:text="Email Support"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
                 </LinearLayout>
@@ -191,7 +185,6 @@
                         android:layout_marginLeft="@dimen/_13sdp"
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="start"
-                        android:text="24/7 Available"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
                 </LinearLayout>

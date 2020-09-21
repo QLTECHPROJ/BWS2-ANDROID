@@ -89,30 +89,34 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
-            startTime = getStartTime();
-            binding.simpleSeekbar.setMax(100);
-            Time t = Time.valueOf("00:00:00");
-            if (queuePlay) {
-                if (listSize != 0) {
-                    t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
-                } else {
-                    stopMedia();
+            try {
+                startTime = getStartTime();
+                binding.simpleSeekbar.setMax(100);
+                Time t = Time.valueOf("00:00:00");
+                if (queuePlay) {
+                    if (listSize != 0) {
+                        t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                    } else {
+                        stopMedia();
+                    }
+                } else if (audioPlay) {
+                    t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
                 }
-            } else if (audioPlay) {
-                t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
-            }
-            long totalDuration = t.getTime();
-            long currentDuration = getStartTime();
+                long totalDuration = t.getTime();
+                long currentDuration = getStartTime();
 
-            int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
-            if (isPause) {
-                binding.simpleSeekbar.setProgress(oTime);
-            } else {
-                binding.simpleSeekbar.setProgress(progress);
+                int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
+                //Log.d("Progress", ""+progress);
+                if (isPause) {
+                    binding.simpleSeekbar.setProgress(oTime);
+                } else {
+                    binding.simpleSeekbar.setProgress(progress);
+                }
+                // Running this thread after 100 milliseconds
+                handler.postDelayed(this, 60);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            // Running this thread after 100 milliseconds
-            handler.postDelayed(this, 60);
         }
     };
 
@@ -310,31 +314,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         });
 
         return view;
-    }
-
-    private void simpleNotification() {
-        int notificationId = 0;
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity())
-                .setSmallIcon(R.drawable.square_app_icon)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.square_app_icon))
-                .setContentTitle("Brain Wellness Spa")
-                .setContentText("Become an Android Developer.")
-                .setAutoCancel(true)
-                .setDefaults(NotificationCompat.DEFAULT_ALL);
-        Uri path = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        builder.setSound(path);
-
-        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String channelId = "10001";
-            NotificationChannel channel = new NotificationChannel(channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-            builder.setChannelId(channelId);
-        }
-        notificationManager.notify(notificationId, builder.build());
     }
 
     private void addToRecentPlay() {
