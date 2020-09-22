@@ -354,11 +354,21 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llRepeat.setEnabled(false);
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {*/
+            if(queuePlay){
+                binding.llRepeat.setEnabled(false);
+                binding.llRepeat.setClickable(false);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            }else{
             binding.llRepeat.setClickable(true);
             binding.llRepeat.setEnabled(true);
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-//            }
+            }
         } else if (IsRepeat.equalsIgnoreCase("1")) {
+            if(queuePlay){
+                binding.llRepeat.setEnabled(false);
+                binding.llRepeat.setClickable(false);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            }else
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         }
 
@@ -630,6 +640,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     private void getPrepareShowData(int position) {
         handler.postDelayed(UpdateSongTime, 60);
+        if(queuePlay){
+            binding.llRepeat.setEnabled(false);
+            binding.llRepeat.setClickable(false);
+        }
         if (listSize == 1) {
             binding.llnext.setEnabled(false);
             binding.llprev.setEnabled(false);

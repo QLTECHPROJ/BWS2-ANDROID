@@ -304,6 +304,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         } else if (queuePlay) {
             listSize = addToQueueModelList.size();
         }
+
         if (listSize == 1) {
             binding.llnext.setEnabled(false);
             binding.llnext.setEnabled(false);

@@ -169,6 +169,11 @@ public class AddQueueActivity extends AppCompatActivity {
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else if (IsRepeat.equalsIgnoreCase("1")) {
+            if(queuePlay){
+                binding.llRepeat.setEnabled(false);
+                binding.llRepeat.setClickable(false);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            }else
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         binding.llLike.setOnClickListener(view ->
