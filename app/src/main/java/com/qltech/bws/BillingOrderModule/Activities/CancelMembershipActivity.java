@@ -32,6 +32,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.pauseMedia;
+import static com.qltech.bws.Utility.MusicService.resumeMedia;
+
 public class CancelMembershipActivity extends YouTubeBaseActivity implements
         YouTubePlayer.OnInitializedListener {
     ActivityCancelMembershipBinding binding;
@@ -52,9 +57,16 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
             @Override
             public void onClick(View view) {
                 finish();
+                resumeMedia();
+                isPause = false;
             }
         });
 
+        if (isMediaStart) {
+            pauseMedia();
+        } else {
+
+        }
         binding.youtubeView.initialize(AppUtils.DEVELOPER_KEY, this);
 
         binding.cbOne.setOnClickListener(view -> {
@@ -97,6 +109,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         });
 
         binding.btnCancelSubscrible.setOnClickListener(view -> {
+            pauseMedia();
             if (CancelId.equalsIgnoreCase("4") &&
                     binding.edtCancelBox.getText().toString().equalsIgnoreCase("")) {
                 BWSApplication.showToast("Please enter reason", ctx);
@@ -113,41 +126,55 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog.dismiss();
+                        pauseMedia();
                         return true;
                     }
                     return false;
                 });
 
                 tvconfirm.setOnClickListener(v -> {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        showProgressBar();
-                        Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, binding.edtCancelBox.getText().toString());
-                        listCall.enqueue(new Callback<CancelPlanModel>() {
-                            @Override
-                            public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
-                                if (response.isSuccessful()) {
-                                    CancelPlanModel model = response.body();
-                                    BWSApplication.showToast(model.getResponseMessage(), ctx);
+//                    if (BWSApplication.isNetworkConnected(ctx)) {
+//                        showProgressBar();
+//                        Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, binding.edtCancelBox.getText().toString());
+//                        listCall.enqueue(new Callback<CancelPlanModel>() {
+//                            @Override
+//                            public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
+//                                if (response.isSuccessful()) {
+//                                    hideProgressBar();
+//                                    CancelPlanModel model = response.body();
+//                                    BWSApplication.showToast(model.getResponseMessage(), ctx);
                                     dialog.dismiss();
-                                    hideProgressBar();
+                                    resumeMedia();
+                                    isPause = false;
                                     finish();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<CancelPlanModel> call, Throwable t) {
-                                hideProgressBar();
-                            }
-                        });
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                    }
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<CancelPlanModel> call, Throwable t) {
+//                                hideProgressBar();
+//                            }
+//                        });
+//                    } else {
+//                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+//                    }
                 });
-                tvGoBack.setOnClickListener(v -> dialog.dismiss());
+
+                tvGoBack.setOnClickListener(v -> {
+                    dialog.dismiss();
+                    pauseMedia();
+                });
                 dialog.show();
                 dialog.setCancelable(false);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        resumeMedia();
+        isPause = false;
+        finish();
     }
 
     private void hideProgressBar() {
@@ -173,8 +200,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer
-            player,
-                                        boolean wasRestored) {
+            player, boolean wasRestored) {
         if (!wasRestored) {
             player.loadVideo(AppUtils.YOUTUBE_VIDEO_CODE);
             player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);

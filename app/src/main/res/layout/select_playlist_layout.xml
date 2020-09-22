@@ -2,32 +2,26 @@
 <layout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/rlMainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/rlMainLayout"
         android:layout_marginHorizontal="@dimen/_8sdp"
         android:layout_marginVertical="@dimen/_16sdp">
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:fontFamily="@font/montserrat_regular"
-            android:textSize="@dimen/_13sdp"
-            android:layout_marginRight="@dimen/_25sdp"/>
 
         <CheckBox
             android:id="@+id/cbChecked"
             style="@android:style/Widget.CompoundButton.RadioButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
             android:button="@drawable/radio_btn_background"
             android:fontFamily="@font/montserrat_regular"
-            android:gravity="center_vertical|start"
+            android:gravity="center_vertical|left"
+            android:layoutDirection="rtl"
+            android:overScrollMode="never"
             android:textColor="@color/black"
-            android:textSize="@dimen/_15sdp" />
+            android:textSize="@dimen/_15sdp"
+            android:visibility="visible" />
 
     </RelativeLayout>
 </layout>

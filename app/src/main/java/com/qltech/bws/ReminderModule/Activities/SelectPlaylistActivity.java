@@ -18,17 +18,13 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Audio.Adapters.RecentlyPlayedAdapter;
 import com.qltech.bws.R;
-import com.qltech.bws.ReminderModule.Models.RemiderDetailsModel;
 import com.qltech.bws.ReminderModule.Models.SelectPlaylistModel;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivitySelectPlaylistBinding;
 import com.qltech.bws.databinding.SelectPlaylistLayoutBinding;
-import com.qltech.bws.databinding.SmallBoxLayoutBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -55,21 +51,23 @@ public class SelectPlaylistActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent i = new Intent(ctx, ReminderActivity.class);
+                startActivity(i);
                 finish();
             }
         });
 
-
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         binding.rvSelectPlaylist.setLayoutManager(mLayoutManager);
         binding.rvSelectPlaylist.setItemAnimator(new DefaultItemAnimator());
-
 
         prepareData();
     }
 
     @Override
     public void onBackPressed() {
+        Intent i = new Intent(ctx, ReminderActivity.class);
+        startActivity(i);
         finish();
     }
 
@@ -86,10 +84,10 @@ public class SelectPlaylistActivity extends AppCompatActivity {
                         adapter = new SelectPlaylistAdapter(listModel.getResponseData());
                         binding.rvSelectPlaylist.setAdapter(adapter);
 
-                        if (listModel.getResponseData().size() == 0){
+                        if (listModel.getResponseData().size() == 0) {
                             binding.llError.setVisibility(View.GONE);
                             binding.rvSelectPlaylist.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             binding.llError.setVisibility(View.GONE);
                             binding.rvSelectPlaylist.setVisibility(View.VISIBLE);
                         }
@@ -106,8 +104,9 @@ public class SelectPlaylistActivity extends AppCompatActivity {
         }
     }
 
-    public class SelectPlaylistAdapter extends RecyclerView.Adapter<SelectPlaylistAdapter.MyViewHolder>{
+    public class SelectPlaylistAdapter extends RecyclerView.Adapter<SelectPlaylistAdapter.MyViewHolder> {
         private List<SelectPlaylistModel.ResponseData> model;
+        public int mSelectedItem = -1;
 
         public SelectPlaylistAdapter(List<SelectPlaylistModel.ResponseData> model) {
             this.model = model;
@@ -123,20 +122,9 @@ public class SelectPlaylistActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.binding.cbChecked.setChecked(false);
-
-            holder.binding.tvTitle.setText(model.get(position).getName());
-            holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    holder.binding.cbChecked.setChecked(true);
-                    Intent i = new Intent(ctx,ReminderActivity.class);
-                    i.putExtra("PlaylistID",model.get(position).getID());
-                    i.putExtra("PlaylistName",model.get(position).getName());
-                    startActivity(i);
-                    finish();
-                }
-            });
+            holder.binding.cbChecked.setTag(model.get(position));
+            holder.binding.cbChecked.setChecked(position == mSelectedItem);
+            holder.binding.cbChecked.setText(model.get(position).getName());
         }
 
         @Override
@@ -150,6 +138,20 @@ public class SelectPlaylistActivity extends AppCompatActivity {
             public MyViewHolder(SelectPlaylistLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
+
+                binding.cbChecked.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mSelectedItem = getAdapterPosition();
+                        notifyDataSetChanged();
+
+                        Intent i = new Intent(ctx, ReminderActivity.class);
+                        i.putExtra("PlaylistID", model.get(mSelectedItem).getID());
+                        i.putExtra("PlaylistName", model.get(mSelectedItem).getName());
+                        startActivity(i);
+                        finish();
+                    }
+                });
             }
         }
     }

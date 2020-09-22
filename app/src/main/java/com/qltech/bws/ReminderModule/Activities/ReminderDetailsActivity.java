@@ -170,7 +170,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     private void prepareSwitchStatus(String reminderStatus) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserId, reminderStatus);
+            Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserId, reminderStatus);/*set 1 or not 0 */
             listCall.enqueue(new Callback<ReminderStatusModel>() {
                 @Override
                 public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {

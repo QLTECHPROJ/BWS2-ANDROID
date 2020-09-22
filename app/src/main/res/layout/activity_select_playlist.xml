@@ -6,9 +6,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        tools:context=".ReminderModule.Activities.SelectPlaylistActivity">
-
+        android:background="@color/white">
 
         <RelativeLayout
             android:id="@+id/rlLayout"
@@ -49,7 +47,8 @@
             android:layout_below="@id/rlLayout"
             android:layout_marginHorizontal="@dimen/_8sdp"
             android:layout_marginTop="@dimen/_18sdp"
-            android:overScrollMode="never" />
+            android:overScrollMode="never"
+            android:paddingBottom="@dimen/_18sdp" />
 
         <LinearLayout
             android:id="@+id/llError"

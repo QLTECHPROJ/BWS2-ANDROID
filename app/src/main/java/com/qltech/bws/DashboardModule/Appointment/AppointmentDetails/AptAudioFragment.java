@@ -38,7 +38,6 @@ import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
-import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.AudioAptListLayoutBinding;
 import com.qltech.bws.databinding.FragmentAptAudioBinding;
 

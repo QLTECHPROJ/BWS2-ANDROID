@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,7 +39,7 @@ public class ReminderActivity extends AppCompatActivity {
     String am_pm, hourString, minuteSting;
     Activity activity;
     Context context;
-    String UserId, ReminderStatus = "", reminderDay, PlaylistID = "", PlaylistName = "",reminderDayNo = "";
+    String UserId, ReminderStatus = "", reminderDay, PlaylistID = "", PlaylistName = "", reminderDayNo = "";
     List<String> reminderDayList;
 
     @Override
@@ -88,6 +86,7 @@ public class ReminderActivity extends AppCompatActivity {
                 || ReminderStatus.equalsIgnoreCase("")) {
             binding.switchStatus.setChecked(false);
         }
+
         binding.llSelectTime.setOnClickListener(view -> {
             final Calendar c = Calendar.getInstance();
             mHour = c.get(Calendar.HOUR_OF_DAY);
@@ -216,26 +215,19 @@ public class ReminderActivity extends AppCompatActivity {
                 ChangeFunction(holder, position, 0);
             }
             holder.binding.llMainDay.setOnClickListener(view -> {
-                row_index = position;
                 pos++;
+                if (row_index == position){
+                    holder.binding.tvday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
+                    holder.binding.tvday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
+                }else {
+                    holder.binding.tvday.setTextColor(context.getResources().getColor(R.color.dark_blue_gray));
+                    holder.binding.tvday.setBackground(context.getResources().getDrawable(R.drawable.transparent_bg));
+                }
                 notifyDataSetChanged();
             });
-
-            if (row_index == position) {
-                ChangeFunction(holder, position, 1);
-            } else {
-                if (position == 1 && pos == 0) {
-                    ChangeFunction(holder, position, 1);
-                } else {
-                    ChangeFunction(holder, position, 0);
-                }
-            }
         }
 
         private void ChangeFunction(MyViewHolder holder, int position, int day) {
-            if (day == 1) {
-                holder.binding.tvday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-                holder.binding.tvday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
                 switch (position) {
                     case 0:
                         reminderDay = "Sunday";
@@ -270,11 +262,6 @@ public class ReminderActivity extends AppCompatActivity {
                         reminderDayNo = "1";
                         break;
                 }
-            } else {
-                holder.binding.tvday.setTextColor(context.getResources().getColor(R.color.dark_blue_gray));
-                holder.binding.tvday.setBackground(context.getResources().getDrawable(R.drawable.transparent_bg));
-            }
-
         }
 
         @Override

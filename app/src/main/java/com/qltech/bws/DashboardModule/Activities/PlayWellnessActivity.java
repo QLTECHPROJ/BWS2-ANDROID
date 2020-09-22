@@ -213,7 +213,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
             Intent i = new Intent(ctx, ViewQueueActivity.class);
-            i.putExtra("ComeFromQueue","0");
+            i.putExtra("ComeFromQueue", "0");
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
             finish();
@@ -687,31 +687,30 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llDownload.setEnabled(true);
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
-            if (!isMediaStart) {
-                play(Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-                playMedia();
+//            if (!isMediaStart) {
+//                play(Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+//                playMedia();
+//                binding.llPause.setVisibility(View.VISIBLE);
+//                binding.llPlay.setVisibility(View.GONE);
+//            } else {
+            if (isPause) {
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.simpleSeekbar.setProgress(oTime);
+                int timeeee = progressToTimer(oTime, (int) (totalDuration));
+                binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
+                        TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
+//                    resumeMedia();
+            } else if ((isPrepare || isMediaStart) && !isPause) {
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
             } else {
-                if (isPause) {
-
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    binding.simpleSeekbar.setProgress(oTime);
-                    int timeeee = progressToTimer(oTime, (int) (totalDuration));
-                    binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
-                            TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
-//                    resumeMedia();
-                } else if ((isPrepare || isMediaStart) && !isPause) {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                } else {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                    play(Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-                    playMedia();
-                }
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+                play(Uri.parse(addToQueueModelList.get(position).getAudioFile()));
+                playMedia();
             }
+//            }
             binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
 
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -755,30 +754,30 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llDownload.setEnabled(true);
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
-            if (!isMediaStart) {
-                play(Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-                playMedia();
+//            if (!isMediaStart) {
+//                play(Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+//                playMedia();
+//                binding.llPause.setVisibility(View.VISIBLE);
+//                binding.llPlay.setVisibility(View.GONE);
+//            } else {
+            if (isPause) {
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.simpleSeekbar.setProgress(oTime);
+//                    resumeMedia();
+                int timeeee = progressToTimer(oTime, (int) (totalDuration));
+                binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
+                        TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
+            } else if (((isPrepare || isMediaStart)) && !isPause) {
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
             } else {
-                if (isPause) {
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    binding.simpleSeekbar.setProgress(oTime);
-//                    resumeMedia();
-                    int timeeee = progressToTimer(oTime, (int) (totalDuration));
-                    binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
-                            TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
-                } else if (((isPrepare || isMediaStart)) && !isPause) {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                } else {
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    binding.llPlay.setVisibility(View.GONE);
-                    play(Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-                    playMedia();
-                }
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+                play(Uri.parse(mainPlayModelList.get(position).getAudioFile()));
+                playMedia();
             }
+//            }
             binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
             startTime = getStartTime();
         }

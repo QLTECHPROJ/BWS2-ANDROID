@@ -219,6 +219,7 @@ public class AccountFragment extends Fragment {
         }
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            showProgressBar();
             Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID, fcm_id, CONSTANTS.FLAG_ONE);
             listCall.enqueue(new Callback<LogoutModel>() {
                 @Override
@@ -230,6 +231,7 @@ public class AccountFragment extends Fragment {
                             return;
                         }
                         mLastClickTime = SystemClock.elapsedRealtime();
+                        hideProgressBar();
                         Intent i = new Intent(getActivity(), LoginActivity.class);
                         startActivity(i);
                     } else {
