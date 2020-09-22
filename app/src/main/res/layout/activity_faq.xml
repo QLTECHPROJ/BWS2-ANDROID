@@ -50,33 +50,33 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:elevation="3.6dp"
-                android:layout_marginHorizontal="@dimen/_16sdp">
+                android:elevation="3.6dp">
 
                 <LinearLayout
                     android:id="@+id/llAudio"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="horizontal"
                     android:paddingHorizontal="@dimen/_14sdp"
                     android:paddingVertical="@dimen/_8sdp"
-                    android:orientation="horizontal"
                     android:weightSum="1">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical"
                         android:layout_weight="0.83"
+                        android:gravity="center_vertical"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
-                            android:textColor="@color/light_black"
                             android:gravity="center_vertical"
                             android:text="@string/Audio"
+                            android:textColor="@color/light_black"
                             android:textSize="@dimen/_14sdp" />
                     </LinearLayout>
 
@@ -88,10 +88,10 @@
                         <ImageView
                             android:layout_width="@dimen/_40sdp"
                             android:layout_height="@dimen/_40sdp"
-                            android:paddingVertical="@dimen/_2sdp"
                             android:layout_alignParentRight="true"
+                            android:paddingVertical="@dimen/_2sdp"
                             android:src="@drawable/ic_back_black_icon"
-                            app:tint="@color/dark_blue_gray"/>
+                            app:tint="@color/dark_blue_gray" />
                     </RelativeLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -99,33 +99,33 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_16sdp"
-                android:elevation="3.6dp"
-                android:layout_marginHorizontal="@dimen/_16sdp">
+                android:elevation="3.6dp">
 
                 <LinearLayout
                     android:id="@+id/llPlaylists"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="horizontal"
                     android:paddingHorizontal="@dimen/_14sdp"
                     android:paddingVertical="@dimen/_8sdp"
-                    android:orientation="horizontal"
                     android:weightSum="1">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical"
                         android:layout_weight="0.83"
+                        android:gravity="center_vertical"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
-                            android:textColor="@color/light_black"
                             android:gravity="center_vertical"
                             android:text="@string/Playlist"
+                            android:textColor="@color/light_black"
                             android:textSize="@dimen/_14sdp" />
                     </LinearLayout>
 
@@ -137,10 +137,10 @@
                         <ImageView
                             android:layout_width="@dimen/_40sdp"
                             android:layout_height="@dimen/_40sdp"
-                            android:paddingVertical="@dimen/_2sdp"
                             android:layout_alignParentRight="true"
+                            android:paddingVertical="@dimen/_2sdp"
                             android:src="@drawable/ic_back_black_icon"
-                            app:tint="@color/dark_blue_gray"/>
+                            app:tint="@color/dark_blue_gray" />
                     </RelativeLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -148,34 +148,34 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:layout_marginBottom="@dimen/_20sdp"
-                android:elevation="3.6dp"
-                android:layout_marginHorizontal="@dimen/_16sdp">
+                android:elevation="3.6dp">
 
                 <LinearLayout
                     android:id="@+id/llHelp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="horizontal"
                     android:paddingHorizontal="@dimen/_14sdp"
                     android:paddingVertical="@dimen/_8sdp"
-                    android:orientation="horizontal"
                     android:weightSum="1">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical"
                         android:layout_weight="0.83"
+                        android:gravity="center_vertical"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
-                            android:textColor="@color/light_black"
                             android:gravity="center_vertical"
                             android:text="@string/Help"
+                            android:textColor="@color/light_black"
                             android:textSize="@dimen/_14sdp" />
                     </LinearLayout>
 
@@ -187,10 +187,10 @@
                         <ImageView
                             android:layout_width="@dimen/_40sdp"
                             android:layout_height="@dimen/_40sdp"
-                            android:paddingVertical="@dimen/_2sdp"
                             android:layout_alignParentRight="true"
+                            android:paddingVertical="@dimen/_2sdp"
                             android:src="@drawable/ic_back_black_icon"
-                            app:tint="@color/dark_blue_gray"/>
+                            app:tint="@color/dark_blue_gray" />
                     </RelativeLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -201,15 +201,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:paddingTop="@dimen/_20sdp"
             android:background="@color/discalimer_gray"
-            android:paddingHorizontal="@dimen/_16sdp"
-            android:paddingBottom="@dimen/_20sdp"
-            android:textSize="@dimen/_13sdp"
-            android:justificationMode="inter_word"
-            android:textColor="@color/black"
             android:fontFamily="@font/montserrat_italic"
-            android:text="@string/disclaimer"/>
+            android:justificationMode="inter_word"
+            android:paddingHorizontal="@dimen/_16sdp"
+            android:paddingTop="@dimen/_20sdp"
+            android:paddingBottom="@dimen/_20sdp"
+            android:text="@string/disclaimer"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13sdp" />
 
         <ImageView
             android:id="@+id/ImgV"

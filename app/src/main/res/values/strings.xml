@@ -166,6 +166,7 @@
     <string name="Podcasts">Podcasts</string>
     <string name="Apps">Apps</string>
     <string name="Website">Website</string>
+    <string name="Websites">Websites</string>
     <string name="Documentaries">Documentaries</string>
     <string name="My_Playlist">My Playlist</string>
     <string name="background_image">Background Image</string>
@@ -189,4 +190,6 @@
     <string name="Select_Playlist">Select Playlist</string>
     <string name="Add_New_Reminder">Add New Reminder</string>
     <string name="Payment">Payment</string>
+
+    <string name="default_notification_channel_id">10001</string>
 </resources>

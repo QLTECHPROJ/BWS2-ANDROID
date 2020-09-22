@@ -36,7 +36,7 @@ import static com.qltech.bws.DashboardModule.Account.AccountFragment.IsLock;
 
 public class ReminderDetailsActivity extends AppCompatActivity {
     ActivityReminderDetailsBinding binding;
-    String UserId;
+    String UserId, PlaylistId;
     Context ctx;
     Activity activity;
     RemiderDetailsAdapter adapter;
@@ -71,6 +71,9 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 }else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")){
                     Intent i = new Intent(ctx, ReminderActivity.class);
+                    i.putExtra("ComeFrom","0");
+                    i.putExtra("PlaylistID", "");
+                    i.putExtra("PlaylistName", "");
                     startActivity(i);
                     finish();
                 }
@@ -86,7 +89,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<RemiderDetailsModel> listCall = APIClient.getClient().getReminderStatus(UserId);
+            Call<RemiderDetailsModel> listCall = APIClient.getClient().getGetReminderStatus(UserId);
             listCall.enqueue(new Callback<RemiderDetailsModel>() {
                 @Override
                 public void onResponse(Call<RemiderDetailsModel> call, Response<RemiderDetailsModel> response) {
@@ -136,7 +139,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             holder.binding.tvName.setText(model.get(position).getPlaylistName());
             holder.binding.tvDate.setText(model.get(position).getReminderDay());
             holder.binding.tvTime.setText(model.get(position).getReminderTime());
-
+            PlaylistId = model.get(position).getPlaylistId();
             if (model.get(position).getIsCheck().equalsIgnoreCase("1")) {
                 holder.binding.switchStatus.setChecked(true);
             } else {
@@ -170,7 +173,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     private void prepareSwitchStatus(String reminderStatus) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserId, reminderStatus);/*set 1 or not 0 */
+            Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserId, PlaylistId, reminderStatus);/*set 1 or not 0 */
             listCall.enqueue(new Callback<ReminderStatusModel>() {
                 @Override
                 public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {

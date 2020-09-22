@@ -126,7 +126,9 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.tlEmail.setError("");
         if (binding.etUser.getText().toString().equalsIgnoreCase("")) {
             binding.flUser.setError("Please enter your full name");
-        } else if (binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
+        } else if (binding.etCalendar.getText().toString().equalsIgnoreCase("")) {
+            binding.tlCalendar.setError("please enter date of birth");
+        }  else if (binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
             binding.tlMobileNumber.setError("please enter mobile number");
         } else if (binding.etEmail.getText().toString().equalsIgnoreCase("")) {
             binding.tlEmail.setError("Please enter your email address");

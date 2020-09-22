@@ -66,7 +66,7 @@ public class ResourceActivity extends AppCompatActivity {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio Books"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Podcasts"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Apps"));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Website"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Websites"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Documentaries"));
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -151,10 +151,10 @@ public class ResourceActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<ResourceFilterModel> call, Response<ResourceFilterModel> response) {
                     if (response.isSuccessful()) {
+                        dialogBox.show();
                         ResourceFilterModel listModel = response.body();
                         ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx, dialogBox, tvAll, ivFilter);
                         rvFilterList.setAdapter(adapter);
-                        dialogBox.show();
                     }
                 }
 

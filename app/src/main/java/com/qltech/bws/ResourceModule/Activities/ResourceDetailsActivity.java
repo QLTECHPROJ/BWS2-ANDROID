@@ -51,7 +51,7 @@ public class ResourceDetailsActivity extends AppCompatActivity {
                 binding.tvCreator.setVisibility(View.GONE);
             }
             if (getIntent().getStringExtra("website") != null) {
-                binding.tvScreenName.setText(R.string.Website);
+                binding.tvScreenName.setText(R.string.Websites);
                 binding.btnComplete.setVisibility(View.VISIBLE);
                 binding.llPlatfroms.setVisibility(View.GONE);
                 binding.tvCreator.setVisibility(View.GONE);

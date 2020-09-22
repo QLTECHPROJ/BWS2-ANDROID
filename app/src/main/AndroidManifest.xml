@@ -41,7 +41,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".BillingOrderModule.Activities.PaymentActivity"></activity>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/square_app_icon" />
+
+        <activity
+            android:name=".BillingOrderModule.Activities.PaymentActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".ReminderModule.Activities.SelectPlaylistActivity"
             android:configChanges="orientation|screenSize"
@@ -56,6 +68,15 @@
         <service
             android:name=".Utility.MusicService"
             tools:ignore="Instantiatable" />
+
+        <service
+            android:name=".Utility.MyFirebaseMessagingService"
+            android:exported="false"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <provider
             android:name="androidx.core.content.FileProvider"

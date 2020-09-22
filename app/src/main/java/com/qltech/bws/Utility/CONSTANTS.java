@@ -126,4 +126,5 @@ public class CONSTANTS {
     public static final String PROVIDER = "BC";
 
     public static final String SECRET_KEY = "SECRET_KEY";
+    public static final String REGISTRATION_COMPLETE = "registrationComplete";
 }

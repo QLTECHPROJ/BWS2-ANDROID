@@ -109,7 +109,11 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         });
 
         binding.btnCancelSubscrible.setOnClickListener(view -> {
-            pauseMedia();
+            if (isMediaStart) {
+                pauseMedia();
+            } else {
+
+            }
             if (CancelId.equalsIgnoreCase("4") &&
                     binding.edtCancelBox.getText().toString().equalsIgnoreCase("")) {
                 BWSApplication.showToast("Please enter reason", ctx);
@@ -126,43 +130,51 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog.dismiss();
-                        pauseMedia();
+                        if (isMediaStart) {
+                            pauseMedia();
+                        } else {
+
+                        }
                         return true;
                     }
                     return false;
                 });
 
                 tvconfirm.setOnClickListener(v -> {
-//                    if (BWSApplication.isNetworkConnected(ctx)) {
-//                        showProgressBar();
-//                        Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, binding.edtCancelBox.getText().toString());
-//                        listCall.enqueue(new Callback<CancelPlanModel>() {
-//                            @Override
-//                            public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
-//                                if (response.isSuccessful()) {
-//                                    hideProgressBar();
-//                                    CancelPlanModel model = response.body();
-//                                    BWSApplication.showToast(model.getResponseMessage(), ctx);
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        showProgressBar();
+                        Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, binding.edtCancelBox.getText().toString());
+                        listCall.enqueue(new Callback<CancelPlanModel>() {
+                            @Override
+                            public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
+                                if (response.isSuccessful()) {
+                                    hideProgressBar();
+                                    CancelPlanModel model = response.body();
+                                    BWSApplication.showToast(model.getResponseMessage(), ctx);
                                     dialog.dismiss();
                                     resumeMedia();
                                     isPause = false;
                                     finish();
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Call<CancelPlanModel> call, Throwable t) {
-//                                hideProgressBar();
-//                            }
-//                        });
-//                    } else {
-//                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-//                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<CancelPlanModel> call, Throwable t) {
+                                hideProgressBar();
+                            }
+                        });
+                    } else {
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    }
                 });
 
                 tvGoBack.setOnClickListener(v -> {
                     dialog.dismiss();
-                    pauseMedia();
+                    if (isMediaStart) {
+                        pauseMedia();
+                    } else {
+
+                    }
                 });
                 dialog.show();
                 dialog.setCancelable(false);

@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.FaqModule.Models.FaqListModel;
@@ -54,62 +53,48 @@ public class FaqActivity extends AppCompatActivity {
             BWSApplication.showToast(getString(R.string.no_server_found), this);
         }
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
+        binding.llBack.setOnClickListener(view -> finish());
+
+        binding.llAudio.setOnClickListener(view -> {
+            modelList.clear();
+            modelList = new ArrayList<>();
+            for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
+                if (faqListModel.getResponseData().get(i).getCategory().contains("Audio")) {
+                    modelList.add(faqListModel.getResponseData().get(i));
+                }
             }
+            Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
+            i.putExtra("Flag", "Audio");
+            i.putParcelableArrayListExtra("faqListModel", modelList);
+            startActivity(i);
         });
 
-        binding.llAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                modelList.clear();
-                modelList = new ArrayList<>();
-                for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
-                    if (faqListModel.getResponseData().get(i).getCategory().contains("Audio")) {
-                        modelList.add(faqListModel.getResponseData().get(i));
-                    }
+        binding.llHelp.setOnClickListener(view -> {
+            modelList.clear();
+            modelList = new ArrayList<>();
+            for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
+                if (faqListModel.getResponseData().get(i).getCategory().contains("Help")) {
+                    modelList.add(faqListModel.getResponseData().get(i));
                 }
-                Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
-                i.putExtra("Flag", "Audio");
-                i.putParcelableArrayListExtra("faqListModel", modelList);
-                startActivity(i);
             }
+            Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
+            i.putExtra("Flag", "Help");
+            i.putExtra("faqListModel", modelList);
+            startActivity(i);
         });
 
-        binding.llHelp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                modelList.clear();
-                modelList = new ArrayList<>();
-                for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
-                    if (faqListModel.getResponseData().get(i).getCategory().contains("Help")) {
-                        modelList.add(faqListModel.getResponseData().get(i));
-                    }
+        binding.llPlaylists.setOnClickListener(view -> {
+            modelList.clear();
+            modelList = new ArrayList<>();
+            for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
+                if (faqListModel.getResponseData().get(i).getCategory().contains("Playlist")) {
+                    modelList.add(faqListModel.getResponseData().get(i));
                 }
-                Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
-                i.putExtra("Flag", "Help");
-                i.putExtra("faqListModel", modelList);
-                startActivity(i);
             }
-        });
-
-        binding.llPlaylists.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                modelList.clear();
-                modelList = new ArrayList<>();
-                for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
-                    if (faqListModel.getResponseData().get(i).getCategory().contains("Playlist")) {
-                        modelList.add(faqListModel.getResponseData().get(i));
-                    }
-                }
-                Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
-                i.putExtra("Flag", "Playlist");
-                i.putExtra("faqListModel", modelList);
-                startActivity(i);
-            }
+            Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
+            i.putExtra("Flag", "Playlist");
+            i.putExtra("faqListModel", modelList);
+            startActivity(i);
         });
     }
 

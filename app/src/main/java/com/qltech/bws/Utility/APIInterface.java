@@ -432,12 +432,13 @@ public interface APIInterface {
     /* TODO ReminderDetailsActivity */
     @POST("getreminder")
     @FormUrlEncoded
-    Call<RemiderDetailsModel> getReminderStatus(@Field("UserID") String userID);
+    Call<RemiderDetailsModel> getGetReminderStatus(@Field("UserID") String userID);
 
     /* TODO ReminderActivity */
     @POST("reminderstatus")
     @FormUrlEncoded
     Call<ReminderStatusModel> getReminderStatus(@Field("UserID") String userID,
+                                                @Field("PlaylistId") String playlistId,
                                                 @Field("ReminderStatus") String reminderStatus);
 
     /* TODO SelectPlaylistActivity */

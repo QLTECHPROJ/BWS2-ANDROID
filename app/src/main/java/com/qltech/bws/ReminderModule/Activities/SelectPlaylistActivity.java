@@ -33,7 +33,7 @@ import retrofit2.Response;
 
 public class SelectPlaylistActivity extends AppCompatActivity {
     ActivitySelectPlaylistBinding binding;
-    String UserId;
+    String UserId, ComeFrom = "", PlaylistID = "", PlaylistName = "";
     Context ctx;
     Activity activity;
     SelectPlaylistAdapter adapter;
@@ -48,10 +48,19 @@ public class SelectPlaylistActivity extends AppCompatActivity {
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
 
+        if (getIntent().getExtras() != null) {
+            ComeFrom = getIntent().getStringExtra("ComeFrom");
+            PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
+            PlaylistName = getIntent().getStringExtra("PlaylistName");
+        }
+
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ctx, ReminderActivity.class);
+                i.putExtra("ComeFrom", "0");
+                i.putExtra("PlaylistID", PlaylistID);
+                i.putExtra("PlaylistName", PlaylistName);
                 startActivity(i);
                 finish();
             }
@@ -67,6 +76,9 @@ public class SelectPlaylistActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent i = new Intent(ctx, ReminderActivity.class);
+        i.putExtra("ComeFrom", "0");
+        i.putExtra("PlaylistID", PlaylistID);
+        i.putExtra("PlaylistName", PlaylistName);
         startActivity(i);
         finish();
     }

@@ -281,6 +281,7 @@ public class MyPlaylistsFragment extends Fragment {
                             @Override
                             public void onClick(View view) {
                                 Intent i = new Intent(getActivity(), ReminderActivity.class);
+                                i.putExtra("ComeFrom","1");
                                 i.putExtra("PlaylistID", PlaylistID);
                                 i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
                                 startActivity(i);

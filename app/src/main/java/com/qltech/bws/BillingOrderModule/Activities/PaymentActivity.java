@@ -25,13 +25,16 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Models.CardListModel;
 import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.BillingOrderModule.Models.PayNowDetailsModel;
+import com.qltech.bws.BillingOrderModule.Models.PlanListBillingModel;
 import com.qltech.bws.MembershipModule.Activities.OrderSummaryActivity;
+import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityPaymentBinding;
 import com.qltech.bws.databinding.CardsListLayoutBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -47,7 +50,10 @@ public class PaymentActivity extends AppCompatActivity {
     ActivityPaymentBinding binding;
     AllCardsAdapter adapter;
     Context context;
-    String userId;
+    String card_id, userId, TrialPeriod, comeFrom = "";
+    int position;
+    ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
+    private ArrayList<MembershipPlanListModel.Plan> listModelList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,14 +68,29 @@ public class PaymentActivity extends AppCompatActivity {
         binding.rvCardList.setLayoutManager(mLayoutManager);
         binding.rvCardList.setItemAnimator(new DefaultItemAnimator());
 
+        if (getIntent() != null) {
+            TrialPeriod = getIntent().getStringExtra("TrialPeriod");
+            position = getIntent().getIntExtra("position", 0);
+            if (getIntent().hasExtra("comeFrom")) {
+                comeFrom = getIntent().getStringExtra("comeFrom");
+                listModelList2 = getIntent().getParcelableArrayListExtra("PlanData");
+            } else {
+                listModelList = getIntent().getParcelableArrayListExtra("PlanData");
+            }
+        }
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent i = new Intent(context, OrderSummaryActivity.class);
-//                startActivity(i);
+                Intent i = new Intent(context, OrderSummaryActivity.class);
+                i.putExtra("comeFrom", "membership");
+                i.putParcelableArrayListExtra("PlanData", listModelList2);
+                i.putExtra("TrialPeriod", "");
+                i.putExtra("position", position);
+                startActivity(i);
                 finish();
             }
         });
+
 
         binding.llAddNewCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,18 +123,49 @@ public class PaymentActivity extends AppCompatActivity {
                             try {
                                 CardListModel cardListModel = response.body();
                                 if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-
-
                                     if (cardListModel.getResponseData().size() == 0) {
                                         binding.rvCardList.setAdapter(null);
                                         binding.rvCardList.setVisibility(View.GONE);
                                     } else {
                                         binding.rvCardList.setVisibility(View.VISIBLE);
-                                        adapter = new AllCardsAdapter(cardListModel.getResponseData(), userId, binding.ImgV,
+                                        adapter = new AllCardsAdapter(cardListModel.getResponseData(), binding.ImgV,
                                                 binding.progressBarHolder, binding.rvCardList);
                                         binding.rvCardList.setAdapter(adapter);
                                     }
 
+                                    binding.btnCheckout.setOnClickListener(view -> {
+                                        if (cardListModel.getResponseData().size() == 0) {
+                                            BWSApplication.showToast("Please enter card details", context);
+                                        } else {
+
+                                            if (BWSApplication.isNetworkConnected(context)) {
+                                                showProgressBar();
+                                                Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(userId, card_id, renewPlanId, renewPlanFlag,
+                                                        invoicePayId, PlanStatus);
+                                                listCall.enqueue(new Callback<PayNowDetailsModel>() {
+                                                    @Override
+                                                    public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
+                                                        if (response.isSuccessful()) {
+                                                            hideProgressBar();
+                                                            PayNowDetailsModel listModel1 = response.body();
+                                                            BWSApplication.showToast(listModel1.getResponseMessage(), context);
+                                                            Intent i = new Intent(context, BillingOrderActivity.class);
+                                                            startActivity(i);
+                                                            finish();
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<PayNowDetailsModel> call, Throwable t) {
+                                                        hideProgressBar();
+                                                    }
+                                                });
+                                            } else {
+                                                hideProgressBar();
+                                                BWSApplication.showToast(getString(R.string.no_server_found), context);
+                                            }
+                                        }
+                                    });
 
                                 } else {
                                     BWSApplication.showToast(cardListModel.getResponseMessage(), context);
@@ -140,16 +192,14 @@ public class PaymentActivity extends AppCompatActivity {
 
     public class AllCardsAdapter extends RecyclerView.Adapter<AllCardsAdapter.MyViewHolder> {
         private List<CardListModel.ResponseData> listModelList;
-        String card_id, userId;
         ImageView ImgV;
         FrameLayout progressBarHolder;
         RecyclerView rvCardList;
         AllCardsAdapter adapter;
 
-        public AllCardsAdapter(List<CardListModel.ResponseData> listModelList, String userId, ImageView ImgV,
+        public AllCardsAdapter(List<CardListModel.ResponseData> listModelList, ImageView ImgV,
                                FrameLayout progressBarHolder, RecyclerView rvCardList) {
             this.listModelList = listModelList;
-            this.userId = userId;
             this.ImgV = ImgV;
             this.progressBarHolder = progressBarHolder;
             this.rvCardList = rvCardList;
@@ -201,7 +251,7 @@ public class PaymentActivity extends AppCompatActivity {
                                         rvCardList.setVisibility(View.GONE);
                                     } else {
                                         rvCardList.setVisibility(View.VISIBLE);
-                                        adapter = new AllCardsAdapter(cardListModel.getResponseData(), userId, ImgV, progressBarHolder, rvCardList);
+                                        adapter = new AllCardsAdapter(cardListModel.getResponseData(), ImgV, progressBarHolder, rvCardList);
                                         rvCardList.setAdapter(adapter);
                                     }
                                 } else {
@@ -235,7 +285,7 @@ public class PaymentActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 CardModel cardModel = response.body();
                                 if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                    getCardList();
+                                    prepareCardList();
                                 } else {
                                     BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                 }
@@ -252,36 +302,6 @@ public class PaymentActivity extends AppCompatActivity {
                     hideProgressBar();
                 }
             });
-
-            binding.btnCheckout.setOnClickListener(view -> {
-
-                if (BWSApplication.isNetworkConnected(context)) {
-                    showProgressBar();
-                    Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(userId, card_id, renewPlanId, renewPlanFlag,
-                            invoicePayId, PlanStatus);
-                    listCall.enqueue(new Callback<PayNowDetailsModel>() {
-                        @Override
-                        public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
-                            if (response.isSuccessful()) {
-                                hideProgressBar();
-                                PayNowDetailsModel listModel1 = response.body();
-                                BWSApplication.showToast(listModel1.getResponseMessage(), context);
-                                Intent i = new Intent(context, BillingOrderActivity.class);
-                                startActivity(i);
-                                finish();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<PayNowDetailsModel> call, Throwable t) {
-                            hideProgressBar();
-                        }
-                    });
-                } else {
-                    hideProgressBar();
-                    BWSApplication.showToast(getString(R.string.no_server_found), context);
-                }
-            });
         }
 
         @Override
@@ -295,42 +315,6 @@ public class PaymentActivity extends AppCompatActivity {
             public MyViewHolder(CardsListLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
-            }
-        }
-
-        private void getCardList() {
-            if (BWSApplication.isNetworkConnected(context)) {
-                hideProgressBar();
-                Call<CardListModel> listCall = APIClient.getClient().getCardLists(userId);
-                listCall.enqueue(new Callback<CardListModel>() {
-                    @Override
-                    public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
-                        if (response.isSuccessful()) {
-                            hideProgressBar();
-                            CardListModel cardListModel = response.body();
-                            if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                if (cardListModel.getResponseData().size() == 0) {
-                                    rvCardList.setAdapter(null);
-                                    rvCardList.setVisibility(View.GONE);
-                                } else {
-                                    rvCardList.setVisibility(View.VISIBLE);
-                                    adapter = new AllCardsAdapter(cardListModel.getResponseData(), userId, ImgV, progressBarHolder, rvCardList);
-                                    rvCardList.setAdapter(adapter);
-                                }
-
-                            } else {
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<CardListModel> call, Throwable t) {
-                        hideProgressBar();
-                    }
-
-                });
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), context);
             }
         }
     }
@@ -359,8 +343,12 @@ public class PaymentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        Intent i = new Intent(PaymentActivity.this, OrderSummaryActivity.class);
-//        startActivity(i);
+        Intent i = new Intent(PaymentActivity.this, OrderSummaryActivity.class);
+        i.putExtra("comeFrom", "membership");
+        i.putParcelableArrayListExtra("PlanData", listModelList2);
+        i.putExtra("TrialPeriod", "");
+        i.putExtra("position", position);
+        startActivity(i);
         finish();
     }
 }

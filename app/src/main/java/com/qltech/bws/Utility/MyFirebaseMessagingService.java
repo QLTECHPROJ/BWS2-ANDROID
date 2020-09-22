@@ -1,4 +1,3 @@
-/*
 package com.qltech.bws.Utility;
 
 
@@ -20,26 +19,14 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.qltech.cunsumer.yupitapp.Activities.NavigationActivity;
-import com.qltech.cunsumer.yupitapp.Activities.RestaurantDetailActivity;
-import com.qltech.cunsumer.yupitapp.OrderModule.Activities.OrderStatusActivity;
-import com.qltech.cunsumer.yupitapp.OrderModule.Activities.RestaurantPlaceOrderActivity;
-import com.qltech.cunsumer.yupitapp.RefferalModule.Activities.ReferHistoryActivity;
-import com.qltech.cunsumer.yupitapp.RefferalModule.Activities.ShareAndEarnActivity;
-import com.qltech.cunsumer.yupitapp.RestaurantReviewModule.Activities.AddReviewActivity;
-import com.qltech.cunsumer.yupitapp.TableBookingModule.Activities.SuccessFulBookTableActivity;
-import com.segment.analytics.AnalyticsContext;
-import com.segment.analytics.Properties;
+import com.qltech.bws.DashboardModule.Activities.DashboardActivity;
+import com.qltech.bws.R;
 
 import java.util.Random;
-
-import io.fabric.sdk.android.Fabric;
-
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final String NOTIFICATION_CHANNEL_ID = "10001";
@@ -74,9 +61,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e(TAG, "Notification Body: " + remoteMessage.getNotification().getBody());
             title = remoteMessage.getNotification().getTitle();
             message = remoteMessage.getNotification().getBody();
-           */
-/* String flag = remoteMessage.getNotification().getBody();
-            String id = remoteMessage.getData().get("id");*//*
+ String flag = remoteMessage.getNotification().getBody();
+            String id = remoteMessage.getData().get("id");
 
 
             Log.e("bundle.....", "" + flag);
@@ -96,21 +82,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 id = remoteMessage.getData().get("id");
                 sendNotification(title, message, flag, id, String.valueOf(m));
             } catch (Exception e) {
-                Fabric.with(this, new Crashlytics());
-                Crashlytics.logException(e);
-                Crashlytics.log(e.toString());
                 Log.e(TAG, "Exception: " + e.getMessage());
             }
         }
-        Properties p = new Properties();
-        AnalyticsContext.Campaign campaign = new AnalyticsContext.Campaign();
-        campaign.putValue("id", id);
-        campaign.putName(title);
-        campaign.putContent(message);
-        campaign.putMedium("Push");
-        campaign.putSource("Admin");
-        p.putValue("campaign", campaign);
-        YupITApplication.addToSegment("Push Notification Received",p, CONSTANTS.track);
     }
 
     @Override
@@ -125,8 +99,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             token = FirebaseInstanceId.getInstance().getToken();
         }
         FirebaseMessaging.getInstance().subscribeToTopic("all");
-        SharedPreferences.Editor editor1 = getSharedPreferences(CONSTANTS.API_param_DeviceToken, MODE_PRIVATE).edit();
-        editor1.putString(CONSTANTS.API_param_DeviceToken, token); //Friend
+        SharedPreferences.Editor editor1 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit();
+        editor1.putString(CONSTANTS.Token, token); //Friend
         editor1.apply();
         editor1.commit();
         fcm_Tocken = token;
@@ -134,8 +108,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendRegistrationToServer(String token) {
-        SharedPreferences.Editor editor1 = getSharedPreferences(CONSTANTS.API_param_DeviceToken, MODE_PRIVATE).edit();
-        editor1.putString(CONSTANTS.API_param_DeviceToken, token); //Friend
+        SharedPreferences.Editor editor1 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit();
+        editor1.putString(CONSTANTS.Token, token); //Friend
         editor1.apply();
         editor1.commit();
         Log.e(TAGs, "sendRegistrationToServer: " + token.toString());
@@ -153,7 +127,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         try {
             if (flag != null && flag.equalsIgnoreCase("refer_friend")) {
-                resultIntent = new Intent(this, ShareAndEarnActivity.class);
+              /*  resultIntent = new Intent(this, ShareAndEarnActivity.class);
                 resultIntent.putExtra(CONSTANTS.back_flag, CONSTANTS.FLAG_ONE);
                 resultIntent.putExtra(CONSTANTS.refer_a_freind, CONSTANTS.FLAG_ONE);
                 resultIntent.putExtra(CONSTANTS.notification, "0");
@@ -161,9 +135,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 resultIntent.putExtra(CONSTANTS.message, message);
                 taskStackBuilder.addParentStack(NavigationActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase(CONSTANTS.refer_restaurant)) {
-                resultIntent = new Intent(this, ShareAndEarnActivity.class);
+                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);*/
+//            } else if (flag != null && flag.equalsIgnoreCase(CONSTANTS.refer_restaurant)) {
+               /* resultIntent = new Intent(this, ShareAndEarnActivity.class);
                 resultIntent.putExtra(CONSTANTS.back_flag, CONSTANTS.FLAG_ONE);
                 resultIntent.putExtra(CONSTANTS.refer_a_freind, CONSTANTS.FLAG_TWO);
                 resultIntent.putExtra(CONSTANTS.notification, "0");
@@ -171,150 +145,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 resultIntent.putExtra(CONSTANTS.message, message);
                 taskStackBuilder.addParentStack(NavigationActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("RestaurantDetails")) {
-                resultIntent = new Intent(this, RestaurantDetailActivity.class);
-                resultIntent.putExtra(CONSTANTS.restaurant_id, id);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("refer_yupit_restaurant")) {
-                resultIntent = new Intent(this, ShareAndEarnActivity.class);
-                resultIntent.putExtra(CONSTANTS.back_flag, CONSTANTS.FLAG_ONE);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                resultIntent.putExtra(CONSTANTS.refer_a_freind, CONSTANTS.FLAG_THREE);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("Order")) {
-                resultIntent = new Intent(this, OrderStatusActivity.class);
-                resultIntent.putExtra(CONSTANTS.PREF_KEY_orderid, id);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                resultIntent.putExtra(CONSTANTS.order_status, CONSTANTS.FLAG_ONE);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("Cart")) {
-                resultIntent = new Intent(this, RestaurantPlaceOrderActivity.class);
-                resultIntent.putExtra(CONSTANTS.PREF_KEY_cart_id, id);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                resultIntent.putExtra(CONSTANTS.clearcart, CONSTANTS.FLAG_FIVE);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("Soldout")) {
-                resultIntent = new Intent(this, RestaurantPlaceOrderActivity.class);
-                resultIntent.putExtra(CONSTANTS.PREF_KEY_orderid, id);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                resultIntent.putExtra(CONSTANTS.clearcart, CONSTANTS.FLAG_FIVE);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("Booking")) {
-                resultIntent = new Intent(this, SuccessFulBookTableActivity.class);
-                resultIntent.putExtra(CONSTANTS.booking_id, id);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("gift")) {
-                resultIntent = new Intent(this, NavigationActivity.class);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("signup")) {
-                resultIntent = new Intent(this, NavigationActivity.class);
-                resultIntent.putExtra(CONSTANTS.PREF_KEY_orderid, id);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase(getString(R.string.review))) {
-                resultIntent = new Intent(this, NavigationActivity.class);
-                resultIntent.putExtra(CONSTANTS.restaurant_id, id);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("feedback")) {
-                resultIntent = new Intent(this, NavigationActivity.class);
-                resultIntent.putExtra(CONSTANTS.PREF_KEY_orderid, id);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("Refer_History")) {
-                resultIntent = new Intent(this, ShareAndEarnActivity.class);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("Refer_History_Restaurant")) {
-                resultIntent = new Intent(this, ReferHistoryActivity.class);
-                resultIntent.putExtra(CONSTANTS.refer_restaurant, "1");
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                resultIntent.putExtra("navigate_screen", "share_earn_history");
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("Review")) {
-                resultIntent = new Intent(this, AddReviewActivity.class);
-                resultIntent.putExtra(CONSTANTS.restaurant_id, id);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("Skip_Cart")) {
-                resultIntent = new Intent(this, RestaurantPlaceOrderActivity.class);
-                resultIntent.putExtra(CONSTANTS.PREF_KEY_cart_id, id);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else if (flag != null && flag.equalsIgnoreCase("Skip_Home")) {
-                resultIntent = new Intent(this, NavigationActivity.class);
-                resultIntent.putExtra(CONSTANTS.PREF_KEY_cart_id, id);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } else {
-                resultIntent = new Intent(this, NavigationActivity.class);
+                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);*/
+            }
+            else {
+                resultIntent = new Intent(this, DashboardActivity.class);
 //                resultIntent.putExtra(CONSTANTS.flag, flag);
 //                resultIntent.putExtra(CONSTANTS.id, id);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
+                taskStackBuilder.addParentStack(DashboardActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                 resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
             }
@@ -339,42 +176,35 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 }
             }
 
-            notificationBuilder.setSmallIcon(R.drawable.yupit_tranparent_icon);
+            notificationBuilder.setSmallIcon(R.drawable.square_app_icon);
             notificationBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
             notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             notificationBuilder.setContentTitle(title);
-           */
-/* notificationBuilder.setDefaults(Notification.FLAG_INSISTENT |
+ notificationBuilder.setDefaults(Notification.FLAG_INSISTENT |
                     Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND |
-                    Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL);*//*
+                    Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL);
 
             notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
             notificationBuilder.setContentText(message);
-            notificationBuilder.setColor(getResources().getColor(R.color.darkorange));
+            notificationBuilder.setColor(getResources().getColor(R.color.blue));
             notificationBuilder.setAutoCancel(true);
             notificationBuilder.setSound(defaultSoundUri);
             notificationBuilder.setChannelId(channelId);
             notificationBuilder.setContentIntent(resultPendingIntent);
 
             Notification notification = notificationBuilder.build();
-            */
-/*notification.flags = Notification.FLAG_INSISTENT;
+notification.flags = Notification.FLAG_INSISTENT;
             notification.flags = Notification.DEFAULT_VIBRATE;
             notification.flags = Notification.DEFAULT_SOUND;
             notification.flags = Notification.DEFAULT_LIGHTS;
-            notification.flags = Notification.FLAG_AUTO_CANCEL;*//*
+            notification.flags = Notification.FLAG_AUTO_CANCEL;
 
             if (notificationManager != null) {
                 notificationManager.notify(Integer.parseInt(m), notification);
             }
-
         } catch (Exception e) {
-            Crashlytics.logException(e);
-            Crashlytics.log(e.toString());
             e.printStackTrace();
             Toast.makeText(context, e.getMessage() + channelId, Toast.LENGTH_SHORT).show();
         }
     }
-
 }
-*/

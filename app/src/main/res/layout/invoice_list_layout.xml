@@ -37,17 +37,17 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_semi_bold"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="@dimen/_11sdp" />
 
                     <TextView
                         android:id="@+id/tvTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_4sdp"
+                        android:textAllCaps="true"
                         android:fontFamily="@font/montserrat_semi_bold"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_18sdp" />
-
+                        android:textSize="@dimen/_15sdp" />
 
                 </LinearLayout>
 

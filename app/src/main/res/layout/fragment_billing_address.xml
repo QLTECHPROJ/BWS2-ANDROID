@@ -103,7 +103,6 @@
                                     android:fontFamily="@font/montserrat_medium"
                                     android:hint="@string/Email_Address"
                                     android:inputType="textEmailAddress"
-                                    android:maxLength="25"
                                     android:imeOptions="actionNext"
                                     android:nextFocusDown="@id/etMobileNumber"
                                     android:maxLines="1"

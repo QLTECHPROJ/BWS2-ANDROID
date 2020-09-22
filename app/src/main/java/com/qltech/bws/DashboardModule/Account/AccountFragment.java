@@ -58,6 +58,7 @@ public class AccountFragment extends Fragment {
     String UserID;
     private long mLastClickTime = 0;
     public static String IsLock = "";
+    public static int ComeScreenReminder = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -126,6 +127,7 @@ public class AccountFragment extends Fragment {
         });
 
         binding.llReminder.setOnClickListener(view16 -> {
+            ComeScreenReminder = 1;
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
             }

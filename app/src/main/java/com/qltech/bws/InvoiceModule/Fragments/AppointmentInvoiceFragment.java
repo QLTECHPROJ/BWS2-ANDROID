@@ -123,12 +123,12 @@ public class AppointmentInvoiceFragment extends Fragment {
                 }
             });
 
+            holder.binding.llDownloads.setVisibility(View.GONE);
             holder.binding.llDownloads.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     downloadUrl = listModelList.get(position).getInvoicePdf();
                     new FileDownloader();
-
                 }
             });
         }

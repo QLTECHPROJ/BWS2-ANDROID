@@ -88,7 +88,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(OrderSummaryActivity.this, PaymentActivity.class);
                 i.putExtra("comeFrom", "membership");
-                i.putParcelableArrayListExtra("PlanData", listModelList);
+                i.putParcelableArrayListExtra("PlanData", listModelList2);
                 i.putExtra("TrialPeriod", "");
                 i.putExtra("position", position);
                 startActivity(i);

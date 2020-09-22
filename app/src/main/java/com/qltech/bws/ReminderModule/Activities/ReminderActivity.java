@@ -5,10 +5,10 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.R;
-import com.qltech.bws.ReminderModule.Models.ReminderStatusModel;
 import com.qltech.bws.ReminderModule.Models.SetReminderModel;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -35,13 +34,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Account.AccountFragment.ComeScreenReminder;
+
 public class ReminderActivity extends AppCompatActivity {
     private int mHour, mMinute;
     ActivityReminderBinding binding;
     String am_pm, hourString, minuteSting;
     Activity activity;
     Context context;
-    String UserId, ReminderStatus = "", reminderDay, PlaylistID = "", PlaylistName = "", reminderDayNo = "";
+    String UserId, ReminderStatus = "", PlaylistID = "", PlaylistName = "", reminderDayNo = "", ComeFrom = "";
     List<String> reminderDayList;
     ArrayList<String> remiderDays = new ArrayList<>();
 
@@ -70,11 +71,20 @@ public class ReminderActivity extends AppCompatActivity {
         binding.rvReminderDay.setAdapter(reminderDayAdapter);
 
         if (getIntent().getExtras() != null) {
+            ComeFrom = getIntent().getStringExtra("ComeFrom");
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
             PlaylistName = getIntent().getStringExtra("PlaylistName");
         }
 
-        binding.llBack.setOnClickListener(view -> finish());
+        binding.llBack.setOnClickListener(view -> {
+            if (ComeScreenReminder == 1) {
+                Intent i = new Intent(context, ReminderDetailsActivity.class);
+                startActivity(i);
+                finish();
+            } else {
+                finish();
+            }
+        });
 
         if (PlaylistName.equalsIgnoreCase("") ||
                 PlaylistName == null) {
@@ -117,86 +127,68 @@ public class ReminderActivity extends AppCompatActivity {
             timePickerDialog.show();
         });
 
-        binding.llSelectPlaylist.setOnClickListener(view -> {
-            Intent i = new Intent(ReminderActivity.this, SelectPlaylistActivity.class);
-            startActivity(i);
-            finish();
-        });
+        if (ComeFrom.equalsIgnoreCase("0")) {
+            binding.ivArrow.setVisibility(View.VISIBLE);
+            binding.llSelectPlaylist.setOnClickListener(view -> {
+                Intent i = new Intent(ReminderActivity.this, SelectPlaylistActivity.class);
+                i.putExtra("ComeFrom", ComeFrom);
+                i.putExtra("PlaylistID", PlaylistID);
+                i.putExtra("PlaylistName", PlaylistName);
+                startActivity(i);
+                finish();
+            });
+        } else if (ComeFrom.equalsIgnoreCase("1")) {
+            binding.ivArrow.setVisibility(View.GONE);
+        }
 
-        binding.switchStatus.setOnCheckedChangeListener((compoundButton, checked) -> {
-            if (checked) {
-                prepareData("1");
-            } else {
-                prepareData("0");
-            }
-        });
-
+//        TextUtils.join(",", remiderDays)
         binding.btnSave.setOnClickListener(view -> {
-            if (BWSApplication.isNetworkConnected(context)) {
-                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                Call<SetReminderModel> listCall = APIClient.getClient().SetReminder(PlaylistID, UserId, CONSTANTS.FLAG_ONE,
-                        binding.tvTime.getText().toString(), TextUtils.join(",", remiderDays));
-                listCall.enqueue(new Callback<SetReminderModel>() {
-                    @Override
-                    public void onResponse(Call<SetReminderModel> call, Response<SetReminderModel> response) {
-                        if (response.isSuccessful()) {
-                            Log.e("dataaaaaaaa", TextUtils.join(",", remiderDays));
-                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                            SetReminderModel listModel = response.body();
-                            BWSApplication.showToast(listModel.getResponseMessage(), activity);
-                            Intent i = new Intent(context, ReminderDetailsActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<SetReminderModel> call, Throwable t) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                    }
-                });
+            if (PlaylistName.equalsIgnoreCase("")) {
+                BWSApplication.showToast("Please select playlist name", context);
             } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), context);
+                if (BWSApplication.isNetworkConnected(context)) {
+                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    Call<SetReminderModel> listCall = APIClient.getClient().SetReminder(PlaylistID, UserId, CONSTANTS.FLAG_ONE,
+                            binding.tvTime.getText().toString(), reminderDayNo);
+                    listCall.enqueue(new Callback<SetReminderModel>() {
+                        @Override
+                        public void onResponse(Call<SetReminderModel> call, Response<SetReminderModel> response) {
+                            if (response.isSuccessful()) {
+                                remiderDays.clear();
+                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                SetReminderModel listModel = response.body();
+                                BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                                Intent i = new Intent(context, ReminderDetailsActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<SetReminderModel> call, Throwable t) {
+                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        }
+                    });
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), context);
+                }
             }
         });
     }
 
     @Override
     public void onBackPressed() {
-        finish();
-    }
-
-    private void prepareData(String reminderStatus) {
-        if (BWSApplication.isNetworkConnected(context)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserId, reminderStatus);
-            listCall.enqueue(new Callback<ReminderStatusModel>() {
-                @Override
-                public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                        ReminderStatusModel listModel = response.body();
-                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_ReminderStatus, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        editor.putString(CONSTANTS.PREF_KEY_ReminderStatus, reminderStatus);
-                        editor.commit();
-                        binding.tvTime.setText(listModel.getResponseData().get(0).getTime());
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ReminderStatusModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                }
-            });
+        if (ComeScreenReminder == 1) {
+            Intent i = new Intent(context, ReminderDetailsActivity.class);
+            startActivity(i);
+            finish();
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), context);
+            finish();
         }
     }
 
     public class ReminderDayAdapter extends RecyclerView.Adapter<ReminderDayAdapter.MyViewHolder> {
-        private boolean checked;
+        private int row_index = -1, pos = 0;
 
         public ReminderDayAdapter() {
         }
@@ -210,16 +202,32 @@ public class ReminderActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ReminderDayAdapter.MyViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ReminderDayAdapter.MyViewHolder holder, final int position) {
             holder.binding.tvday.setText(reminderDayList.get(position));
-
-
-//            remiderDays.remove(String.valueOf(position));
-
+            if (position == 1) {
+                ChangeFunction(holder, position, 1);
+            } else {
+                ChangeFunction(holder, position, 0);
+            }
             holder.binding.llMainDay.setOnClickListener(view -> {
+                row_index = position;
+                pos++;
+                notifyDataSetChanged();
+            });
+
+            if (row_index == position) {
+                ChangeFunction(holder, position, 1);
+            } else {
+                if (position == 1 && pos == 0) {
+                    ChangeFunction(holder, position, 1);
+                } else {
+                    ChangeFunction(holder, position, 0);
+                }
+            }
+
+           /* holder.binding.llMainDay.setOnClickListener(view -> {
                 holder.binding.tvday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
                 holder.binding.tvday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
-
                 if (remiderDays.size() != 0) {
                     if (remiderDays.contains(String.valueOf(position))) {
                         remiderDays.add(String.valueOf(position));
@@ -229,46 +237,45 @@ public class ReminderActivity extends AppCompatActivity {
                         holder.binding.tvday.setTextColor(context.getResources().getColor(R.color.dark_blue_gray));
                         holder.binding.tvday.setBackground(context.getResources().getDrawable(R.drawable.transparent_bg));
                     }
+                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
+                    Log.e("position", String.valueOf(position));
                 }
-                Log.e("remiderDays", TextUtils.join(",", remiderDays));
-                Log.e("position", String.valueOf(position));
-            });
+            });*/
         }
 
         private void ChangeFunction(MyViewHolder holder, int position, int day) {
-            switch (position) {
-                case 0:
-                    reminderDay = "Sunday";
-                    reminderDayNo = "7";
-                    break;
-                case 1:
-                    reminderDay = "Monday";
-                    reminderDayNo = "1";
-                    break;
-                case 2:
-                    reminderDay = "Tuesday";
-                    reminderDayNo = "2";
-                    break;
-                case 3:
-                    reminderDay = "Wednesday";
-                    reminderDayNo = "3";
-                    break;
-                case 4:
-                    reminderDay = "Thursday";
-                    reminderDayNo = "4";
-                    break;
-                case 5:
-                    reminderDay = "Friday";
-                    reminderDayNo = "5";
-                    break;
-                case 6:
-                    reminderDay = "Saturday";
-                    reminderDayNo = "6";
-                    break;
-                default:
-                    reminderDay = "Monday";
-                    reminderDayNo = "1";
-                    break;
+            if (day == 1) {
+                holder.binding.tvday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
+                holder.binding.tvday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
+                switch (position) {
+                    case 0:
+                        reminderDayNo = "0";
+                        break;
+                    case 1:
+                        reminderDayNo = "1";
+                        break;
+                    case 2:
+                        reminderDayNo = "2";
+                        break;
+                    case 3:
+                        reminderDayNo = "3";
+                        break;
+                    case 4:
+                        reminderDayNo = "4";
+                        break;
+                    case 5:
+                        reminderDayNo = "5";
+                        break;
+                    case 6:
+                        reminderDayNo = "6";
+                        break;
+                    default:
+                        reminderDayNo = "1";
+                        break;
+                }
+            } else {
+                holder.binding.tvday.setTextColor(context.getResources().getColor(R.color.dark_blue_gray));
+                holder.binding.tvday.setBackground(context.getResources().getDrawable(R.drawable.transparent_bg));
             }
         }
 
