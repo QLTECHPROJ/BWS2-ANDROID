@@ -122,11 +122,11 @@ public class AptAudioFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             AppointmentDetailModel.Audio audiolist = listModelList.get(position);
             holder.binding.tvTitle.setText(audiolist.getName());
-            if (audiolist.getAudioDescription().equalsIgnoreCase("")) {
+            if (audiolist.getAudioDirection().equalsIgnoreCase("")) {
                 holder.binding.tvTime.setVisibility(View.GONE);
             } else {
                 holder.binding.tvTime.setVisibility(View.VISIBLE);
-                holder.binding.tvTime.setText(audiolist.getAudioDescription());
+                holder.binding.tvTime.setText(audiolist.getAudioDirection());
             }
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
