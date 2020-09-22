@@ -89,6 +89,16 @@ public class CurrentPlanFragment extends Fragment {
             startActivity(i);
             getActivity().finish();
         });
+        binding.btnPayNow.setVisibility(View.VISIBLE);
+        binding.btnPayNow.setOnClickListener(view1 -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+            startActivity(i);
+            getActivity().finish();
+        });
         return view;
     }
 

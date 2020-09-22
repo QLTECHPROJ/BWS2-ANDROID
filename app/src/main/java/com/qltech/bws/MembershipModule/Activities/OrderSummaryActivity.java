@@ -13,6 +13,7 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.qltech.bws.BillingOrderModule.Activities.PaymentActivity;
 import com.qltech.bws.BillingOrderModule.Models.PlanListBillingModel;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
@@ -27,7 +28,6 @@ public class OrderSummaryActivity extends AppCompatActivity {
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
     int position;
-    public static int BtnVisible = 0;
     private long mLastClickTime = 0;
 
     @Override
@@ -82,13 +82,15 @@ public class OrderSummaryActivity extends AppCompatActivity {
 
         binding.btnCheckout.setOnClickListener(view -> {
             if (!comeFrom.equalsIgnoreCase("")) {
-                BtnVisible = 1;
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                     return;
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(OrderSummaryActivity.this, BillingOrderActivity.class);
-                i.putExtra("payment", 1);
+                Intent i = new Intent(OrderSummaryActivity.this, PaymentActivity.class);
+                i.putExtra("comeFrom", "membership");
+                i.putParcelableArrayListExtra("PlanData", listModelList);
+                i.putExtra("TrialPeriod", "");
+                i.putExtra("position", position);
                 startActivity(i);
                 finish();
             } else {

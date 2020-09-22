@@ -123,6 +123,7 @@
     <string name="Close">Close</string>
     <string name="Description">Description</string>
     <string name="Resource">Resource</string>
+    <string name="Resources">Resources</string>
     <string name="Select_reason">Select reason</string>
     <string name="logout_quotes">Are you sure you want to log out Brain Wellness Spa?</string>
     <string name="Discover_More">Discover More</string>
@@ -187,4 +188,5 @@
     <string name="Proceed_to_plan">Proceed to plan</string>
     <string name="Select_Playlist">Select Playlist</string>
     <string name="Add_New_Reminder">Add New Reminder</string>
+    <string name="Payment">Payment</string>
 </resources>

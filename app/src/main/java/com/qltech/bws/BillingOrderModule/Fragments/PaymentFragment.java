@@ -29,15 +29,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
-import static com.qltech.bws.MembershipModule.Activities.OrderSummaryActivity.BtnVisible;
-
 public class PaymentFragment extends Fragment {
     static Context context;
     FragmentPaymentBinding binding;
     AllCardAdapter adapter;
     String userId;
-    public static int ComePayment = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,11 +80,6 @@ public class PaymentFragment extends Fragment {
                             try {
                                 CardListModel cardListModel = response.body();
                                 if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                    if (BtnVisible == 1) {
-                                        binding.btnCheckout.setVisibility(View.VISIBLE);
-                                    } else {
-                                        binding.btnCheckout.setVisibility(View.GONE);
-                                    }
 
                                     if (cardListModel.getResponseData().size() == 0) {
                                         binding.rvCardList.setAdapter(null);
@@ -96,7 +87,7 @@ public class PaymentFragment extends Fragment {
                                     } else {
                                         binding.rvCardList.setVisibility(View.VISIBLE);
                                         adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.ImgV,
-                                                binding.progressBarHolder, binding.rvCardList, binding.btnCheckout);
+                                                binding.progressBarHolder, binding.rvCardList);
                                         binding.rvCardList.setAdapter(adapter);
                                     }
 

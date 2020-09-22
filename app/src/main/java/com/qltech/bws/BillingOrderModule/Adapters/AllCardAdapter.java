@@ -46,17 +46,15 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
     FrameLayout progressBarHolder;
     RecyclerView rvCardList;
     AllCardAdapter adapter;
-    Button btnCheckout;
 
     public AllCardAdapter(List<CardListModel.ResponseData> listModelList, FragmentActivity activity, String userId, ImageView ImgV,
-                          FrameLayout progressBarHolder, RecyclerView rvCardList, Button btnCheckout) {
+                          FrameLayout progressBarHolder, RecyclerView rvCardList) {
         this.listModelList = listModelList;
         this.activity = activity;
         this.userId = userId;
         this.ImgV = ImgV;
         this.progressBarHolder = progressBarHolder;
         this.rvCardList = rvCardList;
-        this.btnCheckout = btnCheckout;
     }
 
     @Override
@@ -105,7 +103,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                                     rvCardList.setVisibility(View.GONE);
                                 } else {
                                     rvCardList.setVisibility(View.VISIBLE);
-                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList, btnCheckout);
+                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList);
                                     rvCardList.setAdapter(adapter);
                                 }
                             } else {
@@ -156,34 +154,6 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                 BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
             }
         });
-
-        btnCheckout.setOnClickListener(view -> {
-            if (BWSApplication.isNetworkConnected(activity)) {
-                BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
-                Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(userId, card_id, renewPlanId, renewPlanFlag,
-                        invoicePayId, PlanStatus);
-                listCall.enqueue(new Callback<PayNowDetailsModel>() {
-                    @Override
-                    public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
-                            PayNowDetailsModel listModel1 = response.body();
-                            BWSApplication.showToast(listModel1.getResponseMessage(), activity);
-                            Intent i = new Intent(activity, BillingOrderActivity.class);
-                            activity.startActivity(i);
-                            activity.finish();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<PayNowDetailsModel> call, Throwable t) {
-                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
-                    }
-                });
-            } else {
-                BWSApplication.showToast(activity.getString(R.string.no_server_found), activity);
-            }
-        });
     }
 
     @Override
@@ -216,7 +186,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                                 rvCardList.setVisibility(View.GONE);
                             } else {
                                 rvCardList.setVisibility(View.VISIBLE);
-                                adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList, btnCheckout);
+                                adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList);
                                 rvCardList.setAdapter(adapter);
                             }
 

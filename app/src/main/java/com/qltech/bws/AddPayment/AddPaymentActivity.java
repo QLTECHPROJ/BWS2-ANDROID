@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.qltech.bws.AddPayment.Model.AddCardModel;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
+import com.qltech.bws.BillingOrderModule.Activities.PaymentActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -70,6 +71,10 @@ public class AddPaymentActivity extends AppCompatActivity {
                 if (ComePayment.equalsIgnoreCase("1")) {
                     Intent i = new Intent(context, BillingOrderActivity.class);
                     i.putExtra("payment", 1);
+                    startActivity(i);
+                    finish();
+                } else if (ComePayment.equalsIgnoreCase("2")) {
+                    Intent i = new Intent(context, PaymentActivity.class);
                     startActivity(i);
                     finish();
                 } else {
@@ -303,6 +308,10 @@ public class AddPaymentActivity extends AppCompatActivity {
         if (ComePayment.equalsIgnoreCase("1")) {
             Intent i = new Intent(AddPaymentActivity.this, BillingOrderActivity.class);
             i.putExtra("payment", 1);
+            startActivity(i);
+            finish();
+        } else if (ComePayment.equalsIgnoreCase("2")) {
+            Intent i = new Intent(context, PaymentActivity.class);
             startActivity(i);
             finish();
         } else {

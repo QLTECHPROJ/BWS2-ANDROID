@@ -2,6 +2,7 @@
 <layout>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,10 +14,43 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_30sdp">
 
+            <RelativeLayout
+                android:id="@+id/rlLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_56sdp">
+
+                <LinearLayout
+                    android:id="@+id/llBack"
+                    android:layout_width="42dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_left_arrow_icon"
+                        app:tint="@color/black" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center"
+                    android:text="@string/Payment"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp" />
+
+            </RelativeLayout>
+
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:overScrollMode="never">
+                android:overScrollMode="never"
+                android:layout_below="@id/rlLayout">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -95,6 +129,22 @@
 
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
+
+            <Button
+                android:id="@+id/btnCheckout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="@dimen/_30sdp"
+                android:background="@drawable/extra_round_cornor"
+                android:fontFamily="@font/montserrat_bold"
+                android:paddingHorizontal="@dimen/_55sdp"
+                android:paddingVertical="@dimen/_4sdp"
+                android:text="@string/Proceed_to_plan"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sdp"
+                android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/ImgV"
