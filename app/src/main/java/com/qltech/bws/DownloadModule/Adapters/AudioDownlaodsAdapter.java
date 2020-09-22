@@ -2,13 +2,15 @@ package com.qltech.bws.DownloadModule.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -21,47 +23,44 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
-import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
-import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
-import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.RoomDataBase.DatabaseClient;
+import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.DownloadsLayoutBinding;
 
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
-import static com.qltech.bws.Utility.MusicService.play;
-import static com.qltech.bws.Utility.MusicService.playMedia;
+import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
-    private ArrayList<DownloadlistModel.Audio> listModelList;
     FragmentActivity ctx;
     String UserID;
     FrameLayout progressBarHolder;
     ImageView ImgV;
+    LinearLayout llError;
+    RecyclerView rvDownloadsList;
+    private List<DownloadAudioDetails> listModelList;
+    TextView tvFound;
 
-    public AudioDownlaodsAdapter(ArrayList<DownloadlistModel.Audio> listModelList, FragmentActivity ctx, String UserID,
-                                 FrameLayout progressBarHolder, ImageView ImgV) {
+    public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, String UserID,
+                                 FrameLayout progressBarHolder, ImageView ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.UserID = UserID;
         this.progressBarHolder = progressBarHolder;
         this.ImgV = ImgV;
+        this.llError = llError;
+        this.rvDownloadsList = rvDownloadsList;
+        this.tvFound = tvFound;
     }
 
     @NonNull
@@ -88,11 +87,11 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
-                    if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-             /*           DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
+                if (IsLock.equalsIgnoreCase("1")) {
+//                    if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                /*        DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
                         try {
-                            FileDescriptor fileDescriptor =  FileUtils.getTempFileDescriptor(ctx.getApplicationContext(), downloadMedia.decrypt(listModelList.get(position).getName()));
+                            FileDescriptor fileDescriptor = FileUtils.getTempFileDescriptor(ctx.getApplicationContext(), downloadMedia.decrypt(listModelList.get(position).getName()));
                             play(Uri.parse(String.valueOf(fileDescriptor)));
                             playMedia();
 
@@ -128,23 +127,22 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                            || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                    }
+//                    } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+//                            || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+//                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+//                    }
 
-                } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
-                        || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
-                 /*   DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
+                } else if (IsLock.equalsIgnoreCase("0")||IsLock.equalsIgnoreCase("")) {
+              /*      DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
                     try {
-                        FileDescriptor fileDescriptor =  FileUtils.getTempFileDescriptor(ctx.getApplicationContext(), downloadMedia.decrypt(listModelList.get(position).getName()));
-                        play(Uri.parse(String.valueOf(fileDescriptor)));
+                        FileDescriptor fileDescriptor = FileUtils.getTempFileDescriptor(ctx.getApplicationContext(), downloadMedia.decrypt(listModelList.get(position).getName()));
+                        play2(fileDescriptor);
                         playMedia();
 
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }*/
-
+                    }
+*/
                     try {
                         player = 1;
                         if (isPrepare || isMediaStart || isPause) {
@@ -180,9 +178,11 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String AudioID = listModelList.get(position).getAudioID();
-                String PlaylistID = listModelList.get(position).getPlaylistId();
-                if (BWSApplication.isNetworkConnected(ctx)) {
+                String AudioFile = listModelList.get(position).getAudioFile();
+                String AudioName = listModelList.get(position).getName();
+                String PlaylistID = "";
+                deleteDownloadFile(ctx.getApplicationContext(),AudioFile,AudioName,position);
+                /*if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
                     Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioID, PlaylistID);
                     listCall.enqueue(new Callback<SucessModel>() {
@@ -202,9 +202,50 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     });
                 } else {
                     BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                }
+                }*/
             }
         });
+    }
+
+    private void deleteDownloadFile(Context applicationContext, String audioFile, String audioName, int position) {
+         FileUtils.getFilePath(applicationContext,audioName);
+
+        class DeleteMedia extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient.getInstance(applicationContext)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deleteByAudioFile(audioFile);
+
+                return null;
+            }
+
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                listModelList = BWSApplication.GetAllMedia(ctx);
+                notifyItemRemoved(position);
+                if (listModelList.size() != 0) {
+                    if (listModelList.size() == 0) {
+                        tvFound.setVisibility(View.VISIBLE);
+                    } else {
+                        llError.setVisibility(View.GONE);
+                        AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(listModelList,ctx, UserID, progressBarHolder, ImgV,llError,rvDownloadsList,tvFound);
+                        rvDownloadsList.setAdapter(adapter);
+                    }                    llError.setVisibility(View.GONE);
+                    rvDownloadsList.setVisibility(View.VISIBLE);
+                } else {
+                    llError.setVisibility(View.VISIBLE);
+                    rvDownloadsList.setVisibility(View.GONE);
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        DeleteMedia st = new DeleteMedia();
+        st.execute();
     }
 
     private void hideProgressBar() {

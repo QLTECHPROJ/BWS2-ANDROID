@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.qltech.bws.RoomDataBase.DatabaseClient;
+import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.CryptLib;
 import com.qltech.bws.Utility.MeasureRatio;
 
@@ -36,7 +39,7 @@ import static java.sql.DriverManager.println;
 public class BWSApplication extends Application {
     private static Context mContext;
     private static BWSApplication BWSApplication;
-
+    private static List<DownloadAudioDetails> downloadAudioDetailsList;
     public static Context getContext() {
         return mContext;
     }
@@ -69,6 +72,59 @@ public class BWSApplication extends Application {
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
         toast.setView(view);
         toast.show();
+    }
+    public static List<DownloadAudioDetails> GetMedia(String id,Context ctx) {
+
+        downloadAudioDetailsList = new ArrayList<>();
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                downloadAudioDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getLastIdByuId(id);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+            }
+        }
+
+        GetMedia st = new GetMedia();
+        st.execute();
+        return downloadAudioDetailsList;
+    }
+    public static List<DownloadAudioDetails> GetAllMedia(Context ctx) {
+
+        class GetTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                downloadAudioDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllData();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+            }
+        }
+
+        GetTask st = new GetTask();
+        st.execute();
+        return downloadAudioDetailsList;
     }
 
     public static synchronized BWSApplication getInstance() {

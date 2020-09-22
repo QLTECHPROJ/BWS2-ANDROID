@@ -43,6 +43,7 @@ public class AudioFragment extends Fragment {
     public static boolean exit = false;
     FragmentAudioBinding binding;
     String UserID, AudioFlag;
+    public static String IsLock="";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -163,6 +164,7 @@ public class AudioFragment extends Fragment {
                 if (listModelList.get(position).getView().equalsIgnoreCase("My Downloads")) {
                     RecommendedAdapter myDownloadsAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
                             listModelList.get(position).getIsLock());
+                    IsLock = listModelList.get(position).getIsLock();
                     RecyclerView.LayoutManager myDownloads = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(myDownloads);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());

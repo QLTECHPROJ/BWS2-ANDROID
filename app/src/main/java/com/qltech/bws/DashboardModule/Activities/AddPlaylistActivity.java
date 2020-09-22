@@ -67,7 +67,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                comefrom_search = 1;
+                comefrom_search = 0;
                 finish();
             }
         });
@@ -136,7 +136,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        comefrom_search = 1;
+        comefrom_search = 0;
         finish();
     }
 

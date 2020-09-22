@@ -16,7 +16,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import static com.qltech.bws.Utility.CONSTANTS.DIR_NAME;
 import static com.qltech.bws.Utility.CONSTANTS.TEMP_FILE_NAME;
 
 public class FileUtils {
@@ -74,7 +73,7 @@ public class FileUtils {
     }
 
     public static final String getDirPath(Context context) {
-        return context.getDir(DIR_NAME, Context.MODE_PRIVATE).getAbsolutePath();
+        return context.getDir("Audio", Context.MODE_PRIVATE).getAbsolutePath();
     }
 
     public static final String getFilePath(Context context,String FILE_NAME) {

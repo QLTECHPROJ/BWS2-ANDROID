@@ -31,7 +31,10 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
+import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
+import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.ItemMoveCallback;
@@ -39,10 +42,13 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityViewQueueBinding;
 import com.qltech.bws.databinding.QueueListLayoutBinding;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import retrofit2.Call;
@@ -61,6 +67,7 @@ import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
 import static com.qltech.bws.Utility.MusicService.play;
+import static com.qltech.bws.Utility.MusicService.play2;
 import static com.qltech.bws.Utility.MusicService.playMedia;
 import static com.qltech.bws.Utility.MusicService.progressToTimer;
 import static com.qltech.bws.Utility.MusicService.resumeMedia;
@@ -70,7 +77,7 @@ import static com.qltech.bws.Utility.MusicService.stopMedia;
 public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener*/ {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
-    String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "";
+    String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "",url,name;
     Context ctx;
     Activity activity;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -79,6 +86,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     Boolean queuePlay, audioPlay;
     QueueAdapter adapter;
     private long mLastClickTime = 0;
+    List<DownloadAudioDetails> downloadAudioDetailsList;
     private Handler handler;
     //    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -118,6 +126,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         ctx = ViewQueueActivity.this;
         activity = ViewQueueActivity.this;
 
+        downloadAudioDetailsList = new ArrayList<>();
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);
         }
@@ -290,7 +299,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     private void getPrepareShowData(int position) {
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-
         if (audioPlay) {
             listSize = mainPlayModelList.size();
         } else if (queuePlay) {
@@ -323,6 +331,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
         if (audioPlay) {
             id = mainPlayModelList.get(position).getID();
+            url = mainPlayModelList.get(position).getAudioFile();
+            name = mainPlayModelList.get(position).getName();
             setInIt(mainPlayModelList.get(position).getName(), mainPlayModelList.get(position).getAudiomastercat(),
                     mainPlayModelList.get(position).getImageFile(), mainPlayModelList.get(position).getAudioDuration());
 
@@ -332,6 +342,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
             } else {*/
+
+            downloadAudioDetailsList = BWSApplication.GetMedia(url,ctx);
             if (isPause) {
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
@@ -343,8 +355,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             } else {
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
-                play(Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-                playMedia();
+                callMedia();
 //                }
             }
         } else if (queuePlay) {
@@ -352,6 +363,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 position = 0;
             }
             id = addToQueueModelList.get(position).getID();
+            url = addToQueueModelList.get(position).getAudioFile();
+            name = addToQueueModelList.get(position).getName();
             setInIt(addToQueueModelList.get(position).getName(), addToQueueModelList.get(position).getAudiomastercat(),
                     addToQueueModelList.get(position).getImageFile(), addToQueueModelList.get(position).getAudioDuration());
          /*   if (!isMediaStart) {
@@ -371,8 +384,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             } else {
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
-                play(Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-                playMedia();
+                callMedia();
             }
 //            }
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -397,7 +409,28 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         editor.commit();
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
-
+    private void callMedia() {
+        if(downloadAudioDetailsList.size()!=0){
+            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
+            FileDescriptor fileDescriptor = null;
+            try {
+                byte[] decrypt = null;
+                decrypt = downloadMedia.decrypt(name);
+                if(decrypt != null) {
+                    fileDescriptor = FileUtils.getTempFileDescriptor(getApplicationContext(), decrypt);
+                    play2(fileDescriptor);
+                }else{
+                    play(Uri.parse(url));
+                }
+                playMedia();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            play(Uri.parse(url));
+            playMedia();
+        }
+    }
     private void callComplete() {
         handler.removeCallbacks(UpdateSongTime);
         isPrepare = false;

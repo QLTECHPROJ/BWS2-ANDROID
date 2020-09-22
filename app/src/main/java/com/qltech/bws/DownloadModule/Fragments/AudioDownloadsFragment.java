@@ -16,20 +16,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter;
-import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.R;
+import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.FragmentDownloadsBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AudioDownloadsFragment extends Fragment {
     FragmentDownloadsBinding binding;
-    ArrayList<DownloadlistModel.Audio> audioList;
+//    ArrayList<DownloadlistModel.Audio> audioList;
+
+    List<DownloadAudioDetails> audioList;
     String UserID;
 
     @Override
@@ -40,11 +45,21 @@ public class AudioDownloadsFragment extends Fragment {
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
-            audioList = getArguments().getParcelableArrayList("audioDownloadsFragment");
+//            audioList = getArguments().getParcelableArrayList("audioDownloadsFragment");
         }
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
+        audioList = new ArrayList<>();
+        audioList = BWSApplication.GetAllMedia(getActivity());
+        if (audioList.size() != 0) {
+            getDataList(audioList, UserID, binding.progressBarHolder, binding.ImgV,binding.llError,binding.rvDownloadsList);
+            binding.llError.setVisibility(View.GONE);
+            binding.rvDownloadsList.setVisibility(View.VISIBLE);
+        } else {
+            binding.llError.setVisibility(View.VISIBLE);
+            binding.rvDownloadsList.setVisibility(View.GONE);
+        }
         try {
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 Fragment fragment = new TransparentPlayerFragment();
@@ -61,24 +76,16 @@ public class AudioDownloadsFragment extends Fragment {
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
 
-        if (audioList.size() != 0) {
-            getDataList(audioList, UserID, binding.progressBarHolder, binding.ImgV);
-            binding.llError.setVisibility(View.GONE);
-            binding.rvDownloadsList.setVisibility(View.VISIBLE);
-        } else {
-            binding.llError.setVisibility(View.VISIBLE);
-            binding.rvDownloadsList.setVisibility(View.GONE);
-        }
         return view;
     }
 
 
-    private void getDataList(ArrayList<DownloadlistModel.Audio> historyList, String UserID, FrameLayout progressBarHolder, ImageView ImgV) {
+    private void getDataList(List<DownloadAudioDetails> historyList, String UserID, FrameLayout progressBarHolder, ImageView ImgV, LinearLayout llError, RecyclerView rvDownloadsList) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
         } else {
             binding.llError.setVisibility(View.GONE);
-            AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV);
+            AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV,llError,rvDownloadsList,binding.tvFound);
             binding.rvDownloadsList.setAdapter(adapter);
         }
     }

@@ -25,7 +25,6 @@ import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
-import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
@@ -38,9 +37,12 @@ import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityPlayWellnessBinding;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -64,6 +66,7 @@ import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
 import static com.qltech.bws.Utility.MusicService.play;
+import static com.qltech.bws.Utility.MusicService.play2;
 import static com.qltech.bws.Utility.MusicService.playMedia;
 import static com.qltech.bws.Utility.MusicService.progressToTimer;
 import static com.qltech.bws.Utility.MusicService.resumeMedia;
@@ -72,13 +75,14 @@ import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*,AudioManager.OnAudioFocusChangeListener*/ {
     ActivityPlayWellnessBinding binding;
-    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url;
+    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url,audioFile;
     int startTime = 0, endTime = 0, position, listSize;
     Context ctx;
     Activity activity;
     Boolean queuePlay, audioPlay;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
+    List<DownloadAudioDetails> downloadAudioDetailsList;
     private long mLastClickTime = 0, totalDuration, currentDuration;
     private Handler handler;
     //    private AudioManager mAudioManager;
@@ -132,6 +136,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         ctx = PlayWellnessActivity.this;
         activity = PlayWellnessActivity.this;
         addToQueueModelList = new ArrayList<>();
+        downloadAudioDetailsList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -223,13 +228,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.VISIBLE);
             if (!isMediaStart) {
-                if (queuePlay) {
-                    play(Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-                    playMedia();
-                } else if (audioPlay) {
-                    play(Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-                    playMedia();
-                }
+                callMedia();
             } else {
                 resumeMedia();
                 isPause = false;
@@ -401,12 +400,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callDownload() {
-       /* DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext(),binding.ImgV,binding.progressBarHolder,activity);
         byte[] EncodeBytes = downloadMedia.encrypt(url, name);
-       String dirPath = FileUtils.getFilePath(getApplicationContext(),name);
-        saveMedia(EncodeBytes,dirPath);*/
+        String dirPath = FileUtils.getFilePath(getApplicationContext(), name);
+        SaveMedia(EncodeBytes, dirPath);
 
-        if (BWSApplication.isNetworkConnected(ctx)) {
+   /*     if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, id, PlaylistId);
             listCall.enqueue(new Callback<DownloadPlaylistModel>() {
@@ -417,15 +416,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         DownloadPlaylistModel model = response.body();
                         if (model.getResponseData().getFlag().equalsIgnoreCase("0")
                                 || model.getResponseData().getFlag().equalsIgnoreCase("")) {
-                            binding.llDownload.setClickable(true);
-                            binding.llDownload.setEnabled(true);
+                            binding.llDownloads.setClickable(true);
+                            binding.llDownloads.setEnabled(true);
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                         } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                             binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
                             binding.ivDownloads.setAlpha(255);
-                            binding.llDownload.setClickable(false);
-                            binding.llDownload.setEnabled(false);
+                            binding.llDownloads.setClickable(false);
+                            binding.llDownloads.setEnabled(false);
                         }
                         BWSApplication.showToast(model.getResponseMessage(), ctx);
                     }
@@ -439,11 +438,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-        }
+        }*/
     }
 
-    private void saveMedia(byte[] EncodeBytes, String dirPath) {
-        class SaveTask extends AsyncTask<Void, Void, Void> {
+    private void SaveMedia(byte[] EncodeBytes, String dirPath) {
+        class SaveMedia extends AsyncTask<Void, Void, Void> {
 
             @Override
             protected Void doInBackground(Void... voids) {
@@ -458,8 +457,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     downloadAudioDetails.setAudioSubCategory(addToQueueModelList.get(position).getAudioSubCategory());
                     downloadAudioDetails.setImageFile(addToQueueModelList.get(position).getImageFile());
                     downloadAudioDetails.setLike(addToQueueModelList.get(position).getLike());
-                    downloadAudioDetails.setDownload(addToQueueModelList.get(position).getDownload());
+                    downloadAudioDetails.setDownload("1");
                     downloadAudioDetails.setAudioDuration(addToQueueModelList.get(position).getAudioDuration());
+                    if(addToQueueModelList.get(position).getPlaylistID().equalsIgnoreCase("")){
+                        downloadAudioDetails.setIsSingle("1");
+                        downloadAudioDetails.setPlaylistId("");
+                    }else{
+                        downloadAudioDetails.setIsSingle("0");
+                        downloadAudioDetails.setPlaylistId(addToQueueModelList.get(position).getPlaylistID());
+                    }
                 } else if (audioPlay) {
                     downloadAudioDetails.setID(mainPlayModelList.get(position).getID());
                     downloadAudioDetails.setName(mainPlayModelList.get(position).getName());
@@ -469,8 +475,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     downloadAudioDetails.setAudioSubCategory(mainPlayModelList.get(position).getAudioSubCategory());
                     downloadAudioDetails.setImageFile(mainPlayModelList.get(position).getImageFile());
                     downloadAudioDetails.setLike(mainPlayModelList.get(position).getLike());
-                    downloadAudioDetails.setDownload(mainPlayModelList.get(position).getDownload());
+                    downloadAudioDetails.setDownload("1");
                     downloadAudioDetails.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
+                    if(mainPlayModelList.get(position).getPlaylistID().equalsIgnoreCase("")){
+                        downloadAudioDetails.setIsSingle("1");
+                        downloadAudioDetails.setPlaylistId("");
+                    }else{
+                        downloadAudioDetails.setIsSingle("0");
+                        downloadAudioDetails.setPlaylistId(mainPlayModelList.get(position).getPlaylistID());
+                    }
                 }
                 downloadAudioDetails.setEncodedBytes(EncodeBytes);
                 downloadAudioDetails.setDirPath(dirPath);
@@ -485,12 +498,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
+                binding.llDownload.setClickable(false);
+                binding.llDownload.setEnabled(false);
                 super.onPostExecute(aVoid);
             }
         }
 
-        SaveTask st = new SaveTask();
+        SaveMedia st = new SaveMedia();
         st.execute();
     }
 
@@ -660,6 +674,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             id = addToQueueModelList.get(position).getID();
             name = addToQueueModelList.get(position).getName();
             url = addToQueueModelList.get(position).getAudioFile();
+            downloadAudioDetailsList = BWSApplication.GetMedia(id,ctx);
             binding.tvName.setText(addToQueueModelList.get(position).getName());
             if (addToQueueModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
                 binding.llDirection.setVisibility(View.GONE);
@@ -676,40 +691,51 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             } else if (!addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
                 binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
             }
-            if (addToQueueModelList.get(position).getDownload().equalsIgnoreCase("1")) {
+            if(downloadAudioDetailsList.size()!=0){
+                if (downloadAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                    binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                    binding.ivDownloads.setAlpha(255);
+                    binding.llDownload.setClickable(false);
+                    binding.llDownload.setEnabled(false);
+                } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */{
+                    binding.llDownload.setClickable(true);
+                    binding.llDownload.setEnabled(true);
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                }
+            }else if (addToQueueModelList.get(position).getDownload().equalsIgnoreCase("1")) {
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                 binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
                 binding.ivDownloads.setAlpha(255);
                 binding.llDownload.setClickable(false);
                 binding.llDownload.setEnabled(false);
-            } else if (!addToQueueModelList.get(position).getDownload().equalsIgnoreCase("")) {
+            } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */{
                 binding.llDownload.setClickable(true);
                 binding.llDownload.setEnabled(true);
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
-//            if (!isMediaStart) {
-//                play(Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-//                playMedia();
-//                binding.llPause.setVisibility(View.VISIBLE);
-//                binding.llPlay.setVisibility(View.GONE);
-//            } else {
-            if (isPause) {
-                binding.llPlay.setVisibility(View.VISIBLE);
-                binding.llPause.setVisibility(View.GONE);
-                binding.simpleSeekbar.setProgress(oTime);
-                int timeeee = progressToTimer(oTime, (int) (totalDuration));
-                binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
-                        TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
+           /* if (!isMediaStart) {
+             callMedia();
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+            } else {*/
+                if (isPause) {
+
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+                    binding.simpleSeekbar.setProgress(oTime);
+                    int timeeee = progressToTimer(oTime, (int) (totalDuration));
+                    binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
+                            TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
 //                    resumeMedia();
-            } else if ((isPrepare || isMediaStart) && !isPause) {
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
-            } else {
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
-                play(Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-                playMedia();
-            }
+                } else if ((isPrepare || isMediaStart) && !isPause) {
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
+                } else {
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
+                    callMedia();
+                }
 //            }
             binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
 
@@ -727,6 +753,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             id = mainPlayModelList.get(position).getID();
             name = mainPlayModelList.get(position).getName();
             url = mainPlayModelList.get(position).getAudioFile();
+            downloadAudioDetailsList = BWSApplication.GetMedia(id,ctx);
             binding.tvName.setText(mainPlayModelList.get(position).getName());
             if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
                 binding.llDirection.setVisibility(View.GONE);
@@ -742,45 +769,56 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
             } else if (!mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
                 binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-            }
-            if (mainPlayModelList.get(position).getDownload().equalsIgnoreCase("1")) {
+            } if(downloadAudioDetailsList.size()!=0){
+                if (downloadAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                    binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                    binding.ivDownloads.setAlpha(255);
+                    binding.llDownload.setClickable(false);
+                    binding.llDownload.setEnabled(false);
+                } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */{
+                    binding.llDownload.setClickable(true);
+                    binding.llDownload.setEnabled(true);
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                }
+            }else if (mainPlayModelList.get(position).getDownload().equalsIgnoreCase("1")) {
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                 binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
                 binding.ivDownloads.setAlpha(255);
                 binding.llDownload.setClickable(false);
                 binding.llDownload.setEnabled(false);
-            } else if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) {
+            } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */{
                 binding.llDownload.setClickable(true);
                 binding.llDownload.setEnabled(true);
                 binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             }
-//            if (!isMediaStart) {
-//                play(Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-//                playMedia();
-//                binding.llPause.setVisibility(View.VISIBLE);
-//                binding.llPlay.setVisibility(View.GONE);
-//            } else {
-            if (isPause) {
-                binding.llPlay.setVisibility(View.VISIBLE);
-                binding.llPause.setVisibility(View.GONE);
-                binding.simpleSeekbar.setProgress(oTime);
+         /*   if (!isMediaStart) {
+                callMedia();
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+            } else {*/
+                if (isPause) {
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+                    binding.simpleSeekbar.setProgress(oTime);
 //                    resumeMedia();
-                int timeeee = progressToTimer(oTime, (int) (totalDuration));
-                binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
-                        TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
-            } else if (((isPrepare || isMediaStart)) && !isPause) {
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
-            } else {
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
-                play(Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-                playMedia();
-            }
+                    int timeeee = progressToTimer(oTime, (int) (totalDuration));
+                    binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
+                            TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
+                } else if (((isPrepare || isMediaStart)) && !isPause) {
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
+                } else {
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
+                    callMedia();
+                }
 //            }
             binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
             startTime = getStartTime();
         }
+
+
         addToRecentPlay();
 
         if (isMediaStart) {
@@ -795,6 +833,29 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         binding.simpleSeekbar.setClickable(true);
         handler.postDelayed(UpdateSongTime, 60);
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+    }
+
+    private void callMedia() {
+        if(downloadAudioDetailsList.size()!=0){
+            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
+            FileDescriptor fileDescriptor = null;
+            try {
+                byte[] decrypt = null;
+                decrypt = downloadMedia.decrypt(name);
+                if(decrypt != null) {
+                    fileDescriptor = FileUtils.getTempFileDescriptor(getApplicationContext(), decrypt);
+                    play2(fileDescriptor);
+                }else{
+                    play(Uri.parse(url));
+                }
+                playMedia();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            play(Uri.parse(url));
+            playMedia();
+        }
     }
 
     private void callComplete() {

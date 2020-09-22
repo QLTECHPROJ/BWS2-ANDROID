@@ -47,8 +47,8 @@ public class EncryptDecryptUtils {
         byte[] decrypted = null;
         Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM, PROVIDER);
         cipher.init(Cipher.DECRYPT_MODE, yourKey, new IvParameterSpec(new byte[cipher.getBlockSize()]));
-        decrypted = cipher.doFinal(Arrays.toString(fileData).getBytes("utf-8"));
-        return decrypted;
+//        decrypted = cipher.doFinal(Arrays.toString(fileData).getBytes("utf-8"));
+        return cipher.doFinal(fileData);
     }
 
     public void saveSecretKey(SecretKey secretKey) {

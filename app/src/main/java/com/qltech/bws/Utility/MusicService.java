@@ -24,6 +24,7 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.R;
 
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -47,6 +48,10 @@ public class MusicService extends Service {
         initMediaPlayer();
         stopMedia();
         playAudio(AudioFile);
+    }    public static void play2(FileDescriptor AudioFile) {
+        initMediaPlayer();
+        stopMedia();
+        playAudio2(AudioFile);
     }
 
     public static boolean play1(Uri AudioFile) {
@@ -64,6 +69,30 @@ public class MusicService extends Service {
 
         try {
             mediaPlayer.setDataSource(String.valueOf(AudioFile));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mediaPlayer.setAudioAttributes(
+                        new AudioAttributes
+                                .Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .build());
+            }
+            mediaPlayer.prepareAsync();
+            isPrepare = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Failedddddddd", "prepare() failed");
+        }
+//        }else {
+//            isPLAYING = false;
+//            stopPlaying();
+//        }
+    }    public static void playAudio2(FileDescriptor AudioFile) {
+//        if (!isPLAYING) {
+//            isPLAYING = true;
+        mediaPlayer = new MediaPlayer();
+
+        try {
+            mediaPlayer.setDataSource(AudioFile);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
                         new AudioAttributes

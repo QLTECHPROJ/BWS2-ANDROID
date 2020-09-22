@@ -4,6 +4,7 @@ public class MainPlayModel {
     private String ID;
     private String name;
     private String audioFile;
+    private String PlaylistID;
     private String audioDirection;
     private String audiomastercat;
     private String audioSubCategory;
@@ -92,4 +93,11 @@ public class MainPlayModel {
         this.audioDuration = audioDuration;
     }
 
+    public String getPlaylistID() {
+        return PlaylistID;
+    }
+
+    public void setPlaylistID(String playlistID) {
+        PlaylistID = playlistID;
+    }
 }

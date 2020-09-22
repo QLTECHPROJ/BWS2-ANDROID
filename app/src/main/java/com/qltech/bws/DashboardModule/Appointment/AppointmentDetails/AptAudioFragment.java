@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -25,8 +27,19 @@ import com.google.gson.Gson;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity;
 import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
-import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
+import com.qltech.bws.EncryptDecryptUtils.FileUtils;
+import com.qltech.bws.R;
+import com.qltech.bws.RoomDataBase.DatabaseClient;
+import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
+import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.databinding.AudioAptListLayoutBinding;
+import com.qltech.bws.databinding.FragmentAptAudioBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
@@ -34,30 +47,19 @@ import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
-import com.qltech.bws.R;
-import com.qltech.bws.Utility.APIClient;
-import com.qltech.bws.Utility.CONSTANTS;
-import com.qltech.bws.Utility.MeasureRatio;
-import com.qltech.bws.databinding.AudioAptListLayoutBinding;
-import com.qltech.bws.databinding.FragmentAptAudioBinding;
-
-import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class AptAudioFragment extends Fragment {
-    FragmentAptAudioBinding binding;
     public FragmentManager f_manager;
+    FragmentAptAudioBinding binding;
     String PlaylistId, UserID;
     ArrayList<AppointmentDetailModel.Audio> appointmentDetail;
+    List<DownloadAudioDetails> oneAudioDetailsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_audio, container, false);
         View view = binding.getRoot();
+        oneAudioDetailsList = new ArrayList<>();
 
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -100,9 +102,9 @@ public class AptAudioFragment extends Fragment {
     }
 
     public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.MyViewHolder> {
-        private ArrayList<AppointmentDetailModel.Audio> listModelList;
-        Context ctx;
         public FragmentManager f_manager;
+        Context ctx;
+        private ArrayList<AppointmentDetailModel.Audio> listModelList;
 
         public AudioListAdapter(ArrayList<AppointmentDetailModel.Audio> listModelList, Context ctx, FragmentManager f_manager) {
             this.listModelList = listModelList;
@@ -128,7 +130,7 @@ public class AptAudioFragment extends Fragment {
                 holder.binding.tvTime.setVisibility(View.VISIBLE);
                 holder.binding.tvTime.setText(audiolist.getAudioDirection());
             }
-
+            oneAudioDetailsList = BWSApplication.GetMedia(audiolist.getID(),getActivity());
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.13f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -141,7 +143,15 @@ public class AptAudioFragment extends Fragment {
 
             Glide.with(getActivity()).load(audiolist.getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-
+            if(oneAudioDetailsList.size()!=0){
+                if(oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")){
+                    disableDownload(holder.binding.llDownload,holder.binding.ivDownload);
+                }
+            }else if (audiolist.getDownload().equalsIgnoreCase("1")) {
+                disableDownload(holder.binding.llDownload,holder.binding.ivDownload);
+            } else {
+                enableDownload(holder.binding.llDownload,holder.binding.ivDownload);
+            }
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -214,7 +224,7 @@ public class AptAudioFragment extends Fragment {
             holder.binding.llDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
+                    /*if (BWSApplication.isNetworkConnected(ctx)) {
                         showProgressBar();
                         Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, audiolist.getID(), PlaylistId);
                         listCall.enqueue(new Callback<DownloadPlaylistModel>() {
@@ -247,7 +257,15 @@ public class AptAudioFragment extends Fragment {
 
                     } else {
                         BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-                    }
+                    }*/
+                    String Name = listModelList.get(position).getName();
+                    String audioFile = listModelList.get(position).getAudioFile();
+
+
+                    DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, getActivity());
+                    byte[] EncodeBytes = downloadMedia.encrypt(audioFile, Name);
+                    String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
+                    SaveMedia(EncodeBytes, dirPath, listModelList.get(position), holder.binding.llDownload);
                 }
             });
 
@@ -259,6 +277,62 @@ public class AptAudioFragment extends Fragment {
                     startActivity(i);
                 }
             });
+        }
+
+        private void enableDownload(LinearLayout llDownload, ImageView ivDownload) {
+            llDownload.setClickable(true);
+            llDownload.setEnabled(true);
+            ivDownload.setImageResource(R.drawable.ic_download_white_icon);
+        }
+
+        private void disableDownload(LinearLayout llDownload, ImageView ivDownload) {
+            ivDownload.setImageResource(R.drawable.ic_download_white_icon);
+            ivDownload.setColorFilter(Color.argb(99, 99, 99, 99));
+            ivDownload.setAlpha(255);
+            llDownload.setClickable(false);
+            llDownload.setEnabled(false);
+        }
+
+        private void SaveMedia(byte[] encodeBytes, String dirPath, AppointmentDetailModel.Audio audio, LinearLayout llDownload) {
+            class SaveMedia extends AsyncTask<Void, Void, Void> {
+
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+
+                    downloadAudioDetails.setID(audio.getID());
+                    downloadAudioDetails.setName(audio.getName());
+                    downloadAudioDetails.setAudioFile(audio.getAudioFile());
+                    downloadAudioDetails.setPlaylistId("");
+                    downloadAudioDetails.setAudioDirection(audio.getAudioDirection());
+                    downloadAudioDetails.setAudiomastercat(audio.getAudiomastercat());
+                    downloadAudioDetails.setAudioSubCategory(audio.getAudioSubCategory());
+                    downloadAudioDetails.setImageFile(audio.getImageFile());
+                    downloadAudioDetails.setLike(audio.getLike());
+                    downloadAudioDetails.setDownload("1");
+                    downloadAudioDetails.setAudioDuration(audio.getAudioDuration());
+                    downloadAudioDetails.setIsSingle("1");
+                    downloadAudioDetails.setPlaylistId("");
+                    downloadAudioDetails.setEncodedBytes(encodeBytes);
+                    downloadAudioDetails.setDirPath(dirPath);
+
+                    DatabaseClient.getInstance(getActivity().getApplicationContext())
+                            .getaudioDatabase()
+                            .taskDao()
+                            .insertMedia(downloadAudioDetails);
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    llDownload.setClickable(false);
+                    llDownload.setEnabled(false);
+                    super.onPostExecute(aVoid);
+                }
+            }
+
+            SaveMedia st = new SaveMedia();
+            st.execute();
         }
 
         @Override

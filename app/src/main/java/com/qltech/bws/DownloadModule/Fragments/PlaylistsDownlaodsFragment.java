@@ -33,9 +33,10 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         View view = binding.getRoot();
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
-            playlistList = getArguments().getParcelableArrayList("playlistsDownlaodsFragment");
+//            playlistList = getArguments().getParcelableArrayList("playlistsDownlaodsFragment");
         }
 
+        playlistList = new ArrayList<>();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
