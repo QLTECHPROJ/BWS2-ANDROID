@@ -56,6 +56,9 @@ public class ProfileViewModel {
         @SerializedName("PhoneNumber")
         @Expose
         private String phoneNumber;
+        @SerializedName("Patientid")
+        @Expose
+        private String Patientid;
         @SerializedName("Address")
         @Expose
         private String address;
@@ -128,6 +131,14 @@ public class ProfileViewModel {
 
         public void setPhoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
+        }
+
+        public String getPatientid() {
+            return Patientid;
+        }
+
+        public void setPatientid(String patientid) {
+            Patientid = patientid;
         }
 
         public String getAddress() {

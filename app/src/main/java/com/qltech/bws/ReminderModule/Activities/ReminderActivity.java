@@ -34,6 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Account.AccountFragment.ComeScreenReminder;
+import static com.qltech.bws.ReminderModule.Activities.ReminderDetailsActivity.ReminderPlaylistID;
 
 public class ReminderActivity extends AppCompatActivity {
     ActivityReminderBinding binding;

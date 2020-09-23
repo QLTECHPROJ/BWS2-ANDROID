@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -125,7 +126,7 @@ public class UserProfileActivity extends AppCompatActivity {
             binding.flUser.setError("Please enter your full name");
         } else if (binding.etCalendar.getText().toString().equalsIgnoreCase("")) {
             binding.tlCalendar.setError("please enter date of birth");
-        }  else if (binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
+        } else if (binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
             binding.tlMobileNumber.setError("please enter mobile number");
         } else if (binding.etEmail.getText().toString().equalsIgnoreCase("")) {
             binding.tlEmail.setError("Please enter your email address");
@@ -306,6 +307,16 @@ public class UserProfileActivity extends AppCompatActivity {
                         } else {
                             binding.etMobileNumber.setEnabled(true);
                             binding.etMobileNumber.setClickable(true);
+                        }
+
+                        if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("1")) { /*Enable */
+                            binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
+                            binding.btnSave.setClickable(true);
+                            binding.btnSave.setEnabled(true);
+                        } else if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("0")) { /*Disable */
+                            binding.btnSave.setBackgroundResource(R.drawable.gray_extra_light_round_corners);
+                            binding.btnSave.setClickable(false);
+                            binding.btnSave.setEnabled(false);
                         }
 
                         if ((viewModel.getResponseData().getIsVerify().equalsIgnoreCase("0"))) {

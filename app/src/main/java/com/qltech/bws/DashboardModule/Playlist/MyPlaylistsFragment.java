@@ -289,31 +289,38 @@ public class MyPlaylistsFragment extends Fragment {
 
                         playlistSongsList = listModel.getResponseData().getPlaylistSongs();
 
-                        if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
+                        if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
                             binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow),
                                     android.graphics.PorterDuff.Mode.SRC_IN);
-                            if (BWSApplication.isNetworkConnected(getActivity())) {
-                                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                                Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserID, PlaylistID, "0");/*set 1 or not 0 */
-                                listCall.enqueue(new Callback<ReminderStatusModel>() {
-                                    @Override
-                                    public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {
-                                        if (response.isSuccessful()) {
-                                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                                            ReminderStatusModel listModel = response.body();
-                                            BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                            binding.llReminder.setOnClickListener(view -> {
+                                if (BWSApplication.isNetworkConnected(getActivity())) {
+                                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                    Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserID, PlaylistID, "0");/*set 1 or not 0 */
+                                    listCall.enqueue(new Callback<ReminderStatusModel>() {
+                                        @Override
+                                        public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {
+                                            if (response.isSuccessful()) {
+                                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                                ReminderStatusModel listModel = response.body();
+                                                BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                                                binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white),
+                                                        android.graphics.PorterDuff.Mode.SRC_IN);
+                                                prepareData(UserID, PlaylistID);
+                                            }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Call<ReminderStatusModel> call, Throwable t) {
-                                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                                    }
-                                });
-                            } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-                            }
-                        } else {
+                                        @Override
+                                        public void onFailure(Call<ReminderStatusModel> call, Throwable t) {
+                                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                        }
+                                    });
+
+                                } else {
+                                    BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+                                }
+                            });
+                        } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
+                                listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
                             binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
                             binding.llReminder.setOnClickListener(view -> {
                                 ComeScreenReminder = 0;

@@ -40,6 +40,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     Context ctx;
     Activity activity;
     RemiderDetailsAdapter adapter;
+    public static String ReminderPlaylistID = "", ReminderPlaylistName = "19";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +68,11 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         binding.btnAddReminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (IsLock.equalsIgnoreCase("1")){
+                if (IsLock.equalsIgnoreCase("1")) {
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                }else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")){
+                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     Intent i = new Intent(ctx, ReminderActivity.class);
-                    i.putExtra("ComeFrom","");
+                    i.putExtra("ComeFrom", "");
                     i.putExtra("PlaylistID", "");
                     i.putExtra("PlaylistName", "");
                     i.putExtra("Time", "");
@@ -100,10 +101,10 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                         adapter = new RemiderDetailsAdapter(listModel.getResponseData());
                         binding.rvReminderDetails.setAdapter(adapter);
 
-                        if (listModel.getResponseData().size() == 0){
+                        if (listModel.getResponseData().size() == 0) {
                             binding.llError.setVisibility(View.VISIBLE);
                             binding.rvReminderDetails.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             binding.llError.setVisibility(View.GONE);
                             binding.rvReminderDetails.setVisibility(View.VISIBLE);
                         }
@@ -155,11 +156,14 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 }
             });
 
+            ReminderPlaylistID = model.get(position).getPlaylistId();
+            ReminderPlaylistName = model.get(position).getPlaylistName();
+
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(ctx, ReminderActivity.class);
-                    i.putExtra("ComeFrom","");
+                    i.putExtra("ComeFrom", "");
                     i.putExtra("PlaylistID", model.get(position).getPlaylistId());
                     i.putExtra("PlaylistName", model.get(position).getPlaylistName());
                     i.putExtra("Time", model.get(position).getReminderTime());
@@ -183,6 +187,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             }
         }
     }
+
     private void prepareSwitchStatus(String reminderStatus) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
@@ -193,7 +198,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         ReminderStatusModel listModel = response.body();
-                        BWSApplication.showToast(listModel.getResponseMessage(),activity);
+                        BWSApplication.showToast(listModel.getResponseMessage(), activity);
                     }
                 }
 
