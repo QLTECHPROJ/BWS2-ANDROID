@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -198,12 +202,16 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             pauseMedia();
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
+            binding.llProgressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
             oTime = binding.simpleSeekbar.getProgress();
         });
 
         binding.llPlay.setOnClickListener(view -> {
             binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.VISIBLE);
+            binding.llProgressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
             resumeMedia();
             isPause = false;
             handler.postDelayed(UpdateSongTime, 60);
@@ -348,14 +356,16 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             if (isPause) {
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
                 binding.simpleSeekbar.setProgress(oTime);
 //                    resumeMedia();
-            } else if ((isPrepare || isMediaStart || isPlaying()) && !isPause) {
+            } else if ((isMediaStart || isPlaying()) && !isPause) {
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
             } else {
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
                 callMedia();
 //                }
             }
@@ -377,14 +387,16 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             if (isPause) {
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
                 binding.simpleSeekbar.setProgress(oTime);
 //                    resumeMedia();
-            } else if ((isPrepare || isMediaStart || isPlaying()) && !isPause) {
+            } else if ((isMediaStart || isPlaying()) && !isPause) {
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
             } else {
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
                 callMedia();
             }
 //            }
@@ -410,26 +422,77 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         editor.commit();
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
+    private void setMediaPlayer() {
+        if (null == mediaPlayer) {
+            mediaPlayer = new MediaPlayer();
+            binding.llProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.GONE);
+            Log.e("Playinggggg", "Playinggggg");
+        }
+        try {
+            binding.llProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.GONE);
+            if (mediaPlayer == null)
+                mediaPlayer = new MediaPlayer();
+            if (mediaPlayer.isPlaying()) {
+                Log.e("Playinggggg", "stoppppp");
+                mediaPlayer.stop();
+                isMediaStart = false;
+                isPrepare = false;
+            }
+            mediaPlayer.setDataSource(String.valueOf(url));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mediaPlayer.setAudioAttributes(
+                        new AudioAttributes
+                                .Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .build());
+            }
+            mediaPlayer.prepareAsync();
+            isPrepare = true;
+        } catch (IllegalStateException | IOException e) {
+            e.printStackTrace();
+        }
+        if (!mediaPlayer.isPlaying()) {
+            mediaPlayer.setOnPreparedListener(mp -> {
+                Log.e("Playinggggg", "Startinggg");
+                mediaPlayer.start();
+                isMediaStart = true;
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
+            });
+        }
+    }
+
     private void callMedia() {
-        if(downloadAudioDetailsList.size()!=0){
+        if (downloadAudioDetailsList.size() != 0) {
             DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
             FileDescriptor fileDescriptor = null;
             try {
                 byte[] decrypt = null;
                 decrypt = downloadMedia.decrypt(name);
-                if(decrypt != null) {
+                if (decrypt != null) {
+                    binding.llProgressBar.setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
                     fileDescriptor = FileUtils.getTempFileDescriptor(getApplicationContext(), decrypt);
                     play2(fileDescriptor);
-                }else{
-                    play(Uri.parse(url));
+                    playMedia();
+                } else {
+                    setMediaPlayer();
                 }
-                playMedia();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            play(Uri.parse(url));
-            playMedia();
+            setMediaPlayer();
         }
     }
     private void callComplete() {
@@ -588,12 +651,19 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
     @Override
     protected void onResume() {
-        if ((isPrepare || isMediaStart || isPlaying()) && !isPause) {
+        if(isPrepare && !isMediaStart){
+            callMedia();
+        }
+        else if ((isMediaStart || isPlaying()) && !isPause) {
             binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.VISIBLE);
+            binding.llProgressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
         } else {
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
+            binding.llProgressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
         }
         super.onResume();
     }

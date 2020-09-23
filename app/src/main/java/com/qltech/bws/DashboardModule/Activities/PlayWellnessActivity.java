@@ -919,6 +919,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 mediaPlayer.stop();
                 isMediaStart = false;
                 isPrepare = false;
+                isPause = false;
             }
             mediaPlayer.setDataSource(String.valueOf(audioFile));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -929,6 +930,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                                 .build());
             }
             mediaPlayer.prepareAsync();
+            isPause = false;
             isPrepare = true;
         } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
@@ -1131,6 +1133,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         } else {
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
+            binding.llProgressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
         }
         super.onResume();
     }
