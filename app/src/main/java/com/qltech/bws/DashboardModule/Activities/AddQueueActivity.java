@@ -33,7 +33,6 @@ import com.qltech.bws.DashboardModule.Adapters.DirectionAdapter;
 import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.DirectionModel;
-import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
@@ -44,7 +43,6 @@ import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
-import com.qltech.bws.Utility.MusicService;
 import com.qltech.bws.databinding.ActivityQueueBinding;
 
 import java.lang.reflect.Type;
@@ -71,8 +69,8 @@ public class AddQueueActivity extends AppCompatActivity {
     AddToQueueModel addToQueueModel;
     int position, listSize;
     Boolean queuePlay, audioPlay;
-    private long mLastClickTime = 0;
     List<DownloadAudioDetails> oneAudioDetailsList;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +143,7 @@ public class AddQueueActivity extends AppCompatActivity {
         }
 
         if (IsShuffle.equalsIgnoreCase("")) {
-            if (listSize == 1 || queuePlay) {
+            if (listSize == 1) {
                 binding.llShuffle.setClickable(false);
                 binding.llShuffle.setEnabled(false);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -155,7 +153,15 @@ public class AddQueueActivity extends AppCompatActivity {
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else if (IsShuffle.equalsIgnoreCase("1")) {
-            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+            if (listSize == 1) {
+                binding.llShuffle.setClickable(false);
+                binding.llShuffle.setEnabled(false);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llShuffle.setClickable(true);
+                binding.llShuffle.setEnabled(true);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
         }
 
         if (IsRepeat.equalsIgnoreCase("")) {
@@ -168,13 +174,29 @@ public class AddQueueActivity extends AppCompatActivity {
                 binding.llRepeat.setEnabled(true);
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             }
+        } else if (IsRepeat.equalsIgnoreCase("0")) {
+            if (queuePlay) {
+                binding.llRepeat.setEnabled(false);
+                binding.llRepeat.setClickable(false);
+                binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                IsRepeat = "0";
+                binding.llRepeat.setClickable(true);
+                binding.llRepeat.setEnabled(true);
+                binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
         } else if (IsRepeat.equalsIgnoreCase("1")) {
-            if(queuePlay){
+            if (queuePlay) {
                 binding.llRepeat.setEnabled(false);
                 binding.llRepeat.setClickable(false);
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            }else
-            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llRepeat.setClickable(true);
+                binding.llRepeat.setEnabled(true);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
         }
         binding.llLike.setOnClickListener(view ->
                 callLike());
@@ -239,9 +261,12 @@ public class AddQueueActivity extends AppCompatActivity {
                     editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
                 }
                 editor.commit();
-                MusicService.ToRepeat(false);
                 IsRepeat = "";
-
+                if(queuePlay){
+                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+                }else
+                binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
                 BWSApplication.showToast("Shuffle mode has been turned on", ctx);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
             }
@@ -261,8 +286,12 @@ public class AddQueueActivity extends AppCompatActivity {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "0");
+            if (IsShuffle.equalsIgnoreCase("1")) {
+                editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
+            }
+            IsShuffle = "";
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             editor.commit();
-            MusicService.ToRepeat(true);
             IsRepeat = "0";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
             BWSApplication.showToast("Repeat mode has been turned on", ctx);
@@ -272,7 +301,6 @@ public class AddQueueActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
             editor.commit();
-            MusicService.ToRepeat(false);
             IsRepeat = "1";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             BWSApplication.showToast("Repeat mode has been turned on", ctx);
@@ -282,7 +310,6 @@ public class AddQueueActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
             editor.commit();
-            MusicService.ToRepeat(false);
             IsRepeat = "";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             BWSApplication.showToast("Repeat mode has been turned off", ctx);
@@ -408,22 +435,22 @@ public class AddQueueActivity extends AppCompatActivity {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }*/
         int i = position;
-        String audioFile = "",Name = "";
+        String audioFile = "", Name = "";
         if (!comeFrom.equalsIgnoreCase("")) {
-            Name =mData.get(i).getName();
-           audioFile =mData.get(i).getAudioFile();
+            Name = mData.get(i).getName();
+            audioFile = mData.get(i).getAudioFile();
         } else {
-            Name =mainPlayModelList.get(i).getName();
-            audioFile =mainPlayModelList.get(i).getAudioFile();
+            Name = mainPlayModelList.get(i).getName();
+            audioFile = mainPlayModelList.get(i).getAudioFile();
         }
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
         byte[] EncodeBytes = downloadMedia.encrypt(audioFile, Name);
         String dirPath = FileUtils.getFilePath(getApplicationContext(), Name);
-        SaveMedia(EncodeBytes, dirPath,i);
+        SaveMedia(EncodeBytes, dirPath, i);
 
     }
 
-    private void SaveMedia(byte[] encodeBytes, String dirPath,int i) {
+    private void SaveMedia(byte[] encodeBytes, String dirPath, int i) {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -441,10 +468,10 @@ public class AddQueueActivity extends AppCompatActivity {
                     downloadAudioDetails.setLike(mData.get(i).getLike());
                     downloadAudioDetails.setDownload("1");
                     downloadAudioDetails.setAudioDuration(mData.get(i).getAudioDuration());
-                    if(mData.get(i).getPlaylistID().equalsIgnoreCase("")){
+                    if (mData.get(i).getPlaylistID().equalsIgnoreCase("")) {
                         downloadAudioDetails.setIsSingle("1");
                         downloadAudioDetails.setPlaylistId("");
-                    }else{
+                    } else {
                         downloadAudioDetails.setIsSingle("0");
                         downloadAudioDetails.setPlaylistId(mData.get(i).getPlaylistID());
                     }
@@ -460,10 +487,10 @@ public class AddQueueActivity extends AppCompatActivity {
                     downloadAudioDetails.setLike(mainPlayModelList.get(i).getLike());
                     downloadAudioDetails.setDownload("1");
                     downloadAudioDetails.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
-                    if(mainPlayModelList.get(i).getPlaylistID().equalsIgnoreCase("")){
+                    if (mainPlayModelList.get(i).getPlaylistID().equalsIgnoreCase("")) {
                         downloadAudioDetails.setIsSingle("1");
                         downloadAudioDetails.setPlaylistId("");
-                    }else{
+                    } else {
                         downloadAudioDetails.setIsSingle("0");
                         downloadAudioDetails.setPlaylistId(mainPlayModelList.get(i).getPlaylistID());
                     }
@@ -558,7 +585,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         DirectionModel directionModel = response.body();
 
-                        oneAudioDetailsList = BWSApplication.GetMedia(AudioId,activity);
+                        oneAudioDetailsList = BWSApplication.GetMedia(AudioId, activity);
                         Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile())
                                 .thumbnail(0.05f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
@@ -630,12 +657,11 @@ public class AddQueueActivity extends AppCompatActivity {
                             binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
                         }
 
-                        if(oneAudioDetailsList.size()!=0){
-                            if(oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")){
+                        if (oneAudioDetailsList.size() != 0) {
+                            if (oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
                                 callDisableDownload();
                             }
-                        }
-                        else if (directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("1")) {
+                        } else if (directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("1")) {
                             callDisableDownload();
                         } else if (!directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("")) {
                             binding.llDownload.setClickable(true);

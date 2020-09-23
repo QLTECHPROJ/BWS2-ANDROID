@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +36,6 @@ import retrofit2.Response;
 import static com.qltech.bws.DashboardModule.Account.AccountFragment.ComeScreenReminder;
 
 public class ReminderActivity extends AppCompatActivity {
-    private int mHour, mMinute;
     ActivityReminderBinding binding;
     String am_pm, hourString, minuteSting;
     Activity activity;
@@ -45,6 +43,7 @@ public class ReminderActivity extends AppCompatActivity {
     String UserId, PlaylistID = "", PlaylistName = "", reminderDayNo = "", ComeFrom = "", Time = "";
     List<String> reminderDayList;
     ArrayList<String> remiderDays = new ArrayList<>();
+    private int mHour, mMinute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +73,7 @@ public class ReminderActivity extends AppCompatActivity {
             PlaylistName = getIntent().getStringExtra("PlaylistName");
         }
 
-        if (getIntent().getExtras() != null){
+        if (getIntent().getExtras() != null) {
             Time = getIntent().getStringExtra("Time");
         }
         binding.llBack.setOnClickListener(view -> {
@@ -94,10 +93,10 @@ public class ReminderActivity extends AppCompatActivity {
             binding.tvPlaylistName.setText(PlaylistName);
         }
 
-        if (Time.equalsIgnoreCase("")||
-                Time == null){
+        if (Time.equalsIgnoreCase("") ||
+                Time == null) {
             binding.tvTime.setText("12:00 pm");
-        }else {
+        } else {
             binding.tvTime.setText(Time);
         }
 

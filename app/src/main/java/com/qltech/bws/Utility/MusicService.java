@@ -48,7 +48,9 @@ public class MusicService extends Service {
         initMediaPlayer();
         stopMedia();
         playAudio(AudioFile);
-    }    public static void play2(FileDescriptor AudioFile) {
+    }
+
+    public static void play2(FileDescriptor AudioFile) {
         initMediaPlayer();
         stopMedia();
         playAudio2(AudioFile);
@@ -86,7 +88,9 @@ public class MusicService extends Service {
 //            isPLAYING = false;
 //            stopPlaying();
 //        }
-    }    public static void playAudio2(FileDescriptor AudioFile) {
+    }
+
+    public static void playAudio2(FileDescriptor AudioFile) {
 //        if (!isPLAYING) {
 //            isPLAYING = true;
         mediaPlayer = new MediaPlayer();

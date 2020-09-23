@@ -53,31 +53,31 @@ public class DashboardActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-// Checks if the device is on a metered network
-        if (connMgr.isActiveNetworkMetered()) {
-            // Checks user’s Data Saver settings.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                switch (connMgr.getRestrictBackgroundStatus()) {
-                    case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED:
-                        // Background data usage is blocked for this app. Wherever possible,
-                        // the app should also use less data in the foreground.
-
-                    case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_WHITELISTED:
-                        // The app is allowed to bypass Data Saver. Nevertheless, wherever possible,
-                        // the app should use less data in the foreground and background.
-
-                    case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_DISABLED:
-                        // Data Saver is disabled. Since the device is connected to a
-                        // metered network, the app should use less data wherever possible.
-                }
-            }
-        } else {
-            // The device is not on a metered network.
-            // Use data as required to perform syncs, downloads, and updates.
-        }
+//
+//        ConnectivityManager connMgr = (ConnectivityManager)
+//                getSystemService(Context.CONNECTIVITY_SERVICE);
+//// Checks if the device is on a metered network
+//        if (connMgr.isActiveNetworkMetered()) {
+//            // Checks user’s Data Saver settings.
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                switch (connMgr.getRestrictBackgroundStatus()) {
+//                    case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED:
+//                        // Background data usage is blocked for this app. Wherever possible,
+//                        // the app should also use less data in the foreground.
+//
+//                    case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_WHITELISTED:
+//                        // The app is allowed to bypass Data Saver. Nevertheless, wherever possible,
+//                        // the app should use less data in the foreground and background.
+//
+//                    case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_DISABLED:
+//                        // Data Saver is disabled. Since the device is connected to a
+//                        // metered network, the app should use less data wherever possible.
+//                }
+//            }
+//        } else {
+//            // The device is not on a metered network.
+//            // Use data as required to perform syncs, downloads, and updates.
+//        }
     }
 
     @Override

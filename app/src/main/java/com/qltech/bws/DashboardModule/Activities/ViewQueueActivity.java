@@ -276,15 +276,15 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
     private void callAdapterMethod() {
         if (addToQueueModelList.size() != 0) {
-          /*  if(queuePlay){
+            if(queuePlay){
                 for(int i = 0;i<addToQueueModelList.size();i++){
                     if(addToQueueModelList.get(i).getName().equalsIgnoreCase(binding.tvName.getText().toString())){
                         addToQueueModelList2.remove(i);
                     }
                 }
 
-            }*/
-            adapter = new QueueAdapter(addToQueueModelList, ctx);
+            }
+            adapter = new QueueAdapter(addToQueueModelList2, ctx);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ctx);
             binding.rvQueueList.setLayoutManager(mLayoutManager);
             binding.rvQueueList.setItemAnimator(new DefaultItemAnimator());
@@ -652,8 +652,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
 
         @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            AddToQueueModel listModel = listModelList.get(position);
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position1) {
+            AddToQueueModel listModel = listModelList.get(position1);
 
             holder.binding.tvTitle.setText(listModel.getName());
             holder.binding.tvTime.setText(listModel.getAudioDuration());
@@ -667,7 +667,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             Glide.with(ctx).load(listModel.getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            holder.binding.llRemove.setOnClickListener(view -> callRemoveList(position));
+            holder.binding.llRemove.setOnClickListener(view -> callRemoveList(position1));
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 if (isPrepare || isMediaStart || isPause) {
@@ -679,9 +679,10 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
                 setInIt(listModel.getName(), listModel.getAudiomastercat(),
                         listModel.getImageFile(), listModel.getAudioDuration());
-                savePrefQueue(position, true, false, addToQueueModelList, ctx);
-                getPrepareShowData(position);
-//                callRemoveList1(position);
+                savePrefQueue(position1, true, false, addToQueueModelList, ctx);
+                position = position1;
+                getPrepareShowData(position1);
+                callRemoveList1(position1);
             });
         }
 
@@ -691,16 +692,21 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
 
         public void callRemoveList(int position) {
+           String Name = listModelList.get(position).getName();
             listModelList.remove(position);
+            for(int i =0;i<addToQueueModelList.size();i++){
+                if(addToQueueModelList.get(i).getName().equalsIgnoreCase(Name))
+                addToQueueModelList.remove(i);
+            }
             notifyDataSetChanged();
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
-            String json = gson.toJson(listModelList);
+            String json = gson.toJson(addToQueueModelList);
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);
             editor.commit();
 //            BWSApplication.showToast("The audio has been removed from the queue", ctx);
-            addToQueueModelList = listModelList;
+            addToQueueModelList2 = listModelList;
         }
 
         @Override
@@ -726,7 +732,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             String json = gson.toJson(listModelList);
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);
             editor.commit();
-            addToQueueModelList = listModelList;
+            addToQueueModelList2 = listModelList;
 
         }
 
