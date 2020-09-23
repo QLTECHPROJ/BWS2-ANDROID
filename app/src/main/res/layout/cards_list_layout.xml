@@ -64,8 +64,8 @@
 
                     <ImageView
                         android:id="@+id/ivCardimg"
-                        android:layout_width="@dimen/_22sdp"
-                        android:layout_height="@dimen/_22sdp"
+                        android:layout_width="@dimen/_33sdp"
+                        android:layout_height="@dimen/_33sdp"
                         android:layout_gravity="center|left"
                         android:layout_marginLeft="@dimen/_16sdp"/>
 <!--                    android:src="@drawable/visa_card"-->

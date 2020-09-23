@@ -135,7 +135,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                 binding.tlNumber.setError("Please provide your card number");
                 binding.txtError.setText("");
                 binding.tlName.setError("");
-            } else if (binding.etNumber.getText().toString().length() < 16) {
+            } else if (binding.etNumber.getText().toString().length() < 15) {
                 binding.tlName.setError("");
                 binding.tlNumber.setError("Please use the correct card number");
                 binding.txtError.setText("");
@@ -169,7 +169,6 @@ public class AddPaymentActivity extends AppCompatActivity {
                 int Years = binding1.YearPicker.getValue();
 
                 Card card = new Card(strCardNo, months, Years, binding.etCvv.getText().toString());
-
                 new Stripe().createToken(card, getString(R.string.stipe_test_key), new TokenCallback() {
                     @Override
                     public void onError(Exception error) {

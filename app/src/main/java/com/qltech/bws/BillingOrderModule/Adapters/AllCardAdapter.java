@@ -73,7 +73,6 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                 listModel.getExpYear());
         Glide.with(activity).load(listModel.getImage())
                 .thumbnail(0.05f)
-                .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.binding.ivCardimg);
         if (listModel.getIsDefault().equalsIgnoreCase(CONSTANTS.FLAG_ONE)) {

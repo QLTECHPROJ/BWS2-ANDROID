@@ -42,7 +42,7 @@ public class ReminderActivity extends AppCompatActivity {
     String am_pm, hourString, minuteSting;
     Activity activity;
     Context context;
-    String UserId, ReminderStatus = "", PlaylistID = "", PlaylistName = "", reminderDayNo = "", ComeFrom = "", Time = "";
+    String UserId, PlaylistID = "", PlaylistName = "", reminderDayNo = "", ComeFrom = "", Time = "";
     List<String> reminderDayList;
     ArrayList<String> remiderDays = new ArrayList<>();
 
@@ -54,8 +54,6 @@ public class ReminderActivity extends AppCompatActivity {
         activity = ReminderActivity.this;
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_ReminderStatus, Context.MODE_PRIVATE);
-        ReminderStatus = (shared.getString(CONSTANTS.PREF_KEY_ReminderStatus, ""));
         reminderDayList = new ArrayList<>();
         reminderDayList.add("S");
         reminderDayList.add("M");
@@ -102,12 +100,6 @@ public class ReminderActivity extends AppCompatActivity {
         }else {
             binding.tvTime.setText(Time);
         }
-        if (ReminderStatus.equalsIgnoreCase("1")) {
-            binding.switchStatus.setChecked(true);
-        } else if (ReminderStatus.equalsIgnoreCase("0")
-                || ReminderStatus.equalsIgnoreCase("")) {
-            binding.switchStatus.setChecked(false);
-        }
 
         binding.llSelectTime.setOnClickListener(view -> {
             final Calendar c = Calendar.getInstance();
@@ -118,19 +110,24 @@ public class ReminderActivity extends AppCompatActivity {
                     (view1, hourOfDay, minute) -> {
                         if (hourOfDay < 10) {
                             hourString = "0" + hourOfDay;
+                            am_pm = "AM";
+                        } else if (hourOfDay > 12) {
+                            am_pm = "PM";
+                            hourOfDay = hourOfDay - 12;
+                            hourString = "" + hourOfDay;
+                            if (hourOfDay < 10) {
+                                hourString = "0" + hourString;
+                            }
+
                         } else {
                             hourString = "" + hourOfDay;
+                            am_pm = "AM";
                         }
                         if (minute < 10)
                             minuteSting = "0" + minute;
                         else
                             minuteSting = "" + minute;
-                        if (hourOfDay > 12) {
-                            am_pm = "PM";
-                            hourOfDay = hourOfDay - 12;
-                        } else {
-                            am_pm = "AM";
-                        }
+
                         binding.tvTime.setText(hourString + ":" + minuteSting + " " + am_pm);
                     }, mHour, mMinute, false);
             timePickerDialog.show();
@@ -143,6 +140,7 @@ public class ReminderActivity extends AppCompatActivity {
                 i.putExtra("ComeFrom", "");
                 i.putExtra("PlaylistID", PlaylistID);
                 i.putExtra("PlaylistName", PlaylistName);
+                i.putExtra("Time", Time);
                 startActivity(i);
                 finish();
             });

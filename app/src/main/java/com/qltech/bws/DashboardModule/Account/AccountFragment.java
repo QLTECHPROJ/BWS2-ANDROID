@@ -261,13 +261,6 @@ public class AccountFragment extends Fragment {
         edit.clear();
         edit.commit();
 
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_ReminderStatus, Context.MODE_PRIVATE);
-        SharedPreferences.Editor edit1 = shared.edit();
-        edit1.remove(CONSTANTS.PREF_KEY_ReminderStatus);
-        edit1.remove(CONSTANTS.PREF_KEY_MobileNo);
-        edit1.clear();
-        edit1.commit();
-
         SharedPreferences shareds = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_CardID, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shareds.edit();
         editor.remove(CONSTANTS.PREF_KEY_CardID);

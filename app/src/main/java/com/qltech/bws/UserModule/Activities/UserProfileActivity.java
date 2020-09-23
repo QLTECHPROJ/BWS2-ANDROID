@@ -29,11 +29,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BuildConfig;
-import com.qltech.bws.LoginModule.Activities.OtpActivity;
-import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.SplashModule.SplashScreenActivity;
 import com.qltech.bws.UserModule.Models.AddProfileModel;
 import com.qltech.bws.UserModule.Models.ProfileUpdateModel;
 import com.qltech.bws.UserModule.Models.ProfileViewModel;
@@ -255,8 +252,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
                         Glide.with(getApplicationContext()).load(profilePicPath)
                                 .placeholder(R.drawable.default_profile)
-                                .thumbnail(1f)
-                                .dontAnimate().into(binding.civProfile);
+                                .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .skipMemoryCache(false).into(binding.civProfile);
 
                         if (viewModel.getResponseData().getDOB().equalsIgnoreCase("0000-00-00")) {
                             binding.etCalendar.setText("");
@@ -441,8 +438,8 @@ public class UserProfileActivity extends AppCompatActivity {
             try {
                 Glide.with(this).load(imageFilePath)
                         .placeholder(R.drawable.default_profile)
-                        .thumbnail(0.1f)
-                        .dontAnimate().into(binding.civProfile);
+                        .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .skipMemoryCache(false).into(binding.civProfile);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
                     HashMap<String, String> map = new HashMap<>();
@@ -457,8 +454,8 @@ public class UserProfileActivity extends AppCompatActivity {
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
                                                 .placeholder(R.drawable.default_profile)
-                                                .thumbnail(1f)
-                                                .dontAnimate().into(binding.civProfile);
+                                                .thumbnail(1f).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                                .skipMemoryCache(false).into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                     }
                                 }
@@ -480,9 +477,8 @@ public class UserProfileActivity extends AppCompatActivity {
                 Uri selectedImageUri = data.getData();
                 Glide.with(this).load(selectedImageUri)
                         .placeholder(R.drawable.default_profile)
-                        .thumbnail(1f).diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .skipMemoryCache(true)
-                        .dontAnimate().into(binding.civProfile);
+                        .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .skipMemoryCache(false).into(binding.civProfile);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
                     HashMap<String, String> map = new HashMap<>();
@@ -499,8 +495,8 @@ public class UserProfileActivity extends AppCompatActivity {
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
                                                 .placeholder(R.drawable.default_profile)
-                                                .thumbnail(1f)
-                                                .dontAnimate().into(binding.civProfile);
+                                                .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                                .skipMemoryCache(false).into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                     }
                                 }

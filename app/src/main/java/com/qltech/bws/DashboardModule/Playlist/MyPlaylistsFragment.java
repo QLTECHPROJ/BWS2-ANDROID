@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -47,6 +48,7 @@ import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
+import com.qltech.bws.ReminderModule.Models.ReminderStatusModel;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.APIClient;
@@ -64,6 +66,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Account.AccountFragment.ComeScreenReminder;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.deleteFrg;
@@ -105,7 +108,7 @@ public class MyPlaylistsFragment extends Fragment {
             PlaylistName = getArguments().getString("PlaylistName");
             PlaylistImage = getArguments().getString("PlaylistImage");
         }
-        downloadAudioDetailsList=BWSApplication.GetAllMedia(activity);
+        downloadAudioDetailsList = BWSApplication.GetAllMedia(activity);
         binding.llBack.setOnClickListener(view1 -> callBack());
 
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
@@ -169,7 +172,7 @@ public class MyPlaylistsFragment extends Fragment {
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
 
         binding.llDownloads.setOnClickListener(view1 -> {
-            callDownload("","","",playlistSongsList,0,binding.llDownloads);
+            callDownload("", "", "", playlistSongsList, 0, binding.llDownloads);
         });
 
         if (New.equalsIgnoreCase("1")) {
@@ -286,23 +289,42 @@ public class MyPlaylistsFragment extends Fragment {
 
                         playlistSongsList = listModel.getResponseData().getPlaylistSongs();
 
-                     /*   if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("")){
-//                            binding.ivReminder
-                        }else {
-//                            binding.ivReminder
-                            binding.llReminder.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent i = new Intent(getActivity(), ReminderActivity.class);
-                                    i.putExtra("ComeFrom","1");
-                                    i.putExtra("PlaylistID", PlaylistID);
-                                    i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
-                                    i.putExtra("Time", "");
-                                    startActivity(i);
-                                }
+                        if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
+                            binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow),
+                                    android.graphics.PorterDuff.Mode.SRC_IN);
+                            if (BWSApplication.isNetworkConnected(getActivity())) {
+                                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserID, PlaylistID, "0");/*set 1 or not 0 */
+                                listCall.enqueue(new Callback<ReminderStatusModel>() {
+                                    @Override
+                                    public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {
+                                        if (response.isSuccessful()) {
+                                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                            ReminderStatusModel listModel = response.body();
+                                            BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ReminderStatusModel> call, Throwable t) {
+                                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                    }
+                                });
+                            } else {
+                                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+                            }
+                        } else {
+                            binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                            binding.llReminder.setOnClickListener(view -> {
+                                ComeScreenReminder = 0;
+                                Intent i = new Intent(getActivity(), ReminderActivity.class);
+                                i.putExtra("ComeFrom", "1");
+                                i.putExtra("PlaylistID", PlaylistID);
+                                i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
+                                i.putExtra("Time", "");
+                                startActivity(i);
                             });
                         }
-*/
 
                         if (listModel.getResponseData().getPlaylistName().equalsIgnoreCase("") ||
                                 listModel.getResponseData().getPlaylistName() == null) {
@@ -503,14 +525,14 @@ public class MyPlaylistsFragment extends Fragment {
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }*/
-       if(id.isEmpty()&& Name.isEmpty() && audioFile.isEmpty()){
+        if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
 
-       }else {
-           DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
-           byte[] EncodeBytes = downloadMedia.encrypt(audioFile, Name);
-           String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
-           SaveMedia(EncodeBytes, dirPath,playlistSongs,i,llDownload);
-       }
+        } else {
+            DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
+            byte[] EncodeBytes = downloadMedia.encrypt(audioFile, Name);
+            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
+            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
+        }
     }
 
     private void SaveMedia(byte[] encodeBytes, String dirPath, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, int i, LinearLayout llDownload) {
@@ -520,23 +542,23 @@ public class MyPlaylistsFragment extends Fragment {
             protected Void doInBackground(Void... voids) {
                 DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
 
-                    downloadAudioDetails.setID(playlistSongs.get(i).getID());
-                    downloadAudioDetails.setName(playlistSongs.get(i).getName());
-                    downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());
-                    downloadAudioDetails.setAudioDirection(playlistSongs.get(i).getAudioDirection());
-                    downloadAudioDetails.setAudiomastercat(playlistSongs.get(i).getAudiomastercat());
-                    downloadAudioDetails.setAudioSubCategory(playlistSongs.get(i).getAudioSubCategory());
-                    downloadAudioDetails.setImageFile(playlistSongs.get(i).getImageFile());
-                    downloadAudioDetails.setLike(playlistSongs.get(i).getLike());
-                    downloadAudioDetails.setDownload("1");
-                    downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
-                    if(playlistSongs.get(i).getPlaylistID().equalsIgnoreCase("")){
-                        downloadAudioDetails.setIsSingle("1");
-                        downloadAudioDetails.setPlaylistId("");
-                    }else{
-                        downloadAudioDetails.setIsSingle("0");
-                        downloadAudioDetails.setPlaylistId(playlistSongs.get(i).getPlaylistID());
-                    }
+                downloadAudioDetails.setID(playlistSongs.get(i).getID());
+                downloadAudioDetails.setName(playlistSongs.get(i).getName());
+                downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());
+                downloadAudioDetails.setAudioDirection(playlistSongs.get(i).getAudioDirection());
+                downloadAudioDetails.setAudiomastercat(playlistSongs.get(i).getAudiomastercat());
+                downloadAudioDetails.setAudioSubCategory(playlistSongs.get(i).getAudioSubCategory());
+                downloadAudioDetails.setImageFile(playlistSongs.get(i).getImageFile());
+                downloadAudioDetails.setLike(playlistSongs.get(i).getLike());
+                downloadAudioDetails.setDownload("1");
+                downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
+                if (playlistSongs.get(i).getPlaylistID().equalsIgnoreCase("")) {
+                    downloadAudioDetails.setIsSingle("1");
+                    downloadAudioDetails.setPlaylistId("");
+                } else {
+                    downloadAudioDetails.setIsSingle("0");
+                    downloadAudioDetails.setPlaylistId(playlistSongs.get(i).getPlaylistID());
+                }
                 downloadAudioDetails.setEncodedBytes(encodeBytes);
                 downloadAudioDetails.setDirPath(dirPath);
 
@@ -591,7 +613,7 @@ public class MyPlaylistsFragment extends Fragment {
             holder.binding.tvTimeB.setText(mData.get(position).getAudioDuration());
 
             String id = mData.get(position).getID();
-            oneAudioDetailsList = BWSApplication.GetMedia(id,activity);
+            oneAudioDetailsList = BWSApplication.GetMedia(id, activity);
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -624,18 +646,18 @@ public class MyPlaylistsFragment extends Fragment {
                 binding.tvSearch.setVisibility(View.GONE);
                 binding.searchView.setVisibility(View.VISIBLE);
             }
-            if(oneAudioDetailsList.size()!=0){
-                if(oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")){
-                    disableDownload(holder.binding.llDownload,holder.binding.ivDownloads);
+            if (oneAudioDetailsList.size() != 0) {
+                if (oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
+                    disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
                 }
-            }else if (mData.get(position).getDownload().equalsIgnoreCase("1")) {
-                disableDownload(holder.binding.llDownload,holder.binding.ivDownloads);
+            } else if (mData.get(position).getDownload().equalsIgnoreCase("1")) {
+                disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
             } else {
-                enableDownload(holder.binding.llDownload,holder.binding.ivDownloads);
+                enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
             }
 
             holder.binding.llMore.setOnClickListener(view -> {
-                Intent i = new Intent(ctx,AddQueueActivity.class );
+                Intent i = new Intent(ctx, AddQueueActivity.class);
                 i.putExtra("play", "");
                 i.putExtra("ID", mData.get(position).getID());
                 i.putExtra("position", position);
@@ -644,8 +666,8 @@ public class MyPlaylistsFragment extends Fragment {
                 startActivity(i);
             });
 
-            holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID(),mData.get(position).getAudioFile(),
-                    mData.get(position).getName(),listFilterData,position,holder.binding.llDownload));
+            holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(),
+                    mData.get(position).getName(), listFilterData, position, holder.binding.llDownload));
 
             holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID()));
         }
@@ -760,7 +782,8 @@ public class MyPlaylistsFragment extends Fragment {
             }
         }
     }
- private void enableDownload(LinearLayout llDownload, ImageView ivDownloads) {
+
+    private void enableDownload(LinearLayout llDownload, ImageView ivDownloads) {
         llDownload.setClickable(true);
         llDownload.setEnabled(true);
         ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
@@ -835,14 +858,14 @@ public class MyPlaylistsFragment extends Fragment {
                 binding.tvSearch.setVisibility(View.GONE);
                 binding.searchView.setVisibility(View.VISIBLE);
             }
-            if(oneAudioDetailsList.size()!=0){
-                if(oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")){
-                    disableDownload(holder.binding.llDownload,holder.binding.ivDownloads);
+            if (oneAudioDetailsList.size() != 0) {
+                if (oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
+                    disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
                 }
-            }else if (mData.get(position).getDownload().equalsIgnoreCase("1")) {
-                disableDownload(holder.binding.llDownload,holder.binding.ivDownloads);
+            } else if (mData.get(position).getDownload().equalsIgnoreCase("1")) {
+                disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
             } else if (!mData.get(position).getDownload().equalsIgnoreCase("")) {
-                enableDownload(holder.binding.llDownload,holder.binding.ivDownloads);
+                enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
             }
 
             holder.binding.llMore.setOnClickListener(new View.OnClickListener() {
@@ -858,8 +881,8 @@ public class MyPlaylistsFragment extends Fragment {
                 }
             });
 
-            holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID(),mData.get(position).getAudioFile(),
-                    mData.get(position).getName(),mData,position,holder.binding.llDownload));
+            holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(),
+                    mData.get(position).getName(), mData, position, holder.binding.llDownload));
 
             holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID()));
         }

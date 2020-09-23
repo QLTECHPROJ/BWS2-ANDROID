@@ -76,8 +76,7 @@
                                         android:id="@+id/ivReminder"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:src="@drawable/ic_clock_icon"
-                                        app:tint="@color/white" />
+                                        android:src="@drawable/ic_clock_icon" />
 
                                 </LinearLayout>
 

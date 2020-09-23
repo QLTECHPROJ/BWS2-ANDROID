@@ -194,10 +194,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         ReminderStatusModel listModel = response.body();
                         BWSApplication.showToast(listModel.getResponseMessage(),activity);
-                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_ReminderStatus, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        editor.putString(CONSTANTS.PREF_KEY_ReminderStatus, reminderStatus);
-                        editor.commit();
                     }
                 }
 

@@ -33,7 +33,7 @@ import retrofit2.Response;
 
 public class SelectPlaylistActivity extends AppCompatActivity {
     ActivitySelectPlaylistBinding binding;
-    String UserId, ComeFrom = "", PlaylistID = "", PlaylistName = "";
+    String UserId, ComeFrom = "", PlaylistID = "", PlaylistName = "", Time = "";
     Context ctx;
     Activity activity;
     SelectPlaylistAdapter adapter;
@@ -52,6 +52,7 @@ public class SelectPlaylistActivity extends AppCompatActivity {
             ComeFrom = getIntent().getStringExtra("ComeFrom");
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
             PlaylistName = getIntent().getStringExtra("PlaylistName");
+            Time = getIntent().getStringExtra("Time");
         }
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +62,7 @@ public class SelectPlaylistActivity extends AppCompatActivity {
                 i.putExtra("ComeFrom", ComeFrom);
                 i.putExtra("PlaylistID", PlaylistID);
                 i.putExtra("PlaylistName", PlaylistName);
+                i.putExtra("Time", Time);
                 startActivity(i);
                 finish();
             }
@@ -79,6 +81,7 @@ public class SelectPlaylistActivity extends AppCompatActivity {
         i.putExtra("ComeFrom", ComeFrom);
         i.putExtra("PlaylistID", PlaylistID);
         i.putExtra("PlaylistName", PlaylistName);
+        i.putExtra("Time", Time);
         startActivity(i);
         finish();
     }
@@ -161,6 +164,7 @@ public class SelectPlaylistActivity extends AppCompatActivity {
                         i.putExtra("ComeFrom", ComeFrom);
                         i.putExtra("PlaylistID", model.get(mSelectedItem).getID());
                         i.putExtra("PlaylistName", model.get(mSelectedItem).getName());
+                        i.putExtra("Time", Time);
                         startActivity(i);
                         finish();
                     }
