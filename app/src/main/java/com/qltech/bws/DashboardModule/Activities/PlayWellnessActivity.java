@@ -76,7 +76,7 @@ import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*,AudioManager.OnAudioFocusChangeListener*/ {
     ActivityPlayWellnessBinding binding;
-    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url, audioFile;
+    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url;
     int startTime = 0, endTime = 0, position, listSize;
     Context ctx;
     Activity activity;
@@ -922,7 +922,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 isPause = false;
             }
             mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(audioFile);
+            mediaPlayer.setDataSource(url);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
                         new AudioAttributes
