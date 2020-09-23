@@ -256,6 +256,7 @@
                         android:layout_marginTop="@dimen/_8sdp"
                         android:layout_marginBottom="@dimen/_8sdp"
                         android:scaleType="fitXY"
+                        android:indeterminateTint="@color/white"
                         android:layout_weight="0.13"
                         android:visibility="gone" />
                 </LinearLayout>
