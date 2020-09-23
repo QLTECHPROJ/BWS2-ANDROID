@@ -89,12 +89,6 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
-        binding.etCalendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setDate();
-            }
-        });
         profileViewData(ctx);
 
         binding.rlImageUpload.setOnClickListener(new View.OnClickListener() {
@@ -313,6 +307,14 @@ public class UserProfileActivity extends AppCompatActivity {
                             binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
                             binding.btnSave.setClickable(true);
                             binding.btnSave.setEnabled(true);
+
+                            binding.etCalendar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    setDate();
+                                }
+                            });
+
                         } else if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("0")) { /*Disable */
                             binding.btnSave.setBackgroundResource(R.drawable.gray_extra_light_round_corners);
                             binding.btnSave.setClickable(false);

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -143,7 +144,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
