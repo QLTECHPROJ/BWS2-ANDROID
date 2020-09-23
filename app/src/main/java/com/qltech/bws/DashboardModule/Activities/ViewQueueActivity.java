@@ -444,6 +444,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 isMediaStart = false;
                 isPrepare = false;
             }
+            mediaPlayer = new MediaPlayer();
             mediaPlayer.setDataSource(String.valueOf(url));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(

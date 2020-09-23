@@ -921,7 +921,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 isPrepare = false;
                 isPause = false;
             }
-            mediaPlayer.setDataSource(String.valueOf(audioFile));
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(audioFile);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
                         new AudioAttributes

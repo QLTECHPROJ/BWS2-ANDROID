@@ -468,7 +468,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 isMediaStart = false;
                 isPrepare = false;
             }
-            mediaPlayer.setDataSource(String.valueOf(audioFile));
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(audioFile);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
                         new AudioAttributes
