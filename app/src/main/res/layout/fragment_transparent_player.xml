@@ -113,7 +113,7 @@
                             android:layout_marginBottom="@dimen/_8sdp"
                             android:layout_weight="0.13"
                             android:padding="@dimen/_13sdp"
-
+                            android:visibility="gone"
                             android:scaleType="fitXY"
                             android:src="@drawable/ic_all_pause_icon" />
                         <ProgressBar

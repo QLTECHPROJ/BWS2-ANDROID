@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -64,7 +67,6 @@ import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
-import static com.qltech.bws.Utility.MusicService.play;
 import static com.qltech.bws.Utility.MusicService.play2;
 import static com.qltech.bws.Utility.MusicService.playMedia;
 import static com.qltech.bws.Utility.MusicService.progressToTimer;
@@ -229,11 +231,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         });
 
         binding.llPlay.setOnClickListener(v -> {
-            binding.llPlay.setVisibility(View.GONE);
-            binding.llPause.setVisibility(View.VISIBLE);
             if (!isMediaStart) {
                 callMedia();
             } else {
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
                 resumeMedia();
                 isPause = false;
             }
@@ -244,6 +248,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             handler.removeCallbacks(UpdateSongTime);
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
             pauseMedia();
+            binding.llProgressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
             oTime = binding.simpleSeekbar.getProgress();
@@ -353,11 +359,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
         }
         if (IsRepeat.equalsIgnoreCase("")) {
-         /*   if (listSize == 1) {
-                binding.llRepeat.setClickable(false);
-                binding.llRepeat.setEnabled(false);
-                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            } else {*/
             if (queuePlay) {
                 binding.llRepeat.setEnabled(false);
                 binding.llRepeat.setClickable(false);
@@ -369,10 +370,19 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             }
-        }else if(IsRepeat.equalsIgnoreCase("0")){
-            IsRepeat = "0";
-            binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
-            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+        } else if (IsRepeat.equalsIgnoreCase("0")) {
+            if (queuePlay) {
+                binding.llRepeat.setEnabled(false);
+                binding.llRepeat.setClickable(false);
+                binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                IsRepeat = "0";
+                binding.llRepeat.setClickable(true);
+                binding.llRepeat.setEnabled(true);
+                binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
         } else if (IsRepeat.equalsIgnoreCase("1")) {
             if (queuePlay) {
                 binding.llRepeat.setEnabled(false);
@@ -549,10 +559,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 }
                 editor.commit();
                 IsRepeat = "";
-                if(queuePlay){
+                if (queuePlay) {
                     binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-                }else
-                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                } else
+                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
                 BWSApplication.showToast("Shuffle mode has been turned on", ctx);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -579,7 +589,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             editor.commit();
             IsShuffle = "";
-            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            if (listSize == 1) {
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             IsRepeat = "0";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
             BWSApplication.showToast("Repeat mode has been turned on", ctx);
@@ -588,20 +601,33 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
-            editor.commit();
             IsRepeat = "1";
+            if (listSize == 1) {
+                editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
+                IsRepeat = "";
+                BWSApplication.showToast("Repeat mode has been turned off", ctx);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                BWSApplication.showToast("Repeat mode has been turned on", ctx);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
+            editor.commit();
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-            BWSApplication.showToast("Repeat mode has been turned on", ctx);
-            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         } else if (IsRepeat.equalsIgnoreCase("1")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
             editor.commit();
             IsRepeat = "";
+            if (listSize == 1) {
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             BWSApplication.showToast("Repeat mode has been turned off", ctx);
-            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
 
@@ -758,7 +784,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llPlay.setVisibility(View.GONE);
             } else {*/
             if (isPause) {
-
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
                 binding.simpleSeekbar.setProgress(oTime);
@@ -766,12 +793,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
                         TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
 //                    resumeMedia();
-            } else if ((isPrepare || isMediaStart) && !isPause) {
+            } else if (isMediaStart && !isPause) {
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
             } else {
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
                 callMedia();
             }
 //            }
@@ -837,6 +864,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llPlay.setVisibility(View.GONE);
             } else {*/
             if (isPause) {
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
                 binding.simpleSeekbar.setProgress(oTime);
@@ -844,12 +873,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 int timeeee = progressToTimer(oTime, (int) (totalDuration));
                 binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
                         TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
-            } else if (((isPrepare || isMediaStart)) && !isPause) {
+            } else if (isMediaStart && !isPause) {
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
             } else {
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
                 callMedia();
             }
 //            }
@@ -869,6 +898,54 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
 
+    private void setMediaPlayer() {
+        if (null == mediaPlayer) {
+            mediaPlayer = new MediaPlayer();
+            binding.llProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.GONE);
+            Log.e("Playinggggg", "Playinggggg");
+        }
+        try {
+            binding.llProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.GONE);
+            if (mediaPlayer == null)
+                mediaPlayer = new MediaPlayer();
+            if (mediaPlayer.isPlaying()) {
+                Log.e("Playinggggg", "stoppppp");
+                mediaPlayer.stop();
+                isMediaStart = false;
+                isPrepare = false;
+            }
+            mediaPlayer.setDataSource(String.valueOf(audioFile));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mediaPlayer.setAudioAttributes(
+                        new AudioAttributes
+                                .Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .build());
+            }
+            mediaPlayer.prepareAsync();
+            isPrepare = true;
+        } catch (IllegalStateException | IOException e) {
+            e.printStackTrace();
+        }
+        if (!mediaPlayer.isPlaying()) {
+            mediaPlayer.setOnPreparedListener(mp -> {
+                Log.e("Playinggggg", "Startinggg");
+                mediaPlayer.start();
+                isMediaStart = true;
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
+            });
+        }
+    }
+
     private void callMedia() {
         if (downloadAudioDetailsList.size() != 0) {
             DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
@@ -877,18 +954,21 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 byte[] decrypt = null;
                 decrypt = downloadMedia.decrypt(name);
                 if (decrypt != null) {
+                    binding.llProgressBar.setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
                     fileDescriptor = FileUtils.getTempFileDescriptor(getApplicationContext(), decrypt);
                     play2(fileDescriptor);
+                    playMedia();
                 } else {
-                    play(Uri.parse(url));
+                    setMediaPlayer();
                 }
-                playMedia();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            play(Uri.parse(url));
-            playMedia();
+            setMediaPlayer();
         }
     }
 
@@ -1040,9 +1120,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         if (listSize == 1) {
             position = 0;
         }
-        if ((isPrepare || isMediaStart || isPlaying()) && !isPause) {
+        if(isPrepare && !isMediaStart){
+            callMedia();
+        }
+        else if ((isMediaStart || isPlaying()) && !isPause) {
             binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.VISIBLE);
+            binding.llProgressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
         } else {
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);

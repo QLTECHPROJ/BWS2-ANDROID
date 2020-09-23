@@ -141,12 +141,16 @@ public class AddQueueActivity extends AppCompatActivity {
         } else {
             binding.llRemovePlaylist.setVisibility(View.GONE);
         }
-
+        if (queuePlay) {
+            listSize = addToQueueModelList.size();
+        } else if (audioPlay) {
+            listSize = mainPlayModelList.size();
+        }
         if (IsShuffle.equalsIgnoreCase("")) {
             if (listSize == 1) {
                 binding.llShuffle.setClickable(false);
                 binding.llShuffle.setEnabled(false);
-                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {
                 binding.llShuffle.setClickable(true);
                 binding.llShuffle.setEnabled(true);
@@ -156,7 +160,7 @@ public class AddQueueActivity extends AppCompatActivity {
             if (listSize == 1) {
                 binding.llShuffle.setClickable(false);
                 binding.llShuffle.setEnabled(false);
-                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {
                 binding.llShuffle.setClickable(true);
                 binding.llShuffle.setEnabled(true);
@@ -165,13 +169,15 @@ public class AddQueueActivity extends AppCompatActivity {
         }
 
         if (IsRepeat.equalsIgnoreCase("")) {
-            if (listSize == 1 || queuePlay) {
+            if (queuePlay) {
                 binding.llRepeat.setClickable(false);
                 binding.llRepeat.setEnabled(false);
-                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {
                 binding.llRepeat.setClickable(true);
                 binding.llRepeat.setEnabled(true);
+                binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else if (IsRepeat.equalsIgnoreCase("0")) {
@@ -179,7 +185,7 @@ public class AddQueueActivity extends AppCompatActivity {
                 binding.llRepeat.setEnabled(false);
                 binding.llRepeat.setClickable(false);
                 binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
-                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {
                 IsRepeat = "0";
                 binding.llRepeat.setClickable(true);
@@ -191,10 +197,12 @@ public class AddQueueActivity extends AppCompatActivity {
             if (queuePlay) {
                 binding.llRepeat.setEnabled(false);
                 binding.llRepeat.setClickable(false);
+                binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {
                 binding.llRepeat.setClickable(true);
                 binding.llRepeat.setEnabled(true);
+                binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         }
@@ -245,12 +253,10 @@ public class AddQueueActivity extends AppCompatActivity {
 
     private void callShuffle() {
         if (IsShuffle.equalsIgnoreCase("")) {
-            if (queuePlay) {
-                listSize = addToQueueModelList.size();
-            } else if (audioPlay) {
-                listSize = mainPlayModelList.size();
-            }
             if (listSize == 1) {
+                binding.llShuffle.setClickable(false);
+                binding.llShuffle.setEnabled(false);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
 
             } else {
                 IsShuffle = "1";
@@ -262,11 +268,11 @@ public class AddQueueActivity extends AppCompatActivity {
                 }
                 editor.commit();
                 IsRepeat = "";
-                if(queuePlay){
-                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.extra_light_blue), android.graphics.PorterDuff.Mode.SRC_IN);
-                }else
+                if (queuePlay) {
+                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                } else
+                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
                 BWSApplication.showToast("Shuffle mode has been turned on", ctx);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
             }
@@ -282,6 +288,7 @@ public class AddQueueActivity extends AppCompatActivity {
     }
 
     private void callRepeat() {
+
         if (IsRepeat.equalsIgnoreCase("")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -289,9 +296,12 @@ public class AddQueueActivity extends AppCompatActivity {
             if (IsShuffle.equalsIgnoreCase("1")) {
                 editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
             }
-            IsShuffle = "";
-            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             editor.commit();
+            IsShuffle = "";
+            if (listSize == 1) {
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             IsRepeat = "0";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
             BWSApplication.showToast("Repeat mode has been turned on", ctx);
@@ -300,20 +310,32 @@ public class AddQueueActivity extends AppCompatActivity {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
-            editor.commit();
             IsRepeat = "1";
+            if (listSize == 1) {
+                editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
+                IsRepeat = "";
+                BWSApplication.showToast("Repeat mode has been turned off", ctx);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                BWSApplication.showToast("Repeat mode has been turned on", ctx);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
+            editor.commit();
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-            BWSApplication.showToast("Repeat mode has been turned on", ctx);
-            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-        } else if (IsRepeat.equalsIgnoreCase("1")) {
+         } else if (IsRepeat.equalsIgnoreCase("1")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
             editor.commit();
+            if (listSize == 1) {
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             IsRepeat = "";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             BWSApplication.showToast("Repeat mode has been turned off", ctx);
-            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
 

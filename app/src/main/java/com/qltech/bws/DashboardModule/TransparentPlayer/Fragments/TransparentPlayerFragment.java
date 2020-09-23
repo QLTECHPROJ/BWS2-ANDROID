@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +44,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import retrofit2.Call;
@@ -53,7 +57,6 @@ import static com.qltech.bws.Utility.MusicService.SeekTo;
 import static com.qltech.bws.Utility.MusicService.getEndTime;
 import static com.qltech.bws.Utility.MusicService.getProgressPercentage;
 import static com.qltech.bws.Utility.MusicService.getStartTime;
-import static com.qltech.bws.Utility.MusicService.initMediaPlayer;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPlaying;
@@ -61,7 +64,6 @@ import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
-import static com.qltech.bws.Utility.MusicService.play;
 import static com.qltech.bws.Utility.MusicService.play2;
 import static com.qltech.bws.Utility.MusicService.playMedia;
 import static com.qltech.bws.Utility.MusicService.progressToTimer;
@@ -71,15 +73,16 @@ import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener*/ {
     public FragmentTransparentPlayerBinding binding;
-    String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id;
+    String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
     int position = 0, startTime, listSize;
     MainPlayModel mainPlayModel;
     Boolean queuePlay, audioPlay;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     boolean downloadPlay = false;
-    private Handler handler;
+    List<DownloadAudioDetails> downloadAudioDetailsList;
     Activity activity;
+    private Handler handler;
     //    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
@@ -122,6 +125,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         View view = binding.getRoot();
         mainPlayModelList = new ArrayList<>();
         addToQueueModelList = new ArrayList<>();
+        downloadAudioDetailsList = new ArrayList<>();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         handler = new Handler();
@@ -263,62 +267,29 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             IsShuffle = "";
         }
         binding.ivPause.setOnClickListener(view1 -> {
-            binding.ivPause.setVisibility(View.GONE);
-            binding.ivPlay.setVisibility(View.VISIBLE);
             handler.removeCallbacks(UpdateSongTime);
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
             if (!isMediaStart) {
 //                callAsyncTask();
-                if (downloadPlay) {
-                    DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
-                    FileDescriptor fileDescriptor = null;
-                    try {
-                        fileDescriptor = FileUtils.getTempFileDescriptor(getActivity().getApplicationContext(),
-                                downloadMedia.decrypt(mainPlayModelList.get(position).getName()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    play2(fileDescriptor);
-                    playMedia();
-                } else {
-                    play(Uri.parse(audioFile));
-                    playMedia();
-                }
+                callMedia();
             } else {
                 pauseMedia();
+                binding.ivPause.setVisibility(View.GONE);
+                binding.ivPlay.setVisibility(View.VISIBLE);
             }
             oTime = binding.simpleSeekbar.getProgress();
         });
 
         binding.ivPlay.setOnClickListener(view12 -> {
             if (!isMediaStart) {
-                initMediaPlayer();
-                stopMedia();
-                binding.progressBar.setVisibility(View.GONE);
-                binding.ivPlay.setVisibility(View.GONE);
-                binding.ivPause.setVisibility(View.GONE);
-                if (downloadPlay) {
-                    DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
-                    FileDescriptor fileDescriptor = null;
-                    try {
-                        fileDescriptor = FileUtils.getTempFileDescriptor(getActivity().getApplicationContext(),
-                                downloadMedia.decrypt(mainPlayModelList.get(position).getName()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    play2(fileDescriptor);
-                    playMedia();
-                } else {
-                    play(Uri.parse(audioFile));
-                    playMedia();
-                }
+                callMedia();
             } else {
                 resumeMedia();
+                binding.progressBar.setVisibility(View.GONE);
+                binding.ivPlay.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.VISIBLE);
                 isPause = false;
             }
-            binding.progressBar.setVisibility(View.GONE);
-            binding.ivPlay.setVisibility(View.GONE);
-            binding.ivPause.setVisibility(View.VISIBLE);
             player = 1;
             handler.postDelayed(UpdateSongTime, 60);
         });
@@ -360,6 +331,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
             if (listSize != 0) {
                 id = addToQueueModelList.get(position).getID();
+                name = addToQueueModelList.get(position).getName();
+                downloadAudioDetailsList = BWSApplication.GetMedia(id, getActivity());
                 Glide.with(getActivity()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                 binding.tvTitle.setText(addToQueueModelList.get(position).getName());
@@ -373,29 +346,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         binding.ivPlay.setVisibility(View.VISIBLE);
                         binding.simpleSeekbar.setProgress(oTime);
                     } else if (!isPrepare && !isMediaStart) {
-                        binding.progressBar.setVisibility(View.GONE);
-                        binding.ivPlay.setVisibility(View.GONE);
-                        binding.ivPause.setVisibility(View.VISIBLE);
-                        if (downloadPlay) {
-                            DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
-                            FileDescriptor fileDescriptor = null;
-                            try {
-                                byte[] decrypt = null;
-                                decrypt = downloadMedia.decrypt(mainPlayModelList.get(position).getName());
-                                if(decrypt != null) {
-                                    fileDescriptor = FileUtils.getTempFileDescriptor(getActivity().getApplicationContext(), decrypt);
-                                    play2(fileDescriptor);
-                                }else{
-                                    play(Uri.parse(audioFile));
-                                }
-                                playMedia();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            play(Uri.parse(audioFile));
-                            playMedia();
-                        }
+                        callMedia();
+
                        /* play(Uri.parse(audioFile));
                         new Handler().postDelayed(() -> {
                             binding.progressBar.setVisibility(View.VISIBLE);
@@ -422,6 +374,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 position = 0;
             }
             id = mainPlayModelList.get(position).getID();
+            name = mainPlayModelList.get(position).getName();
             Glide.with(getActivity()).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTitle.setText(mainPlayModelList.get(position).getName());
@@ -435,30 +388,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     binding.ivPlay.setVisibility(View.VISIBLE);
                     binding.simpleSeekbar.setProgress(oTime);
                 } else if (!isPrepare && !isMediaStart) {
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.ivPlay.setVisibility(View.GONE);
-                    binding.ivPause.setVisibility(View.VISIBLE);
-                    if (downloadPlay) {
-                        DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
-                        FileDescriptor fileDescriptor = null;
-                        try {
-                            byte[] decrypt = null;
-                            decrypt = downloadMedia.decrypt(mainPlayModelList.get(position).getName());
-                            if(decrypt != null) {
-                                fileDescriptor = FileUtils.getTempFileDescriptor(getActivity().getApplicationContext(), decrypt);
-                                play2(fileDescriptor);
-                            }else{
-                                play(Uri.parse(audioFile));
-                            }
-                            playMedia();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        play(Uri.parse(audioFile));
-                        playMedia();
-                    }
-
+                    callMedia();
                     /*play(Uri.parse(audioFile));
                     new Handler().postDelayed(() -> {
                         binding.progressBar.setVisibility(View.VISIBLE);
@@ -516,6 +446,78 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
 //            simpleNotification();
         });
+    }
+
+    private void setMediaPlayer() {
+        if (null == mediaPlayer) {
+            mediaPlayer = new MediaPlayer();
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.GONE);
+            Log.e("Playinggggg", "Playinggggg");
+        }
+        try {
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.GONE);
+            if (mediaPlayer == null)
+                mediaPlayer = new MediaPlayer();
+            if (mediaPlayer.isPlaying()) {
+                Log.e("Playinggggg", "stoppppp");
+                mediaPlayer.stop();
+                isMediaStart = false;
+                isPrepare = false;
+            }
+            mediaPlayer.setDataSource(String.valueOf(audioFile));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mediaPlayer.setAudioAttributes(
+                        new AudioAttributes
+                                .Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .build());
+            }
+            mediaPlayer.prepareAsync();
+            isPrepare = true;
+        } catch (IllegalStateException | IOException e) {
+            e.printStackTrace();
+        }
+        if (!mediaPlayer.isPlaying()) {
+            mediaPlayer.setOnPreparedListener(mp -> {
+                Log.e("Playinggggg", "Startinggg");
+                mediaPlayer.start();
+                isMediaStart = true;
+                binding.progressBar.setVisibility(View.GONE);
+                binding.ivPlay.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.VISIBLE);
+            });
+        }
+    }
+
+    private void callMedia() {
+        if (downloadAudioDetailsList.size() != 0) {
+            DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
+            FileDescriptor fileDescriptor = null;
+            try {
+                byte[] decrypt = null;
+                decrypt = downloadMedia.decrypt(name);
+                if (decrypt != null) {
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.ivPlay.setVisibility(View.GONE);
+                    binding.ivPause.setVisibility(View.VISIBLE);
+                    fileDescriptor = FileUtils.getTempFileDescriptor(getActivity().getApplicationContext(), decrypt);
+                    play2(fileDescriptor);
+                    playMedia();
+                } else {
+                    setMediaPlayer();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+//                            play(Uri.parse(audioFile));
+//                            playMedia();
+            setMediaPlayer();
+        }
     }
 
     private void callComplete() {
@@ -667,7 +669,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
-        if ((isPrepare || isMediaStart || isPlaying()) && !isPause) {
+        if (isPrepare && !isMediaStart) {
+            callMedia();
+        } else if ((isMediaStart || isPlaying()) && !isPause) {
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.VISIBLE);
         } else {
