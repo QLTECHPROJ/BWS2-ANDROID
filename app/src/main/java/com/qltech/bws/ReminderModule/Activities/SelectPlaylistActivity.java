@@ -58,7 +58,7 @@ public class SelectPlaylistActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ctx, ReminderActivity.class);
-                i.putExtra("ComeFrom", "0");
+                i.putExtra("ComeFrom", ComeFrom);
                 i.putExtra("PlaylistID", PlaylistID);
                 i.putExtra("PlaylistName", PlaylistName);
                 startActivity(i);
@@ -76,7 +76,7 @@ public class SelectPlaylistActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent i = new Intent(ctx, ReminderActivity.class);
-        i.putExtra("ComeFrom", "0");
+        i.putExtra("ComeFrom", ComeFrom);
         i.putExtra("PlaylistID", PlaylistID);
         i.putExtra("PlaylistName", PlaylistName);
         startActivity(i);
@@ -158,6 +158,7 @@ public class SelectPlaylistActivity extends AppCompatActivity {
                         notifyDataSetChanged();
 
                         Intent i = new Intent(ctx, ReminderActivity.class);
+                        i.putExtra("ComeFrom", ComeFrom);
                         i.putExtra("PlaylistID", model.get(mSelectedItem).getID());
                         i.putExtra("PlaylistName", model.get(mSelectedItem).getName());
                         startActivity(i);

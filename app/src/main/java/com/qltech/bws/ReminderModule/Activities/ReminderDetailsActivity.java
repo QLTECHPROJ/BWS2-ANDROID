@@ -71,9 +71,10 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 }else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")){
                     Intent i = new Intent(ctx, ReminderActivity.class);
-                    i.putExtra("ComeFrom","0");
+                    i.putExtra("ComeFrom","");
                     i.putExtra("PlaylistID", "");
                     i.putExtra("PlaylistName", "");
+                    i.putExtra("Time", "");
                     startActivity(i);
                     finish();
                 }
@@ -154,6 +155,18 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 }
             });
 
+            holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(ctx, ReminderActivity.class);
+                    i.putExtra("ComeFrom","");
+                    i.putExtra("PlaylistID", model.get(position).getPlaylistId());
+                    i.putExtra("PlaylistName", model.get(position).getPlaylistName());
+                    i.putExtra("Time", model.get(position).getReminderTime());
+                    startActivity(i);
+                    finish();
+                }
+            });
         }
 
         @Override

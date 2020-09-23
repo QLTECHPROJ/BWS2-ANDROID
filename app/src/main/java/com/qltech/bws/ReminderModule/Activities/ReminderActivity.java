@@ -42,7 +42,7 @@ public class ReminderActivity extends AppCompatActivity {
     String am_pm, hourString, minuteSting;
     Activity activity;
     Context context;
-    String UserId, ReminderStatus = "", PlaylistID = "", PlaylistName = "", reminderDayNo = "", ComeFrom = "";
+    String UserId, ReminderStatus = "", PlaylistID = "", PlaylistName = "", reminderDayNo = "", ComeFrom = "", Time = "";
     List<String> reminderDayList;
     ArrayList<String> remiderDays = new ArrayList<>();
 
@@ -76,6 +76,9 @@ public class ReminderActivity extends AppCompatActivity {
             PlaylistName = getIntent().getStringExtra("PlaylistName");
         }
 
+        if (getIntent().getExtras() != null){
+            Time = getIntent().getStringExtra("Time");
+        }
         binding.llBack.setOnClickListener(view -> {
             if (ComeScreenReminder == 1) {
                 Intent i = new Intent(context, ReminderDetailsActivity.class);
@@ -93,6 +96,12 @@ public class ReminderActivity extends AppCompatActivity {
             binding.tvPlaylistName.setText(PlaylistName);
         }
 
+        if (Time.equalsIgnoreCase("")||
+                Time == null){
+            binding.tvTime.setText("12:00 pm");
+        }else {
+            binding.tvTime.setText(Time);
+        }
         if (ReminderStatus.equalsIgnoreCase("1")) {
             binding.switchStatus.setChecked(true);
         } else if (ReminderStatus.equalsIgnoreCase("0")
@@ -127,11 +136,11 @@ public class ReminderActivity extends AppCompatActivity {
             timePickerDialog.show();
         });
 
-        if (ComeFrom.equalsIgnoreCase("0")) {
+        if (ComeFrom.equalsIgnoreCase("") || ComeFrom == null) {
             binding.ivArrow.setVisibility(View.VISIBLE);
             binding.llSelectPlaylist.setOnClickListener(view -> {
                 Intent i = new Intent(ReminderActivity.this, SelectPlaylistActivity.class);
-                i.putExtra("ComeFrom", ComeFrom);
+                i.putExtra("ComeFrom", "");
                 i.putExtra("PlaylistID", PlaylistID);
                 i.putExtra("PlaylistName", PlaylistName);
                 startActivity(i);
@@ -158,9 +167,13 @@ public class ReminderActivity extends AppCompatActivity {
                                 BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                                 SetReminderModel listModel = response.body();
                                 BWSApplication.showToast(listModel.getResponseMessage(), activity);
-                                Intent i = new Intent(context, ReminderDetailsActivity.class);
-                                startActivity(i);
-                                finish();
+                                if (ComeScreenReminder == 1) {
+                                    Intent i = new Intent(context, ReminderDetailsActivity.class);
+                                    startActivity(i);
+                                    finish();
+                                } else {
+                                    finish();
+                                }
                             }
                         }
 

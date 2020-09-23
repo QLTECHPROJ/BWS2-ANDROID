@@ -65,6 +65,9 @@ public class SubPlayListModel {
         @SerializedName("PlaylistDesc")
         @Expose
         private String playlistDesc;
+        @SerializedName("IsReminder")
+        @Expose
+        private String IsReminder;
         @SerializedName("PlaylistMastercat")
         @Expose
         private String playlistMastercat;
@@ -113,6 +116,7 @@ public class SubPlayListModel {
             created = in.readString();
             download = in.readString();
             like = in.readString();
+            IsReminder = in.readString();
         }
 
         public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
@@ -126,6 +130,14 @@ public class SubPlayListModel {
                 return new ResponseData[size];
             }
         };
+
+        public String getIsReminder() {
+            return IsReminder;
+        }
+
+        public void setIsReminder(String isReminder) {
+            IsReminder = isReminder;
+        }
 
         public String getPlaylistID() {
             return playlistID;
@@ -258,6 +270,7 @@ public class SubPlayListModel {
             parcel.writeString(totalminute);
             parcel.writeString(created);
             parcel.writeString(like);
+            parcel.writeString(IsReminder);
         }
 
         public static class PlaylistSong implements Parcelable {

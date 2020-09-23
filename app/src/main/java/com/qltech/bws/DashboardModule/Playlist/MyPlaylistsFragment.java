@@ -285,16 +285,24 @@ public class MyPlaylistsFragment extends Fragment {
                         SubPlayListModel listModel = response.body();
 
                         playlistSongsList = listModel.getResponseData().getPlaylistSongs();
-                        binding.llReminder.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent i = new Intent(getActivity(), ReminderActivity.class);
-                                i.putExtra("ComeFrom","1");
-                                i.putExtra("PlaylistID", PlaylistID);
-                                i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
-                                startActivity(i);
-                            }
-                        });
+
+                     /*   if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("")){
+//                            binding.ivReminder
+                        }else {
+//                            binding.ivReminder
+                            binding.llReminder.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent i = new Intent(getActivity(), ReminderActivity.class);
+                                    i.putExtra("ComeFrom","1");
+                                    i.putExtra("PlaylistID", PlaylistID);
+                                    i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
+                                    i.putExtra("Time", "");
+                                    startActivity(i);
+                                }
+                            });
+                        }
+*/
 
                         if (listModel.getResponseData().getPlaylistName().equalsIgnoreCase("") ||
                                 listModel.getResponseData().getPlaylistName() == null) {
