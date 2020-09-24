@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,7 @@ import com.qltech.bws.LoginModule.Activities.LoginActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Activities.ReminderDetailsActivity;
 import com.qltech.bws.ResourceModule.Activities.ResourceActivity;
+import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.UserModule.Activities.UserProfileActivity;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.UserModule.Models.ProfileViewModel;
@@ -279,7 +281,6 @@ public class AccountFragment extends Fragment {
         editorr.clear();
         editorr.commit();
     }
-
     private void hideProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.GONE);
@@ -290,6 +291,31 @@ public class AccountFragment extends Fragment {
         }
     }
 
+        public void DeletallLocalCart() {
+
+            class DeletallCart extends AsyncTask<Void, Void, Void> {
+
+                @Override
+                protected Void doInBackground(Void... voids) {
+
+                    DatabaseClient
+                            .getInstance(getActivity())
+                            .getaudioDatabase()
+                            .taskDao()
+                            .deleteAll();
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                }
+            }
+
+            DeletallCart st = new DeletallCart();
+            st.execute();
+
+        }
     private void showProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.VISIBLE);

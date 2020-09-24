@@ -8,7 +8,7 @@ import androidx.room.TypeConverters;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity(tableName = "item_table")
+@Entity(tableName = "audio_table")
 public class DownloadAudioDetails implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int uid;

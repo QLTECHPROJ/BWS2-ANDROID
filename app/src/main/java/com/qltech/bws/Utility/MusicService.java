@@ -96,6 +96,7 @@ public class MusicService extends Service {
         mediaPlayer = new MediaPlayer();
 
         try {
+
             mediaPlayer.setDataSource(AudioFile);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(

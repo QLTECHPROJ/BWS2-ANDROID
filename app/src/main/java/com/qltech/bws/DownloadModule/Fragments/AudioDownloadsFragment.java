@@ -2,6 +2,7 @@ package com.qltech.bws.DownloadModule.Fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter;
 import com.qltech.bws.R;
+import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.FragmentDownloadsBinding;
@@ -50,17 +52,8 @@ public class AudioDownloadsFragment extends Fragment {
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
         audioList = new ArrayList<>();
-        audioList = BWSApplication.GetAllMedia(getActivity());
-        if (audioList != null) {
-            if (audioList.size() != 0) {
-                getDataList(audioList, UserID, binding.progressBarHolder, binding.ImgV, binding.llError, binding.rvDownloadsList);
-                binding.llError.setVisibility(View.GONE);
-                binding.rvDownloadsList.setVisibility(View.VISIBLE);
-            }
-        } else {
-            binding.llError.setVisibility(View.VISIBLE);
-            binding.rvDownloadsList.setVisibility(View.GONE);
-        }
+        audioList = GetAllMedia(getActivity());
+
         try {
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 Fragment fragment = new TransparentPlayerFragment();
@@ -78,6 +71,42 @@ public class AudioDownloadsFragment extends Fragment {
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
 
         return view;
+    }
+    public List<DownloadAudioDetails> GetAllMedia(Context ctx) {
+
+        class GetTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                audioList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllData();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (audioList != null) {
+                    if (audioList.size() != 0) {
+                        getDataList(audioList, UserID, binding.progressBarHolder, binding.ImgV, binding.llError, binding.rvDownloadsList);
+                        binding.llError.setVisibility(View.GONE);
+                        binding.rvDownloadsList.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    binding.llError.setVisibility(View.VISIBLE);
+                    binding.rvDownloadsList.setVisibility(View.GONE);
+                }
+                super.onPostExecute(aVoid);
+
+            }
+        }
+
+        GetTask st = new GetTask();
+        st.execute();
+        return audioList;
     }
 
 

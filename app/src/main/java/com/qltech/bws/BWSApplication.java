@@ -100,7 +100,7 @@ public class BWSApplication extends Application {
         st.execute();
         return downloadAudioDetailsList;
     }
-    public static List<DownloadAudioDetails> GetAllMedia(Context ctx) {
+/*    public static List<DownloadAudioDetails> GetAllMedia(Context ctx) {
 
         class GetTask extends AsyncTask<Void, Void, Void> {
 
@@ -125,7 +125,7 @@ public class BWSApplication extends Application {
         GetTask st = new GetTask();
         st.execute();
         return downloadAudioDetailsList;
-    }
+    }*/
 
     public static synchronized BWSApplication getInstance() {
         return BWSApplication;

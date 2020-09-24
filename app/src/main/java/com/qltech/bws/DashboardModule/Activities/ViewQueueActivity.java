@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +38,7 @@ import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
+import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -70,7 +71,6 @@ import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
-import static com.qltech.bws.Utility.MusicService.play;
 import static com.qltech.bws.Utility.MusicService.play2;
 import static com.qltech.bws.Utility.MusicService.playMedia;
 import static com.qltech.bws.Utility.MusicService.progressToTimer;
@@ -81,7 +81,7 @@ import static com.qltech.bws.Utility.MusicService.stopMedia;
 public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener*/ {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
-    String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "",url,name;
+    String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name;
     Context ctx;
     Activity activity;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -89,8 +89,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     SharedPreferences shared;
     Boolean queuePlay, audioPlay;
     QueueAdapter adapter;
-    private long mLastClickTime = 0;
     List<DownloadAudioDetails> downloadAudioDetailsList;
+    private long mLastClickTime = 0;
     private Handler handler;
     //    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -100,12 +100,20 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             Time t = Time.valueOf("00:00:00");
             if (queuePlay) {
                 if (listSize != 0) {
-                    t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                    if (downloadAudioDetailsList.size() != 0) {
+                        t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                    } else {
+                        t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                    }
                 } else {
                     stopMedia();
                 }
             } else if (audioPlay) {
-                t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                if (downloadAudioDetailsList.size() != 0) {
+                    t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                } else {
+                    t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                }
             }
             long totalDuration = t.getTime();
             long currentDuration = getStartTime();
@@ -234,16 +242,46 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 getPrepareShowData(position);
             } else if (IsShuffle.equalsIgnoreCase("1")) {
                 // shuffle is on - play a random song
-                Random random = new Random();
-                position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                getPrepareShowData(position);
+                if (queuePlay) {
+                    adapter.callRemoveList(position);
+                    listSize = addToQueueModelList.size();
+                    if (listSize == 0) {
+                        stopMedia();
+                    } else if (listSize == 1) {
+                        stopMedia();
+                    } else {
+                        Random random = new Random();
+                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                        getPrepareShowData(position);
+                    }
+                } else {
+                    Random random = new Random();
+                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                    getPrepareShowData(position);
+                }
             } else {
-                if (position < listSize - 1) {
-                    position = position + 1;
-                    getPrepareShowData(position);
-                } else if (listSize != 1) {
-                    position = 0;
-                    getPrepareShowData(position);
+                if (queuePlay) {
+                    adapter.callRemoveList(position);
+                    listSize = addToQueueModelList.size();
+                    if (position < listSize - 1) {
+                        getPrepareShowData(position);
+                    } else {
+                        if (listSize == 0) {
+                            savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                            stopMedia();
+                        } else {
+                            position = 0;
+                            getPrepareShowData(position);
+                        }
+                    }
+                } else {
+                    if (position < listSize - 1) {
+                        position = position + 1;
+                        getPrepareShowData(position);
+                    } else if (listSize != 1) {
+                        position = 0;
+                        getPrepareShowData(position);
+                    }
                 }
             }
         });
@@ -266,17 +304,47 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 getPrepareShowData(position);
             } else if (IsShuffle.equalsIgnoreCase("1")) {
                 // shuffle is on - play a random song
-                Random random = new Random();
-                position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                getPrepareShowData(position);
+                if (queuePlay) {
+                    adapter.callRemoveList(position);
+                    listSize = addToQueueModelList.size();
+                    if (listSize == 0) {
+                        stopMedia();
+                    } else if (listSize == 1) {
+                        stopMedia();
+                    } else {
+                        Random random = new Random();
+                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                        getPrepareShowData(position);
+                    }
+                } else {
+                    Random random = new Random();
+                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                    getPrepareShowData(position);
+                }
             } else {
-                if (position > 0) {
-                    position = position - 1;
+                if (queuePlay) {
+                    adapter.callRemoveList(position);
+                    listSize = addToQueueModelList.size();
+                    if (position > 0) {
+                        getPrepareShowData(position - 1);
+                    } else {
+                        if (listSize == 0) {
+                            savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                            stopMedia();
+                        } else {
+                            position = 0;
+                            getPrepareShowData(position);
+                        }
+                    }
+                } else {
+                    if (position > 0) {
+                        position = position - 1;
 
-                    getPrepareShowData(position);
-                } else if (listSize != 1) {
-                    position = listSize - 1;
-                    getPrepareShowData(position);
+                        getPrepareShowData(position);
+                    } else if (listSize != 1) {
+                        position = listSize - 1;
+                        getPrepareShowData(position);
+                    }
                 }
             }
         });
@@ -284,9 +352,9 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
     private void callAdapterMethod() {
         if (addToQueueModelList.size() != 0) {
-            if(queuePlay){
-                for(int i = 0;i<addToQueueModelList.size();i++){
-                    if(addToQueueModelList.get(i).getName().equalsIgnoreCase(binding.tvName.getText().toString())){
+            if (queuePlay) {
+                for (int i = 0; i < addToQueueModelList.size(); i++) {
+                    if (addToQueueModelList.get(i).getName().equalsIgnoreCase(binding.tvName.getText().toString())) {
                         addToQueueModelList2.remove(i);
                     }
                 }
@@ -302,6 +370,48 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             touchHelper.attachToRecyclerView(binding.rvQueueList);
             binding.rvQueueList.setAdapter(adapter);
         }
+    }
+
+    public void GetMedia(String id, Context ctx) {
+
+        downloadAudioDetailsList = new ArrayList<>();
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                downloadAudioDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getLastIdByuId(id);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (isPause) {
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+                    binding.llProgressBar.setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.simpleSeekbar.setProgress(oTime);
+//                    resumeMedia();
+                } else if ((isMediaStart || isPlaying()) && !isPause) {
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
+                    binding.llProgressBar.setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.GONE);
+                } else {
+                    callMedia();
+                }
+                super.onPostExecute(aVoid);
+
+            }
+        }
+
+        GetMedia st = new GetMedia();
+        st.execute();
     }
 
     private void getPrepareShowData(int position) {
@@ -344,31 +454,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             name = mainPlayModelList.get(position).getName();
             setInIt(mainPlayModelList.get(position).getName(), mainPlayModelList.get(position).getAudiomastercat(),
                     mainPlayModelList.get(position).getImageFile(), mainPlayModelList.get(position).getAudioDuration());
-
-           /* if (!isMediaStart) {
-                play(getApplicationContext(), Uri.parse(mainPlayModelList.get(position).getAudioFile()));
-                playMedia();
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
-            } else {*/
-
-            downloadAudioDetailsList = BWSApplication.GetMedia(url,ctx);
-            if (isPause) {
-                binding.llPlay.setVisibility(View.VISIBLE);
-                binding.llPause.setVisibility(View.GONE);
-                binding.llProgressBar.setVisibility(View.GONE);
-                binding.progressBar.setVisibility(View.GONE);
-                binding.simpleSeekbar.setProgress(oTime);
-//                    resumeMedia();
-            } else if ((isMediaStart || isPlaying()) && !isPause) {
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
-                binding.llProgressBar.setVisibility(View.GONE);
-                binding.progressBar.setVisibility(View.GONE);
-            } else {
-                callMedia();
-//                }
-            }
+            GetMedia(url, ctx);
         } else if (queuePlay) {
             if (listSize == 1) {
                 position = 0;
@@ -378,28 +464,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             name = addToQueueModelList.get(position).getName();
             setInIt(addToQueueModelList.get(position).getName(), addToQueueModelList.get(position).getAudiomastercat(),
                     addToQueueModelList.get(position).getImageFile(), addToQueueModelList.get(position).getAudioDuration());
-         /*   if (!isMediaStart) {
-                play( Uri.parse(addToQueueModelList.get(position).getAudioFile()));
-                playMedia();
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
-            } else {*/
-            if (isPause) {
-                binding.llPlay.setVisibility(View.VISIBLE);
-                binding.llPause.setVisibility(View.GONE);
-                binding.llProgressBar.setVisibility(View.GONE);
-                binding.progressBar.setVisibility(View.GONE);
-                binding.simpleSeekbar.setProgress(oTime);
-//                    resumeMedia();
-            } else if ((isMediaStart || isPlaying()) && !isPause) {
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llPlay.setVisibility(View.GONE);
-                binding.llProgressBar.setVisibility(View.GONE);
-                binding.progressBar.setVisibility(View.GONE);
-            } else {
-                callMedia();
-            }
-//            }
+            GetMedia(url, ctx);
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson2 = new Gson();
@@ -422,6 +487,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         editor.commit();
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
+
     private void setMediaPlayer() {
         if (null == mediaPlayer) {
             mediaPlayer = new MediaPlayer();
@@ -496,6 +562,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             setMediaPlayer();
         }
     }
+
     private void callComplete() {
         handler.removeCallbacks(UpdateSongTime);
         isPrepare = false;
@@ -652,10 +719,9 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
     @Override
     protected void onResume() {
-        if(isPrepare && !isMediaStart){
+        if (isPrepare && !isMediaStart) {
             callMedia();
-        }
-        else if ((isMediaStart || isPlaying()) && !isPause) {
+        } else if ((isMediaStart || isPlaying()) && !isPause) {
             binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.VISIBLE);
             binding.llProgressBar.setVisibility(View.GONE);
@@ -763,11 +829,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
 
         public void callRemoveList(int position) {
-           String Name = listModelList.get(position).getName();
+            String Name = listModelList.get(position).getName();
             listModelList.remove(position);
-            for(int i =0;i<addToQueueModelList.size();i++){
-                if(addToQueueModelList.get(i).getName().equalsIgnoreCase(Name))
-                addToQueueModelList.remove(i);
+            for (int i = 0; i < addToQueueModelList.size(); i++) {
+                if (addToQueueModelList.get(i).getName().equalsIgnoreCase(Name))
+                    addToQueueModelList.remove(i);
             }
             notifyDataSetChanged();
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

@@ -37,11 +37,13 @@ import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Playlist.PlaylistFragment;
 import com.qltech.bws.R;
+import com.qltech.bws.RoomDataBase.DownloadPlaylistDetails;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityMyPlaylistBinding;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,6 +57,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     Context ctx;
     public static int deleteFrg = 0;
     public static int ComeFindAudio = 0;
+    DownloadPlaylistDetails downloadPlaylistDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +99,21 @@ public class MyPlaylistActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         SubPlayListModel model = response.body();
+                        downloadPlaylistDetails = new DownloadPlaylistDetails();
+                        downloadPlaylistDetails.setPlaylistID(model.getResponseData().getPlaylistID());
+                        downloadPlaylistDetails.setPlaylistName( model.getResponseData().getPlaylistName());
+                        downloadPlaylistDetails.setPlaylistDesc( model.getResponseData().getPlaylistDesc());
+                        downloadPlaylistDetails.setIsReminder(model.getResponseData().getIsReminder());
+                        downloadPlaylistDetails.setPlaylistMastercat( model.getResponseData().getPlaylistMastercat());
+                        downloadPlaylistDetails.setPlaylistSubcat( model.getResponseData().getPlaylistSubcat());
+                        downloadPlaylistDetails.setPlaylistImage( model.getResponseData().getPlaylistImage());
+                        downloadPlaylistDetails.setTotalAudio( model.getResponseData().getTotalAudio());
+                        downloadPlaylistDetails.setTotalDuration( model.getResponseData().getTotalDuration());
+                        downloadPlaylistDetails.setTotalhour( model.getResponseData().getTotalhour());
+                        downloadPlaylistDetails.setTotalminute( model.getResponseData().getTotalminute());
+                        downloadPlaylistDetails.setCreated( model.getResponseData().getCreated());
+                        downloadPlaylistDetails.setDownload( model.getResponseData().getDownload());
+                        downloadPlaylistDetails.setLike( model.getResponseData().getLike());
                         binding.tvName.setText(model.getResponseData().getPlaylistName());
                         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 20,
                                 1, 1, 0.54f, 20);

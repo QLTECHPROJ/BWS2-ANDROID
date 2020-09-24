@@ -32,6 +32,7 @@ import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.DownloadsLayoutBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
@@ -50,6 +51,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     RecyclerView rvDownloadsList;
     private List<DownloadAudioDetails> listModelList;
     TextView tvFound;
+    List<DownloadAudioDetails> downloadAudioDetailsList;
 
     public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, String UserID,
                                  FrameLayout progressBarHolder, ImageView ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
@@ -225,14 +227,37 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                listModelList = BWSApplication.GetAllMedia(ctx);
-                notifyItemRemoved(position);
-                if (listModelList.size() != 0) {
-                    if (listModelList.size() == 0) {
+                listModelList = GetAllMedia(ctx);
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        DeleteMedia st = new DeleteMedia();
+        st.execute();
+    }
+    public List<DownloadAudioDetails> GetAllMedia(FragmentActivity ctx) {
+
+        class GetTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                downloadAudioDetailsList = new ArrayList<>();
+                downloadAudioDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllData();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (downloadAudioDetailsList.size() != 0) {
+                    if (downloadAudioDetailsList.size() == 0) {
                         tvFound.setVisibility(View.VISIBLE);
                     } else {
                         llError.setVisibility(View.GONE);
-                        AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(listModelList,ctx, UserID, progressBarHolder, ImgV,llError,rvDownloadsList,tvFound);
+                        AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(downloadAudioDetailsList,ctx, UserID, progressBarHolder, ImgV,llError,rvDownloadsList,tvFound);
                         rvDownloadsList.setAdapter(adapter);
                     }                    llError.setVisibility(View.GONE);
                     rvDownloadsList.setVisibility(View.VISIBLE);
@@ -241,11 +266,13 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     rvDownloadsList.setVisibility(View.GONE);
                 }
                 super.onPostExecute(aVoid);
+
             }
         }
 
-        DeleteMedia st = new DeleteMedia();
+        GetTask st = new GetTask();
         st.execute();
+        return downloadAudioDetailsList;
     }
 
     private void hideProgressBar() {
