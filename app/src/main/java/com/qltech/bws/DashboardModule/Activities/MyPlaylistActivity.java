@@ -183,8 +183,78 @@ public class MyPlaylistActivity extends AppCompatActivity {
             downloadMedia.encrypt1(url, name, playlistSongsList);
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
+        savePlaylist();
+        byte[] encodedBytes = new byte[1024];
+        for (int i = 0; i < name.size(); i++) {
+            saveAllMedia(playlistSongsList, encodedBytes, FileUtils.getFilePath(getApplicationContext(), name.get(i)));
+        }
+    }
+    private void savePlaylist() {
+        class SaveMedia extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                DatabaseClient.getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .insertPlaylist(downloadPlaylistDetails);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+//                llDownload.setClickable(false);
+//                llDownload.setEnabled(false);
+                super.onPostExecute(aVoid);
+            }
+        }
+        SaveMedia st = new SaveMedia();
+        st.execute();
     }
 
+    private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes, String filePath) {
+        class SaveMedia extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+                for (int i = 0; i < playlistSongs.size(); i++) {
+                    downloadAudioDetails.setID(playlistSongs.get(i).getID());
+                    downloadAudioDetails.setName(playlistSongs.get(i).getName());
+                    downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());
+                    downloadAudioDetails.setAudioDirection(playlistSongs.get(i).getAudioDirection());
+                    downloadAudioDetails.setAudiomastercat(playlistSongs.get(i).getAudiomastercat());
+                    downloadAudioDetails.setAudioSubCategory(playlistSongs.get(i).getAudioSubCategory());
+                    downloadAudioDetails.setImageFile(playlistSongs.get(i).getImageFile());
+                    downloadAudioDetails.setLike(playlistSongs.get(i).getLike());
+                    downloadAudioDetails.setDownload("1");
+                    downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
+                    downloadAudioDetails.setIsSingle("0");
+                    downloadAudioDetails.setPlaylistId(playlistSongs.get(i).getPlaylistID());
+                    downloadAudioDetails.setEncodedBytes(encodedBytes);
+                    downloadAudioDetails.setDirPath(filePath);
+                    DatabaseClient.getInstance(ctx)
+                            .getaudioDatabase()
+                            .taskDao()
+                            .insertMedia(downloadAudioDetails);
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+//                llDownload.setClickable(false);
+//                llDownload.setEnabled(false);
+                enableDisableDownload(false);
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        SaveMedia st = new SaveMedia();
+        st.execute();
+    }
     @Override
     public void onBackPressed() {
         ComeFindAudio = 1;

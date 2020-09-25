@@ -710,6 +710,21 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                         }
+                        if(queuePlay){
+                            addToQueueModelList.get(position).setLike(model.getResponseData().getFlag());
+                        }else
+                            mainPlayModelList.get(position).setLike(model.getResponseData().getFlag());
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        Gson gson = new Gson();
+                        String json = gson.toJson(mainPlayModelList);
+                        editor.putString(CONSTANTS.PREF_KEY_audioList, json);
+                        String json1 = gson.toJson(addToQueueModelList);
+                        if (queuePlay) {
+                            editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
+                        }
+                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                        editor.commit();
                         BWSApplication.showToast(model.getResponseMessage(), ctx);
                     }
                 }
@@ -889,7 +904,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("1")) {
                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-            } else if (!addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
+            } else if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
                 binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
             }
             binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
@@ -920,9 +935,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.tvDesc.setText(mainPlayModelList.get(position).getAudioSubCategory());
             Glide.with(getApplicationContext()).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+
             if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-            } else if (!mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
+            } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
                 binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
             }
             binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
@@ -1154,15 +1170,29 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }.getType();
             addToQueueModelList = gson.fromJson(json1, type1);
         }
+        String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+        }.getType();
+        mainPlayModelList = gson.fromJson(json, type);
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (queuePlay) {
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             listSize = addToQueueModelList.size();
+            if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("1")) {
+                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+            } else if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
+                binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+            }
         } else if (audioPlay) {
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             listSize = mainPlayModelList.size();
+            if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
+                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+            } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
+                binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+            }
         }
         if (listSize == 1) {
             position = 0;

@@ -550,7 +550,20 @@ public class AddQueueActivity extends AppCompatActivity {
                             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                             Like = "1";
                         }
+                        if(queuePlay){
+                            addToQueueModelList.get(position).setLike(Like);
+                        }else
                         mainPlayModelList.get(position).setLike(Like);
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        Gson gson = new Gson();
+                        String json = gson.toJson(mainPlayModelList);
+                        editor.putString(CONSTANTS.PREF_KEY_audioList, json);
+                        String json1 = gson.toJson(addToQueueModelList);
+                        if (queuePlay) {
+                            editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
+                        }
+                        editor.commit();
                         BWSApplication.showToast(model.getResponseMessage(), ctx);
                     }
                 }

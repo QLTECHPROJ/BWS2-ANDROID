@@ -670,6 +670,7 @@ public class MyPlaylistsFragment extends Fragment {
             url.add(playlistSongs2.get(x).getAudioFile());
         }
         if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
+            enableDisableDownload(false);
             byte[] encodedBytes = new byte[1024];
             DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
             downloadMedia.encrypt1(url, name, playlistSongs);
@@ -745,6 +746,7 @@ public class MyPlaylistsFragment extends Fragment {
             protected void onPostExecute(Void aVoid) {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
+                enableDisableDownload(false);
                 super.onPostExecute(aVoid);
             }
         }
