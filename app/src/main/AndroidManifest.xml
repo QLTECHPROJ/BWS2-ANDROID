@@ -87,7 +87,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
+        <!--<receiver android:name=".Utility.MyReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>-->
         <activity
             android:name=".ResourceModule.Activities.ResourceDetailsActivity"
             android:configChanges="orientation|screenSize"

@@ -560,7 +560,17 @@ public class MyPlaylistsFragment extends Fragment {
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }*/
+       List<String> url = new ArrayList<>();
+       List<String> name = new ArrayList<>();
+       for(int x = 0;x<playlistSongs.size();x++){
+            name.add(playlistSongs.get(i).getName());
+            url.add(playlistSongs.get(i).getAudioFile());
+       }
         if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
+            DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
+             downloadMedia.encrypt1(url, name,playlistSongs);
+//            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
+//            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
 
         } else {
             DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);

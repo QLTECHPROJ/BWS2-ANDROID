@@ -488,20 +488,12 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
     }
 
-    private void setMediaPlayer() {
+    private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {
         if (null == mediaPlayer) {
             mediaPlayer = new MediaPlayer();
-            binding.llProgressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.llPlay.setVisibility(View.GONE);
-            binding.llPause.setVisibility(View.GONE);
             Log.e("Playinggggg", "Playinggggg");
         }
         try {
-            binding.llProgressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.llPlay.setVisibility(View.GONE);
-            binding.llPause.setVisibility(View.GONE);
             if (mediaPlayer == null)
                 mediaPlayer = new MediaPlayer();
             if (mediaPlayer.isPlaying()) {
@@ -511,7 +503,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 isPrepare = false;
             }
             mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(String.valueOf(url));
+            if (download.equalsIgnoreCase("1")) {
+                mediaPlayer.setDataSource(fileDescriptor);
+            } else {
+                mediaPlayer.setDataSource(url);
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
                         new AudioAttributes
@@ -538,9 +534,14 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     }
 
     private void callMedia() {
+        FileDescriptor fileDescriptor = null;
         if (downloadAudioDetailsList.size() != 0) {
+            binding.llProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.GONE);
             DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
-            FileDescriptor fileDescriptor = null;
+
             try {
                 byte[] decrypt = null;
                 decrypt = downloadMedia.decrypt(name);
@@ -550,16 +551,19 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     binding.llPause.setVisibility(View.VISIBLE);
                     binding.llPlay.setVisibility(View.GONE);
                     fileDescriptor = FileUtils.getTempFileDescriptor(getApplicationContext(), decrypt);
-                    play2(fileDescriptor);
-                    playMedia();
+                    setMediaPlayer("1", fileDescriptor);
                 } else {
-                    setMediaPlayer();
+                    setMediaPlayer("0", fileDescriptor);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            setMediaPlayer();
+            binding.llProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.GONE);
+            setMediaPlayer("0", fileDescriptor);
         }
     }
 

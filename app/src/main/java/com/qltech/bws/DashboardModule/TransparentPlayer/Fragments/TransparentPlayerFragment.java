@@ -66,8 +66,6 @@ import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
-import static com.qltech.bws.Utility.MusicService.play2;
-import static com.qltech.bws.Utility.MusicService.playMedia;
 import static com.qltech.bws.Utility.MusicService.progressToTimer;
 import static com.qltech.bws.Utility.MusicService.resumeMedia;
 import static com.qltech.bws.Utility.MusicService.savePrefQueue;
@@ -457,18 +455,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         });
     }
 
-    private void setMediaPlayer() {
+    private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {
         if (null == mediaPlayer) {
             mediaPlayer = new MediaPlayer();
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.ivPlay.setVisibility(View.GONE);
-            binding.ivPause.setVisibility(View.GONE);
             Log.e("Playinggggg", "Playinggggg");
         }
         try {
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.ivPlay.setVisibility(View.GONE);
-            binding.ivPause.setVisibility(View.GONE);
             if (mediaPlayer == null)
                 mediaPlayer = new MediaPlayer();
             if (mediaPlayer.isPlaying()) {
@@ -478,7 +470,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 isPrepare = false;
             }
             mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(audioFile);
+            if (download.equalsIgnoreCase("1")) {
+                mediaPlayer.setDataSource(fileDescriptor);
+            } else {
+                mediaPlayer.setDataSource(audioFile);
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
                         new AudioAttributes
@@ -504,21 +500,21 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void callMedia() {
+        FileDescriptor fileDescriptor = null;
         if (downloadAudioDetailsList.size() != 0) {
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.GONE);
             DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
-            FileDescriptor fileDescriptor = null;
+
             try {
                 byte[] decrypt = null;
                 decrypt = downloadMedia.decrypt(name);
                 if (decrypt != null) {
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.ivPlay.setVisibility(View.GONE);
-                    binding.ivPause.setVisibility(View.VISIBLE);
                     fileDescriptor = FileUtils.getTempFileDescriptor(getActivity().getApplicationContext(), decrypt);
-                    play2(fileDescriptor);
-                    playMedia();
+                    setMediaPlayer("1", fileDescriptor);
                 } else {
-                    setMediaPlayer();
+                    setMediaPlayer("0", fileDescriptor);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -526,7 +522,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         } else {
 //                            play(Uri.parse(audioFile));
 //                            playMedia();
-            setMediaPlayer();
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.GONE);
+            setMediaPlayer("0", fileDescriptor);
         }
     }
 
