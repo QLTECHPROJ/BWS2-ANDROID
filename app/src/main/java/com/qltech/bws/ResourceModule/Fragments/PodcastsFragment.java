@@ -152,6 +152,7 @@ public class PodcastsFragment extends Fragment {
                 Intent i = new Intent(getActivity(), ResourceDetailsActivity.class);
                 i.putExtra("podcasts", podcasts);
                 i.putExtra("title", listModelList.get(position).getTitle());
+                i.putExtra("author", listModelList.get(position).getAuthor());
                 i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
                 i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
                 i.putExtra("image", listModelList.get(position).getImage());

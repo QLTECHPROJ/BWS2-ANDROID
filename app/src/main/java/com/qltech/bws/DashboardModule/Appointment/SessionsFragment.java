@@ -100,7 +100,7 @@ public class SessionsFragment extends Fragment {
         appointmentFragment.setArguments(bundle);
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
-                .replace(R.id.flMainLayout, appointmentFragment)
+                .replace(R.id.flContainer, appointmentFragment)
                 .commit();
     }
 
@@ -110,7 +110,7 @@ public class SessionsFragment extends Fragment {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.flMainLayout, fragment)
+                        .add(R.id.flContainer, fragment)
                         .commit();
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -225,7 +225,7 @@ public class SessionsFragment extends Fragment {
                     appointmentDetailsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
                             .addToBackStack("AppointmentDetailsFragment")
-                            .replace(R.id.flMainLayout, appointmentDetailsFragment).commit();
+                            .replace(R.id.flContainer, appointmentDetailsFragment).commit();
                 }
             });
         }

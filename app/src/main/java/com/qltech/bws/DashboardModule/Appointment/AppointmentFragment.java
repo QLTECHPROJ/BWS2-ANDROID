@@ -90,7 +90,7 @@ public class AppointmentFragment extends Fragment {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.flMainLayout, fragment)
+                        .add(R.id.flContainer, fragment)
                         .commit();
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -240,7 +240,7 @@ public class AppointmentFragment extends Fragment {
                     sessionsFragment.setArguments(bundle);
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .add(R.id.flMainLayout, sessionsFragment).commit();
+                            .add(R.id.flContainer, sessionsFragment).commit();
                 }
             });
         }

@@ -40,7 +40,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     Context ctx;
     Activity activity;
     RemiderDetailsAdapter adapter;
-    public static String ReminderPlaylistID = "", ReminderPlaylistName = "19";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,9 +154,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     prepareSwitchStatus("0");
                 }
             });
-
-            ReminderPlaylistID = model.get(position).getPlaylistId();
-            ReminderPlaylistName = model.get(position).getPlaylistName();
 
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

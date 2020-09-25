@@ -146,6 +146,9 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="start"
+                            android:paddingVertical="@dimen/_4sdp"
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:background="@drawable/transparent_bg"
                             android:text="@string/Select_Playlist"
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_14sdp" />

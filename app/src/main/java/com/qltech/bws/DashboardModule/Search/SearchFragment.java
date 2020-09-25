@@ -163,7 +163,7 @@ public class SearchFragment extends Fragment {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.rlSearchList, fragment)
+                        .add(R.id.flContainer, fragment)
                         .commit();
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -271,7 +271,7 @@ public class SearchFragment extends Fragment {
                         myPlaylistsFragment.setArguments(bundle);
                         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
-                                .replace(R.id.rlSearchList, myPlaylistsFragment)
+                                .replace(R.id.flContainer, myPlaylistsFragment)
                                 .commit();
                     }
                 });
@@ -427,7 +427,7 @@ public class SearchFragment extends Fragment {
                     bundle.putString("PlaylistName", listModelList.get(position).getName());
                     myPlaylistsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
-                            .replace(R.id.rlSearchList, myPlaylistsFragment)
+                            .replace(R.id.flContainer, myPlaylistsFragment)
                             .commit();
                 }
             });

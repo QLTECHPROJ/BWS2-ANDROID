@@ -68,7 +68,7 @@ public class AudioFragment extends Fragment {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.rlAudiolist, fragment)
+                        .add(R.id.flContainer, fragment)
                         .commit();
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -147,7 +147,7 @@ public class AudioFragment extends Fragment {
                     Fragment viewAllAudioFragment = new ViewAllAudioFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .replace(R.id.rlAudiolist, viewAllAudioFragment)
+                            .replace(R.id.flContainer, viewAllAudioFragment)
                             .commit();
                     Bundle bundle = new Bundle();
                     bundle.putString("ID", listModelList.get(position).getHomeID());

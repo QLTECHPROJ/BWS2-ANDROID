@@ -261,7 +261,7 @@
                                 android:theme="@style/WallSearchView"
                                 android:visibility="gone"
                                 app:queryBackground="@null"
-                                app:queryHint="Search for audio"
+                                app:queryHint="Search for audios"
                                 app:searchHintIcon="@null"
                                 app:searchIcon="@null" />
 

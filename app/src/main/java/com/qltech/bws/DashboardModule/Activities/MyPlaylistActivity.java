@@ -359,7 +359,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                         Fragment playlistFragment = new PlaylistFragment();
                                         FragmentManager fragmentManager1 = getSupportFragmentManager();
                                         fragmentManager1.beginTransaction()
-                                                .add(R.id.rlPlaylist, playlistFragment)
+                                                .add(R.id.flContainer, playlistFragment)
                                                 .commit();
                                         Bundle bundle = new Bundle();
                                         playlistFragment.setArguments(bundle);

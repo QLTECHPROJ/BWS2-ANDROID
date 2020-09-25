@@ -47,7 +47,7 @@ public class DashboardActivity extends AppCompatActivity {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.rlAudiolist, fragment)
+                        .add(R.id.flContainer, fragment)
                         .commit();
             }
         } catch (Exception e) {

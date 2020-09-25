@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
+import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
 import com.qltech.bws.BuildConfig;
 import com.qltech.bws.DashboardModule.Models.LogoutModel;
 import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
@@ -55,6 +56,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.pauseMedia;
+import static com.qltech.bws.Utility.MusicService.resumeMedia;
+
 public class AccountFragment extends Fragment {
     FragmentAccountBinding binding;
     String UserID;
@@ -77,15 +83,6 @@ public class AccountFragment extends Fragment {
         profileViewData(getActivity());
 
         binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
-
-        binding.llUserProfile.setOnClickListener(view13 -> {
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return;
-            }
-            mLastClickTime = SystemClock.elapsedRealtime();
-            Intent i = new Intent(getActivity(), UserProfileActivity.class);
-            startActivity(i);
-        });
 
         binding.llDownloads.setOnClickListener(view12 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -281,6 +278,7 @@ public class AccountFragment extends Fragment {
         editorr.clear();
         editorr.commit();
     }
+
     private void hideProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.GONE);
@@ -345,6 +343,37 @@ public class AccountFragment extends Fragment {
                                 .placeholder(R.drawable.default_profile)
                                 .thumbnail(1f)
                                 .dontAnimate().into(binding.civProfile);
+
+                        binding.llUserProfile.setOnClickListener(view13 -> {
+                            if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("1")){
+                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                    return;
+                                }
+                                mLastClickTime = SystemClock.elapsedRealtime();
+                                Intent i = new Intent(getActivity(), UserProfileActivity.class);
+                                startActivity(i);
+                            }else if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("0")) {
+                                final Dialog dialog = new Dialog(ctx);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.patient_popup);
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                final RelativeLayout rlGoBack = dialog.findViewById(R.id.rlGoBack);
+                                dialog.setOnKeyListener((v, keyCode, event) -> {
+                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                        dialog.dismiss();
+                                        return true;
+                                    }
+                                    return false;
+                                });
+
+                                rlGoBack.setOnClickListener(v -> {
+                                    dialog.dismiss();
+                                });
+                                dialog.show();
+                                dialog.setCancelable(false);
+                            }
+                        });
 
                         if (viewModel.getResponseData().getOrderTotal().equalsIgnoreCase("")) {
                             binding.tvCrtPlan.setText("Current plan: $0.00 / month");

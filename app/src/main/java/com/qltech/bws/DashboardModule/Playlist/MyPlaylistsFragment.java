@@ -119,7 +119,6 @@ public class MyPlaylistsFragment extends Fragment {
             i.putExtra("PlaylistID", PlaylistID);
             startActivity(i);
         });
-        //608629
 
         binding.tvSearch.setOnClickListener(view14 -> {
             Intent i = new Intent(getActivity(), AddAudioActivity.class);
@@ -178,8 +177,14 @@ public class MyPlaylistsFragment extends Fragment {
 
         if (New.equalsIgnoreCase("1")) {
             binding.llAddAudio.setVisibility(View.VISIBLE);
-            binding.llDownloads.setVisibility(View.INVISIBLE);
-            binding.llReminder.setVisibility(View.INVISIBLE);
+            binding.llDownloads.setVisibility(View.VISIBLE);
+            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+            binding.ivDownloads.setAlpha(255);
+            binding.llDownloads.setClickable(false);
+            binding.llDownloads.setEnabled(false);
+            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+            binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.INVISIBLE);
             binding.llListing.setVisibility(View.GONE);
             binding.btnAddAudio.setOnClickListener(new View.OnClickListener() {
@@ -253,14 +258,14 @@ public class MyPlaylistsFragment extends Fragment {
             Fragment fragment = new SearchFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
-                    .replace(R.id.rlSearchList, fragment)
+                    .replace(R.id.flContainer, fragment)
                     .commit();
             comefrom_search = 0;
         } else {
             Fragment playlistFragment = new PlaylistFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
-                    .replace(R.id.rlPlaylist, playlistFragment)
+                    .replace(R.id.flContainer, playlistFragment)
                     .commit();
         }
     }
@@ -284,13 +289,13 @@ public class MyPlaylistsFragment extends Fragment {
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .add(R.id.rlSearchList, fragment)
+                            .add(R.id.flContainer, fragment)
                             .commit();
                 } else {
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .add(R.id.rlPlaylist, fragment)
+                            .add(R.id.flContainer, fragment)
                             .commit();
                 }
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -356,7 +361,7 @@ public class MyPlaylistsFragment extends Fragment {
                                 i.putExtra("ComeFrom", "1");
                                 i.putExtra("PlaylistID", PlaylistID);
                                 i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
-                                i.putExtra("Time", "");
+                                i.putExtra("Time", listModel.getResponseData().getReminderTime());
                                 startActivity(i);
                             });
                         }
@@ -367,6 +372,7 @@ public class MyPlaylistsFragment extends Fragment {
                         } else {
                             binding.tvLibraryName.setText(listModel.getResponseData().getPlaylistName());
                         }
+
                         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
                                 4, 2, 1.2f, 0);
                         binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -415,8 +421,14 @@ public class MyPlaylistsFragment extends Fragment {
 
                         if (listModel.getResponseData().getPlaylistSongs().size() == 0) {
                             binding.llAddAudio.setVisibility(View.VISIBLE);
-                            binding.llDownloads.setVisibility(View.INVISIBLE);
-                            binding.llReminder.setVisibility(View.INVISIBLE);
+                            binding.llDownloads.setVisibility(View.VISIBLE);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                            binding.ivDownloads.setAlpha(255);
+                            binding.llDownloads.setClickable(false);
+                            binding.llDownloads.setEnabled(false);
+                            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.lights_gray), PorterDuff.Mode.SRC_IN);
+                            binding.llReminder.setVisibility(View.VISIBLE);
                             binding.ivPlaylistStatus.setVisibility(View.INVISIBLE);
                             binding.llListing.setVisibility(View.GONE);
                             binding.btnAddAudio.setOnClickListener(new View.OnClickListener() {
@@ -483,13 +495,13 @@ public class MyPlaylistsFragment extends Fragment {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.rlSearchList, fragment)
+                        .add(R.id.flContainer, fragment)
                         .commit();
             } else {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.rlPlaylist, fragment)
+                        .add(R.id.flContainer, fragment)
                         .commit();
             }
         } catch (Exception e) {

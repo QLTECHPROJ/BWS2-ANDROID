@@ -2,7 +2,9 @@ package com.qltech.bws.DashboardModule.Appointment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.tabs.TabLayout;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptAnswersFragment;
@@ -27,6 +30,7 @@ import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPla
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentAppointmentDetailsBinding;
 
 import retrofit2.Call;
@@ -92,7 +96,7 @@ public class AppointmentDetailsFragment extends Fragment {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.flMainLayout, fragment)
+                        .add(R.id.flContainer, fragment)
                         .commit();
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 0, 260);
@@ -121,29 +125,39 @@ public class AppointmentDetailsFragment extends Fragment {
                             if (appointmentDetailModel.getResponseData().getAudio().size() == 0
                                     && appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
                                     && appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.llViewOne.setVisibility(View.GONE);
+                                binding.llViewTwo.setVisibility(View.VISIBLE);
                                 binding.viewPager.setOffscreenPageLimit(1);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                             } else if (appointmentDetailModel.getResponseData().getAudio().size() != 0
                                     && appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
                                     && appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.llViewOne.setVisibility(View.VISIBLE);
+                                binding.llViewTwo.setVisibility(View.GONE);
                                 binding.viewPager.setOffscreenPageLimit(2);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
                             } else if (appointmentDetailModel.getResponseData().getAudio().size() == 0
                                     && !appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
                                     && appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.llViewOne.setVisibility(View.VISIBLE);
+                                binding.llViewTwo.setVisibility(View.GONE);
                                 binding.viewPager.setOffscreenPageLimit(2);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"));
                             } else if (appointmentDetailModel.getResponseData().getAudio().size() == 0
                                     && appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
                                     && !appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.llViewOne.setVisibility(View.VISIBLE);
+                                binding.llViewTwo.setVisibility(View.GONE);
                                 binding.viewPager.setOffscreenPageLimit(2);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"));
                             } else if (appointmentDetailModel.getResponseData().getAudio().size() != 0
                                     && !appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
                                     && appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.llViewOne.setVisibility(View.VISIBLE);
+                                binding.llViewTwo.setVisibility(View.GONE);
                                 binding.viewPager.setOffscreenPageLimit(3);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
@@ -151,6 +165,8 @@ public class AppointmentDetailsFragment extends Fragment {
                             } else if (appointmentDetailModel.getResponseData().getAudio().size() != 0
                                     && appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
                                     && !appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.llViewOne.setVisibility(View.VISIBLE);
+                                binding.llViewTwo.setVisibility(View.GONE);
                                 binding.viewPager.setOffscreenPageLimit(3);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
@@ -158,6 +174,8 @@ public class AppointmentDetailsFragment extends Fragment {
                             } else if (appointmentDetailModel.getResponseData().getAudio().size() == 0
                                     && !appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
                                     && !appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.llViewOne.setVisibility(View.VISIBLE);
+                                binding.llViewTwo.setVisibility(View.GONE);
                                 binding.viewPager.setOffscreenPageLimit(3);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"));
@@ -165,12 +183,49 @@ public class AppointmentDetailsFragment extends Fragment {
                             } else if (appointmentDetailModel.getResponseData().getAudio().size() != 0
                                     && !appointmentDetailModel.getResponseData().getBooklet().equalsIgnoreCase("")
                                     && !appointmentDetailModel.getResponseData().getMyAnswers().equalsIgnoreCase("")) {
+                                binding.llViewOne.setVisibility(View.VISIBLE);
+                                binding.llViewTwo.setVisibility(View.GONE);
                                 binding.viewPager.setOffscreenPageLimit(4);
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Details"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Booklet"));
                                 binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My answers"));
                             }
+
+                            MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 10,
+                                    1, 1, 0.24f, 10);
+                            binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+                            binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+
+                            if (globalAppointmentDetailModel.getResponseData().getDate().equalsIgnoreCase("")
+                                    && globalAppointmentDetailModel.getResponseData().getUserName().equalsIgnoreCase("")
+                                    && globalAppointmentDetailModel.getResponseData().getTime().equalsIgnoreCase("")) {
+                                binding.llDetails.setVisibility(View.GONE);
+                            } else {
+                                binding.llDetails.setVisibility(View.VISIBLE);
+                            }
+                            binding.tvTilte.setText(globalAppointmentDetailModel.getResponseData().getName());
+
+                            binding.tvFacilitator.setText(globalAppointmentDetailModel.getResponseData().getFacilitator());
+                            binding.tvUserName.setText(globalAppointmentDetailModel.getResponseData().getUserName());
+                            binding.tvSubTitle.setText(globalAppointmentDetailModel.getResponseData().getDesc());
+                            binding.tvDate.setText(globalAppointmentDetailModel.getResponseData().getDate());
+                            binding.tvTime.setText(globalAppointmentDetailModel.getResponseData().getTime());
+                            Glide.with(getActivity()).load(globalAppointmentDetailModel.getResponseData().getImage()).thumbnail(0.05f)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile);
+
+                            if (globalAppointmentDetailModel.getResponseData().getBookUrl().equalsIgnoreCase("")) {
+                                binding.btnCompletes.setVisibility(View.GONE);
+                            } else {
+                                binding.btnCompletes.setVisibility(View.VISIBLE);
+                            }
+
+                            binding.btnCompletes.setOnClickListener(view1 -> {
+                                BWSApplication.showToast("Book Now", getActivity());
+                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                i.setData(Uri.parse(globalAppointmentDetailModel.getResponseData().getBookUrl()));
+                                startActivity(i);
+                            });
 
                             binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
                             TabAdapter adapter = new TabAdapter(getActivity().getSupportFragmentManager(), getActivity(), binding.tabLayout.getTabCount());

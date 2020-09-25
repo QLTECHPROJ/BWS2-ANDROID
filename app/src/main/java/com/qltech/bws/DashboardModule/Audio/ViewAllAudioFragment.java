@@ -93,7 +93,7 @@ public class ViewAllAudioFragment extends Fragment {
         Fragment audioFragment = new AudioFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
-                .replace(R.id.rlAudiolist, audioFragment)
+                .replace(R.id.flContainer, audioFragment)
                 .commit();
         Bundle bundle = new Bundle();
         audioFragment.setArguments(bundle);
@@ -112,7 +112,7 @@ public class ViewAllAudioFragment extends Fragment {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.rlAudiolist, fragment)
+                        .add(R.id.flContainer, fragment)
                         .commit();
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -219,7 +219,7 @@ public class ViewAllAudioFragment extends Fragment {
                             Fragment fragment = new TransparentPlayerFragment();
                             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                             fragmentManager1.beginTransaction()
-                                    .add(R.id.rlAudiolist, fragment)
+                                    .add(R.id.flContainer, fragment)
                                     .commit();
                             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();

@@ -87,7 +87,7 @@ public class PlaylistFragment extends Fragment {
             bundle.putString("PlaylistImage", playlistImage);
             myPlaylistsFragment.setArguments(bundle);
             fragmentManager1.beginTransaction()
-                    .add(R.id.rlPlaylist, myPlaylistsFragment)
+                    .add(R.id.flContainer, myPlaylistsFragment)
                     .commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,7 +110,7 @@ public class PlaylistFragment extends Fragment {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.rlPlaylist, fragment)
+                        .add(R.id.flContainer, fragment)
                         .commit();
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -181,7 +181,7 @@ public class PlaylistFragment extends Fragment {
                     Fragment viewAllPlaylistFragment = new ViewAllPlaylistFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction().addToBackStack("ViewAllPlaylistFragment")
-                            .add(R.id.rlPlaylist, viewAllPlaylistFragment)
+                            .add(R.id.flContainer, viewAllPlaylistFragment)
                             .commit();
                     Bundle bundle = new Bundle();
                     bundle.putString("GetLibraryID", listModelList.get(position).getGetLibraryID());

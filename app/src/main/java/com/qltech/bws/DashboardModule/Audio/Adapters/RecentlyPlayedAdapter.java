@@ -94,7 +94,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                             Fragment fragment = new TransparentPlayerFragment();
                             FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                             fragmentManager1.beginTransaction()
-                                    .add(R.id.rlAudiolist, fragment)
+                                    .add(R.id.flContainer, fragment)
                                     .commit();
                             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
@@ -129,7 +129,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                         Fragment fragment = new TransparentPlayerFragment();
                         FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
-                                .add(R.id.rlAudiolist, fragment)
+                                .add(R.id.flContainer, fragment)
                                 .commit();
                         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
