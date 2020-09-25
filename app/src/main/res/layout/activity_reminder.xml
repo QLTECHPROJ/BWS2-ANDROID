@@ -114,7 +114,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_28sdp"
-                    android:fontFamily="@font/montserrat_regular"
+                    android:fontFamily="@font/montserrat_medium"
                     android:gravity="start"
                     android:text="@string/Repeat"
                     android:textColor="@color/light_black"
@@ -126,7 +126,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="@dimen/_13sdp"
-                    android:layout_marginTop="@dimen/_6sdp"
                     android:isScrollContainer="false"
                     android:overScrollMode="never" />
 
@@ -146,12 +145,9 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="start"
-                            android:paddingVertical="@dimen/_4sdp"
-                            android:paddingHorizontal="@dimen/_6sdp"
-                            android:background="@drawable/transparent_bg"
                             android:text="@string/Select_Playlist"
                             android:textColor="@color/light_black"
-                            android:textSize="@dimen/_14sdp" />
+                            android:textSize="@dimen/_18sdp" />
 
                         <ImageView
                             android:id="@+id/ivArrow"

@@ -159,7 +159,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(ctx, ReminderActivity.class);
-                    i.putExtra("ComeFrom", "");
+                    i.putExtra("ComeFrom", "1");
                     i.putExtra("PlaylistID", model.get(position).getPlaylistId());
                     i.putExtra("PlaylistName", model.get(position).getPlaylistName());
                     i.putExtra("Time", model.get(position).getReminderTime());

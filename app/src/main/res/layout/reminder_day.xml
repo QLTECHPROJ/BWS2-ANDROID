@@ -5,7 +5,7 @@
         android:id="@+id/llMainDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginLeft="@dimen/_12sdp"
         android:layout_gravity="center"
         android:gravity="center"

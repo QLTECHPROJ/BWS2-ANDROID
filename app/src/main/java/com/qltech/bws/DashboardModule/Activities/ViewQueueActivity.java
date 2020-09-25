@@ -190,19 +190,14 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             callBack();
         });
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                1, 1, 0.1f, 0);
+                1, 1, 0.12f, 0);
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         getPrepareShowData(position);
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         callAdapterMethod();
-        binding.llNowPlaying.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callBack();
-            }
-        });
+        binding.llNowPlaying.setOnClickListener(view -> callBack());
 
         binding.llPause.setOnClickListener(view -> {
             handler.removeCallbacks(UpdateSongTime);
@@ -801,7 +796,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             binding.tvCategory.setText(listModel.getAudiomastercat());
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.1f, 0);
+                    1, 1, 0.12f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);

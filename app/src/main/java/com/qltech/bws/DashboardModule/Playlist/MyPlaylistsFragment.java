@@ -321,11 +321,13 @@ public class MyPlaylistsFragment extends Fragment {
                         SubPlayListModel listModel = response.body();
 
                         playlistSongsList = listModel.getResponseData().getPlaylistSongs();
+                        binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
 
-                        if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
-                            binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow),
-                                    android.graphics.PorterDuff.Mode.SRC_IN);
-                            binding.llReminder.setOnClickListener(view -> {
+
+                        binding.llReminder.setOnClickListener(view -> {
+                            if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
+                                binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow),
+                                        android.graphics.PorterDuff.Mode.SRC_IN);
                                 if (BWSApplication.isNetworkConnected(getActivity())) {
                                     BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                                     Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserID, PlaylistID, "0");/*set 1 or not 0 */
@@ -335,10 +337,10 @@ public class MyPlaylistsFragment extends Fragment {
                                             if (response.isSuccessful()) {
                                                 BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                                                 ReminderStatusModel listModel = response.body();
-                                                BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                                                prepareData(UserID, PlaylistID);
                                                 binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white),
                                                         android.graphics.PorterDuff.Mode.SRC_IN);
-                                                prepareData(UserID, PlaylistID);
+                                                BWSApplication.showToast(listModel.getResponseMessage(), activity);
                                             }
                                         }
 
@@ -351,11 +353,9 @@ public class MyPlaylistsFragment extends Fragment {
                                 } else {
                                     BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                                 }
-                            });
-                        } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
-                                listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
-                            binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-                            binding.llReminder.setOnClickListener(view -> {
+                            } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
+                                    listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
+                                binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
                                 ComeScreenReminder = 0;
                                 Intent i = new Intent(getActivity(), ReminderActivity.class);
                                 i.putExtra("ComeFrom", "1");
@@ -363,8 +363,9 @@ public class MyPlaylistsFragment extends Fragment {
                                 i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
                                 i.putExtra("Time", listModel.getResponseData().getReminderTime());
                                 startActivity(i);
-                            });
-                        }
+                            }
+                        });
+
 
                         if (listModel.getResponseData().getPlaylistName().equalsIgnoreCase("") ||
                                 listModel.getResponseData().getPlaylistName() == null) {
@@ -572,15 +573,15 @@ public class MyPlaylistsFragment extends Fragment {
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }*/
-       List<String> url = new ArrayList<>();
-       List<String> name = new ArrayList<>();
-       for(int x = 0;x<playlistSongs.size();x++){
+        List<String> url = new ArrayList<>();
+        List<String> name = new ArrayList<>();
+        for (int x = 0; x < playlistSongs.size(); x++) {
             name.add(playlistSongs.get(i).getName());
             url.add(playlistSongs.get(i).getAudioFile());
-       }
+        }
         if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
             DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
-             downloadMedia.encrypt1(url, name,playlistSongs);
+            downloadMedia.encrypt1(url, name, playlistSongs);
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
 
