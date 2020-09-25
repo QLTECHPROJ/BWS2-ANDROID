@@ -367,7 +367,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
     }
 
-    public void GetMedia(String id, Context ctx) {
+    public void GetMedia(String url, Context ctx) {
 
         downloadAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
@@ -379,7 +379,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getLastIdByuId(id);
+                        .getLastIdByuId(url);
                 return null;
             }
 
@@ -535,7 +535,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             binding.progressBar.setVisibility(View.VISIBLE);
             binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.GONE);
-            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
+            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
 
             try {
                 byte[] decrypt = null;

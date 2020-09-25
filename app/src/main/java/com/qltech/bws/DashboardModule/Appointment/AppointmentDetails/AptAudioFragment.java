@@ -100,6 +100,41 @@ public class AptAudioFragment extends Fragment {
             e.printStackTrace();
         }
     }
+    public  void GetMedia(String AudioFile, Context ctx, String download, LinearLayout llDownload, ImageView ivDownload) {
+
+        oneAudioDetailsList = new ArrayList<>();
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                oneAudioDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getLastIdByuId(AudioFile);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if(oneAudioDetailsList.size()!=0){
+                    if(oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")){
+                        disableDownload(llDownload,ivDownload);
+                    }
+                }else if (download.equalsIgnoreCase("1")) {
+                    disableDownload(llDownload,ivDownload);
+                } else {
+                    enableDownload(llDownload,ivDownload);
+                }
+                super.onPostExecute(aVoid);
+
+            }
+        }
+
+        GetMedia st = new GetMedia();
+        st.execute();
+    }
 
     public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.MyViewHolder> {
         public FragmentManager f_manager;
@@ -130,7 +165,7 @@ public class AptAudioFragment extends Fragment {
                 holder.binding.tvTime.setVisibility(View.VISIBLE);
                 holder.binding.tvTime.setText(audiolist.getAudioDirection());
             }
-            oneAudioDetailsList = BWSApplication.GetMedia(audiolist.getID(),getActivity());
+             GetMedia(audiolist.getAudioFile(),getActivity(),audiolist.getDownload(),holder.binding.llDownload,holder.binding.ivDownload);
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.13f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -143,15 +178,7 @@ public class AptAudioFragment extends Fragment {
 
             Glide.with(getActivity()).load(audiolist.getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-            if(oneAudioDetailsList.size()!=0){
-                if(oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")){
-                    disableDownload(holder.binding.llDownload,holder.binding.ivDownload);
-                }
-            }else if (audiolist.getDownload().equalsIgnoreCase("1")) {
-                disableDownload(holder.binding.llDownload,holder.binding.ivDownload);
-            } else {
-                enableDownload(holder.binding.llDownload,holder.binding.ivDownload);
-            }
+
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -260,9 +287,7 @@ public class AptAudioFragment extends Fragment {
                     }*/
                     String Name = listModelList.get(position).getName();
                     String audioFile = listModelList.get(position).getAudioFile();
-
-
-                    DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, getActivity());
+                    DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
                     byte[] EncodeBytes = downloadMedia.encrypt(audioFile, Name);
                     String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
                     SaveMedia(EncodeBytes, dirPath, listModelList.get(position), holder.binding.llDownload);
@@ -277,20 +302,6 @@ public class AptAudioFragment extends Fragment {
                     startActivity(i);
                 }
             });
-        }
-
-        private void enableDownload(LinearLayout llDownload, ImageView ivDownload) {
-            llDownload.setClickable(true);
-            llDownload.setEnabled(true);
-            ivDownload.setImageResource(R.drawable.ic_download_white_icon);
-        }
-
-        private void disableDownload(LinearLayout llDownload, ImageView ivDownload) {
-            ivDownload.setImageResource(R.drawable.ic_download_white_icon);
-            ivDownload.setColorFilter(Color.argb(99, 99, 99, 99));
-            ivDownload.setAlpha(255);
-            llDownload.setClickable(false);
-            llDownload.setEnabled(false);
         }
 
         private void SaveMedia(byte[] encodeBytes, String dirPath, AppointmentDetailModel.Audio audio, LinearLayout llDownload) {
@@ -349,4 +360,19 @@ public class AptAudioFragment extends Fragment {
             }
         }
     }
+
+    private void enableDownload(LinearLayout llDownload, ImageView ivDownload) {
+        llDownload.setClickable(true);
+        llDownload.setEnabled(true);
+        ivDownload.setImageResource(R.drawable.ic_download_white_icon);
+    }
+
+    private void disableDownload(LinearLayout llDownload, ImageView ivDownload) {
+        ivDownload.setImageResource(R.drawable.ic_download_white_icon);
+        ivDownload.setColorFilter(Color.argb(99, 99, 99, 99));
+        ivDownload.setAlpha(255);
+        llDownload.setClickable(false);
+        llDownload.setEnabled(false);
+    }
+
 }

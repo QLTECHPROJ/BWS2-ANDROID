@@ -73,33 +73,6 @@ public class BWSApplication extends Application {
         toast.setView(view);
         toast.show();
     }
-    public static List<DownloadAudioDetails> GetMedia(String id,Context ctx) {
-
-        downloadAudioDetailsList = new ArrayList<>();
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                downloadAudioDetailsList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getLastIdByuId(id);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-            }
-        }
-
-        GetMedia st = new GetMedia();
-        st.execute();
-        return downloadAudioDetailsList;
-    }
 /*    public static List<DownloadAudioDetails> GetAllMedia(Context ctx) {
 
         class GetTask extends AsyncTask<Void, Void, Void> {

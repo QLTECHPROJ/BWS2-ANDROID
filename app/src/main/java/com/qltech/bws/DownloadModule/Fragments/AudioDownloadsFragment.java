@@ -83,7 +83,7 @@ public class AudioDownloadsFragment extends Fragment {
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .geAllData();
+                        .geAllData("");
                 return null;
             }
 

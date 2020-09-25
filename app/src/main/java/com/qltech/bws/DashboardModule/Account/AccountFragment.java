@@ -8,11 +8,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,10 +22,15 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
 import com.qltech.bws.BuildConfig;
@@ -44,7 +44,6 @@ import com.qltech.bws.ReminderModule.Activities.ReminderDetailsActivity;
 import com.qltech.bws.ResourceModule.Activities.ResourceActivity;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.UserModule.Activities.UserProfileActivity;
-import com.qltech.bws.BWSApplication;
 import com.qltech.bws.UserModule.Models.ProfileViewModel;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -62,11 +61,11 @@ import static com.qltech.bws.Utility.MusicService.pauseMedia;
 import static com.qltech.bws.Utility.MusicService.resumeMedia;
 
 public class AccountFragment extends Fragment {
+    public static String IsLock = "";
+    public static int ComeScreenReminder = 0;
     FragmentAccountBinding binding;
     String UserID;
     private long mLastClickTime = 0;
-    public static String IsLock = "";
-    public static int ComeScreenReminder = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -251,6 +250,7 @@ public class AccountFragment extends Fragment {
     }
 
     void DeleteCall() {
+        DeletallLocalCart();
         SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREF_KEY_UserID);
@@ -289,31 +289,58 @@ public class AccountFragment extends Fragment {
         }
     }
 
-        public void DeletallLocalCart() {
+    public void DeletallLocalCart() {
 
-            class DeletallCart extends AsyncTask<Void, Void, Void> {
+        class DeletallCart extends AsyncTask<Void, Void, Void> {
 
-                @Override
-                protected Void doInBackground(Void... voids) {
+            @Override
+            protected Void doInBackground(Void... voids) {
 
-                    DatabaseClient
-                            .getInstance(getActivity())
-                            .getaudioDatabase()
-                            .taskDao()
-                            .deleteAll();
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    super.onPostExecute(aVoid);
-                }
+                DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deleteAll();
+                return null;
             }
 
-            DeletallCart st = new DeletallCart();
-            st.execute();
-
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                DeletallLocalCart1();
+                super.onPostExecute(aVoid); 
+            }
         }
+
+        DeletallCart st = new DeletallCart();
+        st.execute();
+
+    }
+    public void DeletallLocalCart1() {
+
+        class DeletallCart extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deleteAllPlalist();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        DeletallCart st = new DeletallCart();
+        st.execute();
+
+    }
+
     private void showProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.VISIBLE);

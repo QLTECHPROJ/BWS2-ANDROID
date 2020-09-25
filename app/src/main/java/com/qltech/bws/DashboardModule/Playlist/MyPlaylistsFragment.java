@@ -51,6 +51,7 @@ import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
 import com.qltech.bws.ReminderModule.Models.ReminderStatusModel;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
+import com.qltech.bws.RoomDataBase.DownloadPlaylistDetails;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.ItemMoveCallback;
@@ -90,6 +91,9 @@ public class MyPlaylistsFragment extends Fragment {
     List<DownloadAudioDetails> downloadAudioDetailsList;
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
     List<DownloadAudioDetails> oneAudioDetailsList;
+    List<DownloadAudioDetails> playlistWiseAudioDetails;
+    List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
+    DownloadPlaylistDetails downloadPlaylistDetails;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,6 +105,8 @@ public class MyPlaylistsFragment extends Fragment {
         activity = getActivity();
         downloadAudioDetailsList = new ArrayList<>();
         oneAudioDetailsList = new ArrayList<>();
+        playlistWiseAudioDetails = new ArrayList<>();
+        downloadPlaylistDetailsList = new ArrayList<>();
         playlistSongsList = new ArrayList<>();
         changedAudio = new ArrayList<>();
         if (getArguments() != null) {
@@ -109,7 +115,6 @@ public class MyPlaylistsFragment extends Fragment {
             PlaylistName = getArguments().getString("PlaylistName");
             PlaylistImage = getArguments().getString("PlaylistImage");
         }
-        downloadAudioDetailsList = GetAllMedia();
 
         binding.llBack.setOnClickListener(view1 -> callBack());
 
@@ -207,6 +212,56 @@ public class MyPlaylistsFragment extends Fragment {
         return view;
     }
 
+    private List<DownloadPlaylistDetails> GetPlaylistDetail(String download) {
+        class GetTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                downloadPlaylistDetailsList = DatabaseClient
+                        .getInstance(activity)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getPlaylist(PlaylistID);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                if (downloadPlaylistDetailsList.size() != 0) {
+                    enableDisableDownload(false);
+                } else if (download.equalsIgnoreCase("1")) {
+                    enableDisableDownload(false);
+                } else if (download.equalsIgnoreCase("0") || download.equalsIgnoreCase("")) {
+                    enableDisableDownload(true);
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        GetTask st = new GetTask();
+        st.execute();
+        return downloadPlaylistDetailsList;
+    }
+
+    private void enableDisableDownload(boolean b) {
+        if (b) {
+            binding.llDownloads.setClickable(true);
+            binding.llDownloads.setEnabled(true);
+            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+        } else {
+
+            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+            binding.ivDownloads.setAlpha(255);
+            binding.llDownloads.setClickable(false);
+            binding.llDownloads.setEnabled(false);
+            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+        }
+    }
+
     public List<DownloadAudioDetails> GetAllMedia() {
 
         class GetTask extends AsyncTask<Void, Void, Void> {
@@ -218,7 +273,7 @@ public class MyPlaylistsFragment extends Fragment {
                         .getInstance(activity)
                         .getaudioDatabase()
                         .taskDao()
-                        .geAllData();
+                        .geAllData1();
                 return null;
             }
 
@@ -335,6 +390,21 @@ public class MyPlaylistsFragment extends Fragment {
                         SubPlayListModel listModel = response.body();
 
                         playlistSongsList = listModel.getResponseData().getPlaylistSongs();
+                        downloadPlaylistDetails = new DownloadPlaylistDetails();
+                        downloadPlaylistDetails.setPlaylistID(listModel.getResponseData().getPlaylistID());
+                        downloadPlaylistDetails.setPlaylistName(listModel.getResponseData().getPlaylistName());
+                        downloadPlaylistDetails.setPlaylistDesc(listModel.getResponseData().getPlaylistDesc());
+                        downloadPlaylistDetails.setIsReminder(listModel.getResponseData().getIsReminder());
+                        downloadPlaylistDetails.setPlaylistMastercat(listModel.getResponseData().getPlaylistMastercat());
+                        downloadPlaylistDetails.setPlaylistSubcat(listModel.getResponseData().getPlaylistSubcat());
+                        downloadPlaylistDetails.setPlaylistImage(listModel.getResponseData().getPlaylistImage());
+                        downloadPlaylistDetails.setTotalAudio(listModel.getResponseData().getTotalAudio());
+                        downloadPlaylistDetails.setTotalDuration(listModel.getResponseData().getTotalDuration());
+                        downloadPlaylistDetails.setTotalhour(listModel.getResponseData().getTotalhour());
+                        downloadPlaylistDetails.setTotalminute(listModel.getResponseData().getTotalminute());
+                        downloadPlaylistDetails.setCreated(listModel.getResponseData().getCreated());
+                        downloadPlaylistDetails.setDownload(listModel.getResponseData().getDownload());
+                        downloadPlaylistDetails.setLike(listModel.getResponseData().getLike());
                         binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
                         if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
                             binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow),
@@ -385,7 +455,9 @@ public class MyPlaylistsFragment extends Fragment {
                                 startActivity(i);
                             }
                         });
-
+                        downloadAudioDetailsList = GetAllMedia();
+                        downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData().getDownload());
+                        playlistWiseAudioDetails = GetMedia();
 
                         if (listModel.getResponseData().getPlaylistName().equalsIgnoreCase("") ||
                                 listModel.getResponseData().getPlaylistName() == null) {
@@ -408,21 +480,6 @@ public class MyPlaylistsFragment extends Fragment {
                             }
                         } else {
                             binding.ivBanner.setImageResource(R.drawable.audio_bg);
-                        }
-
-                        if (listModel.getResponseData().getDownload().equalsIgnoreCase("1")) {
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-                            binding.ivDownloads.setAlpha(255);
-                            binding.llDownloads.setClickable(false);
-                            binding.llDownloads.setEnabled(false);
-                            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-                        } else if (listModel.getResponseData().getDownload().equalsIgnoreCase("0")
-                                || listModel.getResponseData().getDownload().equalsIgnoreCase("")) {
-                            binding.llDownloads.setClickable(true);
-                            binding.llDownloads.setEnabled(true);
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
                         }
 
                         if (listModel.getResponseData().getTotalAudio().equalsIgnoreCase("") ||
@@ -557,7 +614,8 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     private void callDownload(String id, String audioFile, String Name, ArrayList<SubPlayListModel.ResponseData.PlaylistSong>
-            playlistSongs, int i, LinearLayout llDownload) {
+            playlistSongs, int position, LinearLayout llDownload) {
+
        /* if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
             String AudioId = id;
@@ -595,22 +653,104 @@ public class MyPlaylistsFragment extends Fragment {
         }*/
         List<String> url = new ArrayList<>();
         List<String> name = new ArrayList<>();
-        for (int x = 0; x < playlistSongs.size(); x++) {
-            name.add(playlistSongs.get(i).getName());
-            url.add(playlistSongs.get(i).getAudioFile());
+        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2 = new ArrayList<>();
+        playlistSongs2 = playlistSongs;
+        if (downloadAudioDetailsList.size() != 0) {
+
+            for (int x = 0; x < playlistSongs.size(); x++) {
+                for (int y = 0; x < downloadAudioDetailsList.size(); x++) {
+                    if (playlistSongs2.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
+                        playlistSongs2.remove(x);
+                    }
+                }
+            }
+        }
+        for (int x = 0; x < playlistSongs2.size(); x++) {
+            name.add(playlistSongs2.get(x).getName());
+            url.add(playlistSongs2.get(x).getAudioFile());
         }
         if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
-            DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
+            byte[] encodedBytes = new byte[1024];
+            DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
             downloadMedia.encrypt1(url, name, playlistSongs);
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
-
+            savePlaylist();
+            for (int i = 0; i < name.size(); i++) {
+                saveAllMedia(playlistSongsList, encodedBytes, FileUtils.getFilePath(getActivity().getApplicationContext(), name.get(i)));
+            }
         } else {
-            DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
+            DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
             byte[] EncodeBytes = downloadMedia.encrypt(audioFile, Name);
             String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
-            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
+            SaveMedia(EncodeBytes, dirPath, playlistSongs, position, llDownload);
         }
+    }
+
+    private void savePlaylist() {
+        class SaveMedia extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+                DatabaseClient.getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .insertPlaylist(downloadPlaylistDetails);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+//                llDownload.setClickable(false);
+//                llDownload.setEnabled(false);
+            super.onPostExecute(aVoid);
+        }
+    }
+        SaveMedia st = new SaveMedia();
+        st.execute();
+    }
+
+    private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes, String filePath) {
+        class SaveMedia extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+                for (int i = 0; i < playlistSongs.size(); i++) {
+                    downloadAudioDetails.setID(playlistSongs.get(i).getID());
+                    downloadAudioDetails.setName(playlistSongs.get(i).getName());
+                    downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());
+                    downloadAudioDetails.setAudioDirection(playlistSongs.get(i).getAudioDirection());
+                    downloadAudioDetails.setAudiomastercat(playlistSongs.get(i).getAudiomastercat());
+                    downloadAudioDetails.setAudioSubCategory(playlistSongs.get(i).getAudioSubCategory());
+                    downloadAudioDetails.setImageFile(playlistSongs.get(i).getImageFile());
+                    downloadAudioDetails.setLike(playlistSongs.get(i).getLike());
+                    downloadAudioDetails.setDownload("1");
+                    downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
+                    downloadAudioDetails.setIsSingle("0");
+                    downloadAudioDetails.setPlaylistId(playlistSongs.get(i).getPlaylistID());
+                    downloadAudioDetails.setEncodedBytes(encodedBytes);
+                    downloadAudioDetails.setDirPath(filePath);
+                    DatabaseClient.getInstance(getActivity())
+                            .getaudioDatabase()
+                            .taskDao()
+                            .insertMedia(downloadAudioDetails);
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+//                llDownload.setClickable(false);
+//                llDownload.setEnabled(false);
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        SaveMedia st = new SaveMedia();
+        st.execute();
     }
 
     private void SaveMedia(byte[] encodeBytes, String dirPath, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, int i, LinearLayout llDownload) {
@@ -630,13 +770,8 @@ public class MyPlaylistsFragment extends Fragment {
                 downloadAudioDetails.setLike(playlistSongs.get(i).getLike());
                 downloadAudioDetails.setDownload("1");
                 downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
-                if (playlistSongs.get(i).getPlaylistID().equalsIgnoreCase("")) {
-                    downloadAudioDetails.setIsSingle("1");
-                    downloadAudioDetails.setPlaylistId("");
-                } else {
-                    downloadAudioDetails.setIsSingle("0");
-                    downloadAudioDetails.setPlaylistId(playlistSongs.get(i).getPlaylistID());
-                }
+                downloadAudioDetails.setIsSingle("1");
+                downloadAudioDetails.setPlaylistId("");
                 downloadAudioDetails.setEncodedBytes(encodeBytes);
                 downloadAudioDetails.setDirPath(dirPath);
 
@@ -659,7 +794,7 @@ public class MyPlaylistsFragment extends Fragment {
         st.execute();
     }
 
-    public void GetMedia(String id, Context ctx, String download, LinearLayout llDownload, ImageView ivDownloads) {
+    public void GetMedia(String url, Context ctx, String download, LinearLayout llDownload, ImageView ivDownloads) {
 
         oneAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
@@ -671,7 +806,7 @@ public class MyPlaylistsFragment extends Fragment {
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getLastIdByuId(id);
+                        .getLastIdByuId(url);
                 return null;
             }
 
@@ -694,6 +829,33 @@ public class MyPlaylistsFragment extends Fragment {
 
         GetMedia st = new GetMedia();
         st.execute();
+    }
+
+    public List<DownloadAudioDetails> GetMedia() {
+
+        playlistWiseAudioDetails = new ArrayList<>();
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                playlistWiseAudioDetails = DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getAllAudioByPlaylist(PlaylistID);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        GetMedia st = new GetMedia();
+        st.execute();
+        return playlistWiseAudioDetails;
     }
 
     private void enableDownload(LinearLayout llDownload, ImageView ivDownloads) {

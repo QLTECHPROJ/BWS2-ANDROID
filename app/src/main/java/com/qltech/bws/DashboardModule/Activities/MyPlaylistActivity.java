@@ -4,7 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
@@ -15,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +39,11 @@ import com.qltech.bws.DashboardModule.Models.RenamePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Playlist.PlaylistFragment;
+import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
+import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
+import com.qltech.bws.RoomDataBase.DatabaseClient;
+import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.RoomDataBase.DownloadPlaylistDetails;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -52,12 +59,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MyPlaylistActivity extends AppCompatActivity {
+    public static int deleteFrg = 0;
+    public static int ComeFindAudio = 0;
     ActivityMyPlaylistBinding binding;
     String UserID, PlaylistID, Download;
     Context ctx;
-    public static int deleteFrg = 0;
-    public static int ComeFindAudio = 0;
+    List<DownloadAudioDetails> downloadAudioDetailsList;
+    List<DownloadAudioDetails> playlistWiseAudioDetails;
+    List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     DownloadPlaylistDetails downloadPlaylistDetails;
+    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +79,15 @@ public class MyPlaylistActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
+        playlistSongsList = new ArrayList<>();
+        downloadAudioDetailsList = new ArrayList<>();
+        playlistWiseAudioDetails = new ArrayList<>();
+        downloadPlaylistDetailsList = new ArrayList<>();
         if (getIntent().getExtras() != null) {
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
         }
-
+        downloadAudioDetailsList = GetAllMedia();
+        downloadPlaylistDetailsList = GetPlaylistDetail(PlaylistID);
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,7 +96,93 @@ public class MyPlaylistActivity extends AppCompatActivity {
             }
         });
 
+        binding.llDownload.setOnClickListener(view -> callDownload());
         getPrepareData();
+    }
+    public List<DownloadAudioDetails> GetAllMedia() {
+
+        class GetTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                downloadAudioDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllData1();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+            }
+        }
+
+        GetTask st = new GetTask();
+        st.execute();
+        return downloadAudioDetailsList;
+    }
+    private void callDownload() {
+       /* if (BWSApplication.isNetworkConnected(getActivity())) {
+            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+            String AudioId = id;
+            Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistID);
+            listCall.enqueue(new Callback<DownloadPlaylistModel>() {
+                @Override
+                public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+                        DownloadPlaylistModel model = response.body();
+                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")
+                                || model.getResponseData().getFlag().equalsIgnoreCase("")) {
+                            binding.llDownloads.setClickable(true);
+                            binding.llDownloads.setEnabled(true);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+                            binding.ivDownloads.setAlpha(255);
+                            binding.llDownloads.setClickable(false);
+                            binding.llDownloads.setEnabled(false);
+                        }
+                        BWSApplication.showToast(model.getResponseMessage(), getActivity());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+                }
+            });
+
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+        }*/
+        List<String> url = new ArrayList<>();
+        List<String> name = new ArrayList<>();
+        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2 = new ArrayList<>();
+        playlistSongs2 = playlistSongsList;
+        if(downloadAudioDetailsList.size()!=0) {
+
+            for (int x = 0; x < playlistSongsList.size(); x++) {
+                for (int y = 0; x < downloadAudioDetailsList.size(); x++) {
+                    if (playlistSongs2.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
+                        playlistSongs2.remove(x);
+                    }
+                }
+            }
+        }
+        for (int x = 0; x < playlistSongs2.size(); x++) {
+            name.add(playlistSongs2.get(x).getName());
+            url.add(playlistSongs2.get(x).getAudioFile());
+        }
+            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+            downloadMedia.encrypt1(url, name, playlistSongsList);
+//            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
+//            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
     }
 
     @Override
@@ -99,21 +201,22 @@ public class MyPlaylistActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         SubPlayListModel model = response.body();
+                        playlistSongsList = model.getResponseData().getPlaylistSongs();
                         downloadPlaylistDetails = new DownloadPlaylistDetails();
                         downloadPlaylistDetails.setPlaylistID(model.getResponseData().getPlaylistID());
-                        downloadPlaylistDetails.setPlaylistName( model.getResponseData().getPlaylistName());
-                        downloadPlaylistDetails.setPlaylistDesc( model.getResponseData().getPlaylistDesc());
+                        downloadPlaylistDetails.setPlaylistName(model.getResponseData().getPlaylistName());
+                        downloadPlaylistDetails.setPlaylistDesc(model.getResponseData().getPlaylistDesc());
                         downloadPlaylistDetails.setIsReminder(model.getResponseData().getIsReminder());
-                        downloadPlaylistDetails.setPlaylistMastercat( model.getResponseData().getPlaylistMastercat());
-                        downloadPlaylistDetails.setPlaylistSubcat( model.getResponseData().getPlaylistSubcat());
-                        downloadPlaylistDetails.setPlaylistImage( model.getResponseData().getPlaylistImage());
-                        downloadPlaylistDetails.setTotalAudio( model.getResponseData().getTotalAudio());
-                        downloadPlaylistDetails.setTotalDuration( model.getResponseData().getTotalDuration());
-                        downloadPlaylistDetails.setTotalhour( model.getResponseData().getTotalhour());
-                        downloadPlaylistDetails.setTotalminute( model.getResponseData().getTotalminute());
-                        downloadPlaylistDetails.setCreated( model.getResponseData().getCreated());
-                        downloadPlaylistDetails.setDownload( model.getResponseData().getDownload());
-                        downloadPlaylistDetails.setLike( model.getResponseData().getLike());
+                        downloadPlaylistDetails.setPlaylistMastercat(model.getResponseData().getPlaylistMastercat());
+                        downloadPlaylistDetails.setPlaylistSubcat(model.getResponseData().getPlaylistSubcat());
+                        downloadPlaylistDetails.setPlaylistImage(model.getResponseData().getPlaylistImage());
+                        downloadPlaylistDetails.setTotalAudio(model.getResponseData().getTotalAudio());
+                        downloadPlaylistDetails.setTotalDuration(model.getResponseData().getTotalDuration());
+                        downloadPlaylistDetails.setTotalhour(model.getResponseData().getTotalhour());
+                        downloadPlaylistDetails.setTotalminute(model.getResponseData().getTotalminute());
+                        downloadPlaylistDetails.setCreated(model.getResponseData().getCreated());
+                        downloadPlaylistDetails.setDownload(model.getResponseData().getDownload());
+                        downloadPlaylistDetails.setLike(model.getResponseData().getLike());
                         binding.tvName.setText(model.getResponseData().getPlaylistName());
                         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 20,
                                 1, 1, 0.54f, 20);
@@ -421,6 +524,54 @@ public class MyPlaylistActivity extends AppCompatActivity {
             });
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+    }
+    private List<DownloadPlaylistDetails> GetPlaylistDetail(String download) {
+        class GetTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                downloadPlaylistDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getPlaylist(PlaylistID);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                if(downloadPlaylistDetailsList.size()!=0){
+                    enableDisableDownload(false);
+                }else if (download.equalsIgnoreCase("1")) {
+                    enableDisableDownload(false);
+                } else if (download.equalsIgnoreCase("0") || download.equalsIgnoreCase("")) {
+                    enableDisableDownload(true);
+                }
+                super.onPostExecute(aVoid);
+
+            }
+        }
+
+        GetTask st = new GetTask();
+        st.execute();
+        return downloadPlaylistDetailsList;
+    }
+    private void enableDisableDownload(boolean b) {
+        if(b){
+            binding.llDownload.setClickable(true);
+            binding.llDownload.setEnabled(true);
+            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+        }else{
+            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+            binding.ivDownloads.setAlpha(255);
+            binding.llDownload.setClickable(false);
+            binding.llDownload.setEnabled(false);
+            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
         }
     }
 

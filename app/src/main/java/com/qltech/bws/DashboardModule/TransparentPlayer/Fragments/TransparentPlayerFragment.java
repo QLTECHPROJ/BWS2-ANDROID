@@ -327,7 +327,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
     }
 
-    public void GetMedia(String id, Context ctx) {
+    public void GetMedia(String url, Context ctx) {
 
         downloadAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
@@ -339,7 +339,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getLastIdByuId(id);
+                        .getLastIdByuId(url);
                 return null;
             }
 
@@ -395,12 +395,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             if (listSize != 0) {
                 id = addToQueueModelList.get(position).getID();
                 name = addToQueueModelList.get(position).getName();
-                GetMedia(id, getActivity());
+                audioFile = addToQueueModelList.get(position).getAudioFile();
+                GetMedia(audioFile, getActivity());
                 Glide.with(getActivity()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                 binding.tvTitle.setText(addToQueueModelList.get(position).getName());
                 binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
-                audioFile = addToQueueModelList.get(position).getAudioFile();
 
             }
         } else if (audioPlay) {
@@ -410,12 +410,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
             id = mainPlayModelList.get(position).getID();
             name = mainPlayModelList.get(position).getName();
-            GetMedia(id, getActivity());
+            audioFile = mainPlayModelList.get(position).getAudioFile();
+            GetMedia(audioFile, getActivity());
             Glide.with(getActivity()).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTitle.setText(mainPlayModelList.get(position).getName());
             binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
-            audioFile = mainPlayModelList.get(position).getAudioFile();
         }
         binding.simpleSeekbar.setClickable(true);
         if (isMediaStart) {
@@ -505,7 +505,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.progressBar.setVisibility(View.VISIBLE);
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.GONE);
-            DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
+            DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
 
             try {
                 byte[] decrypt = null;

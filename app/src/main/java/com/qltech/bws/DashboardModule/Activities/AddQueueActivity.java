@@ -58,7 +58,7 @@ import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeF
 
 public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
-    String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comeFrom = "";
+    String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comeFrom = "",AudioFile="";
     Context ctx;
     Activity activity;
     ArrayList<String> queue;
@@ -346,6 +346,7 @@ public class AddQueueActivity extends AppCompatActivity {
             addToQueueModel.setID(mData.get(i).getID());
             addToQueueModel.setName(mData.get(i).getName());
             addToQueueModel.setAudioFile(mData.get(i).getAudioFile());
+            AudioFile = mData.get(i).getAudioFile();
             addToQueueModel.setPlaylistID(mData.get(i).getPlaylistID());
             addToQueueModel.setAudioDirection(mData.get(i).getAudioDirection());
             addToQueueModel.setAudiomastercat(mData.get(i).getAudiomastercat());
@@ -358,6 +359,7 @@ public class AddQueueActivity extends AppCompatActivity {
             addToQueueModel.setID(mainPlayModelList.get(i).getID());
             addToQueueModel.setName(mainPlayModelList.get(i).getName());
             addToQueueModel.setAudioFile(mainPlayModelList.get(i).getAudioFile());
+            AudioFile = mainPlayModelList.get(i).getAudioFile();
             addToQueueModel.setPlaylistID(mainPlayModelList.get(i).getPlaylistID());
             addToQueueModel.setAudioDirection(mainPlayModelList.get(i).getAudioDirection());
             addToQueueModel.setAudiomastercat(mainPlayModelList.get(i).getAudiomastercat());
@@ -465,7 +467,7 @@ public class AddQueueActivity extends AppCompatActivity {
             Name = mainPlayModelList.get(i).getName();
             audioFile = mainPlayModelList.get(i).getAudioFile();
         }
-        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext(), binding.ImgV, binding.progressBarHolder, activity);
+        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         byte[] EncodeBytes = downloadMedia.encrypt(audioFile, Name);
         String dirPath = FileUtils.getFilePath(getApplicationContext(), Name);
         SaveMedia(EncodeBytes, dirPath, i);
@@ -490,13 +492,8 @@ public class AddQueueActivity extends AppCompatActivity {
                     downloadAudioDetails.setLike(mData.get(i).getLike());
                     downloadAudioDetails.setDownload("1");
                     downloadAudioDetails.setAudioDuration(mData.get(i).getAudioDuration());
-                    if (mData.get(i).getPlaylistID().equalsIgnoreCase("")) {
                         downloadAudioDetails.setIsSingle("1");
                         downloadAudioDetails.setPlaylistId("");
-                    } else {
-                        downloadAudioDetails.setIsSingle("0");
-                        downloadAudioDetails.setPlaylistId(mData.get(i).getPlaylistID());
-                    }
                 } else {
                     downloadAudioDetails.setID(mainPlayModelList.get(i).getID());
                     downloadAudioDetails.setName(mainPlayModelList.get(i).getName());
@@ -509,13 +506,8 @@ public class AddQueueActivity extends AppCompatActivity {
                     downloadAudioDetails.setLike(mainPlayModelList.get(i).getLike());
                     downloadAudioDetails.setDownload("1");
                     downloadAudioDetails.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
-                    if (mainPlayModelList.get(i).getPlaylistID().equalsIgnoreCase("")) {
                         downloadAudioDetails.setIsSingle("1");
                         downloadAudioDetails.setPlaylistId("");
-                    } else {
-                        downloadAudioDetails.setIsSingle("0");
-                        downloadAudioDetails.setPlaylistId(mainPlayModelList.get(i).getPlaylistID());
-                    }
                 }
 
                 downloadAudioDetails.setEncodedBytes(encodeBytes);
@@ -607,7 +599,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         DirectionModel directionModel = response.body();
 
-                        oneAudioDetailsList = BWSApplication.GetMedia(AudioId, activity);
+                         GetMedia( AudioFile , activity,directionModel.getResponseData().get(0).getDownload());
                         Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile())
                                 .thumbnail(0.05f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
@@ -679,18 +671,6 @@ public class AddQueueActivity extends AppCompatActivity {
                             binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
                         }
 
-                        if (oneAudioDetailsList.size() != 0) {
-                            if (oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
-                                callDisableDownload();
-                            }
-                        } else if (directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("1")) {
-                            callDisableDownload();
-                        } else if (!directionModel.getResponseData().get(0).getDownload().equalsIgnoreCase("")) {
-                            binding.llDownload.setClickable(true);
-                            binding.llDownload.setEnabled(true);
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                        }
-
                         binding.llAddPlaylist.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -747,7 +727,45 @@ public class AddQueueActivity extends AppCompatActivity {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
+    public void GetMedia(String AudioFile, Context ctx, String download) {
 
+        oneAudioDetailsList = new ArrayList<>();
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                oneAudioDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getLastIdByuId(AudioFile);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                if (oneAudioDetailsList.size() != 0) {
+                    if (oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
+                        callDisableDownload();
+                    }
+                } else if (download.equalsIgnoreCase("1")) {
+                    callDisableDownload();
+                } else {
+                    binding.llDownload.setClickable(true);
+                    binding.llDownload.setEnabled(true);
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+                }
+
+                super.onPostExecute(aVoid);
+
+            }
+        }
+
+        GetMedia st = new GetMedia();
+        st.execute();
+    }
     private void callDisableDownload() {
         binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
         binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));

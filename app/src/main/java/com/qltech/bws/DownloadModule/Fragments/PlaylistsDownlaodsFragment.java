@@ -1,9 +1,11 @@
 package com.qltech.bws.DownloadModule.Fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,13 +19,16 @@ import android.widget.ImageView;
 import com.qltech.bws.DownloadModule.Adapters.PlaylistsDownloadsAdapter;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
 import com.qltech.bws.R;
+import com.qltech.bws.RoomDataBase.DatabaseClient;
+import com.qltech.bws.RoomDataBase.DownloadPlaylistDetails;
 import com.qltech.bws.databinding.FragmentDownloadsBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlaylistsDownlaodsFragment extends Fragment {
     FragmentDownloadsBinding binding;
-    ArrayList<DownloadlistModel.Playlist> playlistList;
+    List<DownloadPlaylistDetails> playlistList;
     String UserID;
 
     @Override
@@ -37,22 +42,50 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         }
 
         playlistList = new ArrayList<>();
+
+       GetAllMedia(getActivity());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
 
-        if (playlistList.size() != 0) {
-            getDataList(playlistList, UserID, binding.progressBarHolder, binding.ImgV);
-            binding.llError.setVisibility(View.GONE);
-            binding.rvDownloadsList.setVisibility(View.VISIBLE);
-        } else {
-            binding.llError.setVisibility(View.VISIBLE);
-            binding.rvDownloadsList.setVisibility(View.GONE);
-        }
+
         return view;
     }
 
-    private void getDataList(ArrayList<DownloadlistModel.Playlist> historyList, String UserID, FrameLayout progressBarHolder, ImageView ImgV) {
+    private void GetAllMedia(FragmentActivity activity) {
+        class GetTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                playlistList = DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getAllPlaylist();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (playlistList.size() != 0) {
+                    getDataList(playlistList, UserID, binding.progressBarHolder, binding.ImgV);
+                    binding.llError.setVisibility(View.GONE);
+                    binding.rvDownloadsList.setVisibility(View.VISIBLE);
+                } else {
+                    binding.llError.setVisibility(View.VISIBLE);
+                    binding.rvDownloadsList.setVisibility(View.GONE);
+                }
+                super.onPostExecute(aVoid);
+
+            }
+        }
+        GetTask getTask = new GetTask();
+        getTask.execute();
+
+    }
+
+    private void getDataList(List<DownloadPlaylistDetails>  historyList, String UserID, FrameLayout progressBarHolder, ImageView ImgV) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
         } else {

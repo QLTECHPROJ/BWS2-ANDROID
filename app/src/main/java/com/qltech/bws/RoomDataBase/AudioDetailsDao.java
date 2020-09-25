@@ -13,22 +13,45 @@ import java.util.List;
 @Dao
 public interface AudioDetailsDao {
 
+    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId")// ORDER BY uid ASC
+    List<DownloadAudioDetails> geAllData(String PlaylistId);
+
     @Query("SELECT * FROM audio_table")// ORDER BY uid ASC
-    List<DownloadAudioDetails> geAllData();
+    List<DownloadAudioDetails> geAllData1();
 
     @Insert
     void insertMedia(DownloadAudioDetails downloadAudioDetails);
 
+    @Insert
+    void insertPlaylist(DownloadPlaylistDetails downloadPlaylistDetails);
+
     @Query("DELETE FROM audio_table WHERE AudioFile = :AudioFile")
     void deleteByAudioFile(String AudioFile);
 
-    @Query("SELECT * FROM audio_table WHERE ID =:ID ORDER BY uid DESC LIMIT 1")
-    List<DownloadAudioDetails> getLastIdByuId(String ID);
+    @Query("DELETE FROM audio_table WHERE PlaylistId = :PlaylistId")
+    void deleteByPlaylistId(String PlaylistId);
+
+    @Query("DELETE FROM playlist_table WHERE PlaylistId = :PlaylistId")
+    void deletePlaylist(String PlaylistId);
+
+    @Query("SELECT * FROM audio_table WHERE AudioFile =:AudioFile")
+    List<DownloadAudioDetails> getLastIdByuId(String AudioFile);
+
+    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId ORDER BY uid ASC")
+    List<DownloadAudioDetails> getAllAudioByPlaylist(String PlaylistId);
+
+    @Query("SELECT * FROM playlist_table WHERE PlaylistId =:PlaylistId ORDER BY uid ASC")
+    List<DownloadPlaylistDetails> getPlaylist(String PlaylistId);
+
+    @Query("SELECT * FROM playlist_table ORDER BY uid ASC")
+    List<DownloadPlaylistDetails> getAllPlaylist();
 
     @Query("UPDATE audio_table SET Download =:Download,IsSingle =:IsSingle,PlaylistId =:PlaylistId WHERE ID =:ID")
     void updateMediaByDownload(String Download,String IsSingle,String PlaylistId,String ID );
 
     @Query("DELETE FROM audio_table")
     void deleteAll();
+    @Query("DELETE FROM playlist_table")
+    void deleteAllPlalist();
 
 }

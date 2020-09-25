@@ -210,7 +210,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     }
 
     private void deleteDownloadFile(Context applicationContext, String audioFile, String audioName, int position) {
-         FileUtils.getFilePath(applicationContext,audioName);
+         FileUtils.deleteDownloadedFile(applicationContext,audioName);
 
         class DeleteMedia extends AsyncTask<Void, Void, Void> {
 
@@ -246,7 +246,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .geAllData();
+                        .geAllData("");
                 return null;
             }
 
