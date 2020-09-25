@@ -45,6 +45,7 @@ public class ViewAllPlaylistFragment extends Fragment {
     ArrayList<MainPlayListModel.ResponseData.Detail> Audiolist;
     String AudioFlag;
     public static int ComeFromPlaylistViewAll = 0;
+    public static int ComeFromMyPlaylistViewAll = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,6 +61,8 @@ public class ViewAllPlaylistFragment extends Fragment {
             GetLibraryID = getArguments().getString("GetLibraryID");
             Name = getArguments().getString("Name");
         }
+
+
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
@@ -211,6 +214,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                     } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         Bundle bundle = new Bundle();
+                        ComeFromMyPlaylistViewAll = 1;
                         Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                         bundle.putString("New", "0");

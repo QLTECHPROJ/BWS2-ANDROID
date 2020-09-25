@@ -94,8 +94,9 @@ public class ReminderActivity extends AppCompatActivity {
         }
 
         if (Time.equalsIgnoreCase("") ||
+                Time.equalsIgnoreCase("0") ||
                 Time == null) {
-            binding.tvTime.setText("12:00 pm");
+            binding.tvTime.setText("09:00 am");
         } else {
             binding.tvTime.setText(Time);
         }

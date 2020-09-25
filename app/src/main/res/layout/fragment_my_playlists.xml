@@ -245,7 +245,7 @@
                                 android:layout_toRightOf="@id/button1"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
-                                android:text="@string/Search_for_audio"
+                                android:text="Search for audios"
                                 android:textColor="@color/light_gray"
                                 android:textSize="@dimen/_16sdp"
                                 android:visibility="gone" />

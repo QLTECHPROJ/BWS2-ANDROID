@@ -70,6 +70,7 @@ import static com.qltech.bws.DashboardModule.Account.AccountFragment.ComeScreenR
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.deleteFrg;
+import static com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment.ComeFromMyPlaylistViewAll;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
@@ -140,7 +141,7 @@ public class MyPlaylistsFragment extends Fragment {
             searchEditText.setText("");
             binding.searchView.setQuery("", false);
         });
-        searchEditText.setHint("Search for audio");
+        searchEditText.setHint("Search for audios");
 
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -268,6 +269,19 @@ public class MyPlaylistsFragment extends Fragment {
                     .replace(R.id.flContainer, playlistFragment)
                     .commit();
         }
+
+        if (ComeFromMyPlaylistViewAll == 1) {
+            FragmentManager fm = getActivity()
+                    .getSupportFragmentManager();
+            fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            ComeFromMyPlaylistViewAll = 0;
+        } else {
+            Fragment playlistFragment = new PlaylistFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .replace(R.id.flContainer, playlistFragment)
+                    .commit();
+        }
     }
 
     private void searchClear(EditText searchEditText) {
@@ -322,7 +336,13 @@ public class MyPlaylistsFragment extends Fragment {
 
                         playlistSongsList = listModel.getResponseData().getPlaylistSongs();
                         binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-
+                        if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
+                            binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow),
+                                    android.graphics.PorterDuff.Mode.SRC_IN);
+                        } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
+                                listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
+                            binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                        }
 
                         binding.llReminder.setOnClickListener(view -> {
                             if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {

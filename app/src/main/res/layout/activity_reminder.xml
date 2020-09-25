@@ -104,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_14sdp"
                         android:fontFamily="@font/montserrat_semi_bold"
-                        android:text="12:00 pm"
+                        android:text="09:00 am"
                         android:textColor="@color/light_black"
                         android:textSize="@dimen/_14sdp" />
 
@@ -145,7 +145,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="start"
-                            android:text="@string/Select_Playlist"
+                            android:text="Playlist"
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_18sdp" />
 
