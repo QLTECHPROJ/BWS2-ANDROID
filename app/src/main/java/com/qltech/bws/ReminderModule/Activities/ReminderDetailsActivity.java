@@ -26,7 +26,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Models.DeleteRemiderModel;
 import com.qltech.bws.ReminderModule.Models.RemiderDetailsModel;
@@ -43,10 +42,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Account.AccountFragment.IsLock;
-import static com.qltech.bws.Utility.MusicService.isMediaStart;
-import static com.qltech.bws.Utility.MusicService.isPause;
-import static com.qltech.bws.Utility.MusicService.pauseMedia;
-import static com.qltech.bws.Utility.MusicService.resumeMedia;
 
 public class ReminderDetailsActivity extends AppCompatActivity {
     ActivityReminderDetailsBinding binding;
@@ -105,7 +100,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         @Override
         public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
             final int position = viewHolder.getAdapterPosition();
-
             if (direction == ItemTouchHelper.LEFT) {
                 final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

@@ -323,7 +323,7 @@ public class ReminderActivity extends AppCompatActivity {
         }
         df.setTimeZone(TimeZone.getDefault());
         String formattedDate = df.format(date);
-        Log.e("TIMEZONES",formattedDate);
+        Log.e("TIMEZONES", formattedDate);
 
         binding.btnSave.setOnClickListener(view -> {
             if (PlaylistName.equalsIgnoreCase("")) {
@@ -334,7 +334,7 @@ public class ReminderActivity extends AppCompatActivity {
                 if (BWSApplication.isNetworkConnected(context)) {
                     BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                     Call<SetReminderModel> listCall = APIClient.getClient().SetReminder(PlaylistID, UserId, CONSTANTS.FLAG_ONE,
-                            formattedDate , TextUtils.join(",", remiderDays));
+                            formattedDate, TextUtils.join(",", remiderDays));
                     listCall.enqueue(new Callback<SetReminderModel>() {
                         @Override
                         public void onResponse(Call<SetReminderModel> call, Response<SetReminderModel> response) {
