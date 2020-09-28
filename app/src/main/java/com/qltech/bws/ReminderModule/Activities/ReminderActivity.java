@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -215,7 +217,7 @@ public class ReminderActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ReminderDayAdapter.MyViewHolder holder, final int position) {
             holder.binding.tvday.setText(reminderDayList.get(position));
-            if (position == 1) {
+            /*if (position == 1) {
                 ChangeFunction(holder, position, 1);
             } else {
                 ChangeFunction(holder, position, 0);
@@ -234,24 +236,26 @@ public class ReminderActivity extends AppCompatActivity {
                 } else {
                     ChangeFunction(holder, position, 0);
                 }
-            }
+            }*/
 
-           /* holder.binding.llMainDay.setOnClickListener(view -> {
+            holder.binding.llMainDay.setOnClickListener(view -> {
                 holder.binding.tvday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
                 holder.binding.tvday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
-                if (remiderDays.size() != 0) {
-                    if (remiderDays.contains(String.valueOf(position))) {
+//                if (remiderDays.size() != 0) {
+//                    if (remiderDays.contains(String.valueOf(position))) {
                         remiderDays.add(String.valueOf(position));
                         holder.binding.tvday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
                         holder.binding.tvday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
-                    } else {
+
+                        Log.e("remiderDays", TextUtils.join(",", remiderDays));
+                        Log.e("position", String.valueOf(position));
+                   /* } else {
                         holder.binding.tvday.setTextColor(context.getResources().getColor(R.color.dark_blue_gray));
                         holder.binding.tvday.setBackground(context.getResources().getDrawable(R.drawable.transparent_bg));
-                    }
-                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
-                    Log.e("position", String.valueOf(position));
-                }
-            });*/
+                    }*/
+
+//                }
+            });
         }
 
         private void ChangeFunction(MyViewHolder holder, int position, int day) {

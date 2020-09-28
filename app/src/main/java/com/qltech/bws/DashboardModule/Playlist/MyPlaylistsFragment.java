@@ -71,7 +71,7 @@ import static com.qltech.bws.DashboardModule.Account.AccountFragment.ComeScreenR
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.deleteFrg;
-import static com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment.ComeFromMyPlaylistViewAll;
+import static com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment.GetPlaylistLibraryID;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
@@ -263,9 +263,7 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     public List<DownloadAudioDetails> GetAllMedia() {
-
         class GetTask extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
 
@@ -310,32 +308,30 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     private void callBack() {
-        if (comefrom_search == 1) {
+        if (comefrom_search == 2) {
+            Bundle bundle = new Bundle();
+            Fragment playlistFragment = new ViewAllPlaylistFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .replace(R.id.flContainer, playlistFragment)
+                    .commit();
+            bundle.putString("GetLibraryID", GetPlaylistLibraryID);
+            playlistFragment.setArguments(bundle);
+            comefrom_search = 0;
+        } else if (comefrom_search == 1) {
             Fragment fragment = new SearchFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .replace(R.id.flContainer, fragment)
                     .commit();
             comefrom_search = 0;
-        } else {
+        } else if (comefrom_search == 0) {
             Fragment playlistFragment = new PlaylistFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .replace(R.id.flContainer, playlistFragment)
                     .commit();
-        }
-
-        if (ComeFromMyPlaylistViewAll == 1) {
-            FragmentManager fm = getActivity()
-                    .getSupportFragmentManager();
-            fm.popBackStack("MyPlaylistsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            ComeFromMyPlaylistViewAll = 0;
-        } else {
-            Fragment playlistFragment = new PlaylistFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .replace(R.id.flContainer, playlistFragment)
-                    .commit();
+            comefrom_search = 0;
         }
     }
 
@@ -367,6 +363,7 @@ public class MyPlaylistsFragment extends Fragment {
                             .add(R.id.flContainer, fragment)
                             .commit();
                 }
+
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(10, 8, 10, 260);
                 binding.llSpace.setLayoutParams(params);
@@ -405,13 +402,17 @@ public class MyPlaylistsFragment extends Fragment {
                         downloadPlaylistDetails.setCreated(listModel.getResponseData().getCreated());
                         downloadPlaylistDetails.setDownload(listModel.getResponseData().getDownload());
                         downloadPlaylistDetails.setLike(listModel.getResponseData().getLike());
-                        binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-                        if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
-                            binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow),
-                                    android.graphics.PorterDuff.Mode.SRC_IN);
-                        } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
-                                listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
+                        try {
                             binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                            if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
+                                binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow),
+                                        android.graphics.PorterDuff.Mode.SRC_IN);
+                            } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
+                                    listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
+                                binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
                         binding.llReminder.setOnClickListener(view -> {
@@ -691,23 +692,23 @@ public class MyPlaylistsFragment extends Fragment {
     private void savePlaylist() {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
 
-        @Override
-        protected Void doInBackground(Void... voids) {
+            @Override
+            protected Void doInBackground(Void... voids) {
 
                 DatabaseClient.getInstance(getActivity())
                         .getaudioDatabase()
                         .taskDao()
                         .insertPlaylist(downloadPlaylistDetails);
-            return null;
-        }
+                return null;
+            }
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
+            @Override
+            protected void onPostExecute(Void aVoid) {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
-            super.onPostExecute(aVoid);
+                super.onPostExecute(aVoid);
+            }
         }
-    }
         SaveMedia st = new SaveMedia();
         st.execute();
     }

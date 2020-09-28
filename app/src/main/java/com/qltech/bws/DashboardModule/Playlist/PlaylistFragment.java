@@ -110,7 +110,7 @@ public class PlaylistFragment extends Fragment {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
+                        .replace(R.id.flContainer, fragment)
                         .commit();
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -175,76 +175,76 @@ public class PlaylistFragment extends Fragment {
                 holder.binding.tvViewAll.setVisibility(View.GONE);
             }
 
-            holder.binding.tvViewAll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Fragment viewAllPlaylistFragment = new ViewAllPlaylistFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction().addToBackStack("ViewAllPlaylistFragment")
-                            .add(R.id.flContainer, viewAllPlaylistFragment)
-                            .commit();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("GetLibraryID", listModelList.get(position).getGetLibraryID());
-                    bundle.putString("Name", listModelList.get(position).getView());
-                    viewAllPlaylistFragment.setArguments(bundle);
-                }
+            holder.binding.tvViewAll.setOnClickListener(view -> {
+                Fragment viewAllPlaylistFragment = new ViewAllPlaylistFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.flContainer, viewAllPlaylistFragment)
+                        .commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("GetLibraryID", listModelList.get(position).getGetLibraryID());
+                bundle.putString("Name", listModelList.get(position).getView());
+                viewAllPlaylistFragment.setArguments(bundle);
             });
 
-            binding.rlCreatePlaylist.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
-                    } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
-                            || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
-                        final Dialog dialog = new Dialog(getActivity());
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.setContentView(R.layout.create_palylist);
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-                        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                        final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
-                        final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-                        final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
-                        edtCreate.requestFocus();
-                        dialog.setOnKeyListener((v, keyCode, event) -> {
-                            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                dialog.dismiss();
-                                return true;
-                            }
-                            return false;
-                        });
+            binding.rlCreatePlaylist.setOnClickListener(view -> {
+                if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
+                        || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                    final Dialog dialog = new Dialog(getActivity());
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.create_palylist);
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
+                    final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+                    final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+                    edtCreate.requestFocus();
+                    dialog.setOnKeyListener((v, keyCode, event) -> {
+                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                            dialog.dismiss();
+                            return true;
+                        }
+                        return false;
+                    });
 
-                        rlCreate.setOnClickListener(view1 -> {
-                            if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                                BWSApplication.showToast("Please provide the playlist's name", getActivity());
-                            } else {
-                                if (BWSApplication.isNetworkConnected(getActivity())) {
-                                    Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
-                                    listCall.enqueue(new Callback<CreatePlaylistModel>() {
-                                        @Override
-                                        public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
-                                            if (response.isSuccessful()) {
-                                                CreatePlaylistModel listModel = response.body();
+                    rlCreate.setOnClickListener(view1 -> {
+                        if (edtCreate.getText().toString().equalsIgnoreCase("")) {
+                            BWSApplication.showToast("Please provide the playlist's name", getActivity());
+                        } else {
+                            if (BWSApplication.isNetworkConnected(getActivity())) {
+                                Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
+                                listCall.enqueue(new Callback<CreatePlaylistModel>() {
+                                    @Override
+                                    public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
+                                        if (response.isSuccessful()) {
+                                            CreatePlaylistModel listModel = response.body();
+                                            if (listModel.getResponseData().getIscreated().equalsIgnoreCase("0")) {
+                                                BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
+                                            } else if (listModel.getResponseData().getIscreated().equalsIgnoreCase("1") ||
+                                                    listModel.getResponseData().getIscreated().equalsIgnoreCase("")) {
                                                 callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "");
                                                 dialog.dismiss();
                                             }
-                                        }
 
-                                        @Override
-                                        public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
-                                            hideProgressBar();
                                         }
-                                    });
-                                } else {
-                                    BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-                                }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
+                                        hideProgressBar();
+                                    }
+                                });
+                            } else {
+                                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                             }
-                        });
+                        }
+                    });
 
-                        tvCancel.setOnClickListener(v -> dialog.dismiss());
-                        dialog.show();
-                        dialog.setCancelable(false);
-                    }
+                    tvCancel.setOnClickListener(v -> dialog.dismiss());
+                    dialog.show();
+                    dialog.setCancelable(false);
                 }
             });
 
@@ -341,9 +341,7 @@ public class PlaylistFragment extends Fragment {
                         BWSApplication.showToast("Please re-activate your membership plan", ctx);
                     } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        callMyPlaylistsFragment("0",
-                                listModelList.get(position).getPlaylistID(),
-                                listModelList.get(position).getPlaylistName(),
+                        callMyPlaylistsFragment("0", listModelList.get(position).getPlaylistID(), listModelList.get(position).getPlaylistName(),
                                 listModelList.get(position).getPlaylistImage());
                     }
                 }

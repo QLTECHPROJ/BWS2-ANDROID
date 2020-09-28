@@ -39,19 +39,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
+
 public class ViewAllPlaylistFragment extends Fragment {
     FragmentViewAllPlaylistBinding binding;
-    String GetLibraryID, Name, UserID;
-    ArrayList<MainPlayListModel.ResponseData.Detail> Audiolist;
-    String AudioFlag;
+    String GetLibraryID, Name, UserID, AudioFlag;
     public static int ComeFromPlaylistViewAll = 0;
-    public static int ComeFromMyPlaylistViewAll = 0;
+    public static String GetPlaylistLibraryID = "";
+    View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_all_playlist, container, false);
-        View view = binding.getRoot();
+        view = binding.getRoot();
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -61,17 +62,6 @@ public class ViewAllPlaylistFragment extends Fragment {
             GetLibraryID = getArguments().getString("GetLibraryID");
             Name = getArguments().getString("Name");
         }
-
-
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                callBack();
-                return true;
-            }
-            return false;
-        });
 
         binding.llBack.setOnClickListener(view1 -> {
             callBack();
@@ -86,20 +76,25 @@ public class ViewAllPlaylistFragment extends Fragment {
 
     private void callBack() {
         ComeFromPlaylistViewAll = 1;
-        FragmentManager fm = getActivity()
-                .getSupportFragmentManager();
-        fm.popBackStack("ViewAllPlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        /*Fragment playlistFragment = new PlaylistFragment();
+        Fragment playlistFragment = new PlaylistFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
-                .add(R.id.flContainer, playlistFragment)
+                .replace(R.id.flContainer, playlistFragment)
                 .commit();
-        Bundle bundle = new Bundle();
-        playlistFragment.setArguments(bundle);*/
     }
 
     @Override
     public void onResume() {
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                callBack();
+                return true;
+            }
+            return false;
+        });
+
         super.onResume();
         prepareData();
     }
@@ -125,25 +120,30 @@ public class ViewAllPlaylistFragment extends Fragment {
         }
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            showProgressBar();
-            Call<ViewAllPlayListModel> listCall = APIClient.getClient().getViewAllPlayLists(UserID, GetLibraryID);
-            listCall.enqueue(new Callback<ViewAllPlayListModel>() {
-                @Override
-                public void onResponse(Call<ViewAllPlayListModel> call, Response<ViewAllPlayListModel> response) {
-                    if (response.isSuccessful()) {
-                        hideProgressBar();
-                        ViewAllPlayListModel listModel = response.body();
-                        binding.tvTitle.setText(listModel.getResponseData().getView());
-                        PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
-                        binding.rvMainAudio.setAdapter(adapter);
+            try {
+                showProgressBar();
+                Call<ViewAllPlayListModel> listCall = APIClient.getClient().getViewAllPlayLists(UserID, GetLibraryID);
+                listCall.enqueue(new Callback<ViewAllPlayListModel>() {
+                    @Override
+                    public void onResponse(Call<ViewAllPlayListModel> call, Response<ViewAllPlayListModel> response) {
+                        if (response.isSuccessful()) {
+                            hideProgressBar();
+                            ViewAllPlayListModel listModel = response.body();
+                            binding.tvTitle.setText(listModel.getResponseData().getView());
+                            PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
+                            binding.rvMainAudio.setAdapter(adapter);
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<ViewAllPlayListModel> call, Throwable t) {
-                    hideProgressBar();
-                }
-            });
+                    @Override
+                    public void onFailure(Call<ViewAllPlayListModel> call, Throwable t) {
+                        hideProgressBar();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
@@ -214,7 +214,8 @@ public class ViewAllPlaylistFragment extends Fragment {
                     } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         Bundle bundle = new Bundle();
-                        ComeFromMyPlaylistViewAll = 1;
+                        comefrom_search = 2;
+                        GetPlaylistLibraryID = GetLibraryID;
                         Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                         bundle.putString("New", "0");
@@ -223,8 +224,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                         bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
                         myPlaylistsFragment.setArguments(bundle);
                         fragmentManager1.beginTransaction()
-                                .replace(R.id.flContainer, myPlaylistsFragment).
-                                addToBackStack("MyPlaylistsFragment")
+                                .replace(R.id.flContainer, myPlaylistsFragment)
                                 .commit();
                     }
                 }

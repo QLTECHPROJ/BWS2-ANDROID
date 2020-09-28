@@ -56,6 +56,9 @@ public class CreatePlaylistModel {
         @SerializedName("name")
         @Expose
         private String name;
+        @SerializedName("Iscreate")
+        @Expose
+        private String Iscreated;
 
         public String getId() {
             return id;
@@ -71,6 +74,14 @@ public class CreatePlaylistModel {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public String getIscreated() {
+            return Iscreated;
+        }
+
+        public void setIscreated(String iscreated) {
+            Iscreated = iscreated;
         }
     }
 }
