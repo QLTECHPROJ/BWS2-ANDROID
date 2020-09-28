@@ -658,7 +658,7 @@ public class MyPlaylistsFragment extends Fragment {
         if (downloadAudioDetailsList.size() != 0) {
 
             for (int x = 0; x < playlistSongs.size(); x++) {
-                for (int y = 0; x < downloadAudioDetailsList.size(); x++) {
+                for (int y = 0; y < downloadAudioDetailsList.size(); y++) {
                     if (playlistSongs2.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
                         playlistSongs2.remove(x);
                     }
