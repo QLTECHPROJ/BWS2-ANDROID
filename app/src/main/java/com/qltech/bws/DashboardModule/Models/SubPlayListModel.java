@@ -108,6 +108,8 @@ public class SubPlayListModel {
         @Expose
         private ArrayList<PlaylistSong> playlistSongs = null;
 
+        public ResponseData() {
+        }
         protected ResponseData(Parcel in) {
             playlistID = in.readString();
             playlistName = in.readString();
@@ -337,6 +339,8 @@ public class SubPlayListModel {
             @Expose
             private String audioDirection;
 
+            public PlaylistSong() {
+            }
             protected PlaylistSong(Parcel in) {
                 iD = in.readString();
                 imageFile = in.readString();

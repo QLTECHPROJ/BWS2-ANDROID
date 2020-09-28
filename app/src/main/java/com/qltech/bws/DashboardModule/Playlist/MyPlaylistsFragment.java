@@ -40,6 +40,7 @@ import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
+import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Search.SearchFragment;
@@ -212,7 +213,7 @@ public class MyPlaylistsFragment extends Fragment {
         return view;
     }
 
-    private List<DownloadPlaylistDetails> GetPlaylistDetail(String download) {
+    private List<DownloadPlaylistDetails> GetPlaylistDetail(String download, SubPlayListModel listModel) {
         class GetTask extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -236,6 +237,39 @@ public class MyPlaylistsFragment extends Fragment {
                 } else if (download.equalsIgnoreCase("0") || download.equalsIgnoreCase("")) {
                     enableDisableDownload(true);
                 }
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        GetTask st = new GetTask();
+        st.execute();
+        return downloadPlaylistDetailsList;
+    }
+    private List<DownloadPlaylistDetails> GetPlaylistDetail2() {
+        class GetTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                downloadPlaylistDetailsList = DatabaseClient
+                        .getInstance(activity)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getPlaylist(PlaylistID);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+   /*
+                    "PlaylistDesc": "When life gets tough and you struggle through the days, download the Ultimate Self-development Bundle to help you in finding a new appreciation for life. Everyone can use a little help in all areas of their lives at times. There are 12 programs aimed to help your self-development:",
+                    "PlaylistMastercat": "Self-development",
+                    "PlaylistSubcat": "Self-expression, Focus, Discipline, Self-love, Mindset, Passion, Enthusiasm, Gratitude, Self-doubt, Inner Strength ",
+                    "PlaylistImage": "https://brainwellnessspa.com.au/wp-content/uploads/2018/06/Ultimate self development bundle.jpg",
+                    "PlaylistSongs " */
+                downloadAudioDetailsList = GetAllMedia();
+                playlistWiseAudioDetails = GetMedia();
+
                 super.onPostExecute(aVoid);
             }
         }
@@ -457,8 +491,9 @@ public class MyPlaylistsFragment extends Fragment {
                                 startActivity(i);
                             }
                         });
+                        setData(listModel.getResponseData());
                         downloadAudioDetailsList = GetAllMedia();
-                        downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData().getDownload());
+                        downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData().getDownload(),listModel);
                         playlistWiseAudioDetails = GetMedia();
 
                         if (listModel.getResponseData().getPlaylistName().equalsIgnoreCase("") ||
@@ -468,74 +503,6 @@ public class MyPlaylistsFragment extends Fragment {
                             binding.tvLibraryName.setText(listModel.getResponseData().getPlaylistName());
                         }
 
-                        MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
-                                4, 2, 1.2f, 0);
-                        binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-                        binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-                        binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
-                        if (!listModel.getResponseData().getPlaylistImage().equalsIgnoreCase("")) {
-                            try {
-                                Glide.with(getActivity()).load(listModel.getResponseData().getPlaylistImage()).thumbnail(0.05f)
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            binding.ivBanner.setImageResource(R.drawable.audio_bg);
-                        }
-
-                        if (listModel.getResponseData().getTotalAudio().equalsIgnoreCase("") ||
-                                listModel.getResponseData().getTotalAudio().equalsIgnoreCase("0") &&
-                                        listModel.getResponseData().getTotalhour().equalsIgnoreCase("")
-                                        && listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
-                            binding.tvLibraryDetail.setText("0 Audio | 0h 0m");
-                        } else {
-                            if (listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
-                                binding.tvLibraryDetail.setText(listModel.getResponseData().getTotalAudio() + " Audio | "
-                                        + listModel.getResponseData().getTotalhour() + "h 0m");
-                            } else {
-                                binding.tvLibraryDetail.setText(listModel.getResponseData().getTotalAudio() + " Audio | "
-                                        + listModel.getResponseData().getTotalhour() + "h " + listModel.getResponseData().getTotalminute() + "m");
-                            }
-                        }
-
-                        if (listModel.getResponseData().getPlaylistSongs().size() == 0) {
-                            binding.llAddAudio.setVisibility(View.VISIBLE);
-                            binding.llDownloads.setVisibility(View.VISIBLE);
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-                            binding.ivDownloads.setAlpha(255);
-                            binding.llDownloads.setClickable(false);
-                            binding.llDownloads.setEnabled(false);
-                            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.lights_gray), PorterDuff.Mode.SRC_IN);
-                            binding.llReminder.setVisibility(View.VISIBLE);
-                            binding.ivPlaylistStatus.setVisibility(View.INVISIBLE);
-                            binding.llListing.setVisibility(View.GONE);
-                            binding.btnAddAudio.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent i = new Intent(getActivity(), AddAudioActivity.class);
-                                    i.putExtra("PlaylistID", PlaylistID);
-                                    startActivity(i);
-                                }
-                            });
-                        } else {
-                            binding.llAddAudio.setVisibility(View.GONE);
-                            binding.llDownloads.setVisibility(View.VISIBLE);
-                            binding.llReminder.setVisibility(View.VISIBLE);
-                            binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
-                            binding.llListing.setVisibility(View.VISIBLE);
-                            if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
-                                adpater = new PlayListsAdpater(listModel.getResponseData().getPlaylistSongs(), getActivity(), UserID, listModel.getResponseData().getCreated());
-                                ItemTouchHelper.Callback callback = new ItemMoveCallback(adpater);
-                                ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-                                touchHelper.attachToRecyclerView(binding.rvPlayLists);
-                                binding.rvPlayLists.setAdapter(adpater);
-                            } else {
-                                adpater2 = new PlayListsAdpater2(listModel.getResponseData().getPlaylistSongs(), getActivity(), UserID, listModel.getResponseData().getCreated());
-                                binding.rvPlayLists.setAdapter(adpater2);
-                            }
-                        }
                     }
                 }
 
@@ -545,7 +512,82 @@ public class MyPlaylistsFragment extends Fragment {
                 }
             });
         } else {
+
+            downloadPlaylistDetailsList = GetPlaylistDetail2();
+
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+        }
+    }
+
+    private void setData(SubPlayListModel.ResponseData listModel) {
+
+        MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
+                4, 2, 1.2f, 0);
+        binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
+        if (!listModel.getPlaylistImage().equalsIgnoreCase("")) {
+            try {
+                Glide.with(getActivity()).load(listModel.getPlaylistImage()).thumbnail(0.05f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            binding.ivBanner.setImageResource(R.drawable.audio_bg);
+        }
+
+        if (listModel.getTotalAudio().equalsIgnoreCase("") ||
+                listModel.getTotalAudio().equalsIgnoreCase("0") &&
+                        listModel.getTotalhour().equalsIgnoreCase("")
+                        && listModel.getTotalminute().equalsIgnoreCase("")) {
+            binding.tvLibraryDetail.setText("0 Audio | 0h 0m");
+        } else {
+            if (listModel.getTotalminute().equalsIgnoreCase("")) {
+                binding.tvLibraryDetail.setText(listModel.getTotalAudio() + " Audio | "
+                        + listModel.getTotalhour() + "h 0m");
+            } else {
+                binding.tvLibraryDetail.setText(listModel.getTotalAudio() + " Audio | "
+                        + listModel.getTotalhour() + "h " + listModel.getTotalminute() + "m");
+            }
+        }
+
+        if (listModel.getPlaylistSongs().size() == 0) {
+            binding.llAddAudio.setVisibility(View.VISIBLE);
+            binding.llDownloads.setVisibility(View.VISIBLE);
+            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
+            binding.ivDownloads.setAlpha(255);
+            binding.llDownloads.setClickable(false);
+            binding.llDownloads.setEnabled(false);
+            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.lights_gray), PorterDuff.Mode.SRC_IN);
+            binding.llReminder.setVisibility(View.VISIBLE);
+            binding.ivPlaylistStatus.setVisibility(View.INVISIBLE);
+            binding.llListing.setVisibility(View.GONE);
+            binding.btnAddAudio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(getActivity(), AddAudioActivity.class);
+                    i.putExtra("PlaylistID", PlaylistID);
+                    startActivity(i);
+                }
+            });
+        } else {
+            binding.llAddAudio.setVisibility(View.GONE);
+            binding.llDownloads.setVisibility(View.VISIBLE);
+            binding.llReminder.setVisibility(View.VISIBLE);
+            binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
+            binding.llListing.setVisibility(View.VISIBLE);
+            if (listModel.getCreated().equalsIgnoreCase("1")) {
+                adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
+                ItemTouchHelper.Callback callback = new ItemMoveCallback(adpater);
+                ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+                touchHelper.attachToRecyclerView(binding.rvPlayLists);
+                binding.rvPlayLists.setAdapter(adpater);
+            } else {
+                adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
+                binding.rvPlayLists.setAdapter(adpater2);
+            }
         }
     }
 
@@ -851,6 +893,45 @@ public class MyPlaylistsFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+
+                if (!BWSApplication.isNetworkConnected(getActivity())) {
+                    SubPlayListModel responseData = new SubPlayListModel();
+                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> details = new ArrayList<>();
+                    SubPlayListModel.ResponseData listModel = new SubPlayListModel.ResponseData();
+                    listModel.setPlaylistID(downloadPlaylistDetailsList.get(0).getPlaylistID());
+                    listModel.setPlaylistName(downloadPlaylistDetailsList.get(0).getPlaylistName());
+                    listModel.setPlaylistDesc(downloadPlaylistDetailsList.get(0).getPlaylistDesc());
+                    listModel.setPlaylistMastercat(downloadPlaylistDetailsList.get(0).getPlaylistMastercat());
+                    listModel.setPlaylistSubcat(downloadPlaylistDetailsList.get(0).getPlaylistSubcat());
+                    listModel.setPlaylistImage(downloadPlaylistDetailsList.get(0).getPlaylistImage());
+                    listModel.setTotalAudio(downloadPlaylistDetailsList.get(0).getTotalAudio());
+                    listModel.setTotalDuration(downloadPlaylistDetailsList.get(0).getTotalDuration());
+                    listModel.setTotalhour(downloadPlaylistDetailsList.get(0).getTotalhour());
+                    listModel.setTotalminute(downloadPlaylistDetailsList.get(0).getTotalminute());
+                    listModel.setCreated(downloadPlaylistDetailsList.get(0).getCreated());
+                    listModel.setLike(downloadPlaylistDetailsList.get(0).getLike());
+                    listModel.setIsReminder(downloadPlaylistDetailsList.get(0).getIsReminder());
+                    if(playlistWiseAudioDetails.size()!=0) {
+                        for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
+                            SubPlayListModel.ResponseData.PlaylistSong detail = new  SubPlayListModel.ResponseData.PlaylistSong();
+                            detail.setID(playlistWiseAudioDetails.get(i).getID());
+                            detail.setName(playlistWiseAudioDetails.get(i).getName());
+                            detail.setAudioFile(playlistWiseAudioDetails.get(i).getAudioFile());
+                            detail.setAudioDirection(playlistWiseAudioDetails.get(i).getAudioDirection());
+                            detail.setAudiomastercat(playlistWiseAudioDetails.get(i).getAudiomastercat());
+                            detail.setAudioSubCategory(playlistWiseAudioDetails.get(i).getAudioSubCategory());
+                            detail.setImageFile(playlistWiseAudioDetails.get(i).getImageFile());
+                            detail.setLike(playlistWiseAudioDetails.get(i).getLike());
+                            detail.setDownload(playlistWiseAudioDetails.get(i).getDownload());
+                            detail.setAudioDuration(playlistWiseAudioDetails.get(i).getAudioDuration());
+                            details.add(detail);
+                        }
+                        listModel.setPlaylistSongs(details);
+                    }
+
+
+                    setData(listModel);
+                }
                 super.onPostExecute(aVoid);
             }
         }
@@ -1114,7 +1195,7 @@ public class MyPlaylistsFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 //            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);
             for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                if (downloadAudioDetailsList.get(i).getID().equalsIgnoreCase(mData.get(position).getID())) {
+                if (downloadAudioDetailsList.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile())) {
                     disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
                 } else {
                     enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);

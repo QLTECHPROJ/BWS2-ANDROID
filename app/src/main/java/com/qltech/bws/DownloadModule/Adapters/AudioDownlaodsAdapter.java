@@ -219,7 +219,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 DatabaseClient.getInstance(applicationContext)
                         .getaudioDatabase()
                         .taskDao()
-                        .deleteByAudioFile(audioFile);
+                        .deleteByAudioFile(audioFile,"");
 
                 return null;
             }

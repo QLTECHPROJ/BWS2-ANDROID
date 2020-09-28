@@ -10,6 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainAudioModel implements Parcelable {
+    public static final Creator<MainAudioModel> CREATOR = new Creator<MainAudioModel>() {
+        @Override
+        public MainAudioModel createFromParcel(Parcel in) {
+            return new MainAudioModel(in);
+        }
+
+        @Override
+        public MainAudioModel[] newArray(int size) {
+            return new MainAudioModel[size];
+        }
+    };
     @SerializedName("ResponseData")
     @Expose
     private List<ResponseData> responseData = null;
@@ -23,24 +34,14 @@ public class MainAudioModel implements Parcelable {
     @Expose
     private String responseStatus;
 
-    protected MainAudioModel(Parcel in) {
+    public MainAudioModel() {
+    }
+   protected MainAudioModel(Parcel in) {
         responseData = in.createTypedArrayList(ResponseData.CREATOR);
         responseCode = in.readString();
         responseMessage = in.readString();
         responseStatus = in.readString();
     }
-
-    public static final Creator<MainAudioModel> CREATOR = new Creator<MainAudioModel>() {
-        @Override
-        public MainAudioModel createFromParcel(Parcel in) {
-            return new MainAudioModel(in);
-        }
-
-        @Override
-        public MainAudioModel[] newArray(int size) {
-            return new MainAudioModel[size];
-        }
-    };
 
     public List<ResponseData> getResponseData() {
         return responseData;
@@ -88,6 +89,17 @@ public class MainAudioModel implements Parcelable {
     }
 
     public static class ResponseData implements Parcelable {
+        public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
+            @Override
+            public ResponseData createFromParcel(Parcel in) {
+                return new ResponseData(in);
+            }
+
+            @Override
+            public ResponseData[] newArray(int size) {
+                return new ResponseData[size];
+            }
+        };
         @SerializedName("HomeID")
         @Expose
         private String homeID;
@@ -107,24 +119,14 @@ public class MainAudioModel implements Parcelable {
         @Expose
         private ArrayList<Detail> details = null;
 
-        protected ResponseData(Parcel in) {
+        public ResponseData() {
+
+        } protected ResponseData(Parcel in) {
             homeID = in.readString();
             view = in.readString();
             type = in.readString();
             userID = in.readString();
         }
-
-        public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
-            @Override
-            public ResponseData createFromParcel(Parcel in) {
-                return new ResponseData(in);
-            }
-
-            @Override
-            public ResponseData[] newArray(int size) {
-                return new ResponseData[size];
-            }
-        };
 
         public String getHomeID() {
             return homeID;
@@ -188,6 +190,17 @@ public class MainAudioModel implements Parcelable {
         }
 
         public static class Detail implements Parcelable {
+            public static final Creator<Detail> CREATOR = new Creator<Detail>() {
+                @Override
+                public Detail createFromParcel(Parcel in) {
+                    return new Detail(in);
+                }
+
+                @Override
+                public Detail[] newArray(int size) {
+                    return new Detail[size];
+                }
+            };
             @SerializedName("ID")
             @Expose
             private String iD;
@@ -228,6 +241,9 @@ public class MainAudioModel implements Parcelable {
             @Expose
             private String audioDuration;
 
+            public Detail() {
+            }
+
             protected Detail(Parcel in) {
                 iD = in.readString();
                 name = in.readString();
@@ -243,18 +259,6 @@ public class MainAudioModel implements Parcelable {
                 categoryName = in.readString();
                 catImage = in.readString();
             }
-
-            public static final Creator<Detail> CREATOR = new Creator<Detail>() {
-                @Override
-                public Detail createFromParcel(Parcel in) {
-                    return new Detail(in);
-                }
-
-                @Override
-                public Detail[] newArray(int size) {
-                    return new Detail[size];
-                }
-            };
 
             public String getID() {
                 return iD;

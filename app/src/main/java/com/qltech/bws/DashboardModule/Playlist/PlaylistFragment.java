@@ -4,7 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,9 +33,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
+import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
+import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.R;
+import com.qltech.bws.RoomDataBase.DatabaseClient;
+import com.qltech.bws.RoomDataBase.DownloadPlaylistDetails;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -42,6 +49,7 @@ import com.qltech.bws.databinding.MainAudioLayoutBinding;
 import com.qltech.bws.databinding.PlaylistCustomLayoutBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,7 +61,7 @@ import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_sear
 public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
     String UserID, Check = "", AudioFlag;
-
+    List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -67,6 +75,7 @@ public class PlaylistFragment extends Fragment {
         if (getArguments() != null) {
             Check = getArguments().getString("Check");
         }
+        downloadPlaylistDetailsList = new ArrayList<>();
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
         binding.rvMainPlayList.setItemAnimator(new DefaultItemAnimator());
@@ -134,8 +143,7 @@ public class PlaylistFragment extends Fragment {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         MainPlayListModel listModel = response.body();
-                        MainPlayListAdapter adapter = new MainPlayListAdapter(listModel.getResponseData(), getActivity());
-                        binding.rvMainPlayList.setAdapter(adapter);
+                        downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData());
                     }
                 }
 
@@ -145,8 +153,71 @@ public class PlaylistFragment extends Fragment {
                 }
             });
         } else {
+            ArrayList<MainPlayListModel.ResponseData> responseData = new ArrayList<>();
+            ArrayList<MainPlayListModel.ResponseData.Detail> details = new ArrayList<>();
+            MainPlayListModel.ResponseData listModel = new MainPlayListModel.ResponseData();
+            listModel.setGetLibraryID("2");
+            listModel.setDetails(details);
+            listModel.setUserID(UserID);
+            listModel.setView("My Downloads");
+            listModel.setIsLock("0");
+            responseData.add(listModel);
+            downloadPlaylistDetailsList = GetPlaylistDetail(responseData);
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
+    }
+    private List<DownloadPlaylistDetails> GetPlaylistDetail(ArrayList<MainPlayListModel.ResponseData> responseData) {
+        ArrayList<MainPlayListModel.ResponseData.Detail> details = new ArrayList<>();
+        class GetTask extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                downloadPlaylistDetailsList = DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getAllPlaylist();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                if(downloadPlaylistDetailsList.size()!=0) {
+                    for (int i = 0; i < downloadPlaylistDetailsList.size(); i++) {
+                        MainPlayListModel.ResponseData.Detail detail = new MainPlayListModel.ResponseData.Detail();
+                        detail.setTotalAudio(downloadPlaylistDetailsList.get(i).getTotalAudio());
+                        detail.setTotalhour(downloadPlaylistDetailsList.get(i).getTotalhour());
+                        detail.setTotalminute(downloadPlaylistDetailsList.get(i).getTotalminute());
+                        detail.setPlaylistID(downloadPlaylistDetailsList.get(i).getPlaylistID());
+                        detail.setPlaylistDesc(downloadPlaylistDetailsList.get(i).getPlaylistDesc());
+                        detail.setMasterCategory(downloadPlaylistDetailsList.get(i).getPlaylistMastercat());
+                        detail.setSubCategory(downloadPlaylistDetailsList.get(i).getPlaylistSubcat());
+                        detail.setPlaylistName(downloadPlaylistDetailsList.get(i).getPlaylistName());
+                        detail.setPlaylistImage(downloadPlaylistDetailsList.get(i).getPlaylistImage());
+                        detail.setPlaylistId(downloadPlaylistDetailsList.get(i).getPlaylistID());
+                        details.add(detail);
+                    }
+                    for (int i = 0; i < responseData.size(); i++) {
+                        if (responseData.get(i).getView().equalsIgnoreCase("My Downloads")) {
+                            responseData.get(i).setDetails(details);
+                        }
+                    }
+
+                    MainPlayListAdapter adapter = new MainPlayListAdapter(responseData, getActivity());
+                    binding.rvMainPlayList.setAdapter(adapter);
+                }
+                else{
+                    MainPlayListAdapter adapter = new MainPlayListAdapter(responseData, getActivity());
+                    binding.rvMainPlayList.setAdapter(adapter);
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        GetTask st = new GetTask();
+        st.execute();
+        return downloadPlaylistDetailsList;
     }
 
     public class MainPlayListAdapter extends RecyclerView.Adapter<MainPlayListAdapter.MyViewHolder> {

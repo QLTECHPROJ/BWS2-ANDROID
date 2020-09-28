@@ -165,10 +165,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
         List<String> name = new ArrayList<>();
         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2 = new ArrayList<>();
         playlistSongs2 = playlistSongsList;
-        if(downloadAudioDetailsList.size()!=0) {
+        if (downloadAudioDetailsList.size() != 0) {
 
             for (int x = 0; x < playlistSongsList.size(); x++) {
-                for (int y = 0; x < downloadAudioDetailsList.size(); x++) {
+                for (int y = 0; y < downloadAudioDetailsList.size(); y++) {
                     if (playlistSongs2.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
                         playlistSongs2.remove(x);
                     }
@@ -179,15 +179,13 @@ public class MyPlaylistActivity extends AppCompatActivity {
             name.add(playlistSongs2.get(x).getName());
             url.add(playlistSongs2.get(x).getAudioFile());
         }
-            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-            downloadMedia.encrypt1(url, name, playlistSongsList);
-//            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
-//            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
-        savePlaylist();
+        enableDisableDownload(false);
         byte[] encodedBytes = new byte[1024];
-        for (int i = 0; i < name.size(); i++) {
-            saveAllMedia(playlistSongsList, encodedBytes, FileUtils.getFilePath(getApplicationContext(), name.get(i)));
-        }
+        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+        downloadMedia.encrypt1(url, name, playlistSongsList);
+        savePlaylist();
+        saveAllMedia(playlistSongsList, encodedBytes);
+
     }
     private void savePlaylist() {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
@@ -213,7 +211,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         st.execute();
     }
 
-    private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes, String filePath) {
+    private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes) {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -233,7 +231,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                     downloadAudioDetails.setIsSingle("0");
                     downloadAudioDetails.setPlaylistId(playlistSongs.get(i).getPlaylistID());
                     downloadAudioDetails.setEncodedBytes(encodedBytes);
-                    downloadAudioDetails.setDirPath(filePath);
+                    downloadAudioDetails.setDirPath(FileUtils.getFilePath(getApplicationContext(), playlistSongs.get(i).getName()));
                     DatabaseClient.getInstance(ctx)
                             .getaudioDatabase()
                             .taskDao()

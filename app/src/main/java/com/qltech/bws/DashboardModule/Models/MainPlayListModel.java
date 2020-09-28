@@ -146,6 +146,7 @@ public class MainPlayListModel {
             @Expose
             private ArrayList<Audiolist> audiolist = null;
 
+            public Detail() {}
             protected Detail(Parcel in) {
                 playlistID = in.readString();
                 totalAudio = in.readString();

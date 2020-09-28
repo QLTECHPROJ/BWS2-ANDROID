@@ -25,8 +25,8 @@ public interface AudioDetailsDao {
     @Insert
     void insertPlaylist(DownloadPlaylistDetails downloadPlaylistDetails);
 
-    @Query("DELETE FROM audio_table WHERE AudioFile = :AudioFile")
-    void deleteByAudioFile(String AudioFile);
+    @Query("DELETE FROM audio_table WHERE AudioFile =:AudioFile And PlaylistId =:PlaylistId")
+    void deleteByAudioFile(String AudioFile, String PlaylistId);
 
     @Query("DELETE FROM audio_table WHERE PlaylistId = :PlaylistId")
     void deleteByPlaylistId(String PlaylistId);
