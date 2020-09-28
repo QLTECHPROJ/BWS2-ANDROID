@@ -107,8 +107,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/_20sdp"
                             android:fontFamily="@font/montserrat_semi_bold"
-                            android:gravity="left"
-                            android:text="@string/downloads"
+                            android:gravity="start"
+                            android:text="My Downloads"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_16sdp" />
                     </LinearLayout>
