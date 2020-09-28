@@ -513,6 +513,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             mediaPlayer.prepareAsync();
             isPrepare = true;
         } catch (IllegalStateException | IOException e) {
+            FileDescriptor fileDescriptor1 = null;
+            setMediaPlayer("0", fileDescriptor1);
             e.printStackTrace();
         }
         if (!mediaPlayer.isPlaying()) {

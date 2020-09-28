@@ -989,6 +989,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             isPause = false;
             isPrepare = true;
         } catch (IllegalStateException | IOException e) {
+            FileDescriptor fileDescriptor1 = null;
+            setMediaPlayer("0", fileDescriptor1);
             e.printStackTrace();
         }
         if (!mediaPlayer.isPlaying()) {

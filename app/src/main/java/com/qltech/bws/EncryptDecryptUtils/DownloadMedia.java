@@ -30,7 +30,10 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
     String fileName;
     boolean loop = false;
     List<String> fileNameList;
+    List<String> audioFile;
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
+    boolean frist = true;
+    int i = 0;
     private DownloadManager downloadManager;
     private BroadcastReceiver onComplete;
 
@@ -53,12 +56,12 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs) {
         BWSApplication.showToast("Downloading file...", context);
         fileNameList = FILE_NAME;
+        audioFile = DOWNLOAD_AUDIO_URL;
         playlistSongsList = new ArrayList<>();
         playlistSongsList = playlistSongs;
         loop = true;
-        for (int i = 0; i < FILE_NAME.size(); i++) {
-            PRDownloader.download(DOWNLOAD_AUDIO_URL.get(i), FileUtils.getDirPath(context), FILE_NAME.get(i)).build().start(this);
-        }
+        PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(context), FILE_NAME.get(0)).build().start(this);
+
         return encodedBytes;
     }
 
@@ -81,13 +84,20 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
     public void onDownloadComplete() {
         if (loop) {
             try {
-                for (int i = 0; i < fileNameList.size(); i++) {
-                    byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, fileNameList.get(i)));
-                    encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
-                    saveFile(encodedBytes, FileUtils.getFilePath(context, fileNameList.get(i)));
+                for (int a = 0; a < fileNameList.size(); a++) {
+                }
+                byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, fileNameList.get(0)));
+                encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
+                saveFile(encodedBytes, FileUtils.getFilePath(context, fileNameList.get(0)));
 //                    saveAllMedia(playlistSongsList, encodedBytes, FileUtils.getFilePath(context, fileNameList.get(i)));
+                    fileNameList.remove(0);
+                    audioFile.remove(0);
+                if(fileNameList.size()!=0){
+                    encrypt1(audioFile,fileNameList,playlistSongsList);
+                }else{
                     BWSApplication.showToast("Download Complete...", context);
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 downloadError = 1;

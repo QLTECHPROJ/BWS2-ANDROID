@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -37,15 +39,22 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     ImageView ImgV;
     List<DownloadAudioDetails> playlistWiseAudioDetails;
     List<DownloadAudioDetails> oneAudioDetailsList;
+    List<DownloadPlaylistDetails> playlistList;
+    LinearLayout llError;
+    TextView tvFound;
+    RecyclerView rvDownloadsList;
     private List<DownloadPlaylistDetails> listModelList;
 
     public PlaylistsDownloadsAdapter(List<DownloadPlaylistDetails> listModelList, FragmentActivity ctx, String UserID,
-                                     FrameLayout progressBarHolder, ImageView ImgV) {
+                                     FrameLayout progressBarHolder, ImageView ImgV, LinearLayout llError, TextView tvFound, RecyclerView rvDownloadsList) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.UserID = UserID;
         this.progressBarHolder = progressBarHolder;
         this.ImgV = ImgV;
+        this.llError = llError;
+        this.tvFound = tvFound;
+        this.rvDownloadsList = rvDownloadsList;
         playlistWiseAudioDetails = new ArrayList<>();
         oneAudioDetailsList = new ArrayList<>();
     }
@@ -160,6 +169,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         GetMedia sts = new GetMedia();
         sts.execute();
     }
+
     private void deleteDownloadFile(Context applicationContext, String PlaylistId, int position) {
         class DeleteMedia extends AsyncTask<Void, Void, Void> {
 
@@ -176,7 +186,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                notifyItemRemoved(position);
+//                notifyItemRemoved(position);
                 deletePlaylist(PlaylistId, position);
                 super.onPostExecute(aVoid);
             }
@@ -202,13 +212,49 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
+                playlistList = new ArrayList<>();
+                GetAllMedia(ctx);
                 super.onPostExecute(aVoid);
             }
         }
 
         DeleteMedia st = new DeleteMedia();
         st.execute();
+    }
+
+    private void GetAllMedia(FragmentActivity activity) {
+        class GetTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                playlistList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getAllPlaylist();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (playlistList.size() != 0) {
+                    llError.setVisibility(View.GONE);
+                    tvFound.setVisibility(View.GONE);
+                    PlaylistsDownloadsAdapter adapter = new PlaylistsDownloadsAdapter(playlistList, ctx, UserID, progressBarHolder, ImgV, llError, tvFound, rvDownloadsList);
+                    rvDownloadsList.setAdapter(adapter);
+                } else {
+                    llError.setVisibility(View.VISIBLE);
+                    tvFound.setVisibility(View.VISIBLE);
+                    rvDownloadsList.setVisibility(View.GONE);
+                }
+                super.onPostExecute(aVoid);
+
+            }
+        }
+        GetTask getTask = new GetTask();
+        getTask.execute();
+
     }
 
     public List<DownloadAudioDetails> GetMedia(String playlistID) {
@@ -236,7 +282,9 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         GetMedia st = new GetMedia();
         st.execute();
         return playlistWiseAudioDetails;
-    }public List<DownloadAudioDetails> GetPlaylistMedia(String playlistID) {
+    }
+
+    public List<DownloadAudioDetails> GetPlaylistMedia(String playlistID) {
 
         playlistWiseAudioDetails = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
@@ -254,8 +302,8 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                for(int i = 0;i<playlistWiseAudioDetails.size();i++){
-                    GetSingleMedia(playlistWiseAudioDetails.get(i).getAudioFile(),ctx.getApplicationContext());
+                for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
+                    GetSingleMedia(playlistWiseAudioDetails.get(i).getAudioFile(), ctx.getApplicationContext());
                 }
                 super.onPostExecute(aVoid);
             }

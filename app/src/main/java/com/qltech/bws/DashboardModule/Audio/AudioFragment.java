@@ -2,6 +2,7 @@ package com.qltech.bws.DashboardModule.Audio;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +26,16 @@ import com.qltech.bws.DashboardModule.Audio.Adapters.RecommendedAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.TopCategoriesAdapter;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter;
 import com.qltech.bws.R;
+import com.qltech.bws.RoomDataBase.DatabaseClient;
+import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.FragmentAudioBinding;
 import com.qltech.bws.databinding.MainAudioLayoutBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -43,7 +48,8 @@ public class AudioFragment extends Fragment {
     public static boolean exit = false;
     FragmentAudioBinding binding;
     String UserID, AudioFlag;
-    public static String IsLock= "";
+    public static String IsLock="";
+    List<DownloadAudioDetails> downloadAudioDetailsList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -60,6 +66,37 @@ public class AudioFragment extends Fragment {
 
         prepareData();
         return view;
+    }
+    public List<DownloadAudioDetails> GetAllMedia(FragmentActivity ctx) {
+
+        class GetTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                downloadAudioDetailsList = new ArrayList<>();
+                downloadAudioDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllData("");
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (downloadAudioDetailsList.size() != 0) {
+
+                } else {
+
+                }
+                super.onPostExecute(aVoid);
+
+            }
+        }
+
+        GetTask st = new GetTask();
+        st.execute();
+        return downloadAudioDetailsList;
     }
 
     private void prepareData() {

@@ -87,10 +87,10 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
     private void getDataList(List<DownloadPlaylistDetails>  historyList, String UserID, FrameLayout progressBarHolder, ImageView ImgV) {
         if (historyList.size() == 0) {
-            binding.tvFound.setVisibility(View.VISIBLE);
+            binding.tvFound.setVisibility(View.VISIBLE);binding.llError.setVisibility(View.VISIBLE);
         } else {
             binding.llError.setVisibility(View.GONE);
-            PlaylistsDownloadsAdapter adapter = new PlaylistsDownloadsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV);
+            PlaylistsDownloadsAdapter adapter = new PlaylistsDownloadsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV,binding.llError,binding.tvFound,binding.rvDownloadsList);
             binding.rvDownloadsList.setAdapter(adapter);
         }
     }

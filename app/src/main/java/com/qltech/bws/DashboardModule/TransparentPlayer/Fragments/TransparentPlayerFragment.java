@@ -485,6 +485,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             mediaPlayer.prepareAsync();
             isPrepare = true;
         } catch (IllegalStateException | IOException e) {
+            FileDescriptor fileDescriptor1 = null;
+            setMediaPlayer("0", fileDescriptor1);
             e.printStackTrace();
         }
         if (!mediaPlayer.isPlaying()) {

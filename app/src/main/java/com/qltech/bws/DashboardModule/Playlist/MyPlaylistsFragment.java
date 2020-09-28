@@ -678,9 +678,7 @@ public class MyPlaylistsFragment extends Fragment {
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
             savePlaylist();
-            for (int i = 0; i < name.size(); i++) {
-                saveAllMedia(playlistSongsList, encodedBytes, FileUtils.getFilePath(getActivity().getApplicationContext(), name.get(i)));
-            }
+                saveAllMedia(playlistSongsList, encodedBytes);
         } else {
             DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
             byte[] EncodeBytes = downloadMedia.encrypt(audioFile, Name);
@@ -713,7 +711,7 @@ public class MyPlaylistsFragment extends Fragment {
         st.execute();
     }
 
-    private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes, String filePath) {
+    private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes) {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -733,7 +731,7 @@ public class MyPlaylistsFragment extends Fragment {
                     downloadAudioDetails.setIsSingle("0");
                     downloadAudioDetails.setPlaylistId(playlistSongs.get(i).getPlaylistID());
                     downloadAudioDetails.setEncodedBytes(encodedBytes);
-                    downloadAudioDetails.setDirPath(filePath);
+                    downloadAudioDetails.setDirPath(FileUtils.getFilePath(getActivity().getApplicationContext(), playlistSongs.get(i).getName()));
                     DatabaseClient.getInstance(getActivity())
                             .getaudioDatabase()
                             .taskDao()
