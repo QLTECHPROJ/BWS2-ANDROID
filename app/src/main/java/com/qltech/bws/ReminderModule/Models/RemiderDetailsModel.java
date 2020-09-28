@@ -64,9 +64,15 @@ public class RemiderDetailsModel {
         @SerializedName("ReminderTime")
         @Expose
         private String reminderTime;
+        @SerializedName("RDay")
+        @Expose
+        private String RDay;
         @SerializedName("IsCheck")
         @Expose
         private String isCheck;
+        @SerializedName("ReminderId")
+        @Expose
+        private String reminderId;
 
         public String getPlaylistId() {
             return playlistId;
@@ -106,6 +112,22 @@ public class RemiderDetailsModel {
 
         public void setIsCheck(String isCheck) {
             this.isCheck = isCheck;
+        }
+
+        public String getRDay() {
+            return RDay;
+        }
+
+        public void setRDay(String RDay) {
+            this.RDay = RDay;
+        }
+
+        public String getReminderId() {
+            return reminderId;
+        }
+
+        public void setReminderId(String reminderId) {
+            this.reminderId = reminderId;
         }
     }
 }

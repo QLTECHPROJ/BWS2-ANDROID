@@ -1,3 +1,4 @@
+/*
 package com.qltech.bws.ReminderModule.Activities;
 
 import androidx.annotation.NonNull;
@@ -172,4 +173,4 @@ public class SelectPlaylistActivity extends AppCompatActivity {
             }
         }
     }
-}
+}*/

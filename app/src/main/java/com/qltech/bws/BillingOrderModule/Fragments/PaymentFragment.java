@@ -69,47 +69,43 @@ public class PaymentFragment extends Fragment {
 
     private void prepareCardList() {
         try {
-            if (BWSApplication.isNetworkConnected(context)) {
-                showProgressBar();
-                Call<CardListModel> listCall = APIClient.getClient().getCardLists(userId);
-                listCall.enqueue(new Callback<CardListModel>() {
-                    @Override
-                    public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
-                        if (response.isSuccessful()) {
-                            hideProgressBar();
-                            try {
-                                CardListModel cardListModel = response.body();
-                                if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+            showProgressBar();
+            Call<CardListModel> listCall = APIClient.getClient().getCardLists(userId);
+            listCall.enqueue(new Callback<CardListModel>() {
+                @Override
+                public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
+                    if (response.isSuccessful()) {
+                        hideProgressBar();
+                        try {
+                            CardListModel cardListModel = response.body();
+                            if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
 
-                                    if (cardListModel.getResponseData().size() == 0) {
-                                        binding.rvCardList.setAdapter(null);
-                                        binding.rvCardList.setVisibility(View.GONE);
-                                    } else {
-                                        binding.rvCardList.setVisibility(View.VISIBLE);
-                                        adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.ImgV,
-                                                binding.progressBarHolder, binding.rvCardList);
-                                        binding.rvCardList.setAdapter(adapter);
-                                    }
-
-
+                                if (cardListModel.getResponseData().size() == 0) {
+                                    binding.rvCardList.setAdapter(null);
+                                    binding.rvCardList.setVisibility(View.GONE);
                                 } else {
-                                    BWSApplication.showToast(cardListModel.getResponseMessage(), context);
+                                    binding.rvCardList.setVisibility(View.VISIBLE);
+                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.ImgV,
+                                            binding.progressBarHolder, binding.rvCardList);
+                                    binding.rvCardList.setAdapter(adapter);
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
+
+
+                            } else {
+                                BWSApplication.showToast(cardListModel.getResponseMessage(), context);
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
+                }
 
-                    @Override
-                    public void onFailure(Call<CardListModel> call, Throwable t) {
-                        hideProgressBar();
-                    }
+                @Override
+                public void onFailure(Call<CardListModel> call, Throwable t) {
+                    hideProgressBar();
+                }
 
-                });
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), context);
-            }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

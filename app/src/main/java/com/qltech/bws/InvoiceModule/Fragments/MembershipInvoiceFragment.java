@@ -124,10 +124,10 @@ public class MembershipInvoiceFragment extends Fragment {
                 }
             });
 
-            if (listModelList.get(position).getStatus().equalsIgnoreCase("paid")){
+            if (listModelList.get(position).getStatus().equalsIgnoreCase("paid")) {
                 holder.binding.tvStatus.setText("Paid");
                 holder.binding.tvStatus.setBackgroundResource(R.drawable.green_background);
-            }else if (listModelList.get(position).getStatus().equalsIgnoreCase("open")){
+            } else if (listModelList.get(position).getStatus().equalsIgnoreCase("open")) {
                 holder.binding.tvStatus.setText("Open");
                 holder.binding.tvStatus.setBackgroundResource(R.drawable.blue_background);
             }
@@ -158,7 +158,6 @@ public class MembershipInvoiceFragment extends Fragment {
     }
 
     public class CheckForSDCard {
-        //Check If SD Card is present or not method
         public boolean isSDCardPresent() {
             return Environment.getExternalStorageState().equals(
                     Environment.MEDIA_MOUNTED);
@@ -204,7 +203,6 @@ public class MembershipInvoiceFragment extends Fragment {
                 new DownloadingTask().execute();
                 return true;
             } else {
-
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
                 return false;
             }
@@ -308,7 +306,6 @@ public class MembershipInvoiceFragment extends Fragment {
                 if (c.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     Log.e(TAG, "Server returned HTTP " + c.getResponseCode()
                             + " " + c.getResponseMessage());
-
                 }
 
                 //Get File if SD card is present
@@ -331,7 +328,6 @@ public class MembershipInvoiceFragment extends Fragment {
                     Log.e(TAG, "File Created");
                 }
                 FileOutputStream fos = new FileOutputStream(outputFile);//Get OutputStream for NewFile Location
-
                 InputStream is = c.getInputStream();//Get InputStream for connection
 
                 byte[] buffer = new byte[1024];//Set buffer type

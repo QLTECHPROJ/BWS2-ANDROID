@@ -453,6 +453,7 @@ public class MyPlaylistsFragment extends Fragment {
                                 i.putExtra("PlaylistID", PlaylistID);
                                 i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
                                 i.putExtra("Time", listModel.getResponseData().getReminderTime());
+                                i.putExtra("Day", listModel.getResponseData().getReminderDay());
                                 startActivity(i);
                             }
                         });

@@ -71,33 +71,29 @@ public class BillingAddressFragment extends Fragment {
                 } else if (binding.etPostCode.getText().toString().equalsIgnoreCase("")) {
                     binding.tlPostCode.setError("Please provide a postal code");
                 } else {
-                    if (BWSApplication.isNetworkConnected(getActivity())) {
-                        showProgressBar();
-                        Call<BillingAddressSaveModel> listCall = APIClient.getClient().getBillingAddressSave(UserID,
-                                binding.etName.getText().toString(), binding.etEmail.getText().toString(),
-                                binding.etCountry.getText().toString(), binding.etAddressLine1.getText().toString(),
-                                binding.etAddressLine2.getText().toString(), binding.etCity.getText().toString(),
-                                binding.etState.getText().toString(),
-                                binding.etPostCode.getText().toString());
-                        listCall.enqueue(new Callback<BillingAddressSaveModel>() {
-                            @Override
-                            public void onResponse(Call<BillingAddressSaveModel> call, Response<BillingAddressSaveModel> response) {
-                                if (response.isSuccessful()) {
-                                    hideProgressBar();
-                                    BillingAddressSaveModel listModel = response.body();
-                                    BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
-                                    getActivity().finish();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<BillingAddressSaveModel> call, Throwable t) {
+                    showProgressBar();
+                    Call<BillingAddressSaveModel> listCall = APIClient.getClient().getBillingAddressSave(UserID,
+                            binding.etName.getText().toString(), binding.etEmail.getText().toString(),
+                            binding.etCountry.getText().toString(), binding.etAddressLine1.getText().toString(),
+                            binding.etAddressLine2.getText().toString(), binding.etCity.getText().toString(),
+                            binding.etState.getText().toString(),
+                            binding.etPostCode.getText().toString());
+                    listCall.enqueue(new Callback<BillingAddressSaveModel>() {
+                        @Override
+                        public void onResponse(Call<BillingAddressSaveModel> call, Response<BillingAddressSaveModel> response) {
+                            if (response.isSuccessful()) {
                                 hideProgressBar();
+                                BillingAddressSaveModel listModel = response.body();
+                                BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
+                                getActivity().finish();
                             }
-                        });
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-                    }
+                        }
+
+                        @Override
+                        public void onFailure(Call<BillingAddressSaveModel> call, Throwable t) {
+                            hideProgressBar();
+                        }
+                    });
                 }
             }
         });
@@ -106,43 +102,39 @@ public class BillingAddressFragment extends Fragment {
     }
 
     private void getPrepareData() {
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            showProgressBar();
-            Call<BillingAddressViewModel> listCall = APIClient.getClient().getBillingAddressView(UserID);
-            listCall.enqueue(new Callback<BillingAddressViewModel>() {
-                @Override
-                public void onResponse(Call<BillingAddressViewModel> call, Response<BillingAddressViewModel> response) {
-                    if (response.isSuccessful()) {
-                        hideProgressBar();
-                        BillingAddressViewModel listModel = response.body();
-                        if (listModel.getResponseData().getName().equalsIgnoreCase("") ||
-                                listModel.getResponseData().getName().equalsIgnoreCase(" ") ||
-                                listModel.getResponseData().getName() == null) {
-                            binding.etName.setText("");
-                        } else {
-                            binding.etName.setText(listModel.getResponseData().getName());
-                        }
-                        binding.etEmail.setText(listModel.getResponseData().getEmail());
-                        binding.etMobileNumber.setText(listModel.getResponseData().getPhoneNumber());
-                        binding.etMobileNumber.setEnabled(false);
-                        binding.etMobileNumber.setClickable(false);
-                        binding.etCountry.setText(listModel.getResponseData().getCountry());
-                        binding.etAddressLine1.setText(listModel.getResponseData().getAddress1());
-                        binding.etAddressLine2.setText(listModel.getResponseData().getAddress2());
-                        binding.etCity.setText(listModel.getResponseData().getSuburb());
-                        binding.etState.setText(listModel.getResponseData().getState());
-                        binding.etPostCode.setText(listModel.getResponseData().getPostcode());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<BillingAddressViewModel> call, Throwable t) {
+        showProgressBar();
+        Call<BillingAddressViewModel> listCall = APIClient.getClient().getBillingAddressView(UserID);
+        listCall.enqueue(new Callback<BillingAddressViewModel>() {
+            @Override
+            public void onResponse(Call<BillingAddressViewModel> call, Response<BillingAddressViewModel> response) {
+                if (response.isSuccessful()) {
                     hideProgressBar();
+                    BillingAddressViewModel listModel = response.body();
+                    if (listModel.getResponseData().getName().equalsIgnoreCase("") ||
+                            listModel.getResponseData().getName().equalsIgnoreCase(" ") ||
+                            listModel.getResponseData().getName() == null) {
+                        binding.etName.setText("");
+                    } else {
+                        binding.etName.setText(listModel.getResponseData().getName());
+                    }
+                    binding.etEmail.setText(listModel.getResponseData().getEmail());
+                    binding.etMobileNumber.setText(listModel.getResponseData().getPhoneNumber());
+                    binding.etMobileNumber.setEnabled(false);
+                    binding.etMobileNumber.setClickable(false);
+                    binding.etCountry.setText(listModel.getResponseData().getCountry());
+                    binding.etAddressLine1.setText(listModel.getResponseData().getAddress1());
+                    binding.etAddressLine2.setText(listModel.getResponseData().getAddress2());
+                    binding.etCity.setText(listModel.getResponseData().getSuburb());
+                    binding.etState.setText(listModel.getResponseData().getState());
+                    binding.etPostCode.setText(listModel.getResponseData().getPostcode());
                 }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-        }
+            }
+
+            @Override
+            public void onFailure(Call<BillingAddressViewModel> call, Throwable t) {
+                hideProgressBar();
+            }
+        });
     }
 
     private void hideProgressBar() {

@@ -1,13 +1,19 @@
 package com.qltech.bws.BillingOrderModule.Adapters;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -18,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
+import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
 import com.qltech.bws.BillingOrderModule.Models.CardListModel;
 import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.BillingOrderModule.Models.PayNowDetailsModel;
@@ -37,6 +44,10 @@ import static com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActiv
 import static com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity.renewPlanId;
 import static com.qltech.bws.BillingOrderModule.Fragments.CurrentPlanFragment.PlanStatus;
 import static com.qltech.bws.BillingOrderModule.Fragments.CurrentPlanFragment.invoicePayId;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.pauseMedia;
+import static com.qltech.bws.Utility.MusicService.resumeMedia;
 
 public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHolder> {
     private List<CardListModel.ResponseData> listModelList;
@@ -126,32 +137,60 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
         });
 
         holder.binding.rlRemoveCard.setOnClickListener(view -> {
-            if (BWSApplication.isNetworkConnected(activity)) {
-                BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
-                Call<CardModel> listCall = APIClient.getClient().getRemoveCard(userId, listModel.getCustomer());
-                listCall.enqueue(new Callback<CardModel>() {
-                    @Override
-                    public void onResponse(Call<CardModel> call, Response<CardModel> response) {
-                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
-                        if (response.isSuccessful()) {
-                            CardModel cardModel = response.body();
-                            if (cardModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
-                                getCardList();
-                            } else {
-                                BWSApplication.showToast(cardModel.getResponseMessage(), activity);
+            final Dialog dialog = new Dialog(activity);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.cancel_membership);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(activity.getResources().getColor(R.color.dark_blue_gray)));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+            final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+            final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+            final TextView tvSubTitle = dialog.findViewById(R.id.tvSubTitle);
+            final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+            tvTitle.setText("Delete payment card");
+            tvSubTitle.setText("Are you sure you want to delete the payment card ?");
+            dialog.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                    return true;
+                }
+                return false;
+            });
+
+            tvconfirm.setOnClickListener(v -> {
+                if (BWSApplication.isNetworkConnected(activity)) {
+                    BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
+                    Call<CardModel> listCall = APIClient.getClient().getRemoveCard(userId, listModel.getCustomer());
+                    listCall.enqueue(new Callback<CardModel>() {
+                        @Override
+                        public void onResponse(Call<CardModel> call, Response<CardModel> response) {
+                            BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+                            if (response.isSuccessful()) {
+                                CardModel cardModel = response.body();
+                                if (cardModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
+                                    getCardList();
+                                } else {
+                                    BWSApplication.showToast(cardModel.getResponseMessage(), activity);
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<CardModel> call, Throwable t) {
-                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
-                    }
-                });
-            } else {
-                BWSApplication.showToast(activity.getString(R.string.no_server_found), activity);
-                BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
-            }
+                        @Override
+                        public void onFailure(Call<CardModel> call, Throwable t) {
+                            BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+                        }
+                    });
+                } else {
+                    BWSApplication.showToast(activity.getString(R.string.no_server_found), activity);
+                    BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+                }
+            });
+
+            tvGoBack.setOnClickListener(v -> {
+                dialog.dismiss();
+            });
+            dialog.show();
+            dialog.setCancelable(false);
         });
     }
 

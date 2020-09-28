@@ -40,7 +40,7 @@
                     android:layout_centerVertical="true"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
-                    android:text="@string/Downloads"
+                    android:text="My Downloads"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp" />
 

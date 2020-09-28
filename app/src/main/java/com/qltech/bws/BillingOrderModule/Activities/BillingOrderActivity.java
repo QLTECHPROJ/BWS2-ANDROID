@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Fragments.BillingAddressFragment;
 import com.qltech.bws.BillingOrderModule.Fragments.CurrentPlanFragment;
 import com.qltech.bws.BillingOrderModule.Fragments.PaymentFragment;
@@ -39,9 +40,14 @@ public class BillingOrderActivity extends AppCompatActivity {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Billing Address"));
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), this, binding.tabLayout.getTabCount());
-        binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
+        if (BWSApplication.isNetworkConnected(this)) {
+            TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), this, binding.tabLayout.getTabCount());
+            binding.viewPager.setAdapter(adapter);
+            binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), this);
+        }
+
         if (getIntent().hasExtra("payment")) {
             payment = getIntent().getIntExtra("payment", 0);
         }

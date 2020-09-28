@@ -73,7 +73,6 @@ public class AppointmentInvoiceFragment extends Fragment {
             binding.llError.setVisibility(View.VISIBLE);
             binding.rvAIList.setVisibility(View.GONE);
         }
-
         return view;
     }
 
@@ -149,7 +148,6 @@ public class AppointmentInvoiceFragment extends Fragment {
     }
 
     public class CheckForSDCard {
-        //Check If SD Card is present or not method
         public boolean isSDCardPresent() {
             return Environment.getExternalStorageState().equals(
                     Environment.MEDIA_MOUNTED);
@@ -181,7 +179,6 @@ public class AppointmentInvoiceFragment extends Fragment {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.v(TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
                     openfile();
-
                 } else {
                 }
                 break;
@@ -195,7 +192,6 @@ public class AppointmentInvoiceFragment extends Fragment {
                 new DownloadingTask().execute();
                 return true;
             } else {
-
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
                 return false;
             }
@@ -259,22 +255,17 @@ public class AppointmentInvoiceFragment extends Fragment {
                     alert11.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.dark_blue_gray));
 //                    BWSApplication.showToast("Document Downloaded Successfully", context);
                 } else {
-
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             progressDialog.dismiss();
                         }
                     }, 1000);
-
                     Log.e(TAG, "Download Failed");
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-
                 //Change button text if exception occurs
-
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -282,7 +273,6 @@ public class AppointmentInvoiceFragment extends Fragment {
                     }
                 }, 1000);
                 Log.e(TAG, "Download Failed with Exception - " + e.getLocalizedMessage());
-
             }
             super.onPostExecute(result);
         }
@@ -318,7 +308,6 @@ public class AppointmentInvoiceFragment extends Fragment {
                     Log.e(TAG, "File Created");
                 }
                 FileOutputStream fos = new FileOutputStream(outputFile);//Get OutputStream for NewFile Location
-
                 InputStream is = c.getInputStream();//Get InputStream for connection
 
                 byte[] buffer = new byte[1024];//Set buffer type

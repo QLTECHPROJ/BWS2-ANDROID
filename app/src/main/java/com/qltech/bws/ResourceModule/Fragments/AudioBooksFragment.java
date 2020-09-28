@@ -62,36 +62,32 @@ public class AudioBooksFragment extends Fragment {
     }
 
     void prepareData() {
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            showProgressBar();
-            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_ONE, Category);
-            listCall.enqueue(new Callback<ResourceListModel>() {
-                @Override
-                public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
-                    if (response.isSuccessful()) {
-                        ResourceListModel listModel = response.body();
-                        hideProgressBar();
-                        AudioBooksAdapter adapter = new AudioBooksAdapter(listModel.getResponseData(), getActivity(), audio_books);
-                        binding.rvAudioBooksList.setAdapter(adapter);
+        showProgressBar();
+        Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_ONE, Category);
+        listCall.enqueue(new Callback<ResourceListModel>() {
+            @Override
+            public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
+                if (response.isSuccessful()) {
+                    ResourceListModel listModel = response.body();
+                    hideProgressBar();
+                    AudioBooksAdapter adapter = new AudioBooksAdapter(listModel.getResponseData(), getActivity(), audio_books);
+                    binding.rvAudioBooksList.setAdapter(adapter);
 
-                        if (listModel.getResponseData().size() != 0) {
-                            binding.llError.setVisibility(View.GONE);
-                            binding.rvAudioBooksList.setVisibility(View.VISIBLE);
-                        } else {
-                            binding.llError.setVisibility(View.VISIBLE);
-                            binding.rvAudioBooksList.setVisibility(View.GONE);
-                        }
+                    if (listModel.getResponseData().size() != 0) {
+                        binding.llError.setVisibility(View.GONE);
+                        binding.rvAudioBooksList.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.llError.setVisibility(View.VISIBLE);
+                        binding.rvAudioBooksList.setVisibility(View.GONE);
                     }
                 }
+            }
 
-                @Override
-                public void onFailure(Call<ResourceListModel> call, Throwable t) {
-                    hideProgressBar();
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-        }
+            @Override
+            public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                hideProgressBar();
+            }
+        });
     }
 
     private void hideProgressBar() {

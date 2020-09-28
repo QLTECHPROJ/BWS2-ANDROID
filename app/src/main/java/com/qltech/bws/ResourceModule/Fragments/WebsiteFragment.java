@@ -60,34 +60,31 @@ public class WebsiteFragment extends Fragment {
     }
 
     void prepareData() {
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            showProgressBar();
-            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_FOUR, Category);
-            listCall.enqueue(new Callback<ResourceListModel>() {
-                @Override
-                public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
-                    if (response.isSuccessful()) {
-                        hideProgressBar();
-                        ResourceListModel listModel = response.body();
-                        WebsiteAdapter adapter = new WebsiteAdapter(listModel.getResponseData(), getActivity(), website);
-                        binding.rvWebsiteList.setAdapter(adapter);
+        showProgressBar();
+        Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_FOUR, Category);
+        listCall.enqueue(new Callback<ResourceListModel>() {
+            @Override
+            public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
+                if (response.isSuccessful()) {
+                    hideProgressBar();
+                    ResourceListModel listModel = response.body();
+                    WebsiteAdapter adapter = new WebsiteAdapter(listModel.getResponseData(), getActivity(), website);
+                    binding.rvWebsiteList.setAdapter(adapter);
 
-                        if (listModel.getResponseData().size() != 0) {
-                            binding.llError.setVisibility(View.GONE);
-                            binding.rvWebsiteList.setVisibility(View.VISIBLE);
-                        } else {
-                            binding.llError.setVisibility(View.VISIBLE);
-                            binding.rvWebsiteList.setVisibility(View.GONE);
-                        }
+                    if (listModel.getResponseData().size() != 0) {
+                        binding.llError.setVisibility(View.GONE);
+                        binding.rvWebsiteList.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.llError.setVisibility(View.VISIBLE);
+                        binding.rvWebsiteList.setVisibility(View.GONE);
                     }
                 }
+            }
 
-                @Override
-                public void onFailure(Call<ResourceListModel> call, Throwable t) {
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());        }
+            @Override
+            public void onFailure(Call<ResourceListModel> call, Throwable t) {
+            }
+        });
     }
 
     private void hideProgressBar() {

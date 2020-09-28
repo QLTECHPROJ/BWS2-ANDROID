@@ -116,12 +116,8 @@ public class AccountFragment extends Fragment {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-//            if (IsLocked.equalsIgnoreCase("1")) {
-//                BWSApplication.showToast("Please re-activate your membership plan", getActivity());
-//            } else if (IsLocked.equalsIgnoreCase("0") || IsLocked.equalsIgnoreCase("")) {
             Intent i = new Intent(getActivity(), ResourceActivity.class);
             startActivity(i);
-//            }
         });
 
         binding.llReminder.setOnClickListener(view16 -> {
@@ -307,7 +303,7 @@ public class AccountFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 DeletallLocalCart1();
-                super.onPostExecute(aVoid); 
+                super.onPostExecute(aVoid);
             }
         }
 
@@ -315,6 +311,7 @@ public class AccountFragment extends Fragment {
         st.execute();
 
     }
+
     public void DeletallLocalCart1() {
 
         class DeletallCart extends AsyncTask<Void, Void, Void> {
@@ -372,14 +369,14 @@ public class AccountFragment extends Fragment {
                                 .dontAnimate().into(binding.civProfile);
 
                         binding.llUserProfile.setOnClickListener(view13 -> {
-                            if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("1")){
-                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                    return;
-                                }
-                                mLastClickTime = SystemClock.elapsedRealtime();
-                                Intent i = new Intent(getActivity(), UserProfileActivity.class);
-                                startActivity(i);
-                            }else if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("0")) {
+//                            if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("1")){
+                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                return;
+                            }
+                            mLastClickTime = SystemClock.elapsedRealtime();
+                            Intent i = new Intent(getActivity(), UserProfileActivity.class);
+                            startActivity(i);
+                           /* }else if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("0")) {
                                 final Dialog dialog = new Dialog(ctx);
                                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 dialog.setContentView(R.layout.patient_popup);
@@ -399,7 +396,7 @@ public class AccountFragment extends Fragment {
                                 });
                                 dialog.show();
                                 dialog.setCancelable(false);
-                            }
+                            }*/
                         });
 
                         if (viewModel.getResponseData().getOrderTotal().equalsIgnoreCase("")) {

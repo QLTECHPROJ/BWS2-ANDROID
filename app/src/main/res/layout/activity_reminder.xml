@@ -120,6 +120,158 @@
                     android:textColor="@color/light_black"
                     android:textSize="@dimen/_14sdp" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:weightSum="3.5">
+
+                    <LinearLayout
+                        android:id="@+id/llSunday"
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tvSunday"
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:background="@drawable/transparent_bg"
+                            android:fontFamily="@font/montserrat_semi_bold"
+                            android:gravity="center"
+                            android:text="S"
+                            android:textColor="@color/dark_blue_gray"
+                            android:textSize="@dimen/_17sdp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llMonday"
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tvMonday"
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:background="@drawable/transparent_bg"
+                            android:fontFamily="@font/montserrat_semi_bold"
+                            android:gravity="center"
+                            android:padding="@dimen/_2sdp"
+                            android:text="M"
+                            android:textColor="@color/dark_blue_gray"
+                            android:textSize="@dimen/_17sdp" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/llTuesday"
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tvTuesday"
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:background="@drawable/transparent_bg"
+                            android:fontFamily="@font/montserrat_semi_bold"
+                            android:gravity="center"
+                            android:padding="@dimen/_2sdp"
+                            android:text="T"
+                            android:textColor="@color/dark_blue_gray"
+                            android:textSize="@dimen/_17sdp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llWednesday"
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tvWednesday"
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:background="@drawable/transparent_bg"
+                            android:fontFamily="@font/montserrat_semi_bold"
+                            android:gravity="center"
+                            android:padding="@dimen/_2sdp"
+                            android:text="W"
+                            android:textColor="@color/dark_blue_gray"
+                            android:textSize="@dimen/_17sdp" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/llThursday"
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tvThursday"
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:background="@drawable/transparent_bg"
+                            android:fontFamily="@font/montserrat_semi_bold"
+                            android:gravity="center"
+                            android:padding="@dimen/_2sdp"
+                            android:text="T"
+                            android:textColor="@color/dark_blue_gray"
+                            android:textSize="@dimen/_17sdp" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/llFriday"
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tvFriday"
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:background="@drawable/transparent_bg"
+                            android:fontFamily="@font/montserrat_semi_bold"
+                            android:gravity="center"
+                            android:padding="@dimen/_2sdp"
+                            android:text="F"
+                            android:textColor="@color/dark_blue_gray"
+                            android:textSize="@dimen/_17sdp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llSaturday"
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tvSaturday"
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:background="@drawable/transparent_bg"
+                            android:fontFamily="@font/montserrat_semi_bold"
+                            android:gravity="center"
+                            android:padding="@dimen/_2sdp"
+                            android:text="S"
+                            android:textColor="@color/dark_blue_gray"
+                            android:textSize="@dimen/_17sdp" />
+                    </LinearLayout>
+                </LinearLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvReminderDay"
                     android:layout_width="match_parent"
@@ -127,14 +279,15 @@
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="@dimen/_13sdp"
                     android:isScrollContainer="false"
+                    android:visibility="gone"
                     android:overScrollMode="never" />
 
                 <LinearLayout
                     android:id="@+id/llSelectPlaylist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="@dimen/_30sdp">
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -171,7 +324,6 @@
                         android:textColor="#7E7E7E"
                         android:textSize="@dimen/_14sdp" />
                 </LinearLayout>
-
 
 
                 <Switch

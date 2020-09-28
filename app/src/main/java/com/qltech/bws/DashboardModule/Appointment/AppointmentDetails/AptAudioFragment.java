@@ -100,7 +100,8 @@ public class AptAudioFragment extends Fragment {
             e.printStackTrace();
         }
     }
-    public  void GetMedia(String AudioFile, Context ctx, String download, LinearLayout llDownload, ImageView ivDownload) {
+
+    public void GetMedia(String AudioFile, Context ctx, String download, LinearLayout llDownload, ImageView ivDownload) {
 
         oneAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
@@ -118,14 +119,14 @@ public class AptAudioFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if(oneAudioDetailsList.size()!=0){
-                    if(oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")){
-                        disableDownload(llDownload,ivDownload);
+                if (oneAudioDetailsList.size() != 0) {
+                    if (oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
+                        disableDownload(llDownload, ivDownload);
                     }
-                }else if (download.equalsIgnoreCase("1")) {
-                    disableDownload(llDownload,ivDownload);
+                } else if (download.equalsIgnoreCase("1")) {
+                    disableDownload(llDownload, ivDownload);
                 } else {
-                    enableDownload(llDownload,ivDownload);
+                    enableDownload(llDownload, ivDownload);
                 }
                 super.onPostExecute(aVoid);
 
@@ -165,7 +166,7 @@ public class AptAudioFragment extends Fragment {
                 holder.binding.tvTime.setVisibility(View.VISIBLE);
                 holder.binding.tvTime.setText(audiolist.getAudioDirection());
             }
-             GetMedia(audiolist.getAudioFile(),getActivity(),audiolist.getDownload(),holder.binding.llDownload,holder.binding.ivDownload);
+            GetMedia(audiolist.getAudioFile(), getActivity(), audiolist.getDownload(), holder.binding.llDownload, holder.binding.ivDownload);
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.13f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -182,39 +183,6 @@ public class AptAudioFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   /* if (audiolist.getIsLock().equalsIgnoreCase("1")) {
-                        if (audiolist.getIsPlay().equalsIgnoreCase("1")) {
-                            player = 1;
-                            if (isPrepare || isMediaStart || isPause) {
-                                stopMedia();
-                            }
-                            isPause = false;
-                            isMediaStart = false;
-                            isPrepare = false;
-                            Fragment fragment = new TransparentPlayerFragment();
-                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flMainLayout, fragment)
-                                    .commit();
-
-                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = shared.edit();
-                            Gson gson = new Gson();
-                            String json = gson.toJson(listModelList.get(position));
-                            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
-                            editor.commit();
-                        } else if (audiolist.getIsPlay().equalsIgnoreCase("0")
-                                || audiolist.getIsPlay().equalsIgnoreCase("")) {
-                            BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                        }
-                    } else if (audiolist.getIsLock().equalsIgnoreCase("0")
-                            || audiolist.getIsLock().equalsIgnoreCase("")) {*/
                     try {
                         player = 1;
                         if (isPrepare || isMediaStart || isPause) {
@@ -245,7 +213,6 @@ public class AptAudioFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-//                }
             });
 
             holder.binding.llDownload.setOnClickListener(new View.OnClickListener() {

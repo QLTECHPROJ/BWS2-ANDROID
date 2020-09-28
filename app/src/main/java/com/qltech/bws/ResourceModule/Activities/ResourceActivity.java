@@ -138,10 +138,14 @@ public class ResourceActivity extends AppCompatActivity {
     }
 
     private void setAdapter() {
-        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), this, binding.tabLayout.getTabCount());
-        binding.viewPager.setAdapter(adapter);
-        binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
-        binding.viewPager.setCurrentItem(CurruntTab);
+        if (BWSApplication.isNetworkConnected(activity)) {
+            TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), this, binding.tabLayout.getTabCount());
+            binding.viewPager.setAdapter(adapter);
+            binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
+            binding.viewPager.setCurrentItem(CurruntTab);
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), activity);
+        }
     }
 
     void prepareData(Context ctx, RecyclerView rvFilterList, Dialog dialogBox, TextView tvAll, ImageView ivFilter) {

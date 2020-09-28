@@ -1,24 +1,34 @@
 package com.qltech.bws.ReminderModule.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
 import com.qltech.bws.R;
+import com.qltech.bws.ReminderModule.Models.DeleteRemiderModel;
 import com.qltech.bws.ReminderModule.Models.RemiderDetailsModel;
 import com.qltech.bws.ReminderModule.Models.ReminderStatusModel;
 import com.qltech.bws.Utility.APIClient;
@@ -33,6 +43,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Account.AccountFragment.IsLock;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.pauseMedia;
+import static com.qltech.bws.Utility.MusicService.resumeMedia;
 
 public class ReminderDetailsActivity extends AppCompatActivity {
     ActivityReminderDetailsBinding binding;
@@ -40,6 +54,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     Context ctx;
     Activity activity;
     RemiderDetailsAdapter adapter;
+    RemiderDetailsModel listReminderModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +70,10 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         binding.rvReminderDetails.setLayoutManager(mLayoutManager);
         binding.rvReminderDetails.setItemAnimator(new DefaultItemAnimator());
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(binding.rvReminderDetails);
+
+        binding.llBack.setOnClickListener(view -> finish());
 
         prepareData();
 
@@ -75,12 +88,84 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     i.putExtra("PlaylistID", "");
                     i.putExtra("PlaylistName", "");
                     i.putExtra("Time", "");
+                    i.putExtra("Day", "");
                     startActivity(i);
                     finish();
                 }
             }
         });
     }
+
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+            final int position = viewHolder.getAdapterPosition();
+
+            if (direction == ItemTouchHelper.LEFT) {
+                final Dialog dialog = new Dialog(ctx);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.cancel_membership);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+                final TextView tvSubTitle = dialog.findViewById(R.id.tvSubTitle);
+                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+                tvTitle.setText("Delete Reminder");
+                tvSubTitle.setText("Are you sure you want to delete your reminder?");
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                        return true;
+                    }
+                    return false;
+                });
+
+                tvconfirm.setOnClickListener(v -> {
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        Call<DeleteRemiderModel> listCall = APIClient.getClient().getDeleteRemiderStatus(UserId,
+                                listReminderModel.getResponseData().get(position).getReminderId());
+                        listCall.enqueue(new Callback<DeleteRemiderModel>() {
+                            @Override
+                            public void onResponse(Call<DeleteRemiderModel> call, Response<DeleteRemiderModel> response) {
+                                if (response.isSuccessful()) {
+                                    DeleteRemiderModel model = response.body();
+                                    BWSApplication.showToast(model.getResponseMessage(), ctx);
+                                    prepareData();
+                                    dialog.dismiss();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<DeleteRemiderModel> call, Throwable t) {
+                            }
+                        });
+                    } else {
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    }
+                });
+
+                tvGoBack.setOnClickListener(v -> {
+                    dialog.dismiss();
+                    prepareData();
+                });
+                dialog.show();
+                dialog.setCancelable(false);
+            }
+        }
+
+        @Override
+        public int getSwipeDirs(RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder) {
+            final int position = viewHolder.getAdapterPosition();
+            return super.getSwipeDirs(recyclerView, viewHolder);
+        }
+    };
 
     @Override
     public void onBackPressed() {
@@ -97,6 +182,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         RemiderDetailsModel listModel = response.body();
+                        listReminderModel = listModel;
                         adapter = new RemiderDetailsAdapter(listModel.getResponseData());
                         binding.rvReminderDetails.setAdapter(adapter);
 
@@ -163,6 +249,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     i.putExtra("PlaylistID", model.get(position).getPlaylistId());
                     i.putExtra("PlaylistName", model.get(position).getPlaylistName());
                     i.putExtra("Time", model.get(position).getReminderTime());
+                    i.putExtra("Day", model.get(position).getRDay());
                     startActivity(i);
                     finish();
                 }

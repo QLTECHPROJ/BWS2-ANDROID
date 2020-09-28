@@ -62,36 +62,32 @@ public class DocumentariesFragment extends Fragment {
     }
 
     void prepareData() {
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            showProgressBar();
-            Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_TWO, Category);
-            listCall.enqueue(new Callback<ResourceListModel>() {
-                @Override
-                public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
-                    if (response.isSuccessful()) {
-                        ResourceListModel listModel = response.body();
-                        hideProgressBar();
-                        DocumentariesAdapter adapter = new DocumentariesAdapter(listModel.getResponseData(), getActivity(), documentaries);
-                        binding.rvDocumentariesList.setAdapter(adapter);
+        showProgressBar();
+        Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_TWO, Category);
+        listCall.enqueue(new Callback<ResourceListModel>() {
+            @Override
+            public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
+                if (response.isSuccessful()) {
+                    ResourceListModel listModel = response.body();
+                    hideProgressBar();
+                    DocumentariesAdapter adapter = new DocumentariesAdapter(listModel.getResponseData(), getActivity(), documentaries);
+                    binding.rvDocumentariesList.setAdapter(adapter);
 
-                        if (listModel.getResponseData().size() != 0) {
-                            binding.llError.setVisibility(View.GONE);
-                            binding.rvDocumentariesList.setVisibility(View.VISIBLE);
-                        } else {
-                            binding.llError.setVisibility(View.VISIBLE);
-                            binding.rvDocumentariesList.setVisibility(View.GONE);
-                        }
+                    if (listModel.getResponseData().size() != 0) {
+                        binding.llError.setVisibility(View.GONE);
+                        binding.rvDocumentariesList.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.llError.setVisibility(View.VISIBLE);
+                        binding.rvDocumentariesList.setVisibility(View.GONE);
                     }
                 }
+            }
 
-                @Override
-                public void onFailure(Call<ResourceListModel> call, Throwable t) {
-                    hideProgressBar();
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-        }
+            @Override
+            public void onFailure(Call<ResourceListModel> call, Throwable t) {
+                hideProgressBar();
+            }
+        });
     }
 
     private void hideProgressBar() {

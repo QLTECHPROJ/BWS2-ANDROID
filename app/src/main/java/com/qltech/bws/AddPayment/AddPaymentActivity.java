@@ -135,7 +135,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                 binding.tlNumber.setError("Please provide your card number");
                 binding.txtError.setText("");
                 binding.tlName.setError("");
-            } else if (binding.etNumber.getText().toString().length() < 15) {
+            } else if (binding.etNumber.getText().toString().length() < 15 || binding.etNumber.getText().toString().length() > 16) {
                 binding.tlName.setError("");
                 binding.tlNumber.setError("Please use the correct card number");
                 binding.txtError.setText("");

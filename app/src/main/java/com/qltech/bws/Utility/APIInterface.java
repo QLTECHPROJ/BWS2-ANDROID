@@ -39,6 +39,7 @@ import com.qltech.bws.LoginModule.Models.LoginModel;
 import com.qltech.bws.LoginModule.Models.OtpModel;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.MembershipModule.Models.SignUpModel;
+import com.qltech.bws.ReminderModule.Models.DeleteRemiderModel;
 import com.qltech.bws.ReminderModule.Models.RemiderDetailsModel;
 import com.qltech.bws.ReminderModule.Models.ReminderStatusModel;
 import com.qltech.bws.ReminderModule.Models.SelectPlaylistModel;
@@ -433,6 +434,12 @@ public interface APIInterface {
     @POST("getreminder")
     @FormUrlEncoded
     Call<RemiderDetailsModel> getGetReminderStatus(@Field("UserID") String userID);
+
+    /* TODO ReminderDetailsActivity */
+    @POST("deletereminder")
+    @FormUrlEncoded
+    Call<DeleteRemiderModel> getDeleteRemiderStatus(@Field("UserID") String userID,
+                                                    @Field("ReminderId") String reminderId);
 
     /* TODO ReminderActivity */
     @POST("reminderstatus")

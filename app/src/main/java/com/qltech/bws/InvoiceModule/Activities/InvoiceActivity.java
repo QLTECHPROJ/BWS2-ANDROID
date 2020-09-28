@@ -37,7 +37,7 @@ public class InvoiceActivity extends AppCompatActivity {
     ActivityInvoiceBinding binding;
     ArrayList<InvoiceListModel.Appointment> appointmentList;
     ArrayList<InvoiceListModel.MemberShip> memberShipList;
-    String UserID, ComeFrom= "";
+    String UserID, ComeFrom = "";
     Context context;
     public static int invoiceToDashboard = 0;
 
@@ -67,7 +67,6 @@ public class InvoiceActivity extends AppCompatActivity {
                 }
             }
         });
-
         prepareData();
     }
 
