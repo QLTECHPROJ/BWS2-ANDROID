@@ -55,8 +55,8 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.binding.tvTitle.setText(listModelList.get(position).getName());
-        Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
+        holder.binding.tvTitle.setText(listModelList.get(position).getCategoryName());
+        Glide.with(ctx).load(listModelList.get(position).getCatImage()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
         if (IsLock.equalsIgnoreCase("1")) {
@@ -70,7 +70,7 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
             holder.binding.ivLock.setVisibility(View.GONE);
         }
 
-        holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
+      /*  holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (IsLock.equalsIgnoreCase("1")) {
@@ -141,7 +141,7 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
                     }
                 }
             }
-        });
+        });*/
     }
 
     @Override

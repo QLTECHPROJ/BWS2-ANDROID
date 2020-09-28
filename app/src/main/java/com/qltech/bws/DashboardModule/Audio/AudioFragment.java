@@ -43,7 +43,7 @@ public class AudioFragment extends Fragment {
     public static boolean exit = false;
     FragmentAudioBinding binding;
     String UserID, AudioFlag;
-    public static String IsLock="";
+    public static String IsLock= "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -195,7 +195,7 @@ public class AudioFragment extends Fragment {
                     } else {
                         holder.binding.tvViewAll.setVisibility(View.GONE);
                     }
-                } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.recommended))) {
+                } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Library))) {
                     RecommendedAdapter recommendedAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
                             listModelList.get(position).getIsLock());
                     RecyclerView.LayoutManager recommended = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
