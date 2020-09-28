@@ -194,6 +194,12 @@ public class MainAudioModel implements Parcelable {
             @SerializedName("Name")
             @Expose
             private String name;
+            @SerializedName("CategoryName")
+            @Expose
+            private String categoryName;
+            @SerializedName("CatImage")
+            @Expose
+            private String catImage;
             @SerializedName("IsPlay")
             @Expose
             private String isPlay;
@@ -234,6 +240,8 @@ public class MainAudioModel implements Parcelable {
                 download = in.readString();
                 audioDuration = in.readString();
                 isPlay = in.readString();
+                categoryName = in.readString();
+                catImage = in.readString();
             }
 
             public static final Creator<Detail> CREATOR = new Creator<Detail>() {
@@ -320,12 +328,28 @@ public class MainAudioModel implements Parcelable {
                 this.audioFile = audioFile;
             }
 
+            public String getCatImage() {
+                return catImage;
+            }
+
+            public void setCatImage(String catImage) {
+                this.catImage = catImage;
+            }
+
             public String getImageFile() {
                 return imageFile;
             }
 
             public void setImageFile(String imageFile) {
                 this.imageFile = imageFile;
+            }
+
+            public String getCategoryName() {
+                return categoryName;
+            }
+
+            public void setCategoryName(String categoryName) {
+                this.categoryName = categoryName;
             }
 
             public String getAudioDuration() {
@@ -363,6 +387,8 @@ public class MainAudioModel implements Parcelable {
                 parcel.writeString(download);
                 parcel.writeString(audioDuration);
                 parcel.writeString(isPlay);
+                parcel.writeString(categoryName);
+                parcel.writeString(catImage);
             }
         }
     }

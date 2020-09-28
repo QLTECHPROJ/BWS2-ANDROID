@@ -68,6 +68,9 @@ public class SubPlayListModel {
         @SerializedName("ReminderTime")
         @Expose
         private String reminderTime;
+        @SerializedName("ReminderDay")
+        @Expose
+        private String reminderDay;
         @SerializedName("IsReminder")
         @Expose
         private String IsReminder;
@@ -121,6 +124,7 @@ public class SubPlayListModel {
             like = in.readString();
             IsReminder = in.readString();
             reminderTime = in.readString();
+            reminderDay = in.readString();
         }
 
         public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
@@ -247,6 +251,14 @@ public class SubPlayListModel {
             this.totalminute = totalminute;
         }
 
+        public String getReminderDay() {
+            return reminderDay;
+        }
+
+        public void setReminderDay(String reminderDay) {
+            this.reminderDay = reminderDay;
+        }
+
         public String getPlaylistImage() {
             return playlistImage;
         }
@@ -284,6 +296,7 @@ public class SubPlayListModel {
             parcel.writeString(like);
             parcel.writeString(IsReminder);
             parcel.writeString(reminderTime);
+            parcel.writeString(reminderDay);
         }
 
         public static class PlaylistSong implements Parcelable {
