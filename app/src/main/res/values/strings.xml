@@ -140,6 +140,7 @@
     <string name="my_like">MyLike</string>
     <string name="recently_played">Recently Played</string>
     <string name="recommended">Recommended</string>
+    <string name="Library">Library</string>
     <string name="get_inspired">Get Inspired</string>
     <string name="popular">Popular</string>
     <string name="top_categories">Top Categories</string>
@@ -154,6 +155,7 @@
     <string name="your_created">Your Created</string>
     <string name="MyDownloads">MyDownloads</string>
     <string name="populars">Popular</string>
+    <string name="Bundle">Bundle</string>
     <string name="first_card_chars">XXXX XXXX XXXX </string>
     <string name="blank_all_fields">Hey! I\'ll need your inputs</string>
     <string name="valid_card_no_error">Hey! Seems like the card number is out of whack. Fancy a retry?</string>
