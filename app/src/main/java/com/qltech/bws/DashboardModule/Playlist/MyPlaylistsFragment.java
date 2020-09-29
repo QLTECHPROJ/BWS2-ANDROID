@@ -366,6 +366,11 @@ public class MyPlaylistsFragment extends Fragment {
                     .replace(R.id.flContainer, playlistFragment)
                     .commit();
             comefrom_search = 0;
+        }else if(comefrom_search == 3){
+            FragmentManager fm = getActivity()
+                    .getSupportFragmentManager();
+            fm.popBackStack("myDownloadPlaylist", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            comefrom_search = 0;
         }
     }
 
@@ -578,16 +583,22 @@ public class MyPlaylistsFragment extends Fragment {
             binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
             binding.llListing.setVisibility(View.VISIBLE);
-            if (listModel.getCreated().equalsIgnoreCase("1")) {
-                adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
-                ItemTouchHelper.Callback callback = new ItemMoveCallback(adpater);
-                ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-                touchHelper.attachToRecyclerView(binding.rvPlayLists);
-                binding.rvPlayLists.setAdapter(adpater);
-            } else {
-                adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
-                binding.rvPlayLists.setAdapter(adpater2);
-            }
+//            if(){
+//                adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
+//                binding.rvPlayLists.setAdapter(adpater2);
+//            }else{
+                if (listModel.getCreated().equalsIgnoreCase("1")) {
+                    adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
+                    ItemTouchHelper.Callback callback = new ItemMoveCallback(adpater);
+                    ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+                    touchHelper.attachToRecyclerView(binding.rvPlayLists);
+                    binding.rvPlayLists.setAdapter(adpater);
+                } else {
+                    adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
+                    binding.rvPlayLists.setAdapter(adpater2);
+                }
+//            }
+
         }
     }
 
@@ -1204,16 +1215,16 @@ public class MyPlaylistsFragment extends Fragment {
             binding.ivPlaylistStatus.setOnClickListener(view -> callTransparentFrag(0, ctx, listModelList, ""));
             holder.binding.llMainLayout.setOnClickListener(view -> callTransparentFrag(position, ctx, listModelList, ""));
 
-            if (Created.equalsIgnoreCase("1")) {
-                holder.binding.llMore.setVisibility(View.GONE);
-                holder.binding.llCenterLayoutA.setVisibility(View.GONE);
-                holder.binding.llCenterLayoutB.setVisibility(View.VISIBLE);
-                holder.binding.llDownload.setVisibility(View.VISIBLE);
-                holder.binding.llRemove.setVisibility(View.VISIBLE);
-                holder.binding.llSort.setVisibility(View.VISIBLE);
-                binding.tvSearch.setVisibility(View.VISIBLE);
-                binding.searchView.setVisibility(View.GONE);
-            } else if (Created.equalsIgnoreCase("0")) {
+//            if (Created.equalsIgnoreCase("1")) {
+//                holder.binding.llMore.setVisibility(View.GONE);
+//                holder.binding.llCenterLayoutA.setVisibility(View.GONE);
+//                holder.binding.llCenterLayoutB.setVisibility(View.VISIBLE);
+//                holder.binding.llDownload.setVisibility(View.VISIBLE);
+//                holder.binding.llRemove.setVisibility(View.VISIBLE);
+//                holder.binding.llSort.setVisibility(View.VISIBLE);
+//                binding.tvSearch.setVisibility(View.VISIBLE);
+//                binding.searchView.setVisibility(View.GONE);
+//            } else if (Created.equalsIgnoreCase("0")) {
                 holder.binding.llMore.setVisibility(View.VISIBLE);
                 holder.binding.llCenterLayoutA.setVisibility(View.VISIBLE);
                 holder.binding.llCenterLayoutB.setVisibility(View.GONE);
@@ -1222,7 +1233,7 @@ public class MyPlaylistsFragment extends Fragment {
                 holder.binding.llSort.setVisibility(View.GONE);
                 binding.tvSearch.setVisibility(View.GONE);
                 binding.searchView.setVisibility(View.VISIBLE);
-            }
+//            }
             holder.binding.llMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

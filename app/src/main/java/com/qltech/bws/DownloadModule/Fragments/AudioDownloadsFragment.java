@@ -59,7 +59,7 @@ public class AudioDownloadsFragment extends Fragment {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.f_audio, fragment)
+                        .add(R.id.flContainer, fragment)
                         .commit();
             }
         } catch (Exception e) {

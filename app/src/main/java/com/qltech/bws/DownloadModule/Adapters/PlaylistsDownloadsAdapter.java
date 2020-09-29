@@ -2,6 +2,7 @@ package com.qltech.bws.DownloadModule.Adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
@@ -31,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 
 public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDownloadsAdapter.MyViewHolder> {
     FragmentActivity ctx;
@@ -103,6 +108,19 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 } else if (IsLock.equalsIgnoreCase("0")
                         || IsLock.equalsIgnoreCase("")) {
                     playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());
+                    Bundle bundle = new Bundle();
+                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                    FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+                    bundle.putString("New", "0");
+                    bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
+                    bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
+                    bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                    myPlaylistsFragment.setArguments(bundle);
+                    comefrom_search = 3;
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.flContainer, myPlaylistsFragment)
+                            .addToBackStack("myDownloadPlaylist")
+                            .commit();
                 }
             }
         });
@@ -311,28 +329,6 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         st.execute();
         return playlistWiseAudioDetails;
     }
-
-    private void hideProgressBar() {
-        try {
-            progressBarHolder.setVisibility(View.GONE);
-            ImgV.setVisibility(View.GONE);
-            ctx.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            progressBarHolder.setVisibility(View.VISIBLE);
-            ctx.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            ImgV.setVisibility(View.VISIBLE);
-            ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public int getItemCount() {
         return listModelList.size();
