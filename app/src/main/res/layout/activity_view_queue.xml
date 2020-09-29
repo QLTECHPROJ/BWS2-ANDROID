@@ -167,7 +167,7 @@
                                 android:gravity="start"
                                 android:maxLines="1"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/_14sdp" />
+                                android:textSize="@dimen/_13sdp" />
 
 
                         </LinearLayout>

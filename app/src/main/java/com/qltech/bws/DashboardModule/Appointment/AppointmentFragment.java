@@ -49,7 +49,6 @@ public class AppointmentFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment, container, false);
         View view = binding.getRoot();
-
         activity = getActivity();
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -143,7 +142,6 @@ public class AppointmentFragment extends Fragment {
                                     binding.llCheckBox2.setVisibility(View.VISIBLE);
                                 }
                                 binding.tvNextSession.setText(listModel.getResponseData().getTask().getTitle());
-
                                 binding.cbTask1.setEnabled(false);
                                 binding.cbTask1.setClickable(false);
                                 binding.cbTask2.setEnabled(false);

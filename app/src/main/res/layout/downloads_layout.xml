@@ -6,7 +6,6 @@
         android:id="@+id/llMainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/_10sdp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:weightSum="1">
@@ -22,8 +21,8 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginVertical="@dimen/_2sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_marginVertical="@dimen/_4sdp"
                 app:cardCornerRadius="@dimen/_10sdp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout

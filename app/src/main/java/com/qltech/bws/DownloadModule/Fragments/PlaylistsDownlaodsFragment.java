@@ -59,7 +59,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         }
 
         playlistList = new ArrayList<>();
-
+        binding.tvFound.setText("Playlist you are searching for is not available ");
        GetAllMedia(getActivity());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);

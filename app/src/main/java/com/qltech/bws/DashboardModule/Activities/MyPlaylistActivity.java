@@ -99,6 +99,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         binding.llDownload.setOnClickListener(view -> callDownload());
         getPrepareData();
     }
+
     public List<DownloadAudioDetails> GetAllMedia() {
 
         class GetTask extends AsyncTask<Void, Void, Void> {
@@ -125,6 +126,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         st.execute();
         return downloadAudioDetailsList;
     }
+
     private void callDownload() {
        /* if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
@@ -187,6 +189,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         saveAllMedia(playlistSongsList, encodedBytes);
 
     }
+
     private void savePlaylist() {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
 
@@ -253,6 +256,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         SaveMedia st = new SaveMedia();
         st.execute();
     }
+
     @Override
     public void onBackPressed() {
         ComeFindAudio = 1;
@@ -594,6 +598,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
+
     private List<DownloadPlaylistDetails> GetPlaylistDetail(String download) {
         class GetTask extends AsyncTask<Void, Void, Void> {
 
@@ -611,9 +616,9 @@ public class MyPlaylistActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
 
-                if(downloadPlaylistDetailsList.size()!=0){
+                if (downloadPlaylistDetailsList.size() != 0) {
                     enableDisableDownload(false);
-                }else if (download.equalsIgnoreCase("1")) {
+                } else if (download.equalsIgnoreCase("1")) {
                     enableDisableDownload(false);
                 } else if (download.equalsIgnoreCase("0") || download.equalsIgnoreCase("")) {
                     enableDisableDownload(true);
@@ -627,13 +632,14 @@ public class MyPlaylistActivity extends AppCompatActivity {
         st.execute();
         return downloadPlaylistDetailsList;
     }
+
     private void enableDisableDownload(boolean b) {
-        if(b){
+        if (b) {
             binding.llDownload.setClickable(true);
             binding.llDownload.setEnabled(true);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-        }else{
+        } else {
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
             binding.ivDownloads.setAlpha(255);

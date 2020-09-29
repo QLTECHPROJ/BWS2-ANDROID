@@ -54,6 +54,7 @@ public class AudioDownloadsFragment extends Fragment {
         audioList = new ArrayList<>();
         audioList = GetAllMedia(getActivity());
 
+        binding.tvFound.setText("Audio you are searching for is not available in the list");
         try {
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 Fragment fragment = new TransparentPlayerFragment();

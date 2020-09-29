@@ -90,12 +90,7 @@ public class AddAudioActivity extends AppCompatActivity {
             }
         });
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        binding.llBack.setOnClickListener(view -> finish());
 
         RecyclerView.LayoutManager suggested = new LinearLayoutManager(AddAudioActivity.this, LinearLayoutManager.VERTICAL, false);
         binding.rvSuggestedList.setLayoutManager(suggested);

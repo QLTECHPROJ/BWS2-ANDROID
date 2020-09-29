@@ -188,8 +188,7 @@ public class SearchFragment extends Fragment {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                         SuggestedModel listModel = response.body();
                         binding.tvSuggestedAudios.setText(R.string.Suggested_Audios);
-                        SuggestionAudiosAdpater suggestedAdpater = new SuggestionAudiosAdpater(listModel.getResponseData(), getActivity(),
-                                binding.rvDownloadsList);
+                        SuggestionAudiosAdpater suggestedAdpater = new SuggestionAudiosAdpater(listModel.getResponseData(), getActivity());
                         binding.rvDownloadsList.setAdapter(suggestedAdpater);
                     }
                 }
@@ -315,14 +314,11 @@ public class SearchFragment extends Fragment {
 
     public class SuggestionAudiosAdpater extends RecyclerView.Adapter<SuggestionAudiosAdpater.MyViewHolder> {
         Context ctx;
-        RecyclerView rvDownloadsList;
         private List<SuggestedModel.ResponseData> modelList;
 
-        public SuggestionAudiosAdpater(List<SuggestedModel.ResponseData> modelList, Context ctx,
-                                       RecyclerView rvDownloadsList) {
+        public SuggestionAudiosAdpater(List<SuggestedModel.ResponseData> modelList, Context ctx) {
             this.modelList = modelList;
             this.ctx = ctx;
-            this.rvDownloadsList = rvDownloadsList;
         }
 
         @NonNull
