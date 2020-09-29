@@ -40,11 +40,11 @@ import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
-import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Search.SearchFragment;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.qltech.bws.DownloadModule.Activities.DownloadsActivity;
 import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
@@ -74,6 +74,7 @@ import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeF
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.deleteFrg;
 import static com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment.GetPlaylistLibraryID;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
+import static com.qltech.bws.DownloadModule.Activities.DownloadsActivity.ComeFrom_Playlist;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
@@ -245,6 +246,7 @@ public class MyPlaylistsFragment extends Fragment {
         st.execute();
         return downloadPlaylistDetailsList;
     }
+
     private List<DownloadPlaylistDetails> GetPlaylistDetail2() {
         class GetTask extends AsyncTask<Void, Void, Void> {
 
@@ -366,10 +368,12 @@ public class MyPlaylistsFragment extends Fragment {
                     .replace(R.id.flContainer, playlistFragment)
                     .commit();
             comefrom_search = 0;
-        }else if(comefrom_search == 3){
-            FragmentManager fm = getActivity()
-                    .getSupportFragmentManager();
-            fm.popBackStack("myDownloadPlaylist", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        } else if (comefrom_search == 3) {
+            Intent i = new Intent(getActivity(), DownloadsActivity.class);
+            ComeFrom_Playlist = true;
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+            getActivity().finish();
             comefrom_search = 0;
         }
     }
@@ -498,7 +502,7 @@ public class MyPlaylistsFragment extends Fragment {
                         });
                         setData(listModel.getResponseData());
                         downloadAudioDetailsList = GetAllMedia();
-                        downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData().getDownload(),listModel);
+                        downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData().getDownload(), listModel);
                         playlistWiseAudioDetails = GetMedia();
 
                         if (listModel.getResponseData().getPlaylistName().equalsIgnoreCase("") ||
@@ -583,10 +587,10 @@ public class MyPlaylistsFragment extends Fragment {
             binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
             binding.llListing.setVisibility(View.VISIBLE);
-//            if(){
-//                adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
-//                binding.rvPlayLists.setAdapter(adpater2);
-//            }else{
+            if (comefrom_search == 3) {
+                adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
+                binding.rvPlayLists.setAdapter(adpater2);
+            } else {
                 if (listModel.getCreated().equalsIgnoreCase("1")) {
                     adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
                     ItemTouchHelper.Callback callback = new ItemMoveCallback(adpater);
@@ -597,7 +601,7 @@ public class MyPlaylistsFragment extends Fragment {
                     adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
                     binding.rvPlayLists.setAdapter(adpater2);
                 }
-//            }
+            }
 
         }
     }
@@ -711,10 +715,9 @@ public class MyPlaylistsFragment extends Fragment {
         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2 = new ArrayList<>();
         playlistSongs2 = playlistSongs;
         if (downloadAudioDetailsList.size() != 0) {
-
             for (int x = 0; x < playlistSongs.size(); x++) {
                 for (int y = 0; y < downloadAudioDetailsList.size(); y++) {
-                    if (playlistSongs2.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
+                    if (playlistSongs.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
                         playlistSongs2.remove(x);
                     }
                 }
@@ -732,7 +735,7 @@ public class MyPlaylistsFragment extends Fragment {
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
             savePlaylist();
-                saveAllMedia(playlistSongsList, encodedBytes);
+            saveAllMedia(playlistSongsList, encodedBytes);
         } else {
             DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
             byte[] EncodeBytes = downloadMedia.encrypt(audioFile, Name);
@@ -922,9 +925,9 @@ public class MyPlaylistsFragment extends Fragment {
                     listModel.setCreated(downloadPlaylistDetailsList.get(0).getCreated());
                     listModel.setLike(downloadPlaylistDetailsList.get(0).getLike());
                     listModel.setIsReminder(downloadPlaylistDetailsList.get(0).getIsReminder());
-                    if(playlistWiseAudioDetails.size()!=0) {
+                    if (playlistWiseAudioDetails.size() != 0) {
                         for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
-                            SubPlayListModel.ResponseData.PlaylistSong detail = new  SubPlayListModel.ResponseData.PlaylistSong();
+                            SubPlayListModel.ResponseData.PlaylistSong detail = new SubPlayListModel.ResponseData.PlaylistSong();
                             detail.setID(playlistWiseAudioDetails.get(i).getID());
                             detail.setName(playlistWiseAudioDetails.get(i).getName());
                             detail.setAudioFile(playlistWiseAudioDetails.get(i).getAudioFile());
@@ -1225,14 +1228,14 @@ public class MyPlaylistsFragment extends Fragment {
 //                binding.tvSearch.setVisibility(View.VISIBLE);
 //                binding.searchView.setVisibility(View.GONE);
 //            } else if (Created.equalsIgnoreCase("0")) {
-                holder.binding.llMore.setVisibility(View.VISIBLE);
-                holder.binding.llCenterLayoutA.setVisibility(View.VISIBLE);
-                holder.binding.llCenterLayoutB.setVisibility(View.GONE);
-                holder.binding.llDownload.setVisibility(View.GONE);
-                holder.binding.llRemove.setVisibility(View.GONE);
-                holder.binding.llSort.setVisibility(View.GONE);
-                binding.tvSearch.setVisibility(View.GONE);
-                binding.searchView.setVisibility(View.VISIBLE);
+            holder.binding.llMore.setVisibility(View.VISIBLE);
+            holder.binding.llCenterLayoutA.setVisibility(View.VISIBLE);
+            holder.binding.llCenterLayoutB.setVisibility(View.GONE);
+            holder.binding.llDownload.setVisibility(View.GONE);
+            holder.binding.llRemove.setVisibility(View.GONE);
+            holder.binding.llSort.setVisibility(View.GONE);
+            binding.tvSearch.setVisibility(View.GONE);
+            binding.searchView.setVisibility(View.VISIBLE);
 //            }
             holder.binding.llMore.setOnClickListener(new View.OnClickListener() {
                 @Override

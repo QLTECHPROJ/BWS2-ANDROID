@@ -1,6 +1,7 @@
 package com.qltech.bws.DownloadModule.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
+import com.qltech.bws.DownloadModule.Activities.DownloadedPlaylist;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
@@ -108,19 +110,13 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 } else if (IsLock.equalsIgnoreCase("0")
                         || IsLock.equalsIgnoreCase("")) {
                     playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());
-                    Bundle bundle = new Bundle();
-                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                    FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-                    bundle.putString("New", "0");
-                    bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
-                    bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
-                    bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                    myPlaylistsFragment.setArguments(bundle);
-                    comefrom_search = 3;
-                    fragmentManager1.beginTransaction()
-                            .replace(R.id.flContainer, myPlaylistsFragment)
-                            .addToBackStack("myDownloadPlaylist")
-                            .commit();
+                    Intent i = new Intent(ctx, DownloadedPlaylist.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                    i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
+                    i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                    ctx.startActivity(i);
+                    ctx.finish();
                 }
             }
         });

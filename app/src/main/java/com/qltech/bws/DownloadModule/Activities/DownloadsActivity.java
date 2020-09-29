@@ -32,6 +32,7 @@ public class DownloadsActivity extends AppCompatActivity {
     ArrayList<DownloadlistModel.Audio> audioList;
     ArrayList<DownloadlistModel.Playlist> playlistList;
     String UserID;
+    public static boolean ComeFrom_Playlist = false;
     Context ctx;
 
     @Override
@@ -72,7 +73,12 @@ public class DownloadsActivity extends AppCompatActivity {
                 UserID, binding.progressBarHolder, binding.ImgV);
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
-
+        if(ComeFrom_Playlist){
+            binding.viewPager.setCurrentItem(1);
+            ComeFrom_Playlist =false;
+        }else{
+            binding.viewPager.setCurrentItem(0);
+        }
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
