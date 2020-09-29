@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,13 +30,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
-
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
-import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
-import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
-import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.R;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.RoomDataBase.DownloadPlaylistDetails;
@@ -62,6 +57,7 @@ public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
     String UserID, Check = "", AudioFlag;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -84,7 +80,7 @@ public class PlaylistFragment extends Fragment {
         return view;
     }
 
-    private void callMyPlaylistsFragment(String s, String id, String name, String playlistImage) {
+    private void callMyPlaylistsFragment(String s, String id, String name, String playlistImage, String MyDownloads) {
         try {
             comefrom_search = 0;
             Bundle bundle = new Bundle();
@@ -94,6 +90,7 @@ public class PlaylistFragment extends Fragment {
             bundle.putString("PlaylistID", id);
             bundle.putString("PlaylistName", name);
             bundle.putString("PlaylistImage", playlistImage);
+            bundle.putString("MyDownloads", MyDownloads);
             myPlaylistsFragment.setArguments(bundle);
             fragmentManager1.beginTransaction()
                     .replace(R.id.flContainer, myPlaylistsFragment)
@@ -166,6 +163,7 @@ public class PlaylistFragment extends Fragment {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
+
     private List<DownloadPlaylistDetails> GetPlaylistDetail(ArrayList<MainPlayListModel.ResponseData> responseData) {
         ArrayList<MainPlayListModel.ResponseData.Detail> details = new ArrayList<>();
         class GetTask extends AsyncTask<Void, Void, Void> {
@@ -183,7 +181,7 @@ public class PlaylistFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
 
-                if(downloadPlaylistDetailsList.size()!=0) {
+                if (downloadPlaylistDetailsList.size() != 0) {
                     for (int i = 0; i < downloadPlaylistDetailsList.size(); i++) {
                         MainPlayListModel.ResponseData.Detail detail = new MainPlayListModel.ResponseData.Detail();
                         detail.setTotalAudio(downloadPlaylistDetailsList.get(i).getTotalAudio());
@@ -206,8 +204,7 @@ public class PlaylistFragment extends Fragment {
 
                     MainPlayListAdapter adapter = new MainPlayListAdapter(responseData, getActivity());
                     binding.rvMainPlayList.setAdapter(adapter);
-                }
-                else{
+                } else {
                     MainPlayListAdapter adapter = new MainPlayListAdapter(responseData, getActivity());
                     binding.rvMainPlayList.setAdapter(adapter);
                 }
@@ -220,9 +217,30 @@ public class PlaylistFragment extends Fragment {
         return downloadPlaylistDetailsList;
     }
 
+    private void hideProgressBar() {
+        try {
+            binding.progressBarHolder.setVisibility(View.GONE);
+            binding.ImgV.setVisibility(View.GONE);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showProgressBar() {
+        try {
+            binding.progressBarHolder.setVisibility(View.VISIBLE);
+            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.ImgV.setVisibility(View.VISIBLE);
+            binding.ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public class MainPlayListAdapter extends RecyclerView.Adapter<MainPlayListAdapter.MyViewHolder> {
-        private ArrayList<MainPlayListModel.ResponseData> listModelList;
         Context ctx;
+        private ArrayList<MainPlayListModel.ResponseData> listModelList;
 
         public MainPlayListAdapter(ArrayList<MainPlayListModel.ResponseData> listModelList, Context ctx) {
             this.listModelList = listModelList;
@@ -253,6 +271,11 @@ public class PlaylistFragment extends Fragment {
                         .replace(R.id.flContainer, viewAllPlaylistFragment)
                         .commit();
                 Bundle bundle = new Bundle();
+                if (listModelList.get(position).getView().equalsIgnoreCase("My Downloads")) {
+                    bundle.putString("MyDownloads", "1");
+                } else {
+                    bundle.putString("MyDownloads", "0");
+                }
                 bundle.putString("GetLibraryID", listModelList.get(position).getGetLibraryID());
                 bundle.putString("Name", listModelList.get(position).getView());
                 viewAllPlaylistFragment.setArguments(bundle);
@@ -295,7 +318,7 @@ public class PlaylistFragment extends Fragment {
                                                 BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                                             } else if (listModel.getResponseData().getIscreated().equalsIgnoreCase("1") ||
                                                     listModel.getResponseData().getIscreated().equalsIgnoreCase("")) {
-                                                callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "");
+                                                callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0");
                                                 dialog.dismiss();
                                             }
 
@@ -330,19 +353,19 @@ public class PlaylistFragment extends Fragment {
                 holder.binding.tvTitle.setText(listModelList.get(position).getView());
                 if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.your_created))) {
                     PlaylistAdapter adapter1 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
-                            listModelList.get(position).getIsLock());
+                            listModelList.get(position).getIsLock(), "0");
                     holder.binding.rvMainAudio.setAdapter(adapter1);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase("My Downloads")) {
                     PlaylistAdapter adapter2 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
-                            listModelList.get(position).getIsLock());
+                            listModelList.get(position).getIsLock(), "1");
                     holder.binding.rvMainAudio.setAdapter(adapter2);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Bundle))) {
                     PlaylistAdapter adapter3 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
-                            listModelList.get(position).getIsLock());
+                            listModelList.get(position).getIsLock(), "0");
                     holder.binding.rvMainAudio.setAdapter(adapter3);
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.populars))) {
                     PlaylistAdapter adapter4 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
-                            listModelList.get(position).getIsLock());
+                            listModelList.get(position).getIsLock(), "0");
                     holder.binding.rvMainAudio.setAdapter(adapter4);
                 }
             }
@@ -368,14 +391,15 @@ public class PlaylistFragment extends Fragment {
     }
 
     public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
-        private ArrayList<MainPlayListModel.ResponseData.Detail> listModelList;
         Context ctx;
-        String IsLock;
+        String IsLock, MyDownloads;
+        private ArrayList<MainPlayListModel.ResponseData.Detail> listModelList;
 
-        public PlaylistAdapter(ArrayList<MainPlayListModel.ResponseData.Detail> listModelList, Context ctx, String IsLock) {
+        public PlaylistAdapter(ArrayList<MainPlayListModel.ResponseData.Detail> listModelList, Context ctx, String IsLock, String MyDownloads) {
             this.listModelList = listModelList;
             this.ctx = ctx;
             this.IsLock = IsLock;
+            this.MyDownloads = MyDownloads;
         }
 
         @NonNull
@@ -413,7 +437,7 @@ public class PlaylistFragment extends Fragment {
                     } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
                         callMyPlaylistsFragment("0", listModelList.get(position).getPlaylistID(), listModelList.get(position).getPlaylistName(),
-                                listModelList.get(position).getPlaylistImage());
+                                listModelList.get(position).getPlaylistImage(), MyDownloads);
                     }
                 }
             });
@@ -436,27 +460,6 @@ public class PlaylistFragment extends Fragment {
                 super(binding.getRoot());
                 this.binding = binding;
             }
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

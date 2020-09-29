@@ -115,6 +115,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                     i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
                     i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
                     i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                    i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
                     ctx.startActivity(i);
                     ctx.finish();
                 }

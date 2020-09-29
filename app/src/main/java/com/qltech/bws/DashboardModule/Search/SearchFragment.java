@@ -269,6 +269,7 @@ public class SearchFragment extends Fragment {
                         bundle.putString("New", "0");
                         bundle.putString("PlaylistID", modelList.get(position).getID());
                         bundle.putString("PlaylistName", modelList.get(position).getName());
+                        bundle.putString("MyDownloads", "0");
                         myPlaylistsFragment.setArguments(bundle);
                         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
@@ -423,6 +424,7 @@ public class SearchFragment extends Fragment {
                     bundle.putString("ComeFrom", "Search");
                     bundle.putString("PlaylistID", listModelList.get(position).getID());
                     bundle.putString("PlaylistName", listModelList.get(position).getName());
+                    bundle.putString("MyDownloads", "0");
                     myPlaylistsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
                             .replace(R.id.flContainer, myPlaylistsFragment)

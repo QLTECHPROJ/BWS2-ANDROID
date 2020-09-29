@@ -43,7 +43,7 @@ import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_sear
 
 public class ViewAllPlaylistFragment extends Fragment {
     FragmentViewAllPlaylistBinding binding;
-    String GetLibraryID, Name, UserID, AudioFlag;
+    String GetLibraryID, Name, UserID, AudioFlag,MyDownloads;
     public static int ComeFromPlaylistViewAll = 0;
     public static String GetPlaylistLibraryID = "";
     View view;
@@ -61,6 +61,7 @@ public class ViewAllPlaylistFragment extends Fragment {
         if (getArguments() != null) {
             GetLibraryID = getArguments().getString("GetLibraryID");
             Name = getArguments().getString("Name");
+            MyDownloads = getArguments().getString("MyDownloads");
         }
 
         binding.llBack.setOnClickListener(view1 -> {
@@ -222,6 +223,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                         bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
                         bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
                         bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                        bundle.putString("MyDownloads",MyDownloads);
                         myPlaylistsFragment.setArguments(bundle);
                         fragmentManager1.beginTransaction()
                                 .replace(R.id.flContainer, myPlaylistsFragment)

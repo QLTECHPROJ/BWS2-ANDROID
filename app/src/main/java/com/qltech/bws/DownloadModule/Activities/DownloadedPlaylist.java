@@ -30,6 +30,7 @@ public class DownloadedPlaylist extends AppCompatActivity {
         bundle.putString("PlaylistID",PlaylistId);
         bundle.putString("PlaylistName",PlaylistName);
         bundle.putString("PlaylistImage",PlaylistImage);
+        bundle.putString("MyDownloads", "1");
         myPlaylistsFragment.setArguments(bundle);
         comefrom_search = 3;
         fragmentManager1.beginTransaction()

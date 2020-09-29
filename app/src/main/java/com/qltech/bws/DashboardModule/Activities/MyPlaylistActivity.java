@@ -404,6 +404,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
                         } else if (!model.getResponseData().getDownload().equalsIgnoreCase("")) {
                             binding.llDownload.setClickable(true);
                             binding.llDownload.setEnabled(true);
+                            binding.ivDownloads.setColorFilter(Color.argb(100, 0, 0, 0));
+                            binding.ivDownloads.setAlpha(255);
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                         }
 
@@ -638,6 +640,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
             binding.llDownload.setClickable(true);
             binding.llDownload.setEnabled(true);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            binding.ivDownloads.setColorFilter(Color.argb(100, 0, 0, 0));
+            binding.ivDownloads.setAlpha(255);
             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
         } else {
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);

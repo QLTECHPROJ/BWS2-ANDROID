@@ -331,6 +331,8 @@ public class AptAudioFragment extends Fragment {
     private void enableDownload(LinearLayout llDownload, ImageView ivDownload) {
         llDownload.setClickable(true);
         llDownload.setEnabled(true);
+        ivDownload.setColorFilter(Color.argb(100, 0, 0, 0));
+        ivDownload.setAlpha(255);
         ivDownload.setImageResource(R.drawable.ic_download_white_icon);
     }
 

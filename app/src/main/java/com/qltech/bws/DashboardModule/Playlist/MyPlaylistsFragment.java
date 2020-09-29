@@ -85,7 +85,7 @@ public class MyPlaylistsFragment extends Fragment {
     String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage;
     PlayListsAdpater adpater;
     PlayListsAdpater2 adpater2;
-    String SearchFlag;
+    String SearchFlag, MyDownloads;
     View view;
     EditText searchEditText;
     ArrayList<String> changedAudio;
@@ -116,6 +116,7 @@ public class MyPlaylistsFragment extends Fragment {
             PlaylistID = getArguments().getString("PlaylistID");
             PlaylistName = getArguments().getString("PlaylistName");
             PlaylistImage = getArguments().getString("PlaylistImage");
+            MyDownloads = getArguments().getString("MyDownloads");
         }
 
         binding.llBack.setOnClickListener(view1 -> callBack());
@@ -285,6 +286,8 @@ public class MyPlaylistsFragment extends Fragment {
         if (b) {
             binding.llDownloads.setClickable(true);
             binding.llDownloads.setEnabled(true);
+            binding.ivDownloads.setColorFilter(Color.argb(100, 0, 0, 0));
+            binding.ivDownloads.setAlpha(255);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
         } else {
@@ -587,7 +590,7 @@ public class MyPlaylistsFragment extends Fragment {
             binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
             binding.llListing.setVisibility(View.VISIBLE);
-            if (comefrom_search == 3) {
+            if (MyDownloads.equalsIgnoreCase("1")) {
                 adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
                 binding.rvPlayLists.setAdapter(adpater2);
             } else {
@@ -710,24 +713,25 @@ public class MyPlaylistsFragment extends Fragment {
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }*/
-        List<String> url = new ArrayList<>();
-        List<String> name = new ArrayList<>();
-        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2 = new ArrayList<>();
-        playlistSongs2 = playlistSongs;
-        if (downloadAudioDetailsList.size() != 0) {
-            for (int x = 0; x < playlistSongs.size(); x++) {
-                for (int y = 0; y < downloadAudioDetailsList.size(); y++) {
-                    if (playlistSongs.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
-                        playlistSongs2.remove(x);
+
+        if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
+            List<String> url = new ArrayList<>();
+            List<String> name = new ArrayList<>();
+            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2 = new ArrayList<>();
+            playlistSongs2 = playlistSongs;
+            if (downloadAudioDetailsList.size() != 0) {
+                for (int x = 0; x < playlistSongs.size(); x++) {
+                    for (int y = 0; y < downloadAudioDetailsList.size(); y++) {
+                        if (playlistSongs.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
+                            playlistSongs2.remove(x);
+                        }
                     }
                 }
             }
-        }
-        for (int x = 0; x < playlistSongs2.size(); x++) {
-            name.add(playlistSongs2.get(x).getName());
-            url.add(playlistSongs2.get(x).getAudioFile());
-        }
-        if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
+            for (int x = 0; x < playlistSongs2.size(); x++) {
+                name.add(playlistSongs2.get(x).getName());
+                url.add(playlistSongs2.get(x).getAudioFile());
+            }
             enableDisableDownload(false);
             byte[] encodedBytes = new byte[1024];
             DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
@@ -958,6 +962,8 @@ public class MyPlaylistsFragment extends Fragment {
         llDownload.setClickable(true);
         llDownload.setEnabled(true);
         ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+        ivDownloads.setColorFilter(Color.argb(100, 0, 0, 0));
+        ivDownloads.setAlpha(255);
     }
 
     private void disableDownload(LinearLayout llDownload, ImageView ivDownloads) {
@@ -1002,7 +1008,7 @@ public class MyPlaylistsFragment extends Fragment {
             String id = mData.get(position).getID();
 //            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);
             for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                if (downloadAudioDetailsList.get(i).getID().equalsIgnoreCase(mData.get(position).getID())) {
+                if (downloadAudioDetailsList.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile())) {
                     disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
                 } else {
                     enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
@@ -1207,13 +1213,6 @@ public class MyPlaylistsFragment extends Fragment {
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 //            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);
-            for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                if (downloadAudioDetailsList.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile())) {
-                    disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
-                } else {
-                    enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
-                }
-            }
             binding.ivPlaylistStatus.setOnClickListener(view -> callTransparentFrag(0, ctx, listModelList, ""));
             holder.binding.llMainLayout.setOnClickListener(view -> callTransparentFrag(position, ctx, listModelList, ""));
 
