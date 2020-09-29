@@ -122,7 +122,14 @@ public class MyPlaylistsFragment extends Fragment {
         binding.llBack.setOnClickListener(view1 -> callBack());
 
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
-
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            binding.llMore.setClickable(true);
+            binding.llMore.setEnabled(true);
+        }else{
+            binding.llMore.setClickable(false);
+            binding.llMore.setEnabled(false);
+            binding.ivMore.setBackgroundColor(getResources().getColor(R.color.gray));
+        }
         binding.llMore.setOnClickListener(view13 -> {
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
             i.putExtra("PlaylistID", PlaylistID);
@@ -912,42 +919,42 @@ public class MyPlaylistsFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 if (!BWSApplication.isNetworkConnected(getActivity())) {
-                    SubPlayListModel responseData = new SubPlayListModel();
-                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> details = new ArrayList<>();
-                    SubPlayListModel.ResponseData listModel = new SubPlayListModel.ResponseData();
-                    listModel.setPlaylistID(downloadPlaylistDetailsList.get(0).getPlaylistID());
-                    listModel.setPlaylistName(downloadPlaylistDetailsList.get(0).getPlaylistName());
-                    listModel.setPlaylistDesc(downloadPlaylistDetailsList.get(0).getPlaylistDesc());
-                    listModel.setPlaylistMastercat(downloadPlaylistDetailsList.get(0).getPlaylistMastercat());
-                    listModel.setPlaylistSubcat(downloadPlaylistDetailsList.get(0).getPlaylistSubcat());
-                    listModel.setPlaylistImage(downloadPlaylistDetailsList.get(0).getPlaylistImage());
-                    listModel.setTotalAudio(downloadPlaylistDetailsList.get(0).getTotalAudio());
-                    listModel.setTotalDuration(downloadPlaylistDetailsList.get(0).getTotalDuration());
-                    listModel.setTotalhour(downloadPlaylistDetailsList.get(0).getTotalhour());
-                    listModel.setTotalminute(downloadPlaylistDetailsList.get(0).getTotalminute());
-                    listModel.setCreated(downloadPlaylistDetailsList.get(0).getCreated());
-                    listModel.setLike(downloadPlaylistDetailsList.get(0).getLike());
-                    listModel.setIsReminder(downloadPlaylistDetailsList.get(0).getIsReminder());
-                    if (playlistWiseAudioDetails.size() != 0) {
-                        for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
-                            SubPlayListModel.ResponseData.PlaylistSong detail = new SubPlayListModel.ResponseData.PlaylistSong();
-                            detail.setID(playlistWiseAudioDetails.get(i).getID());
-                            detail.setName(playlistWiseAudioDetails.get(i).getName());
-                            detail.setAudioFile(playlistWiseAudioDetails.get(i).getAudioFile());
-                            detail.setAudioDirection(playlistWiseAudioDetails.get(i).getAudioDirection());
-                            detail.setAudiomastercat(playlistWiseAudioDetails.get(i).getAudiomastercat());
-                            detail.setAudioSubCategory(playlistWiseAudioDetails.get(i).getAudioSubCategory());
-                            detail.setImageFile(playlistWiseAudioDetails.get(i).getImageFile());
-                            detail.setLike(playlistWiseAudioDetails.get(i).getLike());
-                            detail.setDownload(playlistWiseAudioDetails.get(i).getDownload());
-                            detail.setAudioDuration(playlistWiseAudioDetails.get(i).getAudioDuration());
-                            details.add(detail);
+                    if(downloadPlaylistDetailsList.size()!=0) {
+                        SubPlayListModel responseData = new SubPlayListModel();
+                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> details = new ArrayList<>();
+                        SubPlayListModel.ResponseData listModel = new SubPlayListModel.ResponseData();
+                        listModel.setPlaylistID(downloadPlaylistDetailsList.get(0).getPlaylistID());
+                        listModel.setPlaylistName(downloadPlaylistDetailsList.get(0).getPlaylistName());
+                        listModel.setPlaylistDesc(downloadPlaylistDetailsList.get(0).getPlaylistDesc());
+                        listModel.setPlaylistMastercat(downloadPlaylistDetailsList.get(0).getPlaylistMastercat());
+                        listModel.setPlaylistSubcat(downloadPlaylistDetailsList.get(0).getPlaylistSubcat());
+                        listModel.setPlaylistImage(downloadPlaylistDetailsList.get(0).getPlaylistImage());
+                        listModel.setTotalAudio(downloadPlaylistDetailsList.get(0).getTotalAudio());
+                        listModel.setTotalDuration(downloadPlaylistDetailsList.get(0).getTotalDuration());
+                        listModel.setTotalhour(downloadPlaylistDetailsList.get(0).getTotalhour());
+                        listModel.setTotalminute(downloadPlaylistDetailsList.get(0).getTotalminute());
+                        listModel.setCreated(downloadPlaylistDetailsList.get(0).getCreated());
+                        listModel.setLike(downloadPlaylistDetailsList.get(0).getLike());
+                        listModel.setIsReminder(downloadPlaylistDetailsList.get(0).getIsReminder());
+                        if (playlistWiseAudioDetails.size() != 0) {
+                            for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
+                                SubPlayListModel.ResponseData.PlaylistSong detail = new SubPlayListModel.ResponseData.PlaylistSong();
+                                detail.setID(playlistWiseAudioDetails.get(i).getID());
+                                detail.setName(playlistWiseAudioDetails.get(i).getName());
+                                detail.setAudioFile(playlistWiseAudioDetails.get(i).getAudioFile());
+                                detail.setAudioDirection(playlistWiseAudioDetails.get(i).getAudioDirection());
+                                detail.setAudiomastercat(playlistWiseAudioDetails.get(i).getAudiomastercat());
+                                detail.setAudioSubCategory(playlistWiseAudioDetails.get(i).getAudioSubCategory());
+                                detail.setImageFile(playlistWiseAudioDetails.get(i).getImageFile());
+                                detail.setLike(playlistWiseAudioDetails.get(i).getLike());
+                                detail.setDownload(playlistWiseAudioDetails.get(i).getDownload());
+                                detail.setAudioDuration(playlistWiseAudioDetails.get(i).getAudioDuration());
+                                details.add(detail);
+                            }
+                            listModel.setPlaylistSongs(details);
                         }
-                        listModel.setPlaylistSongs(details);
+                        setData(listModel);
                     }
-
-
-                    setData(listModel);
                 }
                 super.onPostExecute(aVoid);
             }
@@ -1046,7 +1053,14 @@ public class MyPlaylistsFragment extends Fragment {
                 binding.tvSearch.setVisibility(View.GONE);
                 binding.searchView.setVisibility(View.VISIBLE);
             }
-
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                holder.binding.llMore.setClickable(true);
+                holder.binding.llMore.setEnabled(true);
+            }else{
+                holder.binding.llMore.setClickable(false);
+                holder.binding.llMore.setEnabled(false);
+                holder.binding.ivMore.setBackgroundColor(getResources().getColor(R.color.gray));
+            }
             holder.binding.llMore.setOnClickListener(view -> {
                 Intent i = new Intent(ctx, AddQueueActivity.class);
                 i.putExtra("play", "");
@@ -1235,6 +1249,14 @@ public class MyPlaylistsFragment extends Fragment {
             binding.tvSearch.setVisibility(View.GONE);
             binding.searchView.setVisibility(View.VISIBLE);
 //            }
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                holder.binding.llMore.setClickable(true);
+                holder.binding.llMore.setEnabled(true);
+            }else{
+                holder.binding.llMore.setClickable(false);
+                holder.binding.llMore.setEnabled(false);
+                holder.binding.ivMore.setBackgroundColor(getResources().getColor(R.color.gray));
+            }
             holder.binding.llMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

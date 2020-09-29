@@ -179,7 +179,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         /*mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);*/
-        getPrepareShowData(position);
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            binding.llMore.setClickable(true);
+            binding.llMore.setEnabled(true);
+        }else{
+            binding.llMore.setClickable(false);
+            binding.llMore.setEnabled(false);
+            binding.ivMore.setBackgroundColor(getResources().getColor(R.color.gray));
+        }
+            getPrepareShowData(position);
         callRepeatShuffle();
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
@@ -201,6 +209,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         binding.llDownload.setOnClickListener(view -> callDownload());
 
         binding.llMore.setOnClickListener(view -> {
+
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
             }
@@ -1176,6 +1185,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
         }.getType();
         mainPlayModelList = gson.fromJson(json, type);
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            binding.llMore.setClickable(true);
+            binding.llMore.setEnabled(true);
+        }else{
+            binding.llMore.setClickable(false);
+            binding.llMore.setEnabled(false);
+            binding.ivMore.setBackgroundColor(getResources().getColor(R.color.gray));
+        }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

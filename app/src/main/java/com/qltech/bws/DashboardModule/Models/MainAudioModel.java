@@ -115,6 +115,9 @@ public class MainAudioModel implements Parcelable {
         @SerializedName("IsLock")
         @Expose
         private String IsLock;
+        @SerializedName("expireDate")
+        @Expose
+        private String expireDate;
         @SerializedName("Details")
         @Expose
         private ArrayList<Detail> details = null;
@@ -126,6 +129,7 @@ public class MainAudioModel implements Parcelable {
             view = in.readString();
             type = in.readString();
             userID = in.readString();
+            expireDate = in.readString();
         }
 
         public String getHomeID() {
@@ -164,6 +168,14 @@ public class MainAudioModel implements Parcelable {
             return userID;
         }
 
+        public String getExpireDate() {
+            return expireDate;
+        }
+
+        public void setExpireDate(String expireDate) {
+            this.expireDate = expireDate;
+        }
+
         public void setUserID(String userID) {
             this.userID = userID;
         }
@@ -187,6 +199,7 @@ public class MainAudioModel implements Parcelable {
             parcel.writeString(view);
             parcel.writeString(type);
             parcel.writeString(userID);
+            parcel.writeString(expireDate);
         }
 
         public static class Detail implements Parcelable {

@@ -34,20 +34,25 @@ import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.FragmentAudioBinding;
 import com.qltech.bws.databinding.MainAudioLayoutBinding;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Audio.ViewAllAudioFragment.viewallAudio;
 
 public class AudioFragment extends Fragment {
     public static boolean exit = false;
     public static String IsLock = "";
     FragmentAudioBinding binding;
-    String UserID, AudioFlag;
+    String UserID, AudioFlag,expDate;
     List<DownloadAudioDetails> downloadAudioDetailsList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -57,10 +62,10 @@ public class AudioFragment extends Fragment {
         View view = binding.getRoot();
         viewallAudio = false;
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
         prepareData();
@@ -167,6 +172,11 @@ public class AudioFragment extends Fragment {
                         MainAudioModel listModel = response.body();
                         GetAllMedia(getActivity(), listModel.getResponseData());
 
+                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().get(0).getExpireDate());
+                        editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().get(0).getIsLock());
+                        editor.commit();
                     } else {
                         hideProgressBar();
                     }
@@ -178,6 +188,11 @@ public class AudioFragment extends Fragment {
                 }
             });
         } else {
+            SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+            expDate = (shared1.getString(CONSTANTS.PREF_KEY_ExpDate, ""));
+            DateFormat df = DateFormat.getTimeInstance();
+            df.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String gmtTime = df.format(new Date());
             ArrayList<MainAudioModel.ResponseData> responseData = new ArrayList<>();
             ArrayList<MainAudioModel.ResponseData.Detail> details = new ArrayList<>();
             MainAudioModel.ResponseData listModel = new MainAudioModel.ResponseData();

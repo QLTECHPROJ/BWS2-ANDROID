@@ -88,6 +88,9 @@ public class CurrentPlanVieViewModel {
         @SerializedName("IsActive")
         @Expose
         private String IsActive;
+        @SerializedName("expireDate")
+        @Expose
+        private String expireDate;
         @SerializedName("Feature")
         @Expose
         private List<Feature> feature = null;
@@ -186,6 +189,14 @@ public class CurrentPlanVieViewModel {
 
         public void setCardDigit(String cardDigit) {
             this.cardDigit = cardDigit;
+        }
+
+        public String getExpireDate() {
+            return expireDate;
+        }
+
+        public void setExpireDate(String expireDate) {
+            this.expireDate = expireDate;
         }
 
         public List<Feature> getFeature() {
