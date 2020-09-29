@@ -15,7 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +27,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Models.SelectPlaylistModel;
@@ -47,14 +51,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Account.AccountFragment.ComeScreenReminder;
+import static com.qltech.bws.DashboardModule.Account.AccountFragment.IsLock;
 
 public class ReminderActivity extends AppCompatActivity {
     ActivityReminderBinding binding;
-    String am_pm, hourString, minuteSting;
     Activity activity;
     Context context;
     Dialog dialog;
-    String UserId, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "";
+    String am_pm, hourString, minuteSting, UserId, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "";
     ArrayList<String> remiderDays = new ArrayList<>();
     private int mHour, mMinute;
     SelectPlaylistAdapter adapter;
@@ -92,9 +96,7 @@ public class ReminderActivity extends AppCompatActivity {
 
         ShowPlaylistName();
 
-        if (Time.equalsIgnoreCase("") ||
-                Time.equalsIgnoreCase("0") ||
-                Time == null) {
+        if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0") || Time == null) {
             binding.tvTime.setText("09:00 am");
         } else {
             binding.tvTime.setText(Time);
@@ -116,7 +118,6 @@ public class ReminderActivity extends AppCompatActivity {
                             if (hourOfDay < 10) {
                                 hourString = "0" + hourString;
                             }
-
                         } else {
                             hourString = "" + hourOfDay;
                             am_pm = "AM";
@@ -132,50 +133,63 @@ public class ReminderActivity extends AppCompatActivity {
         });
 
         if (Day.contains("0")) {
-            remiderDays.add("0");
-            binding.tvSunday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-            binding.tvSunday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
+            ShowDaysSelection("0", binding.tvSunday);
         }
 
         if (Day.contains("1")) {
-            remiderDays.add("1");
-            binding.tvMonday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-            binding.tvMonday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
+            ShowDaysSelection("1", binding.tvMonday);
         }
 
         if (Day.contains("2")) {
-            remiderDays.add("2");
-            binding.tvTuesday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-            binding.tvTuesday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
+            ShowDaysSelection("2", binding.tvTuesday);
         }
 
         if (Day.contains("3")) {
-            remiderDays.add("3");
-            binding.tvWednesday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-            binding.tvWednesday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
+            ShowDaysSelection("3", binding.tvWednesday);
         }
 
         if (Day.contains("4")) {
-            remiderDays.add("4");
-            binding.tvThursday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-            binding.tvThursday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
+            ShowDaysSelection("4", binding.tvThursday);
         }
 
         if (Day.contains("5")) {
-            remiderDays.add("5");
-            binding.tvFriday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-            binding.tvFriday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
+            ShowDaysSelection("5", binding.tvFriday);
         }
 
         if (Day.contains("6")) {
-            remiderDays.add("6");
-            binding.tvSaturday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-            binding.tvSaturday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
+            ShowDaysSelection("6", binding.tvSaturday);
         }
-
         Log.e("remiderDays", TextUtils.join(",", remiderDays));
 
-        if (ComeFrom.equalsIgnoreCase("") || ComeFrom == null) {
+        binding.llSunday.setOnClickListener(view -> {
+            DaysSelection("0", binding.tvSunday);
+        });
+
+        binding.llMonday.setOnClickListener(view -> {
+            DaysSelection("1", binding.tvMonday);
+        });
+
+        binding.llTuesday.setOnClickListener(view -> {
+            DaysSelection("2", binding.tvTuesday);
+        });
+
+        binding.llWednesday.setOnClickListener(view -> {
+            DaysSelection("3", binding.tvWednesday);
+        });
+
+        binding.llThursday.setOnClickListener(view -> {
+            DaysSelection("4", binding.tvThursday);
+        });
+
+        binding.llFriday.setOnClickListener(view -> {
+            DaysSelection("5", binding.tvFriday);
+        });
+
+        binding.llSaturday.setOnClickListener(view -> {
+            DaysSelection("6", binding.tvSaturday);
+        });
+
+        if (ComeFrom.equalsIgnoreCase("")) {
             binding.ivArrow.setVisibility(View.VISIBLE);
             binding.llSelectPlaylist.setOnClickListener(view -> {
                 dialog = new Dialog(context);
@@ -186,13 +200,10 @@ public class ReminderActivity extends AppCompatActivity {
                 final LinearLayout llBack = dialog.findViewById(R.id.llBack);
                 final LinearLayout llError = dialog.findViewById(R.id.llError);
                 final RecyclerView rvSelectPlaylist = dialog.findViewById(R.id.rvSelectPlaylist);
-
-                llBack.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                    }
-                });
+                final ImageView ImgV = dialog.findViewById(R.id.ImgV);
+                final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
+                Glide.with(context).load(R.drawable.loading).asGif().into(ImgV);
+                llBack.setOnClickListener(view12 -> dialog.dismiss());
 
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -206,7 +217,7 @@ public class ReminderActivity extends AppCompatActivity {
                 rvSelectPlaylist.setLayoutManager(manager);
                 rvSelectPlaylist.setItemAnimator(new DefaultItemAnimator());
 
-                prepareData(rvSelectPlaylist, llError);
+                prepareData(rvSelectPlaylist, llError, ImgV, progressBarHolder);
                 dialog.show();
                 dialog.setCancelable(false);
             });
@@ -214,96 +225,25 @@ public class ReminderActivity extends AppCompatActivity {
             binding.ivArrow.setVisibility(View.GONE);
         }
 
-        binding.llSunday.setOnClickListener(view -> {
-            if (!remiderDays.contains("0")) {
-                remiderDays.add("0");
-                binding.tvSunday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-                binding.tvSunday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
-            } else {
-                remiderDays.remove("0");
-                binding.tvSunday.setTextColor(context.getResources().getColor(R.color.dark_blue_gray));
-                binding.tvSunday.setBackground(context.getResources().getDrawable(R.drawable.transparent_bg));
-            }
-            Log.e("remiderDays", TextUtils.join(",", remiderDays));
-        });
+    }
 
-        binding.llMonday.setOnClickListener(view -> {
-            if (!remiderDays.contains("1")) {
-                remiderDays.add("1");
-                binding.tvMonday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-                binding.tvMonday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
-            } else {
-                remiderDays.remove("1");
-                binding.tvMonday.setTextColor(context.getResources().getColor(R.color.dark_blue_gray));
-                binding.tvMonday.setBackground(context.getResources().getDrawable(R.drawable.transparent_bg));
-            }
-            Log.e("remiderDays", TextUtils.join(",", remiderDays));
-        });
+    private void ShowDaysSelection(String value, TextView textView) {
+        remiderDays.add(value);
+        textView.setTextColor(getResources().getColor(R.color.extra_light_blue));
+        textView.setBackground(getResources().getDrawable(R.drawable.fill_transparent_bg));
+    }
 
-        binding.llTuesday.setOnClickListener(view -> {
-            if (!remiderDays.contains("2")) {
-                remiderDays.add("2");
-                binding.tvTuesday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-                binding.tvTuesday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
-            } else {
-                remiderDays.remove("2");
-                binding.tvTuesday.setTextColor(context.getResources().getColor(R.color.dark_blue_gray));
-                binding.tvTuesday.setBackground(context.getResources().getDrawable(R.drawable.transparent_bg));
-            }
-            Log.e("remiderDays", TextUtils.join(",", remiderDays));
-        });
-
-        binding.llWednesday.setOnClickListener(view -> {
-            if (!remiderDays.contains("3")) {
-                remiderDays.add("3");
-                binding.tvWednesday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-                binding.tvWednesday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
-            } else {
-                remiderDays.remove("3");
-                binding.tvWednesday.setTextColor(context.getResources().getColor(R.color.dark_blue_gray));
-                binding.tvWednesday.setBackground(context.getResources().getDrawable(R.drawable.transparent_bg));
-            }
-            Log.e("remiderDays", TextUtils.join(",", remiderDays));
-        });
-
-        binding.llThursday.setOnClickListener(view -> {
-            if (!remiderDays.contains("4")) {
-                remiderDays.add("4");
-                binding.tvThursday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-                binding.tvThursday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
-            } else {
-                remiderDays.remove("4");
-                binding.tvThursday.setTextColor(context.getResources().getColor(R.color.dark_blue_gray));
-                binding.tvThursday.setBackground(context.getResources().getDrawable(R.drawable.transparent_bg));
-            }
-            Log.e("remiderDays", TextUtils.join(",", remiderDays));
-        });
-
-        binding.llFriday.setOnClickListener(view -> {
-            if (!remiderDays.contains("5")) {
-                remiderDays.add("5");
-                binding.tvFriday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-                binding.tvFriday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
-            } else {
-                remiderDays.remove("5");
-                binding.tvFriday.setTextColor(context.getResources().getColor(R.color.dark_blue_gray));
-                binding.tvFriday.setBackground(context.getResources().getDrawable(R.drawable.transparent_bg));
-            }
-            Log.e("remiderDays", TextUtils.join(",", remiderDays));
-        });
-
-        binding.llSaturday.setOnClickListener(view -> {
-            if (!remiderDays.contains("6")) {
-                remiderDays.add("6");
-                binding.tvSaturday.setTextColor(context.getResources().getColor(R.color.extra_light_blue));
-                binding.tvSaturday.setBackground(context.getResources().getDrawable(R.drawable.fill_transparent_bg));
-            } else {
-                remiderDays.remove("6");
-                binding.tvSaturday.setTextColor(context.getResources().getColor(R.color.dark_blue_gray));
-                binding.tvSaturday.setBackground(context.getResources().getDrawable(R.drawable.transparent_bg));
-            }
-            Log.e("remiderDays", TextUtils.join(",", remiderDays));
-        });
+    private void DaysSelection(String value, TextView textView) {
+        if (!remiderDays.contains(value)) {
+            remiderDays.add(value);
+            textView.setTextColor(getResources().getColor(R.color.extra_light_blue));
+            textView.setBackground(getResources().getDrawable(R.drawable.fill_transparent_bg));
+        } else {
+            remiderDays.remove(value);
+            textView.setTextColor(getResources().getColor(R.color.dark_blue_gray));
+            textView.setBackground(getResources().getDrawable(R.drawable.transparent_bg));
+        }
+        Log.e("remiderDays", TextUtils.join(",", remiderDays));
     }
 
     private void ShowPlaylistName() {
@@ -312,7 +252,7 @@ public class ReminderActivity extends AppCompatActivity {
         } else {
             binding.tvPlaylistName.setText(PlaylistName);
         }
-        String dateStr = binding.tvTime.getText().toString();
+    /*    String dateStr = binding.tvTime.getText().toString();
         SimpleDateFormat df = new SimpleDateFormat("HH:mm.S'Z' a", Locale.ENGLISH);
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date date = null;
@@ -323,58 +263,62 @@ public class ReminderActivity extends AppCompatActivity {
         }
         df.setTimeZone(TimeZone.getDefault());
         String formattedDate = df.format(date);
-        Log.e("TIMEZONES", formattedDate);
+        Log.e("TIMEZONES", formattedDate);*/
 
         binding.btnSave.setOnClickListener(view -> {
-            if (PlaylistName.equalsIgnoreCase("")) {
-                BWSApplication.showToast("Please select playlist name", context);
-            } else if (remiderDays.size() == 0) {
-                BWSApplication.showToast("Please select days", context);
-            } else {
-                if (BWSApplication.isNetworkConnected(context)) {
-                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                    Call<SetReminderModel> listCall = APIClient.getClient().SetReminder(PlaylistID, UserId, CONSTANTS.FLAG_ONE,
-                            formattedDate, TextUtils.join(",", remiderDays));
-                    listCall.enqueue(new Callback<SetReminderModel>() {
-                        @Override
-                        public void onResponse(Call<SetReminderModel> call, Response<SetReminderModel> response) {
-                            if (response.isSuccessful()) {
-                                Log.e("remiderDays", TextUtils.join(",", remiderDays));
-                                remiderDays.clear();
-                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                                SetReminderModel listModel = response.body();
-                                BWSApplication.showToast(listModel.getResponseMessage(), activity);
-                                if (ComeScreenReminder == 1) {
-                                    Intent i = new Intent(context, ReminderDetailsActivity.class);
-                                    startActivity(i);
-                                    finish();
-                                } else {
-                                    finish();
+            if (IsLock.equalsIgnoreCase("1")){
+                BWSApplication.showToast("Please re-activate your membership plan", context);
+            }else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")){
+                if (PlaylistName.equalsIgnoreCase("")) {
+                    BWSApplication.showToast("Please select playlist name", context);
+                } else if (remiderDays.size() == 0) {
+                    BWSApplication.showToast("Please select days", context);
+                } else {
+                    if (BWSApplication.isNetworkConnected(context)) {
+                        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        Call<SetReminderModel> listCall = APIClient.getClient().SetReminder(PlaylistID, UserId, CONSTANTS.FLAG_ONE,
+                                binding.tvTime.getText().toString(), TextUtils.join(",", remiderDays));
+                        listCall.enqueue(new Callback<SetReminderModel>() {
+                            @Override
+                            public void onResponse(Call<SetReminderModel> call, Response<SetReminderModel> response) {
+                                if (response.isSuccessful()) {
+                                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
+                                    remiderDays.clear();
+                                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                    SetReminderModel listModel = response.body();
+                                    BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                                    if (ComeScreenReminder == 1) {
+                                        Intent i = new Intent(context, ReminderDetailsActivity.class);
+                                        startActivity(i);
+                                        finish();
+                                    } else {
+                                        finish();
+                                    }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<SetReminderModel> call, Throwable t) {
-                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                        }
-                    });
-                } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), context);
+                            @Override
+                            public void onFailure(Call<SetReminderModel> call, Throwable t) {
+                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                            }
+                        });
+                    } else {
+                        BWSApplication.showToast(getString(R.string.no_server_found), context);
+                    }
                 }
             }
         });
     }
 
-    private void prepareData(RecyclerView rvSelectPlaylist, LinearLayout llError) {
+    private void prepareData(RecyclerView rvSelectPlaylist, LinearLayout llError,ImageView ImgV, FrameLayout progressBarHolder) {
         if (BWSApplication.isNetworkConnected(context)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
             Call<SelectPlaylistModel> listCall = APIClient.getClient().getAllPlayListing(UserId);
             listCall.enqueue(new Callback<SelectPlaylistModel>() {
                 @Override
                 public void onResponse(Call<SelectPlaylistModel> call, Response<SelectPlaylistModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
                         SelectPlaylistModel listModel = response.body();
                         adapter = new SelectPlaylistAdapter(listModel.getResponseData());
                         rvSelectPlaylist.setAdapter(adapter);
@@ -391,7 +335,7 @@ public class ReminderActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<SelectPlaylistModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
                 }
             });
         } else {

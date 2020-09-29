@@ -64,6 +64,9 @@ public class RemiderDetailsModel {
         @SerializedName("ReminderTime")
         @Expose
         private String reminderTime;
+        @SerializedName("IsLock")
+        @Expose
+        private String IsLock;
         @SerializedName("RDay")
         @Expose
         private String RDay;
@@ -120,6 +123,14 @@ public class RemiderDetailsModel {
 
         public void setRDay(String RDay) {
             this.RDay = RDay;
+        }
+
+        public String getIsLock() {
+            return IsLock;
+        }
+
+        public void setIsLock(String isLock) {
+            IsLock = isLock;
         }
 
         public String getReminderId() {

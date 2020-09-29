@@ -70,7 +70,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="center"
-                        android:text="Unlock your emotional potential from The Comfort of Your Home"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_16sdp" />
 
@@ -82,7 +81,6 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="center"
                         android:lineSpacingExtra="@dimen/_4sdp"
-                        android:text="Develop yourself in the comfort of your home while you sleep. Gain access to over 65 audio programs helping you to live inspired and improve your mental wellbeing. Become a member today and enjoy the benefits free for one month."
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_12sdp" />
 
@@ -198,12 +196,12 @@
                         android:textSize="@dimen/_13sdp" />
 
                     <TextView
+                        android:id="@+id/tvTag"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_20sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="center"
-                        android:text="Access More Than 65 Audio Programs."
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_20sdp" />
 
@@ -221,12 +219,12 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvFaqTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_16sdp"
                             android:fontFamily="@font/montserrat_semi_bold"
                             android:gravity="start"
-                            android:text="@string/f_A_Q"
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_17sdp" />
 

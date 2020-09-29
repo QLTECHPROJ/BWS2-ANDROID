@@ -907,7 +907,6 @@ public class MyPlaylistsFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
                 if (!BWSApplication.isNetworkConnected(getActivity())) {
                     SubPlayListModel responseData = new SubPlayListModel();
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> details = new ArrayList<>();

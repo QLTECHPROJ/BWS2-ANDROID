@@ -40,9 +40,8 @@ public class BillingAddressFragment extends Fragment {
 
         getPrepareData();
 
-        binding.btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        binding.btnSave.setOnClickListener(view1 -> {
+            if (BWSApplication.isNetworkConnected(getActivity())){
                 binding.tlName.setError("");
                 binding.tlEmail.setError("");
                 binding.tlMobileNumber.setError("");
@@ -95,6 +94,8 @@ public class BillingAddressFragment extends Fragment {
                         }
                     });
                 }
+            }else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
         });
 

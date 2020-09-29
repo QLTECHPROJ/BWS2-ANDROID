@@ -56,45 +56,57 @@ public class FaqActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(view -> finish());
 
         binding.llAudio.setOnClickListener(view -> {
-            modelList.clear();
-            modelList = new ArrayList<>();
-            for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
-                if (faqListModel.getResponseData().get(i).getCategory().contains("Audio")) {
-                    modelList.add(faqListModel.getResponseData().get(i));
+            try {
+                modelList.clear();
+                modelList = new ArrayList<>();
+                for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
+                    if (faqListModel.getResponseData().get(i).getCategory().contains("Audio")) {
+                        modelList.add(faqListModel.getResponseData().get(i));
+                    }
                 }
+                Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
+                i.putExtra("Flag", "Audio");
+                i.putParcelableArrayListExtra("faqListModel", modelList);
+                startActivity(i);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
-            i.putExtra("Flag", "Audio");
-            i.putParcelableArrayListExtra("faqListModel", modelList);
-            startActivity(i);
         });
 
         binding.llHelp.setOnClickListener(view -> {
-            modelList.clear();
-            modelList = new ArrayList<>();
-            for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
-                if (faqListModel.getResponseData().get(i).getCategory().contains("Help")) {
-                    modelList.add(faqListModel.getResponseData().get(i));
+            try {
+                modelList.clear();
+                modelList = new ArrayList<>();
+                for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
+                    if (faqListModel.getResponseData().get(i).getCategory().contains("Help")) {
+                        modelList.add(faqListModel.getResponseData().get(i));
+                    }
                 }
+                Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
+                i.putExtra("Flag", "Help");
+                i.putExtra("faqListModel", modelList);
+                startActivity(i);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
-            i.putExtra("Flag", "Help");
-            i.putExtra("faqListModel", modelList);
-            startActivity(i);
         });
 
         binding.llPlaylists.setOnClickListener(view -> {
-            modelList.clear();
-            modelList = new ArrayList<>();
-            for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
-                if (faqListModel.getResponseData().get(i).getCategory().contains("Playlist")) {
-                    modelList.add(faqListModel.getResponseData().get(i));
+            try {
+                modelList.clear();
+                modelList = new ArrayList<>();
+                for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
+                    if (faqListModel.getResponseData().get(i).getCategory().contains("Playlist")) {
+                        modelList.add(faqListModel.getResponseData().get(i));
+                    }
                 }
+                Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
+                i.putExtra("Flag", "Playlist");
+                i.putExtra("faqListModel", modelList);
+                startActivity(i);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
-            i.putExtra("Flag", "Playlist");
-            i.putExtra("faqListModel", modelList);
-            startActivity(i);
         });
     }
 

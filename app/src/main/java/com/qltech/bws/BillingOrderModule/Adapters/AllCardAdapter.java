@@ -1,11 +1,14 @@
 package com.qltech.bws.BillingOrderModule.Adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -76,6 +79,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
         return new MyViewHolder(v);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         CardListModel.ResponseData listModel = listModelList.get(position);
@@ -139,16 +143,12 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
         holder.binding.rlRemoveCard.setOnClickListener(view -> {
             final Dialog dialog = new Dialog(activity);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.cancel_membership);
+            dialog.setContentView(R.layout.delete_payment_card);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(activity.getResources().getColor(R.color.dark_blue_gray)));
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
             final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-            final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-            final TextView tvSubTitle = dialog.findViewById(R.id.tvSubTitle);
-            final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
-            tvTitle.setText("Delete payment card");
-            tvSubTitle.setText("Are you sure you want to delete the payment card ?");
+            final Button Btn = dialog.findViewById(R.id.Btn);
             dialog.setOnKeyListener((v, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     dialog.dismiss();
@@ -156,34 +156,50 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                 }
                 return false;
             });
-
-            tvconfirm.setOnClickListener(v -> {
-                if (BWSApplication.isNetworkConnected(activity)) {
-                    BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
-                    Call<CardModel> listCall = APIClient.getClient().getRemoveCard(userId, listModel.getCustomer());
-                    listCall.enqueue(new Callback<CardModel>() {
-                        @Override
-                        public void onResponse(Call<CardModel> call, Response<CardModel> response) {
-                            BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
-                            if (response.isSuccessful()) {
-                                CardModel cardModel = response.body();
-                                if (cardModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
-                                    getCardList();
-                                } else {
-                                    BWSApplication.showToast(cardModel.getResponseMessage(), activity);
+            Btn.setOnTouchListener((view1, event) -> {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        Button views = (Button) view1;
+                        views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
+                        view1.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP:
+                        if (BWSApplication.isNetworkConnected(activity)) {
+                            BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
+                            Call<CardModel> listCall = APIClient.getClient().getRemoveCard(userId, listModel.getCustomer());
+                            listCall.enqueue(new Callback<CardModel>() {
+                                @Override
+                                public void onResponse(Call<CardModel> call, Response<CardModel> response) {
+                                    BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+                                    if (response.isSuccessful()) {
+                                        CardModel cardModel = response.body();
+                                        if (cardModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
+                                            getCardList();
+                                            dialog.dismiss();
+                                        } else {
+                                            BWSApplication.showToast(cardModel.getResponseMessage(), activity);
+                                        }
+                                    }
                                 }
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(Call<CardModel> call, Throwable t) {
+                                @Override
+                                public void onFailure(Call<CardModel> call, Throwable t) {
+                                    BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+                                }
+                            });
+                        } else {
+                            BWSApplication.showToast(activity.getString(R.string.no_server_found), activity);
                             BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
                         }
-                    });
-                } else {
-                    BWSApplication.showToast(activity.getString(R.string.no_server_found), activity);
-                    BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+                    case MotionEvent.ACTION_CANCEL: {
+                        Button views = (Button) view1;
+                        views.getBackground().clearColorFilter();
+                        views.invalidate();
+                        break;
+                    }
                 }
+                return true;
             });
 
             tvGoBack.setOnClickListener(v -> {

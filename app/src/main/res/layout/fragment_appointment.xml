@@ -38,6 +38,7 @@
                         android:textSize="@dimen/_30sdp" />
 
                     <TextView
+                        android:id="@+id/tvNextSessionTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_16sdp"
@@ -45,7 +46,6 @@
                         android:layout_marginRight="@dimen/_16sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
-                        android:text="@string/Next_Session"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 
@@ -285,6 +285,7 @@
                     </androidx.cardview.widget.CardView>
 
                     <TextView
+                        android:id="@+id/tvPreviousAppointments"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_16sdp"
@@ -292,7 +293,6 @@
                         android:layout_marginRight="@dimen/_16sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
-                        android:text="@string/Previous_Appointments"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_15sdp" />
 

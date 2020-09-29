@@ -53,6 +53,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llSwitchStatus"
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

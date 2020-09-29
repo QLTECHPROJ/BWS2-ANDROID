@@ -96,7 +96,7 @@ public class PlaylistFragment extends Fragment {
             bundle.putString("PlaylistImage", playlistImage);
             myPlaylistsFragment.setArguments(bundle);
             fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, myPlaylistsFragment)
+                    .replace(R.id.flContainer, myPlaylistsFragment)
                     .commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -250,7 +250,7 @@ public class PlaylistFragment extends Fragment {
                 Fragment viewAllPlaylistFragment = new ViewAllPlaylistFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, viewAllPlaylistFragment)
+                        .replace(R.id.flContainer, viewAllPlaylistFragment)
                         .commit();
                 Bundle bundle = new Bundle();
                 bundle.putString("GetLibraryID", listModelList.get(position).getGetLibraryID());

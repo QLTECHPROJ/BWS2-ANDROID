@@ -1,5 +1,6 @@
 package com.qltech.bws.DashboardModule.Account;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -67,6 +68,7 @@ public class AccountFragment extends Fragment {
     String UserID;
     private long mLastClickTime = 0;
 
+    @SuppressLint("ClickableViewAccessibility")
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false);
@@ -286,12 +288,9 @@ public class AccountFragment extends Fragment {
     }
 
     public void DeletallLocalCart() {
-
         class DeletallCart extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 DatabaseClient
                         .getInstance(getActivity())
                         .getaudioDatabase()
@@ -306,19 +305,14 @@ public class AccountFragment extends Fragment {
                 super.onPostExecute(aVoid);
             }
         }
-
         DeletallCart st = new DeletallCart();
         st.execute();
-
     }
 
     public void DeletallLocalCart1() {
-
         class DeletallCart extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 DatabaseClient
                         .getInstance(getActivity())
                         .getaudioDatabase()
@@ -332,10 +326,8 @@ public class AccountFragment extends Fragment {
                 super.onPostExecute(aVoid);
             }
         }
-
         DeletallCart st = new DeletallCart();
         st.execute();
-
     }
 
     private void showProgressBar() {

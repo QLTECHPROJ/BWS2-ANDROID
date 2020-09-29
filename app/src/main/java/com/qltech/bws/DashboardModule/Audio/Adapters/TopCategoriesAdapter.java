@@ -60,12 +60,13 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
         if (IsLock.equalsIgnoreCase("1")) {
-            if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+            holder.binding.ivLock.setVisibility(View.VISIBLE);
+           /* if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
             } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                     || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            }
+
+            }*/
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
             holder.binding.ivLock.setVisibility(View.GONE);
         }

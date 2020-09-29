@@ -59,13 +59,6 @@ public class CurrentPlanFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_current_plan, container, false);
         View view = binding.getRoot();
 
-        MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 29,
-                5, 3, 1.1f, 29);
-        binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        binding.ivRestaurantImage.setImageResource(R.drawable.current_plan_image);
-
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -103,6 +96,13 @@ public class CurrentPlanFragment extends Fragment {
                     hideProgressBar();
                     CurrentPlanVieViewModel listModel = response.body();
                     binding.tvHeader.setText(listModel.getResponseData().getPlan());
+
+                    MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 29,
+                            5, 3, 1.1f, 29);
+                    binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+                    binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+                    binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                    binding.ivRestaurantImage.setImageResource(R.drawable.current_plan_image);
 
                     if (listModel.getResponseData().getActivate().equalsIgnoreCase("")) {
                         binding.tvPlan.setText("");

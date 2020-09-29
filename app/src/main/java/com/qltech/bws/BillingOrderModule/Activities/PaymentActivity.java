@@ -7,18 +7,22 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -84,29 +88,25 @@ public class PaymentActivity extends AppCompatActivity {
                 listModelList = getIntent().getParcelableArrayListExtra("PlanData");
             }
         }
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(context, OrderSummaryActivity.class);
-                i.putExtra("comeFrom", "membership");
-                i.putParcelableArrayListExtra("PlanData", listModelList2);
-                i.putExtra("TrialPeriod", "");
-                i.putExtra("position", position);
-                startActivity(i);
-                finish();
-            }
+        binding.llBack.setOnClickListener(view -> {
+            Intent i = new Intent(context, OrderSummaryActivity.class);
+            i.putExtra("comeFrom", "membership");
+            i.putParcelableArrayListExtra("PlanData", listModelList2);
+            i.putExtra("TrialPeriod", "");
+            i.putExtra("position", position);
+            startActivity(i);
+            finish();
         });
 
-
-        binding.llAddNewCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        binding.llAddNewCard.setOnClickListener(view -> {
+            if (BWSApplication.isNetworkConnected(context)) {
                 Intent i = new Intent(context, AddPaymentActivity.class);
                 i.putExtra("ComePayment", "2");
                 startActivity(i);
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), context);
             }
         });
-
         prepareCardList();
     }
 
@@ -219,6 +219,7 @@ public class PaymentActivity extends AppCompatActivity {
             return new MyViewHolder(v);
         }
 
+        @SuppressLint("ClickableViewAccessibility")
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             CardListModel.ResponseData listModel = listModelList.get(position);
@@ -283,16 +284,11 @@ public class PaymentActivity extends AppCompatActivity {
             holder.binding.rlRemoveCard.setOnClickListener(view -> {
                 final Dialog dialog = new Dialog(context);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.cancel_membership);
+                dialog.setContentView(R.layout.delete_payment_card);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
                 final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-                final TextView tvSubTitle = dialog.findViewById(R.id.tvSubTitle);
-                final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
-                tvTitle.setText("Delete payment card");
-                tvSubTitle.setText("Are you sure you want to delete the payment card ?");
+                final Button Btn = dialog.findViewById(R.id.Btn);
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog.dismiss();
@@ -301,33 +297,50 @@ public class PaymentActivity extends AppCompatActivity {
                     return false;
                 });
 
-                tvconfirm.setOnClickListener(v -> {
-                    if (BWSApplication.isNetworkConnected(context)) {
-                        showProgressBar();
-                        Call<CardModel> listCall = APIClient.getClient().getRemoveCard(userId, listModel.getCustomer());
-                        listCall.enqueue(new Callback<CardModel>() {
-                            @Override
-                            public void onResponse(Call<CardModel> call, Response<CardModel> response) {
-                                hideProgressBar();
-                                if (response.isSuccessful()) {
-                                    CardModel cardModel = response.body();
-                                    if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                        prepareCardList();
-                                    } else {
-                                        BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                Btn.setOnTouchListener((view1, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN: {
+                            Button views = (Button) view1;
+                            views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
+                            view1.invalidate();
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP:
+                            if (BWSApplication.isNetworkConnected(context)) {
+                                showProgressBar();
+                                Call<CardModel> listCall = APIClient.getClient().getRemoveCard(userId, listModel.getCustomer());
+                                listCall.enqueue(new Callback<CardModel>() {
+                                    @Override
+                                    public void onResponse(Call<CardModel> call, Response<CardModel> response) {
+                                        hideProgressBar();
+                                        if (response.isSuccessful()) {
+                                            CardModel cardModel = response.body();
+                                            if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                                prepareCardList();
+                                                dialog.dismiss();
+                                            } else {
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                            }
+                                        }
                                     }
-                                }
-                            }
 
-                            @Override
-                            public void onFailure(Call<CardModel> call, Throwable t) {
+                                    @Override
+                                    public void onFailure(Call<CardModel> call, Throwable t) {
+                                        hideProgressBar();
+                                    }
+                                });
+                            } else {
+                                BWSApplication.showToast(getString(R.string.no_server_found), context);
                                 hideProgressBar();
                             }
-                        });
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), context);
-                        hideProgressBar();
+                        case MotionEvent.ACTION_CANCEL: {
+                            Button views = (Button) view1;
+                            views.getBackground().clearColorFilter();
+                            views.invalidate();
+                            break;
+                        }
                     }
+                    return true;
                 });
 
                 tvGoBack.setOnClickListener(v -> {

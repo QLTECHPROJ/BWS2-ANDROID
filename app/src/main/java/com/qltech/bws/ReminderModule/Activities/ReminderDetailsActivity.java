@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -75,17 +76,21 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         binding.btnAddReminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (IsLock.equalsIgnoreCase("1")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                    Intent i = new Intent(ctx, ReminderActivity.class);
-                    i.putExtra("ComeFrom", "");
-                    i.putExtra("PlaylistID", "");
-                    i.putExtra("PlaylistName", "");
-                    i.putExtra("Time", "");
-                    i.putExtra("Day", "");
-                    startActivity(i);
-                    finish();
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    if (IsLock.equalsIgnoreCase("1")) {
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                        Intent i = new Intent(ctx, ReminderActivity.class);
+                        i.putExtra("ComeFrom", "");
+                        i.putExtra("PlaylistID", "");
+                        i.putExtra("PlaylistName", "");
+                        i.putExtra("Time", "");
+                        i.putExtra("Day", "");
+                        startActivity(i);
+                        finish();
+                    }
+                }else {
+                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                 }
             }
         });
@@ -226,27 +231,35 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             } else {
                 holder.binding.switchStatus.setChecked(false);
             }
+            if (model.get(position).getIsLock().equalsIgnoreCase("1")) {
+                holder.binding.switchStatus.setClickable(false);
+                holder.binding.switchStatus.setEnabled(false);
+                holder.binding.llSwitchStatus.setClickable(true);
+                holder.binding.llSwitchStatus.setEnabled(true);
+                holder.binding.llSwitchStatus.setOnClickListener(view -> BWSApplication.showToast("Please re-activate your membership plan", ctx));
+            } else if (model.get(position).getIsLock().equalsIgnoreCase("0") || model.get(position).getIsLock().equalsIgnoreCase("")) {
+                holder.binding.switchStatus.setClickable(true);
+                holder.binding.switchStatus.setEnabled(true);
+                holder.binding.llSwitchStatus.setClickable(false);
+                holder.binding.llSwitchStatus.setEnabled(false);
+                holder.binding.switchStatus.setOnCheckedChangeListener((compoundButton, checked) -> {
+                    if (checked) {
+                        prepareSwitchStatus("1");
+                    } else {
+                        prepareSwitchStatus("0");
+                    }
+                });
+            }
 
-            holder.binding.switchStatus.setOnCheckedChangeListener((compoundButton, checked) -> {
-                if (checked) {
-                    prepareSwitchStatus("1");
-                } else {
-                    prepareSwitchStatus("0");
-                }
-            });
-
-            holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(ctx, ReminderActivity.class);
-                    i.putExtra("ComeFrom", "1");
-                    i.putExtra("PlaylistID", model.get(position).getPlaylistId());
-                    i.putExtra("PlaylistName", model.get(position).getPlaylistName());
-                    i.putExtra("Time", model.get(position).getReminderTime());
-                    i.putExtra("Day", model.get(position).getRDay());
-                    startActivity(i);
-                    finish();
-                }
+            holder.binding.llMainLayout.setOnClickListener(view -> {
+                Intent i = new Intent(ctx, ReminderActivity.class);
+                i.putExtra("ComeFrom", "1");
+                i.putExtra("PlaylistID", model.get(position).getPlaylistId());
+                i.putExtra("PlaylistName", model.get(position).getPlaylistName());
+                i.putExtra("Time", model.get(position).getReminderTime());
+                i.putExtra("Day", model.get(position).getRDay());
+                startActivity(i);
+                finish();
             });
         }
 

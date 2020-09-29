@@ -48,12 +48,13 @@ public class PaymentFragment extends Fragment {
         binding.rvCardList.setLayoutManager(mLayoutManager);
         binding.rvCardList.setItemAnimator(new DefaultItemAnimator());
 
-        binding.llAddNewCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        binding.llAddNewCard.setOnClickListener(view1 -> {
+            if (BWSApplication.isNetworkConnected(context)) {
                 Intent i = new Intent(getActivity(), AddPaymentActivity.class);
                 i.putExtra("ComePayment", "1");
                 startActivity(i);
+            }else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
         });
 

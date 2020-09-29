@@ -187,6 +187,7 @@ public class SearchFragment extends Fragment {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                         SuggestedModel listModel = response.body();
+                        binding.tvSuggestedAudios.setText(R.string.Suggested_Audios);
                         SuggestionAudiosAdpater suggestedAdpater = new SuggestionAudiosAdpater(listModel.getResponseData(), getActivity(),
                                 binding.rvDownloadsList);
                         binding.rvDownloadsList.setAdapter(suggestedAdpater);
@@ -211,6 +212,7 @@ public class SearchFragment extends Fragment {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                         SearchPlaylistModel listModel = response.body();
+                        binding.tvSuggestedPlaylist.setText(R.string.Suggested_Playlist);
                         SearchPlaylistAdapter suggestedAdpater = new SearchPlaylistAdapter(listModel.getResponseData());
                         binding.rvPlayList.setAdapter(suggestedAdpater);
                     }

@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.MembershipModule.Activities.OrderSummaryActivity;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
@@ -89,7 +90,11 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAd
             }
         }
         btnFreeJoin.setOnClickListener(view -> {
-            ctx.startActivity(i);
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                ctx.startActivity(i);
+            }else {
+                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+            }
         });
     }
 

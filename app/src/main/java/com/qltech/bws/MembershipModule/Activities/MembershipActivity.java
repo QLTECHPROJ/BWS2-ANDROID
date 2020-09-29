@@ -84,6 +84,7 @@ public class MembershipActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         FaqListModel listModel = response.body();
+                        binding.tvFaqTitle.setText(R.string.f_A_Q);
                         adapter = new MembershipFaqAdapter(listModel.getResponseData(), ctx, binding.rvFaqList, binding.tvFound);
                         binding.rvFaqList.setAdapter(adapter);
                     }
@@ -113,7 +114,7 @@ public class MembershipActivity extends AppCompatActivity {
                         if (membershipPlanListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
                             binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
-
+                            binding.tvTag.setText("Access More Than 65 Audio Programs.");
                             membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan(), ctx, binding.btnFreeJoin,
                                     membershipPlanListModel.getResponseData().getTrialPeriod());
                             binding.rvPlanList.setAdapter(membershipPlanAdapter);

@@ -115,6 +115,7 @@ public class AppointmentFragment extends Fragment {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                             NextSessionViewModel listModel = response.body();
+                            binding.tvNextSessionTitle.setText(R.string.Next_Session);
                             if (listModel.getResponseData().getResponse().equalsIgnoreCase("")) {
                                 binding.cvShowSession.setVisibility(View.GONE);
                                 binding.cvSetSession.setVisibility(View.VISIBLE);
@@ -185,6 +186,7 @@ public class AppointmentFragment extends Fragment {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                             PreviousAppointmentsModel listModel = response.body();
+                            binding.tvPreviousAppointments.setText(R.string.Previous_Appointments);
                             PreviousAppointmentsAdapter appointmentsAdapter = new PreviousAppointmentsAdapter(listModel.getResponseData(), getActivity());
                             binding.rvPreviousData.setAdapter(appointmentsAdapter);
                         }
