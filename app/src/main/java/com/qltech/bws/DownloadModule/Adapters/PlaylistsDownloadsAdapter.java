@@ -101,7 +101,11 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-
+        if (IsLock.equalsIgnoreCase("1")) {
+            holder.binding.ivLock.setVisibility(View.VISIBLE);
+        } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+            holder.binding.ivLock.setVisibility(View.GONE);
+        }
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

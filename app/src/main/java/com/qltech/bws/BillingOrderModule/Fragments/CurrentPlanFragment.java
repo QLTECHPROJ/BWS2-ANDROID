@@ -39,7 +39,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity.renewPlanId;
+import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 
 /*Active => Cancel button
 remaining 10 days =>cancelled status=> pay now button => => Direct payment
@@ -111,7 +113,11 @@ public class CurrentPlanFragment extends Fragment {
                         binding.tvPlan.setVisibility(View.VISIBLE);
                         binding.tvPlan.setText("Active Since: " + listModel.getResponseData().getActivate());
                     }
-
+                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().getExpireDate());
+                    editor.putString(CONSTANTS.PREF_KEY_IsLock,IsLock);
+                    editor.commit();
                     binding.tvSubName.setText(listModel.getResponseData().getSubtitle());
                     binding.tvPlanAmount.setText("$" + listModel.getResponseData().getOrderTotal() + " ");
                     binding.tvPlanInterval.setText(listModel.getResponseData().getPlanStr());

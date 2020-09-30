@@ -256,18 +256,19 @@ public class ReminderActivity extends AppCompatActivity {
 
         String dateStr = binding.tvTime.getText().toString();
 
-        SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
-//        df.setTimeZone(TimeZone.getDefault());
-        Date date = null;
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
+        simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date currdate = Calendar.getInstance().getTime();
+        Date currdate1 =new Date();
+        String currantDateTime = dateStr;
         try {
-            date = df.parse(dateStr);
+            currdate1 = format.parse(currantDateTime);
+            Log.e("currant datesss !!!!", String.valueOf(currdate1));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String formattedDate = df.format(date);
-
-        Log.e("TIMEZONES", formattedDate);
+        Log.e("TIMEZONES", dateStr);
 
         binding.btnSave.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")){

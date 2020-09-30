@@ -85,53 +85,20 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-
+        if (IsLock.equalsIgnoreCase("1")) {
+            holder.binding.ivLock.setVisibility(View.VISIBLE);
+        } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+            holder.binding.ivLock.setVisibility(View.GONE);
+        }
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (IsLock.equalsIgnoreCase("1")) {
-//                    if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                /*        DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
-                        try {
-                            FileDescriptor fileDescriptor = FileUtils.getTempFileDescriptor(ctx.getApplicationContext(), downloadMedia.decrypt(listModelList.get(position).getName()));
-                            play(Uri.parse(String.valueOf(fileDescriptor)));
-                            playMedia();
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }*/
-
-                        try {
-                            player = 1;
-                            if (isPrepare || isMediaStart || isPause) {
-                                stopMedia();
-                            }
-                            isPause = false;
-                            isMediaStart = false;
-                            isPrepare = false;
-                            Fragment fragment = new TransparentPlayerFragment();
-                            FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();
-                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = shared.edit();
-                            Gson gson = new Gson();
-                            String json = gson.toJson(listModelList);
-                            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
-                            editor.commit();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
 //                    } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
 //                            || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-//                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
 //                    }
 
                 } else if (IsLock.equalsIgnoreCase("0")||IsLock.equalsIgnoreCase("")) {

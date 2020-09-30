@@ -52,6 +52,7 @@ import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment.ComeFromPlaylistViewAll;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
+import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 
 public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
@@ -158,7 +159,7 @@ public class PlaylistFragment extends Fragment {
             listModel.setDetails(details);
             listModel.setUserID(UserID);
             listModel.setView("My Downloads");
-            listModel.setIsLock("0");
+            listModel.setIsLock(IsLock);
             responseData.add(listModel);
             downloadPlaylistDetailsList = GetPlaylistDetail(responseData);
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());

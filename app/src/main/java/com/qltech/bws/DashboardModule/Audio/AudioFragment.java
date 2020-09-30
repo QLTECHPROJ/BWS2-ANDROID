@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.DashboardModule.Audio.Adapters.DownloadAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.RecentlyPlayedAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.RecommendedAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.TopCategoriesAdapter;
@@ -35,6 +37,8 @@ import com.qltech.bws.databinding.FragmentAudioBinding;
 import com.qltech.bws.databinding.MainAudioLayoutBinding;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -190,9 +194,39 @@ public class AudioFragment extends Fragment {
         } else {
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
             expDate = (shared1.getString(CONSTANTS.PREF_KEY_ExpDate, ""));
-            DateFormat df = DateFormat.getTimeInstance();
-            df.setTimeZone(TimeZone.getTimeZone("UTC"));
-            String gmtTime = df.format(new Date());
+//            expDate = "2020-09-29 06:34:10";
+            Log.e("Exp Date !!!!",expDate);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date Expdate = new Date();
+            try {
+                Expdate = format.parse(expDate);
+                Log.e("Exp Date Expdate!!!!", String.valueOf(Expdate));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date currdate = Calendar.getInstance().getTime();
+            Date currdate1 =new Date();
+            String currantDateTime = simpleDateFormat1.format(currdate);
+            try {
+                currdate1 = format.parse(currantDateTime);
+                Log.e("currant currdate !!!!", String.valueOf(currdate1));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Log.e("currant Date !!!!",currantDateTime);
+            if(Expdate.before(currdate1)){
+                Log.e("app", "Date1 is before Date2");
+                IsLock= "1";
+            }else if(Expdate.after(currdate1)){
+                Log.e("app", "Date1 is after Date2");
+                IsLock = "0";
+            }else if(Expdate == currdate1){
+                Log.e("app", "Date1 is equal Date2");
+                IsLock= "1";
+            }
             ArrayList<MainAudioModel.ResponseData> responseData = new ArrayList<>();
             ArrayList<MainAudioModel.ResponseData.Detail> details = new ArrayList<>();
             MainAudioModel.ResponseData listModel = new MainAudioModel.ResponseData();
@@ -203,7 +237,7 @@ public class AudioFragment extends Fragment {
             listModel.setView("My Downloads");
             listModel.setHomeID("1");
             listModel.setUserID(UserID);
-            listModel.setIsLock("0");
+            listModel.setIsLock(IsLock);
             responseData.add(listModel);
             GetAllMedia(getActivity(), responseData);
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
@@ -278,7 +312,7 @@ public class AudioFragment extends Fragment {
                 holder.binding.llMainLayout.setVisibility(View.VISIBLE);
                 holder.binding.tvTitle.setText(listModelList.get(position).getView());
                 if (listModelList.get(position).getView().equalsIgnoreCase("My Downloads")) {
-                    RecommendedAdapter myDownloadsAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
+                    DownloadAdapter myDownloadsAdapter = new DownloadAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
                             listModelList.get(position).getIsLock());
                     IsLock = listModelList.get(position).getIsLock();
                     RecyclerView.LayoutManager myDownloads = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);

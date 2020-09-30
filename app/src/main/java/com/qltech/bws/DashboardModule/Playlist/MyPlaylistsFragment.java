@@ -129,14 +129,14 @@ public class MyPlaylistsFragment extends Fragment {
         binding.llBack.setOnClickListener(view1 -> callBack());
 
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
-        if (BWSApplication.isNetworkConnected(getActivity())) {
+/*        if (BWSApplication.isNetworkConnected(getActivity())) {
             binding.llMore.setClickable(true);
             binding.llMore.setEnabled(true);
         } else {
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);
             binding.ivMore.setBackgroundColor(getResources().getColor(R.color.gray));
-        }
+        }*/
         binding.llMore.setOnClickListener(view13 -> {
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
             i.putExtra("PlaylistID", PlaylistID);
@@ -487,6 +487,8 @@ public class MyPlaylistsFragment extends Fragment {
                                                             if (response1.isSuccessful()) {
                                                                 ReminderStatusModel listModel1 = response1.body();
 //                                                                prepareData(UserID, PlaylistID);
+                                                                listModel.getResponseData().setIsReminder(listModel1.getResponseData().get(0).getIsCheck());
+
                                                                 binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
                                                                 dialog.dismiss();
                                                                 BWSApplication.showToast(listModel1.getResponseMessage(), activity);
