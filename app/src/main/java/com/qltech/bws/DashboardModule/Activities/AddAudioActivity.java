@@ -338,7 +338,6 @@ public class AddAudioActivity extends AppCompatActivity {
                     }
                 }
             });
-
         }
 
         @Override
