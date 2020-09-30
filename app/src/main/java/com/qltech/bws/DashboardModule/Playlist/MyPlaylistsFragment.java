@@ -304,17 +304,12 @@ public class MyPlaylistsFragment extends Fragment {
         if (b) {
             binding.llDownloads.setClickable(true);
             binding.llDownloads.setEnabled(true);
-            binding.ivDownloads.setColorFilter(Color.argb(100, 0, 0, 0));
-            binding.ivDownloads.setAlpha(255);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
         } else {
-
-            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-            binding.ivDownloads.setAlpha(255);
             binding.llDownloads.setClickable(false);
             binding.llDownloads.setEnabled(false);
+            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
         }
     }
@@ -787,8 +782,10 @@ public class MyPlaylistsFragment extends Fragment {
             if (downloadAudioDetailsList.size() != 0) {
                 for (int x = 0; x < playlistSongs.size(); x++) {
                     for (int y = 0; y < downloadAudioDetailsList.size(); y++) {
-                        if (playlistSongs.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
-                            playlistSongs2.remove(x);
+                        if(playlistSongs2.size()!=0) {
+                            if (playlistSongs2.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
+                                playlistSongs2.remove(x);
+                            }
                         }
                     }
                 }
@@ -1023,14 +1020,12 @@ public class MyPlaylistsFragment extends Fragment {
         llDownload.setClickable(true);
         llDownload.setEnabled(true);
         ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-        ivDownloads.setColorFilter(Color.argb(100, 0, 0, 0));
-        ivDownloads.setAlpha(255);
+        ivDownloads.setColorFilter(activity.getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
     }
 
     private void disableDownload(LinearLayout llDownload, ImageView ivDownloads) {
         ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-        ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-        ivDownloads.setAlpha(255);
+        ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
         llDownload.setClickable(false);
         llDownload.setEnabled(false);
     }
