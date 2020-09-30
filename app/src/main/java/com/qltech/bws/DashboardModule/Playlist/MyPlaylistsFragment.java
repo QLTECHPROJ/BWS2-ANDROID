@@ -57,7 +57,6 @@ import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Activities.ReminderActivity;
-import com.qltech.bws.ReminderModule.Models.ReminderStatusModel;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.RoomDataBase.DownloadPlaylistDetails;
@@ -880,11 +879,9 @@ public class MyPlaylistsFragment extends Fragment {
 
     private void SaveMedia(byte[] encodeBytes, String dirPath, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, int i, LinearLayout llDownload, ImageView ivDownloads) {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
                 DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
-
                 downloadAudioDetails.setID(playlistSongs.get(i).getID());
                 downloadAudioDetails.setName(playlistSongs.get(i).getName());
                 downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());
@@ -919,7 +916,6 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     public void GetMedia(String url, Context ctx, String download, LinearLayout llDownload, ImageView ivDownloads) {
-
         oneAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
 

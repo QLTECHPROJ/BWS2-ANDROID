@@ -292,20 +292,17 @@ public class AudioFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.binding.tvViewAll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Fragment viewAllAudioFragment = new ViewAllAudioFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .replace(R.id.flContainer, viewAllAudioFragment)
-                            .commit();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("ID", listModelList.get(position).getHomeID());
-                    bundle.putString("Name", listModelList.get(position).getView());
-                    bundle.putString("Category", "");
-                    viewAllAudioFragment.setArguments(bundle);
-                }
+            holder.binding.tvViewAll.setOnClickListener(view -> {
+                Fragment viewAllAudioFragment = new ViewAllAudioFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .replace(R.id.flContainer, viewAllAudioFragment)
+                        .commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("ID", listModelList.get(position).getHomeID());
+                bundle.putString("Name", listModelList.get(position).getView());
+                bundle.putString("Category", "");
+                viewAllAudioFragment.setArguments(bundle);
             });
 
             if (listModelList.get(position).getDetails().size() == 0) {

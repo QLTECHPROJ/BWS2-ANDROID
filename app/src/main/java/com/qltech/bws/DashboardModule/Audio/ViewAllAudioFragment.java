@@ -76,7 +76,6 @@ public class ViewAllAudioFragment extends Fragment {
             }
             return false;
         });
-        RefreshData();
         binding.llBack.setOnClickListener(view1 -> callBack());
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
@@ -98,11 +97,10 @@ public class ViewAllAudioFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        RefreshData();
         prepareData();
     }
 
-    private void RefreshData() {
+    private void prepareData() {
         try {
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 Fragment fragment = new TransparentPlayerFragment();
@@ -122,9 +120,7 @@ public class ViewAllAudioFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
-    private void prepareData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             showProgressBar();
             Call<ViewAllAudioListModel> listCall = APIClient.getClient().getViewAllAudioLists(UserID, ID, Category);
@@ -215,7 +211,7 @@ public class ViewAllAudioFragment extends Fragment {
                             isPause = false;
                             isMediaStart = false;
                             isPrepare = false;
-                            RefreshData();
+//                            RefreshData();
                             Fragment fragment = new TransparentPlayerFragment();
                             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                             fragmentManager1.beginTransaction()
@@ -318,7 +314,6 @@ public class ViewAllAudioFragment extends Fragment {
                             isPause = false;
                             isMediaStart = false;
                             isPrepare = false;
-                            RefreshData();
                             Fragment fragment = new TransparentPlayerFragment();
                             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                             fragmentManager1.beginTransaction()

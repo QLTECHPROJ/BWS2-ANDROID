@@ -51,7 +51,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment.comeAllPlaylist;
-import static com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment.ComeFromPlaylistViewAll;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 
@@ -105,10 +104,6 @@ public class PlaylistFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (ComeFromPlaylistViewAll == 1) {
-            prepareData();
-            ComeFromPlaylistViewAll = 0;
-        }
         prepareData();
     }
 
@@ -118,7 +113,7 @@ public class PlaylistFragment extends Fragment {
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
-                        .replace(R.id.flContainer, fragment)
+                        .add(R.id.flContainer, fragment)
                         .commit();
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

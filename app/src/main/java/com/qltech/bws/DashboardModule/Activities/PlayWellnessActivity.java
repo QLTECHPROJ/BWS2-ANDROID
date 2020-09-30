@@ -57,8 +57,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
-import static com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment.GetPlaylistLibraryID;
-import static com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment.comeformAllplaylist;
 import static com.qltech.bws.Utility.MusicService.SeekTo;
 import static com.qltech.bws.Utility.MusicService.ToBackward;
 import static com.qltech.bws.Utility.MusicService.ToForward;
@@ -1186,17 +1184,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         editor.commit();
         finish();
 //        overridePendingTransition(R.anim.enter, R.anim.exit);
-
-        /*if (comeformAllplaylist == 1) {
-            Bundle bundle = new Bundle();
-            Fragment playlistFragment = new ViewAllPlaylistFragment();
-            FragmentManager fragmentManager1 = getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, playlistFragment)
-                    .commit();
-            bundle.putString("GetLibraryID", GetPlaylistLibraryID);
-            playlistFragment.setArguments(bundle);
-        }*/
     }
 
     @Override
