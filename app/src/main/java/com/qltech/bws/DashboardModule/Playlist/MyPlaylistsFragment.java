@@ -134,10 +134,12 @@ public class MyPlaylistsFragment extends Fragment {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             binding.llMore.setClickable(true);
             binding.llMore.setEnabled(true);
+            binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivMore.setAlpha(255);
         } else {
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);
+            binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivMore.setAlpha(255);
         }
         binding.llMore.setOnClickListener(view13 -> {
@@ -1109,11 +1111,13 @@ public class MyPlaylistsFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 holder.binding.llMore.setClickable(true);
                 holder.binding.llMore.setEnabled(true);
+                binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivMore.setAlpha(255);
 
             } else {
                 holder.binding.llMore.setClickable(false);
                 holder.binding.llMore.setEnabled(false);
+                binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivMore.setAlpha(255);
             }
             holder.binding.llMore.setOnClickListener(view -> {
@@ -1307,11 +1311,13 @@ public class MyPlaylistsFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 holder.binding.llMore.setClickable(true);
                 holder.binding.llMore.setEnabled(true);
+                binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
                 holder.binding.ivMore.setAlpha(255);
 
             } else {
                 holder.binding.llMore.setClickable(false);
                 holder.binding.llMore.setEnabled(false);
+                binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
                 holder.binding.ivMore.setAlpha(255);
             }
             holder.binding.llMore.setOnClickListener(view -> {

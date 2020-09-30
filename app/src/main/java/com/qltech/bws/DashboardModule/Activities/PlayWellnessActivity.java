@@ -1215,9 +1215,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         if (BWSApplication.isNetworkConnected(ctx)) {
             binding.llMore.setClickable(true);
             binding.llMore.setEnabled(true);
+            binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);
+            binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivMore.setBackgroundColor(getResources().getColor(R.color.gray));
         }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
