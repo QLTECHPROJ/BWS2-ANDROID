@@ -2,6 +2,7 @@
 <layout>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/flContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -47,8 +48,8 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="0.5"
-                            android:visibility="gone"
-                            android:gravity="center_horizontal">
+                            android:gravity="center_horizontal"
+                            android:visibility="gone">
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -77,6 +78,19 @@
                                     android:text="@string/Create_playlist"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/_15sdp" />
+
+                                <ImageView
+                                    android:id="@+id/ivLock"
+                                    android:layout_width="@dimen/_24sdp"
+                                    android:layout_height="@dimen/_24sdp"
+                                    android:layout_marginStart="@dimen/_8sdp"
+                                    android:layout_marginLeft="@dimen/_8sdp"
+                                    android:layout_marginTop="@dimen/_10sdp"
+                                    android:contentDescription="TODO"
+                                    android:src="@drawable/ic_lock_icon"
+                                    android:visibility="gone"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
 
 
                             </RelativeLayout>

@@ -26,6 +26,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity;
+import com.qltech.bws.DashboardModule.Appointment.AppointmentDetailsFragment;
 import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
@@ -53,6 +54,7 @@ public class AptAudioFragment extends Fragment {
     String PlaylistId, UserID;
     ArrayList<AppointmentDetailModel.Audio> appointmentDetail;
     List<DownloadAudioDetails> oneAudioDetailsList;
+    public static int comeAppointmentDetail = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -183,6 +185,7 @@ public class AptAudioFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    comeAppointmentDetail = 1;
                     try {
                         player = 1;
                         if (isPrepare || isMediaStart || isPause) {

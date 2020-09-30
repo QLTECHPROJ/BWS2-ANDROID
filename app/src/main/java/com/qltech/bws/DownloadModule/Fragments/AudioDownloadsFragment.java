@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter;
 import com.qltech.bws.R;
@@ -33,8 +32,7 @@ import java.util.List;
 
 public class AudioDownloadsFragment extends Fragment {
     FragmentDownloadsBinding binding;
-//    ArrayList<DownloadlistModel.Audio> audioList;
-
+    //    ArrayList<DownloadlistModel.Audio> audioList;
     List<DownloadAudioDetails> audioList;
     String UserID;
 
@@ -53,7 +51,6 @@ public class AudioDownloadsFragment extends Fragment {
 
         audioList = new ArrayList<>();
         audioList = GetAllMedia(getActivity());
-
         binding.tvFound.setText("Audio you are searching for is not available in the list");
         try {
             if (!AudioFlag.equalsIgnoreCase("0")) {
@@ -70,16 +67,13 @@ public class AudioDownloadsFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
-
         return view;
     }
+
     public List<DownloadAudioDetails> GetAllMedia(Context ctx) {
-
         class GetTask extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 audioList = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -101,10 +95,8 @@ public class AudioDownloadsFragment extends Fragment {
                     binding.rvDownloadsList.setVisibility(View.GONE);
                 }
                 super.onPostExecute(aVoid);
-
             }
         }
-
         GetTask st = new GetTask();
         st.execute();
         return audioList;

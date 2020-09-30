@@ -1,13 +1,12 @@
 package com.qltech.bws.DownloadModule.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,15 +14,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.qltech.bws.DownloadModule.Activities.DownloadedPlaylist;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
@@ -37,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
-import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 
 public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDownloadsAdapter.MyViewHolder> {
     FragmentActivity ctx;
@@ -74,6 +69,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         return new MyViewHolder(v);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(listModelList.get(position).getPlaylistName());
@@ -90,7 +86,6 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 holder.binding.tvTime.setText(listModelList.get(position).getTotalAudio() +
                         " Audios | " + listModelList.get(position).getTotalhour() + "h " + listModelList.get(position).getTotalminute() + "m");
             }
-
         }
 
         Glide.with(ctx).load(R.drawable.loading).asGif().into(ImgV);
@@ -121,40 +116,15 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String PlaylistId = listModelList.get(position).getPlaylistID();
-               /* if (BWSApplication.isNetworkConnected(ctx)) {
-                    showProgressBar();
-                    Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, "", PlaylistId);
-                    listCall.enqueue(new Callback<SucessModel>() {
-                        @Override
-                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                            if (response.isSuccessful()) {
-                                hideProgressBar();
-                                SucessModel listModel = response.body();
-                                BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<SucessModel> call, Throwable t) {
-                            hideProgressBar();
-                        }
-                    });
-                } else {
-                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                }*/
                 playlistWiseAudioDetails = GetPlaylistMedia(listModelList.get(position).getPlaylistID());
             }
         });
     }
 
     public void GetSingleMedia(String AudioFile, Context ctx, String playlistID) {
-
         class GetMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 oneAudioDetailsList = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -165,7 +135,6 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
                 if (oneAudioDetailsList.size() != 0) {
                     if (oneAudioDetailsList.size() == 1) {
                         FileUtils.deleteDownloadedFile(ctx, oneAudioDetailsList.get(0).getName());
@@ -175,24 +144,20 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 super.onPostExecute(aVoid);
             }
         }
-
         GetMedia sts = new GetMedia();
         sts.execute();
     }
 
     private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
         class DeleteMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
                 DatabaseClient.getInstance(applicationContext)
                         .getaudioDatabase()
                         .taskDao()
                         .deleteByPlaylistId(PlaylistId);
-
                 return null;
             }
-
 
             @Override
             protected void onPostExecute(Void aVoid) {
@@ -201,24 +166,20 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 super.onPostExecute(aVoid);
             }
         }
-
         DeleteMedia st = new DeleteMedia();
         st.execute();
     }
 
     private void deletePlaylist(String playlistId) {
         class DeleteMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
                 DatabaseClient.getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
                         .deletePlaylist(playlistId);
-
                 return null;
             }
-
 
             @Override
             protected void onPostExecute(Void aVoid) {
@@ -227,17 +188,14 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 super.onPostExecute(aVoid);
             }
         }
-
         DeleteMedia st = new DeleteMedia();
         st.execute();
     }
 
     private void GetAllMedia(FragmentActivity activity) {
         class GetTask extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 playlistList = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -259,22 +217,17 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                     rvDownloadsList.setVisibility(View.GONE);
                 }
                 super.onPostExecute(aVoid);
-
             }
         }
         GetTask getTask = new GetTask();
         getTask.execute();
-
     }
 
     public List<DownloadAudioDetails> GetMedia(String playlistID) {
-
         playlistWiseAudioDetails = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 playlistWiseAudioDetails = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -288,20 +241,16 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 super.onPostExecute(aVoid);
             }
         }
-
         GetMedia st = new GetMedia();
         st.execute();
         return playlistWiseAudioDetails;
     }
 
     public List<DownloadAudioDetails> GetPlaylistMedia(String playlistID) {
-
         playlistWiseAudioDetails = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 playlistWiseAudioDetails = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -318,7 +267,6 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 super.onPostExecute(aVoid);
             }
         }
-
         GetMedia st = new GetMedia();
         st.execute();
         return playlistWiseAudioDetails;
@@ -337,5 +285,4 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             this.binding = binding;
         }
     }
-
 }

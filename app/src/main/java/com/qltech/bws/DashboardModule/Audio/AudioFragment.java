@@ -387,7 +387,7 @@ public class AudioFragment extends Fragment {
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.top_categories))) {
                     holder.binding.tvViewAll.setVisibility(View.GONE);
                     TopCategoriesAdapter topCategoriesAdapter = new TopCategoriesAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock(), listModelList.get(position).getHomeID(), listModelList.get(position).getView());
+                            listModelList.get(position).getHomeID(), listModelList.get(position).getView());
                     RecyclerView.LayoutManager topCategories = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(topCategories);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());

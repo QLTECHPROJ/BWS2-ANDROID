@@ -50,7 +50,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment.comeAllPlaylist;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 
@@ -263,7 +262,6 @@ public class PlaylistFragment extends Fragment {
             }
 
             holder.binding.tvViewAll.setOnClickListener(view -> {
-                comeAllPlaylist = 0;
                 Fragment viewAllPlaylistFragment = new ViewAllPlaylistFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
@@ -279,12 +277,20 @@ public class PlaylistFragment extends Fragment {
                 bundle.putString("Name", listModelList.get(position).getView());
                 viewAllPlaylistFragment.setArguments(bundle);
             });
+            if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
+                    || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                binding.ivLock.setVisibility(View.GONE);
+            }
 
             binding.rlCreatePlaylist.setOnClickListener(view -> {
                 if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    binding.ivLock.setVisibility(View.VISIBLE);
                     BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                 } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                    binding.ivLock.setVisibility(View.GONE);
                     final Dialog dialog = new Dialog(getActivity());
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setContentView(R.layout.create_palylist);

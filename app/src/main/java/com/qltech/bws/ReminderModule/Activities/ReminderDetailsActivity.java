@@ -73,25 +73,22 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
         prepareData();
 
-        binding.btnAddReminder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (BWSApplication.isNetworkConnected(ctx)) {
-                    if (IsLock.equalsIgnoreCase("1")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                    } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                        Intent i = new Intent(ctx, ReminderActivity.class);
-                        i.putExtra("ComeFrom", "");
-                        i.putExtra("PlaylistID", "");
-                        i.putExtra("PlaylistName", "");
-                        i.putExtra("Time", "");
-                        i.putExtra("Day", "");
-                        startActivity(i);
-                        finish();
-                    }
-                }else {
-                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+        binding.btnAddReminder.setOnClickListener(view -> {
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                if (IsLock.equalsIgnoreCase("1")) {
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                    Intent i = new Intent(ctx, ReminderActivity.class);
+                    i.putExtra("ComeFrom", "");
+                    i.putExtra("PlaylistID", "");
+                    i.putExtra("PlaylistName", "");
+                    i.putExtra("Time", "");
+                    i.putExtra("Day", "");
+                    startActivity(i);
+                    finish();
                 }
+            } else {
+                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
             }
         });
     }
@@ -184,7 +181,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                         listReminderModel = listModel;
                         adapter = new RemiderDetailsAdapter(listModel.getResponseData());
                         binding.rvReminderDetails.setAdapter(adapter);
-
+                        binding.btnAddReminder.setVisibility(View.VISIBLE);
                         if (listModel.getResponseData().size() == 0) {
                             binding.llError.setVisibility(View.VISIBLE);
                             binding.rvReminderDetails.setVisibility(View.GONE);

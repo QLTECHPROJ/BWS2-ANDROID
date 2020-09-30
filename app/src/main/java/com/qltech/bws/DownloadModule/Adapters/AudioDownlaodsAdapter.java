@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -90,12 +89,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             @Override
             public void onClick(View view) {
                 if (IsLock.equalsIgnoreCase("1")) {
-//                    } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-//                            || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
-//                    }
-
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
               /*      DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
                     try {
@@ -105,8 +99,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }
-*/
+                    }*/
                     try {
                         player = 1;
                         if (isPrepare || isMediaStart || isPause) {
@@ -144,38 +137,14 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             public void onClick(View view) {
                 String AudioFile = listModelList.get(position).getAudioFile();
                 String AudioName = listModelList.get(position).getName();
-                String PlaylistID = "";
                 deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
-                /*if (BWSApplication.isNetworkConnected(ctx)) {
-                    showProgressBar();
-                    Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioID, PlaylistID);
-                    listCall.enqueue(new Callback<SucessModel>() {
-                        @Override
-                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                            if (response.isSuccessful()) {
-                                hideProgressBar();
-                                SucessModel listModel = response.body();
-                                BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<SucessModel> call, Throwable t) {
-                            hideProgressBar();
-                        }
-                    });
-                } else {
-                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
-                }*/
             }
         });
     }
 
     private void deleteDownloadFile(Context applicationContext, String audioFile, String audioName, int position) {
         FileUtils.deleteDownloadedFile(applicationContext, audioName);
-
         class DeleteMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
                 DatabaseClient.getInstance(applicationContext)
@@ -186,22 +155,18 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 return null;
             }
 
-
             @Override
             protected void onPostExecute(Void aVoid) {
                 listModelList = GetAllMedia(ctx);
                 super.onPostExecute(aVoid);
             }
         }
-
         DeleteMedia st = new DeleteMedia();
         st.execute();
     }
 
     public List<DownloadAudioDetails> GetAllMedia(FragmentActivity ctx) {
-
         class GetTask extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
                 downloadAudioDetailsList = new ArrayList<>();
@@ -230,34 +195,12 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     rvDownloadsList.setVisibility(View.GONE);
                 }
                 super.onPostExecute(aVoid);
-
             }
         }
 
         GetTask st = new GetTask();
         st.execute();
         return downloadAudioDetailsList;
-    }
-
-    private void hideProgressBar() {
-        try {
-            progressBarHolder.setVisibility(View.GONE);
-            ImgV.setVisibility(View.GONE);
-            ctx.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            progressBarHolder.setVisibility(View.VISIBLE);
-            ctx.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            ImgV.setVisibility(View.VISIBLE);
-            ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

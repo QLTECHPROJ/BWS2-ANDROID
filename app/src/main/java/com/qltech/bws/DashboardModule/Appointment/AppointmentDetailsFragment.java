@@ -37,6 +37,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptAudioFragment.comeAppointmentDetail;
+
 public class AppointmentDetailsFragment extends Fragment {
     FragmentAppointmentDetailsBinding binding;
     Activity activity;
@@ -65,12 +67,17 @@ public class AppointmentDetailsFragment extends Fragment {
 
         binding.llBack.setOnClickListener(view1 -> callBack());
         getAppointmentData();
+        RefreshData();
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        RefreshData();
+        if (comeAppointmentDetail == 1) {
+            RefreshData();
+        }
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
@@ -80,6 +87,7 @@ public class AppointmentDetailsFragment extends Fragment {
             }
             return false;
         });
+
     }
 
     private void callBack() {
@@ -89,7 +97,7 @@ public class AppointmentDetailsFragment extends Fragment {
         fm.popBackStack("AppointmentDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
-    private void getAppointmentData() {
+    public void RefreshData() {
         try {
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 Fragment fragment = new TransparentPlayerFragment();
@@ -108,7 +116,9 @@ public class AppointmentDetailsFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    private void getAppointmentData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
             Call<AppointmentDetailModel> listCall = APIClient.getClient().getAppointmentDetails(UserId, appointmentTypeId);

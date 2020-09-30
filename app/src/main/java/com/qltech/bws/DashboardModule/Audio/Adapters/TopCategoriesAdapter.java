@@ -37,14 +37,13 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
     FragmentActivity activity;
-    String IsLock, HomeID, Views;
+    String HomeID, Views;
 
     public TopCategoriesAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
-                                String IsLock, String HomeID, String Views) {
+                                String HomeID, String Views) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
-        this.IsLock = IsLock;
         this.HomeID = HomeID;
         this.Views = Views;
     }
@@ -63,26 +62,17 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
         Glide.with(ctx).load(listModelList.get(position).getCatImage()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-        if (IsLock.equalsIgnoreCase("1")) {
-            holder.binding.ivLock.setVisibility(View.VISIBLE);
-        } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-            holder.binding.ivLock.setVisibility(View.GONE);
-        }
-
-        holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment viewAllAudioFragment = new ViewAllAudioFragment();
-                FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .replace(R.id.flContainer, viewAllAudioFragment)
-                        .commit();
-                Bundle bundle = new Bundle();
-                bundle.putString("ID", HomeID);
-                bundle.putString("Name", Views);
-                bundle.putString("Category", listModelList.get(position).getCategoryName());
-                viewAllAudioFragment.setArguments(bundle);
-            }
+        holder.binding.llMainLayout.setOnClickListener(view -> {
+            Fragment viewAllAudioFragment = new ViewAllAudioFragment();
+            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .replace(R.id.flContainer, viewAllAudioFragment)
+                    .commit();
+            Bundle bundle = new Bundle();
+            bundle.putString("ID", HomeID);
+            bundle.putString("Name", Views);
+            bundle.putString("Category", listModelList.get(position).getCategoryName());
+            viewAllAudioFragment.setArguments(bundle);
         });
     }
 

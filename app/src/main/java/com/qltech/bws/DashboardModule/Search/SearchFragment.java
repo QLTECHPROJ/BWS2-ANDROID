@@ -273,7 +273,6 @@ public class SearchFragment extends Fragment {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
-//                       add to playlist
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);
                         i.putExtra("AudioId","");
                         i.putExtra("PlaylistID", modelList.get(position).getID());

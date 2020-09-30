@@ -88,7 +88,6 @@ import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class MyPlaylistsFragment extends Fragment {
-    public static int comeAllPlaylist = 0;
     FragmentMyPlaylistsBinding binding;
     String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "";
     PlayListsAdpater adpater;
@@ -360,7 +359,6 @@ public class MyPlaylistsFragment extends Fragment {
     private void callBack() {
         if (comefrom_search == 2) {
             Bundle bundle = new Bundle();
-            comeAllPlaylist = 1;
             Fragment playlistFragment = new ViewAllPlaylistFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
@@ -369,7 +367,7 @@ public class MyPlaylistsFragment extends Fragment {
             bundle.putString("GetLibraryID", GetPlaylistLibraryID);
             bundle.putString("MyDownloads", MyDownloads);
             playlistFragment.setArguments(bundle);
-            comefrom_search = 0;
+//            comefrom_search = 0;
         } else if (comefrom_search == 1) {
             Fragment fragment = new SearchFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -578,9 +576,7 @@ public class MyPlaylistsFragment extends Fragment {
                 downloadPlaylistDetailsList = GetPlaylistDetail2();
             }
         } else {
-
             downloadPlaylistDetailsList = GetPlaylistDetail2();
-
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
