@@ -93,7 +93,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 Time t = Time.valueOf("00:00:00");
                 if (queuePlay) {
                     if (listSize != 0) {
-                        if (downloadAudioDetailsList.size() != 0) {
+                        if (!BWSApplication.isNetworkConnected(getActivity())) {
                             t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
                         } else {
                             t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
@@ -102,7 +102,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         stopMedia();
                     }
                 } else if (audioPlay) {
-                    if (downloadAudioDetailsList.size() != 0) {
+                    if (!BWSApplication.isNetworkConnected(getActivity())) {
                         t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
                     } else {
                         t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());

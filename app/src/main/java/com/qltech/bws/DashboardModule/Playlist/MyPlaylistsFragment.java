@@ -372,6 +372,7 @@ public class MyPlaylistsFragment extends Fragment {
                     .replace(R.id.flContainer, playlistFragment)
                     .commit();
             bundle.putString("GetLibraryID", GetPlaylistLibraryID);
+            bundle.putString("MyDownloads",MyDownloads);
             playlistFragment.setArguments(bundle);
             comefrom_search = 0;
         } else if (comefrom_search == 1) {

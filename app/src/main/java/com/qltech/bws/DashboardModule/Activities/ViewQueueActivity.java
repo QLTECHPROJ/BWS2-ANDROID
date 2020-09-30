@@ -98,7 +98,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             Time t = Time.valueOf("00:00:00");
             if (queuePlay) {
                 if (listSize != 0) {
-                    if (downloadAudioDetailsList.size() != 0) {
+                    if (!BWSApplication.isNetworkConnected(ctx)) {
                         t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
                     } else {
                         t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
@@ -107,7 +107,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     stopMedia();
                 }
             } else if (audioPlay) {
-                if (downloadAudioDetailsList.size() != 0) {
+                if (!BWSApplication.isNetworkConnected(ctx)) {
                     t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
                 } else {
                     t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());

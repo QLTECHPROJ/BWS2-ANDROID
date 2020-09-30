@@ -95,7 +95,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             String endtimetext = "";
             if (queuePlay) {
                 if (listSize != 0) {
-                    if (downloadAudioDetailsList.size() != 0) {
+                    if (!BWSApplication.isNetworkConnected(ctx)) {
                         endtimetext = downloadAudioDetailsList.get(0).getAudioDuration();
                         t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
                     } else {
@@ -106,7 +106,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     stopMedia();
                 }
             } else if (audioPlay) {
-                if (downloadAudioDetailsList.size() != 0) {
+                if (!BWSApplication.isNetworkConnected(ctx)) {
                     endtimetext = downloadAudioDetailsList.get(0).getAudioDuration();
                     t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
                 } else {
