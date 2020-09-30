@@ -473,7 +473,14 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             if (download.equalsIgnoreCase("1")) {
                 mediaPlayer.setDataSource(fileDescriptor);
             } else {
-                mediaPlayer.setDataSource(audioFile);
+                if (BWSApplication.isNetworkConnected(getActivity())) {
+                    mediaPlayer.setDataSource(audioFile);
+                } else {
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.ivPlay.setVisibility(View.GONE);
+                    binding.ivPause.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+                }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(

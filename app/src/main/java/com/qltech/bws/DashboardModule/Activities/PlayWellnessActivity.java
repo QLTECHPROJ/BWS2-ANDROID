@@ -201,7 +201,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llViewQueue.setClickable(false);
             binding.llViewQueue.setEnabled(false);
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-
         }
         getPrepareShowData(position);
         callRepeatShuffle();
@@ -1001,7 +1000,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (download.equalsIgnoreCase("1")) {
                 mediaPlayer.setDataSource(fileDescriptor);
             } else {
-                mediaPlayer.setDataSource(url);
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    mediaPlayer.setDataSource(url);
+                } else {
+                    binding.llProgressBar.setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.llPlay.setVisibility(View.GONE);
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
@@ -1220,6 +1227,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);
             binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            binding.llViewQueue.setClickable(true);
+            binding.llViewQueue.setEnabled(true);
+            binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+        } else {
+            binding.llViewQueue.setClickable(false);
+            binding.llViewQueue.setEnabled(false);
+            binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);

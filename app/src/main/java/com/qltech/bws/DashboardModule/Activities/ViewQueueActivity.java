@@ -501,7 +501,15 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             if (download.equalsIgnoreCase("1")) {
                 mediaPlayer.setDataSource(fileDescriptor);
             } else {
-                mediaPlayer.setDataSource(url);
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    mediaPlayer.setDataSource(url);
+                } else {
+                    binding.llProgressBar.setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.llPlay.setVisibility(View.GONE);
+                    binding.llPause.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
