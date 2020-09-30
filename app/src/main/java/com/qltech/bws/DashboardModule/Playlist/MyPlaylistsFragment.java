@@ -88,6 +88,7 @@ import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class MyPlaylistsFragment extends Fragment {
+    public static int comeAllPlaylist = 0;
     FragmentMyPlaylistsBinding binding;
     String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "";
     PlayListsAdpater adpater;
@@ -102,7 +103,6 @@ public class MyPlaylistsFragment extends Fragment {
     List<DownloadAudioDetails> playlistWiseAudioDetails;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     DownloadPlaylistDetails downloadPlaylistDetails;
-    public static int comeAllPlaylist = 0;
     Dialog dialog;
 
     @Override
@@ -440,137 +440,141 @@ public class MyPlaylistsFragment extends Fragment {
         }
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
-            Call<SubPlayListModel> listCall = APIClient.getClient().getSubPlayLists(UserId, PlaylistId);
-            listCall.enqueue(new Callback<SubPlayListModel>() {
-                @SuppressLint("ClickableViewAccessibility")
-                @Override
-                public void onResponse(Call<SubPlayListModel> call, Response<SubPlayListModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
-                        SubPlayListModel listModel = response.body();
+            if (!MyDownloads.equalsIgnoreCase("1")) {
+                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+                Call<SubPlayListModel> listCall = APIClient.getClient().getSubPlayLists(UserId, PlaylistId);
+                listCall.enqueue(new Callback<SubPlayListModel>() {
+                    @SuppressLint("ClickableViewAccessibility")
+                    @Override
+                    public void onResponse(Call<SubPlayListModel> call, Response<SubPlayListModel> response) {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+                            SubPlayListModel listModel = response.body();
 
-                        try {
-                            if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
-                                    listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
-                                binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-                                binding.llReminder.setOnClickListener(view -> {
-                                    ComeScreenReminder = 0;
-                                    Intent i = new Intent(getActivity(), ReminderActivity.class);
-                                    i.putExtra("ComeFrom", "1");
-                                    i.putExtra("PlaylistID", PlaylistID);
-                                    i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
-                                    i.putExtra("Time", listModel.getResponseData().getReminderTime());
-                                    i.putExtra("Day", listModel.getResponseData().getReminderDay());
-                                    startActivity(i);
-                                });
-                            } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
-                                binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-                                binding.ivReminder.setOnClickListener(view -> {
-                                    dialog = new Dialog(activity);
-                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                    dialog.setContentView(R.layout.delete_payment_card);
-                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(activity.getResources().getColor(R.color.dark_blue_gray)));
-                                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                    final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-                                    final TextView tvSubTitle = dialog.findViewById(R.id.tvSubTitle);
-                                    final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                                    final Button Btn = dialog.findViewById(R.id.Btn);
-                                    tvTitle.setText("Reminder off");
-                                    tvSubTitle.setText("Are you sure you want to reminder off ?");
-                                    dialog.setOnKeyListener((v, keyCode, event) -> {
-                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                            dialog.dismiss();
-                                            return true;
-                                        }
-                                        return false;
+                            try {
+                                if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
+                                        listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
+                                    binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                                    binding.llReminder.setOnClickListener(view -> {
+                                        ComeScreenReminder = 0;
+                                        Intent i = new Intent(getActivity(), ReminderActivity.class);
+                                        i.putExtra("ComeFrom", "1");
+                                        i.putExtra("PlaylistID", PlaylistID);
+                                        i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
+                                        i.putExtra("Time", listModel.getResponseData().getReminderTime());
+                                        i.putExtra("Day", listModel.getResponseData().getReminderDay());
+                                        startActivity(i);
                                     });
-                                    Btn.setOnTouchListener((view1, event) -> {
-                                        if (BWSApplication.isNetworkConnected(getActivity())) {
-                                            switch (event.getAction()) {
-                                                case MotionEvent.ACTION_DOWN: {
-                                                    Button views = (Button) view1;
-                                                    views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
-                                                    view1.invalidate();
-                                                    break;
-                                                }
-                                                case MotionEvent.ACTION_UP:
-                                                    Call<ReminderStatusPlaylistModel> listCall1 = APIClient.getClient().getReminderStatusPlaylist(UserID, PlaylistID, "0");/*set 1 or not 0 */
-                                                    listCall1.enqueue(new Callback<ReminderStatusPlaylistModel>() {
-                                                        @Override
-                                                        public void onResponse(Call<ReminderStatusPlaylistModel> call1, Response<ReminderStatusPlaylistModel> response1) {
-                                                            if (response1.isSuccessful()) {
-                                                                ReminderStatusPlaylistModel listModel1 = response1.body();
-                                                                prepareData(UserID, PlaylistID);
-                                                                listModel.getResponseData().setIsReminder(listModel1.getResponseData().getIsCheck());
-                                                                binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
-                                                                dialog.dismiss();
-                                                                BWSApplication.showToast(listModel1.getResponseMessage(), activity);
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onFailure(Call<ReminderStatusPlaylistModel> call1, Throwable t) {
-                                                        }
-                                                    });
-
-
-                                                case MotionEvent.ACTION_CANCEL: {
-                                                    Button views = (Button) view1;
-                                                    views.getBackground().clearColorFilter();
-                                                    views.invalidate();
-                                                    break;
-                                                }
+                                } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
+                                    binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                                    binding.ivReminder.setOnClickListener(view -> {
+                                        dialog = new Dialog(activity);
+                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        dialog.setContentView(R.layout.delete_payment_card);
+                                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(activity.getResources().getColor(R.color.dark_blue_gray)));
+                                        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                        final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+                                        final TextView tvSubTitle = dialog.findViewById(R.id.tvSubTitle);
+                                        final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                                        final Button Btn = dialog.findViewById(R.id.Btn);
+                                        tvTitle.setText("Reminder off");
+                                        tvSubTitle.setText("Are you sure you want to reminder off ?");
+                                        dialog.setOnKeyListener((v, keyCode, event) -> {
+                                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                                dialog.dismiss();
+                                                return true;
                                             }
-                                        } else {
-                                            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-                                        }
+                                            return false;
+                                        });
+                                        Btn.setOnTouchListener((view1, event) -> {
+                                            if (BWSApplication.isNetworkConnected(getActivity())) {
+                                                switch (event.getAction()) {
+                                                    case MotionEvent.ACTION_DOWN: {
+                                                        Button views = (Button) view1;
+                                                        views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
+                                                        view1.invalidate();
+                                                        break;
+                                                    }
+                                                    case MotionEvent.ACTION_UP:
+                                                        Call<ReminderStatusPlaylistModel> listCall1 = APIClient.getClient().getReminderStatusPlaylist(UserID, PlaylistID, "0");/*set 1 or not 0 */
+                                                        listCall1.enqueue(new Callback<ReminderStatusPlaylistModel>() {
+                                                            @Override
+                                                            public void onResponse(Call<ReminderStatusPlaylistModel> call1, Response<ReminderStatusPlaylistModel> response1) {
+                                                                if (response1.isSuccessful()) {
+                                                                    ReminderStatusPlaylistModel listModel1 = response1.body();
+                                                                    prepareData(UserID, PlaylistID);
+                                                                    listModel.getResponseData().setIsReminder(listModel1.getResponseData().getIsCheck());
+                                                                    binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
+                                                                    dialog.dismiss();
+                                                                    BWSApplication.showToast(listModel1.getResponseMessage(), activity);
+                                                                }
+                                                            }
 
-                                        return true;
-                                    });
+                                                            @Override
+                                                            public void onFailure(Call<ReminderStatusPlaylistModel> call1, Throwable t) {
+                                                            }
+                                                        });
 
-                                    tvGoBack.setOnClickListener(v -> {
-                                        dialog.dismiss();
+
+                                                    case MotionEvent.ACTION_CANCEL: {
+                                                        Button views = (Button) view1;
+                                                        views.getBackground().clearColorFilter();
+                                                        views.invalidate();
+                                                        break;
+                                                    }
+                                                }
+                                            } else {
+                                                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+                                            }
+
+                                            return true;
+                                        });
+
+                                        tvGoBack.setOnClickListener(v -> {
+                                            dialog.dismiss();
+                                        });
+                                        dialog.show();
+                                        dialog.setCancelable(false);
                                     });
-                                    dialog.show();
-                                    dialog.setCancelable(false);
-                                });
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+
+                            playlistSongsList = listModel.getResponseData().getPlaylistSongs();
+                            downloadPlaylistDetails = new DownloadPlaylistDetails();
+                            downloadPlaylistDetails.setPlaylistID(listModel.getResponseData().getPlaylistID());
+                            downloadPlaylistDetails.setPlaylistName(listModel.getResponseData().getPlaylistName());
+                            downloadPlaylistDetails.setPlaylistDesc(listModel.getResponseData().getPlaylistDesc());
+                            downloadPlaylistDetails.setIsReminder(listModel.getResponseData().getIsReminder());
+                            downloadPlaylistDetails.setPlaylistMastercat(listModel.getResponseData().getPlaylistMastercat());
+                            downloadPlaylistDetails.setPlaylistSubcat(listModel.getResponseData().getPlaylistSubcat());
+                            downloadPlaylistDetails.setPlaylistImage(listModel.getResponseData().getPlaylistImage());
+                            downloadPlaylistDetails.setTotalAudio(listModel.getResponseData().getTotalAudio());
+                            downloadPlaylistDetails.setTotalDuration(listModel.getResponseData().getTotalDuration());
+                            downloadPlaylistDetails.setTotalhour(listModel.getResponseData().getTotalhour());
+                            downloadPlaylistDetails.setTotalminute(listModel.getResponseData().getTotalminute());
+                            downloadPlaylistDetails.setCreated(listModel.getResponseData().getCreated());
+                            downloadPlaylistDetails.setDownload(listModel.getResponseData().getDownload());
+                            downloadPlaylistDetails.setLike(listModel.getResponseData().getLike());
+
+                            setData(listModel.getResponseData());
+                            downloadAudioDetailsList = GetAllMedia();
+                            downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData().getDownload(), listModel);
+                            playlistWiseAudioDetails = GetMedia();
+
+
                         }
-
-                        playlistSongsList = listModel.getResponseData().getPlaylistSongs();
-                        downloadPlaylistDetails = new DownloadPlaylistDetails();
-                        downloadPlaylistDetails.setPlaylistID(listModel.getResponseData().getPlaylistID());
-                        downloadPlaylistDetails.setPlaylistName(listModel.getResponseData().getPlaylistName());
-                        downloadPlaylistDetails.setPlaylistDesc(listModel.getResponseData().getPlaylistDesc());
-                        downloadPlaylistDetails.setIsReminder(listModel.getResponseData().getIsReminder());
-                        downloadPlaylistDetails.setPlaylistMastercat(listModel.getResponseData().getPlaylistMastercat());
-                        downloadPlaylistDetails.setPlaylistSubcat(listModel.getResponseData().getPlaylistSubcat());
-                        downloadPlaylistDetails.setPlaylistImage(listModel.getResponseData().getPlaylistImage());
-                        downloadPlaylistDetails.setTotalAudio(listModel.getResponseData().getTotalAudio());
-                        downloadPlaylistDetails.setTotalDuration(listModel.getResponseData().getTotalDuration());
-                        downloadPlaylistDetails.setTotalhour(listModel.getResponseData().getTotalhour());
-                        downloadPlaylistDetails.setTotalminute(listModel.getResponseData().getTotalminute());
-                        downloadPlaylistDetails.setCreated(listModel.getResponseData().getCreated());
-                        downloadPlaylistDetails.setDownload(listModel.getResponseData().getDownload());
-                        downloadPlaylistDetails.setLike(listModel.getResponseData().getLike());
-
-                        setData(listModel.getResponseData());
-                        downloadAudioDetailsList = GetAllMedia();
-                        downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData().getDownload(), listModel);
-                        playlistWiseAudioDetails = GetMedia();
-
-
                     }
-                }
 
-                @Override
-                public void onFailure(Call<SubPlayListModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
-                }
-            });
+                    @Override
+                    public void onFailure(Call<SubPlayListModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+                    }
+                });
+            } else {
+                downloadPlaylistDetailsList = GetPlaylistDetail2();
+            }
         } else {
 
             downloadPlaylistDetailsList = GetPlaylistDetail2();
@@ -967,7 +971,7 @@ public class MyPlaylistsFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if (!BWSApplication.isNetworkConnected(getActivity())) {
+                if (MyDownloads.equalsIgnoreCase("1")) {
                     if (downloadPlaylistDetailsList.size() != 0) {
                         SubPlayListModel responseData = new SubPlayListModel();
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> details = new ArrayList<>();

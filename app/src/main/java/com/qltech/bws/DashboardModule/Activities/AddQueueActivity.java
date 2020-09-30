@@ -328,6 +328,7 @@ public class AddQueueActivity extends AppCompatActivity {
             } else
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             IsRepeat = "";
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             BWSApplication.showToast("Repeat mode has been turned off", ctx);
         }
