@@ -199,7 +199,7 @@ public class MyPlaylistsFragment extends Fragment {
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
 
         binding.llDownloads.setOnClickListener(view1 -> {
-            callDownload("", "", "", playlistSongsList, 0, binding.llDownloads,binding.ivDownloads);
+            callDownload("", "", "", playlistSongsList, 0, binding.llDownloads, binding.ivDownloads);
         });
 
         if (New.equalsIgnoreCase("1")) {
@@ -772,7 +772,7 @@ public class MyPlaylistsFragment extends Fragment {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }*/
 
-       disableDownload(llDownload,ivDownloads);
+        disableDownload(llDownload, ivDownloads);
         enableDisableDownload(false);
         if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
             List<String> url = new ArrayList<>();
@@ -803,7 +803,7 @@ public class MyPlaylistsFragment extends Fragment {
             DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
             byte[] EncodeBytes = downloadMedia.encrypt(audioFile, Name);
             String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
-            SaveMedia(EncodeBytes, dirPath, playlistSongs, position, llDownload,ivDownloads);
+            SaveMedia(EncodeBytes, dirPath, playlistSongs, position, llDownload, ivDownloads);
         }
     }
 
@@ -904,7 +904,7 @@ public class MyPlaylistsFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-               disableDownload(llDownload,ivDownloads);
+                disableDownload(llDownload, ivDownloads);
                 super.onPostExecute(aVoid);
             }
         }
@@ -1125,7 +1125,7 @@ public class MyPlaylistsFragment extends Fragment {
             });
 
             holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(),
-                    mData.get(position).getName(), listFilterData, position, holder.binding.llDownload,holder.binding.ivDownloads));
+                    mData.get(position).getName(), listFilterData, position, holder.binding.llDownload, holder.binding.ivDownloads));
 
             holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID()));
         }
@@ -1325,7 +1325,7 @@ public class MyPlaylistsFragment extends Fragment {
             });
 
             holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(),
-                    mData.get(position).getName(), mData, position, holder.binding.llDownload,holder.binding.ivDownloads));
+                    mData.get(position).getName(), mData, position, holder.binding.llDownload, holder.binding.ivDownloads));
 
             holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID()));
         }
