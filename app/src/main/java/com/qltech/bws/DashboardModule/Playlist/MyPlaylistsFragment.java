@@ -104,6 +104,7 @@ public class MyPlaylistsFragment extends Fragment {
     DownloadPlaylistDetails downloadPlaylistDetails;
     public static int comeAllPlaylist = 0;
 
+    Dialog dialog;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -453,7 +454,7 @@ public class MyPlaylistsFragment extends Fragment {
                             if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
                                 binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
                                 binding.ivReminder.setOnClickListener(view -> {
-                                    final Dialog dialog = new Dialog(activity);
+                                    dialog = new Dialog(activity);
                                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     dialog.setContentView(R.layout.delete_payment_card);
                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(activity.getResources().getColor(R.color.dark_blue_gray)));
