@@ -185,7 +185,8 @@ public class AptAudioFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    comeAppointmentDetail = 1;
+                    /*AppointmentDetailsFragment appointmentDetailsFragment = new AppointmentDetailsFragment();
+                    appointmentDetailsFragment.RefreshData();*/
                     try {
                         player = 1;
                         if (isPrepare || isMediaStart || isPause) {
