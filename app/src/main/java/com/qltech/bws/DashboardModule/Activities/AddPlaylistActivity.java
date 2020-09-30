@@ -65,68 +65,59 @@ public class AddPlaylistActivity extends AppCompatActivity {
             FromPlaylistID = getIntent().getStringExtra("PlaylistID");
         }
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                comefrom_search = 0;
-                finish();
-            }
+        binding.llBack.setOnClickListener(view -> {
+            comefrom_search = 0;
+            finish();
         });
 
-        binding.btnAddPlatLists.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Dialog dialog = new Dialog(ctx);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.create_palylist);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
-                final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-                final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+        binding.btnAddPlatLists.setOnClickListener(view -> {
+            final Dialog dialog = new Dialog(ctx);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.create_palylist);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
+            final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+            final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
 
-                dialog.setOnKeyListener((v, keyCode, event) -> {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss();
-                        return true;
-                    }
-                    return false;
-                });
+            dialog.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                    return true;
+                }
+                return false;
+            });
 
-                rlCreate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                            BWSApplication.showToast("Please provide the playlist's name", ctx);
-                        } else {
-                            if (BWSApplication.isNetworkConnected(ctx)) {
-                                Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
-                                listCall.enqueue(new Callback<CreatePlaylistModel>() {
-                                    @Override
-                                    public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
-                                        if (response.isSuccessful()) {
-                                            CreatePlaylistModel listModel = response.body();
-                                            BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                            dialog.dismiss();
-                                            prepareData(ctx);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
-                                    }
-                                });
-                            } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            rlCreate.setOnClickListener(view1 -> {
+                if (edtCreate.getText().toString().equalsIgnoreCase("")) {
+                    BWSApplication.showToast("Please provide the playlist's name", ctx);
+                } else {
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
+                        listCall.enqueue(new Callback<CreatePlaylistModel>() {
+                            @Override
+                            public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
+                                if (response.isSuccessful()) {
+                                    CreatePlaylistModel listModel = response.body();
+                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                    dialog.dismiss();
+                                    prepareData(ctx);
+                                }
                             }
-                        }
-                    }
-                });
 
-                tvCancel.setOnClickListener(v -> dialog.dismiss());
-                dialog.show();
-                dialog.setCancelable(false);
-            }
+                            @Override
+                            public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
+                            }
+                        });
+                    } else {
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    }
+                }
+            });
+
+            tvCancel.setOnClickListener(v -> dialog.dismiss());
+            dialog.show();
+            dialog.setCancelable(false);
         });
 
         RecyclerView.LayoutManager played = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);

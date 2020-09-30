@@ -52,7 +52,6 @@ public class AppointmentDetailsFragment extends Fragment {
         view = binding.getRoot();
         activity = getActivity();
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
-
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

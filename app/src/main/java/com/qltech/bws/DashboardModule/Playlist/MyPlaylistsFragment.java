@@ -471,22 +471,22 @@ public class MyPlaylistsFragment extends Fragment {
                                         return false;
                                     });
                                     Btn.setOnTouchListener((view1, event) -> {
-                                        switch (event.getAction()) {
-                                            case MotionEvent.ACTION_DOWN: {
-                                                Button views = (Button) view1;
-                                                views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
-                                                view1.invalidate();
-                                                break;
-                                            }
-                                            case MotionEvent.ACTION_UP:
-                                                if (BWSApplication.isNetworkConnected(getActivity())) {
+                                        if (BWSApplication.isNetworkConnected(getActivity())) {
+                                            switch (event.getAction()) {
+                                                case MotionEvent.ACTION_DOWN: {
+                                                    Button views = (Button) view1;
+                                                    views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
+                                                    view1.invalidate();
+                                                    break;
+                                                }
+                                                case MotionEvent.ACTION_UP:
                                                     Call<ReminderStatusModel> listCall1 = APIClient.getClient().getReminderStatus(UserID, PlaylistID, "0");/*set 1 or not 0 */
                                                     listCall1.enqueue(new Callback<ReminderStatusModel>() {
                                                         @Override
                                                         public void onResponse(Call<ReminderStatusModel> call1, Response<ReminderStatusModel> response1) {
                                                             if (response1.isSuccessful()) {
                                                                 ReminderStatusModel listModel1 = response1.body();
-                                                                prepareData(UserID, PlaylistID);
+//                                                                prepareData(UserID, PlaylistID);
                                                                 binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
                                                                 dialog.dismiss();
                                                                 BWSApplication.showToast(listModel1.getResponseMessage(), activity);
@@ -498,16 +498,18 @@ public class MyPlaylistsFragment extends Fragment {
                                                         }
                                                     });
 
-                                                } else {
-                                                    BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+
+                                                case MotionEvent.ACTION_CANCEL: {
+                                                    Button views = (Button) view1;
+                                                    views.getBackground().clearColorFilter();
+                                                    views.invalidate();
+                                                    break;
                                                 }
-                                            case MotionEvent.ACTION_CANCEL: {
-                                                Button views = (Button) view1;
-                                                views.getBackground().clearColorFilter();
-                                                views.invalidate();
-                                                break;
                                             }
+                                        } else {
+                                            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                                         }
+
                                         return true;
                                     });
 

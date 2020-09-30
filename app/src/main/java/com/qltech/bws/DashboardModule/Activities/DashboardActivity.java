@@ -39,7 +39,6 @@ public class DashboardActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
-
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         try {
@@ -88,7 +87,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (invoiceToDashboard == 1) {
-           finishAffinity();
+            finishAffinity();
             /*if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
                 return;
@@ -115,12 +114,7 @@ public class DashboardActivity extends AppCompatActivity {
             this.doubleBackToExitPressedOnce = true;
             BWSApplication.showToast("Press again to exit.", DashboardActivity.this);
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce = false;
-                }
-            }, 2000);
+            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
         } else {
             super.onBackPressed();
         }

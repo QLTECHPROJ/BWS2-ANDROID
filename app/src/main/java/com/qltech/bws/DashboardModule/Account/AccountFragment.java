@@ -346,6 +346,7 @@ public class AccountFragment extends Fragment {
             showProgressBar();
             Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
             listCall.enqueue(new Callback<ProfileViewModel>() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onResponse(Call<ProfileViewModel> call, Response<ProfileViewModel> response) {
                     if (response.isSuccessful()) {
@@ -354,7 +355,6 @@ public class AccountFragment extends Fragment {
                         binding.tvViewProfile.setVisibility(View.VISIBLE);
                         binding.tvName.setText(viewModel.getResponseData().getName());
                         String profilePicPath = viewModel.getResponseData().getImage();
-
                         IsLock = viewModel.getResponseData().getIsLock();
                         Glide.with(ctx).load(profilePicPath)
                                 .placeholder(R.drawable.default_profile)
