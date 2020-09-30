@@ -46,7 +46,7 @@ import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class ViewAllAudioFragment extends Fragment {
     FragmentViewAllAudioBinding binding;
-    String ID, Name, UserID, AudioFlag;
+    String ID, Name, UserID, AudioFlag, Category;
     public static boolean viewallAudio = false;
     public static int ComeFromAudioViewAll = 0;
 
@@ -64,8 +64,9 @@ public class ViewAllAudioFragment extends Fragment {
         if (getArguments() != null) {
             ID = getArguments().getString("ID");
             Name = getArguments().getString("Name");
-
+            Category = getArguments().getString("Category");
         }
+
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
@@ -85,11 +86,6 @@ public class ViewAllAudioFragment extends Fragment {
     }
 
     private void callBack() {
-        /*ComeFromAudioViewAll = 1;
-        FragmentManager fm = getActivity()
-                .getSupportFragmentManager();
-        fm.popBackStack("ViewAllAudioFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);*/
-
         Fragment audioFragment = new AudioFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
         fragmentManager1.beginTransaction()
@@ -131,14 +127,18 @@ public class ViewAllAudioFragment extends Fragment {
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             showProgressBar();
-            Call<ViewAllAudioListModel> listCall = APIClient.getClient().getViewAllAudioLists(UserID, ID);
+            Call<ViewAllAudioListModel> listCall = APIClient.getClient().getViewAllAudioLists(UserID, ID, Category);
             listCall.enqueue(new Callback<ViewAllAudioListModel>() {
                 @Override
                 public void onResponse(Call<ViewAllAudioListModel> call, Response<ViewAllAudioListModel> response) {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         ViewAllAudioListModel listModel = response.body();
-                        binding.tvTitle.setText(listModel.getResponseData().getView());
+                        if (Category.equalsIgnoreCase("")) {
+                            binding.tvTitle.setText(listModel.getResponseData().getView());
+                        } else {
+                            binding.tvTitle.setText(Category);
+                        }
                         AudiolistAdapter adapter = new AudiolistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
                         binding.rvMainAudio.setAdapter(adapter);
                     }
@@ -159,6 +159,109 @@ public class ViewAllAudioFragment extends Fragment {
         String IsLock;
 
         public AudiolistAdapter(ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList, String IsLock) {
+            this.listModelList = listModelList;
+            this.IsLock = IsLock;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            AudiolistCustomLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.audiolist_custom_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
+                    1, 1, 0.46f, 0);
+            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+
+            holder.binding.tvPlaylistName.setText(listModelList.get(position).getName());
+            Glide.with(getActivity()).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+
+            if (IsLock.equalsIgnoreCase("1")) {
+                if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                        || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                }
+            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
+
+            holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (IsLock.equalsIgnoreCase("1")) {
+                        if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                            holder.binding.ivLock.setVisibility(View.GONE);
+                        } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                                || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                            holder.binding.ivLock.setVisibility(View.VISIBLE);
+                            BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                        }
+                    } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                        holder.binding.ivLock.setVisibility(View.GONE);
+                        try {
+                            player = 1;
+                            if (isPrepare || isMediaStart || isPause) {
+                                stopMedia();
+                            }
+                            isPause = false;
+                            isMediaStart = false;
+                            isPrepare = false;
+                            RefreshData();
+                            Fragment fragment = new TransparentPlayerFragment();
+                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                            fragmentManager1.beginTransaction()
+                                    .add(R.id.flContainer, fragment)
+                                    .commit();
+                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            Gson gson = new Gson();
+                            String json = gson.toJson(listModelList.get(position));
+                            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
+                            editor.commit();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return listModelList.size();
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            AudiolistCustomLayoutBinding binding;
+
+            public MyViewHolder(AudiolistCustomLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+    }
+
+    public class TopAudiolistAdapter extends RecyclerView.Adapter<TopAudiolistAdapter.MyViewHolder> {
+        private ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList;
+        String IsLock;
+
+        public TopAudiolistAdapter(ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList, String IsLock) {
             this.listModelList = listModelList;
             this.IsLock = IsLock;
         }

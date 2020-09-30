@@ -93,7 +93,7 @@ public class PlaylistFragment extends Fragment {
             bundle.putString("MyDownloads", MyDownloads);
             myPlaylistsFragment.setArguments(bundle);
             fragmentManager1.beginTransaction()
-                    .replace(R.id.flContainer, myPlaylistsFragment)
+                    .add(R.id.flContainer, myPlaylistsFragment)
                     .commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,6 +140,7 @@ public class PlaylistFragment extends Fragment {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         MainPlayListModel listModel = response.body();
+                        binding.rlCreatePlaylist.setVisibility(View.VISIBLE);
                         downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData());
                     }
                 }

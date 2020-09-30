@@ -56,13 +56,6 @@ public class MembershipActivity extends AppCompatActivity {
         });
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
 
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 29,
-                5, 3, 1.1f, 29);
-        binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner);
-
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
         binding.rvList.setLayoutManager(mLayoutManager);
         binding.rvList.setItemAnimator(new DefaultItemAnimator());
@@ -112,9 +105,19 @@ public class MembershipActivity extends AppCompatActivity {
                         hideProgressBar();
                         MembershipPlanListModel membershipPlanListModel = response.body();
                         if (membershipPlanListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            binding.btnFreeJoin.setVisibility(View.VISIBLE);
                             binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
                             binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
                             binding.tvTag.setText("Access More Than 65 Audio Programs.");
+                            binding.tvText.setText("By clicking on Register or Sign up you agree to our T&amp;Cs, Privacy Policy &amp; Disclaimer");
+
+                            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 29,
+                                    5, 3, 1.1f, 29);
+                            binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+                            binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+                            binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                            binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner);
+
                             membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan(), ctx, binding.btnFreeJoin,
                                     membershipPlanListModel.getResponseData().getTrialPeriod());
                             binding.rvPlanList.setAdapter(membershipPlanAdapter);

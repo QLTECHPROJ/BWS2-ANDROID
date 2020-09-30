@@ -120,6 +120,7 @@
     <string name="Rename_playlist">Rename playlist</string>
     <string name="Delete_playlist">Delete playlist</string>
     <string name="Download_playlist">Download playlist</string>
+    <string name="Add_playlist">Add playlist</string>
     <string name="delete_quotes">Are you sure you want to delete Self-development playlist?</string>
     <string name="Close">Close</string>
     <string name="Description">Description</string>

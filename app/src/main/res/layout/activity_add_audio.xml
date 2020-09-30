@@ -111,6 +111,7 @@
                         android:gravity="center"
                         android:layout_marginHorizontal="@dimen/_22sdp"
                         android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"
                         android:visibility="gone"
                         android:orientation="vertical">
 
@@ -120,18 +121,8 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_regular"
                             android:gravity="center"
-                            android:textColor="@color/dark_blue_gray"
-                            android:textSize="@dimen/_12sdp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:gravity="center"
-                            android:visibility="gone"
-                            android:layout_marginTop="@dimen/_4sdp"
-                            android:text="@string/no_data_found"
-                            android:textColor="@color/dark_blue_gray"
+                            android:layout_marginVertical="@dimen/_10sdp"
+                            android:textColor="@color/gray"
                             android:textSize="@dimen/_15sdp" />
 
                     </LinearLayout>

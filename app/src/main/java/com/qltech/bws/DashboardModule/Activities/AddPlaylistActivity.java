@@ -46,7 +46,7 @@ import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_sear
 
 public class AddPlaylistActivity extends AppCompatActivity {
     ActivityAddPlaylistBinding binding;
-    String UserID, AudioId;
+    String UserID, AudioId, FromPlaylistID;
     Context ctx;
     Activity activity;
 
@@ -56,12 +56,13 @@ public class AddPlaylistActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_playlist);
         ctx = AddPlaylistActivity.this;
         activity = AddPlaylistActivity.this;
-        Glide.with(AddPlaylistActivity.this).load(R.drawable.loading).asGif().into(binding.ImgV);
+        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra("AudioId");
+            FromPlaylistID = getIntent().getStringExtra("PlaylistID");
         }
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {
@@ -205,7 +206,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     String PlaylistID = listModel.get(position).getID();
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID);
+                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID, FromPlaylistID);
                         listCall.enqueue(new Callback<SucessModel>() {
                             @Override
                             public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {

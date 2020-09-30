@@ -53,6 +53,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:visibility="gone"
                         android:orientation="vertical">
 
                         <ImageView
@@ -80,6 +81,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_16sdp"
                         android:gravity="center"
+                        android:visibility="gone"
                         android:orientation="vertical">
 
                         <ImageView
@@ -108,6 +110,7 @@
                         android:layout_marginLeft="@dimen/_16sdp"
                         android:layout_marginRight="@dimen/_16sdp"
                         android:gravity="center"
+                        android:visibility="gone"
                         android:orientation="vertical">
 
                         <ImageView
@@ -130,10 +133,12 @@
                 </LinearLayout>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cvImage"
                     android:layout_width="@dimen/_150sdp"
                     android:layout_height="@dimen/_150sdp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/_30sdp"
+                    android:visibility="gone"
                     app:cardCornerRadius="@dimen/_10sdp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -197,6 +202,7 @@
                     android:fontFamily="@font/montserrat_semi_bold"
                     android:gravity="start"
                     android:text="@string/Description"
+                    android:visibility="gone"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_16sdp" />
 
@@ -242,6 +248,7 @@
                     android:fontFamily="@font/montserrat_semi_bold"
                     android:gravity="start"
                     android:text="@string/Directions"
+                    android:visibility="gone"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_16sdp" />
 
@@ -270,6 +277,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_30sdp"
+                    android:visibility="gone"
                     android:gravity="center_vertical">
 
                     <ImageView
@@ -296,6 +304,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
+                    android:visibility="gone"
                     android:gravity="center_vertical">
 
                     <ImageView
@@ -321,6 +330,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
+                    android:visibility="gone"
                     android:gravity="center_vertical">
 
                     <ImageView
@@ -346,6 +356,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
+                    android:visibility="gone"
                     android:gravity="center_vertical">
 
                     <ImageView
@@ -372,6 +383,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:layout_marginBottom="@dimen/_30sdp"
+                    android:visibility="gone"
                     android:gravity="center_vertical">
 
                     <ImageView

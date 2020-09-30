@@ -351,6 +351,7 @@ public class AccountFragment extends Fragment {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         ProfileViewModel viewModel = response.body();
+                        binding.tvViewProfile.setVisibility(View.VISIBLE);
                         binding.tvName.setText(viewModel.getResponseData().getName());
                         String profilePicPath = viewModel.getResponseData().getImage();
 

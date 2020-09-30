@@ -65,6 +65,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="start"
+                            android:visibility="gone"
                             android:text="@string/view_profile"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_13sdp" />

@@ -293,6 +293,7 @@ public class SearchFragment extends Fragment {
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", modelList.get(position).getID());
+                    i.putExtra("PlaylistID", "");
                     startActivity(i);
                 }
             });
@@ -350,6 +351,7 @@ public class SearchFragment extends Fragment {
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", modelList.get(position).getID());
+                    i.putExtra("PlaylistID", "");
                     startActivity(i);
                 }
             });

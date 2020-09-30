@@ -193,7 +193,8 @@
                         android:paddingVertical="@dimen/_4sdp"
                         android:text="@string/month_free"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_13sdp"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tvTag"
@@ -250,6 +251,7 @@
                             android:visibility="gone" />
 
                         <TextView
+                            android:id="@+id/tvText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/_16sdp"
@@ -257,7 +259,6 @@
                             android:layout_marginBottom="@dimen/_26sdp"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="center"
-                            android:text="By clicking on Register or Sign up you agree to our T&amp;Cs, Privacy Policy &amp; Disclaimer"
                             android:textColor="@color/dark_blue_gray"
                             android:textSize="@dimen/_12sdp" />
                     </LinearLayout>

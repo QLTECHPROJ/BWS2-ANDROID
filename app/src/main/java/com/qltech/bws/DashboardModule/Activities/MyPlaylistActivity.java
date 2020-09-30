@@ -2,12 +2,14 @@ package com.qltech.bws.DashboardModule.Activities;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.Selection;
 import android.view.KeyEvent;
@@ -64,6 +66,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     ActivityMyPlaylistBinding binding;
     String UserID, PlaylistID, Download;
     Context ctx;
+    private long mLastClickTime = 0;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     List<DownloadAudioDetails> playlistWiseAudioDetails;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
@@ -304,7 +307,21 @@ public class MyPlaylistActivity extends AppCompatActivity {
                         }
 
                         Download = model.getResponseData().getDownload();
+                        binding.llAddPlaylist.setVisibility(View.VISIBLE);
 
+                        binding.llAddPlaylist.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                    return;
+                                }
+                                mLastClickTime = SystemClock.elapsedRealtime();
+                                Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                                i.putExtra("AudioId", "");
+                                i.putExtra("PlaylistID", model.getResponseData().getPlaylistID());
+                                startActivity(i);
+                            }
+                        });
                         if (model.getResponseData().getCreated().equalsIgnoreCase("1")) {
                             binding.llOptions.setVisibility(View.GONE);
                             binding.llRename.setVisibility(View.VISIBLE);

@@ -267,6 +267,7 @@ public class AudioFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("ID", listModelList.get(position).getHomeID());
                     bundle.putString("Name", listModelList.get(position).getView());
+                    bundle.putString("Category","");
                     viewAllAudioFragment.setArguments(bundle);
                 }
             });
@@ -351,19 +352,13 @@ public class AudioFragment extends Fragment {
                         holder.binding.tvViewAll.setVisibility(View.GONE);
                     }
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.top_categories))) {
+                    holder.binding.tvViewAll.setVisibility(View.GONE);
                     TopCategoriesAdapter topCategoriesAdapter = new TopCategoriesAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock());
+                            listModelList.get(position).getIsLock(), listModelList.get(position).getHomeID(), listModelList.get(position).getView());
                     RecyclerView.LayoutManager topCategories = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(topCategories);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(topCategoriesAdapter);
-
-                    if (listModelList.get(position).getDetails() != null &&
-                            listModelList.get(position).getDetails().size() > 6) {
-                        holder.binding.tvViewAll.setVisibility(View.VISIBLE);
-                    } else {
-                        holder.binding.tvViewAll.setVisibility(View.GONE);
-                    }
                 }
             }
 

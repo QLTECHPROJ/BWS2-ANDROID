@@ -280,6 +280,33 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/_15sdp" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llAddPlaylist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_13sdp"
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/ivAddPlaylist"
+                        android:layout_width="@dimen/_56sdp"
+                        android:layout_height="@dimen/_50sdp"
+                        android:padding="@dimen/_15sdp"
+                        android:src="@drawable/ic_playlist_white_icon" />
+
+                    <TextView
+                        android:id="@+id/tvAddPlaylist"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_4sdp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="start"
+                        android:text="@string/Add_playlist"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_15sdp" />
+                </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 

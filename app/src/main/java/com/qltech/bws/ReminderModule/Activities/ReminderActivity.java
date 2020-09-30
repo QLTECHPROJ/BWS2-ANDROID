@@ -96,7 +96,7 @@ public class ReminderActivity extends AppCompatActivity {
 
         ShowPlaylistName();
 
-        if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0") || Time == null) {
+        if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
             binding.tvTime.setText("09:00 am");
         } else {
             binding.tvTime.setText(Time);
@@ -128,6 +128,7 @@ public class ReminderActivity extends AppCompatActivity {
                             minuteSting = "" + minute;
 
                         binding.tvTime.setText(hourString + ":" + minuteSting + " " + am_pm);
+                        ShowPlaylistName();
                     }, mHour, mMinute, false);
             timePickerDialog.show();
         });
@@ -252,18 +253,21 @@ public class ReminderActivity extends AppCompatActivity {
         } else {
             binding.tvPlaylistName.setText(PlaylistName);
         }
-    /*    String dateStr = binding.tvTime.getText().toString();
-        SimpleDateFormat df = new SimpleDateFormat("HH:mm.S'Z' a", Locale.ENGLISH);
-        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        String dateStr = binding.tvTime.getText().toString();
+
+        SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
+//        df.setTimeZone(TimeZone.getDefault());
         Date date = null;
         try {
             date = df.parse(dateStr);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        df.setTimeZone(TimeZone.getDefault());
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
         String formattedDate = df.format(date);
-        Log.e("TIMEZONES", formattedDate);*/
+
+        Log.e("TIMEZONES", formattedDate);
 
         binding.btnSave.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")){
@@ -378,16 +382,13 @@ public class ReminderActivity extends AppCompatActivity {
                 super(binding.getRoot());
                 this.binding = binding;
 
-                binding.cbChecked.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mSelectedItem = getAdapterPosition();
-                        notifyDataSetChanged();
-                        PlaylistID = model.get(mSelectedItem).getID();
-                        PlaylistName = model.get(mSelectedItem).getName();
-                        ShowPlaylistName();
-                        dialog.dismiss();
-                    }
+                binding.cbChecked.setOnClickListener(view -> {
+                    mSelectedItem = getAdapterPosition();
+                    notifyDataSetChanged();
+                    PlaylistID = model.get(mSelectedItem).getID();
+                    PlaylistName = model.get(mSelectedItem).getName();
+                    ShowPlaylistName();
+                    dialog.dismiss();
                 });
             }
         }

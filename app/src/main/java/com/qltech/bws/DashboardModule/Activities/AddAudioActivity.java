@@ -90,7 +90,9 @@ public class AddAudioActivity extends AppCompatActivity {
             }
         });
 
-        binding.llBack.setOnClickListener(view -> finish());
+        binding.llBack.setOnClickListener(view -> {
+            finish();
+        });
 
         RecyclerView.LayoutManager suggested = new LinearLayoutManager(AddAudioActivity.this, LinearLayoutManager.VERTICAL, false);
         binding.rvSuggestedList.setLayoutManager(suggested);
@@ -236,7 +238,7 @@ public class AddAudioActivity extends AppCompatActivity {
                     String AudioID = modelList.get(position).getID();
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         showProgressBar();
-                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID);
+                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID,"");
                         listCall.enqueue(new Callback<SucessModel>() {
                             @Override
                             public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
@@ -314,7 +316,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         String AudioID = listModel.get(position).getID();
                         if (BWSApplication.isNetworkConnected(ctx)) {
                             showProgressBar();
-                            Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID);
+                            Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID,"");
                             listCall.enqueue(new Callback<SucessModel>() {
                                 @Override
                                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {

@@ -266,6 +266,7 @@ public class AptAudioFragment extends Fragment {
                 public void onClick(View view) {
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", listModelList.get(position).getID());
+                    i.putExtra("PlaylistID", "");
                     startActivity(i);
                 }
             });

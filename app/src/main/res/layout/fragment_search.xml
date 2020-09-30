@@ -78,6 +78,7 @@
                             android:layout_marginHorizontal="@dimen/_22sdp"
                             android:layout_marginTop="@dimen/_20sdp"
                             android:gravity="center"
+                            android:layout_marginBottom="@dimen/_10sdp"
                             android:orientation="vertical"
                             android:visibility="gone">
 
@@ -87,19 +88,9 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/montserrat_regular"
                                 android:gravity="center"
-                                android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_12sdp" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_4sdp"
-                                android:fontFamily="@font/montserrat_regular"
-                                android:gravity="center"
-                                android:text="@string/no_data_found"
-                                android:textColor="@color/dark_blue_gray"
-                                android:textSize="@dimen/_15sdp"
-                                android:visibility="gone" />
+                                android:layout_marginVertical="@dimen/_10sdp"
+                                android:textColor="@color/gray"
+                                android:textSize="@dimen/_15sdp" />
 
                         </LinearLayout>
 

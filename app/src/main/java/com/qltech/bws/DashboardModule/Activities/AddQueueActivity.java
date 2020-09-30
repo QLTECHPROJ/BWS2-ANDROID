@@ -125,15 +125,9 @@ public class AddQueueActivity extends AppCompatActivity {
         }
         if (play.equalsIgnoreCase("play")) {
             binding.llOptions.setVisibility(View.VISIBLE);
-            binding.llDownload.setVisibility(View.VISIBLE);
-            binding.llAddPlaylist.setVisibility(View.VISIBLE);
-            binding.llAddQueue.setVisibility(View.VISIBLE);
             binding.llRemovePlaylist.setVisibility(View.VISIBLE);
         } else {
             binding.llOptions.setVisibility(View.VISIBLE);
-            binding.llAddPlaylist.setVisibility(View.VISIBLE);
-            binding.llDownload.setVisibility(View.VISIBLE);
-            binding.llAddQueue.setVisibility(View.VISIBLE);
             binding.llRemovePlaylist.setVisibility(View.GONE);
         }
         if (myPlaylist.equalsIgnoreCase("myPlaylist")) {
@@ -613,6 +607,14 @@ public class AddQueueActivity extends AppCompatActivity {
                         DirectionModel directionModel = response.body();
 
                          GetMedia( AudioFile , activity,directionModel.getResponseData().get(0).getDownload());
+                         binding.cvImage.setVisibility(View.VISIBLE);
+                         binding.llLike.setVisibility(View.VISIBLE);
+                         binding.llAddPlaylist.setVisibility(View.VISIBLE);
+                        binding.llAddQueue.setVisibility(View.VISIBLE);
+                        binding.llDownload.setVisibility(View.VISIBLE);
+                        binding.llShuffle.setVisibility(View.VISIBLE);
+                        binding.llRepeat.setVisibility(View.VISIBLE);
+                        binding.llViewQueue.setVisibility(View.VISIBLE);
                         Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile())
                                 .thumbnail(0.05f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
@@ -693,6 +695,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                 mLastClickTime = SystemClock.elapsedRealtime();
                                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
                                 i.putExtra("AudioId", AudioId);
+                                i.putExtra("PlaylistID", "");
                                 startActivity(i);
                             }
                         });

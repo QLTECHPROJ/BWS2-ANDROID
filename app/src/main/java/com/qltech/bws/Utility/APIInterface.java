@@ -198,7 +198,8 @@ public interface APIInterface {
     @POST("gethomeallaudio")
     @FormUrlEncoded
     Call<ViewAllAudioListModel> getViewAllAudioLists(@Field("UserID") String userID,
-                                                     @Field("GetHomeId") String HomeId);
+                                                     @Field("GetHomeId") String HomeId,
+                                                     @Field("CategoryName") String CategoryName);
 
     /* TODO MyPlaylistsFragment */
     @POST("playlistdetails")
@@ -233,7 +234,8 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<SucessModel> getAddSearchAudioFromPlaylist(@Field("UserID") String userID,
                                                     @Field("AudioId") String audioId,
-                                                    @Field("PlaylistId") String playlistId);
+                                                    @Field("PlaylistId") String playlistId,
+                                                    @Field("FromPlaylistId") String fromPlaylistId);
 
     /* TODO BillingAddressFragment */
     @POST("billingaddress")

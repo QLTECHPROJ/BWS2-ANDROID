@@ -2,6 +2,7 @@ package com.qltech.bws.DashboardModule.Audio.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.qltech.bws.DashboardModule.Audio.ViewAllAudioFragment;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
@@ -35,14 +37,16 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
     FragmentActivity activity;
-    String IsLock;
+    String IsLock, HomeID, Views;
 
     public TopCategoriesAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
-                                String IsLock) {
+                                String IsLock, String HomeID, String Views) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
         this.IsLock = IsLock;
+        this.HomeID = HomeID;
+        this.Views = Views;
     }
 
     @NonNull
@@ -61,97 +65,30 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
 
         if (IsLock.equalsIgnoreCase("1")) {
             holder.binding.ivLock.setVisibility(View.VISIBLE);
-           /* if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                holder.binding.ivLock.setVisibility(View.GONE);
-            } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                    || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-
-            }*/
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
             holder.binding.ivLock.setVisibility(View.GONE);
         }
 
-      /*  holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
+        holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (IsLock.equalsIgnoreCase("1")) {
-                    if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        holder.binding.ivLock.setVisibility(View.GONE);
-                        try {
-                            player = 1;
-                            if (isPrepare || isMediaStart || isPause) {
-                                stopMedia();
-                            }
-                            isPause = false;
-                            isMediaStart = false;
-                            isPrepare = false;
-                            Fragment fragment = new TransparentPlayerFragment();
-                            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();
-                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = shared.edit();
-                            Gson gson = new Gson();
-                            String json = gson.toJson(listModelList.get(position));
-                            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
-                            editor.commit();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                            || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                    }
-                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                    try {
-                        player = 1;
-                        if (isPrepare || isMediaStart || isPause) {
-                            stopMedia();
-                        }
-                        isPause = false;
-                        isMediaStart = false;
-                        isPrepare = false;
-                        Fragment fragment = new TransparentPlayerFragment();
-                        FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-                        fragmentManager1.beginTransaction()
-                                .add(R.id.flContainer, fragment)
-                                .commit();
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        Gson gson = new Gson();
-                        String json = gson.toJson(listModelList.get(position));
-                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
-                        editor.commit();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                Fragment viewAllAudioFragment = new ViewAllAudioFragment();
+                FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .replace(R.id.flContainer, viewAllAudioFragment)
+                        .commit();
+                Bundle bundle = new Bundle();
+                bundle.putString("ID", HomeID);
+                bundle.putString("Name", Views);
+                bundle.putString("Category", listModelList.get(position).getCategoryName());
+                viewAllAudioFragment.setArguments(bundle);
             }
-        });*/
+        });
     }
 
     @Override
     public int getItemCount() {
-        if (6 > listModelList.size()) {
-            return listModelList.size();
-        } else {
-            return 6;
-        }
+        return listModelList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
