@@ -85,23 +85,18 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-        if (IsLock.equalsIgnoreCase("1")) {
-            holder.binding.ivLock.setVisibility(View.VISIBLE);
-        } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-            holder.binding.ivLock.setVisibility(View.GONE);
-        }
+
         holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (IsLock.equalsIgnoreCase("1")) {
 //                    } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
 //                            || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
 
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
 //                    }
 
-                } else if (IsLock.equalsIgnoreCase("0")||IsLock.equalsIgnoreCase("")) {
+                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
               /*      DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
                     try {
                         FileDescriptor fileDescriptor = FileUtils.getTempFileDescriptor(ctx.getApplicationContext(), downloadMedia.decrypt(listModelList.get(position).getName()));
@@ -150,7 +145,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 String AudioFile = listModelList.get(position).getAudioFile();
                 String AudioName = listModelList.get(position).getName();
                 String PlaylistID = "";
-                deleteDownloadFile(ctx.getApplicationContext(),AudioFile,AudioName,position);
+                deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
                 /*if (BWSApplication.isNetworkConnected(ctx)) {
                     showProgressBar();
                     Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioID, PlaylistID);
@@ -177,7 +172,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     }
 
     private void deleteDownloadFile(Context applicationContext, String audioFile, String audioName, int position) {
-         FileUtils.deleteDownloadedFile(applicationContext,audioName);
+        FileUtils.deleteDownloadedFile(applicationContext, audioName);
 
         class DeleteMedia extends AsyncTask<Void, Void, Void> {
 
@@ -186,7 +181,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 DatabaseClient.getInstance(applicationContext)
                         .getaudioDatabase()
                         .taskDao()
-                        .deleteByAudioFile(audioFile,"");
+                        .deleteByAudioFile(audioFile, "");
 
                 return null;
             }
@@ -202,6 +197,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         DeleteMedia st = new DeleteMedia();
         st.execute();
     }
+
     public List<DownloadAudioDetails> GetAllMedia(FragmentActivity ctx) {
 
         class GetTask extends AsyncTask<Void, Void, Void> {
@@ -224,9 +220,10 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                         tvFound.setVisibility(View.VISIBLE);
                     } else {
                         llError.setVisibility(View.GONE);
-                        AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(downloadAudioDetailsList,ctx, UserID, progressBarHolder, ImgV,llError,rvDownloadsList,tvFound);
+                        AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(downloadAudioDetailsList, ctx, UserID, progressBarHolder, ImgV, llError, rvDownloadsList, tvFound);
                         rvDownloadsList.setAdapter(adapter);
-                    }                    llError.setVisibility(View.GONE);
+                    }
+                    llError.setVisibility(View.GONE);
                     rvDownloadsList.setVisibility(View.VISIBLE);
                 } else {
                     llError.setVisibility(View.VISIBLE);

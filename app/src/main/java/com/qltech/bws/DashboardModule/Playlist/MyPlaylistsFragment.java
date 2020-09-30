@@ -323,7 +323,6 @@ public class MyPlaylistsFragment extends Fragment {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadAudioDetailsList = DatabaseClient
                         .getInstance(activity)
                         .getaudioDatabase()
@@ -335,7 +334,6 @@ public class MyPlaylistsFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-
             }
         }
 
@@ -559,7 +557,6 @@ public class MyPlaylistsFragment extends Fragment {
                         downloadPlaylistDetails.setDownload(listModel.getResponseData().getDownload());
                         downloadPlaylistDetails.setLike(listModel.getResponseData().getLike());
 
-
                         setData(listModel.getResponseData());
                         downloadAudioDetailsList = GetAllMedia();
                         downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData().getDownload(), listModel);
@@ -644,6 +641,7 @@ public class MyPlaylistsFragment extends Fragment {
                 if (MyDownloads.equalsIgnoreCase("1")) {
                     adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
                     binding.rvPlayLists.setAdapter(adpater2);
+                    binding.rlSearch.setVisibility(View.GONE);
                 } else {
                     if (listModel.getCreated().equalsIgnoreCase("1")) {
                         adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());

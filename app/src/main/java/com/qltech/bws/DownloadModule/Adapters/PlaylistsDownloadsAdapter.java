@@ -101,28 +101,21 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-        if (IsLock.equalsIgnoreCase("1")) {
-            holder.binding.ivLock.setVisibility(View.VISIBLE);
-        } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-            holder.binding.ivLock.setVisibility(View.GONE);
-        }
-        holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (IsLock.equalsIgnoreCase("1")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                } else if (IsLock.equalsIgnoreCase("0")
-                        || IsLock.equalsIgnoreCase("")) {
-                    playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());
-                    Intent i = new Intent(ctx, DownloadedPlaylist.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
-                    i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
-                    i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                    i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                    ctx.startActivity(i);
-                    ctx.finish();
-                }
+
+        holder.binding.llMainLayout.setOnClickListener(view -> {
+            if (IsLock.equalsIgnoreCase("1")) {
+                BWSApplication.showToast("Please re-activate your membership plan", ctx);
+            } else if (IsLock.equalsIgnoreCase("0")
+                    || IsLock.equalsIgnoreCase("")) {
+                playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());
+                Intent i = new Intent(ctx, DownloadedPlaylist.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
+                i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                ctx.startActivity(i);
+                ctx.finish();
             }
         });
         holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
@@ -320,7 +313,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             @Override
             protected void onPostExecute(Void aVoid) {
                 for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
-                    GetSingleMedia(playlistWiseAudioDetails.get(i).getAudioFile(), ctx.getApplicationContext(),playlistID);
+                    GetSingleMedia(playlistWiseAudioDetails.get(i).getAudioFile(), ctx.getApplicationContext(), playlistID);
                 }
                 super.onPostExecute(aVoid);
             }
@@ -330,6 +323,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         st.execute();
         return playlistWiseAudioDetails;
     }
+
     @Override
     public int getItemCount() {
         return listModelList.size();
