@@ -182,10 +182,21 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         if (BWSApplication.isNetworkConnected(ctx)) {
             binding.llMore.setClickable(true);
             binding.llMore.setEnabled(true);
+            binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }else{
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);
-            binding.ivMore.setBackgroundColor(getResources().getColor(R.color.gray));
+            binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            binding.llViewQueue.setClickable(true);
+            binding.llViewQueue.setEnabled(true);
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+        }else{
+            binding.llViewQueue.setClickable(false);
+            binding.llViewQueue.setEnabled(false);
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+
         }
             getPrepareShowData(position);
         callRepeatShuffle();

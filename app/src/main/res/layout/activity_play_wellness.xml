@@ -446,6 +446,7 @@
                         android:gravity="center">
 
                         <ImageView
+                            android:id="@+id/ivViewQueue"
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
                             android:src="@drawable/ic_music_list_icon" />
