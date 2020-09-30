@@ -47,6 +47,7 @@ public class ViewAllPlaylistFragment extends Fragment {
     String GetLibraryID, Name, UserID, AudioFlag,MyDownloads;
     public static int ComeFromPlaylistViewAll = 0;
     public static String GetPlaylistLibraryID = "";
+    public static int comeformAllplaylist = 0;
     View view;
 
     @Override
@@ -110,6 +111,7 @@ public class ViewAllPlaylistFragment extends Fragment {
     private void prepareData() {
         try {
             if (!AudioFlag.equalsIgnoreCase("0")) {
+                comeformAllplaylist = 1;
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()

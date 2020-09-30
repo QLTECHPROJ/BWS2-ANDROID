@@ -110,6 +110,7 @@ public class SubPlayListModel {
 
         public ResponseData() {
         }
+
         protected ResponseData(Parcel in) {
             playlistID = in.readString();
             playlistName = in.readString();
@@ -341,6 +342,7 @@ public class SubPlayListModel {
 
             public PlaylistSong() {
             }
+
             protected PlaylistSong(Parcel in) {
                 iD = in.readString();
                 imageFile = in.readString();

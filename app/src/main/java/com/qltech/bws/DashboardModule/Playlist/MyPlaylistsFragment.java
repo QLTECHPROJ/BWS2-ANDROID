@@ -47,6 +47,7 @@ import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
+import com.qltech.bws.DashboardModule.Models.ReminderStatusPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Search.SearchFragment;
@@ -103,8 +104,8 @@ public class MyPlaylistsFragment extends Fragment {
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     DownloadPlaylistDetails downloadPlaylistDetails;
     public static int comeAllPlaylist = 0;
-
     Dialog dialog;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -133,12 +134,10 @@ public class MyPlaylistsFragment extends Fragment {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             binding.llMore.setClickable(true);
             binding.llMore.setEnabled(true);
-            binding.ivMore.setColorFilter(Color.argb(100, 255, 255, 255));
             binding.ivMore.setAlpha(255);
         } else {
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);
-            binding.ivMore.setColorFilter(Color.argb(99, 99, 99, 99));
             binding.ivMore.setAlpha(255);
         }
         binding.llMore.setOnClickListener(view13 -> {
@@ -362,7 +361,6 @@ public class MyPlaylistsFragment extends Fragment {
         } else {
             prepareData(UserID, PlaylistID);
         }
-
     }
 
     private void callBack() {
@@ -454,7 +452,20 @@ public class MyPlaylistsFragment extends Fragment {
                         SubPlayListModel listModel = response.body();
 
                         try {
-                            if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
+                            if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
+                                    listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
+                                binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+                                binding.llReminder.setOnClickListener(view -> {
+                                    ComeScreenReminder = 0;
+                                    Intent i = new Intent(getActivity(), ReminderActivity.class);
+                                    i.putExtra("ComeFrom", "1");
+                                    i.putExtra("PlaylistID", PlaylistID);
+                                    i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
+                                    i.putExtra("Time", listModel.getResponseData().getReminderTime());
+                                    i.putExtra("Day", listModel.getResponseData().getReminderDay());
+                                    startActivity(i);
+                                });
+                            } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
                                 binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
                                 binding.ivReminder.setOnClickListener(view -> {
                                     dialog = new Dialog(activity);
@@ -485,15 +496,14 @@ public class MyPlaylistsFragment extends Fragment {
                                                     break;
                                                 }
                                                 case MotionEvent.ACTION_UP:
-                                                    Call<ReminderStatusModel> listCall1 = APIClient.getClient().getReminderStatus(UserID, PlaylistID, "0");/*set 1 or not 0 */
-                                                    listCall1.enqueue(new Callback<ReminderStatusModel>() {
+                                                    Call<ReminderStatusPlaylistModel> listCall1 = APIClient.getClient().getReminderStatusPlaylist(UserID, PlaylistID, "0");/*set 1 or not 0 */
+                                                    listCall1.enqueue(new Callback<ReminderStatusPlaylistModel>() {
                                                         @Override
-                                                        public void onResponse(Call<ReminderStatusModel> call1, Response<ReminderStatusModel> response1) {
+                                                        public void onResponse(Call<ReminderStatusPlaylistModel> call1, Response<ReminderStatusPlaylistModel> response1) {
                                                             if (response1.isSuccessful()) {
-                                                                ReminderStatusModel listModel1 = response1.body();
-//                                                                prepareData(UserID, PlaylistID);
-                                                                listModel.getResponseData().setIsReminder(listModel1.getResponseData().get(0).getIsCheck());
-
+                                                                ReminderStatusPlaylistModel listModel1 = response1.body();
+                                                                prepareData(UserID, PlaylistID);
+                                                                listModel.getResponseData().setIsReminder(listModel1.getResponseData().getIsCheck());
                                                                 binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
                                                                 dialog.dismiss();
                                                                 BWSApplication.showToast(listModel1.getResponseMessage(), activity);
@@ -501,7 +511,7 @@ public class MyPlaylistsFragment extends Fragment {
                                                         }
 
                                                         @Override
-                                                        public void onFailure(Call<ReminderStatusModel> call1, Throwable t) {
+                                                        public void onFailure(Call<ReminderStatusPlaylistModel> call1, Throwable t) {
                                                         }
                                                     });
 
@@ -525,19 +535,6 @@ public class MyPlaylistsFragment extends Fragment {
                                     });
                                     dialog.show();
                                     dialog.setCancelable(false);
-                                });
-                            } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
-                                    listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
-                                binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-                                binding.llReminder.setOnClickListener(view -> {
-                                    ComeScreenReminder = 0;
-                                    Intent i = new Intent(getActivity(), ReminderActivity.class);
-                                    i.putExtra("ComeFrom", "1");
-                                    i.putExtra("PlaylistID", PlaylistID);
-                                    i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
-                                    i.putExtra("Time", listModel.getResponseData().getReminderTime());
-                                    i.putExtra("Day", listModel.getResponseData().getReminderDay());
-                                    startActivity(i);
                                 });
                             }
                         } catch (Exception e) {
@@ -642,20 +639,24 @@ public class MyPlaylistsFragment extends Fragment {
             binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
             binding.llListing.setVisibility(View.VISIBLE);
-            if (MyDownloads.equalsIgnoreCase("1")) {
-                adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
-                binding.rvPlayLists.setAdapter(adpater2);
-            } else {
-                if (listModel.getCreated().equalsIgnoreCase("1")) {
-                    adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
-                    ItemTouchHelper.Callback callback = new ItemMoveCallback(adpater);
-                    ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-                    touchHelper.attachToRecyclerView(binding.rvPlayLists);
-                    binding.rvPlayLists.setAdapter(adpater);
-                } else {
+            try {
+                if (MyDownloads.equalsIgnoreCase("1")) {
                     adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
                     binding.rvPlayLists.setAdapter(adpater2);
+                } else {
+                    if (listModel.getCreated().equalsIgnoreCase("1")) {
+                        adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
+                        ItemTouchHelper.Callback callback = new ItemMoveCallback(adpater);
+                        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+                        touchHelper.attachToRecyclerView(binding.rvPlayLists);
+                        binding.rvPlayLists.setAdapter(adpater);
+                    } else {
+                        adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
+                        binding.rvPlayLists.setAdapter(adpater2);
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             if (listModel.getPlaylistName().equalsIgnoreCase("") ||
                     listModel.getPlaylistName() == null) {
@@ -1108,14 +1109,11 @@ public class MyPlaylistsFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 holder.binding.llMore.setClickable(true);
                 holder.binding.llMore.setEnabled(true);
-
-                binding.ivMore.setColorFilter(Color.argb(100, 0, 0, 0));
                 binding.ivMore.setAlpha(255);
 
             } else {
                 holder.binding.llMore.setClickable(false);
                 holder.binding.llMore.setEnabled(false);
-                binding.ivMore.setColorFilter(Color.argb(99, 99, 99, 99));
                 binding.ivMore.setAlpha(255);
             }
             holder.binding.llMore.setOnClickListener(view -> {
@@ -1309,26 +1307,21 @@ public class MyPlaylistsFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 holder.binding.llMore.setClickable(true);
                 holder.binding.llMore.setEnabled(true);
-                holder.binding.ivMore.setColorFilter(Color.argb(100, 0, 0, 0));
                 holder.binding.ivMore.setAlpha(255);
 
             } else {
                 holder.binding.llMore.setClickable(false);
                 holder.binding.llMore.setEnabled(false);
-                holder.binding.ivMore.setColorFilter(Color.argb(99, 99, 99, 99));
                 holder.binding.ivMore.setAlpha(255);
             }
-            holder.binding.llMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(ctx, AddQueueActivity.class);
-                    i.putExtra("play", "");
-                    i.putExtra("ID", mData.get(position).getID());
-                    i.putExtra("position", position);
-                    i.putParcelableArrayListExtra("data", mData);
-                    i.putExtra("comeFrom", "myPlayList");
-                    startActivity(i);
-                }
+            holder.binding.llMore.setOnClickListener(view -> {
+                Intent i = new Intent(ctx, AddQueueActivity.class);
+                i.putExtra("play", "");
+                i.putExtra("ID", mData.get(position).getID());
+                i.putExtra("position", position);
+                i.putParcelableArrayListExtra("data", mData);
+                i.putExtra("comeFrom", "myPlayList");
+                startActivity(i);
             });
 
             holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(),

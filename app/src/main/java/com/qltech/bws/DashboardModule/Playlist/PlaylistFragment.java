@@ -271,8 +271,8 @@ public class PlaylistFragment extends Fragment {
                 comeAllPlaylist = 0;
                 Fragment viewAllPlaylistFragment = new ViewAllPlaylistFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction().addToBackStack("ViewAllPlaylistFragment")
-                        .add(R.id.flContainer, viewAllPlaylistFragment)
+                fragmentManager1.beginTransaction()
+                        .replace(R.id.flContainer, viewAllPlaylistFragment)
                         .commit();
                 Bundle bundle = new Bundle();
                 if (listModelList.get(position).getView().equalsIgnoreCase("My Downloads")) {

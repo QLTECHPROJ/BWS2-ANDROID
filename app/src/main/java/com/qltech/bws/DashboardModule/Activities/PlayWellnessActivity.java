@@ -20,6 +20,8 @@ import android.widget.SeekBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -29,6 +31,7 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
+import com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
@@ -54,6 +57,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment.GetPlaylistLibraryID;
+import static com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment.comeformAllplaylist;
 import static com.qltech.bws.Utility.MusicService.SeekTo;
 import static com.qltech.bws.Utility.MusicService.ToBackward;
 import static com.qltech.bws.Utility.MusicService.ToForward;
@@ -139,7 +144,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.enter, R.anim.exit);
+//        overridePendingTransition(R.anim.enter, R.anim.exit);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_wellness);
         handler = new Handler();
         ctx = PlayWellnessActivity.this;
@@ -183,7 +188,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llMore.setClickable(true);
             binding.llMore.setEnabled(true);
             binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-        }else{
+        } else {
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);
             binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -192,13 +197,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llViewQueue.setClickable(true);
             binding.llViewQueue.setEnabled(true);
             binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-        }else{
+        } else {
             binding.llViewQueue.setClickable(false);
             binding.llViewQueue.setEnabled(false);
             binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
 
         }
-            getPrepareShowData(position);
+        getPrepareShowData(position);
         callRepeatShuffle();
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
@@ -730,9 +735,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                         }
-                        if(queuePlay){
+                        if (queuePlay) {
                             addToQueueModelList.get(position).setLike(model.getResponseData().getFlag());
-                        }else
+                        } else
                             mainPlayModelList.get(position).setLike(model.getResponseData().getFlag());
                         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
@@ -1173,7 +1178,18 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
         finish();
-        overridePendingTransition(R.anim.enter, R.anim.exit);
+//        overridePendingTransition(R.anim.enter, R.anim.exit);
+
+        /*if (comeformAllplaylist == 1) {
+            Bundle bundle = new Bundle();
+            Fragment playlistFragment = new ViewAllPlaylistFragment();
+            FragmentManager fragmentManager1 = getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, playlistFragment)
+                    .commit();
+            bundle.putString("GetLibraryID", GetPlaylistLibraryID);
+            playlistFragment.setArguments(bundle);
+        }*/
     }
 
     @Override
@@ -1199,7 +1215,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         if (BWSApplication.isNetworkConnected(ctx)) {
             binding.llMore.setClickable(true);
             binding.llMore.setEnabled(true);
-        }else{
+        } else {
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);
             binding.ivMore.setBackgroundColor(getResources().getColor(R.color.gray));

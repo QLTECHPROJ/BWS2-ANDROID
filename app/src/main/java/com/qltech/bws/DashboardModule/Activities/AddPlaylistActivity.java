@@ -99,9 +99,31 @@ public class AddPlaylistActivity extends AppCompatActivity {
                             public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
                                 if (response.isSuccessful()) {
                                     CreatePlaylistModel listModel = response.body();
-                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+//                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
                                     dialog.dismiss();
                                     prepareData(ctx);
+                                    String PlaylistID = listModel.getResponseData().getId();
+                                    if (BWSApplication.isNetworkConnected(ctx)) {
+                                        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID, FromPlaylistID);
+                                        listCall.enqueue(new Callback<SucessModel>() {
+                                            @Override
+                                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                                if (response.isSuccessful()) {
+                                                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                                    SucessModel listModel = response.body();
+                                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<SucessModel> call, Throwable t) {
+                                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                            }
+                                        });
+                                    } else {
+                                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                                    }
                                 }
                             }
 

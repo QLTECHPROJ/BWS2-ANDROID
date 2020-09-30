@@ -268,7 +268,7 @@ public class ReminderActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Log.e("TIMEZONES", dateStr);
+        Log.e("TIMEZONES", String.valueOf(currdate1));
 
         binding.btnSave.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")){

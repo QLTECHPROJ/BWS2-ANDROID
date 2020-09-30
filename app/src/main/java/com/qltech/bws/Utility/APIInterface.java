@@ -20,6 +20,7 @@ import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
 import com.qltech.bws.DashboardModule.Models.NextSessionViewModel;
 import com.qltech.bws.DashboardModule.Models.PlaylistingModel;
 import com.qltech.bws.DashboardModule.Models.PreviousAppointmentsModel;
+import com.qltech.bws.DashboardModule.Models.ReminderStatusPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.RenamePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SearchBothModel;
 import com.qltech.bws.DashboardModule.Models.SearchPlaylistModel;
@@ -449,6 +450,13 @@ public interface APIInterface {
     Call<ReminderStatusModel> getReminderStatus(@Field("UserID") String userID,
                                                 @Field("PlaylistId") String playlistId,
                                                 @Field("ReminderStatus") String reminderStatus);
+
+    /* TODO ReminderActivity */
+    @POST("reminderstatus")
+    @FormUrlEncoded
+    Call<ReminderStatusPlaylistModel> getReminderStatusPlaylist(@Field("UserID") String userID,
+                                                                @Field("PlaylistId") String playlistId,
+                                                                @Field("ReminderStatus") String reminderStatus);
 
     /* TODO SelectPlaylistActivity */
     @POST("allplaylist")
