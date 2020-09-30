@@ -56,7 +56,7 @@ public class AudioFragment extends Fragment {
     public static boolean exit = false;
     public static String IsLock = "";
     FragmentAudioBinding binding;
-    String UserID, AudioFlag,expDate;
+    String UserID, AudioFlag, expDate;
     List<DownloadAudioDetails> downloadAudioDetailsList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -76,11 +76,9 @@ public class AudioFragment extends Fragment {
         return view;
     }
 
-    public void GetAllMedia(FragmentActivity ctx, List<MainAudioModel.ResponseData> listModel ) {
-
+    public void GetAllMedia(FragmentActivity ctx, List<MainAudioModel.ResponseData> listModel) {
         ArrayList<MainAudioModel.ResponseData.Detail> details = new ArrayList<>();
         class GetTask extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
                 downloadAudioDetailsList = new ArrayList<>();
@@ -95,7 +93,7 @@ public class AudioFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
 
-                if(downloadAudioDetailsList.size()!=0) {
+                if (downloadAudioDetailsList.size() != 0) {
                     for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                         MainAudioModel.ResponseData.Detail detail = new MainAudioModel.ResponseData.Detail();
                         detail.setID(downloadAudioDetailsList.get(i).getID());
@@ -120,7 +118,7 @@ public class AudioFragment extends Fragment {
                     binding.rvMainAudioList.setLayoutManager(manager);
                     binding.rvMainAudioList.setItemAnimator(new DefaultItemAnimator());
                     binding.rvMainAudioList.setAdapter(adapter);
-                }else{
+                } else {
                     MainAudioListAdapter adapter = new MainAudioListAdapter(listModel, getActivity());
                     RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
                     binding.rvMainAudioList.setLayoutManager(manager);
@@ -174,13 +172,17 @@ public class AudioFragment extends Fragment {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         MainAudioModel listModel = response.body();
-                        GetAllMedia(getActivity(), listModel.getResponseData());
+                        try {
+                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().get(0).getExpireDate());
+                            editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().get(0).getIsLock());
+                            editor.commit();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().get(0).getExpireDate());
-                        editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().get(0).getIsLock());
-                        editor.commit();
+                        GetAllMedia(getActivity(), listModel.getResponseData());
                     } else {
                         hideProgressBar();
                     }
@@ -195,7 +197,7 @@ public class AudioFragment extends Fragment {
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
             expDate = (shared1.getString(CONSTANTS.PREF_KEY_ExpDate, ""));
 //            expDate = "2020-09-29 06:34:10";
-            Log.e("Exp Date !!!!",expDate);
+            Log.e("Exp Date !!!!", expDate);
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date Expdate = new Date();
             try {
@@ -208,7 +210,7 @@ public class AudioFragment extends Fragment {
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date currdate = Calendar.getInstance().getTime();
-            Date currdate1 =new Date();
+            Date currdate1 = new Date();
             String currantDateTime = simpleDateFormat1.format(currdate);
             try {
                 currdate1 = format.parse(currantDateTime);
@@ -216,16 +218,16 @@ public class AudioFragment extends Fragment {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            Log.e("currant Date !!!!",currantDateTime);
-            if(Expdate.before(currdate1)){
+            Log.e("currant Date !!!!", currantDateTime);
+            if (Expdate.before(currdate1)) {
                 Log.e("app", "Date1 is before Date2");
-                IsLock= "1";
-            }else if(Expdate.after(currdate1)){
+                IsLock = "1";
+            } else if (Expdate.after(currdate1)) {
                 Log.e("app", "Date1 is after Date2");
                 IsLock = "0";
-            }else if(Expdate == currdate1){
+            } else if (Expdate == currdate1) {
                 Log.e("app", "Date1 is equal Date2");
-                IsLock= "1";
+                IsLock = "1";
             }
             ArrayList<MainAudioModel.ResponseData> responseData = new ArrayList<>();
             ArrayList<MainAudioModel.ResponseData.Detail> details = new ArrayList<>();
@@ -301,7 +303,7 @@ public class AudioFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("ID", listModelList.get(position).getHomeID());
                     bundle.putString("Name", listModelList.get(position).getView());
-                    bundle.putString("Category","");
+                    bundle.putString("Category", "");
                     viewAllAudioFragment.setArguments(bundle);
                 }
             });

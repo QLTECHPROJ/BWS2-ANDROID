@@ -89,10 +89,9 @@ import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
-    String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage;
+    String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "";
     PlayListsAdpater adpater;
     PlayListsAdpater2 adpater2;
-    String SearchFlag, MyDownloads;
     View view;
     EditText searchEditText;
     ArrayList<String> changedAudio;
@@ -103,6 +102,7 @@ public class MyPlaylistsFragment extends Fragment {
     List<DownloadAudioDetails> playlistWiseAudioDetails;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     DownloadPlaylistDetails downloadPlaylistDetails;
+    public static int comeAllPlaylist = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -364,6 +364,7 @@ public class MyPlaylistsFragment extends Fragment {
     private void callBack() {
         if (comefrom_search == 2) {
             Bundle bundle = new Bundle();
+            comeAllPlaylist = 1;
             Fragment playlistFragment = new ViewAllPlaylistFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
@@ -380,10 +381,10 @@ public class MyPlaylistsFragment extends Fragment {
                     .commit();
             comefrom_search = 0;
         } else if (comefrom_search == 0) {
-            Fragment playlistFragment = new PlaylistFragment();
+            Fragment fragment = new PlaylistFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
-                    .replace(R.id.flContainer, playlistFragment)
+                    .replace(R.id.flContainer, fragment)
                     .commit();
             comefrom_search = 0;
         } else if (comefrom_search == 3) {

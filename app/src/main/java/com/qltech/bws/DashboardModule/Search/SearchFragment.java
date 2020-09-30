@@ -256,9 +256,30 @@ public class SearchFragment extends Fragment {
             if (modelList.get(position).getIscategory().equalsIgnoreCase("1")) {
                 holder.binding.tvPart.setText(R.string.Audio);
                 holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
+                holder.binding.llRemoveAudio.setOnClickListener(view -> {
+                    if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                        Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                        i.putExtra("AudioId", modelList.get(position).getID());
+                        i.putExtra("PlaylistID", "");
+                        startActivity(i);
+                    }
+                });
             } else if (modelList.get(position).getIscategory().equalsIgnoreCase("0")) {
                 holder.binding.tvPart.setText(R.string.Playlist);
-                holder.binding.llRemoveAudio.setVisibility(View.INVISIBLE);
+                holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
+                holder.binding.llRemoveAudio.setOnClickListener(view -> {
+                    if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+//                       add to playlist
+                        Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                        i.putExtra("AudioId","");
+                        i.putExtra("PlaylistID", modelList.get(position).getID());
+                        startActivity(i);
+                    }
+                });
                 holder.binding.llMainLayout.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         BWSApplication.showToast("Please re-activate your membership plan", getActivity());
@@ -286,17 +307,6 @@ public class SearchFragment extends Fragment {
             Glide.with(getActivity()).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
-
-            holder.binding.llRemoveAudio.setOnClickListener(view -> {
-                if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
-                } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
-                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                    i.putExtra("AudioId", modelList.get(position).getID());
-                    i.putExtra("PlaylistID", "");
-                    startActivity(i);
-                }
-            });
         }
 
         @Override

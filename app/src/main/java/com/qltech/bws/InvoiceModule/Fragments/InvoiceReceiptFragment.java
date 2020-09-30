@@ -75,13 +75,23 @@ public class InvoiceReceiptFragment extends DialogFragment {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         InvoiceDetailModel listModel = response.body();
-
+                        binding.tvFromTitle.setText("From");
+                        binding.tvBilledToTitle.setText("Billed to");
+                        binding.tvDateTitle.setText("Order Date:");
+                        binding.tvOrderIdTitle.setText("Order #:");
+                        binding.tvTotalTitle.setText("Order Total:");
+                        binding.tvItemsTitle.setText("Items:");
+                        binding.tvGstTitle.setText("GST:");
+                        binding.tvOrderTotalAmountTitle.setText("Order Total:");
                         if (Flag.equalsIgnoreCase("1")) {
                             binding.tvSession.setVisibility(View.GONE);
-                            binding.tvPaymentDetails.setText(listModel.getResponseData().getCardBrand() +" ending **** "+
-                                    listModel.getResponseData().getCardDigit() +"\n"+listModel.getResponseData().getEmail());
+                            binding.tvPaymentDetails.setText(listModel.getResponseData().getCardBrand() + " ending **** " +
+                                    listModel.getResponseData().getCardDigit() + "\n" + listModel.getResponseData().getEmail());
                         } else if (Flag.equalsIgnoreCase("2")) {
                             binding.tvSession.setVisibility(View.VISIBLE);
+                            binding.tvText.setVisibility(View.GONE);
+                            binding.views.setVisibility(View.GONE);
+                            binding.tvPaymentDetails.setVisibility(View.GONE);
                             binding.tvPaymentDetails.setText(listModel.getResponseData().getEmail());
                         }
 

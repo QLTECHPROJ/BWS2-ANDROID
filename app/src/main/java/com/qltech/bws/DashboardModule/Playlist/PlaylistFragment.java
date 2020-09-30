@@ -50,6 +50,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment.comeAllPlaylist;
 import static com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment.ComeFromPlaylistViewAll;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
@@ -94,7 +95,7 @@ public class PlaylistFragment extends Fragment {
             bundle.putString("MyDownloads", MyDownloads);
             myPlaylistsFragment.setArguments(bundle);
             fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, myPlaylistsFragment)
+                    .replace(R.id.flContainer, myPlaylistsFragment)
                     .commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -267,10 +268,11 @@ public class PlaylistFragment extends Fragment {
             }
 
             holder.binding.tvViewAll.setOnClickListener(view -> {
+                comeAllPlaylist = 0;
                 Fragment viewAllPlaylistFragment = new ViewAllPlaylistFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .replace(R.id.flContainer, viewAllPlaylistFragment)
+                fragmentManager1.beginTransaction().addToBackStack("ViewAllPlaylistFragment")
+                        .add(R.id.flContainer, viewAllPlaylistFragment)
                         .commit();
                 Bundle bundle = new Bundle();
                 if (listModelList.get(position).getView().equalsIgnoreCase("My Downloads")) {

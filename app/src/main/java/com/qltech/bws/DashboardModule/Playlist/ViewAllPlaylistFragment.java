@@ -39,6 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment.comeAllPlaylist;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 
 public class ViewAllPlaylistFragment extends Fragment {
@@ -77,11 +78,17 @@ public class ViewAllPlaylistFragment extends Fragment {
 
     private void callBack() {
         ComeFromPlaylistViewAll = 1;
-        Fragment playlistFragment = new PlaylistFragment();
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .replace(R.id.flContainer, playlistFragment)
-                .commit();
+        if (comeAllPlaylist == 1){
+            Fragment playlistFragment = new PlaylistFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .replace(R.id.flContainer, playlistFragment)
+                    .commit();
+        }else {
+            FragmentManager fm = getActivity()
+                    .getSupportFragmentManager();
+            fm.popBackStack("ViewAllPlaylistFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
     }
 
     @Override

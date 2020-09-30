@@ -81,28 +81,11 @@ public class UserProfileActivity extends AppCompatActivity {
         Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
         profileViewData(ctx);
+        binding.llBack.setOnClickListener(view -> finish());
 
-        binding.rlImageUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectImage();
-            }
-        });
-        binding.btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                profileUpdate();
-            }
-        });
+        binding.rlImageUpload.setOnClickListener(view -> selectImage());
+        binding.btnSave.setOnClickListener(view -> profileUpdate());
 
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 20,
                 1, 1, 0.4f, 20);
@@ -116,7 +99,36 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.tlMobileNumber.setError("");
         binding.tlCalendar.setError("");
         binding.tlEmail.setError("");
-        if (binding.etUser.getText().toString().equalsIgnoreCase("")) {
+        if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
+                binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
+                binding.etMobileNumber.getText().toString().equalsIgnoreCase("") &&
+                binding.etEmail.getText().toString().equalsIgnoreCase("")) {
+            binding.flUser.setError("Please enter your full name");
+            binding.tlCalendar.setError("please enter date of birth");
+            binding.tlMobileNumber.setError("please enter mobile number");
+            binding.tlEmail.setError("Please provide a valid email address");
+        }else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
+                binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
+                binding.etEmail.getText().toString().equalsIgnoreCase("")) {
+            binding.flUser.setError("Please enter your full name");
+            binding.tlCalendar.setError("please enter date of birth");
+            binding.tlEmail.setError("Please provide a valid email address");
+        }else if (!binding.etUser.getText().toString().equalsIgnoreCase("") &&
+                binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
+                binding.etEmail.getText().toString().equalsIgnoreCase("")) {
+            binding.tlCalendar.setError("please enter date of birth");
+            binding.tlEmail.setError("Please provide a valid email address");
+        }else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
+                binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
+                !binding.etEmail.getText().toString().equalsIgnoreCase("")) {
+            binding.flUser.setError("Please enter your full name");
+            binding.tlCalendar.setError("please enter date of birth");
+        }else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
+                !binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
+                binding.etEmail.getText().toString().equalsIgnoreCase("")) {
+            binding.flUser.setError("Please enter your full name");
+            binding.tlEmail.setError("Please provide a valid email address");
+        } else if (binding.etUser.getText().toString().equalsIgnoreCase("")) {
             binding.flUser.setError("Please enter your full name");
         } else if (binding.etCalendar.getText().toString().equalsIgnoreCase("")) {
             binding.tlCalendar.setError("please enter date of birth");
@@ -303,7 +315,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             binding.etMobileNumber.setClickable(true);
                         }
 
-                        if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("1")) { /*Enable */
+//                        if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("1")) { /*Enable */
                             binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
                             binding.btnSave.setClickable(true);
                             binding.btnSave.setEnabled(true);
@@ -315,11 +327,11 @@ public class UserProfileActivity extends AppCompatActivity {
                                 }
                             });
 
-                        } else if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("0")) { /*Disable */
+                      /*  } else if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("0")) { *//*Disable *//*
                             binding.btnSave.setBackgroundResource(R.drawable.gray_extra_light_round_corners);
                             binding.btnSave.setClickable(false);
                             binding.btnSave.setEnabled(false);
-                        }
+                        }*/
 
                         if ((viewModel.getResponseData().getIsVerify().equalsIgnoreCase("0"))) {
                             binding.ivCheckEmail.setVisibility(View.GONE);

@@ -1,6 +1,7 @@
 package com.qltech.bws.LoginModule.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -94,13 +95,13 @@ public class OtpActivity extends AppCompatActivity {
         binding.btnSendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE);
+                SharedPreferences sharedPreferences2 = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
                 String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
                 if (TextUtils.isEmpty(fcm_id)) {
                     FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(activity, instanceIdResult -> {
                         String newToken = instanceIdResult.getToken();
                         Log.e("newToken", newToken);
-                        SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, MODE_PRIVATE).edit();
+                        SharedPreferences.Editor editor = getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE).edit();
                         editor.putString(CONSTANTS.Token, newToken); //Friend
                         editor.apply();
                         editor.commit();
@@ -130,7 +131,7 @@ public class OtpActivity extends AppCompatActivity {
                                     OtpModel otpModel = response.body();
                                     if(otpModel.getResponseData().getError().equalsIgnoreCase("0")||
                                             otpModel.getResponseData().getError().equalsIgnoreCase("")){
-                                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = shared.edit();
                                         editor.putString(CONSTANTS.PREF_KEY_UserID, otpModel.getResponseData().getUserID());
                                         editor.putString(CONSTANTS.PREF_KEY_MobileNo, otpModel.getResponseData().getPhoneNumber());

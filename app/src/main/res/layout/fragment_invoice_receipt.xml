@@ -57,11 +57,11 @@
                             android:weightSum="1">
 
                             <TextView
+                                android:id="@+id/tvDateTitle"
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.4"
                                 android:fontFamily="@font/montserrat_regular"
-                                android:text="Order Date:"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_12sdp" />
 
@@ -83,11 +83,11 @@
                             android:weightSum="1">
 
                             <TextView
+                                android:id="@+id/tvOrderIdTitle"
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.4"
                                 android:fontFamily="@font/montserrat_regular"
-                                android:text="Order #:"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_12sdp" />
 
@@ -109,11 +109,11 @@
                             android:weightSum="1">
 
                             <TextView
+                                android:id="@+id/tvTotalTitle"
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.4"
                                 android:fontFamily="@font/montserrat_regular"
-                                android:text="Order Total:"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_12sdp" />
 
@@ -214,6 +214,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_bold"
@@ -236,18 +237,19 @@
                             android:textSize="@dimen/_12sdp" />
 
                         <View
+                            android:id="@+id/views"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_1sdp"
                             android:background="#EEEEEE" />
 
                         <TextView
+                            android:id="@+id/tvFromTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_10sdp"
                             android:fontFamily="@font/montserrat_bold"
-                            android:gravity="left"
+                            android:gravity="start"
                             android:paddingHorizontal="@dimen/_13sdp"
-                            android:text="From"
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_20sdp" />
 
@@ -273,11 +275,11 @@
                         android:padding="@dimen/_13sdp">
 
                         <TextView
+                            android:id="@+id/tvBilledToTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_bold"
-                            android:gravity="left"
-                            android:text="Billed to"
+                            android:gravity="start"
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_20sdp" />
 
@@ -318,11 +320,11 @@
                             android:weightSum="1">
 
                             <TextView
+                                android:id="@+id/tvItemsTitle"
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.4"
                                 android:fontFamily="@font/montserrat_medium"
-                                android:text="Items:"
                                 android:textColor="@color/light_black"
                                 android:textSize="@dimen/_12sdp" />
 
@@ -345,11 +347,11 @@
                             android:weightSum="1">
 
                             <TextView
+                                android:id="@+id/tvGstTitle"
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.4"
                                 android:fontFamily="@font/montserrat_medium"
-                                android:text="GST:"
                                 android:textColor="@color/light_black"
                                 android:textSize="@dimen/_12sdp" />
 
@@ -372,11 +374,11 @@
                             android:weightSum="1">
 
                             <TextView
+                                android:id="@+id/tvOrderTotalAmountTitle"
                                 android:layout_width="@dimen/_0sdp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.4"
                                 android:fontFamily="@font/montserrat_bold"
-                                android:text="Order Total:"
                                 android:textColor="@color/light_black"
                                 android:textSize="@dimen/_13sdp" />
 
