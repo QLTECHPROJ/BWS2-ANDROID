@@ -113,7 +113,12 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
                 }
             }
-            long totalDuration = t.getTime();
+            long totalDuration;
+            if (!BWSApplication.isNetworkConnected(ctx)) {
+                totalDuration = mediaPlayer.getDuration();
+            } else {
+                totalDuration = t.getTime();
+            }
             long currentDuration = getStartTime();
 
             int progress = getProgressPercentage(currentDuration, totalDuration);

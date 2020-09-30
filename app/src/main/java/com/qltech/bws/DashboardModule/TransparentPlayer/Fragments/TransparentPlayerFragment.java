@@ -63,6 +63,7 @@ import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPlaying;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.isPreparing;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
@@ -108,7 +109,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
                     }
                 }
-                long totalDuration = t.getTime();
+                long totalDuration;
+                if (!BWSApplication.isNetworkConnected(getActivity())) {
+                    if (mediaPlayer != null) {
+                        totalDuration = mediaPlayer.getDuration();
+                    } else
+                        totalDuration = t.getTime();
+                } else {
+                    totalDuration = t.getTime();
+                }
                 long currentDuration = getStartTime();
 
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
@@ -424,7 +433,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             });
         }
         startTime = getStartTime();
-
         handler.postDelayed(UpdateSongTime, 60);
         addToRecentPlay();
         binding.llPlayearMain.setOnClickListener(view -> {
@@ -469,6 +477,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 isMediaStart = false;
                 isPrepare = false;
             }
+            isPreparing = true;
             mediaPlayer = new MediaPlayer();
             if (download.equalsIgnoreCase("1")) {
                 mediaPlayer.setDataSource(fileDescriptor);
@@ -481,6 +490,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     binding.ivPause.setVisibility(View.VISIBLE);
                     BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                 }
+                Log.e("Playinggggxxxxx", "Startinggg1xxxxx");
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
@@ -488,6 +498,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                                 .Builder()
                                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                                 .build());
+                Log.e("Playinggggg11111111", "Startinggg111111111");
             }
             mediaPlayer.prepareAsync();
             isPrepare = true;
@@ -689,10 +700,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
         if (isPrepare && !isMediaStart) {
             callMedia();
-        } else if ((isMediaStart || isPlaying()) && !isPause) {
+        } else if ((isMediaStart && isPlaying()) && !isPause) {
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.VISIBLE);
-        } else {
+        }else if (isPreparing) {
+//            callMedia();
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+        }else {
             binding.ivPlay.setVisibility(View.VISIBLE);
             binding.ivPause.setVisibility(View.GONE);
         }

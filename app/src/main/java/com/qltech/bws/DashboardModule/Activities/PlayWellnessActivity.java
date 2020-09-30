@@ -20,8 +20,6 @@ import android.widget.SeekBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -31,7 +29,6 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.AudioLikeModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
-import com.qltech.bws.DashboardModule.Playlist.ViewAllPlaylistFragment;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
@@ -67,6 +64,7 @@ import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPlaying;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.isPreparing;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
@@ -114,7 +112,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
                 }
             }
-            totalDuration = t.getTime();
+            if (!BWSApplication.isNetworkConnected(ctx)) {
+                if (mediaPlayer != null) {
+                    totalDuration = mediaPlayer.getDuration();
+                } else
+                    totalDuration = t.getTime();
+            } else {
+                totalDuration = t.getTime();
+            }
             currentDuration = getStartTime();
 
             int progress = getProgressPercentage(currentDuration, totalDuration);
@@ -966,8 +971,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
             startTime = getStartTime();
         }
-
-
         addToRecentPlay();
 
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -1249,12 +1252,18 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }
         if (isPrepare && !isMediaStart) {
             callMedia();
-        } else if ((isMediaStart || isPlaying()) && !isPause) {
+        } else if ((isMediaStart && isPlaying()) && !isPause) {
             binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.VISIBLE);
             binding.llProgressBar.setVisibility(View.GONE);
             binding.progressBar.setVisibility(View.GONE);
-        } else {
+        }else if (isPreparing) {
+//            callMedia();
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.GONE);
+            binding.llProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+        }  else {
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
             binding.llProgressBar.setVisibility(View.GONE);
