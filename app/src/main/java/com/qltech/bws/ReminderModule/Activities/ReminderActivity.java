@@ -103,7 +103,10 @@ public class ReminderActivity extends AppCompatActivity {
 
         binding.llSelectTime.setOnClickListener(view -> {
             final Calendar c = Calendar.getInstance();
-            mHour = c.get(Calendar.HOUR);
+//            TimeZone tz = c.getTimeZone();
+//            c.setTimeZone(TimeZone.getTimeZone("GMT"));
+//            Log.e("GMTTTTTT", tz.getDisplayName());
+            mHour = c.get(Calendar.HOUR_OF_DAY);
             mMinute = c.get(Calendar.MINUTE);
             timePickerDialog = new TimePickerDialog(ReminderActivity.this, R.style.TimePickerTheme,
                     (view1, hourOfDay, minute) -> {

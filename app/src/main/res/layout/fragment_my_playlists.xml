@@ -311,6 +311,7 @@
                                 android:visibility="visible" />
                         </LinearLayout>
 
+
                         <LinearLayout
                             android:id="@+id/llError"
                             android:layout_width="match_parent"
@@ -348,6 +349,15 @@
 
 
             </androidx.core.widget.NestedScrollView>
+
+            <LinearLayout
+                android:id="@+id/llExtra"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_70sdp"
+                android:orientation="horizontal"
+                android:background="@color/white"
+                android:layout_alignParentBottom="true"
+                android:visibility="gone"></LinearLayout>
 
             <ImageView
                 android:id="@+id/ImgV"

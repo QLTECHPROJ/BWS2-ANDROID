@@ -141,6 +141,7 @@ public class MyPlaylistsFragment extends Fragment {
             binding.ivMore.setImageResource(R.drawable.ic_menu_icon);
             binding.ivMore.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
         }
+
         binding.llMore.setOnClickListener(view13 -> {
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
             i.putExtra("PlaylistID", PlaylistID);
@@ -159,7 +160,6 @@ public class MyPlaylistsFragment extends Fragment {
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
         ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
         binding.searchView.clearFocus();
-
         searchClear(searchEditText);
 
         closeButton.setOnClickListener(v -> {
@@ -403,6 +403,13 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     private void prepareData(String UserId, String PlaylistId) {
+        if (comefrom_search == 3){
+            binding.llExtra.setVisibility(View.VISIBLE);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10, 8, 10, 260);
+            binding.llSpace.setLayoutParams(params);
+        }
+
         searchClear(searchEditText);
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         try {
