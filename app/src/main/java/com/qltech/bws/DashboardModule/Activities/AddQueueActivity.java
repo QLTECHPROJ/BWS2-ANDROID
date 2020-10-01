@@ -218,31 +218,35 @@ public class AddQueueActivity extends AppCompatActivity {
         binding.llRemovePlaylist.setOnClickListener(view -> callRemoveFromPlayList());
 
         binding.llBack.setOnClickListener(view -> {
-            ComeFindAudio = 1;
             /*  Intent i = new Intent(ctx, PlayWellnessActivity.class);
             i.putExtra("Like", Like);
             i.putExtra("Download", Download);
             startActivity(i);*/
-            if (!comeFrom.equalsIgnoreCase("")) {
-                finish();
-            } else {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(ctx, PlayWellnessActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(i);
-                SharedPreferences shared11 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared11.edit();
-                Gson gson11 = new Gson();
-                String json11 = gson11.toJson(mainPlayModelList);
-                editor.putString(CONSTANTS.PREF_KEY_audioList, json11);
-                editor.commit();
-                finish();
-            }
+            callBack();
         });
         prepareData();
+    }
+
+    private void callBack() {
+        ComeFindAudio = 1;
+        if (!comeFrom.equalsIgnoreCase("")) {
+            finish();
+        } else {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+//            Intent i = new Intent(ctx, PlayWellnessActivity.class);
+//            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//            startActivity(i);
+      /*      SharedPreferences shared11 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared11.edit();
+            Gson gson11 = new Gson();
+            String json11 = gson11.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, json11);
+            editor.commit();*/
+            finish();
+        }
     }
 
     private void callShuffle() {
@@ -575,25 +579,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        ComeFindAudio = 1;
-        if (!comeFrom.equalsIgnoreCase("")) {
-            finish();
-        } else {
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return;
-            }
-            mLastClickTime = SystemClock.elapsedRealtime();
-//            Intent i = new Intent(ctx, PlayWellnessActivity.class);
-//            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//            startActivity(i);
-      /*      SharedPreferences shared11 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-            SharedPreferences.Editor editor = shared11.edit();
-            Gson gson11 = new Gson();
-            String json11 = gson11.toJson(mainPlayModelList);
-            editor.putString(CONSTANTS.PREF_KEY_audioList, json11);
-            editor.commit();*/
-            finish();
-        }
+        callBack();
     }
 
     private void prepareData() {

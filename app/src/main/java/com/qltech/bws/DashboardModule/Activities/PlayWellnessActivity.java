@@ -94,8 +94,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (queuePlay) {
                 if (listSize != 0) {
                     if (!BWSApplication.isNetworkConnected(ctx)) {
-                        endtimetext = downloadAudioDetailsList.get(0).getAudioDuration();
-                        t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                        if (downloadAudioDetailsList.size() != 0) {
+                            endtimetext = downloadAudioDetailsList.get(0).getAudioDuration();
+                            t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                        }else{
+                            endtimetext = addToQueueModelList.get(position).getAudioDuration();
+                            t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                        }
                     } else {
                         endtimetext = addToQueueModelList.get(position).getAudioDuration();
                         t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
@@ -105,8 +110,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 }
             } else if (audioPlay) {
                 if (!BWSApplication.isNetworkConnected(ctx)) {
-                    endtimetext = downloadAudioDetailsList.get(0).getAudioDuration();
-                    t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                    if (downloadAudioDetailsList.size() != 0) {
+                        endtimetext = downloadAudioDetailsList.get(0).getAudioDuration();
+                        t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                    }else{
+                        endtimetext = mainPlayModelList.get(position).getAudioDuration();
+                        t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                    }
                 } else {
                     endtimetext = mainPlayModelList.get(position).getAudioDuration();
                     t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
@@ -1257,13 +1267,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llPause.setVisibility(View.VISIBLE);
             binding.llProgressBar.setVisibility(View.GONE);
             binding.progressBar.setVisibility(View.GONE);
-        }else if (isPreparing) {
+        } else if (isPreparing) {
 //            callMedia();
             binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.GONE);
             binding.llProgressBar.setVisibility(View.VISIBLE);
             binding.progressBar.setVisibility(View.VISIBLE);
-        }  else {
+        } else {
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
             binding.llProgressBar.setVisibility(View.GONE);

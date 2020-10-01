@@ -580,8 +580,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 if (listSize == 1) {
 
                 } else {
+                    int oldPosition = position;
                     Random random = new Random();
                     position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                    if(oldPosition == position){
+                        Random random1 = new Random();
+                        position = random1.nextInt((listSize - 1) - 0 + 1) + 0;
+                    }
                     getPrepareShowData();
                 }
             }
