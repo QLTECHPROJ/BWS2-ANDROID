@@ -4,6 +4,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -18,7 +19,6 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_weight="0.6"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
@@ -29,7 +29,6 @@
                 android:id="@+id/tvViewAll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_weight="0.4"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="right"

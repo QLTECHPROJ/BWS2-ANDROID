@@ -2,12 +2,10 @@
 <layout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/flContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        tools:context=".DashboardModule.Audio.AudioFragment">
+        android:background="@color/white">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -27,6 +25,7 @@
                     android:layout_marginLeft="@dimen/_16sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginRight="@dimen/_16sdp"
+                    android:layout_marginBottom="@dimen/_2sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="start"
                     android:text="@string/Explore"
@@ -38,12 +37,13 @@
                     android:id="@+id/llSpace"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvMainAudioList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:overScrollMode="never"
-                        android:paddingBottom="@dimen/_30sdp"/>
+                        android:paddingBottom="@dimen/_30sdp" />
                 </LinearLayout>
             </LinearLayout>
 

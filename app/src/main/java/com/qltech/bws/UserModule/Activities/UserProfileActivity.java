@@ -195,34 +195,30 @@ public class UserProfileActivity extends AppCompatActivity {
         mDay = c.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        view.setMinDate(System.currentTimeMillis() - 1000);
-                        Calendar cal = Calendar.getInstance();
-                        cal.getTimeInMillis();
-                        cal.set(year, monthOfYear, dayOfMonth);
-                        Date date = cal.getTime();
-                        SimpleDateFormat sdf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
-                        String strDate = sdf.format(date);
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    view.setMinDate(System.currentTimeMillis() - 1000);
+                    Calendar cal = Calendar.getInstance();
+                    cal.getTimeInMillis();
+                    cal.set(year, monthOfYear, dayOfMonth);
+                    Date date = cal.getTime();
+                    SimpleDateFormat sdf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
+                    String strDate = sdf.format(date);
 
-                        ageYear = year;
-                        ageMonth = monthOfYear;
-                        ageDate = dayOfMonth;
+                    ageYear = year;
+                    ageMonth = monthOfYear;
+                    ageDate = dayOfMonth;
 
-                        BirthYear = getAge(ageYear, ageMonth, ageDate);
-                        if (BirthYear < 18) {
-                            binding.tlCalendar.setError("You must be 18 years of age to register");
-                            binding.btnSave.setEnabled(false);
-                            binding.btnSave.setClickable(false);
-                        } else {
-                            binding.tlCalendar.setError("");
-                            binding.btnSave.setEnabled(true);
-                            binding.btnSave.setClickable(true);
-                        }
-                        binding.etCalendar.setText(strDate);
+                    BirthYear = getAge(ageYear, ageMonth, ageDate);
+                    if (BirthYear < 18) {
+                        binding.tlCalendar.setError("You must be 18 years of age to register");
+                        binding.btnSave.setEnabled(false);
+                        binding.btnSave.setClickable(false);
+                    } else {
+                        binding.tlCalendar.setError("");
+                        binding.btnSave.setEnabled(true);
+                        binding.btnSave.setClickable(true);
                     }
+                    binding.etCalendar.setText(strDate);
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
     }

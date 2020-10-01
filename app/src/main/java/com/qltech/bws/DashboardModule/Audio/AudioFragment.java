@@ -59,9 +59,7 @@ public class AudioFragment extends Fragment {
     String UserID, AudioFlag, expDate;
     List<DownloadAudioDetails> downloadAudioDetailsList;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_audio, container, false);
         View view = binding.getRoot();
         viewallAudio = false;

@@ -58,9 +58,7 @@ public class PlaylistFragment extends Fragment {
     String UserID, Check = "", AudioFlag;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false);
         View view = binding.getRoot();
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);

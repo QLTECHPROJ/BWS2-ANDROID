@@ -155,6 +155,7 @@ public class AddAudioActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         SuggestedModel listModel = response.body();
+                        binding.tvSuggested.setText(R.string.Suggested);
                         SuggestedAdpater suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), AddAudioActivity.this);
                         binding.rvSuggestedList.setAdapter(suggestedAdpater);
                     }

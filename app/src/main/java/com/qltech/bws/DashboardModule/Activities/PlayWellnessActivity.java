@@ -55,6 +55,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.qltech.bws.Utility.MusicService.SeekTo;
 import static com.qltech.bws.Utility.MusicService.ToBackward;
 import static com.qltech.bws.Utility.MusicService.ToForward;
@@ -98,7 +99,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         if (downloadAudioDetailsList.size() != 0) {
                             endtimetext = downloadAudioDetailsList.get(0).getAudioDuration();
                             t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
-                        }else{
+                        } else {
                             endtimetext = addToQueueModelList.get(position).getAudioDuration();
                             t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
                         }
@@ -114,7 +115,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     if (downloadAudioDetailsList.size() != 0) {
                         endtimetext = downloadAudioDetailsList.get(0).getAudioDuration();
                         t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
-                    }else{
+                    } else {
                         endtimetext = mainPlayModelList.get(position).getAudioDuration();
                         t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
                     }
@@ -199,9 +200,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);*/
         if (BWSApplication.isNetworkConnected(ctx)) {
-            binding.llMore.setClickable(true);
-            binding.llMore.setEnabled(true);
-            binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            if (IsLock.equalsIgnoreCase("1")) {
+                binding.llMore.setClickable(true);
+                binding.llMore.setEnabled(true);
+                binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llMore.setClickable(false);
+                binding.llMore.setEnabled(false);
+                binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
         } else {
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);
@@ -238,7 +245,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         binding.llDownload.setOnClickListener(view -> callDownload());
 
         binding.llMore.setOnClickListener(view -> {
-
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
             }
@@ -814,7 +820,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getaudioByPlaylist(AudioFile,PlayListId);
+                        .getaudioByPlaylist(AudioFile, PlayListId);
                 return null;
             }
 
@@ -930,7 +936,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             id = addToQueueModelList.get(position).getID();
             name = addToQueueModelList.get(position).getName();
             url = addToQueueModelList.get(position).getAudioFile();
-            GetMedia(url, ctx, addToQueueModelList.get(position).getDownload(),addToQueueModelList.get(position).getPlaylistID());
+            GetMedia(url, ctx, addToQueueModelList.get(position).getDownload(), addToQueueModelList.get(position).getPlaylistID());
             binding.tvName.setText(addToQueueModelList.get(position).getName());
             if (addToQueueModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
                 binding.llDirection.setVisibility(View.GONE);
@@ -940,7 +946,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             binding.tvTitle.setText(addToQueueModelList.get(position).getAudiomastercat());
             binding.tvDesc.setText(addToQueueModelList.get(position).getAudioSubCategory());
-            if(addToQueueModelList.get(position).getPlaylistID()== null){
+            if (addToQueueModelList.get(position).getPlaylistID() == null) {
                 addToQueueModelList.get(position).setPlaylistID("");
             }
             Glide.with(getApplicationContext()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
@@ -966,10 +972,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             id = mainPlayModelList.get(position).getID();
             name = mainPlayModelList.get(position).getName();
             url = mainPlayModelList.get(position).getAudioFile();
-            if(mainPlayModelList.get(position).getPlaylistID()== null){
+            if (mainPlayModelList.get(position).getPlaylistID() == null) {
                 mainPlayModelList.get(position).setPlaylistID("");
             }
-            GetMedia(url, ctx, mainPlayModelList.get(position).getDownload(),mainPlayModelList.get(position).getPlaylistID());
+            GetMedia(url, ctx, mainPlayModelList.get(position).getDownload(), mainPlayModelList.get(position).getPlaylistID());
             binding.tvName.setText(mainPlayModelList.get(position).getName());
             if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
                 binding.llDirection.setVisibility(View.GONE);
@@ -1075,7 +1081,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         binding.llProgressBar.setVisibility(View.GONE);
                         binding.llPlay.setVisibility(View.VISIBLE);
                         binding.llPause.setVisibility(View.GONE);
-                        BWSApplication.showToast(getString(R.string.no_server_found),ctx);
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                     }
                 }
             } catch (IOException e) {
@@ -1093,7 +1099,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llProgressBar.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
-                BWSApplication.showToast(getString(R.string.no_server_found),ctx);
+                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
         }
     }
@@ -1237,9 +1243,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }.getType();
         mainPlayModelList = gson.fromJson(json, type);
         if (BWSApplication.isNetworkConnected(ctx)) {
-            binding.llMore.setClickable(true);
-            binding.llMore.setEnabled(true);
-            binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            if (IsLock.equalsIgnoreCase("1")) {
+                binding.llMore.setClickable(true);
+                binding.llMore.setEnabled(true);
+                binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llMore.setClickable(false);
+                binding.llMore.setEnabled(false);
+                binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
         } else {
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);

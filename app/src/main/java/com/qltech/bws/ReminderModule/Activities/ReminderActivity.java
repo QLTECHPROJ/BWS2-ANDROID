@@ -103,7 +103,7 @@ public class ReminderActivity extends AppCompatActivity {
 
         binding.llSelectTime.setOnClickListener(view -> {
             final Calendar c = Calendar.getInstance();
-            mHour = c.get(Calendar.HOUR_OF_DAY);
+            mHour = c.get(Calendar.HOUR);
             mMinute = c.get(Calendar.MINUTE);
             timePickerDialog = new TimePickerDialog(ReminderActivity.this, R.style.TimePickerTheme,
                     (view1, hourOfDay, minute) -> {
@@ -259,7 +259,7 @@ public class ReminderActivity extends AppCompatActivity {
         SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
         simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date currdate = Calendar.getInstance().getTime();
-        Date currdate1 =new Date();
+        Date currdate1 = new Date();
         String currantDateTime = dateStr;
         try {
             currdate1 = format.parse(currantDateTime);
@@ -270,9 +270,9 @@ public class ReminderActivity extends AppCompatActivity {
         Log.e("TIMEZONES", String.valueOf(currdate1));
 
         binding.btnSave.setOnClickListener(view -> {
-            if (IsLock.equalsIgnoreCase("1")){
+            if (IsLock.equalsIgnoreCase("1")) {
                 BWSApplication.showToast("Please re-activate your membership plan", context);
-            }else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")){
+            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 if (PlaylistName.equalsIgnoreCase("")) {
                     BWSApplication.showToast("Please select playlist name", context);
                 } else if (remiderDays.size() == 0) {
@@ -314,7 +314,7 @@ public class ReminderActivity extends AppCompatActivity {
         });
     }
 
-    private void prepareData(RecyclerView rvSelectPlaylist, LinearLayout llError,ImageView ImgV, FrameLayout progressBarHolder) {
+    private void prepareData(RecyclerView rvSelectPlaylist, LinearLayout llError, ImageView ImgV, FrameLayout progressBarHolder) {
         if (BWSApplication.isNetworkConnected(context)) {
             BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
             Call<SelectPlaylistModel> listCall = APIClient.getClient().getAllPlayListing(UserId);

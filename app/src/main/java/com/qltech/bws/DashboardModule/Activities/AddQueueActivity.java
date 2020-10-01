@@ -59,7 +59,7 @@ import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeF
 public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
     String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comeFrom = "",
-            AudioFile = "",PlaylistAudioId = "";
+            AudioFile = "", PlaylistAudioId = "";
     Context ctx;
     Activity activity;
     ArrayList<String> queue;
@@ -115,6 +115,7 @@ public class AddQueueActivity extends AppCompatActivity {
         if (getIntent().hasExtra("PlaylistAudioId") ) {
             PlaylistAudioId = getIntent().getStringExtra("PlaylistAudioId");
         }
+
         if (getIntent().hasExtra("play")) {
             play = getIntent().getStringExtra("play");
         } else {
@@ -401,7 +402,7 @@ public class AddQueueActivity extends AppCompatActivity {
     private void callRemoveFromPlayList() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistId,PlaylistAudioId);
+            Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistId, PlaylistAudioId);
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {

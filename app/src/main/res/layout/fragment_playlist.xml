@@ -30,6 +30,7 @@
                         android:layout_marginLeft="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginRight="@dimen/_16sdp"
+                        android:layout_marginBottom="@dimen/_6sdp"
                         android:fontFamily="@font/montserrat_bold"
                         android:gravity="start"
                         android:text="@string/Playlist"
@@ -39,7 +40,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_16sdp"
                         android:orientation="horizontal"
                         android:weightSum="1">
 
@@ -47,6 +47,7 @@
                             android:id="@+id/rlCreatePlaylist"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
+                            android:layout_marginTop="@dimen/_8sdp"
                             android:layout_weight="0.5"
                             android:gravity="center_horizontal"
                             android:visibility="gone">

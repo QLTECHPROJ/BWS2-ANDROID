@@ -105,8 +105,7 @@ public class MyPlaylistsFragment extends Fragment {
     Dialog dialog;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
         view = binding.getRoot();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -390,7 +389,7 @@ public class MyPlaylistsFragment extends Fragment {
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
             getActivity().finish();
-            comefrom_search = 0;
+//            comefrom_search = 0;
         }
     }
 
@@ -446,12 +445,16 @@ public class MyPlaylistsFragment extends Fragment {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                             SubPlayListModel listModel = response.body();
-                            if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
-                                    listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
-                                binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
+                            try {
+                                if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
+                                        listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
+                                    binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
 
-                            } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
-                                binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                                } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
+                                    binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
 
                             binding.rlSearch.setVisibility(View.VISIBLE);
