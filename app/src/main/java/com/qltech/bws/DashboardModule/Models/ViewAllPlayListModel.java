@@ -51,7 +51,7 @@ public class ViewAllPlayListModel {
         this.responseStatus = responseStatus;
     }
 
-    public class ResponseData {
+    public static class ResponseData {
         @SerializedName("GetLibraryID")
         @Expose
         private String getLibraryID;
@@ -108,7 +108,7 @@ public class ViewAllPlayListModel {
             this.details = details;
         }
 
-        public class Detail {
+        public static class Detail {
             @SerializedName("PlaylistID")
             @Expose
             private String playlistID;

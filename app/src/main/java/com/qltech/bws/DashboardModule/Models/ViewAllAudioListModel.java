@@ -179,6 +179,8 @@ public class ViewAllAudioListModel {
             @Expose
             private String download;
 
+            public Detail() {
+            }
             protected Detail(Parcel in) {
                 iD = in.readString();
                 name = in.readString();

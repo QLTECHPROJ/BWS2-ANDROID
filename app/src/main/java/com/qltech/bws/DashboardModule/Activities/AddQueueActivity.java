@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -73,6 +72,7 @@ public class AddQueueActivity extends AppCompatActivity {
     Boolean queuePlay, audioPlay;
     List<DownloadAudioDetails> oneAudioDetailsList;
     private long mLastClickTime = 0;
+    SharedPreferences shared;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +87,7 @@ public class AddQueueActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
@@ -113,7 +113,7 @@ public class AddQueueActivity extends AppCompatActivity {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);
             position = getIntent().getIntExtra(CONSTANTS.position, 0);
         }
-        if (getIntent().hasExtra("PlaylistAudioId") ) {
+        if (getIntent().hasExtra("PlaylistAudioId")) {
             PlaylistAudioId = getIntent().getStringExtra("PlaylistAudioId");
         }
 
@@ -600,8 +600,20 @@ public class AddQueueActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         DirectionModel directionModel = response.body();
-
-                        GetMedia(AudioFile, activity, directionModel.getResponseData().get(0).getDownload(),PlaylistId);
+                        int ix = position;
+                        if (!comeFrom.equalsIgnoreCase("")) {
+                            AudioFile = mData.get(ix).getAudioFile();
+                            PlaylistId = mData.get(ix).getPlaylistID();
+                        } else {
+                            AudioFile = mainPlayModelList.get(ix).getAudioFile();
+                            PlaylistId = mainPlayModelList.get(ix).getPlaylistID();
+                        }
+                        if(PlaylistId == null){
+                            PlaylistId = "";
+                        }else{
+                            PlaylistId = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                        }
+                        GetMedia(AudioFile, activity, directionModel.getResponseData().get(0).getDownload(), PlaylistId);
                         binding.cvImage.setVisibility(View.VISIBLE);
                         binding.llLike.setVisibility(View.VISIBLE);
                         binding.llAddPlaylist.setVisibility(View.VISIBLE);
@@ -734,7 +746,7 @@ public class AddQueueActivity extends AppCompatActivity {
         }
     }
 
-    public void GetMedia(String AudioFile, Context ctx, String download,String PlayListId) {
+    public void GetMedia(String AudioFile, Context ctx, String download, String PlayListId) {
 
         oneAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
@@ -746,7 +758,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getaudioByPlaylist(AudioFile,PlayListId);
+                        .getaudioByPlaylist(AudioFile, PlayListId);
                 return null;
             }
 

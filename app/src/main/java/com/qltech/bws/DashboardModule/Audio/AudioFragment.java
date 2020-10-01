@@ -315,6 +315,7 @@ public class AudioFragment extends Fragment {
                 bundle.putString("ID", listModelList.get(position).getHomeID());
                 bundle.putString("Name", listModelList.get(position).getView());
                 bundle.putString("Category", "");
+                bundle.putString("View", listModelList.get(position).getView());
                 viewAllAudioFragment.setArguments(bundle);
             });
 

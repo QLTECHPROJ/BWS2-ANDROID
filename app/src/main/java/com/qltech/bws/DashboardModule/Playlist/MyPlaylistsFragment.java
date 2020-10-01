@@ -64,6 +64,7 @@ import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.ItemMoveCallback;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.StartDragListener;
 import com.qltech.bws.databinding.FragmentMyPlaylistsBinding;
 import com.qltech.bws.databinding.MyPlaylistLayoutBinding;
 
@@ -128,7 +129,7 @@ public class MyPlaylistsFragment extends Fragment {
         binding.llBack.setOnClickListener(view1 -> callBack());
 
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
-        if (BWSApplication.isNetworkConnected(getActivity())) {
+        if (BWSApplication.isNetworkConnected(getActivity()) && !MyDownloads.equalsIgnoreCase("1")) {
             binding.llMore.setVisibility(View.VISIBLE);
             binding.llMore.setClickable(true);
             binding.llMore.setEnabled(true);
@@ -1055,7 +1056,7 @@ public class MyPlaylistsFragment extends Fragment {
         llDownload.setEnabled(false);
     }
 
-    public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable, ItemMoveCallback.ItemTouchHelperContract {
+    public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable, StartDragListener, ItemMoveCallback.ItemTouchHelperContract {
         Context ctx;
         String UserID, Created;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
@@ -1085,7 +1086,16 @@ public class MyPlaylistsFragment extends Fragment {
             holder.binding.tvTitleB.setText(mData.get(position).getName());
             holder.binding.tvTimeA.setText(mData.get(position).getAudioDuration());
             holder.binding.tvTimeB.setText(mData.get(position).getAudioDuration());
-
+   /*         holder.binding.llSort.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() ==
+                            MotionEvent.ACTION_DOWN) {
+                        mStartDragListener.requestDrag(holder);
+                    }
+                    return false;
+                }
+            });*/
             String id = mData.get(position).getID();
 //            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);
             for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
@@ -1254,6 +1264,11 @@ public class MyPlaylistsFragment extends Fragment {
                     }
                 }
             };
+        }
+
+        @Override
+        public void requestDrag(RecyclerView.ViewHolder viewHolder) {
+
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {

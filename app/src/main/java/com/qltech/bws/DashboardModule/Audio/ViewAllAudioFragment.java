@@ -2,6 +2,7 @@ package com.qltech.bws.DashboardModule.Audio;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,7 +26,10 @@ import com.google.gson.Gson;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.ViewAllAudioListModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.qltech.bws.R;
+import com.qltech.bws.RoomDataBase.DatabaseClient;
+import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
@@ -33,22 +37,25 @@ import com.qltech.bws.databinding.AudiolistCustomLayoutBinding;
 import com.qltech.bws.databinding.FragmentViewAllAudioBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class ViewAllAudioFragment extends Fragment {
-    FragmentViewAllAudioBinding binding;
-    String ID, Name, UserID, AudioFlag, Category;
     public static boolean viewallAudio = false;
     public static int ComeFromAudioViewAll = 0;
+    FragmentViewAllAudioBinding binding;
+    String ID, Name, UserID, AudioFlag, Category, HomeView;
+    List<DownloadAudioDetails> audioList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +72,7 @@ public class ViewAllAudioFragment extends Fragment {
             ID = getArguments().getString("ID");
             Name = getArguments().getString("Name");
             Category = getArguments().getString("Category");
+            HomeView = getArguments().getString("View");
         }
 
         view.setFocusableInTouchMode(true);
@@ -80,7 +88,12 @@ public class ViewAllAudioFragment extends Fragment {
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
         binding.rvMainAudio.setLayoutManager(manager);
-        prepareData();
+        if (HomeView.equalsIgnoreCase("My Downloads")) {
+            audioList = new ArrayList<>();
+            GetAllMedia(getActivity());
+        } else {
+            prepareData();
+        }
         return view;
     }
 
@@ -97,30 +110,53 @@ public class ViewAllAudioFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        prepareData();
+//        prepareData();
+    }
+
+    public List<DownloadAudioDetails> GetAllMedia(Context ctx) {
+        class GetTask extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                audioList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllData("");
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                refreshData();
+                binding.tvTitle.setText(HomeView);
+                ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList = new ArrayList<>();
+                for(int i = 0;i<audioList.size();i++){
+                    ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
+
+                    mainPlayModel.setID(audioList.get(i).getID());
+                    mainPlayModel.setName(audioList.get(i).getName());
+                    mainPlayModel.setAudioFile(audioList.get(i).getAudioFile());
+                    mainPlayModel.setAudioDirection(audioList.get(i).getAudioDirection());
+                    mainPlayModel.setAudiomastercat(audioList.get(i).getAudiomastercat());
+                    mainPlayModel.setAudioSubCategory(audioList.get(i).getAudioSubCategory());
+                    mainPlayModel.setImageFile(audioList.get(i).getImageFile());
+                    mainPlayModel.setLike(audioList.get(i).getLike());
+                    mainPlayModel.setDownload(audioList.get(i).getDownload());
+                    mainPlayModel.setAudioDuration(audioList.get(i).getAudioDuration());
+                    listModelList.add(mainPlayModel);
+                }
+                AudiolistAdapter adapter = new AudiolistAdapter(listModelList, IsLock);
+                binding.rvMainAudio.setAdapter(adapter);
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetTask st = new GetTask();
+        st.execute();
+        return audioList;
     }
 
     private void prepareData() {
-        try {
-            if (!AudioFlag.equalsIgnoreCase("0")) {
-                Fragment fragment = new TransparentPlayerFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
-
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(4, 6, 4, 260);
-                binding.llSpace.setLayoutParams(params);
-            } else {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(4, 6, 4, 50);
-                binding.llSpace.setLayoutParams(params);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        refreshData();
         if (BWSApplication.isNetworkConnected(getActivity())) {
             showProgressBar();
             Call<ViewAllAudioListModel> listCall = APIClient.getClient().getViewAllAudioLists(UserID, ID, Category);
@@ -150,9 +186,52 @@ public class ViewAllAudioFragment extends Fragment {
         }
     }
 
+    private void refreshData() {
+        try {
+            if (!AudioFlag.equalsIgnoreCase("0")) {
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.flContainer, fragment)
+                        .commit();
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(4, 6, 4, 260);
+                binding.llSpace.setLayoutParams(params);
+            } else {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(4, 6, 4, 50);
+                binding.llSpace.setLayoutParams(params);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void hideProgressBar() {
+        try {
+            binding.progressBarHolder.setVisibility(View.GONE);
+            binding.ImgV.setVisibility(View.GONE);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showProgressBar() {
+        try {
+            binding.progressBarHolder.setVisibility(View.VISIBLE);
+            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            binding.ImgV.setVisibility(View.VISIBLE);
+            binding.ImgV.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public class AudiolistAdapter extends RecyclerView.Adapter<AudiolistAdapter.MyViewHolder> {
-        private ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList;
         String IsLock;
+        private ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList;
 
         public AudiolistAdapter(ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList, String IsLock) {
             this.listModelList = listModelList;
@@ -254,8 +333,8 @@ public class ViewAllAudioFragment extends Fragment {
     }
 
     public class TopAudiolistAdapter extends RecyclerView.Adapter<TopAudiolistAdapter.MyViewHolder> {
-        private ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList;
         String IsLock;
+        private ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList;
 
         public TopAudiolistAdapter(ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList, String IsLock) {
             this.listModelList = listModelList;
@@ -352,27 +431,6 @@ public class ViewAllAudioFragment extends Fragment {
                 super(binding.getRoot());
                 this.binding = binding;
             }
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

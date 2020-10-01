@@ -412,7 +412,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
                         }*/
 
-                        if (model.getResponseData().getDownload().equalsIgnoreCase("1")) {
+                    /*    if (model.getResponseData().getDownload().equalsIgnoreCase("1")) {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
                             binding.tvDownload.setTextColor(getResources().getColor(R.color.light_gray));
@@ -424,7 +424,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
                             binding.tvDownload.setTextColor(getResources().getColor(R.color.white));
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                        }
+                        }*/
 
                         binding.llDownload.setVisibility(View.VISIBLE);
 
@@ -657,16 +657,14 @@ public class MyPlaylistActivity extends AppCompatActivity {
             binding.llDownload.setClickable(true);
             binding.llDownload.setEnabled(true);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.ivDownloads.setColorFilter(Color.argb(100, 0, 0, 0));
-            binding.ivDownloads.setAlpha(255);
             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+            binding.tvDownload.setTextColor(getResources().getColor(R.color.white));
         } else {
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-            binding.ivDownloads.setAlpha(255);
             binding.llDownload.setClickable(false);
             binding.llDownload.setEnabled(false);
-            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+            binding.tvDownload.setTextColor(getResources().getColor(R.color.light_gray));
         }
     }
 

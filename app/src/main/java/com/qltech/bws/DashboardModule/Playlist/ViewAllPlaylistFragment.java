@@ -2,6 +2,7 @@ package com.qltech.bws.DashboardModule.Playlist;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -22,15 +24,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.DashboardModule.Models.ViewAllAudioListModel;
 import com.qltech.bws.DashboardModule.Models.ViewAllPlayListModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
+import com.qltech.bws.RoomDataBase.DatabaseClient;
+import com.qltech.bws.RoomDataBase.DownloadPlaylistDetails;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentViewAllPlaylistBinding;
 import com.qltech.bws.databinding.PlaylistCustomLayoutBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,11 +44,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
+import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 
 public class ViewAllPlaylistFragment extends Fragment {
     FragmentViewAllPlaylistBinding binding;
     String GetLibraryID, Name, UserID, AudioFlag, MyDownloads;
     public static String GetPlaylistLibraryID = "";
+    List<DownloadPlaylistDetails> playlistList;
     View view;
 
     @Override
@@ -78,8 +86,47 @@ public class ViewAllPlaylistFragment extends Fragment {
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
         binding.rvMainAudio.setLayoutManager(manager);
-        prepareData();
+        if(MyDownloads.equalsIgnoreCase("1")){
+            playlistList = new ArrayList<>();
+            GetAllMedia();
+        }else{
+            prepareData();
+        }
         return view;
+    }
+    private void GetAllMedia() {
+        class GetTask extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                playlistList = DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getAllPlaylist();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                binding.tvTitle.setText("My Downloads");
+
+                ArrayList<ViewAllPlayListModel.ResponseData.Detail> listModelList = new ArrayList<>();
+                for(int i = 0;i<playlistList.size();i++){
+                    ViewAllPlayListModel.ResponseData.Detail detail = new ViewAllPlayListModel.ResponseData.Detail();
+
+                    detail.setPlaylistID(playlistList.get(i).getPlaylistID());
+                    detail.setPlaylistDesc(playlistList.get(i).getPlaylistDesc());
+                    detail.setPlaylistName(playlistList.get(i).getPlaylistName());
+                    detail.setPlaylistImage(playlistList.get(i).getPlaylistImage());
+                    listModelList.add(detail);
+                }
+                PlaylistAdapter adapter = new PlaylistAdapter(listModelList,IsLock);
+                binding.rvMainAudio.setAdapter(adapter);
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetTask getTask = new GetTask();
+        getTask.execute();
     }
 
     private void callBack() {
@@ -95,7 +142,7 @@ public class ViewAllPlaylistFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        prepareData();
+//        prepareData();
     }
 
     private void prepareData() {
