@@ -370,7 +370,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
     }
 
-    public void GetMedia(String url, Context ctx) {
+    public void GetMedia(String url, Context ctx,String PlaylistId) {
 
         downloadAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
@@ -382,7 +382,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getLastIdByuId(url);
+                        .getaudioByPlaylist(url,PlaylistId);
                 return null;
             }
 
@@ -452,7 +452,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             name = mainPlayModelList.get(position).getName();
             setInIt(mainPlayModelList.get(position).getName(), mainPlayModelList.get(position).getAudiomastercat(),
                     mainPlayModelList.get(position).getImageFile(), mainPlayModelList.get(position).getAudioDuration());
-            GetMedia(url, ctx);
+            GetMedia(url, ctx,mainPlayModelList.get(position).getPlaylistID());
         } else if (queuePlay) {
             if (listSize == 1) {
                 position = 0;
@@ -462,7 +462,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             name = addToQueueModelList.get(position).getName();
             setInIt(addToQueueModelList.get(position).getName(), addToQueueModelList.get(position).getAudiomastercat(),
                     addToQueueModelList.get(position).getImageFile(), addToQueueModelList.get(position).getAudioDuration());
-            GetMedia(url, ctx);
+            GetMedia(url, ctx,addToQueueModelList.get(position).getPlaylistID());
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson2 = new Gson();

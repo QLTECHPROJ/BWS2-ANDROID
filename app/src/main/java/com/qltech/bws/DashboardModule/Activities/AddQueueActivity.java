@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -351,6 +352,7 @@ public class AddQueueActivity extends AppCompatActivity {
             addToQueueModel.setName(mData.get(i).getName());
             addToQueueModel.setAudioFile(mData.get(i).getAudioFile());
             AudioFile = mData.get(i).getAudioFile();
+            PlaylistId = mData.get(i).getPlaylistID();
             addToQueueModel.setPlaylistID(mData.get(i).getPlaylistID());
             addToQueueModel.setAudioDirection(mData.get(i).getAudioDirection());
             addToQueueModel.setAudiomastercat(mData.get(i).getAudiomastercat());
@@ -364,6 +366,7 @@ public class AddQueueActivity extends AppCompatActivity {
             addToQueueModel.setName(mainPlayModelList.get(i).getName());
             addToQueueModel.setAudioFile(mainPlayModelList.get(i).getAudioFile());
             AudioFile = mainPlayModelList.get(i).getAudioFile();
+            PlaylistId = mainPlayModelList.get(i).getPlaylistID();
             addToQueueModel.setPlaylistID(mainPlayModelList.get(i).getPlaylistID());
             addToQueueModel.setAudioDirection(mainPlayModelList.get(i).getAudioDirection());
             addToQueueModel.setAudiomastercat(mainPlayModelList.get(i).getAudiomastercat());
@@ -598,7 +601,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         DirectionModel directionModel = response.body();
 
-                        GetMedia(AudioFile, activity, directionModel.getResponseData().get(0).getDownload());
+                        GetMedia(AudioFile, activity, directionModel.getResponseData().get(0).getDownload(),PlaylistId);
                         binding.cvImage.setVisibility(View.VISIBLE);
                         binding.llLike.setVisibility(View.VISIBLE);
                         binding.llAddPlaylist.setVisibility(View.VISIBLE);
@@ -731,7 +734,7 @@ public class AddQueueActivity extends AppCompatActivity {
         }
     }
 
-    public void GetMedia(String AudioFile, Context ctx, String download) {
+    public void GetMedia(String AudioFile, Context ctx, String download,String PlayListId) {
 
         oneAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
@@ -743,7 +746,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getLastIdByuId(AudioFile);
+                        .getaudioByPlaylist(AudioFile,PlayListId);
                 return null;
             }
 
@@ -773,8 +776,8 @@ public class AddQueueActivity extends AppCompatActivity {
 
     private void callDisableDownload() {
         binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-        binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-        binding.ivDownloads.setAlpha(255);
+        binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+        binding.tvDownloads.setTextColor(activity.getResources().getColor(R.color.light_gray));
         binding.llDownload.setClickable(false);
         binding.llDownload.setEnabled(false);
     }

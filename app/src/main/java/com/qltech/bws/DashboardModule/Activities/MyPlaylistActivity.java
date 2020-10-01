@@ -414,15 +414,15 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
                         if (model.getResponseData().getDownload().equalsIgnoreCase("1")) {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-                            binding.ivDownloads.setAlpha(255);
+                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+                            binding.tvDownload.setTextColor(getResources().getColor(R.color.light_gray));
                             binding.llDownload.setClickable(false);
                             binding.llDownload.setEnabled(false);
                         } else if (!model.getResponseData().getDownload().equalsIgnoreCase("")) {
                             binding.llDownload.setClickable(true);
                             binding.llDownload.setEnabled(true);
-                            binding.ivDownloads.setColorFilter(Color.argb(100, 0, 0, 0));
-                            binding.ivDownloads.setAlpha(255);
+                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+                            binding.tvDownload.setTextColor(getResources().getColor(R.color.white));
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                         }
 

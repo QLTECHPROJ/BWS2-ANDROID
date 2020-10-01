@@ -249,6 +249,7 @@ public class AccountFragment extends Fragment {
 
     void DeleteCall() {
         DeletallLocalCart();
+        DeletallLocalCart1();
         SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREF_KEY_UserID);
