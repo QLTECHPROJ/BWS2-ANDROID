@@ -58,7 +58,8 @@ import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeF
 
 public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
-    String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comeFrom = "",AudioFile="";
+    String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comeFrom = "",
+            AudioFile = "",PlaylistAudioId = "";
     Context ctx;
     Activity activity;
     ArrayList<String> queue;
@@ -110,6 +111,10 @@ public class AddQueueActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);
             position = getIntent().getIntExtra(CONSTANTS.position, 0);
+        }
+
+        if (getIntent().getExtras() != null) {
+            PlaylistAudioId = getIntent().getStringExtra("PlaylistAudioId");
         }
         if (getIntent().hasExtra("play")) {
             play = getIntent().getStringExtra("play");
@@ -322,7 +327,7 @@ public class AddQueueActivity extends AppCompatActivity {
             }
             editor.commit();
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-         } else if (IsRepeat.equalsIgnoreCase("1")) {
+        } else if (IsRepeat.equalsIgnoreCase("1")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
@@ -397,7 +402,7 @@ public class AddQueueActivity extends AppCompatActivity {
     private void callRemoveFromPlayList() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistId);
+            Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistId,PlaylistAudioId);
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
@@ -491,8 +496,8 @@ public class AddQueueActivity extends AppCompatActivity {
                     downloadAudioDetails.setLike(mData.get(i).getLike());
                     downloadAudioDetails.setDownload("1");
                     downloadAudioDetails.setAudioDuration(mData.get(i).getAudioDuration());
-                        downloadAudioDetails.setIsSingle("1");
-                        downloadAudioDetails.setPlaylistId("");
+                    downloadAudioDetails.setIsSingle("1");
+                    downloadAudioDetails.setPlaylistId("");
                 } else {
                     downloadAudioDetails.setID(mainPlayModelList.get(i).getID());
                     downloadAudioDetails.setName(mainPlayModelList.get(i).getName());
@@ -505,8 +510,8 @@ public class AddQueueActivity extends AppCompatActivity {
                     downloadAudioDetails.setLike(mainPlayModelList.get(i).getLike());
                     downloadAudioDetails.setDownload("1");
                     downloadAudioDetails.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
-                        downloadAudioDetails.setIsSingle("1");
-                        downloadAudioDetails.setPlaylistId("");
+                    downloadAudioDetails.setIsSingle("1");
+                    downloadAudioDetails.setPlaylistId("");
                 }
 
                 downloadAudioDetails.setEncodedBytes(encodeBytes);
@@ -549,10 +554,10 @@ public class AddQueueActivity extends AppCompatActivity {
                             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                             Like = "1";
                         }
-                        if(queuePlay){
+                        if (queuePlay) {
                             addToQueueModelList.get(position).setLike(Like);
-                        }else
-                        mainPlayModelList.get(position).setLike(Like);
+                        } else
+                            mainPlayModelList.get(position).setLike(Like);
                         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
                         Gson gson = new Gson();
@@ -593,10 +598,10 @@ public class AddQueueActivity extends AppCompatActivity {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         DirectionModel directionModel = response.body();
 
-                         GetMedia( AudioFile , activity,directionModel.getResponseData().get(0).getDownload());
-                         binding.cvImage.setVisibility(View.VISIBLE);
-                         binding.llLike.setVisibility(View.VISIBLE);
-                         binding.llAddPlaylist.setVisibility(View.VISIBLE);
+                        GetMedia(AudioFile, activity, directionModel.getResponseData().get(0).getDownload());
+                        binding.cvImage.setVisibility(View.VISIBLE);
+                        binding.llLike.setVisibility(View.VISIBLE);
+                        binding.llAddPlaylist.setVisibility(View.VISIBLE);
                         binding.llAddQueue.setVisibility(View.VISIBLE);
                         binding.llDownload.setVisibility(View.VISIBLE);
                         binding.llShuffle.setVisibility(View.VISIBLE);
@@ -673,34 +678,29 @@ public class AddQueueActivity extends AppCompatActivity {
                             binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
                         }
 
-                        binding.llAddPlaylist.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                    return;
-                                }
-                                mLastClickTime = SystemClock.elapsedRealtime();
-                                Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                                i.putExtra("AudioId", AudioId);
-                                i.putExtra("PlaylistID", "");
-                                startActivity(i);
+                        binding.llAddPlaylist.setOnClickListener(view -> {
+                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                return;
                             }
+                            mLastClickTime = SystemClock.elapsedRealtime();
+                            Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                            i.putExtra("AudioId", AudioId);
+                            i.putExtra("PlaylistID", "");
+                            startActivity(i);
+                            finish();
                         });
 
-                        binding.llViewQueue.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                    return;
-                                }
-                                mLastClickTime = SystemClock.elapsedRealtime();
-                                Intent i = new Intent(ctx, ViewQueueActivity.class);
-                                i.putExtra("ComeFromQueue", "1");
-                                i.putExtra("ID", AudioId);
-                                i.putExtra("play", play);
-                                startActivity(i);
-                                finish();
+                        binding.llViewQueue.setOnClickListener(view -> {
+                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                return;
                             }
+                            mLastClickTime = SystemClock.elapsedRealtime();
+                            Intent i = new Intent(ctx, ViewQueueActivity.class);
+                            i.putExtra("ComeFromQueue", "1");
+                            i.putExtra("ID", AudioId);
+                            i.putExtra("play", play);
+                            startActivity(i);
+                            finish();
                         });
 
                         if (directionModel.getResponseData().get(0).getAudioSubCategory().equalsIgnoreCase("")) {
@@ -730,6 +730,7 @@ public class AddQueueActivity extends AppCompatActivity {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
+
     public void GetMedia(String AudioFile, Context ctx, String download) {
 
         oneAudioDetailsList = new ArrayList<>();
@@ -769,6 +770,7 @@ public class AddQueueActivity extends AppCompatActivity {
         GetMedia st = new GetMedia();
         st.execute();
     }
+
     private void callDisableDownload() {
         binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
         binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));

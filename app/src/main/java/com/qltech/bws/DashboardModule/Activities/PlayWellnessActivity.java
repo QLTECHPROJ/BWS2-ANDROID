@@ -246,6 +246,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             i.putExtra("play", "play");
             i.putExtra("ID", id);
             i.putExtra("position", position);
+            i.putExtra("PlaylistAudioId", "");
             startActivity(i);
 //            finish();
         });

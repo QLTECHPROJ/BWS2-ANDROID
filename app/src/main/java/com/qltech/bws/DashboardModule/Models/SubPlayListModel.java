@@ -321,6 +321,9 @@ public class SubPlayListModel {
             @SerializedName("AudioFile")
             @Expose
             private String audioFile;
+            @SerializedName("PlaylistAudioId")
+            @Expose
+            private String playlistAudioId;
             @SerializedName("Name")
             @Expose
             private String name;
@@ -356,6 +359,7 @@ public class SubPlayListModel {
                 audiomastercat = in.readString();
                 audioSubCategory = in.readString();
                 audioDirection = in.readString();
+                playlistAudioId = in.readString();
             }
 
             public static final Creator<PlaylistSong> CREATOR = new Creator<PlaylistSong>() {
@@ -434,6 +438,14 @@ public class SubPlayListModel {
                 this.audioDuration = audioDuration;
             }
 
+            public String getPlaylistAudioId() {
+                return playlistAudioId;
+            }
+
+            public void setPlaylistAudioId(String playlistAudioId) {
+                this.playlistAudioId = playlistAudioId;
+            }
+
             public String getAudioFile() {
                 return audioFile;
             }
@@ -485,6 +497,7 @@ public class SubPlayListModel {
                 parcel.writeString(audiomastercat);
                 parcel.writeString(audioSubCategory);
                 parcel.writeString(audioDirection);
+                parcel.writeString(playlistAudioId);
             }
         }
     }

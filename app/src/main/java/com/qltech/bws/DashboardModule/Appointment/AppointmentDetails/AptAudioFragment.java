@@ -54,7 +54,7 @@ public class AptAudioFragment extends Fragment {
     String PlaylistId, UserID;
     ArrayList<AppointmentDetailModel.Audio> appointmentDetail;
     List<DownloadAudioDetails> oneAudioDetailsList;
-    public static int comeAppointmentDetail = 0;
+    public static int comeRefreshData = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -178,44 +178,39 @@ public class AptAudioFragment extends Fragment {
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-
             Glide.with(getActivity()).load(audiolist.getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    /*AppointmentDetailsFragment appointmentDetailsFragment = new AppointmentDetailsFragment();
-                    appointmentDetailsFragment.RefreshData();*/
-                    try {
-                        player = 1;
-                        if (isPrepare || isMediaStart || isPause) {
-                            stopMedia();
-                        }
-                        isPause = false;
-                        isMediaStart = false;
-                        isPrepare = false;
-                        Fragment fragment = new TransparentPlayerFragment();
-                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                        fragmentManager1.beginTransaction()
-                                .add(R.id.flContainer, fragment)
-                                .commit();
-
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        Gson gson = new Gson();
-                        String json = gson.toJson(listModelList.get(position));
-                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
-                        editor.commit();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            holder.binding.llMainLayout.setOnClickListener(view -> {
+               comeRefreshData = 1;
+                try {
+                    player = 1;
+                    if (isPrepare || isMediaStart || isPause) {
+                        stopMedia();
                     }
+                    isPause = false;
+                    isMediaStart = false;
+                    isPrepare = false;
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flContainer, fragment)
+                            .commit();
+
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(listModelList.get(position));
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
+                    editor.commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             });
 

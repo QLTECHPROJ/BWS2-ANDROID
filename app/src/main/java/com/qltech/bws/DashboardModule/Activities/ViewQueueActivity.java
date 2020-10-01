@@ -708,6 +708,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             Intent i = new Intent(ctx, AddQueueActivity.class);
             i.putExtra("ID", AudioId);
             i.putExtra("play", play);
+            i.putExtra("PlaylistAudioId", "");
             startActivity(i);
             finish();
         } else if (ComeFromQueue.equalsIgnoreCase("0") ||

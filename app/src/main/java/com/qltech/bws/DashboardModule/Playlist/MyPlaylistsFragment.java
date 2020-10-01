@@ -444,15 +444,20 @@ public class MyPlaylistsFragment extends Fragment {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                             SubPlayListModel listModel = response.body();
-
                             if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
                                     listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
                                 binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
 
-                            }else if(listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
+                            } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
                                 binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                             }
 
+                            binding.rlSearch.setVisibility(View.VISIBLE);
+                            binding.llMore.setVisibility(View.VISIBLE);
+                            binding.llReminder.setVisibility(View.VISIBLE);
+                            binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
+                            binding.tvPlaylist.setText("Playlist");
+                            binding.tvTag.setText(R.string.Audios_in_Playlist);
                             binding.llReminder.setOnClickListener(view -> {
                                 if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
                                         listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
@@ -709,11 +714,11 @@ public class MyPlaylistsFragment extends Fragment {
         }
     }
 
-    private void callRemove(String id) {
+    private void callRemove(String id, String PlaylistAudioId) {
         String AudioId = id;
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
-            Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistID);
+            Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistID, PlaylistAudioId);
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
@@ -1120,16 +1125,18 @@ public class MyPlaylistsFragment extends Fragment {
                 Intent i = new Intent(ctx, AddQueueActivity.class);
                 i.putExtra("play", "");
                 i.putExtra("ID", mData.get(position).getID());
+                i.putExtra("PlaylistAudioId", mData.get(position).getPlaylistAudioId());
                 i.putExtra("position", position);
                 i.putParcelableArrayListExtra("data", mData);
                 i.putExtra("comeFrom", "myPlayList");
                 startActivity(i);
+                getActivity().finish();
             });
 
             holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(),
                     mData.get(position).getName(), listFilterData, position, holder.binding.llDownload, holder.binding.ivDownloads));
 
-            holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID()));
+            holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId()));
         }
 
         @Override
@@ -1320,6 +1327,7 @@ public class MyPlaylistsFragment extends Fragment {
                 Intent i = new Intent(ctx, AddQueueActivity.class);
                 i.putExtra("play", "");
                 i.putExtra("ID", mData.get(position).getID());
+                i.putExtra("PlaylistAudioId", mData.get(position).getPlaylistAudioId());
                 i.putExtra("position", position);
                 i.putParcelableArrayListExtra("data", mData);
                 i.putExtra("comeFrom", "myPlayList");
@@ -1329,7 +1337,7 @@ public class MyPlaylistsFragment extends Fragment {
             holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(),
                     mData.get(position).getName(), mData, position, holder.binding.llDownload, holder.binding.ivDownloads));
 
-            holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID()));
+            holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId()));
         }
 
         @Override

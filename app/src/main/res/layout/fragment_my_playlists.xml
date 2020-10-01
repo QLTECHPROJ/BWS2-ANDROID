@@ -70,7 +70,8 @@
                                     android:layout_width="42dp"
                                     android:layout_height="match_parent"
                                     android:layout_centerVertical="true"
-                                    android:gravity="center">
+                                    android:gravity="center"
+                                    android:visibility="gone">
 
                                     <ImageView
                                         android:id="@+id/ivReminder"
@@ -100,7 +101,8 @@
                                     android:layout_width="42dp"
                                     android:layout_height="match_parent"
                                     android:layout_centerVertical="true"
-                                    android:gravity="center">
+                                    android:gravity="center"
+                                    android:visibility="gone">
 
                                     <ImageView
                                         android:id="@+id/ivMore"
@@ -122,6 +124,7 @@
                             android:paddingBottom="@dimen/_16sdp">
 
                             <TextView
+                                android:id="@+id/tvPlaylist"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="@dimen/_16sdp"
@@ -129,7 +132,8 @@
                                 android:gravity="start"
                                 android:text="Playlist"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/_15sdp" />
+                                android:textSize="@dimen/_15sdp"
+                                android:visibility="gone" />
 
                             <TextView
                                 android:id="@+id/tvLibraryName"
@@ -156,8 +160,6 @@
                                 android:textSize="@dimen/_15sdp" />
 
                         </LinearLayout>
-
-
                     </RelativeLayout>
 
                     <ImageView
@@ -169,7 +171,8 @@
                         android:layout_marginTop="-33dp"
                         android:layout_marginRight="@dimen/_20sdp"
                         android:scaleType="fitXY"
-                        android:src="@drawable/ic_blue_play_icon" />
+                        android:src="@drawable/ic_blue_play_icon"
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:id="@+id/llAddAudio"
@@ -225,7 +228,7 @@
                             android:layout_marginRight="@dimen/_16sdp"
                             android:layout_weight="2"
                             android:background="@drawable/rounded_extra_gray_corner"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <ImageView
                                 android:id="@+id/button1"
@@ -281,6 +284,7 @@
                             android:visibility="gone" />
 
                         <TextView
+                            android:id="@+id/tvTag"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/_16sdp"
@@ -290,7 +294,8 @@
                             android:gravity="start"
                             android:text="@string/Audios_in_Playlist"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_16sdp" />
+                            android:textSize="@dimen/_16sdp"
+                            android:visibility="gone" />
 
                         <LinearLayout
                             android:id="@+id/llSpace"

@@ -3,6 +3,8 @@ package com.qltech.bws.DashboardModule.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +29,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.PlaylistingModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
+import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -41,6 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.comeAddPlaylist;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 
 public class AddPlaylistActivity extends AppCompatActivity {
@@ -67,78 +71,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(view -> {
             comefrom_search = 0;
             finish();
-        });
-
-        binding.btnAddPlatLists.setOnClickListener(view -> {
-            final Dialog dialog = new Dialog(ctx);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.create_palylist);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
-            final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-            final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
-
-            dialog.setOnKeyListener((v, keyCode, event) -> {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dialog.dismiss();
-                    return true;
-                }
-                return false;
-            });
-
-            rlCreate.setOnClickListener(view1 -> {
-                if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                    BWSApplication.showToast("Please provide the playlist's name", ctx);
-                } else {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
-                        listCall.enqueue(new Callback<CreatePlaylistModel>() {
-                            @Override
-                            public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
-                                if (response.isSuccessful()) {
-                                    CreatePlaylistModel listModel = response.body();
-//                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                    dialog.dismiss();
-                                    prepareData(ctx);
-                                    String PlaylistID = listModel.getResponseData().getId();
-                                    if (BWSApplication.isNetworkConnected(ctx)) {
-                                        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID, FromPlaylistID);
-                                        listCall.enqueue(new Callback<SucessModel>() {
-                                            @Override
-                                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                                                if (response.isSuccessful()) {
-                                                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                                                    SucessModel listModel = response.body();
-                                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<SucessModel> call, Throwable t) {
-                                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                                            }
-                                        });
-                                    } else {
-                                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
-                            }
-                        });
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                    }
-                }
-            });
-
-            tvCancel.setOnClickListener(v -> dialog.dismiss());
-            dialog.show();
-            dialog.setCancelable(false);
         });
 
         RecyclerView.LayoutManager played = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
@@ -212,6 +144,121 @@ public class AddPlaylistActivity extends AppCompatActivity {
             Glide.with(ctx).load(listModel.get(position).getImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
+            binding.btnAddPlatLists.setOnClickListener(view -> {
+                final Dialog dialog = new Dialog(ctx);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.create_palylist);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
+                final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+                final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                        return true;
+                    }
+                    return false;
+                });
+
+                rlCreate.setOnClickListener(view1 -> {
+                    if (edtCreate.getText().toString().equalsIgnoreCase("")) {
+                        BWSApplication.showToast("Please provide the playlist's name", ctx);
+                    } else {
+                        if (BWSApplication.isNetworkConnected(ctx)) {
+                            Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
+                            listCall.enqueue(new Callback<CreatePlaylistModel>() {
+                                @Override
+                                public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
+                                    if (response.isSuccessful()) {
+                                        CreatePlaylistModel listsModel = response.body();
+//                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                        dialog.dismiss();
+                                        prepareData(ctx);
+                                        String PlaylistID = listsModel.getResponseData().getId();
+                                        if (BWSApplication.isNetworkConnected(ctx)) {
+                                            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                            Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID, FromPlaylistID);
+                                            listCall.enqueue(new Callback<SucessModel>() {
+                                                @Override
+                                                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                                    if (response.isSuccessful()) {
+                                                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                                        SucessModel listModels = response.body();
+                                                        if (comeAddPlaylist == 1) {
+                                                            final Dialog dialog = new Dialog(ctx);
+                                                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                                            dialog.setContentView(R.layout.go_to_playlist);
+                                                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+                                                            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                                            final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+                                                            final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+
+                                                            dialog.setOnKeyListener((v, keyCode, event) -> {
+                                                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                                                    dialog.dismiss();
+                                                                    return true;
+                                                                }
+                                                                return false;
+                                                            });
+
+                                                            rlCreate.setOnClickListener(view2 -> {
+                                                                dialog.dismiss();
+                                                                finish();
+                                                                /*Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                                                                Bundle bundle = new Bundle();
+                                                                bundle.putString("New", "0");
+                                                                bundle.putString("PlaylistID", listsModel.getResponseData().getId());
+                                                                bundle.putString("PlaylistName", listsModel.getResponseData().getName());
+                                                                bundle.putString("MyDownloads", "0");
+                                                                myPlaylistsFragment.setArguments(bundle);
+                                                                FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                                                fragmentManager1.beginTransaction()
+                                                                        .replace(R.id.flContainer, myPlaylistsFragment)
+                                                                        .commit();*/
+                                                            });
+
+                                                            tvCancel.setOnClickListener(v -> {
+                                                                dialog.dismiss();
+                                                                finish();
+                                                            });
+                                                            dialog.show();
+                                                            dialog.setCancelable(false);
+                                                        } else {
+                                                            dialog.dismiss();
+                                                            finish();
+                                                        }
+                                                        BWSApplication.showToast(listModels.getResponseMessage(), ctx);
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<SucessModel> call, Throwable t) {
+                                                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                                }
+                                            });
+                                        } else {
+                                            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
+                                }
+                            });
+                        } else {
+                            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                        }
+                    }
+                });
+
+                tvCancel.setOnClickListener(v -> dialog.dismiss());
+                dialog.show();
+                dialog.setCancelable(false);
+            });
+
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -224,8 +271,50 @@ public class AddPlaylistActivity extends AppCompatActivity {
                             public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                                 if (response.isSuccessful()) {
                                     BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-                                    SucessModel listModel = response.body();
-                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                    SucessModel listModels = response.body();
+                                    if (comeAddPlaylist == 1) {
+                                        final Dialog dialog = new Dialog(ctx);
+                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        dialog.setContentView(R.layout.go_to_playlist);
+                                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+                                        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                        final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+                                        final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+
+                                        dialog.setOnKeyListener((v, keyCode, event) -> {
+                                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                                dialog.dismiss();
+                                                return true;
+                                            }
+                                            return false;
+                                        });
+
+                                        rlCreate.setOnClickListener(view2 -> {
+                                            dialog.dismiss();
+                                            finish();
+                                            /*Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("New", "0");
+                                            bundle.putString("PlaylistID", listModel.get(position).getID());
+                                            bundle.putString("PlaylistName", listModel.get(position).getName());
+                                            bundle.putString("MyDownloads", "0");
+                                            myPlaylistsFragment.setArguments(bundle);
+                                            FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                            fragmentManager1.beginTransaction()
+                                                    .replace(R.id.flContainer, myPlaylistsFragment)
+                                                    .commit();*/
+                                        });
+
+                                        tvCancel.setOnClickListener(v -> {
+                                            dialog.dismiss();
+                                            finish();
+                                        });
+                                        dialog.show();
+                                        dialog.setCancelable(false);
+                                    } else {
+                                        finish();
+                                    }
+                                    BWSApplication.showToast(listModels.getResponseMessage(), ctx);
                                 }
                             }
 

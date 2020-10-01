@@ -37,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptAudioFragment.comeAppointmentDetail;
+import static com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptAudioFragment.comeRefreshData;
 
 public class AppointmentDetailsFragment extends Fragment {
     FragmentAppointmentDetailsBinding binding;
@@ -48,8 +48,7 @@ public class AppointmentDetailsFragment extends Fragment {
     AppointmentDetailModel globalAppointmentDetailModel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment_details, container, false);
         view = binding.getRoot();
         activity = getActivity();
@@ -201,14 +200,6 @@ public class AppointmentDetailsFragment extends Fragment {
                                     1, 1, 0.24f, 10);
                             binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
                             binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-
-                            if (globalAppointmentDetailModel.getResponseData().getDate().equalsIgnoreCase("")
-                                    && globalAppointmentDetailModel.getResponseData().getUserName().equalsIgnoreCase("")
-                                    && globalAppointmentDetailModel.getResponseData().getTime().equalsIgnoreCase("")) {
-                                binding.llDetails.setVisibility(View.GONE);
-                            } else {
-                                binding.llDetails.setVisibility(View.VISIBLE);
-                            }
                             binding.tvTilte.setText(globalAppointmentDetailModel.getResponseData().getName());
 
                             binding.tvFacilitator.setText(globalAppointmentDetailModel.getResponseData().getFacilitator());
@@ -218,6 +209,14 @@ public class AppointmentDetailsFragment extends Fragment {
                             binding.tvTime.setText(globalAppointmentDetailModel.getResponseData().getTime());
                             Glide.with(getActivity()).load(globalAppointmentDetailModel.getResponseData().getImage()).thumbnail(0.05f)
                                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile);
+
+                            if (globalAppointmentDetailModel.getResponseData().getDate().equalsIgnoreCase("")
+                                    && globalAppointmentDetailModel.getResponseData().getUserName().equalsIgnoreCase("")
+                                    && globalAppointmentDetailModel.getResponseData().getTime().equalsIgnoreCase("")) {
+                                binding.llDetails.setVisibility(View.GONE);
+                            } else {
+                                binding.llDetails.setVisibility(View.VISIBLE);
+                            }
 
                             if (globalAppointmentDetailModel.getResponseData().getBookUrl().equalsIgnoreCase("")) {
                                 binding.btnCompletes.setVisibility(View.GONE);
@@ -235,11 +234,14 @@ public class AppointmentDetailsFragment extends Fragment {
                             binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
                             TabAdapter adapter = new TabAdapter(getActivity().getSupportFragmentManager(), getActivity(), binding.tabLayout.getTabCount());
                             binding.viewPager.setAdapter(adapter);
-                            binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
 
+                            binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
                             binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                                 @Override
                                 public void onTabSelected(TabLayout.Tab tab) {
+                                    if (comeRefreshData == 1) {
+                                        RefreshData();
+                                    }
                                     binding.viewPager.setCurrentItem(tab.getPosition());
                                 }
 

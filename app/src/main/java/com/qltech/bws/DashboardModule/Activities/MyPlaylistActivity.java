@@ -66,6 +66,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     ActivityMyPlaylistBinding binding;
     String UserID, PlaylistID, Download;
     Context ctx;
+    public static int comeAddPlaylist = 0;
     private long mLastClickTime = 0;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     List<DownloadAudioDetails> playlistWiseAudioDetails;
@@ -309,18 +310,16 @@ public class MyPlaylistActivity extends AppCompatActivity {
                         Download = model.getResponseData().getDownload();
                         binding.llAddPlaylist.setVisibility(View.VISIBLE);
 
-                        binding.llAddPlaylist.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                    return;
-                                }
-                                mLastClickTime = SystemClock.elapsedRealtime();
-                                Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                                i.putExtra("AudioId", "");
-                                i.putExtra("PlaylistID", model.getResponseData().getPlaylistID());
-                                startActivity(i);
+                        binding.llAddPlaylist.setOnClickListener(view -> {
+                            comeAddPlaylist = 1;
+                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                return;
                             }
+                            mLastClickTime = SystemClock.elapsedRealtime();
+                            Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                            i.putExtra("AudioId", "");
+                            i.putExtra("PlaylistID", model.getResponseData().getPlaylistID());
+                            startActivity(i);
                         });
                         if (model.getResponseData().getCreated().equalsIgnoreCase("1")) {
                             binding.llOptions.setVisibility(View.GONE);
