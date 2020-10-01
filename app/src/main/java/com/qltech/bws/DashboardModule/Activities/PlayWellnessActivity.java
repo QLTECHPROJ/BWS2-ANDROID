@@ -200,7 +200,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);*/
         if (BWSApplication.isNetworkConnected(ctx)) {
-            if (IsLock.equalsIgnoreCase("1")) {
+            if (IsLock.equalsIgnoreCase("0")) {
                 binding.llMore.setClickable(true);
                 binding.llMore.setEnabled(true);
                 binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
