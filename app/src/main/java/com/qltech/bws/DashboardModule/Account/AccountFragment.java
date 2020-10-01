@@ -271,8 +271,8 @@ public class AccountFragment extends Fragment {
         editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
         editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
         editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
-        editor.remove(CONSTANTS.PREF_KEY_PlaylistId);
-        editor.remove(CONSTANTS.PREF_KEY_myPlaylist);
+        editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
+        editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
         editorr.clear();
         editorr.commit();
     }

@@ -482,14 +482,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             if (download.equalsIgnoreCase("1")) {
                 mediaPlayer.setDataSource(fileDescriptor);
             } else {
-                if (BWSApplication.isNetworkConnected(getActivity())) {
-                    mediaPlayer.setDataSource(audioFile);
-                } else {
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.ivPlay.setVisibility(View.GONE);
-                    binding.ivPause.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-                }
+               mediaPlayer.setDataSource(audioFile);
                 Log.e("Playinggggxxxxx", "Startinggg1xxxxx");
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -534,7 +527,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     fileDescriptor = FileUtils.getTempFileDescriptor(getActivity().getApplicationContext(), decrypt);
                     setMediaPlayer("1", fileDescriptor);
                 } else {
-                    setMediaPlayer("0", fileDescriptor);
+                    if (BWSApplication.isNetworkConnected(getActivity())) {
+                        setMediaPlayer("0", fileDescriptor);
+//                mediaPlayer.setDataSource(audioFile);
+                    } else {
+                        binding.progressBar.setVisibility(View.GONE);
+                        binding.ivPlay.setVisibility(View.VISIBLE);
+                        binding.ivPause.setVisibility(View.GONE);
+                        BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -542,10 +543,19 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         } else {
 //                            play(Uri.parse(audioFile));
 //                            playMedia();
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.ivPlay.setVisibility(View.GONE);
-            binding.ivPause.setVisibility(View.GONE);
-            setMediaPlayer("0", fileDescriptor);
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                binding.progressBar.setVisibility(View.VISIBLE);
+                binding.ivPlay.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.GONE);
+                setMediaPlayer("0", fileDescriptor);
+//                mediaPlayer.setDataSource(audioFile);
+            } else {
+                binding.progressBar.setVisibility(View.GONE);
+                binding.ivPlay.setVisibility(View.VISIBLE);
+                binding.ivPause.setVisibility(View.GONE);
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
+
         }
     }
 

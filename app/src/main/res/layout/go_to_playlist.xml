@@ -5,6 +5,7 @@
     android:focusable="true"
     android:gravity="center"
     android:background="@color/dark_blue_gray"
+    android:id="@+id/flContainer"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 

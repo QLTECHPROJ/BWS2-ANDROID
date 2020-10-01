@@ -292,7 +292,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         rlCreate.setOnClickListener(view2 -> {
                                             dialog.dismiss();
                                             finish();
-                                            /*Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                                            Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                                             Bundle bundle = new Bundle();
                                             bundle.putString("New", "0");
                                             bundle.putString("PlaylistID", listModel.get(position).getID());
@@ -302,7 +302,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             FragmentManager fragmentManager1 = getSupportFragmentManager();
                                             fragmentManager1.beginTransaction()
                                                     .replace(R.id.flContainer, myPlaylistsFragment)
-                                                    .commit();*/
+                                                    .commit();
                                         });
 
                                         tvCancel.setOnClickListener(v -> {

@@ -112,8 +112,7 @@ public class AddQueueActivity extends AppCompatActivity {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);
             position = getIntent().getIntExtra(CONSTANTS.position, 0);
         }
-
-        if (getIntent().getExtras() != null) {
+        if (getIntent().hasExtra("PlaylistAudioId") ) {
             PlaylistAudioId = getIntent().getStringExtra("PlaylistAudioId");
         }
         if (getIntent().hasExtra("play")) {

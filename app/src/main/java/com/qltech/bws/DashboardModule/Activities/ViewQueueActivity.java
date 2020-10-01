@@ -504,15 +504,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             if (download.equalsIgnoreCase("1")) {
                 mediaPlayer.setDataSource(fileDescriptor);
             } else {
-                if (BWSApplication.isNetworkConnected(ctx)) {
-                    mediaPlayer.setDataSource(url);
-                } else {
-                    binding.llProgressBar.setVisibility(View.GONE);
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.llPlay.setVisibility(View.GONE);
-                    binding.llPause.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                }
+                mediaPlayer.setDataSource(url);
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
@@ -561,17 +553,33 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     fileDescriptor = FileUtils.getTempFileDescriptor(getApplicationContext(), decrypt);
                     setMediaPlayer("1", fileDescriptor);
                 } else {
-                    setMediaPlayer("0", fileDescriptor);
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        setMediaPlayer("0", fileDescriptor);
+                    } else {
+                        binding.progressBar.setVisibility(View.GONE);
+                        binding.llProgressBar.setVisibility(View.GONE);
+                        binding.llPlay.setVisibility(View.VISIBLE);
+                        binding.llPause.setVisibility(View.GONE);
+                        BWSApplication.showToast(getString(R.string.no_server_found),ctx);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            binding.llProgressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.llPlay.setVisibility(View.GONE);
-            binding.llPause.setVisibility(View.GONE);
-            setMediaPlayer("0", fileDescriptor);
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                binding.llProgressBar.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.GONE);
+                setMediaPlayer("0", fileDescriptor);
+            } else {
+                binding.progressBar.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                BWSApplication.showToast(getString(R.string.no_server_found),ctx);
+            }
         }
     }
 
@@ -708,7 +716,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             Intent i = new Intent(ctx, AddQueueActivity.class);
             i.putExtra("ID", AudioId);
             i.putExtra("play", play);
-            i.putExtra("PlaylistAudioId", "");
             startActivity(i);
             finish();
         } else if (ComeFromQueue.equalsIgnoreCase("0") ||

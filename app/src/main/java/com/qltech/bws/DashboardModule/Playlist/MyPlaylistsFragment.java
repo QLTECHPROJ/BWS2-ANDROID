@@ -130,15 +130,17 @@ public class MyPlaylistsFragment extends Fragment {
 
         Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         if (BWSApplication.isNetworkConnected(getActivity())) {
+            binding.llMore.setVisibility(View.VISIBLE);
             binding.llMore.setClickable(true);
             binding.llMore.setEnabled(true);
-            binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-            binding.ivMore.setAlpha(255);
+            binding.ivMore.setImageResource(R.drawable.ic_menu_icon);
+            binding.ivMore.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
         } else {
+            binding.llMore.setVisibility(View.VISIBLE);
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);
-            binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            binding.ivMore.setAlpha(255);
+            binding.ivMore.setImageResource(R.drawable.ic_menu_icon);
+            binding.ivMore.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
         }
         binding.llMore.setOnClickListener(view13 -> {
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
@@ -205,11 +207,9 @@ public class MyPlaylistsFragment extends Fragment {
             binding.llAddAudio.setVisibility(View.VISIBLE);
             binding.llDownloads.setVisibility(View.VISIBLE);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-            binding.ivDownloads.setAlpha(255);
+            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             binding.llDownloads.setClickable(false);
             binding.llDownloads.setEnabled(false);
-            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.INVISIBLE);
             binding.llListing.setVisibility(View.GONE);
@@ -224,6 +224,8 @@ public class MyPlaylistsFragment extends Fragment {
         } else if (New.equalsIgnoreCase("0")) {
             binding.llAddAudio.setVisibility(View.GONE);
             binding.llDownloads.setVisibility(View.VISIBLE);
+            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
             binding.llListing.setVisibility(View.VISIBLE);
@@ -304,12 +306,12 @@ public class MyPlaylistsFragment extends Fragment {
             binding.llDownloads.setClickable(true);
             binding.llDownloads.setEnabled(true);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
         } else {
             binding.llDownloads.setClickable(false);
             binding.llDownloads.setEnabled(false);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
         }
     }
 
@@ -622,8 +624,6 @@ public class MyPlaylistsFragment extends Fragment {
             binding.llAddAudio.setVisibility(View.VISIBLE);
             binding.llDownloads.setVisibility(View.VISIBLE);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-            binding.ivDownloads.setAlpha(255);
             binding.llDownloads.setClickable(false);
             binding.llDownloads.setEnabled(false);
             binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.lights_gray), PorterDuff.Mode.SRC_IN);
@@ -642,12 +642,20 @@ public class MyPlaylistsFragment extends Fragment {
             binding.llAddAudio.setVisibility(View.GONE);
             binding.llDownloads.setVisibility(View.VISIBLE);
             binding.llReminder.setVisibility(View.VISIBLE);
+            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
             binding.llListing.setVisibility(View.VISIBLE);
             try {
                 if (MyDownloads.equalsIgnoreCase("1")) {
                     adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
                     binding.rvPlayLists.setAdapter(adpater2);
+                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                    binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+                    enableDisableDownload(false);
+                    binding.llReminder.setClickable(false);
+                    binding.llReminder.setEnabled(false);
+                    binding.ivReminder.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
                     binding.rlSearch.setVisibility(View.GONE);
                 } else {
                     if (listModel.getCreated().equalsIgnoreCase("1")) {
@@ -1112,14 +1120,12 @@ public class MyPlaylistsFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 holder.binding.llMore.setClickable(true);
                 holder.binding.llMore.setEnabled(true);
-                binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-                binding.ivMore.setAlpha(255);
+                holder.binding.ivMore.setColorFilter(activity.getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
 
             } else {
                 holder.binding.llMore.setClickable(false);
                 holder.binding.llMore.setEnabled(false);
-                binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-                binding.ivMore.setAlpha(255);
+                holder.binding.ivMore.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
             }
             holder.binding.llMore.setOnClickListener(view -> {
                 Intent i = new Intent(ctx, AddQueueActivity.class);
@@ -1314,14 +1320,12 @@ public class MyPlaylistsFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 holder.binding.llMore.setClickable(true);
                 holder.binding.llMore.setEnabled(true);
-                binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-                holder.binding.ivMore.setAlpha(255);
+                holder.binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
 
             } else {
                 holder.binding.llMore.setClickable(false);
                 holder.binding.llMore.setEnabled(false);
-                binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-                holder.binding.ivMore.setAlpha(255);
+                holder.binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             }
             holder.binding.llMore.setOnClickListener(view -> {
                 Intent i = new Intent(ctx, AddQueueActivity.class);

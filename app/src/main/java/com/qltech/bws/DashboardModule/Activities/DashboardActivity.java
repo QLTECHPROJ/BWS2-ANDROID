@@ -40,7 +40,7 @@ public class DashboardActivity extends AppCompatActivity {
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+     /*   String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         try {
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 Fragment fragment = new TransparentPlayerFragment();
@@ -51,7 +51,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 //
 //        ConnectivityManager connMgr = (ConnectivityManager)
 //                getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -61,7 +61,6 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
         playlistSongsList = playlistSongs;
         loop = true;
         PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(context), FILE_NAME.get(0)).build().start(this);
-
         return encodedBytes;
     }
 
