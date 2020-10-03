@@ -76,6 +76,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Account.AccountFragment.ComeScreenReminder;
+import static com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity.MyPlaylistId;
+import static com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity.addToPlayList;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.deleteFrg;
@@ -347,6 +349,9 @@ public class MyPlaylistsFragment extends Fragment {
         if (deleteFrg == 1) {
             callBack();
             deleteFrg = 0;
+        }else if(addToPlayList){
+            prepareData(UserID, MyPlaylistId);
+            addToPlayList = false;
         } else {
             prepareData(UserID, PlaylistID);
         }
