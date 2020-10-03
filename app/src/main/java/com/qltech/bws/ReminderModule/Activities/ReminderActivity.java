@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -37,8 +38,10 @@ import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityReminderBinding;
 import com.qltech.bws.databinding.SelectPlaylistLayoutBinding;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -97,16 +100,23 @@ public class ReminderActivity extends AppCompatActivity {
 
         if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
-//            simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
-            Date currdate = Calendar.getInstance().getTime();
-            Date currdate1 = new Date();
-            currantTime = simpleDateFormat1.format(currdate);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                Clock clock = Clock.systemDefaultZone();
+                String timezone = (String.valueOf(clock.getZone()));
+                simpleDateFormat1.setTimeZone(TimeZone.getTimeZone(timezone));
+            }else {
+                simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+            }
+            DateFormat df = DateFormat.getTimeInstance();
+            String gmtTime = df.format(new Date());
+            Date currdate = new Date();
             try {
-                currdate1 = simpleDateFormat1.parse(currantTime);
-                Log.e("currant currdate !!!!", String.valueOf(currdate1));
+                currdate = simpleDateFormat1.parse(gmtTime);
+                Log.e("currant currdate !!!!", String.valueOf(currdate));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            currantTime = simpleDateFormat1.format(currdate);
 //            Calendar rightNow = Calendar.getInstance();
 //            int currentHourIn12Format = rightNow.get(Calendar.HOUR);
 //            int currentminIn12Format = rightNow.get(Calendar.MINUTE);
@@ -274,23 +284,6 @@ public class ReminderActivity extends AppCompatActivity {
         } else {
             binding.tvPlaylistName.setText(PlaylistName);
         }
-
-        String dateStr = binding.tvTime.getText().toString();
-
-        SimpleDateFormat format = new SimpleDateFormat("hh:mm a");
-        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
-        simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date currdate = Calendar.getInstance().getTime();
-        Date currdate1 = new Date();
-        String currantDateTime = dateStr;
-        try {
-            currdate1 = format.parse(currantDateTime);
-            Log.e("currant datesss !!!!", String.valueOf(currdate1));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Log.e("TIMEZONES", String.valueOf(currdate1));
-
         binding.btnSave.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")) {
                 BWSApplication.showToast("Please re-activate your membership plan", context);
@@ -300,10 +293,23 @@ public class ReminderActivity extends AppCompatActivity {
                 } else if (remiderDays.size() == 0) {
                     BWSApplication.showToast("Please select days", context);
                 } else {
+                    String sendTime = binding.tvTime.getText().toString();
+                    SimpleDateFormat simpleDateFormat1x = new SimpleDateFormat("hh:mm a");
+                    simpleDateFormat1x.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    Date currdatex = new Date();
+                    try {
+                        currdatex = simpleDateFormat1x.parse(sendTime);
+                        Log.e("sendTime currdate !!!!", String.valueOf(sendTime));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    sendTime =  simpleDateFormat1x.format(currdatex);
+                    Log.e("sendTime currdate###", sendTime);
+
                     if (BWSApplication.isNetworkConnected(context)) {
                         BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         Call<SetReminderModel> listCall = APIClient.getClient().SetReminder(PlaylistID, UserId, CONSTANTS.FLAG_ONE,
-                                binding.tvTime.getText().toString(), TextUtils.join(",", remiderDays));
+                                sendTime, TextUtils.join(",", remiderDays));
                         listCall.enqueue(new Callback<SetReminderModel>() {
                             @Override
                             public void onResponse(Call<SetReminderModel> call, Response<SetReminderModel> response) {
