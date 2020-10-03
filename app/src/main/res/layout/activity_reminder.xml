@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -337,7 +337,8 @@
                     android:text="Reminder Status"
                     android:textColor="@color/light_black"
                     android:textSize="@dimen/_13sdp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
             </LinearLayout>
 
             <LinearLayout

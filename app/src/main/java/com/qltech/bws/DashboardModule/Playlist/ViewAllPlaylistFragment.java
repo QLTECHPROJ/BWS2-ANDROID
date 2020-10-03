@@ -87,14 +87,15 @@ public class ViewAllPlaylistFragment extends Fragment {
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
         binding.rvMainAudio.setLayoutManager(manager);
-        if(MyDownloads.equalsIgnoreCase("1")){
+        if (MyDownloads.equalsIgnoreCase("1")) {
             playlistList = new ArrayList<>();
             GetAllMedia();
-        }else{
+        } else {
             prepareData();
         }
         return view;
     }
+
     private void GetAllMedia() {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
@@ -112,7 +113,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                 binding.tvTitle.setText("My Downloads");
 
                 ArrayList<ViewAllPlayListModel.ResponseData.Detail> listModelList = new ArrayList<>();
-                for(int i = 0;i<playlistList.size();i++){
+                for (int i = 0; i < playlistList.size(); i++) {
                     ViewAllPlayListModel.ResponseData.Detail detail = new ViewAllPlayListModel.ResponseData.Detail();
 
                     detail.setPlaylistID(playlistList.get(i).getPlaylistID());
@@ -121,7 +122,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                     detail.setPlaylistImage(playlistList.get(i).getPlaylistImage());
                     listModelList.add(detail);
                 }
-                PlaylistAdapter adapter = new PlaylistAdapter(listModelList,IsLock);
+                PlaylistAdapter adapter = new PlaylistAdapter(listModelList, IsLock);
                 binding.rvMainAudio.setAdapter(adapter);
                 super.onPostExecute(aVoid);
             }
@@ -148,7 +149,7 @@ public class ViewAllPlaylistFragment extends Fragment {
 
     private void prepareData() {
         try {
-            if(IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")){
+            if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
                 editorr.remove(CONSTANTS.PREF_KEY_modelList);

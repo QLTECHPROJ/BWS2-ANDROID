@@ -71,7 +71,6 @@ public class AptAudioFragment extends Fragment {
             appointmentDetail = getArguments().getParcelableArrayList("AppointmentDetailList");
         }
         if (appointmentDetail.size() == 0) {
-
         } else {
             AudioListAdapter appointmentsAdapter = new AudioListAdapter(appointmentDetail, getActivity(), f_manager);
             RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -82,35 +81,11 @@ public class AptAudioFragment extends Fragment {
         return view;
     }
 
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void GetMedia(String AudioFile, Context ctx, String download, LinearLayout llDownload, ImageView ivDownload) {
-
         oneAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 oneAudioDetailsList = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -131,10 +106,8 @@ public class AptAudioFragment extends Fragment {
                     enableDownload(llDownload, ivDownload);
                 }
                 super.onPostExecute(aVoid);
-
             }
         }
-
         GetMedia st = new GetMedia();
         st.execute();
     }
@@ -182,7 +155,7 @@ public class AptAudioFragment extends Fragment {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
-               comeRefreshData = 1;
+                comeRefreshData = 1;
                 try {
                     player = 1;
                     if (isPrepare || isMediaStart || isPause) {
@@ -277,7 +250,6 @@ public class AptAudioFragment extends Fragment {
                 @Override
                 protected Void doInBackground(Void... voids) {
                     DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
-
                     downloadAudioDetails.setID(audio.getID());
                     downloadAudioDetails.setName(audio.getName());
                     downloadAudioDetails.setAudioFile(audio.getAudioFile());
@@ -308,7 +280,6 @@ public class AptAudioFragment extends Fragment {
                     super.onPostExecute(aVoid);
                 }
             }
-
             SaveMedia st = new SaveMedia();
             st.execute();
         }
@@ -343,5 +314,4 @@ public class AptAudioFragment extends Fragment {
         llDownload.setClickable(false);
         llDownload.setEnabled(false);
     }
-
 }

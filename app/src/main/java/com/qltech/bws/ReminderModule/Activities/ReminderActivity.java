@@ -60,7 +60,7 @@ public class ReminderActivity extends AppCompatActivity {
     Activity activity;
     Context context;
     Dialog dialog;
-    String am_pm, hourString, minuteSting, UserId, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "",currantTime;
+    String am_pm, hourString, minuteSting, UserId, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "", currantTime;
     ArrayList<String> remiderDays = new ArrayList<>();
     private int mHour, mMinute;
     SelectPlaylistAdapter adapter;
@@ -105,7 +105,7 @@ public class ReminderActivity extends AppCompatActivity {
 //                String timezone = (String.valueOf(clock.getZone()));
 //                simpleDateFormat1.setTimeZone(TimeZone.getTimeZone(timezone));
 //            }else {
-                simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+            simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+8"));
 //            }
             DateFormat df = DateFormat.getTimeInstance();
             String gmtTime = df.format(new Date());
@@ -303,7 +303,7 @@ public class ReminderActivity extends AppCompatActivity {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    sendTime =  simpleDateFormat1x.format(currdatex);
+                    sendTime = simpleDateFormat1x.format(currdatex);
                     Log.e("sendTime currdate###", sendTime);
 
                     if (BWSApplication.isNetworkConnected(context)) {

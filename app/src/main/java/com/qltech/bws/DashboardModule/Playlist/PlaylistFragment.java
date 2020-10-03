@@ -107,7 +107,7 @@ public class PlaylistFragment extends Fragment {
 
     private void prepareData() {
         try {
-            if(IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")){
+            if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
                 editorr.remove(CONSTANTS.PREF_KEY_modelList);

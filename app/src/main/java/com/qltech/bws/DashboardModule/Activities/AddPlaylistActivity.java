@@ -29,7 +29,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.PlaylistingModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
-import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -131,8 +130,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            AddPlayListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.add_play_list_layout, parent, false);
+            AddPlayListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.add_play_list_layout, parent, false);
             return new MyViewHolder(v);
         }
 
@@ -175,7 +173,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                 public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
                                     if (response.isSuccessful()) {
                                         CreatePlaylistModel listsModel = response.body();
-//                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
                                         dialog.dismiss();
                                         prepareData(ctx);
                                         String PlaylistID = listsModel.getResponseData().getId();

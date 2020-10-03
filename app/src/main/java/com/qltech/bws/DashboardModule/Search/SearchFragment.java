@@ -47,6 +47,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
+
 public class SearchFragment extends Fragment {
     FragmentSearchBinding binding;
     String UserID;
@@ -161,7 +162,7 @@ public class SearchFragment extends Fragment {
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
         try {
-            if(IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")){
+            if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
                 editorr.remove(CONSTANTS.PREF_KEY_modelList);
@@ -291,7 +292,7 @@ public class SearchFragment extends Fragment {
                         BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                        i.putExtra("AudioId","");
+                        i.putExtra("AudioId", "");
                         i.putExtra("PlaylistID", modelList.get(position).getID());
                         startActivity(i);
                     }

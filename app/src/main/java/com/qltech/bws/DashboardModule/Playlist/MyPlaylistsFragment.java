@@ -93,7 +93,7 @@ import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 
 public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
-    String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "",AudioFlag;
+    String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag;
     int RefreshIcon;
     public static int RefreshIconData = 0;
     public static String RefreshNew = "";
@@ -418,7 +418,7 @@ public class MyPlaylistsFragment extends Fragment {
         searchClear(searchEditText);
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         try {
-            if(IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")){
+            if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
                 editorr.remove(CONSTANTS.PREF_KEY_modelList);
@@ -433,7 +433,7 @@ public class MyPlaylistsFragment extends Fragment {
             }
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
 
-              AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 if (comefrom_search == 1) {
                     Fragment fragment = new TransparentPlayerFragment();
@@ -494,9 +494,8 @@ public class MyPlaylistsFragment extends Fragment {
                                 if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
                                         listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
                                     binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
-
-                                    ComeScreenReminder = 0;
                                     Intent i = new Intent(getActivity(), ReminderActivity.class);
+                                    ComeScreenReminder = 0;
                                     i.putExtra("ComeFrom", "1");
                                     i.putExtra("PlaylistID", PlaylistID);
                                     i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
@@ -505,7 +504,6 @@ public class MyPlaylistsFragment extends Fragment {
                                     startActivity(i);
                                 } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
                                     binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-
                                     dialog = new Dialog(activity);
                                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     dialog.setContentView(R.layout.delete_payment_card);
@@ -1041,7 +1039,7 @@ public class MyPlaylistsFragment extends Fragment {
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
 
-        public  PlayListsAdpater(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
+        public PlayListsAdpater(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
                                 String Created) {
             this.listModelList = listModelList;
             this.listFilterData = listModelList;

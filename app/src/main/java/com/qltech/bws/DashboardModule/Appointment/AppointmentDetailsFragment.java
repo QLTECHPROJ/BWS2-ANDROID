@@ -37,7 +37,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Appointment.AppointmentDetails.AptAudioFragment.comeRefreshData;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 
@@ -96,7 +95,7 @@ public class AppointmentDetailsFragment extends Fragment {
 
     public void RefreshData() {
         try {
-            if(IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")){
+            if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
                 editorr.remove(CONSTANTS.PREF_KEY_modelList);
@@ -109,7 +108,7 @@ public class AppointmentDetailsFragment extends Fragment {
                 editorr.clear();
                 editorr.commit();
             }
-            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 Fragment fragment = new TransparentPlayerFragment();

@@ -223,7 +223,7 @@ public class AudioFragment extends Fragment {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
         try {
-            if(IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")){
+            if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
                 editorr.remove(CONSTANTS.PREF_KEY_modelList);
@@ -337,6 +337,22 @@ public class AudioFragment extends Fragment {
                     } else {
                         holder.binding.tvViewAll.setVisibility(View.GONE);
                     }
+                } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Library))) {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(10, -4, 10, 0);
+                    holder.binding.llMainLayout.setLayoutParams(params);
+                    RecommendedAdapter recommendedAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
+                            listModelList.get(position).getIsLock());
+                    RecyclerView.LayoutManager recommended = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                    holder.binding.rvMainAudio.setLayoutManager(recommended);
+                    holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
+                    holder.binding.rvMainAudio.setAdapter(recommendedAdapter);
+                    if (listModelList.get(position).getDetails() != null &&
+                            listModelList.get(position).getDetails().size() > 4) {
+                        holder.binding.tvViewAll.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.binding.tvViewAll.setVisibility(View.GONE);
+                    }
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.my_like))) {
                     holder.binding.llMainLayout.setVisibility(View.GONE);
                     /*RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModelList.get(position).getDetails(), getActivity());
@@ -353,19 +369,6 @@ public class AudioFragment extends Fragment {
                     holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);
                     if (listModelList.get(position).getDetails() != null &&
                             listModelList.get(position).getDetails().size() > 6) {
-                        holder.binding.tvViewAll.setVisibility(View.VISIBLE);
-                    } else {
-                        holder.binding.tvViewAll.setVisibility(View.GONE);
-                    }
-                } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Library))) {
-                    RecommendedAdapter recommendedAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock());
-                    RecyclerView.LayoutManager recommended = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-                    holder.binding.rvMainAudio.setLayoutManager(recommended);
-                    holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
-                    holder.binding.rvMainAudio.setAdapter(recommendedAdapter);
-                    if (listModelList.get(position).getDetails() != null &&
-                            listModelList.get(position).getDetails().size() > 4) {
                         holder.binding.tvViewAll.setVisibility(View.VISIBLE);
                     } else {
                         holder.binding.tvViewAll.setVisibility(View.GONE);

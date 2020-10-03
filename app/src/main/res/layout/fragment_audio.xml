@@ -25,7 +25,6 @@
                     android:layout_marginLeft="@dimen/_16sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginRight="@dimen/_16sdp"
-                    android:layout_marginBottom="@dimen/_2sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="start"
                     android:text="@string/Explore"
