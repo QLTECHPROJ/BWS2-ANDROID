@@ -91,7 +91,7 @@ public class ViewAllAudioFragment extends Fragment {
         if (HomeView.equalsIgnoreCase("My Downloads")) {
             audioList = new ArrayList<>();
             GetAllMedia(getActivity());
-        } else if (HomeView.equalsIgnoreCase("")){
+        } else{
             prepareData();
         }
         return view;
