@@ -295,7 +295,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             dialog.dismiss();
                                             finish();
                                             addToPlayList = true;
-                                            PlaylistId =  listModel.get(position).getID();
+                                            MyPlaylistId =  listModel.get(position).getID();
                                         /*    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                                             Bundle bundle = new Bundle();
                                             bundle.putString("New", "0");
