@@ -157,6 +157,7 @@
     <string name="MyDownloads">MyDownloads</string>
     <string name="populars">Popular</string>
     <string name="Bundle">Bundle</string>
+    <string name="Recommended_Playlist">Recommended Playlist</string>
     <string name="first_card_chars">XXXX XXXX XXXX </string>
     <string name="blank_all_fields">Hey! I\'ll need your inputs</string>
     <string name="valid_card_no_error">Hey! Seems like the card number is out of whack. Fancy a retry?</string>

@@ -408,10 +408,6 @@ public class AudioFragment extends Fragment {
                     holder.binding.rvMainAudio.setAdapter(topCategoriesAdapter);
                 }
             }
-
-            if (!listModelList.get(position).getDetails().equals("")) {
-
-            }
         }
 
         @Override

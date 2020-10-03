@@ -90,6 +90,7 @@ import static com.qltech.bws.Utility.MusicService.stopMedia;
 public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
     String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "";
+    int RefreshIcon;
     PlayListsAdpater adpater;
     PlayListsAdpater2 adpater2;
     View view;
@@ -207,18 +208,13 @@ public class MyPlaylistsFragment extends Fragment {
             binding.llDownloads.setVisibility(View.VISIBLE);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-            binding.llDownloads.setClickable(false);
-            binding.llDownloads.setEnabled(false);
             binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.INVISIBLE);
             binding.llListing.setVisibility(View.GONE);
-            binding.btnAddAudio.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(getActivity(), AddAudioActivity.class);
-                    i.putExtra("PlaylistID", PlaylistID);
-                    startActivity(i);
-                }
+            binding.btnAddAudio.setOnClickListener(view -> {
+                Intent i = new Intent(getActivity(), AddAudioActivity.class);
+                i.putExtra("PlaylistID", PlaylistID);
+                startActivity(i);
             });
         } else if (New.equalsIgnoreCase("0")) {
             binding.llAddAudio.setVisibility(View.GONE);
@@ -235,7 +231,6 @@ public class MyPlaylistsFragment extends Fragment {
 
     private List<DownloadPlaylistDetails> GetPlaylistDetail(String download, SubPlayListModel listModel) {
         class GetTask extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
 
@@ -249,12 +244,12 @@ public class MyPlaylistsFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
-                if (downloadPlaylistDetailsList.size() != 0) {
+                if (downloadPlaylistDetailsList.size() != 0 || New.equalsIgnoreCase("1") || RefreshIcon == 0) {
                     enableDisableDownload(false);
-                } else if (download.equalsIgnoreCase("1")) {
+                } else if (download.equalsIgnoreCase("1") || New.equalsIgnoreCase("1") || RefreshIcon == 0) {
                     enableDisableDownload(false);
-                } else if (download.equalsIgnoreCase("0") || download.equalsIgnoreCase("")) {
+                } else if (download.equalsIgnoreCase("0") || download.equalsIgnoreCase("") ||
+                        New.equalsIgnoreCase("0") || RefreshIcon != 0) {
                     enableDisableDownload(true);
                 }
                 super.onPostExecute(aVoid);
@@ -629,24 +624,19 @@ public class MyPlaylistsFragment extends Fragment {
                         + listModel.getTotalhour() + "h " + listModel.getTotalminute() + "m");
             }
         }
+        RefreshIcon = listModel.getPlaylistSongs().size();
 
         if (listModel.getPlaylistSongs().size() == 0) {
             binding.llAddAudio.setVisibility(View.VISIBLE);
             binding.llDownloads.setVisibility(View.VISIBLE);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.llDownloads.setClickable(false);
-            binding.llDownloads.setEnabled(false);
-            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.lights_gray), PorterDuff.Mode.SRC_IN);
             binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivPlaylistStatus.setVisibility(View.INVISIBLE);
             binding.llListing.setVisibility(View.GONE);
-            binding.btnAddAudio.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(getActivity(), AddAudioActivity.class);
-                    i.putExtra("PlaylistID", PlaylistID);
-                    startActivity(i);
-                }
+            binding.btnAddAudio.setOnClickListener(view -> {
+                Intent i = new Intent(getActivity(), AddAudioActivity.class);
+                i.putExtra("PlaylistID", PlaylistID);
+                startActivity(i);
             });
         } else {
             binding.llAddAudio.setVisibility(View.GONE);
@@ -760,42 +750,6 @@ public class MyPlaylistsFragment extends Fragment {
 
     private void callDownload(String id, String audioFile, String Name, ArrayList<SubPlayListModel.ResponseData.PlaylistSong>
             playlistSongs, int position, LinearLayout llDownload, ImageView ivDownloads) {
-
-       /* if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
-            String AudioId = id;
-            Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistID);
-            listCall.enqueue(new Callback<DownloadPlaylistModel>() {
-                @Override
-                public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
-                        DownloadPlaylistModel model = response.body();
-                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")
-                                || model.getResponseData().getFlag().equalsIgnoreCase("")) {
-                            binding.llDownloads.setClickable(true);
-                            binding.llDownloads.setEnabled(true);
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-                            binding.ivDownloads.setAlpha(255);
-                            binding.llDownloads.setClickable(false);
-                            binding.llDownloads.setEnabled(false);
-                        }
-                        BWSApplication.showToast(model.getResponseMessage(), getActivity());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
-                }
-            });
-
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-        }*/
 
         disableDownload(llDownload, ivDownloads);
         enableDisableDownload(false);
@@ -977,7 +931,6 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     public List<DownloadAudioDetails> GetMedia() {
-
         playlistWiseAudioDetails = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
 

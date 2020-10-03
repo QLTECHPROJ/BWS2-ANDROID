@@ -1,10 +1,8 @@
 package com.qltech.bws.DashboardModule.Audio.Adapters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -16,22 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
 import com.qltech.bws.DashboardModule.Audio.ViewAllAudioFragment;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
-import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
-import com.qltech.bws.BWSApplication;
-import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.RoundBoxLayoutBinding;
 
 import java.util.ArrayList;
-
-import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
-import static com.qltech.bws.Utility.MusicService.isMediaStart;
-import static com.qltech.bws.Utility.MusicService.isPause;
-import static com.qltech.bws.Utility.MusicService.isPrepare;
-import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
@@ -72,6 +60,7 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
             bundle.putString("ID", HomeID);
             bundle.putString("Name", Views);
             bundle.putString("Category", listModelList.get(position).getCategoryName());
+            bundle.putString("View", Views);
             viewAllAudioFragment.setArguments(bundle);
         });
     }

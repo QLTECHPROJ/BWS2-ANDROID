@@ -91,6 +91,9 @@ public class CurrentPlanVieViewModel {
         @SerializedName("expireDate")
         @Expose
         private String expireDate;
+        @SerializedName("Reattempt")
+        @Expose
+        private String reattempt;
         @SerializedName("Feature")
         @Expose
         private List<Feature> feature = null;
@@ -101,6 +104,14 @@ public class CurrentPlanVieViewModel {
 
         public void setPlan(String plan) {
             this.plan = plan;
+        }
+
+        public String getReattempt() {
+            return reattempt;
+        }
+
+        public void setReattempt(String reattempt) {
+            this.reattempt = reattempt;
         }
 
         public String getCardId() {

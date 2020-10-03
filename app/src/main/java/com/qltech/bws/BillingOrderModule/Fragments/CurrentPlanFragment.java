@@ -96,103 +96,114 @@ public class CurrentPlanFragment extends Fragment {
             public void onResponse(Call<CurrentPlanVieViewModel> call, Response<CurrentPlanVieViewModel> response) {
                 if (response.isSuccessful()) {
                     hideProgressBar();
-                    CurrentPlanVieViewModel listModel = response.body();
-                    binding.tvHeader.setText(listModel.getResponseData().getPlan());
+                    try {
+                        CurrentPlanVieViewModel listModel = response.body();
+                        binding.tvHeader.setText(listModel.getResponseData().getPlan());
+                        MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 29,
+                                5, 3, 1.1f, 29);
+                        binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+                        binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+                        binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                        binding.ivRestaurantImage.setImageResource(R.drawable.current_plan_image);
 
-                    MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 29,
-                            5, 3, 1.1f, 29);
-                    binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-                    binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-                    binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-                    binding.ivRestaurantImage.setImageResource(R.drawable.current_plan_image);
+                        if (listModel.getResponseData().getActivate().equalsIgnoreCase("")) {
+                            binding.tvPlan.setText("");
+                            binding.tvPlan.setVisibility(View.GONE);
+                        } else {
+                            binding.tvPlan.setVisibility(View.VISIBLE);
+                            binding.tvPlan.setText("Active Since: " + listModel.getResponseData().getActivate());
+                        }
 
-                    if (listModel.getResponseData().getActivate().equalsIgnoreCase("")) {
-                        binding.tvPlan.setText("");
-                        binding.tvPlan.setVisibility(View.GONE);
-                    } else {
-                        binding.tvPlan.setVisibility(View.VISIBLE);
-                        binding.tvPlan.setText("Active Since: " + listModel.getResponseData().getActivate());
-                    }
-                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().getExpireDate());
-                    editor.putString(CONSTANTS.PREF_KEY_IsLock,IsLock);
-                    editor.commit();
-                    binding.tvSubName.setText(listModel.getResponseData().getSubtitle());
-                    binding.tvPlanAmount.setText("$" + listModel.getResponseData().getOrderTotal() + " ");
-                    binding.tvPlanInterval.setText(listModel.getResponseData().getPlanStr());
-                    binding.tvPayUsing.setText(listModel.getResponseData().getCardDigit());
-                    invoicePayId = listModel.getResponseData().getInvoicePayId();
-                    PlanStatus = listModel.getResponseData().getStatus();
+                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().getExpireDate());
+                        editor.putString(CONSTANTS.PREF_KEY_IsLock, IsLock);
+                        editor.commit();
 
-                    if (listModel.getResponseData().getStatus().equalsIgnoreCase("1")) {
-                        binding.tvRecommended.setBackgroundResource(R.drawable.green_background);
-                        binding.tvRecommended.setText(R.string.Active);
-                        binding.btnCancelSubscrible.setVisibility(View.VISIBLE);
-                        binding.btnPayNow.setVisibility(View.GONE);
-                        binding.tvPayUsing.setVisibility(View.GONE);
-                        binding.tvChangeCard.setVisibility(View.GONE);
-                    } else if (listModel.getResponseData().getStatus().equalsIgnoreCase("2")) {
-                        binding.tvRecommended.setBackgroundResource(R.drawable.dark_brown_background);
-                        binding.tvRecommended.setText(R.string.InActive);
-                        binding.btnCancelSubscrible.setVisibility(View.GONE);
-                        binding.btnPayNow.setVisibility(View.VISIBLE);
-                        binding.tvPayUsing.setVisibility(View.GONE);
-                        binding.tvChangeCard.setVisibility(View.GONE);
 
-                        binding.btnPayNow.setOnClickListener(view1 -> {
-                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                return;
-                            }
-                            mLastClickTime = SystemClock.elapsedRealtime();
-                            Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                            startActivity(i);
-                            getActivity().finish();
-                        });
-                    } else if (listModel.getResponseData().getStatus().equalsIgnoreCase("3")) {
-                        binding.tvRecommended.setBackgroundResource(R.drawable.yellow_background);
-                        binding.tvRecommended.setText(R.string.Suspended);
-                        binding.btnCancelSubscrible.setVisibility(View.GONE);
-                        binding.btnPayNow.setVisibility(View.VISIBLE);
-                        binding.tvPayUsing.setVisibility(View.VISIBLE);
-                        binding.tvChangeCard.setVisibility(View.VISIBLE);
+                        if (listModel.getResponseData().getReattempt().equalsIgnoreCase("")) {
+                            binding.tvSubName.setText(listModel.getResponseData().getSubtitle());
+                        } else {
+                            binding.tvSubName.setText(listModel.getResponseData().getReattempt());
+                        }
 
-                        binding.btnPayNow.setOnClickListener(view1 -> {
-                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                return;
-                            }
-                            mLastClickTime = SystemClock.elapsedRealtime();
-                            showProgressBar();
-                            Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(UserID, listModel.getResponseData().getCardId(),
-                                    listModel.getResponseData().getPlanId(), listModel.getResponseData().getPlanFlag(),
-                                    listModel.getResponseData().getInvoicePayId(), listModel.getResponseData().getStatus());
-                            listCall.enqueue(new Callback<PayNowDetailsModel>() {
-                                @Override
-                                public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
-                                    if (response.isSuccessful()) {
-                                        hideProgressBar();
-                                        PayNowDetailsModel listModel1 = response.body();
-                                        BWSApplication.showToast(listModel1.getResponseMessage(), getActivity());
-                                        getActivity().finish();
-                                    }
+                        binding.tvPlanAmount.setText("$" + listModel.getResponseData().getOrderTotal() + " ");
+                        binding.tvPlanInterval.setText(listModel.getResponseData().getPlanStr());
+                        binding.tvPayUsing.setText(listModel.getResponseData().getCardDigit());
+                        invoicePayId = listModel.getResponseData().getInvoicePayId();
+                        PlanStatus = listModel.getResponseData().getStatus();
+
+                        if (listModel.getResponseData().getStatus().equalsIgnoreCase("1")) {
+                            binding.tvRecommended.setBackgroundResource(R.drawable.green_background);
+                            binding.tvRecommended.setText(R.string.Active);
+                            binding.btnCancelSubscrible.setVisibility(View.VISIBLE);
+                            binding.btnPayNow.setVisibility(View.GONE);
+                            binding.tvPayUsing.setVisibility(View.GONE);
+                            binding.tvChangeCard.setVisibility(View.GONE);
+                        } else if (listModel.getResponseData().getStatus().equalsIgnoreCase("2")) {
+                            binding.tvRecommended.setBackgroundResource(R.drawable.dark_brown_background);
+                            binding.tvRecommended.setText(R.string.InActive);
+                            binding.btnCancelSubscrible.setVisibility(View.GONE);
+                            binding.btnPayNow.setVisibility(View.VISIBLE);
+                            binding.tvPayUsing.setVisibility(View.GONE);
+                            binding.tvChangeCard.setVisibility(View.GONE);
+
+                            binding.btnPayNow.setOnClickListener(view1 -> {
+                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                    return;
                                 }
-
-                                @Override
-                                public void onFailure(Call<PayNowDetailsModel> call, Throwable t) {
-                                    hideProgressBar();
-                                }
+                                mLastClickTime = SystemClock.elapsedRealtime();
+                                Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                                startActivity(i);
+                                getActivity().finish();
                             });
-                        });
-                    } else if (listModel.getResponseData().getStatus().equalsIgnoreCase("4")) {
-                        binding.tvRecommended.setBackgroundResource(R.drawable.dark_red_background);
-                        binding.tvRecommended.setText(R.string.Cancelled);
-                        binding.btnCancelSubscrible.setVisibility(View.GONE);
-                        binding.btnPayNow.setVisibility(View.GONE);
-                        binding.tvPayUsing.setVisibility(View.GONE);
-                        binding.tvChangeCard.setVisibility(View.GONE);
+                        } else if (listModel.getResponseData().getStatus().equalsIgnoreCase("3")) {
+                            binding.tvRecommended.setBackgroundResource(R.drawable.yellow_background);
+                            binding.tvRecommended.setText(R.string.Suspended);
+                            binding.btnCancelSubscrible.setVisibility(View.GONE);
+                            binding.btnPayNow.setVisibility(View.VISIBLE);
+                            binding.tvPayUsing.setVisibility(View.VISIBLE);
+                            binding.tvChangeCard.setVisibility(View.VISIBLE);
+
+                            binding.btnPayNow.setOnClickListener(view1 -> {
+                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                    return;
+                                }
+                                mLastClickTime = SystemClock.elapsedRealtime();
+                                showProgressBar();
+                                Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(UserID, listModel.getResponseData().getCardId(),
+                                        listModel.getResponseData().getPlanId(), listModel.getResponseData().getPlanFlag(),
+                                        listModel.getResponseData().getInvoicePayId(), listModel.getResponseData().getStatus());
+                                listCall.enqueue(new Callback<PayNowDetailsModel>() {
+                                    @Override
+                                    public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
+                                        if (response.isSuccessful()) {
+                                            hideProgressBar();
+                                            PayNowDetailsModel listModel1 = response.body();
+                                            BWSApplication.showToast(listModel1.getResponseMessage(), getActivity());
+                                            getActivity().finish();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<PayNowDetailsModel> call, Throwable t) {
+                                        hideProgressBar();
+                                    }
+                                });
+                            });
+                        } else if (listModel.getResponseData().getStatus().equalsIgnoreCase("4")) {
+                            binding.tvRecommended.setBackgroundResource(R.drawable.dark_red_background);
+                            binding.tvRecommended.setText(R.string.Cancelled);
+                            binding.btnCancelSubscrible.setVisibility(View.GONE);
+                            binding.btnPayNow.setVisibility(View.GONE);
+                            binding.tvPayUsing.setVisibility(View.GONE);
+                            binding.tvChangeCard.setVisibility(View.GONE);
+                        }
+                        adpater = new FeaturedListAdpater(listModel.getResponseData().getFeature());
+                        binding.rvFeatured.setAdapter(adpater);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    adpater = new FeaturedListAdpater(listModel.getResponseData().getFeature());
-                    binding.rvFeatured.setAdapter(adpater);
                 }
             }
 

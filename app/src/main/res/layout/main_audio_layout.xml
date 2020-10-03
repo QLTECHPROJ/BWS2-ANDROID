@@ -19,17 +19,17 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.6"
+                android:layout_weight="0.7"
                 android:fontFamily="@font/montserrat_bold"
                 android:gravity="start"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_20sdp" />
+                android:textSize="@dimen/_19sdp" />
 
             <TextView
                 android:id="@+id/tvViewAll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.4"
+                android:layout_weight="0.3"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="right"
                 android:visibility="gone"

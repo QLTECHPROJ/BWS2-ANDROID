@@ -362,7 +362,7 @@ public class PlaylistFragment extends Fragment {
                     PlaylistAdapter adapter2 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
                             listModelList.get(position).getIsLock(), "1");
                     holder.binding.rvMainAudio.setAdapter(adapter2);
-                } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Bundle))) {
+                } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Recommended_Playlist))) {
                     PlaylistAdapter adapter3 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
                             listModelList.get(position).getIsLock(), "0");
                     holder.binding.rvMainAudio.setAdapter(adapter3);

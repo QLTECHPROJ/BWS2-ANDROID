@@ -311,7 +311,6 @@
                                 android:visibility="visible" />
                         </LinearLayout>
 
-
                         <LinearLayout
                             android:id="@+id/llError"
                             android:layout_width="match_parent"

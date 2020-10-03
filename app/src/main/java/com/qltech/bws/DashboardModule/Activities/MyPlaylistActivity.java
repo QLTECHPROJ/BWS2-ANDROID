@@ -79,7 +79,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_playlist);
         ctx = MyPlaylistActivity.this;
-        Glide.with(MyPlaylistActivity.this).load(R.drawable.loading).asGif().into(binding.ImgV);
+        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -132,41 +132,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
     }
 
     private void callDownload() {
-       /* if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
-            String AudioId = id;
-            Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistID);
-            listCall.enqueue(new Callback<DownloadPlaylistModel>() {
-                @Override
-                public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
-                        DownloadPlaylistModel model = response.body();
-                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")
-                                || model.getResponseData().getFlag().equalsIgnoreCase("")) {
-                            binding.llDownloads.setClickable(true);
-                            binding.llDownloads.setEnabled(true);
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-                            binding.ivDownloads.setAlpha(255);
-                            binding.llDownloads.setClickable(false);
-                            binding.llDownloads.setEnabled(false);
-                        }
-                        BWSApplication.showToast(model.getResponseMessage(), getActivity());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
-                }
-            });
-
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-        }*/
         List<String> url = new ArrayList<>();
         List<String> name = new ArrayList<>();
         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2 = new ArrayList<>();
@@ -405,12 +370,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 dialog.setCancelable(false);
                             }
                         });
-
-                       /* if (model.getResponseData().get(0).getLike().equalsIgnoreCase("1")) {
-                            binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                        } else if (!model.getResponseData().get(0).getLike().equalsIgnoreCase("0")) {
-                            binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
-                        }*/
 
                     /*    if (model.getResponseData().getDownload().equalsIgnoreCase("1")) {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);

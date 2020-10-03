@@ -55,7 +55,6 @@ import com.qltech.bws.UserModule.Models.RemoveProfileModel;
 
 import java.util.List;
 
-import retrofit.Callback;
 import retrofit.mime.TypedFile;
 import retrofit2.Call;
 import retrofit2.http.Field;

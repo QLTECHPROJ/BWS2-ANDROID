@@ -8,7 +8,7 @@ import java.util.List;
 public class ReminderStatusModel {
     @SerializedName("ResponseData")
     @Expose
-    private List<ResponseData> responseData = null;
+    private ResponseData responseData;
     @SerializedName("ResponseCode")
     @Expose
     private String responseCode;
@@ -19,11 +19,11 @@ public class ReminderStatusModel {
     @Expose
     private String responseStatus;
 
-    public List<ResponseData> getResponseData() {
+    public ResponseData getResponseData() {
         return responseData;
     }
 
-    public void setResponseData(List<ResponseData> responseData) {
+    public void setResponseData(ResponseData responseData) {
         this.responseData = responseData;
     }
 
