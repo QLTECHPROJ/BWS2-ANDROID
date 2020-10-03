@@ -57,7 +57,7 @@ public class ReminderActivity extends AppCompatActivity {
     Activity activity;
     Context context;
     Dialog dialog;
-    String am_pm, hourString, minuteSting, UserId, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "";
+    String am_pm, hourString, minuteSting, UserId, PlaylistID = "", PlaylistName = "", ComeFrom = "", Time = "", Day = "",currantTime;
     ArrayList<String> remiderDays = new ArrayList<>();
     private int mHour, mMinute;
     SelectPlaylistAdapter adapter;
@@ -96,11 +96,22 @@ public class ReminderActivity extends AppCompatActivity {
         ShowPlaylistName();
 
         if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
-            Calendar rightNow = Calendar.getInstance();
-            int currentHourIn12Format = rightNow.get(Calendar.HOUR);
-            int currentminIn12Format = rightNow.get(Calendar.MINUTE);
-            int ampm = rightNow.get(Calendar.AM_PM);
-            binding.tvTime.setText(String.valueOf(currentHourIn12Format)+String.valueOf(currentminIn12Format)+String.valueOf(ampm));
+            SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
+//            simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date currdate = Calendar.getInstance().getTime();
+            Date currdate1 = new Date();
+            currantTime = simpleDateFormat1.format(currdate);
+            try {
+                currdate1 = simpleDateFormat1.parse(currantTime);
+                Log.e("currant currdate !!!!", String.valueOf(currdate1));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+//            Calendar rightNow = Calendar.getInstance();
+//            int currentHourIn12Format = rightNow.get(Calendar.HOUR);
+//            int currentminIn12Format = rightNow.get(Calendar.MINUTE);
+//            int ampm = rightNow.get(Calendar.AM_PM);
+            binding.tvTime.setText(currantTime);
         } else {
             binding.tvTime.setText(Time);
         }
@@ -110,8 +121,11 @@ public class ReminderActivity extends AppCompatActivity {
 //            TimeZone tz = c.getTimeZone();
 //            c.setTimeZone(TimeZone.getTimeZone("GMT"));
 //            Log.e("GMTTTTTT", tz.getDisplayName());
-            mHour = c.get(Calendar.HOUR_OF_DAY);
-            mMinute = c.get(Calendar.MINUTE);
+            String[] time = currantTime.split(":");
+            String min[] = time[1].split(" ");
+            mHour = Integer.parseInt(time[0]);
+//            mHour = c.get(Calendar.HOUR_OF_DAY);
+            mMinute = Integer.parseInt(min[0]);
             timePickerDialog = new TimePickerDialog(ReminderActivity.this, R.style.TimePickerTheme,
                     (view1, hourOfDay, minute) -> {
                         if (hourOfDay < 10) {
