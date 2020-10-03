@@ -376,22 +376,22 @@ public class AddQueueActivity extends AppCompatActivity {
             addToQueueModel.setDownload(mainPlayModelList.get(i).getDownload());
             addToQueueModel.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
         }
-        if (addToQueueModelList.size() == 0) {
+//        if (addToQueueModelList.size() == 0) {
             BWSApplication.showToast("Audio has been added to queue", ctx);
             addToQueueModelList.add(addToQueueModel);
-        } else {
-            for (int x = 0; x < addToQueueModelList.size(); x++) {
-                if (addToQueueModelList.get(x).getAudioFile().equals(addToQueueModel.getAudioFile())) {
-                    addToQueueModel = new AddToQueueModel();
-                    BWSApplication.showToast("Already in Queue", ctx);
-                    break;
-                } else if (x == (addToQueueModelList.size() - 1)) {
-                    BWSApplication.showToast("Audio has been added to queue", ctx);
-                    addToQueueModelList.add(addToQueueModel);
-                    break;
-                }
-            }
-        }
+//        } else {
+//            for (int x = 0; x < addToQueueModelList.size(); x++) {
+//                if (addToQueueModelList.get(x).getAudioFile().equals(addToQueueModel.getAudioFile())) {
+//                    addToQueueModel = new AddToQueueModel();
+//                    BWSApplication.showToast("Already in Queue", ctx);
+//                    break;
+//                } else if (x == (addToQueueModelList.size() - 1)) {
+//                    BWSApplication.showToast("Audio has been added to queue", ctx);
+//                    addToQueueModelList.add(addToQueueModel);
+//                    break;
+//                }
+//            }
+//        }
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();

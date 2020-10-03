@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -72,7 +73,7 @@ import static com.qltech.bws.Utility.MusicService.resumeMedia;
 import static com.qltech.bws.Utility.MusicService.savePrefQueue;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
-public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener*/ {
+public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, AudioManager.OnAudioFocusChangeListener {
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
     int position = 0, startTime, listSize;
@@ -660,7 +661,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+    /*    handler.removeCallbacks(UpdateSongTime);
+        if (isMediaStart) {
+            int totalDuration = getEndTime();
+            int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
 
+            // forward or backward to certain seconds
+            SeekTo(currentPosition);
+        }
+        // update timer progress again
+        updateProgressBar();*/
     }
 
     @Override
@@ -683,6 +693,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         // forward or backward to certain seconds
         SeekTo(currentPosition);
 
+        oTime = binding.simpleSeekbar.getProgress();
         // update timer progress again
         updateProgressBar();
     }
@@ -730,7 +741,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         super.onResume();
     }
 
-/*    @Override
+    @Override
     public void onAudioFocusChange(int i) {
         switch (i) {
             case AudioManager.AUDIOFOCUS_GAIN:
@@ -741,11 +752,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 if (isMediaStart) {
                     pauseMedia();
-                    binding.ivPlay.setVisibility(View.VISIBLE);
-                    binding.ivPause.setVisibility(View.GONE);
+//                    binding.ivPlay.setVisibility(View.VISIBLE);
+//                    binding.ivPause.setVisibility(View.GONE);
                 }
 //                MusicService.pauseMedia();// Pause your media player here
                 break;
         }
-    }*/
+    }
 }

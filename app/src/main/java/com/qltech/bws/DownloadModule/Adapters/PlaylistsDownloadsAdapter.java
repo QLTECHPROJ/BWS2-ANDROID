@@ -3,6 +3,7 @@ package com.qltech.bws.DownloadModule.Adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,25 +15,35 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Activities.DownloadedPlaylist;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.RoomDataBase.DownloadPlaylistDetails;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.DownloadsLayoutBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDownloadsAdapter.MyViewHolder> {
     FragmentActivity ctx;
@@ -103,14 +114,15 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             } else if (IsLock.equalsIgnoreCase("0")
                     || IsLock.equalsIgnoreCase("")) {
                 playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());
-                Intent i = new Intent(ctx, DownloadedPlaylist.class);
+
+        /*        Intent i = new Intent(ctx, DownloadedPlaylist.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
                 i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
                 i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
                 i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
                 ctx.startActivity(i);
-                ctx.finish();
+                ctx.finish();*/
             }
         });
         holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
@@ -238,6 +250,34 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                player = 1;
+                if (isPrepare || isMediaStart || isPause) {
+                    stopMedia();
+                }
+                isPause = false;
+                isMediaStart = false;
+                isPrepare = false;
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(playlistWiseAudioDetails);
+                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, playlistID);
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                editor.commit();
+                try {
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flContainer, fragment)
+                            .commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 super.onPostExecute(aVoid);
             }
         }

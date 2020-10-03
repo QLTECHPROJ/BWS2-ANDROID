@@ -29,12 +29,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
+import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.RoomDataBase.DownloadPlaylistDetails;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -51,14 +53,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
     String UserID, Check = "", AudioFlag;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
-
+    List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false);
         View view = binding.getRoot();
@@ -378,6 +385,7 @@ public class PlaylistFragment extends Fragment {
                     PlaylistAdapter adapter2 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
                             listModelList.get(position).getIsLock(), "1");
                     holder.binding.rvMainAudio.setAdapter(adapter2);
+
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Recommended_Playlist))) {
                     PlaylistAdapter adapter3 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
                             listModelList.get(position).getIsLock(), "0");
@@ -407,6 +415,54 @@ public class PlaylistFragment extends Fragment {
                 this.binding = binding;
             }
         }
+    }
+    private void getMedia(String playlistID) {
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                playlistWiseAudioDetails = DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getAllAudioByPlaylist(playlistID);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) { player = 1;
+                if (isPrepare || isMediaStart || isPause) {
+                    stopMedia();
+                }
+                isPause = false;
+                isMediaStart = false;
+                isPrepare = false;
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(playlistWiseAudioDetails);
+                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, playlistID);
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                editor.commit();
+                try {
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flContainer, fragment)
+                            .commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetMedia st = new GetMedia();
+        st.execute();
     }
 
     public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
@@ -455,8 +511,13 @@ public class PlaylistFragment extends Fragment {
                         BWSApplication.showToast("Please re-activate your membership plan", ctx);
                     } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        callMyPlaylistsFragment("0", listModelList.get(position).getPlaylistID(), listModelList.get(position).getPlaylistName(),
-                                listModelList.get(position).getPlaylistImage(), MyDownloads);
+                        if(MyDownloads.equalsIgnoreCase("1")){
+                           getMedia(listModelList.get(position).getPlaylistID());
+                        }else{
+                            callMyPlaylistsFragment("0", listModelList.get(position).getPlaylistID(), listModelList.get(position).getPlaylistName(),
+                                    listModelList.get(position).getPlaylistImage(), MyDownloads);
+                        }
+
                     }
                 }
             });

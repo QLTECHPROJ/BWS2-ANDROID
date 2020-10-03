@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -75,7 +76,7 @@ import static com.qltech.bws.Utility.MusicService.resumeMedia;
 import static com.qltech.bws.Utility.MusicService.savePrefQueue;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
-public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*,AudioManager.OnAudioFocusChangeListener*/ {
+public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, AudioManager.OnAudioFocusChangeListener {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url;
     int startTime = 0, endTime = 0, position, listSize;
@@ -733,13 +734,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         } else if (IsRepeat.equalsIgnoreCase("1")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
+            editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
-            editor.commit();
             IsRepeat = "";
             if (listSize == 1) {
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            editor.commit();
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             BWSApplication.showToast("Repeat mode has been turned off", ctx);
@@ -1325,7 +1327,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+     /*   handler.removeCallbacks(UpdateSongTime);
+        if (isMediaStart) {
+            int totalDuration = getEndTime();
+            int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
 
+            // forward or backward to certain seconds
+            SeekTo(currentPosition);
+        }
+        // update timer progress again
+        updateProgressBar();*/
     }
 
     @Override
@@ -1334,7 +1345,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     public void updateProgressBar() {
-        handler.postDelayed(UpdateSongTime, 100);
+        handler.postDelayed(UpdateSongTime, 60);
     }
 
     @Override
@@ -1344,6 +1355,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             int totalDuration = getEndTime();
             int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
 
+            oTime = binding.simpleSeekbar.getProgress();
             // forward or backward to certain seconds
             SeekTo(currentPosition);
         }
@@ -1355,7 +1367,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
- /*   @Override
+    @Override
     public void onAudioFocusChange(int i) {
         switch (i) {
             case AudioManager.AUDIOFOCUS_GAIN:
@@ -1375,5 +1387,5 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //                MusicService.pauseMedia();// Pause your media player here
                 break;
         }
-    }*/
+    }
 }

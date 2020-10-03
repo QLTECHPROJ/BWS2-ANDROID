@@ -23,12 +23,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.ViewAllAudioListModel;
 import com.qltech.bws.DashboardModule.Models.ViewAllPlayListModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
+import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.RoomDataBase.DownloadPlaylistDetails;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -44,14 +46,20 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class ViewAllPlaylistFragment extends Fragment {
     FragmentViewAllPlaylistBinding binding;
     String GetLibraryID, Name, UserID, AudioFlag, MyDownloads;
     public static String GetPlaylistLibraryID = "";
     List<DownloadPlaylistDetails> playlistList;
+    List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
     View view;
 
     @Override
@@ -276,20 +284,25 @@ public class ViewAllPlaylistFragment extends Fragment {
                         BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                     } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        Bundle bundle = new Bundle();
-                        comefrom_search = 2;
-                        GetPlaylistLibraryID = GetLibraryID;
-                        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                        bundle.putString("New", "0");
-                        bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
-                        bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
-                        bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                        bundle.putString("MyDownloads", MyDownloads);
-                        myPlaylistsFragment.setArguments(bundle);
-                        fragmentManager1.beginTransaction()
-                                .replace(R.id.flContainer, myPlaylistsFragment)
-                                .commit();
+                        if (MyDownloads.equalsIgnoreCase("1")) {
+                            getMedia(listModelList.get(position).getPlaylistID());
+
+                        } else {
+                            Bundle bundle = new Bundle();
+                            comefrom_search = 2;
+                            GetPlaylistLibraryID = GetLibraryID;
+                            Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                            bundle.putString("New", "0");
+                            bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
+                            bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
+                            bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                            bundle.putString("MyDownloads", MyDownloads);
+                            myPlaylistsFragment.setArguments(bundle);
+                            fragmentManager1.beginTransaction()
+                                    .replace(R.id.flContainer, myPlaylistsFragment)
+                                    .commit();
+                        }
                     }
                 }
             });
@@ -308,5 +321,54 @@ public class ViewAllPlaylistFragment extends Fragment {
                 this.binding = binding;
             }
         }
+    }
+
+    private void getMedia(String playlistID) {
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                playlistWiseAudioDetails = DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getAllAudioByPlaylist(playlistID);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) { player = 1;
+                if (isPrepare || isMediaStart || isPause) {
+                    stopMedia();
+                }
+                isPause = false;
+                isMediaStart = false;
+                isPrepare = false;
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(playlistWiseAudioDetails);
+                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, playlistID);
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                editor.commit();
+                try {
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flContainer, fragment)
+                            .commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetMedia st = new GetMedia();
+        st.execute();
     }
 }

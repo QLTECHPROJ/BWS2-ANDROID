@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -76,7 +77,7 @@ import static com.qltech.bws.Utility.MusicService.resumeMedia;
 import static com.qltech.bws.Utility.MusicService.savePrefQueue;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
-public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener*/ {
+public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, AudioManager.OnAudioFocusChangeListener {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
     String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name;
@@ -767,7 +768,16 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+     /*   handler.removeCallbacks(UpdateSongTime);
+        if (isMediaStart) {
+            int totalDuration = getEndTime();
+            int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
 
+            // forward or backward to certain seconds
+            SeekTo(currentPosition);
+        }
+        // update timer progress again
+        updateProgressBar();*/
     }
 
     @Override
@@ -783,6 +793,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
         int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
 
+        oTime = binding.simpleSeekbar.getProgress();
         // forward or backward to certain seconds
         SeekTo(currentPosition);
 
@@ -918,7 +929,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             }
         }
     }
-/*    @Override
+    @Override
     public void onAudioFocusChange(int i) {
         switch (i) {
             case AudioManager.AUDIOFOCUS_GAIN:
@@ -938,5 +949,5 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 //                MusicService.pauseMedia();// Pause your media player here
                 break;
         }
-    }*/
+    }
 }
