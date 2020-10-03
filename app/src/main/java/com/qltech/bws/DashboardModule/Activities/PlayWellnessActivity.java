@@ -215,9 +215,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         if (BWSApplication.isNetworkConnected(ctx)) {
-            binding.llViewQueue.setClickable(true);
-            binding.llViewQueue.setEnabled(true);
-            binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            if (IsLock.equalsIgnoreCase("0")) {
+                binding.llViewQueue.setClickable(true);
+                binding.llViewQueue.setEnabled(true);
+                binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llViewQueue.setClickable(false);
+                binding.llViewQueue.setEnabled(false);
+                binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
         } else {
             binding.llViewQueue.setClickable(false);
             binding.llViewQueue.setEnabled(false);
@@ -1258,9 +1264,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         if (BWSApplication.isNetworkConnected(ctx)) {
-            binding.llViewQueue.setClickable(true);
-            binding.llViewQueue.setEnabled(true);
-            binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            if (IsLock.equalsIgnoreCase("0")) {
+                binding.llViewQueue.setClickable(true);
+                binding.llViewQueue.setEnabled(true);
+                binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llViewQueue.setClickable(false);
+                binding.llViewQueue.setEnabled(false);
+                binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
         } else {
             binding.llViewQueue.setClickable(false);
             binding.llViewQueue.setEnabled(false);

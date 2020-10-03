@@ -504,7 +504,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
                                 final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
                                 final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
-
                                 tvHeader.setText("Are you sure you want to delete " + model.getResponseData().getPlaylistName() + "  playlist?");
                                 dialog.setOnKeyListener((v, keyCode, event) -> {
                                     if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -562,9 +561,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             }
                         });
 
-                    } else {
                     }
-
                 }
 
                 @Override
@@ -579,10 +576,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
     private List<DownloadPlaylistDetails> GetPlaylistDetail(String download) {
         class GetTask extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadPlaylistDetailsList = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -593,7 +588,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
                 if (downloadPlaylistDetailsList.size() != 0) {
                     enableDisableDownload(false);
                 } else if (download.equalsIgnoreCase("1")) {
@@ -605,7 +599,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
             }
         }
-
         GetTask st = new GetTask();
         st.execute();
         return downloadPlaylistDetailsList;
