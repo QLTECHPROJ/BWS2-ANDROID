@@ -96,7 +96,11 @@ public class ReminderActivity extends AppCompatActivity {
         ShowPlaylistName();
 
         if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
-            binding.tvTime.setText("09:00 am");
+            Calendar rightNow = Calendar.getInstance();
+            int currentHourIn12Format = rightNow.get(Calendar.HOUR);
+            int currentminIn12Format = rightNow.get(Calendar.MINUTE);
+            int ampm = rightNow.get(Calendar.AM_PM);
+            binding.tvTime.setText(String.valueOf(currentHourIn12Format)+String.valueOf(currentminIn12Format)+String.valueOf(ampm));
         } else {
             binding.tvTime.setText(Time);
         }

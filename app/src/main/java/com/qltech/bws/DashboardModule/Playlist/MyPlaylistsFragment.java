@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -404,7 +403,7 @@ public class MyPlaylistsFragment extends Fragment {
     }
 
     private void prepareData(String UserId, String PlaylistId) {
-        if (comefrom_search == 3){
+        if (comefrom_search == 3) {
             binding.llExtra.setVisibility(View.VISIBLE);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(10, 8, 10, 260);
@@ -1056,9 +1055,10 @@ public class MyPlaylistsFragment extends Fragment {
         llDownload.setEnabled(false);
     }
 
-    public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable, StartDragListener, ItemMoveCallback.ItemTouchHelperContract {
+    public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable, /*StartDragListener,*/ ItemMoveCallback.ItemTouchHelperContract {
         Context ctx;
         String UserID, Created;
+        StartDragListener startDragListener;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
 
@@ -1079,6 +1079,7 @@ public class MyPlaylistsFragment extends Fragment {
             return new MyViewHolder(v);
         }
 
+        @SuppressLint("ClickableViewAccessibility")
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             final ArrayList<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
@@ -1086,16 +1087,16 @@ public class MyPlaylistsFragment extends Fragment {
             holder.binding.tvTitleB.setText(mData.get(position).getName());
             holder.binding.tvTimeA.setText(mData.get(position).getAudioDuration());
             holder.binding.tvTimeB.setText(mData.get(position).getAudioDuration());
-   /*         holder.binding.llSort.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() ==
-                            MotionEvent.ACTION_DOWN) {
-                        mStartDragListener.requestDrag(holder);
-                    }
-                    return false;
-                }
-            });*/
+//            holder.binding.llSort.setOnTouchListener((v, event) -> {
+//                if (event.getAction() ==
+//                        MotionEvent.ACTION_DOWN) {
+//                    startDragListener.requestDrag(holder);
+//                } if (event.getAction() ==
+//                        MotionEvent.ACTION_UP) {
+//                    startDragListener.requestDrag(holder);
+//                }
+//                return false;
+//            });
             String id = mData.get(position).getID();
 //            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);
             for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
@@ -1159,6 +1160,9 @@ public class MyPlaylistsFragment extends Fragment {
                 getActivity().finish();
             });
 
+//            if (changedAudio != null) {
+//                callDragApi();
+//            }
             holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(),
                     mData.get(position).getName(), listFilterData, position, holder.binding.llDownload, holder.binding.ivDownloads));
 
@@ -1190,7 +1194,7 @@ public class MyPlaylistsFragment extends Fragment {
             for (int i = 0; i < listModelList.size(); i++) {
                 changedAudio.add(listModelList.get(i).getID());
             }
-            callDragApi();
+//            callDragApi();
          /* SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -1198,6 +1202,11 @@ public class MyPlaylistsFragment extends Fragment {
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);
             editor.commit();*/
 
+        }
+
+        @Override
+        public void onMovedPos(int fromPosition, int toPosition) {
+            callDragApi();
         }
 
         private void callDragApi() {
@@ -1266,10 +1275,10 @@ public class MyPlaylistsFragment extends Fragment {
             };
         }
 
-        @Override
+     /*   @Override
         public void requestDrag(RecyclerView.ViewHolder viewHolder) {
 
-        }
+        }*/
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             MyPlaylistLayoutBinding binding;

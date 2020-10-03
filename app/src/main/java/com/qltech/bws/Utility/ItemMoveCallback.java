@@ -41,6 +41,17 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
+    public boolean canDropOver(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder current, @NonNull RecyclerView.ViewHolder target) {
+        return super.canDropOver(recyclerView, current, target);
+    }
+
+    @Override
+    public void onMoved(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, int fromPos, @NonNull RecyclerView.ViewHolder target, int toPos, int x, int y) {
+        mAdapter.onMovedPos(fromPos,toPos);
+        super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
+    }
+
+    @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
             if (viewHolder instanceof RecyclerView.ViewHolder) {
@@ -65,6 +76,8 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
 
     public interface ItemTouchHelperContract {
         void onRowMoved(int fromPosition, int toPosition);
+
+        void onMovedPos(int fromPosition, int toPosition);
 
         void onRowSelected(RecyclerView.ViewHolder myViewHolder);
 

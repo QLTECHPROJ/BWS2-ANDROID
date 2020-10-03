@@ -894,6 +894,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
 
         @Override
+        public void onMovedPos(int fromPosition, int toPosition) {
+
+        }
+
+        @Override
         public void onRowSelected(RecyclerView.ViewHolder myViewHolder) {
 
         }
