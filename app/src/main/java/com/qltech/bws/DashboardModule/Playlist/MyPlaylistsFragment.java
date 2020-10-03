@@ -95,6 +95,8 @@ public class MyPlaylistsFragment extends Fragment {
     FragmentMyPlaylistsBinding binding;
     String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "",AudioFlag;
     int RefreshIcon;
+    public static int RefreshIconData = 0;
+    public static String RefreshNew = "";
     PlayListsAdpater adpater;
     PlayListsAdpater2 adpater2;
     View view;
@@ -207,6 +209,7 @@ public class MyPlaylistsFragment extends Fragment {
             callDownload("", "", "", playlistSongsList, 0, binding.llDownloads, binding.ivDownloads);
         });
 
+        RefreshNew = New;
         if (New.equalsIgnoreCase("1")) {
             binding.llAddAudio.setVisibility(View.VISIBLE);
             binding.llDownloads.setVisibility(View.VISIBLE);
@@ -351,7 +354,7 @@ public class MyPlaylistsFragment extends Fragment {
         if (deleteFrg == 1) {
             callBack();
             deleteFrg = 0;
-        }else if(addToPlayList){
+        } else if (addToPlayList) {
             prepareData(UserID, MyPlaylistId);
             addToPlayList = false;
         } else {
@@ -647,6 +650,7 @@ public class MyPlaylistsFragment extends Fragment {
             }
         }
         RefreshIcon = listModel.getPlaylistSongs().size();
+        RefreshIconData = listModel.getPlaylistSongs().size();
 
         if (listModel.getPlaylistSongs().size() == 0) {
             binding.llAddAudio.setVisibility(View.VISIBLE);

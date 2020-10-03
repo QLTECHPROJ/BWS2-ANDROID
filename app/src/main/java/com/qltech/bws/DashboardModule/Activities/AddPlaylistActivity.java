@@ -292,21 +292,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         });
 
                                         rlCreate.setOnClickListener(view2 -> {
+                                            addToPlayList = true;
+                                            MyPlaylistId = listModel.get(position).getID();
                                             dialog.dismiss();
                                             finish();
-                                            addToPlayList = true;
-                                            MyPlaylistId =  listModel.get(position).getID();
-                                        /*    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                                            Bundle bundle = new Bundle();
-                                            bundle.putString("New", "0");
-                                            bundle.putString("PlaylistID", listModel.get(position).getID());
-                                            bundle.putString("PlaylistName", listModel.get(position).getName());
-                                            bundle.putString("MyDownloads", "0");
-                                            myPlaylistsFragment.setArguments(bundle);
-                                            FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                            fragmentManager1.beginTransaction()
-                                                    .replace(R.id.flContainer, myPlaylistsFragment)
-                                                    .commit();*/
                                         });
 
                                         tvCancel.setOnClickListener(v -> {

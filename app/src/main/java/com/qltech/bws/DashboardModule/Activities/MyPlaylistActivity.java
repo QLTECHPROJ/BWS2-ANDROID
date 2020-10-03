@@ -60,6 +60,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment.RefreshIconData;
+import static com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment.RefreshNew;
+
 public class MyPlaylistActivity extends AppCompatActivity {
     public static int deleteFrg = 0;
     public static int ComeFindAudio = 0;
@@ -588,11 +591,12 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if (downloadPlaylistDetailsList.size() != 0) {
+                if (downloadPlaylistDetailsList.size() != 0 || RefreshNew.equalsIgnoreCase("1") || RefreshIconData == 0) {
                     enableDisableDownload(false);
-                } else if (download.equalsIgnoreCase("1")) {
+                } else if (download.equalsIgnoreCase("1") || RefreshNew.equalsIgnoreCase("1") || RefreshIconData == 0) {
                     enableDisableDownload(false);
-                } else if (download.equalsIgnoreCase("0") || download.equalsIgnoreCase("")) {
+                } else if (download.equalsIgnoreCase("0") || RefreshNew.equalsIgnoreCase("0") || download.equalsIgnoreCase("") ||
+                        RefreshIconData != 0) {
                     enableDisableDownload(true);
                 }
                 super.onPostExecute(aVoid);

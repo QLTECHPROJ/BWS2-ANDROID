@@ -267,11 +267,13 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llBilledTo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_13sdp"
                         android:background="@drawable/rounded_black_corner_square"
                         android:orientation="vertical"
+                        android:visibility="gone"
                         android:padding="@dimen/_13sdp">
 
                         <TextView
