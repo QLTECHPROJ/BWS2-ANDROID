@@ -1310,12 +1310,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llPause.setVisibility(View.VISIBLE);
             binding.llProgressBar.setVisibility(View.GONE);
             binding.progressBar.setVisibility(View.GONE);
-        } else if (isPreparing) {
-//            callMedia();
-            binding.llPlay.setVisibility(View.GONE);
-            binding.llPause.setVisibility(View.GONE);
-            binding.llProgressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
         } else {
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
