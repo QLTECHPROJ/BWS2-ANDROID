@@ -54,7 +54,7 @@ public class ViewAllAudioFragment extends Fragment {
     public static boolean viewallAudio = false;
     public static int ComeFromAudioViewAll = 0;
     FragmentViewAllAudioBinding binding;
-    String ID, Name, UserID, AudioFlag, Category, HomeView;
+    String ID, Name, UserID, AudioFlag, Category;
     List<DownloadAudioDetails> audioList;
 
     @Override
@@ -72,7 +72,6 @@ public class ViewAllAudioFragment extends Fragment {
             ID = getArguments().getString("ID");
             Name = getArguments().getString("Name");
             Category = getArguments().getString("Category");
-            HomeView = getArguments().getString("View");
         }
 
         view.setFocusableInTouchMode(true);
@@ -88,10 +87,10 @@ public class ViewAllAudioFragment extends Fragment {
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
         binding.rvMainAudio.setLayoutManager(manager);
-        if (HomeView.equalsIgnoreCase("My Downloads")) {
+        if (Name.equalsIgnoreCase("My Downloads")) {
             audioList = new ArrayList<>();
             GetAllMedia(getActivity());
-        } else if (HomeView.equalsIgnoreCase("")){
+        } else{
             prepareData();
         }
         return view;
@@ -128,7 +127,7 @@ public class ViewAllAudioFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 refreshData();
-                binding.tvTitle.setText(HomeView);
+                binding.tvTitle.setText(Name);
                 ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList = new ArrayList<>();
                 for(int i = 0;i<audioList.size();i++){
                     ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();

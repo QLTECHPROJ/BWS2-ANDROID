@@ -114,6 +114,7 @@ public class ReminderActivity extends AppCompatActivity {
             binding.tvTime.setText(currantTime);
         } else {
             binding.tvTime.setText(Time);
+            currantTime = Time;
         }
 
         binding.llSelectTime.setOnClickListener(view -> {

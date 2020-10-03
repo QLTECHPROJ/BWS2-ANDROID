@@ -60,7 +60,6 @@ public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdap
             bundle.putString("ID", HomeID);
             bundle.putString("Name", Views);
             bundle.putString("Category", listModelList.get(position).getCategoryName());
-            bundle.putString("View", Views);
             viewAllAudioFragment.setArguments(bundle);
         });
     }
