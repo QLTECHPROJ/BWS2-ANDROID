@@ -275,7 +275,7 @@ public class MusicService extends Service {
     }
 
     public static void pauseMedia() {
-        if (mediaPlayer.isPlaying()) {
+         if (mediaPlayer.isPlaying()) {
             Log.e("Playinggggg", "pauseeeeeee");
             mediaPlayer.pause();
             isPause = true;

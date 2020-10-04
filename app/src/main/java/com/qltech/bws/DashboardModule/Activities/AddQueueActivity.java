@@ -412,6 +412,38 @@ public class AddQueueActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                         SucessModel listModel = response.body();
+                      /*  SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                       String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                       int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                        if(audioPlay){
+                            if(AudioFlag.equalsIgnoreCase("SubPlayList")){
+                                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                                if(pID.equalsIgnoreCase(PlaylistID)){
+                                    if(mData.size()!=0) {
+                                        if(pos == position && position<mData.size()-1){
+                                            pos = pos+1;
+                                        }else if(pos == position && position == mData.size()-1){
+                                            pos = 0;
+                                        }
+                                        SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedx.edit();
+                                        Gson gson = new Gson();
+                                        String json = gson.toJson(listModelList);
+                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, pID);
+                                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, myPlaylist);
+                                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                                        editor.commit();
+                                    }else{
+
+                                    }
+                                }
+                            }
+                        }*/
                         finish();
                     }
                 }

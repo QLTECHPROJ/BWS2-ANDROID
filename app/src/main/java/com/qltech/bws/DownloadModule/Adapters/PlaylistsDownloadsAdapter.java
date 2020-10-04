@@ -267,7 +267,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 editor.putString(CONSTANTS.PREF_KEY_PlaylistId, playlistID);
                 editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
                 editor.commit();
                 try {
                     Fragment fragment = new TransparentPlayerFragment();

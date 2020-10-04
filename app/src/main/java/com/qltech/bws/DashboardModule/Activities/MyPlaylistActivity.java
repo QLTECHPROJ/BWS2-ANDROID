@@ -34,6 +34,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Adapters.DirectionAdapter;
 import com.qltech.bws.DashboardModule.Models.DownloadPlaylistModel;
@@ -52,6 +54,7 @@ import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityMyPlaylistBinding;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -155,8 +158,34 @@ public class MyPlaylistActivity extends AppCompatActivity {
         }
         enableDisableDownload(false);
         byte[] encodedBytes = new byte[1024];
-        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-        downloadMedia.encrypt1(url, name, playlistSongsList);
+
+        SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+        Gson gson1 = new Gson();
+        String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+        String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+        if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+           List<String> fileNameList = gson1.fromJson(json, type);
+           List<String> audioFile = gson1.fromJson(json1, type);
+            if(fileNameList.size()!=0) {
+                url.addAll(audioFile);
+                name.addAll(fileNameList);
+            }
+         }
+
+        if(url.size()!=0) {
+            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+            downloadMedia.encrypt1(url, name/*, playlistSongs*/);
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String urlJson = gson.toJson(url);
+            String nameJson = gson.toJson(name);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+            editor.commit();
+        }
         savePlaylist();
         saveAllMedia(playlistSongsList, encodedBytes);
 

@@ -245,7 +245,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     mainPlayModel.setID(arrayList.get(i).getID());
                     mainPlayModel.setName(arrayList.get(i).getName());
                     mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                    mainPlayModel.setPlaylistID("");
+                    mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistId());
                     mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                     mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                     mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());

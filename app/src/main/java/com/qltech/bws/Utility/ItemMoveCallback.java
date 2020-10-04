@@ -14,12 +14,12 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean isLongPressDragEnabled() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isItemViewSwipeEnabled() {
-        return true;
+        return false;
     }
 
     @Override
@@ -45,18 +45,17 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
         return super.canDropOver(recyclerView, current, target);
     }
 
-    @Override
-    public void onMoved(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, int fromPos, @NonNull RecyclerView.ViewHolder target, int toPos, int x, int y) {
-        mAdapter.onMovedPos(fromPos,toPos);
-        super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
-    }
+//    @Override
+//    public void onMoved(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, int fromPos, @NonNull RecyclerView.ViewHolder target, int toPos, int x, int y) {
+//        mAdapter.onMovedPos(fromPos,toPos);
+//        super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
+//    }
 
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-            if (viewHolder instanceof RecyclerView.ViewHolder) {
-                RecyclerView.ViewHolder myViewHolder =
-                        viewHolder;
+            if (viewHolder != null) {
+                RecyclerView.ViewHolder myViewHolder = viewHolder;
                 mAdapter.onRowSelected(myViewHolder);
             }
         }
@@ -76,8 +75,6 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
 
     public interface ItemTouchHelperContract {
         void onRowMoved(int fromPosition, int toPosition);
-
-        void onMovedPos(int fromPosition, int toPosition);
 
         void onRowSelected(RecyclerView.ViewHolder myViewHolder);
 

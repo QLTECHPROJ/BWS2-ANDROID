@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Audio.Adapters.DownloadAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.RecentlyPlayedAdapter;
@@ -28,6 +30,7 @@ import com.qltech.bws.DashboardModule.Audio.Adapters.RecommendedAdapter;
 import com.qltech.bws.DashboardModule.Audio.Adapters.TopCategoriesAdapter;
 import com.qltech.bws.DashboardModule.Models.MainAudioModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.R;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
@@ -36,7 +39,7 @@ import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.FragmentAudioBinding;
 import com.qltech.bws.databinding.MainAudioLayoutBinding;
 
-import java.text.DateFormat;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,6 +60,8 @@ public class AudioFragment extends Fragment {
     public static String IsLock = "";
     FragmentAudioBinding binding;
     String UserID, AudioFlag, expDate;
+    List<String> fileNameList;
+    List<String> audioFile;
     List<DownloadAudioDetails> downloadAudioDetailsList;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,7 +74,6 @@ public class AudioFragment extends Fragment {
 
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
         prepareData();
         return view;
     }
@@ -262,6 +266,20 @@ public class AudioFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+        String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+            fileNameList = gson.fromJson(json, type);
+            audioFile = gson.fromJson(json1, type);
+            if (fileNameList.size() != 0) {
+                DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
+                downloadMedia.encrypt1(audioFile, fileNameList/*, playlistSongs*/);
+            }
+        }
         prepareData();
     }
 

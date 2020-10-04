@@ -1,6 +1,7 @@
 package com.qltech.bws.DashboardModule.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Build;
@@ -16,11 +17,16 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.databinding.ActivityDashboardBinding;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 import static com.qltech.bws.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 
@@ -39,7 +45,7 @@ public class DashboardActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+
      /*   String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         try {
             if (!AudioFlag.equalsIgnoreCase("0")) {

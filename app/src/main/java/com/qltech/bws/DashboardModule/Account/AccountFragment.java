@@ -258,6 +258,12 @@ public class AccountFragment extends Fragment {
         edit.remove(CONSTANTS.PREF_KEY_IsShuffle);
         edit.clear();
         edit.commit();
+        SharedPreferences preferences11 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit1 = preferences11.edit();
+        edit1.remove(CONSTANTS.PREF_KEY_DownloadName);
+        edit1.remove(CONSTANTS.PREF_KEY_DownloadUrl);
+        edit1.clear();
+        edit1.commit();
 
         SharedPreferences shareds = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_CardID, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shareds.edit();

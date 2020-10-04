@@ -68,6 +68,10 @@
             </intent-filter>
         </receiver>
         -->
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true" />
         <activity
             android:name=".DashboardModule.Activities.AddAudioActivity"
             android:configChanges="orientation|screenSize"

@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -45,6 +46,7 @@ import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.ItemMoveCallback;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.Utility.StartDragListener;
 import com.qltech.bws.databinding.ActivityViewQueueBinding;
 import com.qltech.bws.databinding.QueueListLayoutBinding;
 
@@ -77,7 +79,7 @@ import static com.qltech.bws.Utility.MusicService.resumeMedia;
 import static com.qltech.bws.Utility.MusicService.savePrefQueue;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
-public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, AudioManager.OnAudioFocusChangeListener {
+public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, AudioManager.OnAudioFocusChangeListener, StartDragListener {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
     String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name;
@@ -85,12 +87,15 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     Activity activity;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList, addToQueueModelList2;
+    ArrayList<AddToQueueModel> addToQueueModeNowPlaying;
     SharedPreferences shared;
     Boolean queuePlay, audioPlay;
     QueueAdapter adapter;
     List<DownloadAudioDetails> downloadAudioDetailsList;
+    ItemTouchHelper touchHelper;
     private long mLastClickTime = 0;
     private Handler handler;
+    int mypos = 0;
     //    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
@@ -352,26 +357,24 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     private void callAdapterMethod() {
         if (addToQueueModelList.size() != 0) {
             if (queuePlay) {
-                for (int i = 0; i < addToQueueModelList.size(); i++) {
-                    if (addToQueueModelList.get(i).getName().equalsIgnoreCase(binding.tvName.getText().toString())) {
-                        addToQueueModelList2.remove(i);
-                    }
+                if (addToQueueModelList.get(position).getName().equalsIgnoreCase(binding.tvName.getText().toString())) {
+                    mypos = position;
+                    addToQueueModelList2.remove(position);
                 }
-
             }
-            adapter = new QueueAdapter(addToQueueModelList2, ctx);
+            adapter = new QueueAdapter(addToQueueModelList2, ctx, this);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ctx);
             binding.rvQueueList.setLayoutManager(mLayoutManager);
             binding.rvQueueList.setItemAnimator(new DefaultItemAnimator());
             ItemTouchHelper.Callback callback =
                     new ItemMoveCallback(adapter);
-            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+            touchHelper = new ItemTouchHelper(callback);
             touchHelper.attachToRecyclerView(binding.rvQueueList);
             binding.rvQueueList.setAdapter(adapter);
         }
     }
 
-    public void GetMedia(String url, Context ctx,String PlaylistId) {
+    public void GetMedia(String url, Context ctx, String PlaylistId) {
 
         downloadAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
@@ -383,7 +386,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getaudioByPlaylist(url,PlaylistId);
+                        .getaudioByPlaylist(url, PlaylistId);
                 return null;
             }
 
@@ -453,7 +456,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             name = mainPlayModelList.get(position).getName();
             setInIt(mainPlayModelList.get(position).getName(), mainPlayModelList.get(position).getAudiomastercat(),
                     mainPlayModelList.get(position).getImageFile(), mainPlayModelList.get(position).getAudioDuration());
-            GetMedia(url, ctx,mainPlayModelList.get(position).getPlaylistID());
+            GetMedia(url, ctx, mainPlayModelList.get(position).getPlaylistID());
         } else if (queuePlay) {
             if (listSize == 1) {
                 position = 0;
@@ -463,7 +466,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             name = addToQueueModelList.get(position).getName();
             setInIt(addToQueueModelList.get(position).getName(), addToQueueModelList.get(position).getAudiomastercat(),
                     addToQueueModelList.get(position).getImageFile(), addToQueueModelList.get(position).getAudioDuration());
-            GetMedia(url, ctx,addToQueueModelList.get(position).getPlaylistID());
+            GetMedia(url, ctx, addToQueueModelList.get(position).getPlaylistID());
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson2 = new Gson();
@@ -561,7 +564,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                         binding.llProgressBar.setVisibility(View.GONE);
                         binding.llPlay.setVisibility(View.VISIBLE);
                         binding.llPause.setVisibility(View.GONE);
-                        BWSApplication.showToast(getString(R.string.no_server_found),ctx);
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                     }
                 }
             } catch (IOException e) {
@@ -579,7 +582,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 binding.llProgressBar.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
-                BWSApplication.showToast(getString(R.string.no_server_found),ctx);
+                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
         }
     }
@@ -801,13 +804,42 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         updateProgressBar();
     }
 
+    @Override
+    public void requestDrag(RecyclerView.ViewHolder viewHolder) {
+        touchHelper.startDrag(viewHolder);
+    }
+
+    @Override
+    public void onAudioFocusChange(int i) {
+        switch (i) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                // Resume your media player here
+                resumeMedia();
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                if (isMediaStart) {
+                    pauseMedia();
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+                }
+//                MusicService.pauseMedia();// Pause your media player here
+                break;
+        }
+    }
+
     public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
         ArrayList<AddToQueueModel> listModelList;
         Context ctx;
+        StartDragListener startDragListener;
 
-        public QueueAdapter(ArrayList<AddToQueueModel> listModelList, Context ctx) {
+        public QueueAdapter(ArrayList<AddToQueueModel> listModelList, Context ctx, StartDragListener startDragListener) {
             this.listModelList = listModelList;
             this.ctx = ctx;
+            this.startDragListener = startDragListener;
 
         }
 
@@ -836,7 +868,17 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             holder.binding.llRemove.setOnClickListener(view -> callRemoveList(position1));
-
+            holder.binding.llSort.setOnTouchListener((v, event) -> {
+                if (event.getAction() ==
+                        MotionEvent.ACTION_DOWN) {
+                    startDragListener.requestDrag(holder);
+                }
+                if (event.getAction() ==
+                        MotionEvent.ACTION_UP) {
+                    startDragListener.requestDrag(holder);
+                }
+                return false;
+            });
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 if (isPrepare || isMediaStart || isPause) {
                     stopMedia();
@@ -847,9 +889,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
                 setInIt(listModel.getName(), listModel.getAudiomastercat(),
                         listModel.getImageFile(), listModel.getAudioDuration());
+                if(queuePlay)
+                addToQueueModelList.remove(mypos);
                 savePrefQueue(position1, true, false, addToQueueModelList, ctx);
                 position = position1;
-                getPrepareShowData(position1);
+                getPrepareShowData(position);
                 callRemoveList1(position1);
             });
         }
@@ -892,20 +936,24 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 for (int i = fromPosition; i > toPosition; i--) {
                     Collections.swap(listModelList, i, i - 1);
                 }
-            }
-            notifyItemMoved(fromPosition, toPosition);
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            }    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
-            String json = gson.toJson(listModelList);
+            String json="";
+            if(queuePlay) {
+                ArrayList<AddToQueueModel> listModelList1 = new ArrayList<>();
+                listModelList1.clear();
+                listModelList1 = listModelList;
+                listModelList1.add(addToQueueModelList.get(mypos));
+                json = gson.toJson(listModelList1);
+            }else{
+                json = gson.toJson(listModelList);
+            }
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);
             editor.commit();
             addToQueueModelList2 = listModelList;
+            notifyItemMoved(fromPosition, toPosition);
 
-        }
-
-        @Override
-        public void onMovedPos(int fromPosition, int toPosition) {
 
         }
 
@@ -927,27 +975,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 super(binding.getRoot());
                 this.binding = binding;
             }
-        }
-    }
-    @Override
-    public void onAudioFocusChange(int i) {
-        switch (i) {
-            case AudioManager.AUDIOFOCUS_GAIN:
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                // Resume your media player here
-                resumeMedia();
-                binding.llPlay.setVisibility(View.GONE);
-                binding.llPause.setVisibility(View.VISIBLE);
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS:
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                if (isMediaStart) {
-                    pauseMedia();
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                }
-//                MusicService.pauseMedia();// Pause your media player here
-                break;
         }
     }
 }

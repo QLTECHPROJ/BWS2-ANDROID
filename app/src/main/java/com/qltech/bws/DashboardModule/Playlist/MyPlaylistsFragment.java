@@ -41,11 +41,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
+import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.ReminderStatusPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
@@ -67,6 +69,7 @@ import com.qltech.bws.Utility.StartDragListener;
 import com.qltech.bws.databinding.FragmentMyPlaylistsBinding;
 import com.qltech.bws.databinding.MyPlaylistLayoutBinding;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -91,7 +94,7 @@ import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 
-public class MyPlaylistsFragment extends Fragment {
+public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     FragmentMyPlaylistsBinding binding;
     String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag;
     int RefreshIcon;
@@ -110,7 +113,7 @@ public class MyPlaylistsFragment extends Fragment {
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     DownloadPlaylistDetails downloadPlaylistDetails;
     Dialog dialog;
-
+    ItemTouchHelper touchHelper;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
@@ -683,9 +686,9 @@ public class MyPlaylistsFragment extends Fragment {
                     binding.rlSearch.setVisibility(View.GONE);
                 } else {
                     if (listModel.getCreated().equalsIgnoreCase("1")) {
-                        adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
+                        adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated(),this);
                         ItemTouchHelper.Callback callback = new ItemMoveCallback(adpater);
-                        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+                        touchHelper = new ItemTouchHelper(callback);
                         touchHelper.attachToRecyclerView(binding.rvPlayLists);
                         binding.rvPlayLists.setAdapter(adpater);
                     } else {
@@ -746,7 +749,7 @@ public class MyPlaylistsFragment extends Fragment {
         }
     }
 
-    private void callRemove(String id, String PlaylistAudioId) {
+    private void callRemove(String id, String PlaylistAudioId, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> mData, int position) {
         String AudioId = id;
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
@@ -757,7 +760,30 @@ public class MyPlaylistsFragment extends Fragment {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
                         SucessModel listModel = response.body();
-                        prepareData(UserID, PlaylistID);
+                        mData.remove(position);
+                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                        if(audioPlay){
+                            if(AudioFlag.equalsIgnoreCase("SubPlayList")){
+                                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                                if(pID.equalsIgnoreCase(PlaylistID)){
+                                    if(mData.size()!=0) {
+                                        if(pos == position && position<mData.size()-1){
+                                            pos = pos+1;
+                                        }else if(pos == position && position == mData.size()-1){
+                                            pos = 0;
+                                        }
+                                        callTransparentFrag(pos, getActivity(), mData, "myPlaylist");
+                                    }else{
+
+                                    }
+                                }
+                            }
+                        }
+                        adpater.notifyItemRemoved(position);
+                        //prepareData(UserID, PlaylistID);
                         BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                     }
                 }
@@ -798,8 +824,32 @@ public class MyPlaylistsFragment extends Fragment {
                 url.add(playlistSongs2.get(x).getAudioFile());
             }
             byte[] encodedBytes = new byte[1024];
-            DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
-            downloadMedia.encrypt1(url, name, playlistSongs);
+            SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            Gson gson1 = new Gson();
+            String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+            String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+            if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                List<String> fileNameList = gson1.fromJson(json, type);
+                List<String> audioFile1 = gson1.fromJson(json1, type);
+                if(fileNameList.size()!=0) {
+                    url.addAll(audioFile1);
+                    name.addAll(fileNameList);
+                }
+            }
+            if(url.size()!=0) {
+                DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
+                downloadMedia.encrypt1(url, name/*, playlistSongs*/);
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+                String urlJson = gson.toJson(url);
+                String nameJson = gson.toJson(name);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                editor.commit();
+            }
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
             savePlaylist();
@@ -1032,7 +1082,12 @@ public class MyPlaylistsFragment extends Fragment {
         llDownload.setEnabled(false);
     }
 
-    public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable, /*StartDragListener,*/ ItemMoveCallback.ItemTouchHelperContract {
+    @Override
+    public void requestDrag(RecyclerView.ViewHolder viewHolder) {
+        touchHelper.startDrag(viewHolder);
+    }
+
+    public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable/*, StartDragListener*/, ItemMoveCallback.ItemTouchHelperContract {
         Context ctx;
         String UserID, Created;
         StartDragListener startDragListener;
@@ -1040,12 +1095,13 @@ public class MyPlaylistsFragment extends Fragment {
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
 
         public PlayListsAdpater(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
-                                String Created) {
+                                String Created,StartDragListener startDragListener) {
             this.listModelList = listModelList;
             this.listFilterData = listModelList;
             this.ctx = ctx;
             this.UserID = UserID;
             this.Created = Created;
+            this.startDragListener = startDragListener;
         }
 
         @NonNull
@@ -1064,16 +1120,16 @@ public class MyPlaylistsFragment extends Fragment {
             holder.binding.tvTitleB.setText(mData.get(position).getName());
             holder.binding.tvTimeA.setText(mData.get(position).getAudioDuration());
             holder.binding.tvTimeB.setText(mData.get(position).getAudioDuration());
-//            holder.binding.llSort.setOnTouchListener((v, event) -> {
-//                if (event.getAction() ==
-//                        MotionEvent.ACTION_DOWN) {
-//                    startDragListener.requestDrag(holder);
-//                } if (event.getAction() ==
-//                        MotionEvent.ACTION_UP) {
-//                    startDragListener.requestDrag(holder);
-//                }
-//                return false;
-//            });
+            holder.binding.llSort.setOnTouchListener((v, event) -> {
+                if (event.getAction() ==
+                        MotionEvent.ACTION_DOWN) {
+                    startDragListener.requestDrag(holder);
+                } if (event.getAction() ==
+                        MotionEvent.ACTION_UP) {
+                    startDragListener.requestDrag(holder);
+                }
+                return false;
+            });
             String id = mData.get(position).getID();
 //            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);
             for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
@@ -1143,7 +1199,7 @@ public class MyPlaylistsFragment extends Fragment {
             holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(),
                     mData.get(position).getName(), listFilterData, position, holder.binding.llDownload, holder.binding.ivDownloads));
 
-            holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId()));
+            holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId(),mData,position));
         }
 
         @Override
@@ -1165,13 +1221,14 @@ public class MyPlaylistsFragment extends Fragment {
                     Collections.swap(listModelList, i, i - 1);
                 }
             }
-
-            notifyItemMoved(fromPosition, toPosition);
             changedAudio.clear();
             for (int i = 0; i < listModelList.size(); i++) {
                 changedAudio.add(listModelList.get(i).getID());
             }
-//            callDragApi();
+            callDragApi();
+
+            notifyItemMoved(fromPosition, toPosition);
+
          /* SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -1180,12 +1237,6 @@ public class MyPlaylistsFragment extends Fragment {
             editor.commit();*/
 
         }
-
-        @Override
-        public void onMovedPos(int fromPosition, int toPosition) {
-            callDragApi();
-        }
-
         private void callDragApi() {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Call<CardModel> listCall = APIClient.getClient().setShortedAudio(UserID, PlaylistID, TextUtils.join(",", changedAudio));
@@ -1252,10 +1303,6 @@ public class MyPlaylistsFragment extends Fragment {
             };
         }
 
-     /*   @Override
-        public void requestDrag(RecyclerView.ViewHolder viewHolder) {
-
-        }*/
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             MyPlaylistLayoutBinding binding;
@@ -1348,11 +1395,6 @@ public class MyPlaylistsFragment extends Fragment {
                 i.putExtra("comeFrom", "myPlayList");
                 startActivity(i);
             });
-
-            holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(),
-                    mData.get(position).getName(), mData, position, holder.binding.llDownload, holder.binding.ivDownloads));
-
-            holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId()));
         }
 
         @Override

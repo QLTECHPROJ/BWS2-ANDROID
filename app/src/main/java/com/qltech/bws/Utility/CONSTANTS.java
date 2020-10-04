@@ -105,6 +105,9 @@ public class CONSTANTS {
     public static final String PREF_KEY_AudioFlag = "AudioFlag";
     public static final String PREF_KEY_myPlaylist = "myPlaylist";
     public static final String PREF_KEY_PlaylistId = "PlaylistId";
+    public static final String PREF_KEY_DownloadPlaylist = "PlaylistId";
+    public static final String PREF_KEY_DownloadName = "Name";
+    public static final String PREF_KEY_DownloadUrl = "Url";
     public static final String PREF_KEY_CardID = "CardID";
     public static final String PREF_KEY_Name = "Name";
     public static final String PREF_KEY_Image = "Image";
