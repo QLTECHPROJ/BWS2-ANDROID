@@ -315,7 +315,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.llDownloads.setClickable(false);
             binding.llDownloads.setEnabled(false);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
         }
     }
 
@@ -678,11 +678,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
                     binding.rvPlayLists.setAdapter(adpater2);
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                    binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+                    binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                     enableDisableDownload(false);
                     binding.llReminder.setClickable(false);
                     binding.llReminder.setEnabled(false);
-                    binding.ivReminder.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+                    binding.ivReminder.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                     binding.rlSearch.setVisibility(View.GONE);
                 } else {
                     if (listModel.getCreated().equalsIgnoreCase("1")) {
@@ -906,10 +906,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void savePlaylist() {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 DatabaseClient.getInstance(getActivity())
                         .getaudioDatabase()
                         .taskDao()
@@ -1119,7 +1117,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void disableDownload(LinearLayout llDownload, ImageView ivDownloads) {
         ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-        ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+        ivDownloads.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
         llDownload.setClickable(false);
         llDownload.setEnabled(false);
     }

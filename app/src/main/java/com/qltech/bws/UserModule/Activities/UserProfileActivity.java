@@ -107,23 +107,23 @@ public class UserProfileActivity extends AppCompatActivity {
             binding.tlCalendar.setError("please enter date of birth");
             binding.tlMobileNumber.setError("please enter mobile number");
             binding.tlEmail.setError("Please provide a valid email address");
-        }else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
+        } else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
                 binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
                 binding.etEmail.getText().toString().equalsIgnoreCase("")) {
             binding.flUser.setError("Please enter your full name");
             binding.tlCalendar.setError("please enter date of birth");
             binding.tlEmail.setError("Please provide a valid email address");
-        }else if (!binding.etUser.getText().toString().equalsIgnoreCase("") &&
+        } else if (!binding.etUser.getText().toString().equalsIgnoreCase("") &&
                 binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
                 binding.etEmail.getText().toString().equalsIgnoreCase("")) {
             binding.tlCalendar.setError("please enter date of birth");
             binding.tlEmail.setError("Please provide a valid email address");
-        }else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
+        } else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
                 binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
                 !binding.etEmail.getText().toString().equalsIgnoreCase("")) {
             binding.flUser.setError("Please enter your full name");
             binding.tlCalendar.setError("please enter date of birth");
-        }else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
+        } else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
                 !binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
                 binding.etEmail.getText().toString().equalsIgnoreCase("")) {
             binding.flUser.setError("Please enter your full name");
@@ -249,7 +249,14 @@ public class UserProfileActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         hideProgressBar();
                         ProfileViewModel viewModel = response.body();
-                        binding.etUser.setText(viewModel.getResponseData().getName());
+
+                        if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
+                                viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
+                                viewModel.getResponseData().getName() == null) {
+                            binding.etUser.setText(R.string.Guest);
+                        } else {
+                            binding.etUser.setText(viewModel.getResponseData().getName());
+                        }
 
                         profilePicPath = viewModel.getResponseData().getImage();
 
@@ -312,18 +319,18 @@ public class UserProfileActivity extends AppCompatActivity {
                         }
 
 //                        if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("1")) { /*Enable */
-                            binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
-                            binding.btnSave.setClickable(true);
-                            binding.btnSave.setEnabled(true);
+                        binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
+                        binding.btnSave.setClickable(true);
+                        binding.btnSave.setEnabled(true);
 
-                            binding.etCalendar.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    setDate();
-                                }
-                            });
+                        binding.etCalendar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                setDate();
+                            }
+                        });
 
-                      /*  } else if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("0")) { *//*Disable *//*
+                        /*  } else if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("0")) { *//*Disable *//*
                             binding.btnSave.setBackgroundResource(R.drawable.gray_extra_light_round_corners);
                             binding.btnSave.setClickable(false);
                             binding.btnSave.setEnabled(false);

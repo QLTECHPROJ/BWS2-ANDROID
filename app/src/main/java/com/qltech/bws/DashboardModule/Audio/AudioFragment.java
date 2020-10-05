@@ -62,14 +62,13 @@ public class AudioFragment extends Fragment {
     FragmentAudioBinding binding;
     String UserID, AudioFlag, expDate;
     List<String> fileNameList;
-    List<String> audioFile,playlistDownloadId;
+    List<String> audioFile, playlistDownloadId;
     List<DownloadAudioDetails> downloadAudioDetailsList;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_audio, container, false);
         View view = binding.getRoot();
         viewallAudio = false;
-        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -277,7 +276,7 @@ public class AudioFragment extends Fragment {
             }.getType();
             fileNameList = gson.fromJson(json, type);
             audioFile = gson.fromJson(json1, type);
-            if(json2.equalsIgnoreCase(String.valueOf(gson))){
+            if (json2.equalsIgnoreCase(String.valueOf(gson))) {
                 playlistDownloadId = new ArrayList<>();
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
@@ -298,8 +297,8 @@ public class AudioFragment extends Fragment {
 
     private void hideProgressBar() {
         try {
+            binding.progressBar.setVisibility(View.GONE);
             binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } catch (Exception e) {
             e.printStackTrace();
@@ -308,10 +307,10 @@ public class AudioFragment extends Fragment {
 
     private void showProgressBar() {
         try {
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.invalidate();
             binding.progressBarHolder.setVisibility(View.VISIBLE);
             getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
         } catch (Exception e) {
             e.printStackTrace();
         }

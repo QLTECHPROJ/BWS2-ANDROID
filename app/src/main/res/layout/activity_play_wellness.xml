@@ -324,21 +324,21 @@
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.24"
-                        android:gravity="center_horizontal"
+                        android:gravity="center"
                         android:padding="@dimen/_2sdp"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <ProgressBar
                             android:id="@+id/progressBar"
-                            android:layout_width="0.00dp"
-                            android:layout_height="match_parent"
+                            android:layout_width="@dimen/_50sdp"
+                            android:layout_height="@dimen/_50sdp"
                             android:layout_marginLeft="@dimen/_13sdp"
                             android:layout_marginTop="@dimen/_8sdp"
                             android:layout_marginBottom="@dimen/_8sdp"
                             android:layout_weight="0.13"
                             android:indeterminateTint="@color/blue"
                             android:scaleType="fitXY"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
                     </LinearLayout>
 
                     <LinearLayout

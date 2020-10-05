@@ -103,7 +103,7 @@ public class AccountFragment extends Fragment {
                 Intent i = new Intent(getActivity(), InvoiceActivity.class);
                 i.putExtra("ComeFrom", "");
                 startActivity(i);
-            }else {
+            } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
         });
@@ -116,7 +116,7 @@ public class AccountFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), BillingOrderActivity.class);
                 startActivity(i);
-            }else {
+            } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
         });
@@ -129,7 +129,7 @@ public class AccountFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), ResourceActivity.class);
                 startActivity(i);
-            }else {
+            } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
         });
@@ -143,7 +143,7 @@ public class AccountFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), ReminderDetailsActivity.class);
                 startActivity(i);
-            }else {
+            } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
         });
@@ -155,7 +155,7 @@ public class AccountFragment extends Fragment {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 Intent i = new Intent(getActivity(), FaqActivity.class);
                 startActivity(i);
-            }else {
+            } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
         });
@@ -381,7 +381,15 @@ public class AccountFragment extends Fragment {
                         hideProgressBar();
                         ProfileViewModel viewModel = response.body();
                         binding.tvViewProfile.setVisibility(View.VISIBLE);
-                        binding.tvName.setText(viewModel.getResponseData().getName());
+
+                        if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
+                                viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
+                                viewModel.getResponseData().getName() == null) {
+                            binding.tvName.setText(R.string.Guest);
+                        } else {
+                            binding.tvName.setText(viewModel.getResponseData().getName());
+                        }
+
                         String profilePicPath = viewModel.getResponseData().getImage();
                         IsLock = viewModel.getResponseData().getIsLock();
                         Glide.with(ctx).load(profilePicPath)

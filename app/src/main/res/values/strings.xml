@@ -200,4 +200,5 @@
     <string name="Delete_payment_card">Delete payment card</string>
     <string name="delete_payment_quotes">Are you sure you want to delete the payment card ?</string>
     <string name="sucess_playlist">Sucessfully added to playlist</string>
+    <string name="Guest">Guest</string>
 </resources>
