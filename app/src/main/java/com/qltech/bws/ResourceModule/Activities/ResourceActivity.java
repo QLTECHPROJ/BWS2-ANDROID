@@ -87,49 +87,53 @@ public class ResourceActivity extends AppCompatActivity {
         });
 
         setAdapter();
+        LayoutInflater li = LayoutInflater.from(activity);
+        View promptsView = li.inflate(R.layout.resource_filter_menu, null);
+        Dialog dialogBox;
+        dialogBox = new Dialog(activity, R.style.AppCompatAlertDialogStyle);
+        Window window = dialogBox.getWindow();
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+        window.requestFeature(Window.FEATURE_NO_TITLE);
+        dialogBox.setContentView(promptsView);
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        wlp.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+        dialogBox.getWindow().getDecorView().setBottom(100);
+        dialogBox.getWindow().getDecorView().setRight(100);
+        dialogBox.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        wlp.y = 170;
+        wlp.x = 33;
+        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        window.setAttributes(wlp);
+
+        dialogBox.setOnKeyListener((dialog, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                finish();
+            }
+            return false;
+        });
+
+        RecyclerView rvFilterList = promptsView.findViewById(R.id.rvFilterList);
+        ImageView ivFilter = promptsView.findViewById(R.id.ivFilter);
+        TextView tvAll = promptsView.findViewById(R.id.tvAll);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
+        rvFilterList.setLayoutManager(mLayoutManager);
+        rvFilterList.setItemAnimator(new DefaultItemAnimator());
+
         binding.ivFilter.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-            LayoutInflater li = LayoutInflater.from(ResourceActivity.this);
-            View promptsView = li.inflate(R.layout.resource_filter_menu, null);
-            Dialog dialogBox;
-            dialogBox = new Dialog(ResourceActivity.this, R.style.AppCompatAlertDialogStyle);
-            Window window = dialogBox.getWindow();
-            window.setBackgroundDrawableResource(android.R.color.transparent);
-            window.requestFeature(Window.FEATURE_NO_TITLE);
-            dialogBox.setContentView(promptsView);
-            WindowManager.LayoutParams wlp = window.getAttributes();
-            wlp.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-            dialogBox.getWindow().getDecorView().setBottom(100);
-            dialogBox.getWindow().getDecorView().setRight(100);
-            dialogBox.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-            wlp.y = 170;
-            wlp.x = 33;
-            wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-            window.setAttributes(wlp);
-
-            RecyclerView rvFilterList = promptsView.findViewById(R.id.rvFilterList);
-            ImageView ivFilter = promptsView.findViewById(R.id.ivFilter);
-            TextView tvAll = promptsView.findViewById(R.id.tvAll);
-            dialogBox.setOnKeyListener((dialog, keyCode, event) -> {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    finish();
-                }
-                return false;
-            });
-
+            setAdapter();
+            prepareData(activity, rvFilterList, dialogBox, tvAll, ivFilter);
             tvAll.setOnClickListener(view1 -> {
                 Category = "";
                 setAdapter();
                 dialogBox.dismiss();
             });
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ResourceActivity.this);
-            rvFilterList.setLayoutManager(mLayoutManager);
-            rvFilterList.setItemAnimator(new DefaultItemAnimator());
-            prepareData(ResourceActivity.this, rvFilterList, dialogBox, tvAll, ivFilter);
+            dialogBox.show();
         });
+        prepareData(activity, rvFilterList, dialogBox, tvAll, ivFilter);
     }
 
     @Override
@@ -155,7 +159,6 @@ public class ResourceActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<ResourceFilterModel> call, Response<ResourceFilterModel> response) {
                     if (response.isSuccessful()) {
-                        dialogBox.show();
                         ResourceFilterModel listModel = response.body();
                         ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx, dialogBox, tvAll, ivFilter);
                         rvFilterList.setAdapter(adapter);
@@ -209,6 +212,7 @@ public class ResourceActivity extends AppCompatActivity {
             });
             if (listModel.get(position).getCategoryName().equalsIgnoreCase(Category)) {
                 ivFilter.setVisibility(View.INVISIBLE);
+                tvAll.setTextColor(getResources().getColor(R.color.black));
                 holder.binding.tvTitle.setTextColor(getResources().getColor(R.color.blue));
                 holder.binding.ivFiltered.setVisibility(View.VISIBLE);
             } else if (Category.equalsIgnoreCase("")) {

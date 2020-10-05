@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import androidx.databinding.DataBindingUtil;
@@ -56,6 +57,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.qltech.bws.Utility.MusicService.SeekTo;
 import static com.qltech.bws.Utility.MusicService.getEndTime;
 import static com.qltech.bws.Utility.MusicService.getProgressPercentage;
@@ -157,6 +159,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             addToQueueModelList = gson.fromJson(json1, type1);
         }
+//        if (comefromDownload == 1) {
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//            params.setMargins(0, 0, 0, 0);
+//            binding.llPlayearMain.setLayoutParams(params);
+//        } else {
+//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        params.setMargins(0, 0, 0, 56);
+//        binding.llPlayearMain.setLayoutParams(params);
+//        }
+
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -483,7 +495,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             if (download.equalsIgnoreCase("1")) {
                 mediaPlayer.setDataSource(fileDescriptor);
             } else {
-               mediaPlayer.setDataSource(audioFile);
+                mediaPlayer.setDataSource(audioFile);
                 Log.e("Playinggggxxxxx", "Startinggg1xxxxx");
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -594,7 +606,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     int oldPosition = position;
                     Random random = new Random();
                     position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                    if(oldPosition == position){
+                    if (oldPosition == position) {
                         Random random1 = new Random();
                         position = random1.nextInt((listSize - 1) - 0 + 1) + 0;
                     }
@@ -729,7 +741,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         } else if ((isMediaStart && isPlaying()) && !isPause) {
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             binding.ivPlay.setVisibility(View.VISIBLE);
             binding.ivPause.setVisibility(View.GONE);
         }

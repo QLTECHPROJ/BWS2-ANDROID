@@ -86,7 +86,6 @@ public class AddQueueActivity extends AppCompatActivity {
         mData = new ArrayList<>();
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
         shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
@@ -129,18 +128,7 @@ public class AddQueueActivity extends AppCompatActivity {
         } else {
             comeFrom = "";
         }
-        if (play.equalsIgnoreCase("play")) {
-            binding.llOptions.setVisibility(View.VISIBLE);
-            binding.llRemovePlaylist.setVisibility(View.VISIBLE);
-        } else {
-            binding.llOptions.setVisibility(View.VISIBLE);
-            binding.llRemovePlaylist.setVisibility(View.GONE);
-        }
-        if (myPlaylist.equalsIgnoreCase("myPlaylist")) {
-            binding.llRemovePlaylist.setVisibility(View.VISIBLE);
-        } else {
-            binding.llRemovePlaylist.setVisibility(View.GONE);
-        }
+
         if (queuePlay) {
             listSize = addToQueueModelList.size();
         } else if (audioPlay) {
@@ -377,8 +365,8 @@ public class AddQueueActivity extends AppCompatActivity {
             addToQueueModel.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
         }
 //        if (addToQueueModelList.size() == 0) {
-            BWSApplication.showToast("Audio has been added to queue", ctx);
-            addToQueueModelList.add(addToQueueModel);
+        BWSApplication.showToast("Audio has been added to queue", ctx);
+        addToQueueModelList.add(addToQueueModel);
 //        } else {
 //            for (int x = 0; x < addToQueueModelList.size(); x++) {
 //                if (addToQueueModelList.get(x).getAudioFile().equals(addToQueueModel.getAudioFile())) {
@@ -631,6 +619,18 @@ public class AddQueueActivity extends AppCompatActivity {
                 public void onResponse(Call<DirectionModel> call, Response<DirectionModel> response) {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        if (play.equalsIgnoreCase("play")) {
+                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llRemovePlaylist.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llRemovePlaylist.setVisibility(View.GONE);
+                        }
+                        if (myPlaylist.equalsIgnoreCase("myPlaylist")) {
+                            binding.llRemovePlaylist.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.llRemovePlaylist.setVisibility(View.GONE);
+                        }
                         DirectionModel directionModel = response.body();
                         int ix = position;
                         if (!comeFrom.equalsIgnoreCase("")) {
@@ -640,9 +640,9 @@ public class AddQueueActivity extends AppCompatActivity {
                             AudioFile = mainPlayModelList.get(ix).getAudioFile();
                             PlaylistId = mainPlayModelList.get(ix).getPlaylistID();
                         }
-                        if(PlaylistId == null){
+                        if (PlaylistId == null) {
                             PlaylistId = "";
-                        }else{
+                        } else {
                             PlaylistId = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                         }
                         GetMedia(AudioFile, activity, directionModel.getResponseData().get(0).getDownload(), PlaylistId);

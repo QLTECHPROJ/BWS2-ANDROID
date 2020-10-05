@@ -125,15 +125,15 @@
                                     android:id="@+id/ivBg"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:scaleType="fitXY"
-                                    android:background="@drawable/gradient"/>
+                                    android:background="@drawable/gradient"
+                                    android:scaleType="fitXY" />
 
                                 <LinearLayout
                                     android:id="@+id/llDirection"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:layout_alignParentBottom="true">
+                                    android:layout_alignParentBottom="true"
+                                    android:orientation="vertical">
 
                                     <TextView
                                         android:id="@+id/tvDireName"
@@ -152,9 +152,9 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="@dimen/_6sdp"
                                         android:layout_marginBottom="@dimen/_22sdp"
+                                        android:ellipsize="end"
                                         android:fontFamily="@font/montserrat_regular"
                                         android:gravity="start"
-                                        android:ellipsize="end"
                                         android:maxLines="2"
                                         android:paddingHorizontal="@dimen/_18sdp"
                                         android:textColor="@color/white"
@@ -170,9 +170,9 @@
                     android:id="@+id/llThired"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
                     android:layout_weight="0.15"
                     android:gravity="center"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
                     android:orientation="vertical">
 
                     <TextView
@@ -318,6 +318,7 @@
                             android:layout_height="match_parent"
                             android:src="@drawable/ic_pause_icon" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/llProgressBar"
                         android:layout_width="@dimen/_0sdp"
@@ -326,6 +327,7 @@
                         android:gravity="center_horizontal"
                         android:padding="@dimen/_2sdp"
                         android:visibility="gone">
+
                         <ProgressBar
                             android:id="@+id/progressBar"
                             android:layout_width="0.00dp"
@@ -333,11 +335,12 @@
                             android:layout_marginLeft="@dimen/_13sdp"
                             android:layout_marginTop="@dimen/_8sdp"
                             android:layout_marginBottom="@dimen/_8sdp"
-                            android:scaleType="fitXY"
-                            android:indeterminateTint="@color/blue"
                             android:layout_weight="0.13"
+                            android:indeterminateTint="@color/blue"
+                            android:scaleType="fitXY"
                             android:visibility="gone" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/llnext"
                         android:layout_width="@dimen/_0sdp"
@@ -403,7 +406,7 @@
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
                             android:src="@drawable/ic_shuffle_icon"
-                            app:tint="@color/black"/>
+                            app:tint="@color/black" />
                     </LinearLayout>
 
 
@@ -421,6 +424,27 @@
                             android:src="@drawable/ic_repeat_music_icon" />
                     </LinearLayout>
 
+
+                    <LinearLayout
+                        android:id="@+id/llProgress"
+                        android:layout_width="@dimen/_0sdp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.2"
+                        android:visibility="gone"
+                        android:gravity="center">
+
+                        <ProgressBar
+                            android:id="@+id/pbProgress"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/circular_shape"
+                            android:indeterminate="false"
+                            android:max="100"
+                            android:progress="65"
+                            android:progressDrawable="@drawable/circular_progress_bar" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/llDownload"

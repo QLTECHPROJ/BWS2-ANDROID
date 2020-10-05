@@ -19,7 +19,6 @@ import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.qltech.bws.BWSApplication;
 import com.qltech.bws.R;
 import com.qltech.bws.ResourceModule.Activities.ResourceDetailsActivity;
 import com.qltech.bws.ResourceModule.Models.ResourceListModel;
