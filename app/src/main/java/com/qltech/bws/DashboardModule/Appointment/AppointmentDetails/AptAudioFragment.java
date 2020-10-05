@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity;
 import com.qltech.bws.DashboardModule.Appointment.AppointmentDetailsFragment;
@@ -39,6 +40,7 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.AudioAptListLayoutBinding;
 import com.qltech.bws.databinding.FragmentAptAudioBinding;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -224,12 +226,35 @@ public class AptAudioFragment extends Fragment {
                     } else {
                         BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                     }*/
+                    List<String> url1 = new ArrayList<>();
+                    List<String> name1 = new ArrayList<>();
+                    List<String> downloadPlaylistId = new ArrayList<>();
+                    SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                    Gson gson1 = new Gson();
+                    String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+                    String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+                    String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
+                    if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+                        Type type = new TypeToken<List<String>>() {
+                        }.getType();
+                        List<String> fileNameList = gson1.fromJson(json, type);
+                        List<String> audioFile1 = gson1.fromJson(json1, type);
+                        List<String> playlistId1 = gson1.fromJson(json2, type);
+                        if(fileNameList.size()!=0) {
+                            url1.addAll(audioFile1);
+                            name1.addAll(fileNameList);
+                            downloadPlaylistId.addAll(playlistId1);
+                        }
+                    }
                     String Name = listModelList.get(position).getName();
                     String audioFile = listModelList.get(position).getAudioFile();
+                    url1.add(audioFile);
+                    name1.add(Name);
+                    downloadPlaylistId.add("");
                     DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
-                    byte[] EncodeBytes = downloadMedia.encrypt(audioFile, Name);
+                    downloadMedia.encrypt1(url1, name1);
                     String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
-                    SaveMedia(EncodeBytes, dirPath, listModelList.get(position), holder.binding.llDownload);
+                    SaveMedia(new byte[1024], dirPath, listModelList.get(position), holder.binding.llDownload);
                 }
             });
 

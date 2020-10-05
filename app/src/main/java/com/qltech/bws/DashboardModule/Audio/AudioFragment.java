@@ -61,7 +61,7 @@ public class AudioFragment extends Fragment {
     FragmentAudioBinding binding;
     String UserID, AudioFlag, expDate;
     List<String> fileNameList;
-    List<String> audioFile;
+    List<String> audioFile,playlistDownloadId;
     List<DownloadAudioDetails> downloadAudioDetailsList;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -270,11 +270,13 @@ public class AudioFragment extends Fragment {
         Gson gson = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
         String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
         if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
             Type type = new TypeToken<List<String>>() {
             }.getType();
             fileNameList = gson.fromJson(json, type);
             audioFile = gson.fromJson(json1, type);
+            playlistDownloadId = gson.fromJson(json2, type);
             if (fileNameList.size() != 0) {
                 DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
                 downloadMedia.encrypt1(audioFile, fileNameList/*, playlistSongs*/);

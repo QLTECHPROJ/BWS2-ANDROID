@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -72,6 +73,13 @@ public class BWSApplication extends Application {
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 35);
         toast.setView(view);
         toast.show();
+    }
+    public static String getProgressDisplayLine(long currentBytes, long totalBytes) {
+        return getBytesToMBString(currentBytes) + "/" + getBytesToMBString(totalBytes);
+    }
+
+    private static String getBytesToMBString(long bytes){
+        return String.format(Locale.ENGLISH, "%.2fMb", bytes / (1024.00 * 1024.00));
     }
 /*    public static List<DownloadAudioDetails> GetAllMedia(Context ctx) {
 

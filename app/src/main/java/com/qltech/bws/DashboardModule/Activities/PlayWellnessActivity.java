@@ -25,6 +25,8 @@ import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.downloader.OnProgressListener;
+import com.downloader.Progress;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
@@ -57,6 +59,8 @@ import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.downloadProgress;
+import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.qltech.bws.Utility.MusicService.SeekTo;
 import static com.qltech.bws.Utility.MusicService.ToBackward;
 import static com.qltech.bws.Utility.MusicService.ToForward;
@@ -76,7 +80,7 @@ import static com.qltech.bws.Utility.MusicService.resumeMedia;
 import static com.qltech.bws.Utility.MusicService.savePrefQueue;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
-public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, AudioManager.OnAudioFocusChangeListener {
+public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, AudioManager.OnAudioFocusChangeListener/*, OnProgressListener*/ {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url;
     int startTime = 0, endTime = 0, position, listSize;
@@ -88,6 +92,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     List<DownloadAudioDetails> downloadAudioDetailsList;
     private long mLastClickTime = 0, totalDuration, currentDuration;
     private Handler handler;
+    private Handler handler1;
     //    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
@@ -156,6 +161,24 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             handler.postDelayed(this, 60);
         }
     };
+    private Runnable UpdateSongTime1 = new Runnable() {
+        @Override
+        public void run() {
+            if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
+                if(downloadProgress <100) {
+                    binding.pbProgress.setProgress(downloadProgress);
+                    binding.pbProgress.setVisibility(View.VISIBLE);
+                }else{
+                    binding.pbProgress.setVisibility(View.GONE);
+                    handler1.removeCallbacks(UpdateSongTime1);
+                }
+            }else{
+                binding.pbProgress.setVisibility(View.GONE);
+                handler1.removeCallbacks(UpdateSongTime1);
+            }
+            handler.postDelayed(this, 10);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,6 +186,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //        overridePendingTransition(R.anim.enter, R.anim.exit);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_wellness);
         handler = new Handler();
+        handler1 = new Handler();
         ctx = PlayWellnessActivity.this;
         activity = PlayWellnessActivity.this;
         addToQueueModelList = new ArrayList<>();
@@ -231,6 +255,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         getPrepareShowData(position);
+        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
+            handler.postDelayed(UpdateSongTime1, 10);
+         }else{
+            binding.pbProgress.setVisibility(View.GONE);
+            handler.removeCallbacks(UpdateSongTime1);
+        }
         callRepeatShuffle();
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
@@ -555,9 +585,38 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     private void callDownload() {
         disableDownload();
-        byte[] EncodeBytes;
+        byte[] EncodeBytes = new byte[1024];
+        List<String> url1 = new ArrayList<>();
+        List<String> name1 = new ArrayList<>();
+        List<String> downloadPlaylistId = new ArrayList<>();
+        SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+        Gson gson1 = new Gson();
+        String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+        String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
+        if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+            List<String> fileNameList = gson1.fromJson(json, type);
+            List<String> audioFile1 = gson1.fromJson(json1, type);
+            List<String> playlistId1 = gson1.fromJson(json2, type);
+            if(fileNameList.size()!=0) {
+                url1.addAll(audioFile1);
+                name1.addAll(fileNameList);
+                downloadPlaylistId.addAll(playlistId1);
+            }
+        }
+        url1.add(url);
+        name1.add(name);
+        downloadPlaylistId.add("");
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-        EncodeBytes = downloadMedia.encrypt(url, name);
+        downloadMedia.encrypt1(url1, name1);
+        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
+            handler.postDelayed(UpdateSongTime1, 10);
+        }else{
+            binding.pbProgress.setVisibility(View.GONE);
+            handler.removeCallbacks(UpdateSongTime1);
+        }
         SaveMedia(EncodeBytes, FileUtils.getFilePath(getApplicationContext(), name));
    /*     if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
@@ -1382,4 +1441,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 break;
         }
     }
+
+/*    @Override
+    public void onProgress(Progress progress) {
+        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
+            handler.postDelayed(UpdateSongTime1, 10);
+        }else{
+            handler.removeCallbacks(UpdateSongTime1);
+        }
+    }*/
 }

@@ -440,7 +440,7 @@
                             android:background="@drawable/circular_shape"
                             android:indeterminate="false"
                             android:max="100"
-                            android:progress="75"
+                            android:indeterminateTint="@color/green"
                             android:progressDrawable="@drawable/circular_progress_bar" />
 
                         <ImageView

@@ -140,6 +140,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     private void callDownload() {
         List<String> url = new ArrayList<>();
         List<String> name = new ArrayList<>();
+        List<String> downloadPlaylistId = new ArrayList<>();
         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2 = new ArrayList<>();
         playlistSongs2 = playlistSongsList;
         if (downloadAudioDetailsList.size() != 0) {
@@ -155,6 +156,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         for (int x = 0; x < playlistSongs2.size(); x++) {
             name.add(playlistSongs2.get(x).getName());
             url.add(playlistSongs2.get(x).getAudioFile());
+            downloadPlaylistId.add(playlistSongs2.get(x).getPlaylistID());
         }
         enableDisableDownload(false);
         byte[] encodedBytes = new byte[1024];
@@ -163,14 +165,17 @@ public class MyPlaylistActivity extends AppCompatActivity {
         Gson gson1 = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
         String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
         if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
             Type type = new TypeToken<List<String>>() {
             }.getType();
            List<String> fileNameList = gson1.fromJson(json, type);
            List<String> audioFile = gson1.fromJson(json1, type);
+            List<String> playlistId1 = gson1.fromJson(json2, type);
             if(fileNameList.size()!=0) {
                 url.addAll(audioFile);
                 name.addAll(fileNameList);
+                downloadPlaylistId.addAll(playlistId1);
             }
          }
 
@@ -182,8 +187,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
             Gson gson = new Gson();
             String urlJson = gson.toJson(url);
             String nameJson = gson.toJson(name);
+            String playlistIdJson = gson.toJson(downloadPlaylistId);
             editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
             editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
             editor.commit();
         }
         savePlaylist();

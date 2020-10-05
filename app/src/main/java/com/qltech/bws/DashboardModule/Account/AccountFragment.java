@@ -262,6 +262,7 @@ public class AccountFragment extends Fragment {
         SharedPreferences.Editor edit1 = preferences11.edit();
         edit1.remove(CONSTANTS.PREF_KEY_DownloadName);
         edit1.remove(CONSTANTS.PREF_KEY_DownloadUrl);
+        edit1.remove(CONSTANTS.PREF_KEY_DownloadPlaylistId);
         edit1.clear();
         edit1.commit();
 

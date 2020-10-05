@@ -1,9 +1,6 @@
 package com.qltech.bws.EncryptDecryptUtils;
 
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -19,6 +16,7 @@ import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.CONSTANTS;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,34 +25,30 @@ import static com.qltech.bws.EncryptDecryptUtils.FileUtils.saveFile;
 
 public class DownloadMedia extends AppCompatActivity implements OnDownloadListener {
     public static int downloadError = 2;
+    public static String filename = "";
+    public static int downloadProgress = 0;
     Context context;
     byte[] encodedBytes;
-    long refid;
-    String fileName;
-    boolean loop = false;
     List<String> fileNameList;
     List<String> audioFile;
+    List<String> playlistDownloadId;
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
-    boolean frist = true;
-    int i = 0;
-    private DownloadManager downloadManager;
-    private BroadcastReceiver onComplete;
 
     public DownloadMedia(Context context) {
         this.context = context;
     }
 
-    public byte[] encrypt(String DOWNLOAD_AUDIO_URL, String FILE_NAME) {
-       /* downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+    /*    public byte[] encrypt(String DOWNLOAD_AUDIO_URL, String FILE_NAME) {
+     *//* downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
         registerReceiver(onComplete,
-                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));*/
+                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));*//*
         fileName = FILE_NAME;
         loop = false;
         PRDownloader.download(DOWNLOAD_AUDIO_URL, FileUtils.getDirPath(context), FILE_NAME).build().start(this);
         BWSApplication.showToast("Downloading file...", context);
 //        encodedBytes = DownloadMedia(context, DOWNLOAD_AUDIO_URL, FILE_NAME);
         return encodedBytes;
-    }
+    }*/
 
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME/*, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs*/) {
         BWSApplication.showToast("Downloading file...", context);
@@ -62,8 +56,14 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
         audioFile = DOWNLOAD_AUDIO_URL;
         playlistSongsList = new ArrayList<>();/*
         playlistSongsList = playlistSongs;*/
-        loop = true;
-        PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(context), FILE_NAME.get(0)).build().start(this);
+        filename = FILE_NAME.get(0);
+        PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(context), FILE_NAME.get(0)).build().setOnProgressListener(progress -> {
+            long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
+            downloadProgress = (int) progressPercent;
+//        progressBarOne.setProgress((int) progressPercent);
+//        textViewProgressOne.setText(BWSApplication.getProgressDisplayLine(progress.currentBytes, progress.totalBytes));
+//        progressBarOne.setIndeterminate(false);
+        }).start(this);
         return encodedBytes;
     }
 
@@ -84,33 +84,36 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
 
     @Override
     public void onDownloadComplete() {
-        if (loop) {
-            try {
-                byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, fileNameList.get(0)));
-                encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
-                saveFile(encodedBytes, FileUtils.getFilePath(context, fileNameList.get(0)));
+        try {
+            byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, fileNameList.get(0)));
+            encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
+            saveFile(encodedBytes, FileUtils.getFilePath(context, fileNameList.get(0)));
 //                    saveAllMedia(playlistSongsList, encodedBytes, FileUtils.getFilePath(context, fileNameList.get(i)));
-                    fileNameList.remove(0);
-                    audioFile.remove(0);
-                SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                Gson gson = new Gson();
-                String urlJson = gson.toJson(audioFile);
-                String nameJson = gson.toJson(fileNameList);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                editor.commit();
-                if(fileNameList.size()!=0){
-                    encrypt1(audioFile,fileNameList);
-                }else{
-                    BWSApplication.showToast("Download Complete...", context);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                downloadError = 1;
-                Log.e("error in encrypt", e.getMessage());
+            fileNameList.remove(0);
+            audioFile.remove(0);
+            playlistDownloadId.remove(0);
+            SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String urlJson = gson.toJson(audioFile);
+            String nameJson = gson.toJson(fileNameList);
+            String playlistIdJson = gson.toJson(fileNameList);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+            editor.commit();
+            if (fileNameList.size() != 0) {
+                encrypt1(audioFile, fileNameList);
+            } else {
+                downloadProgress = 0;
+                filename = "";
+                BWSApplication.showToast("Download Complete...", context);
             }
-        } else {
+        } catch (Exception e) {
+            e.printStackTrace();
+            downloadError = 1;
+            Log.e("error in encrypt", e.getMessage());
+        } /*else {
             try {
                 downloadError = 0;
                 byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, fileName));
@@ -123,7 +126,7 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
                 downloadError = 1;
                 Log.e("error in encrypt", e.getMessage());
             }
-        }
+        }*/
     }
 
     @Override
@@ -172,5 +175,14 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
         SaveMedia st = new SaveMedia();
         st.execute();
     }
+/*
+    @Override
+    public String getName() {
+        return null;
+    }
 
+    @Override
+    public int getProgress() {
+        return 0;
+    }*/
 }
