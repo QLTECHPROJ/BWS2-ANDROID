@@ -166,6 +166,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
         view = binding.getRoot();
+        handler1 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         activity = getActivity();
@@ -892,6 +893,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         if (playlistSongs2.size() != 0) {
                             if (playlistSongs2.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
                                 playlistSongs2.remove(x);
+                                int size = playlistSongs2.size();
+                                if(size == 0){
+                                    break;
+                                }
                             }
                         }
                     }

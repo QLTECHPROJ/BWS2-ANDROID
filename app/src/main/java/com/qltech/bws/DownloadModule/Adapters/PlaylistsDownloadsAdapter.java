@@ -152,7 +152,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                         FileUtils.deleteDownloadedFile(ctx, oneAudioDetailsList.get(0).getName());
                     }
                 }
-                deleteDownloadFile(ctx.getApplicationContext(), playlistID);
+
                 super.onPostExecute(aVoid);
             }
         }
@@ -301,6 +301,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                deleteDownloadFile(ctx.getApplicationContext(), playlistID);
                 for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
                     GetSingleMedia(playlistWiseAudioDetails.get(i).getAudioFile(), ctx.getApplicationContext(), playlistID);
                 }
