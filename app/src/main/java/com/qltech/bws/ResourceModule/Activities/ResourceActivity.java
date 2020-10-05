@@ -124,7 +124,6 @@ public class ResourceActivity extends AppCompatActivity {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-            setAdapter();
             prepareData(activity, rvFilterList, dialogBox, tvAll, ivFilter);
             tvAll.setOnClickListener(view1 -> {
                 Category = "";

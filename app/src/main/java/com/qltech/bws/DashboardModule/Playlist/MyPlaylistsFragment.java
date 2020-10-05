@@ -1241,7 +1241,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             holder.binding.llDownload.setOnClickListener(view -> callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(),
                     mData.get(position).getName(), listFilterData, position, holder.binding.llDownload, holder.binding.ivDownloads));
 
-            holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId(),mData,position));
+            try {
+                holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId(),mData,position));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override

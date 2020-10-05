@@ -54,6 +54,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Audio.ViewAllAudioFragment.viewallAudio;
+import static com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 
 public class AudioFragment extends Fragment {
     public static boolean exit = false;

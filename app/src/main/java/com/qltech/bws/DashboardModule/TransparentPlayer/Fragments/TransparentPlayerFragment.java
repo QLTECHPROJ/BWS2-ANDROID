@@ -159,15 +159,21 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             addToQueueModelList = gson.fromJson(json1, type1);
         }
-//        if (comefromDownload == 1) {
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//            params.setMargins(0, 0, 0, 0);
-//            binding.llPlayearMain.setLayoutParams(params);
-//        } else {
-//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        params.setMargins(0, 0, 0, 56);
-//        binding.llPlayearMain.setLayoutParams(params);
-//        }
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, 0, 0, 94);
+        binding.llLayout.setLayoutParams(params);
+
+        if (comefromDownload.equalsIgnoreCase("1")) {
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            param.setMargins(0, 0, 0, 0);
+            binding.llLayout.setLayoutParams(param);
+        }else {
+            LinearLayout.LayoutParams paramm = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            paramm.setMargins(0, 0, 0, 94);
+            binding.llLayout.setLayoutParams(paramm);
+
+        }
 
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);

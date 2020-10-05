@@ -99,9 +99,13 @@ public class AccountFragment extends Fragment {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-            Intent i = new Intent(getActivity(), InvoiceActivity.class);
-            i.putExtra("ComeFrom", "");
-            startActivity(i);
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                Intent i = new Intent(getActivity(), InvoiceActivity.class);
+                i.putExtra("ComeFrom", "");
+                startActivity(i);
+            }else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
         });
 
         binding.llBillingOrder.setOnClickListener(view15 -> {
@@ -109,8 +113,12 @@ public class AccountFragment extends Fragment {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-            Intent i = new Intent(getActivity(), BillingOrderActivity.class);
-            startActivity(i);
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                Intent i = new Intent(getActivity(), BillingOrderActivity.class);
+                startActivity(i);
+            }else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
         });
 
         binding.llResource.setOnClickListener(view17 -> {
@@ -118,8 +126,12 @@ public class AccountFragment extends Fragment {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-            Intent i = new Intent(getActivity(), ResourceActivity.class);
-            startActivity(i);
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                Intent i = new Intent(getActivity(), ResourceActivity.class);
+                startActivity(i);
+            }else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
         });
 
         binding.llReminder.setOnClickListener(view16 -> {
@@ -128,16 +140,24 @@ public class AccountFragment extends Fragment {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-            Intent i = new Intent(getActivity(), ReminderDetailsActivity.class);
-            startActivity(i);
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                Intent i = new Intent(getActivity(), ReminderDetailsActivity.class);
+                startActivity(i);
+            }else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
         });
         binding.llFaq.setOnClickListener(view18 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-            Intent i = new Intent(getActivity(), FaqActivity.class);
-            startActivity(i);
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                Intent i = new Intent(getActivity(), FaqActivity.class);
+                startActivity(i);
+            }else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
         });
 
         binding.llLogout.setOnClickListener(view19 -> {

@@ -27,6 +27,8 @@ import com.qltech.bws.databinding.ActivityDownloadsBinding;
 
 import java.util.ArrayList;
 
+import static com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
+
 public class DownloadsActivity extends AppCompatActivity {
     ActivityDownloadsBinding binding;
     ArrayList<DownloadlistModel.Audio> audioList;
@@ -44,8 +46,17 @@ public class DownloadsActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        binding.llBack.setOnClickListener(view -> finish());
+        binding.llBack.setOnClickListener(view -> {
+            comefromDownload = "0";
+            finish();
+        });
         prepareData();
+    }
+
+    @Override
+    public void onBackPressed() {
+        comefromDownload = "0";
+        finish();
     }
 
     public void prepareData() {
@@ -73,10 +84,10 @@ public class DownloadsActivity extends AppCompatActivity {
                 UserID, binding.progressBarHolder, binding.ImgV);
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
-        if(ComeFrom_Playlist){
+        if (ComeFrom_Playlist) {
             binding.viewPager.setCurrentItem(1);
-            ComeFrom_Playlist =false;
-        }else{
+            ComeFrom_Playlist = false;
+        } else {
             binding.viewPager.setCurrentItem(0);
         }
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -106,7 +117,9 @@ public class DownloadsActivity extends AppCompatActivity {
    });
 } else {
    BWSApplication.showToast( getString(R.string.no_server_found), this);
-}*/   public class TabAdapter extends FragmentStatePagerAdapter {
+}*/
+
+    public class TabAdapter extends FragmentStatePagerAdapter {
         int totalTabs;
         String UserID;
         FrameLayout progressBarHolder;

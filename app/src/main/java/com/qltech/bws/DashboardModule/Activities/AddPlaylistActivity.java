@@ -203,6 +203,8 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                                             });
 
                                                             rlCreate.setOnClickListener(view2 -> {
+                                                                addToPlayList = true;
+                                                                MyPlaylistId = listsModel.getResponseData().getId();
                                                                 dialog.dismiss();
                                                                 finish();
                                                                 /*Fragment myPlaylistsFragment = new MyPlaylistsFragment();
@@ -252,7 +254,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                         }
                     }
                 });
-
                 tvCancel.setOnClickListener(v -> dialog.dismiss());
                 dialog.show();
                 dialog.setCancelable(false);

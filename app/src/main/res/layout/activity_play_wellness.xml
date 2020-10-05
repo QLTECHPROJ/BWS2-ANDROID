@@ -204,7 +204,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
-                android:layout_marginBottom="@dimen/_26sdp"
+                android:layout_marginBottom="@dimen/_20sdp"
                 android:layout_weight="0.30"
                 android:gravity="bottom"
                 android:orientation="vertical"

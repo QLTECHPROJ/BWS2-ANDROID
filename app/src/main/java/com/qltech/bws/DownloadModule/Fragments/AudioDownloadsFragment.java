@@ -33,6 +33,8 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 
+import static com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
+
 public class AudioDownloadsFragment extends Fragment {
     FragmentDownloadsBinding binding;
     //    ArrayList<DownloadlistModel.Audio> audioList;
@@ -56,7 +58,7 @@ public class AudioDownloadsFragment extends Fragment {
         audioList = GetAllMedia(getActivity());
         binding.tvFound.setText("Audio you are searching for is not available in the list");
         try {
-            if(IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")){
+            if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
                 editorr.remove(CONSTANTS.PREF_KEY_modelList);
@@ -72,6 +74,7 @@ public class AudioDownloadsFragment extends Fragment {
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
+                comefromDownload = "1";
                 Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
