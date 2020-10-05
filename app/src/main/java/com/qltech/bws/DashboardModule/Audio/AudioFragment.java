@@ -277,6 +277,16 @@ public class AudioFragment extends Fragment {
             }.getType();
             fileNameList = gson.fromJson(json, type);
             audioFile = gson.fromJson(json1, type);
+            if(json2.equalsIgnoreCase(String.valueOf(gson))){
+                playlistDownloadId = new ArrayList<>();
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                String playlistIdJson = gson.toJson(playlistDownloadId);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                editor.commit();
+                SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+                json2 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+            }
             playlistDownloadId = gson.fromJson(json2, type);
             if (fileNameList.size() != 0) {
                 DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
