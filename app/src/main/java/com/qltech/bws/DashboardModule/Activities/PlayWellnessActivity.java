@@ -176,7 +176,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.pbProgress.setVisibility(View.GONE);
                 handler1.removeCallbacks(UpdateSongTime1);
             }
-            handler.postDelayed(this, 10);
+            handler1.postDelayed(this, 10);
         }
     };
 
@@ -256,10 +256,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }
         getPrepareShowData(position);
         if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
-            handler.postDelayed(UpdateSongTime1, 10);
+            handler1.postDelayed(UpdateSongTime1, 10);
          }else{
             binding.pbProgress.setVisibility(View.GONE);
-            handler.removeCallbacks(UpdateSongTime1);
+            handler1.removeCallbacks(UpdateSongTime1);
         }
         callRepeatShuffle();
         if (isMediaStart) {
@@ -612,10 +612,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         downloadMedia.encrypt1(url1, name1);
         if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
-            handler.postDelayed(UpdateSongTime1, 10);
+            handler1.postDelayed(UpdateSongTime1, 10);
         }else{
             binding.pbProgress.setVisibility(View.GONE);
-            handler.removeCallbacks(UpdateSongTime1);
+            handler1.removeCallbacks(UpdateSongTime1);
         }
         SaveMedia(EncodeBytes, FileUtils.getFilePath(getApplicationContext(), name));
    /*     if (BWSApplication.isNetworkConnected(ctx)) {

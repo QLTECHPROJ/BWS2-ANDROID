@@ -82,19 +82,31 @@
 
                                 </LinearLayout>
 
-                                <LinearLayout
+                                <RelativeLayout
                                     android:id="@+id/llDownloads"
                                     android:layout_width="42dp"
                                     android:layout_height="match_parent"
                                     android:layout_centerVertical="true"
                                     android:gravity="center">
 
+                                    <ProgressBar
+                                        android:id="@+id/pbProgress"
+                                        style="?android:attr/progressBarStyleHorizontal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_centerInParent="true"
+                                        android:background="@drawable/circular_shape"
+                                        android:indeterminate="false"
+                                        android:max="100"
+                                        android:visibility="gone"
+                                        android:indeterminateTint="@color/green"
+                                        android:progressDrawable="@drawable/circular_progress_bar" />
                                     <ImageView
                                         android:id="@+id/ivDownloads"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content" />
 
-                                </LinearLayout>
+                                </RelativeLayout>
 
                                 <LinearLayout
                                     android:id="@+id/llMore"

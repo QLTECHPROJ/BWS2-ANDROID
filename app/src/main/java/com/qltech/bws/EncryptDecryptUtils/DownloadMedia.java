@@ -11,12 +11,14 @@ import com.downloader.Error;
 import com.downloader.OnDownloadListener;
 import com.downloader.PRDownloader;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.CONSTANTS;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +31,7 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
     public static int downloadProgress = 0;
     Context context;
     byte[] encodedBytes;
-    List<String> fileNameList;
-    List<String> audioFile;
-    List<String> playlistDownloadId;
+    List<String> fileNameList,audioFile,playlistDownloadId,removedFileNameList,removedPlaylistDownloadId;
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
 
     public DownloadMedia(Context context) {
@@ -89,6 +89,26 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
             encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
             saveFile(encodedBytes, FileUtils.getFilePath(context, fileNameList.get(0)));
 //                    saveAllMedia(playlistSongsList, encodedBytes, FileUtils.getFilePath(context, fileNameList.get(i)));
+            SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_removedDownloadPlaylist, MODE_PRIVATE);
+            Gson gson1 = new Gson();
+            String json = sharedx.getString(CONSTANTS.PREF_KEY_removedDownloadName, String.valueOf(gson1));
+            String json2 = sharedx.getString(CONSTANTS.PREF_KEY_removedDownloadPlaylistId, String.valueOf(gson1));
+            if (!json.equalsIgnoreCase(String.valueOf(gson1))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                removedFileNameList = gson1.fromJson(json, type);
+                removedPlaylistDownloadId = gson1.fromJson(json2, type);
+                removedFileNameList.add(fileNameList.get(0));
+                removedPlaylistDownloadId.add(playlistDownloadId.get(0));
+            }
+            SharedPreferences shared1 = context.getSharedPreferences(CONSTANTS.PREF_KEY_removedDownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor1 = shared1.edit();
+            String nameJson1 = gson1.toJson(removedFileNameList);
+            String playlistIdJson1 = gson1.toJson(removedPlaylistDownloadId);
+            editor1.putString(CONSTANTS.PREF_KEY_removedDownloadName, nameJson1);
+            editor1.putString(CONSTANTS.PREF_KEY_removedDownloadPlaylistId, playlistIdJson1);
+            editor1.commit();
+
             fileNameList.remove(0);
             audioFile.remove(0);
             playlistDownloadId.remove(0);
