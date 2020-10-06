@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
+import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Fragments.AudioDownloadsFragment;
 import com.qltech.bws.DownloadModule.Fragments.PlaylistsDownlaodsFragment;
 import com.qltech.bws.DownloadModule.Models.DownloadlistModel;
@@ -28,6 +29,7 @@ import com.qltech.bws.databinding.ActivityDownloadsBinding;
 
 import java.util.ArrayList;
 
+import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.qltech.bws.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 
 public class DownloadsActivity extends AppCompatActivity {
@@ -43,8 +45,38 @@ public class DownloadsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_downloads);
         ctx = DownloadsActivity.this;
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+
+        try {
+            if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                SharedPreferences sharedm = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editorr = sharedm.edit();
+                editorr.remove(CONSTANTS.PREF_KEY_modelList);
+                editorr.remove(CONSTANTS.PREF_KEY_position);
+                editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
+                editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
+                editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
+                editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
+                editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
+                editorr.clear();
+                editorr.commit();
+            }
+            SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            if (!AudioFlag.equalsIgnoreCase("0")) {
+                comefromDownload = "1";
+                Fragment fragment = new TransparentPlayerFragment();
+                FragmentManager fragmentManager1 = getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .add(R.id.flContainer, fragment)
+                        .commit();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         binding.llBack.setOnClickListener(view -> {
             comefromDownload = "0";

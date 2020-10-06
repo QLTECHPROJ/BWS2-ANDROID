@@ -78,7 +78,7 @@ import static com.qltech.bws.Utility.MusicService.resumeMedia;
 import static com.qltech.bws.Utility.MusicService.savePrefQueue;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
-public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, AudioManager.OnAudioFocusChangeListener/*, OnProgressListener*/ {
+public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener, OnProgressListener*/ {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url;
     int startTime = 0, endTime = 0, position, listSize;
@@ -91,7 +91,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     private long mLastClickTime = 0, totalDuration, currentDuration;
     private Handler handler;
     private Handler handler1;
-    //    private AudioManager mAudioManager;
+//        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -218,7 +218,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        /*mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+/*        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);*/
         if (BWSApplication.isNetworkConnected(ctx)) {
@@ -724,9 +724,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "1");
-                if (IsRepeat.equalsIgnoreCase("0")) {
-                    editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
-                }
+                editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
                 editor.commit();
                 IsRepeat = "";
                 if (queuePlay) {
@@ -1268,6 +1266,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callBack() {
+        handler.removeCallbacks(UpdateSongTime);
         player = 1;
         if (binding.llPause.getVisibility() == View.VISIBLE) {
             isPause = false;
@@ -1417,7 +1416,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
-    @Override
+ /*   @Override
     public void onAudioFocusChange(int i) {
         switch (i) {
             case AudioManager.AUDIOFOCUS_GAIN:
@@ -1437,7 +1436,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //                MusicService.pauseMedia();// Pause your media player here
                 break;
         }
-    }
+    }*/
 
 /*    @Override
     public void onProgress(Progress progress) {

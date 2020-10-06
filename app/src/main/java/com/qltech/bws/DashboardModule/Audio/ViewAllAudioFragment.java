@@ -290,14 +290,20 @@ public class ViewAllAudioFragment extends Fragment {
                             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             Gson gson = new Gson();
-                            String json = gson.toJson(listModelList.get(position));
+                            String json="";
+                            if(Name.equalsIgnoreCase(getString(R.string.top_categories))){
+                                json = gson.toJson(listModelList);
+                                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "TopCategories");
+                            }else{
+                                json = gson.toJson(listModelList.get(position));
+                                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
+                            }
                             editor.putString(CONSTANTS.PREF_KEY_modelList, json);
                             editor.putInt(CONSTANTS.PREF_KEY_position, position);
                             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                             editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
                             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
                             editor.commit();
                         } catch (Exception e) {
                             e.printStackTrace();

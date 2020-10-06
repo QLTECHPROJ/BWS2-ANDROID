@@ -75,7 +75,7 @@ import static com.qltech.bws.Utility.MusicService.resumeMedia;
 import static com.qltech.bws.Utility.MusicService.savePrefQueue;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
-public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, AudioManager.OnAudioFocusChangeListener {
+public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener*/ {
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
     int position = 0, startTime, listSize;
@@ -87,7 +87,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     List<DownloadAudioDetails> downloadAudioDetailsList;
     Activity activity;
     private Handler handler;
-    //    private AudioManager mAudioManager;
+//        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -183,9 +183,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
-//        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-//        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
-//                AudioManager.AUDIOFOCUS_GAIN);
+    /*    mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);*/
         if (queuePlay) {
             getPrepareShowData();
         } else if (audioPlay) {
@@ -209,6 +209,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
 //            }
+                SharedPreferences sharedz = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedz.edit();
+                Gson gsonz = new Gson();
+                String jsonz = gsonz.toJson(mainPlayModelList);
+                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+                editor.commit();
                 getPrepareShowData();
 
             } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
@@ -231,6 +237,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
 //                }
+                SharedPreferences sharedz = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedz.edit();
+                Gson gsonz = new Gson();
+                String jsonz = gsonz.toJson(mainPlayModelList);
+                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+                editor.commit();
+                getPrepareShowData();
                 getPrepareShowData();
             } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 Type type = new TypeToken<AppointmentDetailModel.Audio>() {
@@ -252,6 +265,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
 //                }
+                SharedPreferences sharedz = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedz.edit();
+                Gson gsonz = new Gson();
+                String jsonz = gsonz.toJson(mainPlayModelList);
+                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+                editor.commit();
+                getPrepareShowData();
                 getPrepareShowData();
             } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
                 Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
@@ -274,6 +294,41 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     mainPlayModelList.add(mainPlayModel);
                     downloadPlay = true;
                 }
+                SharedPreferences sharedz = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedz.edit();
+                Gson gsonz = new Gson();
+                String jsonz = gsonz.toJson(mainPlayModelList);
+                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+                editor.commit();
+                getPrepareShowData();
+                getPrepareShowData();
+            } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
+                Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+                }.getType();
+                ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
+                listSize = arrayList.size();
+                for (int i = 0; i < listSize; i++) {
+                    mainPlayModel = new MainPlayModel();
+                    mainPlayModel.setID(arrayList.get(i).getID());
+                    mainPlayModel.setName(arrayList.get(i).getName());
+                    mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                    mainPlayModel.setPlaylistID("");
+                    mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                    mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                    mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                    mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                    mainPlayModel.setLike(arrayList.get(i).getLike());
+                    mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                    mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                    mainPlayModelList.add(mainPlayModel);
+                }
+                SharedPreferences sharedz = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedz.edit();
+                Gson gsonz = new Gson();
+                String jsonz = gsonz.toJson(mainPlayModelList);
+                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+                editor.commit();
+                getPrepareShowData();
                 getPrepareShowData();
             } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
                 Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
@@ -295,6 +350,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                     mainPlayModelList.add(mainPlayModel);
                 }
+                SharedPreferences sharedz = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedz.edit();
+                Gson gsonz = new Gson();
+                String jsonz = gsonz.toJson(mainPlayModelList);
+                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+                editor.commit();
+                getPrepareShowData();
                 getPrepareShowData();
             }
         }
@@ -767,12 +829,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         super.onResume();
     }
 
-    @Override
+   /* @Override
     public void onAudioFocusChange(int i) {
         switch (i) {
             case AudioManager.AUDIOFOCUS_GAIN:
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 // Resume your media player here
+                resumeMedia();
                 break;
             case AudioManager.AUDIOFOCUS_LOSS:
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
@@ -784,5 +847,5 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                MusicService.pauseMedia();// Pause your media player here
                 break;
         }
-    }
+    }*/
 }

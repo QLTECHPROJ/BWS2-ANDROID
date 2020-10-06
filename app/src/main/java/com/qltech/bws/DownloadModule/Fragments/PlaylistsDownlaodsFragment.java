@@ -48,13 +48,14 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             UserID = getArguments().getString("UserID");
 //            playlistList = getArguments().getParcelableArrayList("playlistsDownlaodsFragment");
         }
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+//        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+//        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
 //        binding.tvFound.setText("Audio you are searching for is not available in the list");
         playlistList = new ArrayList<>();
         binding.tvFound.setText("Playlist you are searching for is not available ");
         GetAllMedia(getActivity());
+/*
         try {
             if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -82,6 +83,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+*/
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);

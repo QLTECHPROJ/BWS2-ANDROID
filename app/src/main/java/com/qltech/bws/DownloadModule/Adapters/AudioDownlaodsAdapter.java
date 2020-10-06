@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,7 +25,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
-import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
@@ -40,29 +38,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
-import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
-import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
+    public static String comefromDownload = "";
     FragmentActivity ctx;
     String UserID;
     FrameLayout progressBarHolder;
     ProgressBar ImgV;
     LinearLayout llError;
     RecyclerView rvDownloadsList;
-    private List<DownloadAudioDetails> listModelList;
     TextView tvFound;
     List<DownloadAudioDetails> downloadAudioDetailsList;
-    public static String comefromDownload = "";
     Runnable UpdateSongTime1;
+    List<String> fileNameList = new ArrayList<>();
+    private List<DownloadAudioDetails> listModelList;
     private Handler handler1;
-    List<String> fileNameList=new ArrayList<>();
+
     public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, String UserID,
                                  FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
         this.listModelList = listModelList;
@@ -97,9 +96,9 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {
-                for(int i = 0;i<fileNameList.size();i++) {
-                    if (fileNameList.contains(listModelList.get(position).getName())) {
-                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
+                for (int f = 0; f < listModelList.size(); f++) {
+                    if (fileNameList.contains(listModelList.get(f).getName())) {
+                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(f).getName())) {
                             if (downloadProgress < 100) {
                                 holder.binding.pbProgress.setProgress(downloadProgress);
                                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
@@ -113,7 +112,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 handler1.postDelayed(this, 500);
             }
         };
-        if(fileNameList.size()!=0) {
+        if (fileNameList.size() != 0) {
             if (fileNameList.contains(listModelList.get(position).getName())) {
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
                 handler1.postDelayed(UpdateSongTime1, 500);

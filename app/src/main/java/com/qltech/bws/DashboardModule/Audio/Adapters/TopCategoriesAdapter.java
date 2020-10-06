@@ -21,7 +21,7 @@ import com.qltech.bws.databinding.RoundBoxLayoutBinding;
 
 import java.util.ArrayList;
 
-public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
+public class  TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
     FragmentActivity activity;

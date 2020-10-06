@@ -126,11 +126,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         @Override
         public void run() {
             if (fileNameList.size() != 0) {
-                for (int i = 0; i < fileNameList.size(); i++) {
-                    if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
-                        remainAudio.add(playlistDownloadId.get(i));
-                    }
-                }
                 if (remainAudio.size() < SongListSize) {
                     int total = SongListSize;
                     int remain = remainAudio.size();
@@ -145,13 +140,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
                 }
                 handler1.postDelayed(this, 10);
-            }/*if() {
-                    for(int i = 0;i<fileNameList.size();i++){
-                        if(playlistDownloadId.get(i).equalsIgnoreCase("")){
-                            remainAudio2.add(playlistDownloadId.get(i));
-                        }
-                    }
-                }*/
+            }
         }
     };
 
@@ -691,7 +680,17 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             remainAudio = new ArrayList<>();
             if(playlistDownloadId.size()!=0){
                 playlistDownloadId.contains(PlaylistID);
-                handler1.postDelayed(UpdateSongTime1,500);
+                for (int i = 0; i < fileNameList.size(); i++) {
+                    if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
+                        remainAudio.add(playlistDownloadId.get(i));
+                    }
+                }
+                if(downloadPlaylistDetailsList.size()!=0){
+                    if (remainAudio.size() < SongListSize) {
+                        handler1.postDelayed(UpdateSongTime1,500);
+                    }
+                }
+             //
             }
         }else{
             fileNameList = new ArrayList<>();
@@ -857,7 +856,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                         } else if (pos == position && position == mData.size() - 1) {
                                             pos = 0;
                                         }
-                                        callTransparentFrag(pos, getActivity(), mData, "myPlaylist");
+//                                        callTransparentFrag(pos, getActivity(), mData, "myPlaylist");
                                     } else {
 
                                     }
@@ -947,6 +946,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                 editor.commit();
+                remainAudio = new ArrayList<>();
+                for (int i = 0; i < fileNameList.size(); i++) {
+                    if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
+                        remainAudio.add(playlistDownloadId.get(i));
+                    }
+                }
                 handler1.postDelayed(UpdateSongTime1, 500);
             }
             SongListSize = playlistSongs.size();
@@ -978,7 +983,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
             url.add(audioFile);
             name.add(Name);
-            downloadPlaylistId.add(PlaylistID);
+            downloadPlaylistId.add("");
             if (url.size() != 0) {
                 DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
                 downloadMedia.encrypt1(url, name/*, playlistSongs*/);
@@ -1226,6 +1231,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable/*, StartDragListener*/, ItemMoveCallback.ItemTouchHelperContract {
         Context ctx;
         String UserID, Created, name;
+        List<String> disableName;
         StartDragListener startDragListener;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
@@ -1255,9 +1261,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             UpdateSongTime2 = new Runnable() {
                 @Override
                 public void run() {
-                    for(int i = 0;i<fileNameList.size();i++) {
-                        if (fileNameList.contains(mData.get(position).getName())) {
-                            if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(mData.get(position).getName())) {
+                    for (int f = 0; f < listModelList.size(); f++) {
+                        if (fileNameList.contains(mData.get(f).getName())) {
+                            if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(mData.get(f).getName())) {
                                 if (downloadProgress < 100) {
                                     holder.binding.pbProgress.setProgress(downloadProgress);
                                     holder.binding.pbProgress.setVisibility(View.VISIBLE);
@@ -1299,6 +1305,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                 if (downloadAudioDetailsList.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile()) &&
                         downloadAudioDetailsList.get(i).getPlaylistId().equalsIgnoreCase(mData.get(position).getPlaylistID()) ) {
+                    disableName.add(mData.get(position).getName());
                     disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
                 } else {
                     enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);

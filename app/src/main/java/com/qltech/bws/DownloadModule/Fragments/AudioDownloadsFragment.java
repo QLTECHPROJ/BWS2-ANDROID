@@ -51,13 +51,13 @@ public class AudioDownloadsFragment extends Fragment {
             UserID = getArguments().getString("UserID");
 //            audioList = getArguments().getParcelableArrayList("audioDownloadsFragment");
         }
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+//        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+//        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
         audioList = new ArrayList<>();
         audioList = GetAllMedia(getActivity());
         binding.tvFound.setText("Audio you are searching for is not available in the list");
-        try {
+       /* try {
             if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
@@ -83,7 +83,7 @@ public class AudioDownloadsFragment extends Fragment {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);
@@ -127,6 +127,7 @@ public class AudioDownloadsFragment extends Fragment {
     private void getDataList(List<DownloadAudioDetails> historyList, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
+            binding.llError.setVisibility(View.VISIBLE);
         } else {
             binding.llError.setVisibility(View.GONE);
             AudioDownlaodsAdapter adapter = new AudioDownlaodsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV, llError, rvDownloadsList, binding.tvFound);

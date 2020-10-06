@@ -85,18 +85,13 @@ public class MyPlaylistActivity extends AppCompatActivity {
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
     List<String> fileNameList,playlistDownloadId, remainAudio;
     private Handler handler1;
+    int SongListSize = 0;
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
-            getDownloadData();
             if (fileNameList.size() != 0) {
-                for (int i = 0; i < fileNameList.size(); i++) {
-                    if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
-                        remainAudio.add(playlistDownloadId.get(i));
-                    }
-                }
-                if (remainAudio.size() < downloadPlaylistDetailsList.size()) {
-                    int total = downloadPlaylistDetailsList.size();
+                if (remainAudio.size() < SongListSize) {
+                    int total = SongListSize;
                     int remain = remainAudio.size();
                     long progressPercent = remain * 100 / total;
                     int downloadProgress = (int) progressPercent;
@@ -108,7 +103,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                         handler1.removeCallbacks(UpdateSongTime1);
                     }
                 }
-                handler1.postDelayed(this, 500);
+                handler1.postDelayed(this, 10);
             }
         }
     };
@@ -169,9 +164,19 @@ public class MyPlaylistActivity extends AppCompatActivity {
             }.getType();
             fileNameList = gson.fromJson(jsony, type);
             playlistDownloadId = gson.fromJson(jsonq, type);
+            remainAudio = new ArrayList<>();
             if(playlistDownloadId.size()!=0){
                 playlistDownloadId.contains(PlaylistID);
-                handler1.postDelayed(UpdateSongTime1,500);
+                for (int i = 0; i < fileNameList.size(); i++) {
+                    if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
+                        remainAudio.add(playlistDownloadId.get(i));
+                    }
+                }
+                if(downloadPlaylistDetailsList.size()!=0){
+                    if (remainAudio.size() < SongListSize) {
+                        handler1.postDelayed(UpdateSongTime1,500);
+                    }
+                }
             }
         }else{
             fileNameList = new ArrayList<>();
@@ -213,11 +218,19 @@ public class MyPlaylistActivity extends AppCompatActivity {
         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2 = new ArrayList<>();
         playlistSongs2 = playlistSongsList;
         if (downloadAudioDetailsList.size() != 0) {
-
-            for (int x = 0; x < playlistSongsList.size(); x++) {
-                for (int y = 0; y < downloadAudioDetailsList.size(); y++) {
-                    if (playlistSongs2.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
-                        playlistSongs2.remove(x);
+            for (int y = 0; y < downloadAudioDetailsList.size(); y++) {
+                if (playlistSongs2.size() == 0) {
+                    break;
+                } else {
+                    for (int x = 0; x < playlistSongs2.size(); x++) {
+                        if (playlistSongs2.size() != 0) {
+                            if (playlistSongs2.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
+                                playlistSongs2.remove(x);
+                            }
+                            if (playlistSongs2.size() == 0) {
+                                break;
+                            }
+                        } else break;
                     }
                 }
             }
@@ -264,6 +277,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
             editor.commit();
         }
+        SongListSize = playlistSongsList.size();
         savePlaylist();
         saveAllMedia(playlistSongsList, encodedBytes);
 
@@ -383,7 +397,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             } else {
                                 binding.ivRestaurantImage.setImageResource(R.drawable.ic_playlist_bg);
                             }
-
+                            SongListSize = model.getResponseData().getPlaylistSongs().size();
                             Download = model.getResponseData().getDownload();
                             binding.llAddPlaylist.setVisibility(View.VISIBLE);
 

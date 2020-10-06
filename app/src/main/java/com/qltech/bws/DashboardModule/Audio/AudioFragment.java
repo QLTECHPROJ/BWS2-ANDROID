@@ -155,6 +155,7 @@ public class AudioFragment extends Fragment {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         MainAudioModel listModel = response.body();
                         try {
+                            IsLock = listModel.getResponseData().get(0).getIsLock();
                             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             editor.putString(CONSTANTS.PREF_KEY_ExpDate, listModel.getResponseData().get(0).getExpireDate());
@@ -349,6 +350,7 @@ public class AudioFragment extends Fragment {
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Library))) {
                     RecommendedAdapter recommendedAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
                             listModelList.get(position).getIsLock());
+                    IsLock = listModelList.get(position).getIsLock();
                     RecyclerView.LayoutManager recommended = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recommended);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());

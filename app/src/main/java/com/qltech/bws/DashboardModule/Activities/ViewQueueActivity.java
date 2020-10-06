@@ -79,7 +79,7 @@ import static com.qltech.bws.Utility.MusicService.resumeMedia;
 import static com.qltech.bws.Utility.MusicService.savePrefQueue;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
-public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, AudioManager.OnAudioFocusChangeListener, StartDragListener {
+public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,/* AudioManager.OnAudioFocusChangeListener,*/ StartDragListener {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
     String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name;
@@ -206,7 +206,22 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         getPrepareShowData(position);
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         callAdapterMethod();
-        binding.llNowPlaying.setOnClickListener(view -> callBack());
+        binding.llNowPlaying.setOnClickListener(view -> {
+            if (binding.llPause.getVisibility() == View.VISIBLE) {
+                isPause = false;
+            }
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson2 = new Gson();
+            String json22 = gson2.toJson(addToQueueModelList);
+            editor.putString(CONSTANTS.PREF_KEY_queueList, json22);
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.commit();
+            Intent i = new Intent(ctx, PlayWellnessActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+            finish();
+        });
 
         binding.llPause.setOnClickListener(view -> {
             handler.removeCallbacks(UpdateSongTime);
@@ -716,6 +731,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     }
 
     private void callBack() {
+        handler.removeCallbacks(UpdateSongTime);
         if (ComeFromQueue.equalsIgnoreCase("1")) {
             Intent i = new Intent(ctx, AddQueueActivity.class);
             i.putExtra("ID", AudioId);
@@ -809,7 +825,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         touchHelper.startDrag(viewHolder);
     }
 
-    @Override
+ /*   @Override
     public void onAudioFocusChange(int i) {
         switch (i) {
             case AudioManager.AUDIOFOCUS_GAIN:
@@ -829,7 +845,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 //                MusicService.pauseMedia();// Pause your media player here
                 break;
         }
-    }
+    }*/
 
     public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
         ArrayList<AddToQueueModel> listModelList;
