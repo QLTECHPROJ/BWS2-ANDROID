@@ -303,7 +303,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     } else {
                                         finish();
                                     }
-                                    BWSApplication.showToast(listModels.getResponseMessage(), ctx);
                                 }
                             }
 

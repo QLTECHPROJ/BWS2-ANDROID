@@ -75,6 +75,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     Context ctx;
     Activity activity;
     public static int comeAddPlaylist = 0;
+    public static int comeRename = 0;
     private long mLastClickTime = 0;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     List<DownloadAudioDetails> playlistWiseAudioDetails;
@@ -502,6 +503,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onResponse(Call<RenamePlaylistModel> call1, Response<RenamePlaylistModel> response1) {
                                                     if (response1.isSuccessful()) {
+                                                        comeRename = 1;
                                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                                         RenamePlaylistModel listModel = response1.body();
                                                         BWSApplication.showToast(listModel.getResponseMessage(), ctx);

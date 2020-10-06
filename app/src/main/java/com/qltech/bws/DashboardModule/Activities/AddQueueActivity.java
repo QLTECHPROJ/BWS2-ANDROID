@@ -755,7 +755,12 @@ public class AddQueueActivity extends AppCompatActivity {
                         Like = directionModel.getResponseData().get(0).getLike();
                         Download = directionModel.getResponseData().get(0).getDownload();
                         binding.tvName.setText(directionModel.getResponseData().get(0).getName());
-                        binding.tvDesc.setText(directionModel.getResponseData().get(0).getAudiomastercat());
+                        if(directionModel.getResponseData().get(0).getAudiomastercat().equalsIgnoreCase("")){
+                            binding.tvDesc.setVisibility(View.GONE);
+                        }else {
+                            binding.tvDesc.setVisibility(View.VISIBLE);
+                            binding.tvDesc.setText(directionModel.getResponseData().get(0).getAudiomastercat());
+                        }
                         binding.tvDuration.setText(directionModel.getResponseData().get(0).getAudioDuration());
 
                         if (directionModel.getResponseData().get(0).getAudioDirection().equalsIgnoreCase("")) {

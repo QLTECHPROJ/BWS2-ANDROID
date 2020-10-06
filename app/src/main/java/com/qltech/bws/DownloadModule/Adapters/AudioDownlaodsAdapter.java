@@ -137,7 +137,6 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
         comefromDownload = "1";
         if (IsLock.equalsIgnoreCase("1")) {
-            BWSApplication.showToast("Please re-activate your membership plan", ctx);
             holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
             holder.binding.ivLock.setVisibility(View.VISIBLE);
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {

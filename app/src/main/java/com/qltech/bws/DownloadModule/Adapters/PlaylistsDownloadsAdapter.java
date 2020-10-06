@@ -108,7 +108,6 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
         if (IsLock.equalsIgnoreCase("1")) {
-            BWSApplication.showToast("Please re-activate your membership plan", ctx);
             holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
             holder.binding.ivLock.setVisibility(View.VISIBLE);
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
