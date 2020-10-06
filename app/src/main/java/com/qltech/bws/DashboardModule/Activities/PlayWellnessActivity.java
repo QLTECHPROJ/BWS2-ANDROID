@@ -156,7 +156,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.simpleSeekbar.setMax(100);
 
             // Running this thread after 100 milliseconds
-            handler.postDelayed(this, 500);
+            handler.postDelayed(this, 100);
         }
     };
     private Runnable UpdateSongTime1 = new Runnable() {
@@ -328,7 +328,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 resumeMedia();
                 isPause = false;
             }
-            handler.postDelayed(UpdateSongTime, 500);
+            handler.postDelayed(UpdateSongTime, 100);
         });
 
         binding.llPause.setOnClickListener(view -> {
@@ -944,7 +944,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void getPrepareShowData(int position) {
-        handler.postDelayed(UpdateSongTime, 500);
+        handler.postDelayed(UpdateSongTime, 100);
         if (queuePlay) {
             binding.llRepeat.setEnabled(false);
             binding.llRepeat.setClickable(false);
@@ -1067,7 +1067,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
         binding.simpleSeekbar.setClickable(true);
-        handler.postDelayed(UpdateSongTime, 500);
+        handler.postDelayed(UpdateSongTime, 100);
         BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
     }
 
@@ -1395,7 +1395,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     public void updateProgressBar() {
-        handler.postDelayed(UpdateSongTime, 500);
+        handler.postDelayed(UpdateSongTime, 100);
     }
 
     @Override
