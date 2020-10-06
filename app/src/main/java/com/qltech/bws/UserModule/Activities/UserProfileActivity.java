@@ -258,7 +258,6 @@ public class UserProfileActivity extends AppCompatActivity {
                         }
 
                         profilePicPath = viewModel.getResponseData().getImage();
-
                         Glide.with(getApplicationContext()).load(profilePicPath)
                                 .placeholder(R.drawable.default_profile)
                                 .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -277,7 +276,6 @@ public class UserProfileActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                 spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
-
                                 date = spf.format(newDate);
                                 binding.etCalendar.setText(date);
                             }
@@ -286,7 +284,6 @@ public class UserProfileActivity extends AppCompatActivity {
                         if (!viewModel.getResponseData().getEmail().equalsIgnoreCase("")
                                 && BWSApplication.isEmailValid(viewModel.getResponseData().getEmail())) {
                             binding.ivCheckEmail.setColorFilter(ContextCompat.getColor(ctx, R.color.green_dark), android.graphics.PorterDuff.Mode.SRC_IN);
-
                         } else {
                             binding.ivCheckEmail.setColorFilter(ContextCompat.getColor(ctx, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
 

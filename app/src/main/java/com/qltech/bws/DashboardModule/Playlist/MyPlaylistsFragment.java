@@ -118,7 +118,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     Dialog dialog;
     List<String> fileNameList, audioFile, playlistDownloadId, completeAudio, remainAudio, remainAudio2;
     ItemTouchHelper touchHelper;
-    private Handler handler1,handler2;
+    private Handler handler1, handler2;
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
@@ -143,14 +143,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
                 }
                 handler1.postDelayed(this, 10);
-                }/*if() {
+            }/*if() {
                     for(int i = 0;i<fileNameList.size();i++){
                         if(playlistDownloadId.get(i).equalsIgnoreCase("")){
                             remainAudio2.add(playlistDownloadId.get(i));
                         }
                     }
                 }*/
-            }
+        }
     };
 
     @Override
@@ -769,8 +769,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     listModel.getPlaylistName() == null) {
                 binding.tvLibraryName.setText(R.string.My_Playlist);
             } else {
-                binding.tvLibraryName.setText(listModel
-                        .getPlaylistName());
+                binding.tvLibraryName.setText(listModel.getPlaylistName());
             }
         }
     }
@@ -849,7 +848,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             }
                         }
                         adpater.notifyItemRemoved(position);
-                        //prepareData(UserID, PlaylistID);
+                        prepareData(UserID, PlaylistID);
                         BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                     }
                 }
@@ -1004,7 +1003,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes) {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
                 DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
@@ -1205,7 +1203,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable/*, StartDragListener*/, ItemMoveCallback.ItemTouchHelperContract {
         Context ctx;
-        String UserID, Created,name;
+        String UserID, Created, name;
         StartDragListener startDragListener;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
@@ -1231,19 +1229,19 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-             Runnable UpdateSongTime2 = new Runnable() {
+            Runnable UpdateSongTime2 = new Runnable() {
                 @Override
                 public void run() {
 //                getDownloadData();
-                    if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
-                        if(downloadProgress <100) {
+                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
+                        if (downloadProgress < 100) {
                             holder.binding.pbProgress.setProgress(downloadProgress);
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                        }else{
+                        } else {
                             holder.binding.pbProgress.setVisibility(View.GONE);
                             handler1.removeCallbacks(UpdateSongTime1);
                         }
-                    }else{
+                    } else {
                         holder.binding.pbProgress.setVisibility(View.GONE);
                         handler2.removeCallbacks(UpdateSongTime1);
                     }
@@ -1251,10 +1249,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
             };
             final ArrayList<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
-            if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(mData.get(position).getName())){
+            if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(mData.get(position).getName())) {
                 name = mData.get(position).getName();
                 handler2.postDelayed(UpdateSongTime2, 10);
-            }else{
+            } else {
                 holder.binding.pbProgress.setVisibility(View.GONE);
                 handler2.removeCallbacks(UpdateSongTime2);
             }
@@ -1341,7 +1339,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //            }
             holder.binding.llDownload.setOnClickListener(view -> {
                 name = mData.get(position).getName();
-                handler2.postDelayed(UpdateSongTime2,10);
+                handler2.postDelayed(UpdateSongTime2, 10);
                 callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(), mData.get(position).getName(), listFilterData, position, holder.binding.llDownload, holder.binding.ivDownloads);
 
             });

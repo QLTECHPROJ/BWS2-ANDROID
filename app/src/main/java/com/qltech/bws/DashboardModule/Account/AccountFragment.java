@@ -410,9 +410,9 @@ public class AccountFragment extends Fragment {
                             binding.tvCrtPlan.setText("Current plan: $0.00 / month");
                         } else {
                             if (viewModel.getResponseData().getPlanperiod().equalsIgnoreCase("")) {
-                                binding.tvCrtPlan.setText("Current plan: $" + viewModel.getResponseData().getOrderTotal());
+                                binding.tvCrtPlan.setText("Current plan: " + viewModel.getResponseData().getOrderTotal());
                             } else {
-                                binding.tvCrtPlan.setText("Current plan: $" + viewModel.getResponseData().getOrderTotal() + " / " +
+                                binding.tvCrtPlan.setText("Current plan: " + viewModel.getResponseData().getOrderTotal() + " / " +
                                         viewModel.getResponseData().getPlanperiod());
                             }
                         }
