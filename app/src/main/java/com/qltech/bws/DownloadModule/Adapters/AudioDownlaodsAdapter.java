@@ -110,13 +110,13 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                         }
                     }
                 }
-                handler1.postDelayed(this, 10);
+                handler1.postDelayed(this, 500);
             }
         };
         if(fileNameList.size()!=0) {
             if (fileNameList.contains(listModelList.get(position).getName())) {
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                handler1.postDelayed(UpdateSongTime1, 10);
+                handler1.postDelayed(UpdateSongTime1, 500);
             } else {
                 holder.binding.pbProgress.setVisibility(View.GONE);
             }

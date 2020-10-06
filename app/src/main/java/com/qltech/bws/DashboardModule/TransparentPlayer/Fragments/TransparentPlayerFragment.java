@@ -131,7 +131,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     binding.simpleSeekbar.setProgress(progress);
                 }
                 // Running this thread after 100 milliseconds
-                handler.postDelayed(this, 60);
+                handler.postDelayed(this, 500);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -327,7 +327,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 isPause = false;
             }
             player = 1;
-            handler.postDelayed(UpdateSongTime, 60);
+            handler.postDelayed(UpdateSongTime, 500);
         });
 
         return view;
@@ -458,7 +458,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             });
         }
         startTime = getStartTime();
-        handler.postDelayed(UpdateSongTime, 60);
+        handler.postDelayed(UpdateSongTime, 500);
         addToRecentPlay();
         binding.llPlayearMain.setOnClickListener(view -> {
             if (player == 0) {
@@ -711,7 +711,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     public void updateProgressBar() {
-        handler.postDelayed(UpdateSongTime, 100);
+        handler.postDelayed(UpdateSongTime, 500);
     }
 
     @Override

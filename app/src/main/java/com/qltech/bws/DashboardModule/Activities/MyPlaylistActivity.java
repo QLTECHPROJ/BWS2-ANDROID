@@ -108,7 +108,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                         handler1.removeCallbacks(UpdateSongTime1);
                     }
                 }
-                handler1.postDelayed(this, 10);
+                handler1.postDelayed(this, 500);
             }
         }
     };
@@ -171,7 +171,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             playlistDownloadId = gson.fromJson(jsonq, type);
             if(playlistDownloadId.size()!=0){
                 playlistDownloadId.contains(PlaylistID);
-                handler1.postDelayed(UpdateSongTime1,60);
+                handler1.postDelayed(UpdateSongTime1,500);
             }
         }else{
             fileNameList = new ArrayList<>();
@@ -257,6 +257,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
             String urlJson = gson.toJson(url);
             String nameJson = gson.toJson(name);
             String playlistIdJson = gson.toJson(downloadPlaylistId);
+            fileNameList = name;
+            playlistDownloadId = downloadPlaylistId;
             editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
             editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);

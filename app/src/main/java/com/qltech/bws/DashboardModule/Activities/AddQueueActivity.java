@@ -81,20 +81,16 @@ public class AddQueueActivity extends AppCompatActivity {
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
-            for(int i = 0;i<fileNameList.size();i++) {
-                if (fileNameList.contains(audioFileName)) {
-                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
-                        if (downloadProgress < 100) {
-                            binding.pbProgress.setProgress(downloadProgress);
-                            binding.pbProgress.setVisibility(View.VISIBLE);
-                        } else {
-                            binding.pbProgress.setVisibility(View.GONE);
-                            handler1.removeCallbacks(UpdateSongTime1);
-                        }
-                    }
-                }
-            }
-            handler1.postDelayed(this, 10);
+           if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
+               if (downloadProgress < 100) {
+                   binding.pbProgress.setProgress(downloadProgress);
+                   binding.pbProgress.setVisibility(View.VISIBLE);
+               } else {
+                   binding.pbProgress.setVisibility(View.GONE);
+                   handler1.removeCallbacks(UpdateSongTime1);
+               }
+           }
+            handler1.postDelayed(this, 500);
         }
     };
 
@@ -152,7 +148,7 @@ public class AddQueueActivity extends AppCompatActivity {
         if(fileNameList.size()!=0) {
             if (fileNameList.contains(audioFileName)) {
                 binding.pbProgress.setVisibility(View.VISIBLE);
-                handler1.postDelayed(UpdateSongTime1, 10);
+                handler1.postDelayed(UpdateSongTime1, 500);
             } else {
                 binding.pbProgress.setVisibility(View.GONE);
                 handler1.removeCallbacks(UpdateSongTime1);
@@ -558,10 +554,11 @@ public class AddQueueActivity extends AppCompatActivity {
         url1.add(audioFile);
         name1.add(Name);
         downloadPlaylistId.add("");
+        fileNameList = url1;
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         downloadMedia.encrypt1(url1, name1);
 //        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
-            handler1.postDelayed(UpdateSongTime1, 10);
+            handler1.postDelayed(UpdateSongTime1, 500);
 //        }else{
 //            binding.pbProgress.setVisibility(View.GONE);
 //            handler1.removeCallbacks(UpdateSongTime1);

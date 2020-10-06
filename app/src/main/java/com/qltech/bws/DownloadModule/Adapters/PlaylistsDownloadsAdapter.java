@@ -113,7 +113,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                             handler1.removeCallbacks(UpdateSongTime1);
                         }
                     }
-                    handler1.postDelayed(this, 10);
+                    handler1.postDelayed(this, 500);
                     getDownloadData();
                 }/*if() {
                     for(int i = 0;i<fileNameList.size();i++){
@@ -127,7 +127,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         if(fileNameList.size()!=0){
             if(playlistDownloadId.contains(listModelList.get(position).getPlaylistID())){
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                handler1.postDelayed(UpdateSongTime1,60);
+                handler1.postDelayed(UpdateSongTime1,500);
             }else{
                 holder.binding.pbProgress.setVisibility(View.GONE);
             }

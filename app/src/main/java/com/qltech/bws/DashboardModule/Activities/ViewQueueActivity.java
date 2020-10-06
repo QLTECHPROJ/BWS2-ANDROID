@@ -135,7 +135,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 binding.simpleSeekbar.setProgress(progress);
             }
             binding.simpleSeekbar.setMax(100);
-            handler.postDelayed(this, 60);
+            handler.postDelayed(this, 500);
         }
     };
 
@@ -226,7 +226,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             binding.progressBar.setVisibility(View.GONE);
             resumeMedia();
             isPause = false;
-            handler.postDelayed(UpdateSongTime, 60);
+            handler.postDelayed(UpdateSongTime, 500);
         });
 
         binding.llnext.setOnClickListener(view -> {
@@ -477,7 +477,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
         addToRecentPlay();
         binding.simpleSeekbar.setClickable(true);
-        handler.postDelayed(UpdateSongTime, 60);
+        handler.postDelayed(UpdateSongTime, 500);
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
@@ -766,7 +766,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     }
 
     public void updateProgressBar() {
-        handler.postDelayed(UpdateSongTime, 60);
+        handler.postDelayed(UpdateSongTime, 500);
     }
 
     @Override

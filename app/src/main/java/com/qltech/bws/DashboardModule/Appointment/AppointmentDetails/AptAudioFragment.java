@@ -120,6 +120,7 @@ public class AptAudioFragment extends Fragment {
     public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.MyViewHolder> {
         public FragmentManager f_manager;
         Context ctx;
+        String Name;
         List<String> fileNameList= new ArrayList<>();
 
         private ArrayList<AppointmentDetailModel.Audio> listModelList;
@@ -152,26 +153,22 @@ public class AptAudioFragment extends Fragment {
              UpdateSongTime1 = new Runnable() {
                 @Override
                 public void run() {
-                    for(int i = 0;i<fileNameList.size();i++) {
-                        if (fileNameList.contains(listModelList.get(position).getName())) {
-                            if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
-                                if (downloadProgress < 100) {
-                                    holder.binding.pbProgress.setProgress(downloadProgress);
-                                    holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                                } else {
-                                    holder.binding.pbProgress.setVisibility(View.GONE);
-                                    handler1.removeCallbacks(UpdateSongTime1);
-                                }
-                            }
-                        }
-                    }
-                    handler1.postDelayed(this, 10);
+                   if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(Name)) {
+                       if (downloadProgress < 100) {
+                           holder.binding.pbProgress.setProgress(downloadProgress);
+                           holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                       } else {
+                           holder.binding.pbProgress.setVisibility(View.GONE);
+                           handler1.removeCallbacks(UpdateSongTime1);
+                       }
+                   }
+                    handler1.postDelayed(this, 500);
                 }
             };
             if(fileNameList.size()!=0) {
                 if (fileNameList.contains(listModelList.get(position).getName())) {
                     holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                    handler1.postDelayed(UpdateSongTime1, 10);
+                    handler1.postDelayed(UpdateSongTime1, 500);
                 } else {
                     holder.binding.pbProgress.setVisibility(View.GONE);
                 }
@@ -184,7 +181,7 @@ public class AptAudioFragment extends Fragment {
                 holder.binding.tvTime.setText(audiolist.getAudioDirection());
             }
             if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audiolist.getName())){
-                handler1.postDelayed(UpdateSongTime1, 10);
+                handler1.postDelayed(UpdateSongTime1, 500);
             }else{
                 holder.binding.pbProgress.setVisibility(View.GONE);
                 handler1.removeCallbacks(UpdateSongTime1);
@@ -256,14 +253,15 @@ public class AptAudioFragment extends Fragment {
                         downloadPlaylistId.addAll(playlistId1);
                     }
                 }
-                String Name = listModelList.get(position).getName();
+                Name = listModelList.get(position).getName();
                 String audioFile = listModelList.get(position).getAudioFile();
                 url1.add(audioFile);
                 name1.add(Name);
                 downloadPlaylistId.add("");
                 DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
                 downloadMedia.encrypt1(url1, name1);
-                handler1.postDelayed(UpdateSongTime1, 10);
+                fileNameList = url1;
+                handler1.postDelayed(UpdateSongTime1, 500);
                 String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
                 SaveMedia(new byte[1024], dirPath, listModelList.get(position), holder.binding.llDownload);
             });
