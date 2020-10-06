@@ -90,6 +90,11 @@ public class UserProfileActivity extends AppCompatActivity {
                 1, 1, 0.4f, 20);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+
+        MeasureRatio measureRatios = BWSApplication.measureRatio(ctx, 20,
+                1, 1, 0.4f, 20);
+        binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
+        binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
     }
 
 
@@ -256,12 +261,21 @@ public class UserProfileActivity extends AppCompatActivity {
                         } else {
                             binding.etUser.setText(viewModel.getResponseData().getName());
                         }
-
+                        String Name = viewModel.getResponseData().getName();
+                        String Letter = Name.substring(0,1);
                         profilePicPath = viewModel.getResponseData().getImage();
-                        Glide.with(getApplicationContext()).load(profilePicPath)
-                                .placeholder(R.drawable.default_profile)
-                                .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .skipMemoryCache(false).into(binding.civProfile);
+                        if (profilePicPath.equalsIgnoreCase("")){
+                            binding.civProfile.setVisibility(View.GONE);
+                            binding.rlLetter.setVisibility(View.VISIBLE);
+                            binding.tvLetter.setText(Letter);
+                        }else {
+                            binding.civProfile.setVisibility(View.VISIBLE);
+                            binding.rlLetter.setVisibility(View.GONE);
+                            Glide.with(getApplicationContext()).load(profilePicPath)
+                                    .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .skipMemoryCache(false).into(binding.civProfile);
+
+                        }
 
                         if (viewModel.getResponseData().getDOB().equalsIgnoreCase("0000-00-00")) {
                             binding.etCalendar.setText("");
@@ -454,7 +468,6 @@ public class UserProfileActivity extends AppCompatActivity {
         if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
                 Glide.with(this).load(imageFilePath)
-                        .placeholder(R.drawable.default_profile)
                         .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
                         .skipMemoryCache(false).into(binding.civProfile);
                 if (BWSApplication.isNetworkConnected(ctx)) {
@@ -470,7 +483,6 @@ public class UserProfileActivity extends AppCompatActivity {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .placeholder(R.drawable.default_profile)
                                                 .thumbnail(1f).diskCacheStrategy(DiskCacheStrategy.ALL)
                                                 .skipMemoryCache(false).into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
@@ -493,7 +505,6 @@ public class UserProfileActivity extends AppCompatActivity {
             if (data != null) {
                 Uri selectedImageUri = data.getData();
                 Glide.with(this).load(selectedImageUri)
-                        .placeholder(R.drawable.default_profile)
                         .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
                         .skipMemoryCache(false).into(binding.civProfile);
                 if (BWSApplication.isNetworkConnected(ctx)) {
@@ -511,7 +522,6 @@ public class UserProfileActivity extends AppCompatActivity {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .placeholder(R.drawable.default_profile)
                                                 .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
                                                 .skipMemoryCache(false).into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);

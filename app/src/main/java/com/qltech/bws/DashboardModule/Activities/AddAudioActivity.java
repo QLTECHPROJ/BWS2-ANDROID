@@ -321,7 +321,11 @@ public class AddAudioActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return listModel.size();
+            if (10 > listModel.size()) {
+                return listModel.size();
+            } else {
+                return 10;
+            }
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {

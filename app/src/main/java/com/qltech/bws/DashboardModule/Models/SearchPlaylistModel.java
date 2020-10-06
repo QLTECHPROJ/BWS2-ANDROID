@@ -1,14 +1,28 @@
 package com.qltech.bws.DashboardModule.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.util.ArrayList;
 
-public class SearchPlaylistModel {
+public class SearchPlaylistModel implements Parcelable {
+    public static final Creator<SearchPlaylistModel> CREATOR = new Creator<SearchPlaylistModel>() {
+        @Override
+        public SearchPlaylistModel createFromParcel(Parcel in) {
+            return new SearchPlaylistModel(in);
+        }
+
+        @Override
+        public SearchPlaylistModel[] newArray(int size) {
+            return new SearchPlaylistModel[size];
+        }
+    };
     @SerializedName("ResponseData")
     @Expose
-    private List<ResponseData> responseData = null;
+    private ArrayList<ResponseData> responseData = null;
     @SerializedName("ResponseCode")
     @Expose
     private String responseCode;
@@ -19,11 +33,18 @@ public class SearchPlaylistModel {
     @Expose
     private String responseStatus;
 
-    public List<ResponseData> getResponseData() {
+    protected SearchPlaylistModel(Parcel in) {
+        responseData = in.createTypedArrayList(ResponseData.CREATOR);
+        responseCode = in.readString();
+        responseMessage = in.readString();
+        responseStatus = in.readString();
+    }
+
+    public ArrayList<ResponseData> getResponseData() {
         return responseData;
     }
 
-    public void setResponseData(List<ResponseData> responseData) {
+    public void setResponseData(ArrayList<ResponseData> responseData) {
         this.responseData = responseData;
     }
 
@@ -50,7 +71,32 @@ public class SearchPlaylistModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
-    public class ResponseData {
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeTypedList(responseData);
+        parcel.writeString(responseCode);
+        parcel.writeString(responseMessage);
+        parcel.writeString(responseStatus);
+    }
+
+    public static class ResponseData implements Parcelable {
+        public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
+            @Override
+            public ResponseData createFromParcel(Parcel in) {
+                return new ResponseData(in);
+            }
+
+            @Override
+            public ResponseData[] newArray(int size) {
+                return new ResponseData[size];
+            }
+        };
         @SerializedName("ID")
         @Expose
         private String iD;
@@ -75,6 +121,17 @@ public class SearchPlaylistModel {
         @SerializedName("Download")
         @Expose
         private String download;
+
+        public ResponseData(Parcel in) {
+            iD = in.readString();
+            name = in.readString();
+            desc = in.readString();
+            image = in.readString();
+            isLock = in.readString();
+            masterCat = in.readString();
+            subCat = in.readString();
+            download = in.readString();
+        }
 
         public String getID() {
             return iD;
@@ -138,6 +195,23 @@ public class SearchPlaylistModel {
 
         public void setDownload(String download) {
             this.download = download;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(iD);
+            parcel.writeString(name);
+            parcel.writeString(desc);
+            parcel.writeString(image);
+            parcel.writeString(isLock);
+            parcel.writeString(masterCat);
+            parcel.writeString(subCat);
+            parcel.writeString(download);
         }
     }
 }

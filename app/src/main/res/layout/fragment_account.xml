@@ -32,14 +32,43 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.20"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/civProfile"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:padding="@dimen/_4sdp"
-                            android:src="@drawable/default_profile" />
+                            android:src="@drawable/default_profile"
+                            android:visibility="gone" />
+
+                        <RelativeLayout
+                            android:id="@+id/rlLetter"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="@dimen/_4sdp"
+                            android:visibility="gone">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/civLetter"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_centerInParent="true"
+                                android:padding="@dimen/_4sdp"
+                                android:src="@color/dark_blue_gray" />
+
+                            <TextView
+                                android:id="@+id/tvLetter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:fontFamily="@font/montserrat_semi_bold"
+                                android:textColor="#A6B0CF"
+                                android:textSize="@dimen/_26sdp" />
+                        </RelativeLayout>
+
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -65,10 +94,10 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="start"
-                            android:visibility="gone"
                             android:text="@string/view_profile"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp" />
+                            android:textSize="@dimen/_13sdp"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -312,6 +341,7 @@
                     android:visibility="gone" />
 
             </LinearLayout>
+
             <FrameLayout
                 android:id="@+id/progressBarHolder"
                 android:layout_width="match_parent"

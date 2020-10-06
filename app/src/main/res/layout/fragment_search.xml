@@ -77,8 +77,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/_22sdp"
                             android:layout_marginTop="@dimen/_20sdp"
-                            android:gravity="center"
                             android:layout_marginBottom="@dimen/_10sdp"
+                            android:gravity="center"
                             android:orientation="vertical"
                             android:visibility="gone">
 
@@ -86,9 +86,9 @@
                                 android:id="@+id/tvFound"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginVertical="@dimen/_10sdp"
                                 android:fontFamily="@font/montserrat_regular"
                                 android:gravity="center"
-                                android:layout_marginVertical="@dimen/_10sdp"
                                 android:textColor="@color/gray"
                                 android:textSize="@dimen/_15sdp" />
 
@@ -116,16 +116,37 @@
                             android:paddingTop="@dimen/_8sdp"
                             android:visibility="gone" />
 
-                        <TextView
-                            android:id="@+id/tvSuggestedAudios"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_16sdp"
-                            android:layout_marginRight="@dimen/_16sdp"
-                            android:fontFamily="@font/montserrat_medium"
-                            android:gravity="start"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_15sdp" />
+                            android:orientation="horizontal"
+                            android:weightSum="1">
+
+                            <TextView
+                                android:id="@+id/tvSuggestedAudios"
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_16sdp"
+                                android:layout_weight="0.6"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:gravity="start"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_15sdp" />
+
+                            <TextView
+                                android:id="@+id/tvSAViewAll"
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:layout_marginRight="@dimen/_16sdp"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="right"
+                                android:text="@string/View_all"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_13sdp"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
 
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -137,17 +158,38 @@
                             android:overScrollMode="never"
                             android:paddingTop="@dimen/_8sdp" />
 
-                        <TextView
-                            android:id="@+id/tvSuggestedPlaylist"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_16sdp"
                             android:layout_marginTop="@dimen/_20sdp"
-                            android:layout_marginRight="@dimen/_16sdp"
-                            android:fontFamily="@font/montserrat_medium"
-                            android:gravity="start"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_15sdp" />
+                            android:orientation="horizontal"
+                            android:weightSum="1">
+
+                            <TextView
+                                android:id="@+id/tvSuggestedPlaylist"
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_16sdp"
+                                android:layout_weight="0.6"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:gravity="start"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_15sdp" />
+
+                            <TextView
+                                android:id="@+id/tvSPViewAll"
+                                android:layout_width="@dimen/_0sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.4"
+                                android:layout_marginRight="@dimen/_16sdp"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="right"
+                                android:text="@string/View_all"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_13sdp"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/llSpace"

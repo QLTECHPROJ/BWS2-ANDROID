@@ -80,6 +80,11 @@ public class AccountFragment extends Fragment {
                 1, 1, 0.2f, 10);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+
+        MeasureRatio measureRatios = BWSApplication.measureRatio(getActivity(), 10,
+                1, 1, 0.2f, 10);
+        binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
+        binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
         profileViewData(getActivity());
 
         binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
@@ -160,51 +165,55 @@ public class AccountFragment extends Fragment {
         });
 
         binding.llLogout.setOnClickListener(view19 -> {
-            final Dialog dialog = new Dialog(getActivity());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.logout_layout);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                final Dialog dialog = new Dialog(getActivity());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.logout_layout);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-            final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-            final Button Btn = dialog.findViewById(R.id.Btn);
+                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                final Button Btn = dialog.findViewById(R.id.Btn);
 
-            dialog.setOnKeyListener((v, keyCode, event) -> {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dialog.hide();
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.hide();
+                        return true;
+                    }
+                    return false;
+                });
+
+                Btn.setOnTouchListener((view1, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN: {
+                            Button views = (Button) view1;
+                            views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
+                            view1.invalidate();
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP:
+                            clearData(dialog);
+                        case MotionEvent.ACTION_CANCEL: {
+                            Button views = (Button) view1;
+                            views.getBackground().clearColorFilter();
+                            views.invalidate();
+                            break;
+                        }
+                    }
                     return true;
-                }
-                return false;
-            });
+                });
 
-            Btn.setOnTouchListener((view1, event) -> {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        Button views = (Button) view1;
-                        views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
-                        view1.invalidate();
-                        break;
+                tvGoBack.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.hide();
                     }
-                    case MotionEvent.ACTION_UP:
-                        clearData(dialog);
-                    case MotionEvent.ACTION_CANCEL: {
-                        Button views = (Button) view1;
-                        views.getBackground().clearColorFilter();
-                        views.invalidate();
-                        break;
-                    }
-                }
-                return true;
-            });
-
-            tvGoBack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.hide();
-                }
-            });
-            dialog.show();
-            dialog.setCancelable(false);
+                });
+                dialog.show();
+                dialog.setCancelable(false);
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
         });
         return view;
     }
@@ -367,13 +376,20 @@ public class AccountFragment extends Fragment {
                         } else {
                             binding.tvName.setText(viewModel.getResponseData().getName());
                         }
-
+                        String Name = viewModel.getResponseData().getName();
+                        String Letter = Name.substring(0, 1);
                         String profilePicPath = viewModel.getResponseData().getImage();
                         IsLock = viewModel.getResponseData().getIsLock();
-                        Glide.with(ctx).load(profilePicPath)
-                                .placeholder(R.drawable.default_profile)
-                                .thumbnail(1f)
-                                .dontAnimate().into(binding.civProfile);
+                        if (profilePicPath.equalsIgnoreCase("")) {
+                            binding.civProfile.setVisibility(View.GONE);
+                            binding.rlLetter.setVisibility(View.VISIBLE);
+                            binding.tvLetter.setText(Letter);
+                        } else {
+                            binding.civProfile.setVisibility(View.VISIBLE);
+                            binding.rlLetter.setVisibility(View.GONE);
+                            Glide.with(ctx).load(profilePicPath).thumbnail(1f).dontAnimate().into(binding.civProfile);
+                        }
+
 
                         binding.llUserProfile.setOnClickListener(view13 -> {
 //                            if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("1")){

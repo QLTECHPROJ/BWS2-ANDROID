@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity;
+import com.qltech.bws.DashboardModule.Audio.ViewAllAudioFragment;
 import com.qltech.bws.DashboardModule.Models.SearchBothModel;
 import com.qltech.bws.DashboardModule.Models.SearchPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SuggestedModel;
@@ -205,8 +206,21 @@ public class SearchFragment extends Fragment {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         SuggestedModel listModel = response.body();
                         binding.tvSuggestedAudios.setText(R.string.Suggested_Audios);
+                        binding.tvSAViewAll.setVisibility(View.VISIBLE);
                         SuggestionAudiosAdpater suggestedAdpater = new SuggestionAudiosAdpater(listModel.getResponseData(), getActivity());
                         binding.rvDownloadsList.setAdapter(suggestedAdpater);
+
+                        binding.tvSAViewAll.setOnClickListener(view -> {
+                            Fragment fragment = new ViewAllSearchFragment();
+                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                            fragmentManager1.beginTransaction()
+                                    .replace(R.id.flContainer, fragment)
+                                    .commit();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("Name", "Suggested Audios");
+                            bundle.putParcelableArrayList("AudiolistModel", listModel.getResponseData());
+                            fragment.setArguments(bundle);
+                        });
                     }
                 }
 
@@ -229,8 +243,22 @@ public class SearchFragment extends Fragment {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         SearchPlaylistModel listModel = response.body();
                         binding.tvSuggestedPlaylist.setText(R.string.Suggested_Playlist);
+                        binding.tvSPViewAll.setVisibility(View.VISIBLE);
+
                         SearchPlaylistAdapter suggestedAdpater = new SearchPlaylistAdapter(listModel.getResponseData());
                         binding.rvPlayList.setAdapter(suggestedAdpater);
+
+                        binding.tvSPViewAll.setOnClickListener(view -> {
+                            Fragment fragment = new ViewAllSearchFragment();
+                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                            fragmentManager1.beginTransaction()
+                                    .replace(R.id.flContainer, fragment)
+                                    .commit();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("Name", "Suggested Playlist");
+                            bundle.putParcelableArrayList("PlaylistModel", listModel.getResponseData());
+                            fragment.setArguments(bundle);
+                        });
                     }
                 }
 
@@ -417,7 +445,11 @@ public class SearchFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return modelList.size();
+            if (10 > modelList.size()) {
+                return modelList.size();
+            } else {
+                return 10;
+            }
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -431,10 +463,10 @@ public class SearchFragment extends Fragment {
     }
 
     public class SearchPlaylistAdapter extends RecyclerView.Adapter<SearchPlaylistAdapter.MyViewHolder> {
-        private List<SearchPlaylistModel.ResponseData> listModelList;
+        private List<SearchPlaylistModel.ResponseData> modelList;
 
         public SearchPlaylistAdapter(List<SearchPlaylistModel.ResponseData> listModelList) {
-            this.listModelList = listModelList;
+            this.modelList = listModelList;
         }
 
         @NonNull
@@ -458,23 +490,23 @@ public class SearchFragment extends Fragment {
             holder.binding.rlMainLayout.getLayoutParams().height = (int) (measureRatio1.getHeight() * measureRatio1.getRatio());
             holder.binding.rlMainLayout.getLayoutParams().width = (int) (measureRatio1.getWidthImg() * measureRatio1.getRatio());
 
-            holder.binding.tvPlaylistName.setText(listModelList.get(position).getName());
-            Glide.with(getActivity()).load(listModelList.get(position).getImage()).thumbnail(0.05f)
+            holder.binding.tvPlaylistName.setText(modelList.get(position).getName());
+            Glide.with(getActivity()).load(modelList.get(position).getImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+            if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
-                    || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
+            } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0")
+                    || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
             holder.binding.rlMainLayout.setOnClickListener(view -> {
-                if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                     BWSApplication.showToast("Please re-activate your membership plan", getActivity());
-                } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
-                        || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0")
+                        || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     comefrom_search = 1;
                     Bundle bundle = new Bundle();
@@ -482,8 +514,8 @@ public class SearchFragment extends Fragment {
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     bundle.putString("New", "0");
                     bundle.putString("ComeFrom", "Search");
-                    bundle.putString("PlaylistID", listModelList.get(position).getID());
-                    bundle.putString("PlaylistName", listModelList.get(position).getName());
+                    bundle.putString("PlaylistID", modelList.get(position).getID());
+                    bundle.putString("PlaylistName", modelList.get(position).getName());
                     bundle.putString("MyDownloads", "0");
                     myPlaylistsFragment.setArguments(bundle);
                     fragmentManager1.beginTransaction()
@@ -495,7 +527,11 @@ public class SearchFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return listModelList.size();
+            if (10 > modelList.size()) {
+                return modelList.size();
+            } else {
+                return 10;
+            }
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {

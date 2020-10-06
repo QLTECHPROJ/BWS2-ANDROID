@@ -1,14 +1,29 @@
 package com.qltech.bws.DashboardModule.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SuggestedModel {
+public class SuggestedModel implements Parcelable {
+    public static final Creator<SuggestedModel> CREATOR = new Creator<SuggestedModel>() {
+        @Override
+        public SuggestedModel createFromParcel(Parcel in) {
+            return new SuggestedModel(in);
+        }
+
+        @Override
+        public SuggestedModel[] newArray(int size) {
+            return new SuggestedModel[size];
+        }
+    };
     @SerializedName("ResponseData")
     @Expose
-    private List<ResponseData> responseData = null;
+    private ArrayList<ResponseData> responseData = null;
     @SerializedName("ResponseCode")
     @Expose
     private String responseCode;
@@ -19,11 +34,17 @@ public class SuggestedModel {
     @Expose
     private String responseStatus;
 
-    public List<ResponseData> getResponseData() {
+    protected SuggestedModel(Parcel in) {
+        responseData = in.createTypedArrayList(ResponseData.CREATOR);
+        responseCode = in.readString();
+        responseMessage = in.readString();
+        responseStatus = in.readString();
+    }
+    public ArrayList<ResponseData> getResponseData() {
         return responseData;
     }
 
-    public void setResponseData(List<ResponseData> responseData) {
+    public void setResponseData(ArrayList<ResponseData> responseData) {
         this.responseData = responseData;
     }
 
@@ -51,7 +72,20 @@ public class SuggestedModel {
         this.responseStatus = responseStatus;
     }
 
-    public class ResponseData {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeTypedList(responseData);
+        parcel.writeString(responseCode);
+        parcel.writeString(responseMessage);
+        parcel.writeString(responseStatus);
+    }
+
+    public static class ResponseData implements Parcelable {
 
         @SerializedName("ID")
         @Expose
@@ -86,6 +120,52 @@ public class SuggestedModel {
         @SerializedName("Download")
         @Expose
         private String download;
+
+        public ResponseData(Parcel in) {
+            iD = in.readString();
+            name = in.readString();
+            isLock = in.readString();
+            audioFile = in.readString();
+            isLock = in.readString();
+            imageFile = in.readString();
+            audioDuration = in.readString();
+            audiomastercat = in.readString();
+            audioSubCategory = in.readString();
+            like = in.readString();
+            download = in.readString();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(iD);
+            dest.writeString(name);
+            dest.writeString(isLock);
+            dest.writeString(audioFile);
+            dest.writeString(imageFile);
+            dest.writeString(audioDuration);
+            dest.writeString(audioDirection);
+            dest.writeString(audiomastercat);
+            dest.writeString(audioSubCategory);
+            dest.writeString(like);
+            dest.writeString(download);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
+            @Override
+            public ResponseData createFromParcel(Parcel in) {
+                return new ResponseData(in);
+            }
+
+            @Override
+            public ResponseData[] newArray(int size) {
+                return new ResponseData[size];
+            }
+        };
 
         public String getIsLock() {
             return isLock;
