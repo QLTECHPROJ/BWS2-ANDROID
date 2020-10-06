@@ -426,7 +426,7 @@
                     <RelativeLayout
                         android:id="@+id/llDownload"
                         android:layout_width="@dimen/_0sdp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="0.2"
                         android:gravity="center">
 
