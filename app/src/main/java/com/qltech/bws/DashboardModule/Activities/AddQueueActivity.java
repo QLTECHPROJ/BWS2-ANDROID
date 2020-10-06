@@ -464,8 +464,7 @@ public class AddQueueActivity extends AppCompatActivity {
                             Download = "0";
                         } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-                            binding.ivDownloads.setAlpha(255);
+                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                             binding.llDownload.setClickable(false);
                             binding.llDownload.setEnabled(false);
                             Download = "1";
@@ -843,7 +842,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
     private void callDisableDownload() {
         binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-        binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
         binding.tvDownloads.setTextColor(activity.getResources().getColor(R.color.light_gray));
         binding.llDownload.setClickable(false);
         binding.llDownload.setEnabled(false);
