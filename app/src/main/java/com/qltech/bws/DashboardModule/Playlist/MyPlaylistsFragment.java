@@ -683,11 +683,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             audioFile = gson.fromJson(json1, type);
             playlistDownloadId = gson.fromJson(jsonq, type);
         }
-        if (fileNameList.size() != 0) {
-
-        } else {
-
-        }
     }
 
     private void setData(SubPlayListModel.ResponseData listModel) {
