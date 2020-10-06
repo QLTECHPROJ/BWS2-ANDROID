@@ -525,7 +525,6 @@ public class AddQueueActivity extends AppCompatActivity {
 
     private void SaveMedia(byte[] encodeBytes, String dirPath, int i) {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
                 DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
@@ -561,7 +560,6 @@ public class AddQueueActivity extends AppCompatActivity {
 
                 downloadAudioDetails.setEncodedBytes(encodeBytes);
                 downloadAudioDetails.setDirPath(dirPath);
-
                 DatabaseClient.getInstance(activity)
                         .getaudioDatabase()
                         .taskDao()
@@ -576,7 +574,6 @@ public class AddQueueActivity extends AppCompatActivity {
                 super.onPostExecute(aVoid);
             }
         }
-
         SaveMedia st = new SaveMedia();
         st.execute();
     }
@@ -676,8 +673,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         binding.llShuffle.setVisibility(View.VISIBLE);
                         binding.llRepeat.setVisibility(View.VISIBLE);
                         binding.llViewQueue.setVisibility(View.VISIBLE);
-                        Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile())
-                                .thumbnail(0.05f)
+                        Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile()).thumbnail(0.05f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
                         if (directionModel.getResponseData().get(0).getAudioDescription().equalsIgnoreCase("")) {
@@ -696,36 +692,31 @@ public class AddQueueActivity extends AppCompatActivity {
                             binding.tvReadMore.setVisibility(View.GONE);
                         }
 
-                        binding.tvReadMore.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                final Dialog dialog = new Dialog(ctx);
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog.setContentView(R.layout.full_desc_layout);
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
-                                final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
-                                tvDesc.setText(directionModel.getResponseData().get(0).getAudioDescription());
+                        binding.tvReadMore.setOnClickListener(view -> {
+                            final Dialog dialog = new Dialog(ctx);
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            dialog.setContentView(R.layout.full_desc_layout);
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
+                            final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
+                            tvDesc.setText(directionModel.getResponseData().get(0).getAudioDescription());
 
-                                dialog.setOnKeyListener((v, keyCode, event) -> {
-                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                        dialog.dismiss();
-                                        return true;
-                                    }
-                                    return false;
-                                });
+                            dialog.setOnKeyListener((v, keyCode, event) -> {
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                    dialog.dismiss();
+                                    return true;
+                                }
+                                return false;
+                            });
 
-                                tvClose.setOnClickListener(v -> dialog.dismiss());
-
-                                dialog.show();
-                                dialog.setCancelable(false);
-                            }
+                            tvClose.setOnClickListener(v -> dialog.dismiss());
+                            dialog.show();
+                            dialog.setCancelable(false);
                         });
 
                         Like = directionModel.getResponseData().get(0).getLike();
                         Download = directionModel.getResponseData().get(0).getDownload();
-
                         binding.tvName.setText(directionModel.getResponseData().get(0).getName());
                         binding.tvDesc.setText(directionModel.getResponseData().get(0).getAudiomastercat());
                         binding.tvDuration.setText(directionModel.getResponseData().get(0).getAudioDuration());
@@ -739,7 +730,6 @@ public class AddQueueActivity extends AppCompatActivity {
                             binding.tvSubDire.setVisibility(View.VISIBLE);
                             binding.tvDire.setVisibility(View.VISIBLE);
                         }
-
 
                         if (directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")) {
                             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
@@ -785,7 +775,6 @@ public class AddQueueActivity extends AppCompatActivity {
                             binding.rvDirlist.setItemAnimator(new DefaultItemAnimator());
                             binding.rvDirlist.setAdapter(directionAdapter);
                         }
-                    } else {
                     }
                 }
 
@@ -804,10 +793,8 @@ public class AddQueueActivity extends AppCompatActivity {
 
         oneAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 oneAudioDetailsList = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -818,7 +805,6 @@ public class AddQueueActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
                 if (oneAudioDetailsList.size() != 0) {
                     if (oneAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
                         callDisableDownload();
@@ -830,12 +816,9 @@ public class AddQueueActivity extends AppCompatActivity {
                     binding.llDownload.setEnabled(true);
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                 }
-
                 super.onPostExecute(aVoid);
-
             }
         }
-
         GetMedia st = new GetMedia();
         st.execute();
     }
