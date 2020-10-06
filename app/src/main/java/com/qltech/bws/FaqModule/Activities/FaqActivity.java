@@ -32,13 +32,13 @@ public class FaqActivity extends AppCompatActivity {
         activity = FaqActivity.this;
         modelList = new ArrayList<>();
         if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<FaqListModel> listCall = APIClient.getClient().getFaqLists();
             listCall.enqueue(new Callback<FaqListModel>() {
                 @Override
                 public void onResponse(Call<FaqListModel> call, Response<FaqListModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         FaqListModel listModel = response.body();
                         faqListModel = listModel;
                     }
@@ -46,7 +46,7 @@ public class FaqActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<FaqListModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {

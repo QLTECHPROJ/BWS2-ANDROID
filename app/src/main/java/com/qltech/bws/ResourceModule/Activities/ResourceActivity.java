@@ -166,7 +166,6 @@ public class ResourceActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ResourceFilterModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
                 }
             });
         } else {

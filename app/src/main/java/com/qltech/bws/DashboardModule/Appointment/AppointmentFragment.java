@@ -53,7 +53,6 @@ public class AppointmentFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment, container, false);
         View view = binding.getRoot();
         activity = getActivity();
-        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -124,13 +123,13 @@ public class AppointmentFragment extends Fragment {
 
         try {
             if (BWSApplication.isNetworkConnected(getActivity())) {
-                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 Call<NextSessionViewModel> listCall = APIClient.getClient().getNextSessionVIew(UserID);
                 listCall.enqueue(new Callback<NextSessionViewModel>() {
                     @Override
                     public void onResponse(Call<NextSessionViewModel> call, Response<NextSessionViewModel> response) {
                         if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             NextSessionViewModel listModel = response.body();
                             binding.tvNextSessionTitle.setText(R.string.Next_Session);
                             if (listModel.getResponseData().getResponse().equalsIgnoreCase("")) {
@@ -186,7 +185,7 @@ public class AppointmentFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<NextSessionViewModel> call, Throwable t) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
                 });
             } else {
@@ -194,13 +193,13 @@ public class AppointmentFragment extends Fragment {
             }
 
             if (BWSApplication.isNetworkConnected(getActivity())) {
-                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 Call<PreviousAppointmentsModel> listCall1 = APIClient.getClient().getAppointmentVIew(UserID);
                 listCall1.enqueue(new Callback<PreviousAppointmentsModel>() {
                     @Override
                     public void onResponse(Call<PreviousAppointmentsModel> call, Response<PreviousAppointmentsModel> response) {
                         if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             PreviousAppointmentsModel listModel = response.body();
                             binding.tvPreviousAppointments.setText(R.string.Previous_Appointments);
                             PreviousAppointmentsAdapter appointmentsAdapter = new PreviousAppointmentsAdapter(listModel.getResponseData(), getActivity());
@@ -210,7 +209,7 @@ public class AppointmentFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<PreviousAppointmentsModel> call, Throwable t) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
                 });
             } else {

@@ -392,13 +392,13 @@ public class AddQueueActivity extends AppCompatActivity {
 
     private void callRemoveFromPlayList() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
-            Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistId, PlaylistAudioId);
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+            Call<SucessModel> listCall = APIClient.getClient().getRemoveAudioFromPlaylist(UserID, AudioId, PlaylistId);
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         SucessModel listModel = response.body();
                       /*  SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -438,7 +438,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<SucessModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {
@@ -448,13 +448,13 @@ public class AddQueueActivity extends AppCompatActivity {
 
     private void callDownload() {
       /*  if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, AudioId, PlaylistId);
             listCall.enqueue(new Callback<DownloadPlaylistModel>() {
                 @Override
                 public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         DownloadPlaylistModel model = response.body();
                         if (model.getResponseData().getFlag().equalsIgnoreCase("0")
                                 || model.getResponseData().getFlag().equalsIgnoreCase("")) {
@@ -478,7 +478,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
 
@@ -584,14 +584,14 @@ public class AddQueueActivity extends AppCompatActivity {
 
     private void callLike() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(AudioId, UserID);
             listCall.enqueue(new Callback<AudioLikeModel>() {
                 @Override
                 public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
                     if (response.isSuccessful()) {
                         binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         AudioLikeModel model = response.body();
                         if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
                             binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
@@ -620,7 +620,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<AudioLikeModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {
@@ -635,13 +635,13 @@ public class AddQueueActivity extends AppCompatActivity {
 
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<DirectionModel> listCall = APIClient.getClient().getAudioDetailLists(UserID, AudioId);
             listCall.enqueue(new Callback<DirectionModel>() {
                 @Override
                 public void onResponse(Call<DirectionModel> call, Response<DirectionModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         if (play.equalsIgnoreCase("play")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.VISIBLE);
@@ -792,7 +792,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<DirectionModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     BWSApplication.showToast(t.getMessage(), ctx);
                 }
             });

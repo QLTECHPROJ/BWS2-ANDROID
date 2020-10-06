@@ -46,7 +46,6 @@ public class InvoiceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_invoice);
         context = InvoiceActivity.this;
-        Glide.with(InvoiceActivity.this).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -179,7 +178,7 @@ public class InvoiceActivity extends AppCompatActivity {
     private void hideProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } catch (Exception e) {
             e.printStackTrace();
@@ -190,8 +189,8 @@ public class InvoiceActivity extends AppCompatActivity {
         try {
             binding.progressBarHolder.setVisibility(View.VISIBLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.invalidate();
         } catch (Exception e) {
             e.printStackTrace();
         }

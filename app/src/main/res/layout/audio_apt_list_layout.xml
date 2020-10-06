@@ -2,8 +2,8 @@
 <layout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
         android:id="@+id/llMainLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_10sdp"
         android:orientation="horizontal"
@@ -23,14 +23,13 @@
                 <ImageView
                     android:id="@+id/ivRestaurantImage"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
+                    android:layout_height="wrap_content" />
 
                 <ImageView
                     android:id="@+id/ivBackgroundImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_centerInParent="true"/>
+                    android:layout_centerInParent="true" />
 
                 <ImageView
                     android:layout_width="@dimen/_18sdp"
@@ -40,14 +39,13 @@
                     android:src="@drawable/ic_round_play_icon" />
 
             </RelativeLayout>
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="@dimen/_0sdp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.56"
             android:layout_gravity="center"
+            android:layout_weight="0.56"
             android:orientation="vertical">
 
             <TextView
@@ -71,10 +69,9 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:maxLines="2"
-                android:visibility="gone"
                 android:textColor="@color/extra_light_gray"
-                android:textSize="@dimen/_11sdp" />
-
+                android:textSize="@dimen/_11sdp"
+                android:visibility="gone" />
 
         </LinearLayout>
 

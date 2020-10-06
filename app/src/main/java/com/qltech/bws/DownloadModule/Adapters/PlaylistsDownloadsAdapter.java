@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,7 +50,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     FragmentActivity ctx;
     String UserID;
     FrameLayout progressBarHolder;
-    ImageView ImgV;
+    ProgressBar ImgV;
     List<DownloadAudioDetails> playlistWiseAudioDetails;
     List<DownloadAudioDetails> oneAudioDetailsList;
     List<DownloadPlaylistDetails> playlistList;
@@ -59,7 +60,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     private List<DownloadPlaylistDetails> listModelList;
 
     public PlaylistsDownloadsAdapter(List<DownloadPlaylistDetails> listModelList, FragmentActivity ctx, String UserID,
-                                     FrameLayout progressBarHolder, ImageView ImgV, LinearLayout llError, TextView tvFound, RecyclerView rvDownloadsList) {
+                                     FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, TextView tvFound, RecyclerView rvDownloadsList) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.UserID = UserID;
@@ -99,22 +100,32 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             }
         }
 
-        Glide.with(ctx).load(R.drawable.loading).asGif().into(ImgV);
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.12f, 0);
-        holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+        holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+        if (IsLock.equalsIgnoreCase("1")) {
+            BWSApplication.showToast("Please re-activate your membership plan", ctx);
+            holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+            holder.binding.ivLock.setVisibility(View.VISIBLE);
+        } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+            holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+            holder.binding.ivLock.setVisibility(View.GONE);
+        }
 
         holder.binding.llMainLayout.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")) {
                 BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
             } else if (IsLock.equalsIgnoreCase("0")
                     || IsLock.equalsIgnoreCase("")) {
                 playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());
-
+                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                holder.binding.ivLock.setVisibility(View.GONE);
         /*        Intent i = new Intent(ctx, DownloadedPlaylist.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());

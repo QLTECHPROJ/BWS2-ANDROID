@@ -3,6 +3,7 @@ package com.qltech.bws.LoginModule.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
     String Name = "", Code = "", MobileNo = "";
     Context ctx;
+    Activity activity;
     private long mLastClickTime = 0;
 
     @Override
@@ -37,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 
         ctx = LoginActivity.this;
+        activity = LoginActivity.this;
         if (getIntent().getExtras() != null) {
             Name = getIntent().getStringExtra(CONSTANTS.Name);
             Code = getIntent().getStringExtra(CONSTANTS.Code);
@@ -57,8 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             binding.edtNumber.setText(MobileNo);
         }
-
-        Glide.with(getApplicationContext()).load(R.drawable.loading).asGif().into(binding.ImgV);
 
         binding.rlCountrySelect.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -116,16 +117,16 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             binding.txtError.setVisibility(View.GONE);
             if (BWSApplication.isNetworkConnected(ctx)) {
-                showProgressBar();
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(binding.edtNumber.getText().toString(), binding.tvCountryCode.getText().toString(), CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
                 listCall.enqueue(new Callback<LoginModel>() {
                     @Override
                     public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         binding.txtError.setVisibility(View.GONE);
                         if (response.isSuccessful()) {
                             LoginModel loginModel = response.body();
-                            if(loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))){
+                            if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                                     return;
                                 }
@@ -137,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                                 startActivity(i);
                                 finish();
                                 BWSApplication.showToast(loginModel.getResponseMessage(), ctx);
-                            }else if(loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))){
+                            } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
                                 binding.txtError.setVisibility(View.VISIBLE);
                                 binding.txtError.setText(loginModel.getResponseMessage());
                             }
@@ -148,33 +149,12 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<LoginModel> call, Throwable t) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
                 });
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

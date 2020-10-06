@@ -449,7 +449,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
         }
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+        BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
         if (audioPlay) {
             id = mainPlayModelList.get(position).getID();
             url = mainPlayModelList.get(position).getAudioFile();
@@ -487,7 +487,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
-        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
     }
 
     private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {
@@ -694,20 +694,20 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
             Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(id, UserID);
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
                         SucessModel model = response.body();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<SucessModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {

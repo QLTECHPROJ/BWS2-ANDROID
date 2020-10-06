@@ -43,7 +43,6 @@ public class WebsiteFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_website, container, false);
         View view = binding.getRoot();
-        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             website = bundle.getString("website");
@@ -89,7 +88,7 @@ public class WebsiteFragment extends Fragment {
     private void hideProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,8 +99,8 @@ public class WebsiteFragment extends Fragment {
         try {
             binding.progressBarHolder.setVisibility(View.VISIBLE);
             getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.invalidate();
         } catch (Exception e) {
             e.printStackTrace();
         }

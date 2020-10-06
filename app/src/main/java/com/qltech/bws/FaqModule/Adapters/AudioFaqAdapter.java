@@ -22,8 +22,7 @@ public class AudioFaqAdapter extends RecyclerView.Adapter<AudioFaqAdapter.MyView
     RecyclerView rvFaqList;
     TextView tvFound;
 
-    public AudioFaqAdapter(List<FaqListModel.ResponseData> modelList, Context ctx, RecyclerView rvFaqList,
-                           TextView tvFound) {
+    public AudioFaqAdapter(List<FaqListModel.ResponseData> modelList, Context ctx, RecyclerView rvFaqList, TextView tvFound) {
         this.modelList = modelList;
         this.ctx = ctx;
         this.rvFaqList = rvFaqList;
@@ -33,8 +32,7 @@ public class AudioFaqAdapter extends RecyclerView.Adapter<AudioFaqAdapter.MyView
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        AudioFaqLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                , R.layout.audio_faq_layout, parent, false);
+        AudioFaqLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.audio_faq_layout, parent, false);
         return new MyViewHolder(v);
     }
 
@@ -42,28 +40,22 @@ public class AudioFaqAdapter extends RecyclerView.Adapter<AudioFaqAdapter.MyView
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(modelList.get(position).getTitle());
         holder.binding.tvDesc.setText(modelList.get(position).getDesc());
-        holder.binding.ivClickRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.binding.llMainLayout.setBackgroundResource(R.color.discalimer_gray);
-                holder.binding.tvDesc.setFocusable(true);
-                holder.binding.tvDesc.requestFocus();
-                holder.binding.tvDesc.setVisibility(View.VISIBLE);
-                holder.binding.ivClickRight.setVisibility(View.GONE);
-                holder.binding.ivClickDown.setVisibility(View.VISIBLE);
-                holder.binding.ivClickDown.setImageResource(R.drawable.ic_down_black_icon);
-            }
+        holder.binding.ivClickRight.setOnClickListener(view -> {
+            holder.binding.llMainLayout.setBackgroundResource(R.color.discalimer_gray);
+            holder.binding.tvDesc.setFocusable(true);
+            holder.binding.tvDesc.requestFocus();
+            holder.binding.tvDesc.setVisibility(View.VISIBLE);
+            holder.binding.ivClickRight.setVisibility(View.GONE);
+            holder.binding.ivClickDown.setVisibility(View.VISIBLE);
+            holder.binding.ivClickDown.setImageResource(R.drawable.ic_down_black_icon);
         });
 
-        holder.binding.ivClickDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.binding.llMainLayout.setBackgroundResource(R.color.white);
-                holder.binding.tvDesc.setVisibility(View.GONE);
-                holder.binding.ivClickRight.setVisibility(View.VISIBLE);
-                holder.binding.ivClickDown.setVisibility(View.GONE);
-                holder.binding.ivClickDown.setImageResource(R.drawable.ic_back_black_icon);
-            }
+        holder.binding.ivClickDown.setOnClickListener(view -> {
+            holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+            holder.binding.tvDesc.setVisibility(View.GONE);
+            holder.binding.ivClickRight.setVisibility(View.VISIBLE);
+            holder.binding.ivClickDown.setVisibility(View.GONE);
+            holder.binding.ivClickDown.setImageResource(R.drawable.ic_back_black_icon);
         });
 
         if (modelList.size() == 0) {

@@ -144,14 +144,14 @@ public class SessionsFragment extends Fragment {
 
         try {
             if (BWSApplication.isNetworkConnected(getActivity())) {
-                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 Call<SessionListModel> listCall = APIClient.getClient().getAppointmentSession(UserId, appointmentName);
                 listCall.enqueue(new Callback<SessionListModel>() {
                     @Override
                     public void onResponse(Call<SessionListModel> call, Response<SessionListModel> response) {
                         if (response.isSuccessful()) {
                             try {
-                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 SessionListModel listModel = response.body();
                                 if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                     binding.tvSessionTitle.setText(listModel.getResponseData().get(0).getCatName());
@@ -170,7 +170,7 @@ public class SessionsFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<SessionListModel> call, Throwable t) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
                 });
             } else {

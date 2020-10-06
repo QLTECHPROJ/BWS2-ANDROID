@@ -35,12 +35,7 @@ public class AudioFaqActivity extends AppCompatActivity {
             faqListModel = getIntent().getParcelableArrayListExtra("faqListModel");
             Flag = getIntent().getStringExtra("Flag");
         }
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        binding.llBack.setOnClickListener(view -> finish());
 
         if (Flag.equalsIgnoreCase("Audio")) {
             binding.tvTitle.setText(R.string.Audio);

@@ -25,8 +25,7 @@ public class DirectionAdapter extends RecyclerView.Adapter<DirectionAdapter.MyVi
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        DirectionTagLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                , R.layout.direction_tag_layout, parent, false);
+        DirectionTagLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.direction_tag_layout, parent, false);
         return new MyViewHolder(v);
     }
 

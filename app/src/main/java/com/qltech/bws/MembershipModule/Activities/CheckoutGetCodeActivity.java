@@ -45,7 +45,6 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_checkout_get_code);
         ctx = CheckoutGetCodeActivity.this;
         activity = CheckoutGetCodeActivity.this;
-        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
 
         if (getIntent().hasExtra("Name")) {
             Name = getIntent().getStringExtra(CONSTANTS.Name);
@@ -116,12 +115,12 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         } else {
             binding.txtError.setVisibility(View.GONE);
             if (BWSApplication.isNetworkConnected(ctx)) {
-                BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(binding.edtNumber.getText().toString(), binding.tvCountryCode.getText().toString(), CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
                 listCall.enqueue(new Callback<SignUpModel>() {
                     @Override
                     public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         if (response.isSuccessful()) {
                             SignUpModel loginModel = response.body();
                             if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
@@ -146,7 +145,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<SignUpModel> call, Throwable t) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
                 });
             } else {

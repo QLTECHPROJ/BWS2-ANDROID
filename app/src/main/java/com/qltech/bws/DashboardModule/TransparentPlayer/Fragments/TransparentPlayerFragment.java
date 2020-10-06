@@ -335,20 +335,20 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     private void addToRecentPlay() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
-//            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+//            BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
             Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(id, UserID);
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                     if (response.isSuccessful()) {
-//                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+//                        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
                         SucessModel model = response.body();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<SucessModel> call, Throwable t) {
-//                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+//                    BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {

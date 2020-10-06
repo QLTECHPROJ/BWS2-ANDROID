@@ -25,8 +25,6 @@ import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.downloader.OnProgressListener;
-import com.downloader.Progress;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
@@ -192,7 +190,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         addToQueueModelList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
-        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
@@ -619,13 +616,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }
         SaveMedia(EncodeBytes, FileUtils.getFilePath(getApplicationContext(), name));
    /*     if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
             Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, id, PlaylistId);
             listCall.enqueue(new Callback<DownloadPlaylistModel>() {
                 @Override
                 public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
                         DownloadPlaylistModel model = response.body();
                         if (model.getResponseData().getFlag().equalsIgnoreCase("0")
                                 || model.getResponseData().getFlag().equalsIgnoreCase("")) {
@@ -634,8 +631,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                         } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                            binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-                            binding.ivDownloads.setAlpha(255);
+                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                             binding.llDownloads.setClickable(false);
                             binding.llDownloads.setEnabled(false);
                         }
@@ -645,7 +641,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
                 @Override
                 public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
                 }
             });
 
@@ -711,8 +707,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     private void disableDownload() {
         binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-        binding.ivDownloads.setColorFilter(Color.argb(99, 99, 99, 99));
-        binding.ivDownloads.setAlpha(255);
+        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
         binding.llDownload.setClickable(false);
         binding.llDownload.setEnabled(false);
     }
@@ -809,13 +804,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     private void callLike() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
             Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(id, UserID);
             listCall.enqueue(new Callback<AudioLikeModel>() {
                 @Override
                 public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
                         AudioLikeModel model = response.body();
                         if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
                             binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
@@ -843,7 +838,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
                 @Override
                 public void onFailure(Call<AudioLikeModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {
@@ -853,20 +848,20 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     private void addToRecentPlay() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
             Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(id, UserID);
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
                         SucessModel model = response.body();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<SucessModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {
@@ -898,22 +893,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                         binding.llDownload.setClickable(false);
                         binding.llDownload.setEnabled(false);
-                        binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+                        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                     } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
                         binding.llDownload.setClickable(true);
                         binding.llDownload.setEnabled(true);
-                        binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+                        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                         binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                     }
                 } else if (download.equalsIgnoreCase("1")) {
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                     binding.llDownload.setClickable(false);
                     binding.llDownload.setEnabled(false);
-                    binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                 } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
                     binding.llDownload.setClickable(true);
                     binding.llDownload.setEnabled(true);
-                    binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                 }
            /* if (!isMediaStart) {
@@ -994,7 +989,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }
-        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+        BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
         if (queuePlay) {
             listSize = addToQueueModelList.size();
             if (listSize == 1) {
@@ -1071,7 +1066,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         editor.commit();
         binding.simpleSeekbar.setClickable(true);
         handler.postDelayed(UpdateSongTime, 60);
-        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
     }
 
     private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {

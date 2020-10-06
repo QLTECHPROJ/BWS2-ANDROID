@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -112,23 +113,22 @@ public class BWSApplication extends Application {
         return BWSApplication;
     }
 
-    public static void hideProgressBar(ImageView ImgV, FrameLayout progressBarHolder, Activity ctx) {
+    public static void hideProgressBar(ProgressBar progressBar, FrameLayout progressBarHolder, Activity ctx) {
         try {
             progressBarHolder.setVisibility(View.GONE);
-            ImgV.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
             ctx.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void showProgressBar(ImageView ImgV, FrameLayout progressBarHolder, Activity ctx) {
+    public static void showProgressBar(ProgressBar progressBar, FrameLayout progressBarHolder, Activity ctx) {
         try {
-            Glide.with(ctx).load(R.drawable.loading).asGif().into(ImgV);
             progressBarHolder.setVisibility(View.VISIBLE);
             ctx.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            ImgV.setVisibility(View.VISIBLE);
-            ImgV.invalidate();
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.invalidate();
         } catch (Exception e) {
             e.printStackTrace();
         }

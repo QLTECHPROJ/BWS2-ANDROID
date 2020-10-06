@@ -64,24 +64,21 @@ public class CountrySelectActivity extends AppCompatActivity {
 //            listModelList = getIntent().getParcelableArrayListExtra("PlanData");
 //            position = getIntent().getIntExtra("position", 0);
         }
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Check.equalsIgnoreCase("0")) {
-                    Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
-                    i.putExtra("Name", Name);
-                    i.putExtra("Code", Code);
-                    i.putExtra("MobileNo", MobileNo);
-                    startActivity(i);
-                    finish();
-                } else if (Check.equalsIgnoreCase("1")) {
-                    Intent i = new Intent(ctx, LoginActivity.class);
-                    i.putExtra("Name", Name);
-                    i.putExtra("Code", Code);
-                    i.putExtra("MobileNo", MobileNo);
-                    startActivity(i);
-                    finish();
-                }
+        binding.llBack.setOnClickListener(view -> {
+            if (Check.equalsIgnoreCase("0")) {
+                Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+                i.putExtra("Name", Name);
+                i.putExtra("Code", Code);
+                i.putExtra("MobileNo", MobileNo);
+                startActivity(i);
+                finish();
+            } else if (Check.equalsIgnoreCase("1")) {
+                Intent i = new Intent(ctx, LoginActivity.class);
+                i.putExtra("Name", Name);
+                i.putExtra("Code", Code);
+                i.putExtra("MobileNo", MobileNo);
+                startActivity(i);
+                finish();
             }
         });
 
@@ -110,7 +107,6 @@ public class CountrySelectActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String search) {
                 try {
                     adapter.getFilter().filter(search);
-                    Log.e("searchsearch", "" + search);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -122,13 +118,13 @@ public class CountrySelectActivity extends AppCompatActivity {
         binding.rvCountryList.setLayoutManager(mLayoutManager);
         binding.rvCountryList.setItemAnimator(new DefaultItemAnimator());
         if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<CountryListModel> listCall = APIClient.getClient().getCountryLists();
             listCall.enqueue(new Callback<CountryListModel>() {
                 @Override
                 public void onResponse(Call<CountryListModel> call, Response<CountryListModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         CountryListModel listModel = response.body();
                         if (listModel != null) {
                             adapter = new CountrySelectAdapter(listModel.getResponseData());
@@ -139,7 +135,7 @@ public class CountrySelectActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<CountryListModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {

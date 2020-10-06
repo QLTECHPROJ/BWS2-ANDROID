@@ -50,15 +50,11 @@ public class MembershipChangeActivity extends AppCompatActivity {
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MembershipChangeActivity.this, BillingOrderActivity.class);
-                startActivity(i);
-                finish();
-            }
+        binding.llBack.setOnClickListener(view -> {
+            Intent i = new Intent(MembershipChangeActivity.this, BillingOrderActivity.class);
+            startActivity(i);
+            finish();
         });
 
         RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
@@ -220,7 +216,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
     private void hideProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } catch (Exception e) {
             e.printStackTrace();
@@ -231,8 +227,8 @@ public class MembershipChangeActivity extends AppCompatActivity {
         try {
             binding.progressBarHolder.setVisibility(View.VISIBLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.invalidate();
         } catch (Exception e) {
             e.printStackTrace();
         }

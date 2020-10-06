@@ -146,13 +146,13 @@ public class AudioFragment extends Fragment {
 
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<MainAudioModel> listCall = APIClient.getClient().getMainAudioLists(UserID);
             listCall.enqueue(new Callback<MainAudioModel>() {
                 @Override
                 public void onResponse(Call<MainAudioModel> call, Response<MainAudioModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         MainAudioModel listModel = response.body();
                         try {
                             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -166,13 +166,13 @@ public class AudioFragment extends Fragment {
 
                         GetAllMedia(getActivity(), listModel.getResponseData());
                     } else {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<MainAudioModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 }
             });
         } else {
@@ -295,27 +295,6 @@ public class AudioFragment extends Fragment {
         prepareData();
     }
 
-    private void hideProgressBar() {
-        try {
-            binding.progressBar.setVisibility(View.GONE);
-            binding.progressBarHolder.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public class MainAudioListAdapter extends RecyclerView.Adapter<MainAudioListAdapter.MyViewHolder> {
         FragmentActivity activity;
         private List<MainAudioModel.ResponseData> listModelList;
@@ -368,9 +347,6 @@ public class AudioFragment extends Fragment {
                         holder.binding.tvViewAll.setVisibility(View.GONE);
                     }
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Library))) {
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(10, -4, 10, 0);
-                    holder.binding.llMainLayout.setLayoutParams(params);
                     RecommendedAdapter recommendedAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
                             listModelList.get(position).getIsLock());
                     RecyclerView.LayoutManager recommended = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);

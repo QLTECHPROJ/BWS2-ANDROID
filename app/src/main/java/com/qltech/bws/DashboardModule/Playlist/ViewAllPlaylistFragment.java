@@ -67,7 +67,6 @@ public class ViewAllPlaylistFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_all_playlist, container, false);
         view = binding.getRoot();
-        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -223,7 +222,7 @@ public class ViewAllPlaylistFragment extends Fragment {
     private void hideProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } catch (Exception e) {
             e.printStackTrace();
@@ -234,8 +233,8 @@ public class ViewAllPlaylistFragment extends Fragment {
         try {
             binding.progressBarHolder.setVisibility(View.VISIBLE);
             getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.invalidate();
         } catch (Exception e) {
             e.printStackTrace();
         }

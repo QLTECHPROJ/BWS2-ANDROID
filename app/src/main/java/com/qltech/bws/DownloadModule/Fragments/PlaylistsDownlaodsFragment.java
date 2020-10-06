@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.DownloadModule.Adapters.PlaylistsDownloadsAdapter;
@@ -103,7 +104,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 if (playlistList.size() != 0) {
-                    getDataList(playlistList, UserID, binding.progressBarHolder, binding.ImgV);
+                    getDataList(playlistList, UserID, binding.progressBarHolder, binding.progressBar);
                     binding.llError.setVisibility(View.GONE);
                     binding.rvDownloadsList.setVisibility(View.VISIBLE);
                 } else {
@@ -117,7 +118,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         getTask.execute();
     }
 
-    private void getDataList(List<DownloadPlaylistDetails> historyList, String UserID, FrameLayout progressBarHolder, ImageView ImgV) {
+    private void getDataList(List<DownloadPlaylistDetails> historyList, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
             binding.llError.setVisibility(View.VISIBLE);

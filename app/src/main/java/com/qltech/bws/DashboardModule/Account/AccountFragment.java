@@ -76,7 +76,6 @@ public class AccountFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 10,
                 1, 1, 0.2f, 10);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -237,7 +236,7 @@ public class AccountFragment extends Fragment {
         }
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<LogoutModel> listCall = APIClient.getClient().getLogout(UserID, fcm_id, CONSTANTS.FLAG_ONE);
             listCall.enqueue(new Callback<LogoutModel>() {
                 @Override
@@ -245,11 +244,11 @@ public class AccountFragment extends Fragment {
                     if (response.isSuccessful()) {
                         LogoutModel loginModel = response.body();
                         dialog.hide();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                             return;
                         }
                         mLastClickTime = SystemClock.elapsedRealtime();
-                        hideProgressBar();
                         Intent i = new Intent(getActivity(), LoginActivity.class);
                         startActivity(i);
                     } else {
@@ -259,7 +258,7 @@ public class AccountFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<LogoutModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 }
             });
         } else {
@@ -305,16 +304,6 @@ public class AccountFragment extends Fragment {
         editorr.commit();
     }
 
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void DeletallLocalCart() {
         class DeletallCart extends AsyncTask<Void, Void, Void> {
             @Override
@@ -358,27 +347,16 @@ public class AccountFragment extends Fragment {
         st.execute();
     }
 
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     void profileViewData(Context ctx) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
             listCall.enqueue(new Callback<ProfileViewModel>() {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onResponse(Call<ProfileViewModel> call, Response<ProfileViewModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         ProfileViewModel viewModel = response.body();
                         binding.tvViewProfile.setVisibility(View.VISIBLE);
 
@@ -440,13 +418,13 @@ public class AccountFragment extends Fragment {
                         }
 
                     } else {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ProfileViewModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 }
             });
         }

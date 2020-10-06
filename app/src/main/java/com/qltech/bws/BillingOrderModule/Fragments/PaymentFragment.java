@@ -43,7 +43,6 @@ public class PaymentFragment extends Fragment {
         context = getActivity();
         SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         userId = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvCardList.setLayoutManager(mLayoutManager);
         binding.rvCardList.setItemAnimator(new DefaultItemAnimator());
@@ -86,7 +85,7 @@ public class PaymentFragment extends Fragment {
                                     binding.rvCardList.setVisibility(View.GONE);
                                 } else {
                                     binding.rvCardList.setVisibility(View.VISIBLE);
-                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.ImgV,
+                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), getActivity(), userId, binding.progressBar,
                                             binding.progressBarHolder, binding.rvCardList);
                                     binding.rvCardList.setAdapter(adapter);
                                 }
@@ -115,7 +114,7 @@ public class PaymentFragment extends Fragment {
     private void hideProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,8 +125,8 @@ public class PaymentFragment extends Fragment {
         try {
             binding.progressBarHolder.setVisibility(View.VISIBLE);
             getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.invalidate();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -59,7 +59,6 @@ public class SearchFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false);
         View view = binding.getRoot();
-        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -113,13 +112,13 @@ public class SearchFragment extends Fragment {
 
     private void prepareSearchData(String search, EditText searchEditText) {
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<SearchBothModel> listCall = APIClient.getClient().getSearchBoth(UserID, search);
             listCall.enqueue(new Callback<SearchBothModel>() {
                 @Override
                 public void onResponse(Call<SearchBothModel> call, Response<SearchBothModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         SearchBothModel listModel = response.body();
                         if (!searchEditText.getText().toString().equalsIgnoreCase("")) {
                             if (listModel.getResponseData().size() == 0) {
@@ -142,7 +141,7 @@ public class SearchFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<SearchBothModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 }
             });
         } else {
@@ -197,13 +196,13 @@ public class SearchFragment extends Fragment {
         }
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<SuggestedModel> listCall = APIClient.getClient().getSuggestedLists(UserID);
             listCall.enqueue(new Callback<SuggestedModel>() {
                 @Override
                 public void onResponse(Call<SuggestedModel> call, Response<SuggestedModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         SuggestedModel listModel = response.body();
                         binding.tvSuggestedAudios.setText(R.string.Suggested_Audios);
                         SuggestionAudiosAdpater suggestedAdpater = new SuggestionAudiosAdpater(listModel.getResponseData(), getActivity());
@@ -213,7 +212,7 @@ public class SearchFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<SuggestedModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 }
             });
         } else {
@@ -221,13 +220,13 @@ public class SearchFragment extends Fragment {
         }
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<SearchPlaylistModel> listCall = APIClient.getClient().getSuggestedPlayLists(UserID);
             listCall.enqueue(new Callback<SearchPlaylistModel>() {
                 @Override
                 public void onResponse(Call<SearchPlaylistModel> call, Response<SearchPlaylistModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         SearchPlaylistModel listModel = response.body();
                         binding.tvSuggestedPlaylist.setText(R.string.Suggested_Playlist);
                         SearchPlaylistAdapter suggestedAdpater = new SearchPlaylistAdapter(listModel.getResponseData());
@@ -237,7 +236,7 @@ public class SearchFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<SearchPlaylistModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, getActivity());
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 }
             });
         } else {
@@ -271,13 +270,26 @@ public class SearchFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(modelList.get(position).getName());
 
+            if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
+
             if (modelList.get(position).getIscategory().equalsIgnoreCase("1")) {
                 holder.binding.tvPart.setText(R.string.Audio);
                 holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
                 holder.binding.llRemoveAudio.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
                         BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                        holder.binding.ivLock.setVisibility(View.GONE);
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);
                         i.putExtra("AudioId", modelList.get(position).getID());
                         i.putExtra("PlaylistID", "");
@@ -289,8 +301,12 @@ public class SearchFragment extends Fragment {
                 holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
                 holder.binding.llRemoveAudio.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
                         BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                        holder.binding.ivLock.setVisibility(View.GONE);
                         Intent i = new Intent(ctx, AddPlaylistActivity.class);
                         i.putExtra("AudioId", "");
                         i.putExtra("PlaylistID", modelList.get(position).getID());
@@ -299,9 +315,13 @@ public class SearchFragment extends Fragment {
                 });
                 holder.binding.llMainLayout.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
                         BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         comefrom_search = 1;
+                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                        holder.binding.ivLock.setVisibility(View.GONE);
                         Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("New", "0");
@@ -318,12 +338,12 @@ public class SearchFragment extends Fragment {
             }
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
-            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+            holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             Glide.with(getActivity()).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
         }
 
         @Override
@@ -365,17 +385,28 @@ public class SearchFragment extends Fragment {
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
-            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+            holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             Glide.with(getActivity()).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
-
+            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+            if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    holder.binding.ivLock.setVisibility(View.GONE);
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", modelList.get(position).getID());
                     i.putExtra("PlaylistID", "");
@@ -417,13 +448,13 @@ public class SearchFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
-                    1, 1, 0.45f, 0);
+                    1, 1, 0.38f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
             MeasureRatio measureRatio1 = BWSApplication.measureRatio(getActivity(), 0,
-                    1, 1, 0.45f, 0);
+                    1, 1, 0.38f, 0);
             holder.binding.rlMainLayout.getLayoutParams().height = (int) (measureRatio1.getHeight() * measureRatio1.getRatio());
             holder.binding.rlMainLayout.getLayoutParams().width = (int) (measureRatio1.getWidthImg() * measureRatio1.getRatio());
 

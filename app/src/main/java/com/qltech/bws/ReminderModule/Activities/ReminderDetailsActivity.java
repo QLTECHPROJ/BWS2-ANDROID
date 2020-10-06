@@ -60,7 +60,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         activity = ReminderDetailsActivity.this;
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         binding.rvReminderDetails.setLayoutManager(mLayoutManager);
@@ -170,13 +169,13 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<RemiderDetailsModel> listCall = APIClient.getClient().getGetReminderStatus(UserId);
             listCall.enqueue(new Callback<RemiderDetailsModel>() {
                 @Override
                 public void onResponse(Call<RemiderDetailsModel> call, Response<RemiderDetailsModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         RemiderDetailsModel listModel = response.body();
                         listReminderModel = listModel;
                         adapter = new RemiderDetailsAdapter(listModel.getResponseData());
@@ -194,7 +193,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<RemiderDetailsModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {
@@ -277,13 +276,13 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
     private void prepareSwitchStatus(String reminderStatus) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserId, PlaylistId, reminderStatus);/*set 1 or not 0 */
             listCall.enqueue(new Callback<ReminderStatusModel>() {
                 @Override
                 public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         ReminderStatusModel listModel = response.body();
                         BWSApplication.showToast(listModel.getResponseMessage(), activity);
                     }
@@ -291,7 +290,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ReminderStatusModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {

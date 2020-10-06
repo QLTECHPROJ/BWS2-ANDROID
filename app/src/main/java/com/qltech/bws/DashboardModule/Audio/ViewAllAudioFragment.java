@@ -90,7 +90,7 @@ public class ViewAllAudioFragment extends Fragment {
         if (Name.equalsIgnoreCase("My Downloads")) {
             audioList = new ArrayList<>();
             GetAllMedia(getActivity());
-        } else{
+        } else {
             prepareData();
         }
         return view;
@@ -129,7 +129,7 @@ public class ViewAllAudioFragment extends Fragment {
                 refreshData();
                 binding.tvTitle.setText(Name);
                 ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList = new ArrayList<>();
-                for(int i = 0;i<audioList.size();i++){
+                for (int i = 0; i < audioList.size(); i++) {
                     ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
 
                     mainPlayModel.setID(audioList.get(i).getID());
@@ -157,13 +157,13 @@ public class ViewAllAudioFragment extends Fragment {
     private void prepareData() {
         refreshData();
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<ViewAllAudioListModel> listCall = APIClient.getClient().getViewAllAudioLists(UserID, ID, Category);
             listCall.enqueue(new Callback<ViewAllAudioListModel>() {
                 @Override
                 public void onResponse(Call<ViewAllAudioListModel> call, Response<ViewAllAudioListModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         ViewAllAudioListModel listModel = response.body();
                         if (Category.equalsIgnoreCase("")) {
                             binding.tvTitle.setText(listModel.getResponseData().getView());
@@ -177,7 +177,7 @@ public class ViewAllAudioFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<ViewAllAudioListModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 }
             });
         } else {
@@ -187,7 +187,7 @@ public class ViewAllAudioFragment extends Fragment {
 
     private void refreshData() {
         try {
-            if(IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")){
+            if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
                 editorr.remove(CONSTANTS.PREF_KEY_modelList);
@@ -217,27 +217,6 @@ public class ViewAllAudioFragment extends Fragment {
                 params.setMargins(4, 6, 4, 50);
                 binding.llSpace.setLayoutParams(params);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
         } catch (Exception e) {
             e.printStackTrace();
         }

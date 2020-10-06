@@ -25,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -73,7 +74,6 @@ public class PaymentActivity extends AppCompatActivity {
 
         SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         userId = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        Glide.with(context).load(R.drawable.loading).asGif().into(binding.ImgV);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
         binding.rvCardList.setLayoutManager(mLayoutManager);
         binding.rvCardList.setItemAnimator(new DefaultItemAnimator());
@@ -134,7 +134,7 @@ public class PaymentActivity extends AppCompatActivity {
                                         binding.rvCardList.setVisibility(View.GONE);
                                     } else {
                                         binding.rvCardList.setVisibility(View.VISIBLE);
-                                        adapter = new AllCardsAdapter(cardListModel.getResponseData(), binding.ImgV,
+                                        adapter = new AllCardsAdapter(cardListModel.getResponseData(), binding.progressBar,
                                                 binding.progressBarHolder, binding.rvCardList);
                                         binding.rvCardList.setAdapter(adapter);
                                     }
@@ -198,12 +198,12 @@ public class PaymentActivity extends AppCompatActivity {
 
     public class AllCardsAdapter extends RecyclerView.Adapter<AllCardsAdapter.MyViewHolder> {
         private List<CardListModel.ResponseData> listModelList;
-        ImageView ImgV;
+        ProgressBar ImgV;
         FrameLayout progressBarHolder;
         RecyclerView rvCardList;
         AllCardsAdapter adapter;
 
-        public AllCardsAdapter(List<CardListModel.ResponseData> listModelList, ImageView ImgV,
+        public AllCardsAdapter(List<CardListModel.ResponseData> listModelList, ProgressBar ImgV,
                                FrameLayout progressBarHolder, RecyclerView rvCardList) {
             this.listModelList = listModelList;
             this.ImgV = ImgV;
@@ -213,7 +213,6 @@ public class PaymentActivity extends AppCompatActivity {
 
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            Glide.with(context).load(R.drawable.loading).asGif().into(ImgV);
             CardsListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
                     , R.layout.cards_list_layout, parent, false);
             return new MyViewHolder(v);
@@ -370,7 +369,7 @@ public class PaymentActivity extends AppCompatActivity {
     private void hideProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } catch (Exception e) {
             e.printStackTrace();
@@ -381,8 +380,8 @@ public class PaymentActivity extends AppCompatActivity {
         try {
             binding.progressBarHolder.setVisibility(View.VISIBLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.invalidate();
         } catch (Exception e) {
             e.printStackTrace();
         }

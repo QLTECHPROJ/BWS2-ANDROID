@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ public class AddAudioActivity extends AppCompatActivity {
     String UserID, PlaylistID;
     SerachListAdpater adpater;
     EditText searchEditText;
+    Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +52,11 @@ public class AddAudioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_audio);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_audio);
         ctx = AddAudioActivity.this;
+        activity = AddAudioActivity.this;
 
         if (getIntent().getExtras() != null) {
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
         }
-        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.searchView.onActionViewExpanded();
@@ -107,13 +109,13 @@ public class AddAudioActivity extends AppCompatActivity {
 
     private void prepareSearchData(String search, EditText searchEditText, String PlaylistID) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<SuggestionAudiosModel> listCall = APIClient.getClient().getAddSearchAudio(search, PlaylistID);
             listCall.enqueue(new Callback<SuggestionAudiosModel>() {
                 @Override
                 public void onResponse(Call<SuggestionAudiosModel> call, Response<SuggestionAudiosModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         SuggestionAudiosModel listModel = response.body();
                         if (!searchEditText.getText().toString().equalsIgnoreCase("")) {
                             if (listModel.getResponseData().size() == 0) {
@@ -137,7 +139,7 @@ public class AddAudioActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<SuggestionAudiosModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {
@@ -147,13 +149,13 @@ public class AddAudioActivity extends AppCompatActivity {
 
     private void prepareSuggestedData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<SuggestedModel> listCall = APIClient.getClient().getSuggestedLists(UserID);
             listCall.enqueue(new Callback<SuggestedModel>() {
                 @Override
                 public void onResponse(Call<SuggestedModel> call, Response<SuggestedModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         SuggestedModel listModel = response.body();
                         binding.tvSuggested.setText(R.string.Suggested);
                         SuggestedAdpater suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), AddAudioActivity.this);
@@ -163,7 +165,7 @@ public class AddAudioActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<SuggestedModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {
@@ -174,27 +176,6 @@ public class AddAudioActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public class SerachListAdpater extends RecyclerView.Adapter<SerachListAdpater.MyViewHolder> {
@@ -233,31 +214,28 @@ public class AddAudioActivity extends AppCompatActivity {
             Glide.with(ctx).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
-            holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String AudioID = modelList.get(position).getID();
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        showProgressBar();
-                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID, "");
-                        listCall.enqueue(new Callback<SucessModel>() {
-                            @Override
-                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                                if (response.isSuccessful()) {
-                                    hideProgressBar();
-                                    SucessModel listModel = response.body();
-                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                }
+            holder.binding.llRemoveAudio.setOnClickListener(view -> {
+                String AudioID = modelList.get(position).getID();
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                    Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID, "");
+                    listCall.enqueue(new Callback<SucessModel>() {
+                        @Override
+                        public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                            if (response.isSuccessful()) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                SucessModel listModel = response.body();
+                                BWSApplication.showToast(listModel.getResponseMessage(), ctx);
                             }
+                        }
 
-                            @Override
-                            public void onFailure(Call<SucessModel> call, Throwable t) {
-                                hideProgressBar();
-                            }
-                        });
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                    }
+                        @Override
+                        public void onFailure(Call<SucessModel> call, Throwable t) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        }
+                    });
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                 }
             });
         }
@@ -316,13 +294,13 @@ public class AddAudioActivity extends AppCompatActivity {
                     } else if (listModel.get(position).getIsLock().equalsIgnoreCase("0") || listModel.get(position).getIsLock().equalsIgnoreCase("")) {
                         String AudioID = listModel.get(position).getID();
                         if (BWSApplication.isNetworkConnected(ctx)) {
-                            showProgressBar();
+                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID, "");
                             listCall.enqueue(new Callback<SucessModel>() {
                                 @Override
                                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                                     if (response.isSuccessful()) {
-                                        hideProgressBar();
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         SucessModel listModel = response.body();
                                         BWSApplication.showToast(listModel.getResponseMessage(), ctx);
                                     }
@@ -330,7 +308,7 @@ public class AddAudioActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<SucessModel> call, Throwable t) {
-                                    hideProgressBar();
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 }
                             });
                         } else {

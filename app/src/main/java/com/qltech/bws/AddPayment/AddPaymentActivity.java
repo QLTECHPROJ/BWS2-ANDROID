@@ -112,7 +112,6 @@ public class AddPaymentActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
             }
         });
-        Glide.with(activity).load(R.drawable.loading).asGif().into(binding.ImgV);
 
         binding.opendilog.setOnClickListener(v -> {
             a = 1;
@@ -284,7 +283,7 @@ public class AddPaymentActivity extends AppCompatActivity {
     private void hideProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } catch (Exception e) {
             e.printStackTrace();
@@ -295,8 +294,8 @@ public class AddPaymentActivity extends AppCompatActivity {
         try {
             binding.progressBarHolder.setVisibility(View.VISIBLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.invalidate();
         } catch (Exception e) {
             e.printStackTrace();
         }

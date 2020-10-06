@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -42,7 +43,6 @@ public class DownloadsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_downloads);
         ctx = DownloadsActivity.this;
-        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -81,7 +81,7 @@ public class DownloadsActivity extends AppCompatActivity {
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), ctx, binding.tabLayout.getTabCount(),
-                UserID, binding.progressBarHolder, binding.ImgV);
+                UserID, binding.progressBarHolder, binding.progressBar);
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
         if (ComeFrom_Playlist) {
@@ -123,10 +123,10 @@ public class DownloadsActivity extends AppCompatActivity {
         int totalTabs;
         String UserID;
         FrameLayout progressBarHolder;
-        ImageView ImgV;
+        ProgressBar ImgV;
         private Context myContext;
 
-        public TabAdapter(FragmentManager fm, Context myContext, int totalTabs, String UserID, FrameLayout progressBarHolder, ImageView ImgV) {
+        public TabAdapter(FragmentManager fm, Context myContext, int totalTabs, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV) {
             super(fm);
             this.myContext = myContext;
             this.totalTabs = totalTabs;
@@ -165,15 +165,15 @@ public class DownloadsActivity extends AppCompatActivity {
 
 /*    public void hideProgressBar() {
         binding.progressBarHolder.setVisibility(View.GONE);
-        binding.ImgV.setVisibility(View.GONE);
+        binding.progressBar.setVisibility(View.GONE);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     public void showProgressBar() {
         binding.progressBarHolder.setVisibility(View.VISIBLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        binding.ImgV.setVisibility(View.VISIBLE);
-        binding.ImgV.invalidate();
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.progressBar.invalidate();
     }*/
     }
 }

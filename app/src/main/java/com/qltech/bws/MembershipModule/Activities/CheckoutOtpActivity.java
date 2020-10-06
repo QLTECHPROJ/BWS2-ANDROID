@@ -135,7 +135,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                 binding.txtError.setVisibility(View.VISIBLE);
             } else {
                 if (BWSApplication.isNetworkConnected(CheckoutOtpActivity.this)) {
-                    BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     String deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                     Call<OtpModel> listCall = APIClient.getClient().getAuthOtps1(
                             binding.edtOTP1.getText().toString() + "" +
@@ -147,7 +147,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
                             if (response.isSuccessful()) {
-                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 OtpModel otpModel = response.body();
                                 if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                     Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
@@ -163,7 +163,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<OtpModel> call, Throwable t) {
-                            BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
 
                         }
                     });
@@ -191,13 +191,13 @@ public class CheckoutOtpActivity extends AppCompatActivity {
     void prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             tvSendOTPbool = false;
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
             listCall.enqueue(new Callback<SignUpModel>() {
                 @Override
                 public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         SignUpModel loginModel = response.body();
                         if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             countDownTimer = new CountDownTimer(30000, 1000) {
@@ -233,7 +233,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<SignUpModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     BWSApplication.showToast(t.getMessage(), getApplicationContext());
                 }
             });

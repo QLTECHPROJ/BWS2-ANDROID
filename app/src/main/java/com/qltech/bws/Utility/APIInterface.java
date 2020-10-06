@@ -374,8 +374,7 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<SucessModel> getRemoveAudioFromPlaylist(@Field("UserID") String userID,
                                                  @Field("AudioId") String audioId,
-                                                 @Field("PlaylistId") String playlistId,
-                                                 @Field("PlaylistAudioId") String playlistAudioId);
+                                                 @Field("PlaylistId") String playlistId);
 
     /* TODO MyPlaylistsFragment */
     @POST("deleteplaylist")

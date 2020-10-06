@@ -54,8 +54,7 @@ public class MembershipInvoiceFragment extends Fragment {
     private ProgressDialog progressDialog;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invoice, container, false);
         View view = binding.getRoot();
 
@@ -74,7 +73,6 @@ public class MembershipInvoiceFragment extends Fragment {
         } else {
             binding.llError.setVisibility(View.VISIBLE);
             binding.rvAIList.setVisibility(View.GONE);
-
         }
         return view;
     }
@@ -101,8 +99,7 @@ public class MembershipInvoiceFragment extends Fragment {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            InvoiceListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.invoice_list_layout, parent, false);
+            InvoiceListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.invoice_list_layout, parent, false);
             return new MyViewHolder(v);
         }
 
@@ -113,15 +110,12 @@ public class MembershipInvoiceFragment extends Fragment {
             holder.binding.tvTitle.setText(listModelList.get(position).getName());
             holder.binding.tvDate.setText(listModelList.get(position).getDate());
             holder.binding.tvDoller.setText("$" + listModelList.get(position).getAmount());
-            holder.binding.llViewReceipt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    InvoiceReceiptFragment receiptFragment = new InvoiceReceiptFragment();
-                    receiptFragment.setCancelable(true);
-                    receiptFragment.setValues(listModelList.get(position).getInvoiceId(), "1");
-                    receiptFragment.show(fragmentManager, "receipt");
-                }
+            holder.binding.llViewReceipt.setOnClickListener(view -> {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                InvoiceReceiptFragment receiptFragment = new InvoiceReceiptFragment();
+                receiptFragment.setCancelable(true);
+                receiptFragment.setValues(listModelList.get(position).getInvoiceId(), "1");
+                receiptFragment.show(fragmentManager, "receipt");
             });
 
             if (listModelList.get(position).getStatus().equalsIgnoreCase("paid")) {
@@ -132,13 +126,9 @@ public class MembershipInvoiceFragment extends Fragment {
                 holder.binding.tvStatus.setBackgroundResource(R.drawable.blue_background);
             }
 
-            holder.binding.llDownloads.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    downloadUrl = listModelList.get(position).getInvoicePdf();
-                    new FileDownloader();
-
-                }
+            holder.binding.llDownloads.setOnClickListener(v -> {
+                downloadUrl = listModelList.get(position).getInvoicePdf();
+                new FileDownloader();
             });
         }
 

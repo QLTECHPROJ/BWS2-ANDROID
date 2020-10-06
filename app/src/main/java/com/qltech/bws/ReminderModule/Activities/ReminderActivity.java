@@ -19,6 +19,7 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -232,9 +233,8 @@ public class ReminderActivity extends AppCompatActivity {
                 final LinearLayout llBack = dialog.findViewById(R.id.llBack);
                 final LinearLayout llError = dialog.findViewById(R.id.llError);
                 final RecyclerView rvSelectPlaylist = dialog.findViewById(R.id.rvSelectPlaylist);
-                final ImageView ImgV = dialog.findViewById(R.id.ImgV);
+                final ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
                 final FrameLayout progressBarHolder = dialog.findViewById(R.id.progressBarHolder);
-                Glide.with(context).load(R.drawable.loading).asGif().into(ImgV);
                 llBack.setOnClickListener(view12 -> dialog.dismiss());
 
                 dialog.setOnKeyListener((v, keyCode, event) -> {
@@ -249,7 +249,7 @@ public class ReminderActivity extends AppCompatActivity {
                 rvSelectPlaylist.setLayoutManager(manager);
                 rvSelectPlaylist.setItemAnimator(new DefaultItemAnimator());
 
-                prepareData(rvSelectPlaylist, llError, ImgV, progressBarHolder);
+                prepareData(rvSelectPlaylist, llError, progressBar, progressBarHolder);
                 dialog.show();
                 dialog.setCancelable(false);
             });
@@ -307,7 +307,7 @@ public class ReminderActivity extends AppCompatActivity {
                     Log.e("sendTime currdate###", sendTime);
 
                     if (BWSApplication.isNetworkConnected(context)) {
-                        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         Call<SetReminderModel> listCall = APIClient.getClient().SetReminder(PlaylistID, UserId, CONSTANTS.FLAG_ONE,
                                 sendTime, TextUtils.join(",", remiderDays));
                         listCall.enqueue(new Callback<SetReminderModel>() {
@@ -316,7 +316,7 @@ public class ReminderActivity extends AppCompatActivity {
                                 if (response.isSuccessful()) {
                                     Log.e("remiderDays", TextUtils.join(",", remiderDays));
                                     remiderDays.clear();
-                                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     SetReminderModel listModel = response.body();
                                     BWSApplication.showToast(listModel.getResponseMessage(), activity);
                                     if (ComeScreenReminder == 1) {
@@ -331,7 +331,7 @@ public class ReminderActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<SetReminderModel> call, Throwable t) {
-                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             }
                         });
                     } else {
@@ -342,15 +342,15 @@ public class ReminderActivity extends AppCompatActivity {
         });
     }
 
-    private void prepareData(RecyclerView rvSelectPlaylist, LinearLayout llError, ImageView ImgV, FrameLayout progressBarHolder) {
+    private void prepareData(RecyclerView rvSelectPlaylist, LinearLayout llError, ProgressBar progressBar, FrameLayout progressBarHolder) {
         if (BWSApplication.isNetworkConnected(context)) {
-            BWSApplication.showProgressBar(ImgV, progressBarHolder, activity);
+            BWSApplication.showProgressBar(progressBar, progressBarHolder, activity);
             Call<SelectPlaylistModel> listCall = APIClient.getClient().getAllPlayListing(UserId);
             listCall.enqueue(new Callback<SelectPlaylistModel>() {
                 @Override
                 public void onResponse(Call<SelectPlaylistModel> call, Response<SelectPlaylistModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity);
                         SelectPlaylistModel listModel = response.body();
                         adapter = new SelectPlaylistAdapter(listModel.getResponseData());
                         rvSelectPlaylist.setAdapter(adapter);
@@ -367,7 +367,7 @@ public class ReminderActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<SelectPlaylistModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity);
                 }
             });
         } else {

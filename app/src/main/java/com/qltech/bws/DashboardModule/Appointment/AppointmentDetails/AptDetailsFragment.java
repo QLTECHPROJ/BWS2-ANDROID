@@ -24,8 +24,7 @@ public class AptDetailsFragment extends Fragment {
     AppointmentDetailModel.ResponseData appointmentDetail;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_details, container, false);
         View view = binding.getRoot();
         if (getArguments() != null) {
@@ -50,8 +49,7 @@ public class AptDetailsFragment extends Fragment {
         binding.tvSubTitle.setText(appointmentDetail.getDesc());
         binding.tvDate.setText(appointmentDetail.getDate());
         binding.tvTime.setText(appointmentDetail.getTime());
-        Glide.with(getActivity()).load(appointmentDetail.getImage()).thumbnail(0.05f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile);
+        Glide.with(getActivity()).load(appointmentDetail.getImage()).thumbnail(0.05f).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile);
 
         if (appointmentDetail.getBookUrl().equalsIgnoreCase("")) {
             binding.btnComplete.setVisibility(View.GONE);

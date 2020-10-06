@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,7 +46,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     FragmentActivity ctx;
     String UserID;
     FrameLayout progressBarHolder;
-    ImageView ImgV;
+    ProgressBar ImgV;
     LinearLayout llError;
     RecyclerView rvDownloadsList;
     private List<DownloadAudioDetails> listModelList;
@@ -54,7 +55,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     public static String comefromDownload = "";
 
     public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, String UserID,
-                                 FrameLayout progressBarHolder, ImageView ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
+                                 FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.UserID = UserID;
@@ -77,59 +78,68 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(listModelList.get(position).getName());
         holder.binding.tvTime.setText(listModelList.get(position).getAudioDuration());
-        Glide.with(ctx).load(R.drawable.loading).asGif().into(ImgV);
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.12f, 0);
-        holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-        holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+        holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
         comefromDownload = "1";
-        holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (IsLock.equalsIgnoreCase("1")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                    comefromDownload = "1";
-              /*      DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
-                    try {
-                        FileDescriptor fileDescriptor = FileUtils.getTempFileDescriptor(ctx.getApplicationContext(), downloadMedia.decrypt(listModelList.get(position).getName()));
-                        play2(fileDescriptor);
-                        playMedia();
+        if (IsLock.equalsIgnoreCase("1")) {
+            BWSApplication.showToast("Please re-activate your membership plan", ctx);
+            holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+            holder.binding.ivLock.setVisibility(View.VISIBLE);
+        } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+            holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+            holder.binding.ivLock.setVisibility(View.GONE);
+        }
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }*/
-                    try {
-                        player = 1;
-                        if (isPrepare || isMediaStart || isPause) {
-                            stopMedia();
-                        }
-                        isPause = false;
-                        isMediaStart = false;
-                        isPrepare = false;
-                        Fragment fragment = new TransparentPlayerFragment();
-                        FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-                        fragmentManager1.beginTransaction()
-                                .add(R.id.flContainer, fragment)
-                                .commit();
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        Gson gson = new Gson();
-                        String json = gson.toJson(listModelList);
-                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
-                        editor.commit();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        holder.binding.llMainLayout.setOnClickListener(view -> {
+            if (IsLock.equalsIgnoreCase("1")) {
+                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+                BWSApplication.showToast("Please re-activate your membership plan", ctx);
+            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                comefromDownload = "1";
+                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                holder.binding.ivLock.setVisibility(View.GONE);
+          /*      DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
+                try {
+                    FileDescriptor fileDescriptor = FileUtils.getTempFileDescriptor(ctx.getApplicationContext(), downloadMedia.decrypt(listModelList.get(position).getName()));
+                    play2(fileDescriptor);
+                    playMedia();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }*/
+                try {
+                    player = 1;
+                    if (isPrepare || isMediaStart || isPause) {
+                        stopMedia();
                     }
+                    isPause = false;
+                    isMediaStart = false;
+                    isPrepare = false;
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flContainer, fragment)
+                            .commit();
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(listModelList);
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
+                    editor.commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

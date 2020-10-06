@@ -61,22 +61,18 @@ public class OtpActivity extends AppCompatActivity {
         activity = OtpActivity.this;
 
         binding.tvSendCodeText.setText("We sent an SMS with a 4-digit code to " + Code + MobileNo);
-        Glide.with(getApplicationContext()).load(R.drawable.loading).asGif().into(binding.ImgV);
 
-        binding.llEditNumber.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                Intent i = new Intent(OtpActivity.this, LoginActivity.class);
-                i.putExtra("Name",Name);
-                i.putExtra("Code",Code);
-                i.putExtra(CONSTANTS.MobileNo,MobileNo);
-                startActivity(i);
-                finish();
+        binding.llEditNumber.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(OtpActivity.this, LoginActivity.class);
+            i.putExtra("Name", Name);
+            i.putExtra("Code", Code);
+            i.putExtra(CONSTANTS.MobileNo, MobileNo);
+            startActivity(i);
+            finish();
         });
 
         editTexts = new EditText[]{binding.edtOTP1, binding.edtOTP2, binding.edtOTP3, binding.edtOTP4};
@@ -116,7 +112,7 @@ public class OtpActivity extends AppCompatActivity {
                     binding.txtError.setVisibility(View.VISIBLE);
                 } else {
                     if (BWSApplication.isNetworkConnected(OtpActivity.this)) {
-                        showProgressBar();
+                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         Call<OtpModel> listCall = APIClient.getClient().getAuthOtps(
                                 binding.edtOTP1.getText().toString() + "" +
                                         binding.edtOTP2.getText().toString() + "" +
@@ -127,10 +123,10 @@ public class OtpActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
                                 if (response.isSuccessful()) {
-                                    hideProgressBar();
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     OtpModel otpModel = response.body();
-                                    if(otpModel.getResponseData().getError().equalsIgnoreCase("0")||
-                                            otpModel.getResponseData().getError().equalsIgnoreCase("")){
+                                    if (otpModel.getResponseData().getError().equalsIgnoreCase("0") ||
+                                            otpModel.getResponseData().getError().equalsIgnoreCase("")) {
                                         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = shared.edit();
                                         editor.putString(CONSTANTS.PREF_KEY_UserID, otpModel.getResponseData().getUserID());
@@ -140,7 +136,7 @@ public class OtpActivity extends AppCompatActivity {
                                         Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
                                         startActivity(i);
                                         finish();
-                                    }else if(otpModel.getResponseData().getError().equalsIgnoreCase("1")){
+                                    } else if (otpModel.getResponseData().getError().equalsIgnoreCase("1")) {
                                         binding.txtError.setText(otpModel.getResponseMessage());
                                         binding.txtError.setVisibility(View.VISIBLE);
                                     }
@@ -149,7 +145,7 @@ public class OtpActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<OtpModel> call, Throwable t) {
-                                hideProgressBar();
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             }
                         });
                     } else {
@@ -159,20 +155,15 @@ public class OtpActivity extends AppCompatActivity {
             }
         });
 
-        binding.llResendSms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                prepareData();
-            }
-        });
+        binding.llResendSms.setOnClickListener(view -> prepareData());
     }
 
     @Override
     public void onBackPressed() {
         Intent i = new Intent(OtpActivity.this, LoginActivity.class);
-        i.putExtra("Name",Name);
-        i.putExtra("Code",Code);
-        i.putExtra(CONSTANTS.MobileNo,MobileNo);
+        i.putExtra("Name", Name);
+        i.putExtra("Code", Code);
+        i.putExtra(CONSTANTS.MobileNo, MobileNo);
         startActivity(i);
         finish();
     }
@@ -182,13 +173,13 @@ public class OtpActivity extends AppCompatActivity {
             tvSendOTPbool = false;
             binding.txtError.setText("");
             binding.txtError.setVisibility(View.GONE);
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
             listCall.enqueue(new Callback<LoginModel>() {
                 @Override
                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         LoginModel loginModel = response.body();
                         if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             countDownTimer = new CountDownTimer(30000, 1000) {
@@ -221,7 +212,7 @@ public class OtpActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<LoginModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     BWSApplication.showToast(t.getMessage(), OtpActivity.this);
                 }
             });
@@ -325,27 +316,6 @@ public class OtpActivity extends AppCompatActivity {
                     editTexts[currentIndex - 1].requestFocus();
             }
             return false;
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

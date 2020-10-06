@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -46,7 +47,6 @@ public class AudioDownloadsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_downloads, container, false);
         View view = binding.getRoot();
-        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
 //            audioList = getArguments().getParcelableArrayList("audioDownloadsFragment");
@@ -107,7 +107,7 @@ public class AudioDownloadsFragment extends Fragment {
             protected void onPostExecute(Void aVoid) {
                 if (audioList != null) {
                     if (audioList.size() != 0) {
-                        getDataList(audioList, UserID, binding.progressBarHolder, binding.ImgV, binding.llError, binding.rvDownloadsList);
+                        getDataList(audioList, UserID, binding.progressBarHolder, binding.progressBar, binding.llError, binding.rvDownloadsList);
                         binding.llError.setVisibility(View.GONE);
                         binding.rvDownloadsList.setVisibility(View.VISIBLE);
                     }
@@ -124,7 +124,7 @@ public class AudioDownloadsFragment extends Fragment {
     }
 
 
-    private void getDataList(List<DownloadAudioDetails> historyList, String UserID, FrameLayout progressBarHolder, ImageView ImgV, LinearLayout llError, RecyclerView rvDownloadsList) {
+    private void getDataList(List<DownloadAudioDetails> historyList, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList) {
         if (historyList.size() == 0) {
             binding.tvFound.setVisibility(View.VISIBLE);
         } else {

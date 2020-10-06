@@ -65,8 +65,7 @@ public class ResourceDetailsActivity extends AppCompatActivity {
             binding.tvCreator.setText(author);
             binding.tvSubTitle.setText(description);
 
-            Glide.with(ctx).load(image).thumbnail(0.05f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+            Glide.with(ctx).load(image).thumbnail(0.05f).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
             binding.btnComplete.setOnClickListener(view -> {
                 if (linkOne.equalsIgnoreCase("")) {

@@ -53,7 +53,6 @@ public class AppointmentDetailsFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment_details, container, false);
         view = binding.getRoot();
         activity = getActivity();
-        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserId = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -131,13 +130,13 @@ public class AppointmentDetailsFragment extends Fragment {
 
     private void getAppointmentData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<AppointmentDetailModel> listCall = APIClient.getClient().getAppointmentDetails(UserId, appointmentTypeId);
             listCall.enqueue(new Callback<AppointmentDetailModel>() {
                 @Override
                 public void onResponse(Call<AppointmentDetailModel> call, Response<AppointmentDetailModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         AppointmentDetailModel appointmentDetailModel = response.body();
                         globalAppointmentDetailModel = appointmentDetailModel;
 
@@ -277,7 +276,7 @@ public class AppointmentDetailsFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<AppointmentDetailModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {

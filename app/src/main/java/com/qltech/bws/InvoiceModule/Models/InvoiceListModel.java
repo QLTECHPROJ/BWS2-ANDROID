@@ -56,7 +56,6 @@ public class InvoiceListModel {
     }
 
     public static class ResponseData implements Parcelable {
-
         @SerializedName("Appointment")
         @Expose
         private ArrayList<Appointment> appointment = null;

@@ -451,7 +451,6 @@ public class DownloadlistModel {
         }
 
         public class Audiolist {
-
             @SerializedName("AudioID")
             @Expose
             private String audioID;

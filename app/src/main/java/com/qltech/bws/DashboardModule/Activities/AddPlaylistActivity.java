@@ -60,7 +60,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_playlist);
         ctx = AddPlaylistActivity.this;
         activity = AddPlaylistActivity.this;
-        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -94,13 +93,13 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
     private void prepareData(Context ctx) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<PlaylistingModel> listCall = APIClient.getClient().getPlaylisting(UserID);
             listCall.enqueue(new Callback<PlaylistingModel>() {
                 @Override
                 public void onResponse(Call<PlaylistingModel> call, Response<PlaylistingModel> response) {
                     if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         PlaylistingModel model = response.body();
                         AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
                         binding.rvPlayLists.setAdapter(addPlaylistAdapter);
@@ -109,7 +108,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<PlaylistingModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
 
@@ -177,13 +176,13 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         prepareData(ctx);
                                         String PlaylistID = listsModel.getResponseData().getId();
                                         if (BWSApplication.isNetworkConnected(ctx)) {
-                                            BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                             Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID, FromPlaylistID);
                                             listCall.enqueue(new Callback<SucessModel>() {
                                                 @Override
                                                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                                                     if (response.isSuccessful()) {
-                                                        BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                                         SucessModel listModels = response.body();
                                                         if (comeAddPlaylist == 1) {
                                                             final Dialog dialog = new Dialog(ctx);
@@ -236,7 +235,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
                                                 @Override
                                                 public void onFailure(Call<SucessModel> call, Throwable t) {
-                                                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                                 }
                                             });
                                         } else {
@@ -264,13 +263,13 @@ public class AddPlaylistActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     String PlaylistID = listModel.get(position).getID();
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        BWSApplication.showProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID, FromPlaylistID);
                         listCall.enqueue(new Callback<SucessModel>() {
                             @Override
                             public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                                 if (response.isSuccessful()) {
-                                    BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     SucessModel listModels = response.body();
                                     if (comeAddPlaylist == 1) {
                                         final Dialog dialog = new Dialog(ctx);
@@ -311,7 +310,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<SucessModel> call, Throwable t) {
-                                BWSApplication.hideProgressBar(binding.ImgV, binding.progressBarHolder, activity);
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             }
                         });
                     } else {

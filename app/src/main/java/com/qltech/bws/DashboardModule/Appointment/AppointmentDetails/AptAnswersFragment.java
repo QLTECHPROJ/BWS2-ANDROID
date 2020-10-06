@@ -21,8 +21,7 @@ public class AptAnswersFragment extends Fragment {
     AppointmentDetailModel.ResponseData appointmentDetail;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_answers, container, false);
         View view = binding.getRoot();
         if (getArguments() != null) {
@@ -30,16 +29,12 @@ public class AptAnswersFragment extends Fragment {
         }
         binding.tvTilte.setText(appointmentDetail.getName());
 
-        binding.btnComplete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BWSApplication.showToast("Download PDF", getActivity());
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(appointmentDetail.getMyAnswers()));
-                startActivity(i);
-            }
+        binding.btnComplete.setOnClickListener(view1 -> {
+            BWSApplication.showToast("Download PDF", getActivity());
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(appointmentDetail.getMyAnswers()));
+            startActivity(i);
         });
-
         return view;
     }
 }

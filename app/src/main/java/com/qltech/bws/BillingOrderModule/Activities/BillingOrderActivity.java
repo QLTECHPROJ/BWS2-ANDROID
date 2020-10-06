@@ -27,12 +27,7 @@ public class BillingOrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_billing_order);
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        binding.llBack.setOnClickListener(view -> finish());
 
         binding.viewPager.setOffscreenPageLimit(3);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Current Plan"));

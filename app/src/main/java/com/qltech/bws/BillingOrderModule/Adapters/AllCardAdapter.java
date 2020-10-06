@@ -15,6 +15,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,12 +57,12 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
     private List<CardListModel.ResponseData> listModelList;
     FragmentActivity activity;
     String card_id, userId;
-    ImageView ImgV;
+    ProgressBar ImgV;
     FrameLayout progressBarHolder;
     RecyclerView rvCardList;
     AllCardAdapter adapter;
 
-    public AllCardAdapter(List<CardListModel.ResponseData> listModelList, FragmentActivity activity, String userId, ImageView ImgV,
+    public AllCardAdapter(List<CardListModel.ResponseData> listModelList, FragmentActivity activity, String userId, ProgressBar ImgV,
                           FrameLayout progressBarHolder, RecyclerView rvCardList) {
         this.listModelList = listModelList;
         this.activity = activity;
@@ -73,7 +74,6 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Glide.with(activity).load(R.drawable.loading).asGif().into(ImgV);
         CardsListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
                 , R.layout.cards_list_layout, parent, false);
         return new MyViewHolder(v);

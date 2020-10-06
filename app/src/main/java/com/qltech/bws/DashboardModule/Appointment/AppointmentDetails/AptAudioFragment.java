@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -27,7 +26,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity;
-import com.qltech.bws.DashboardModule.Appointment.AppointmentDetailsFragment;
 import com.qltech.bws.DashboardModule.Models.AppointmentDetailModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
@@ -59,13 +57,11 @@ public class AptAudioFragment extends Fragment {
     public static int comeRefreshData = 0;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_audio, container, false);
         View view = binding.getRoot();
         oneAudioDetailsList = new ArrayList<>();
 
-        Glide.with(getActivity()).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         appointmentDetail = new ArrayList<>();
@@ -189,73 +185,36 @@ public class AptAudioFragment extends Fragment {
                 }
             });
 
-            holder.binding.llDownload.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    /*if (BWSApplication.isNetworkConnected(ctx)) {
-                        showProgressBar();
-                        Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, audiolist.getID(), PlaylistId);
-                        listCall.enqueue(new Callback<DownloadPlaylistModel>() {
-                            @Override
-                            public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
-                                if (response.isSuccessful()) {
-                                    hideProgressBar();
-                                    DownloadPlaylistModel model = response.body();
-                                    if (model.getResponseData().getFlag().equalsIgnoreCase("0")
-                                            || model.getResponseData().getFlag().equalsIgnoreCase("")) {
-                                        holder.binding.llDownload.setClickable(true);
-                                        holder.binding.llDownload.setEnabled(true);
-                                        holder.binding.ivDownload.setImageResource(R.drawable.ic_download_white_icon);
-                                    } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                        holder.binding.ivDownload.setImageResource(R.drawable.ic_download_white_icon);
-                                        holder.binding.ivDownload.setColorFilter(Color.argb(99, 99, 99, 99));
-                                        holder.binding.ivDownload.setAlpha(255);
-                                        holder.binding.llDownload.setClickable(false);
-                                        holder.binding.llDownload.setEnabled(false);
-                                    }
-                                    BWSApplication.showToast(model.getResponseMessage(), getActivity());
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                                hideProgressBar();
-                            }
-                        });
-
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-                    }*/
-                    List<String> url1 = new ArrayList<>();
-                    List<String> name1 = new ArrayList<>();
-                    List<String> downloadPlaylistId = new ArrayList<>();
-                    SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                    Gson gson1 = new Gson();
-                    String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
-                    String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
-                    String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
-                    if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
-                        Type type = new TypeToken<List<String>>() {
-                        }.getType();
-                        List<String> fileNameList = gson1.fromJson(json, type);
-                        List<String> audioFile1 = gson1.fromJson(json1, type);
-                        List<String> playlistId1 = gson1.fromJson(json2, type);
-                        if(fileNameList.size()!=0) {
-                            url1.addAll(audioFile1);
-                            name1.addAll(fileNameList);
-                            downloadPlaylistId.addAll(playlistId1);
-                        }
+            holder.binding.llDownload.setOnClickListener(view -> {
+                List<String> url1 = new ArrayList<>();
+                List<String> name1 = new ArrayList<>();
+                List<String> downloadPlaylistId = new ArrayList<>();
+                SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                Gson gson1 = new Gson();
+                String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+                String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+                String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
+                if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+                    Type type = new TypeToken<List<String>>() {
+                    }.getType();
+                    List<String> fileNameList = gson1.fromJson(json, type);
+                    List<String> audioFile1 = gson1.fromJson(json1, type);
+                    List<String> playlistId1 = gson1.fromJson(json2, type);
+                    if (fileNameList.size() != 0) {
+                        url1.addAll(audioFile1);
+                        name1.addAll(fileNameList);
+                        downloadPlaylistId.addAll(playlistId1);
                     }
-                    String Name = listModelList.get(position).getName();
-                    String audioFile = listModelList.get(position).getAudioFile();
-                    url1.add(audioFile);
-                    name1.add(Name);
-                    downloadPlaylistId.add("");
-                    DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
-                    downloadMedia.encrypt1(url1, name1);
-                    String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
-                    SaveMedia(new byte[1024], dirPath, listModelList.get(position), holder.binding.llDownload);
                 }
+                String Name = listModelList.get(position).getName();
+                String audioFile = listModelList.get(position).getAudioFile();
+                url1.add(audioFile);
+                name1.add(Name);
+                downloadPlaylistId.add("");
+                DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
+                downloadMedia.encrypt1(url1, name1);
+                String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
+                SaveMedia(new byte[1024], dirPath, listModelList.get(position), holder.binding.llDownload);
             });
 
             holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {

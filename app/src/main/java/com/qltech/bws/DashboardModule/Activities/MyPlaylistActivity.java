@@ -85,7 +85,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_playlist);
         ctx = MyPlaylistActivity.this;
-        Glide.with(ctx).load(R.drawable.loading).asGif().into(binding.ImgV);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -413,7 +412,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
                     /*    if (model.getResponseData().getDownload().equalsIgnoreCase("1")) {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                             binding.tvDownload.setTextColor(getResources().getColor(R.color.light_gray));
                             binding.llDownload.setClickable(false);
                             binding.llDownload.setEnabled(false);
@@ -659,7 +658,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.llDownload.setClickable(false);
             binding.llDownload.setEnabled(false);
-            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
             binding.tvDownload.setTextColor(getResources().getColor(R.color.light_gray));
         }
     }
@@ -667,7 +666,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     private void hideProgressBar() {
         try {
             binding.progressBarHolder.setVisibility(View.GONE);
-            binding.ImgV.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } catch (Exception e) {
             e.printStackTrace();
@@ -678,8 +677,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
         try {
             binding.progressBarHolder.setVisibility(View.VISIBLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.ImgV.setVisibility(View.VISIBLE);
-            binding.ImgV.invalidate();
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.invalidate();
         } catch (Exception e) {
             e.printStackTrace();
         }
