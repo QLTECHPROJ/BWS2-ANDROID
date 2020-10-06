@@ -382,7 +382,7 @@ public class SearchFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(modelList.get(position).getName());
             holder.binding.tvTime.setText(modelList.get(position).getAudioDuration());
-
+            holder.binding.pbProgress.setVisibility(View.GONE);
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());

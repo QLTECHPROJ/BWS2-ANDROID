@@ -1000,6 +1000,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             url = addToQueueModelList.get(position).getAudioFile();
             GetMedia(url, ctx, addToQueueModelList.get(position).getDownload(), addToQueueModelList.get(position).getPlaylistID());
             binding.tvName.setText(addToQueueModelList.get(position).getName());
+            binding.tvDireName.setText(R.string.Directions);
+            binding.tvDireName.setText(R.string.Directions);
             if (addToQueueModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
                 binding.llDirection.setVisibility(View.GONE);
             } else {

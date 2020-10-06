@@ -229,7 +229,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                                             dialog.dismiss();
                                                             finish();
                                                         }
-                                                        BWSApplication.showToast(listModels.getResponseMessage(), ctx);
                                                     }
                                                 }
 

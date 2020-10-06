@@ -291,13 +291,6 @@ public class UserProfileActivity extends AppCompatActivity {
                         binding.etEmail.setText(viewModel.getResponseData().getEmail());
                         binding.etMobileNumber.setText(viewModel.getResponseData().getPhoneNumber());
 
-                       /* if (binding.etCalendar.getText().toString().matches("")) {
-                            binding.etCalendar.setEnabled(true);
-                        } else {
-                            binding.etCalendar.setEnabled(false);
-                            binding.etCalendar.setClickable(false);
-                        }*/
-
                         if (!viewModel.getResponseData().getEmail().equalsIgnoreCase("")) {
                             binding.etEmail.setEnabled(true);
                             binding.etEmail.setClickable(true);

@@ -142,7 +142,6 @@
                                         android:fontFamily="@font/montserrat_medium"
                                         android:gravity="start"
                                         android:paddingHorizontal="@dimen/_18sdp"
-                                        android:text="@string/Directions"
                                         android:textColor="@color/white"
                                         android:textSize="@dimen/_20sdp" />
 
@@ -204,7 +203,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
-                android:layout_marginBottom="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_18sdp"
                 android:layout_weight="0.30"
                 android:gravity="bottom"
                 android:orientation="vertical"
@@ -376,7 +375,7 @@
                     android:layout_height="0dp"
                     android:layout_alignParentBottom="true"
                     android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_26sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
                     android:layout_weight="0.24"
                     android:weightSum="1">
 
@@ -389,8 +388,8 @@
 
                         <ImageView
                             android:id="@+id/ivLike"
-                            android:layout_width="@dimen/_18sdp"
-                            android:layout_height="@dimen/_18sdp"
+                            android:layout_width="@dimen/_17sdp"
+                            android:layout_height="@dimen/_17sdp"
                             android:src="@drawable/ic_unlike_icon" />
                     </LinearLayout>
 
@@ -403,8 +402,8 @@
 
                         <ImageView
                             android:id="@+id/ivShuffle"
-                            android:layout_width="@dimen/_18sdp"
-                            android:layout_height="@dimen/_18sdp"
+                            android:layout_width="@dimen/_17sdp"
+                            android:layout_height="@dimen/_17sdp"
                             android:src="@drawable/ic_shuffle_icon"
                             app:tint="@color/black" />
                     </LinearLayout>
@@ -419,8 +418,8 @@
 
                         <ImageView
                             android:id="@+id/ivRepeat"
-                            android:layout_width="@dimen/_18sdp"
-                            android:layout_height="@dimen/_18sdp"
+                            android:layout_width="@dimen/_17sdp"
+                            android:layout_height="@dimen/_17sdp"
                             android:src="@drawable/ic_repeat_music_icon" />
                     </LinearLayout>
 
@@ -445,8 +444,10 @@
 
                         <ImageView
                             android:id="@+id/ivDownloads"
-                            android:layout_width="@dimen/_18sdp"
-                            android:layout_height="@dimen/_18sdp"
+                            android:layout_width="@dimen/_17sdp"
+                            android:layout_height="@dimen/_17sdp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
                             android:layout_centerInParent="true"
                             android:src="@drawable/ic_download_play_icon"
                             app:tint="@color/black" />
@@ -463,8 +464,8 @@
 
                         <ImageView
                             android:id="@+id/ivViewQueue"
-                            android:layout_width="@dimen/_18sdp"
-                            android:layout_height="@dimen/_18sdp"
+                            android:layout_width="@dimen/_17sdp"
+                            android:layout_height="@dimen/_17sdp"
                             android:src="@drawable/ic_music_list_icon" />
                     </LinearLayout>
                 </LinearLayout>
