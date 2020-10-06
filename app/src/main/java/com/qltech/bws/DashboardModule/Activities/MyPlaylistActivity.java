@@ -1,5 +1,6 @@
 package com.qltech.bws.DashboardModule.Activities;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -72,6 +73,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     ActivityMyPlaylistBinding binding;
     String UserID, PlaylistID, Download;
     Context ctx;
+    Activity activity;
     public static int comeAddPlaylist = 0;
     private long mLastClickTime = 0;
     List<DownloadAudioDetails> downloadAudioDetailsList;
@@ -85,6 +87,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_playlist);
         ctx = MyPlaylistActivity.this;
+        activity = MyPlaylistActivity.this;
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -272,14 +275,14 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
     private void getPrepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<SubPlayListModel> listCall = APIClient.getClient().getSubPlayLists(UserID, PlaylistID);
             listCall.enqueue(new Callback<SubPlayListModel>() {
                 @Override
                 public void onResponse(Call<SubPlayListModel> call, Response<SubPlayListModel> response) {
                     try {
                         if (response.isSuccessful()) {
-                            hideProgressBar();
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             SubPlayListModel model = response.body();
                             playlistSongsList = model.getResponseData().getPlaylistSongs();
                             downloadPlaylistDetails = new DownloadPlaylistDetails();
@@ -426,32 +429,29 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
                             binding.llDownload.setVisibility(View.VISIBLE);
 
-                            binding.llDownload.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if (BWSApplication.isNetworkConnected(ctx)) {
-                                        showProgressBar();
-                                        Call<DownloadPlaylistModel> listCall = null;
-                                        listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
-                                        listCall.enqueue(new Callback<DownloadPlaylistModel>() {
-                                            @Override
-                                            public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
-                                                if (response.isSuccessful()) {
-                                                    hideProgressBar();
-                                                    DownloadPlaylistModel model = response.body();
-                                                    BWSApplication.showToast(model.getResponseMessage(), ctx);
-                                                }
+                            binding.llDownload.setOnClickListener(view -> {
+                                if (BWSApplication.isNetworkConnected(ctx)) {
+                                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                    Call<DownloadPlaylistModel> listCall13 = null;
+                                    listCall13 = APIClient.getClient().getDownloadlistPlaylist(UserID, "", PlaylistID);
+                                    listCall13.enqueue(new Callback<DownloadPlaylistModel>() {
+                                        @Override
+                                        public void onResponse(Call<DownloadPlaylistModel> call13, Response<DownloadPlaylistModel> response13) {
+                                            if (response13.isSuccessful()) {
+                                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                                DownloadPlaylistModel model1 = response13.body();
+                                                BWSApplication.showToast(model1.getResponseMessage(), ctx);
                                             }
+                                        }
 
-                                            @Override
-                                            public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                                                hideProgressBar();
-                                            }
-                                        });
+                                        @Override
+                                        public void onFailure(Call<DownloadPlaylistModel> call13, Throwable t) {
+                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        }
+                                    });
 
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
-                                    }
+                                } else {
+                                    Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -464,140 +464,123 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             binding.rvDirlist.setItemAnimator(new DefaultItemAnimator());
                             binding.rvDirlist.setAdapter(directionAdapter);
                             String PlaylistID = model.getResponseData().getPlaylistID();
-                            binding.llRename.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    final Dialog dialog = new Dialog(ctx);
-                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                    dialog.setContentView(R.layout.create_palylist);
-                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-                                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                    final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
-                                    final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-                                    final TextView tvAction = dialog.findViewById(R.id.tvAction);
-                                    final TextView tvHeading = dialog.findViewById(R.id.tvHeading);
-                                    final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
-                                    tvHeading.setText(R.string.Rename_your_playlist);
-                                    tvAction.setText(R.string.Save);
-                                    edtCreate.requestFocus();
-                                    edtCreate.setText(model.getResponseData().getPlaylistName());
-                                    int position1 = edtCreate.getText().length();
-                                    Editable editObj = edtCreate.getText();
-                                    Selection.setSelection(editObj, position1);
+                            binding.llRename.setOnClickListener(view -> {
+                                final Dialog dialog = new Dialog(ctx);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.create_palylist);
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
+                                final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+                                final TextView tvAction = dialog.findViewById(R.id.tvAction);
+                                final TextView tvHeading = dialog.findViewById(R.id.tvHeading);
+                                final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+                                tvHeading.setText(R.string.Rename_your_playlist);
+                                tvAction.setText(R.string.Save);
+                                edtCreate.requestFocus();
+                                edtCreate.setText(model.getResponseData().getPlaylistName());
+                                int position1 = edtCreate.getText().length();
+                                Editable editObj = edtCreate.getText();
+                                Selection.setSelection(editObj, position1);
 
-                                    dialog.setOnKeyListener((v, keyCode, event) -> {
-                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                            dialog.dismiss();
-                                            return true;
-                                        }
-                                        return false;
-                                    });
+                                dialog.setOnKeyListener((v, keyCode, event) -> {
+                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                        dialog.dismiss();
+                                        return true;
+                                    }
+                                    return false;
+                                });
 
-                                    rlCreate.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                                                BWSApplication.showToast("Please provide the playlist's name", ctx);
-                                            } else {
-                                                if (BWSApplication.isNetworkConnected(ctx)) {
-                                                    showProgressBar();
-                                                    Call<RenamePlaylistModel> listCall = APIClient.getClient().getRenamePlaylist(UserID, PlaylistID, edtCreate.getText().toString());
-                                                    listCall.enqueue(new Callback<RenamePlaylistModel>() {
-                                                        @Override
-                                                        public void onResponse(Call<RenamePlaylistModel> call, Response<RenamePlaylistModel> response) {
-                                                            if (response.isSuccessful()) {
-                                                                hideProgressBar();
-                                                                RenamePlaylistModel listModel = response.body();
-                                                                BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                                                dialog.dismiss();
-                                                                finish();
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onFailure(Call<RenamePlaylistModel> call, Throwable t) {
-                                                            hideProgressBar();
-                                                        }
-                                                    });
-                                                } else {
-                                                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                                rlCreate.setOnClickListener(view1 -> {
+                                    if (edtCreate.getText().toString().equalsIgnoreCase("")) {
+                                        BWSApplication.showToast("Please provide the playlist's name", ctx);
+                                    } else {
+                                        if (BWSApplication.isNetworkConnected(ctx)) {
+                                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                            Call<RenamePlaylistModel> listCall1 = APIClient.getClient().getRenamePlaylist(UserID, PlaylistID, edtCreate.getText().toString());
+                                            listCall1.enqueue(new Callback<RenamePlaylistModel>() {
+                                                @Override
+                                                public void onResponse(Call<RenamePlaylistModel> call1, Response<RenamePlaylistModel> response1) {
+                                                    if (response1.isSuccessful()) {
+                                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                                        RenamePlaylistModel listModel = response1.body();
+                                                        BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                                        dialog.dismiss();
+                                                        finish();
+                                                    }
                                                 }
-                                            }
+
+                                                @Override
+                                                public void onFailure(Call<RenamePlaylistModel> call1, Throwable t) {
+                                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                                }
+                                            });
+                                        } else {
+                                            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                                         }
-                                    });
-                                    tvCancel.setOnClickListener(v -> dialog.dismiss());
-                                    dialog.show();
-                                    dialog.setCancelable(false);
-                                }
+                                    }
+                                });
+                                tvCancel.setOnClickListener(v -> dialog.dismiss());
+                                dialog.show();
+                                dialog.setCancelable(false);
                             });
 
-                            binding.llDelete.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    final Dialog dialog = new Dialog(ctx);
-                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                    dialog.setContentView(R.layout.delete_playlist);
-                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            binding.llDelete.setOnClickListener(view -> {
+                                final Dialog dialog = new Dialog(ctx);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.delete_playlist);
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                                    final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                                    final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
-                                    final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
-                                    tvHeader.setText("Are you sure you want to delete " + model.getResponseData().getPlaylistName() + "  playlist?");
-                                    dialog.setOnKeyListener((v, keyCode, event) -> {
-                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                            dialog.dismiss();
-                                            Fragment playlistFragment = new PlaylistFragment();
-                                            FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                            fragmentManager1.beginTransaction()
-                                                    .add(R.id.flContainer, playlistFragment)
-                                                    .commit();
-                                            Bundle bundle = new Bundle();
-                                            playlistFragment.setArguments(bundle);
-                                            return true;
-                                        }
-                                        return false;
-                                    });
+                                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                                final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+                                final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+                                tvHeader.setText("Are you sure you want to delete " + model.getResponseData().getPlaylistName() + "  playlist?");
+                                dialog.setOnKeyListener((v, keyCode, event) -> {
+                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                        dialog.dismiss();
+                                        Fragment playlistFragment = new PlaylistFragment();
+                                        FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                        fragmentManager1.beginTransaction()
+                                                .add(R.id.flContainer, playlistFragment)
+                                                .commit();
+                                        Bundle bundle = new Bundle();
+                                        playlistFragment.setArguments(bundle);
+                                        return true;
+                                    }
+                                    return false;
+                                });
 
-                                    tvconfirm.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            if (BWSApplication.isNetworkConnected(ctx)) {
-                                                showProgressBar();
-                                                Call<SucessModel> listCall = APIClient.getClient().getDeletePlaylist(UserID, PlaylistID);
-                                                listCall.enqueue(new Callback<SucessModel>() {
-                                                    @Override
-                                                    public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                                                        if (response.isSuccessful()) {
-                                                            deleteFrg = 1;
-                                                            hideProgressBar();
-                                                            SucessModel listModel = response.body();
-                                                            dialog.dismiss();
-                                                            BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                                            finish();
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onFailure(Call<SucessModel> call, Throwable t) {
-                                                        hideProgressBar();
-                                                    }
-                                                });
-                                            } else {
-                                                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                                tvconfirm.setOnClickListener(v -> {
+                                    if (BWSApplication.isNetworkConnected(ctx)) {
+                                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        Call<SucessModel> listCall12 = APIClient.getClient().getDeletePlaylist(UserID, PlaylistID);
+                                        listCall12.enqueue(new Callback<SucessModel>() {
+                                            @Override
+                                            public void onResponse(Call<SucessModel> call12, Response<SucessModel> response12) {
+                                                if (response12.isSuccessful()) {
+                                                    deleteFrg = 1;
+                                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                                    SucessModel listModel = response12.body();
+                                                    dialog.dismiss();
+                                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                                    finish();
+                                                }
                                             }
-                                        }
-                                    });
 
-                                    tvGoBack.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                                    dialog.show();
-                                    dialog.setCancelable(false);
-                                }
+                                            @Override
+                                            public void onFailure(Call<SucessModel> call12, Throwable t) {
+                                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                            }
+                                        });
+                                    } else {
+                                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                                    }
+                                });
+
+                                tvGoBack.setOnClickListener(v -> dialog.dismiss());
+                                dialog.show();
+                                dialog.setCancelable(false);
                             });
 
                         }
@@ -608,7 +591,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<SubPlayListModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {
@@ -660,27 +643,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
             binding.llDownload.setEnabled(false);
             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
             binding.tvDownload.setTextColor(getResources().getColor(R.color.light_gray));
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

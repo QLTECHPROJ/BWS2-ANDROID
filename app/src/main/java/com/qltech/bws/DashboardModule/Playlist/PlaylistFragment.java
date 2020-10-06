@@ -148,13 +148,13 @@ public class PlaylistFragment extends Fragment {
         }
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<MainPlayListModel> listCall = APIClient.getClient().getMainPlayLists(UserID);
             listCall.enqueue(new Callback<MainPlayListModel>() {
                 @Override
                 public void onResponse(Call<MainPlayListModel> call, Response<MainPlayListModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         MainPlayListModel listModel = response.body();
                         binding.rlCreatePlaylist.setVisibility(View.VISIBLE);
                         downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData());
@@ -163,7 +163,7 @@ public class PlaylistFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<MainPlayListModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 }
             });
         } else {
@@ -232,27 +232,6 @@ public class PlaylistFragment extends Fragment {
         GetTask st = new GetTask();
         st.execute();
         return downloadPlaylistDetailsList;
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public class MainPlayListAdapter extends RecyclerView.Adapter<MainPlayListAdapter.MyViewHolder> {
@@ -352,7 +331,7 @@ public class PlaylistFragment extends Fragment {
 
                                     @Override
                                     public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
-                                        hideProgressBar();
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                     }
                                 });
                             } else {

@@ -20,6 +20,7 @@ import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.qltech.bws.BWSApplication;
 import com.qltech.bws.R;
 import com.qltech.bws.ResourceModule.Activities.ResourceDetailsActivity;
 import com.qltech.bws.ResourceModule.Models.ResourceListModel;
@@ -59,13 +60,13 @@ public class PodcastsFragment extends Fragment {
     }
 
     void prepareData() {
-        showProgressBar();
+        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
         Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_THREE, Category);
         listCall.enqueue(new Callback<ResourceListModel>() {
             @Override
             public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
                 if (response.isSuccessful()) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     ResourceListModel listModel = response.body();
                     PodcastsAdapter adapter = new PodcastsAdapter(listModel.getResponseData(), getActivity(), podcasts);
                     binding.rvPodcastsList.setAdapter(adapter);
@@ -82,31 +83,9 @@ public class PodcastsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ResourceListModel> call, Throwable t) {
-                hideProgressBar();
+                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             }
         });
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public class PodcastsAdapter extends RecyclerView.Adapter<PodcastsAdapter.MyViewHolder> {

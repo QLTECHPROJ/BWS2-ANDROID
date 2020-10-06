@@ -144,7 +144,7 @@ public class UserProfileActivity extends AppCompatActivity {
             binding.flUser.clearFocus();
             binding.tlEmail.clearFocus();
             if (BWSApplication.isNetworkConnected(ctx)) {
-                showProgressBar();
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 String dob = "";
                 if (!binding.etCalendar.getText().toString().isEmpty()) {
                     dob = binding.etCalendar.getText().toString();
@@ -164,18 +164,18 @@ public class UserProfileActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ProfileUpdateModel> call, Response<ProfileUpdateModel> response) {
                         if (response.isSuccessful()) {
-                            hideProgressBar();
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             ProfileUpdateModel viewModel = response.body();
                             finish();
                             BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
                         } else {
-                            hideProgressBar();
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ProfileUpdateModel> call, Throwable t) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
                 });
             }
@@ -240,13 +240,13 @@ public class UserProfileActivity extends AppCompatActivity {
 
     void profileViewData(Context ctx) {
         if (BWSApplication.isNetworkConnected(ctx)) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<ProfileViewModel> listCall = APIClient.getClient().getProfileView(UserID);
             listCall.enqueue(new Callback<ProfileViewModel>() {
                 @Override
                 public void onResponse(Call<ProfileViewModel> call, Response<ProfileViewModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         ProfileViewModel viewModel = response.body();
 
                         if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
@@ -369,13 +369,13 @@ public class UserProfileActivity extends AppCompatActivity {
 //                            tvApply.setTextColor(getResources().getColor(R.color.gray));
                         }
                     } else {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ProfileViewModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         }
@@ -418,13 +418,13 @@ public class UserProfileActivity extends AppCompatActivity {
                         startActivityForResult(intent, 2);
                     } else if (options[item].equals(getString(R.string.removeProfilePicture))) {
                         if (BWSApplication.isNetworkConnected(ctx)) {
-                            showProgressBar();
+                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             Call<RemoveProfileModel> listCall = APIClient.getClient().getRemoveProfile(UserID);
                             listCall.enqueue(new Callback<RemoveProfileModel>() {
                                 @Override
                                 public void onResponse(Call<RemoveProfileModel> call, Response<RemoveProfileModel> response) {
                                     if (response.isSuccessful()) {
-                                        hideProgressBar();
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         RemoveProfileModel viewModel = response.body();
                                         BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
                                         profileViewData(ctx);
@@ -433,7 +433,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<RemoveProfileModel> call, Throwable t) {
-                                    hideProgressBar();
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 }
                             });
                         }
@@ -468,7 +468,7 @@ public class UserProfileActivity extends AppCompatActivity {
                         .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
                         .skipMemoryCache(false).into(binding.civProfile);
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    showProgressBar();
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     HashMap<String, String> map = new HashMap<>();
                     map.put(CONSTANTS.PREF_KEY_UserID, UserID);
                     TypedFile typedFile = new TypedFile(CONSTANTS.MULTIPART_FORMAT, image);
@@ -477,7 +477,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                 @Override
                                 public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
                                     if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                        hideProgressBar();
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
                                                 .placeholder(R.drawable.default_profile)
@@ -489,7 +489,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
                                 @Override
                                 public void failure(RetrofitError e) {
-                                    hideProgressBar();
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     BWSApplication.showToast(e.getMessage(), ctx);
                                 }
                             });
@@ -507,7 +507,7 @@ public class UserProfileActivity extends AppCompatActivity {
                         .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
                         .skipMemoryCache(false).into(binding.civProfile);
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    showProgressBar();
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     HashMap<String, String> map = new HashMap<>();
                     map.put(CONSTANTS.PREF_KEY_UserID, UserID);
                     File file = new File(FileUtil.getPath(selectedImageUri, this));
@@ -518,7 +518,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                 @Override
                                 public void success(AddProfileModel addProfileModel, retrofit.client.Response response) {
                                     if (addProfileModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                        hideProgressBar();
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
                                                 .placeholder(R.drawable.default_profile)
@@ -530,7 +530,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
                                 @Override
                                 public void failure(RetrofitError e) {
-                                    hideProgressBar();
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     BWSApplication.showToast(e.getMessage(), ctx);
                                 }
                             });
@@ -569,26 +569,5 @@ public class UserProfileActivity extends AppCompatActivity {
         );
         imageFilePath = image.getAbsolutePath();
         return image;
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

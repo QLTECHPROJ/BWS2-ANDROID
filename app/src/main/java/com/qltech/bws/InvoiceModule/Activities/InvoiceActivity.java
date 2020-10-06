@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,6 +40,7 @@ public class InvoiceActivity extends AppCompatActivity {
     ArrayList<InvoiceListModel.MemberShip> memberShipList;
     String UserID, ComeFrom = "";
     Context context;
+    Activity activity;
     public static int invoiceToDashboard = 0;
 
     @Override
@@ -46,6 +48,7 @@ public class InvoiceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_invoice);
         context = InvoiceActivity.this;
+        activity = InvoiceActivity.this;
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -71,13 +74,13 @@ public class InvoiceActivity extends AppCompatActivity {
 
     void prepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<InvoiceListModel> listCall = APIClient.getClient().getInvoicelistPlaylist(UserID, "1");
             listCall.enqueue(new Callback<InvoiceListModel>() {
                 @Override
                 public void onResponse(Call<InvoiceListModel> call, Response<InvoiceListModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         InvoiceListModel listModel = response.body();
                         appointmentList = new ArrayList<>();
                         memberShipList = new ArrayList<>();
@@ -113,7 +116,7 @@ public class InvoiceActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<InvoiceListModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {
@@ -172,27 +175,6 @@ public class InvoiceActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             return totalTabs;
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

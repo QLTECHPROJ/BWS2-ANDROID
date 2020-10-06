@@ -88,13 +88,13 @@ public class CurrentPlanFragment extends Fragment {
     }
 
     private void PrepareData() {
-        showProgressBar();
+        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
         Call<CurrentPlanVieViewModel> listCall = APIClient.getClient().getCurrentPlanView(UserID);
         listCall.enqueue(new Callback<CurrentPlanVieViewModel>() {
             @Override
             public void onResponse(Call<CurrentPlanVieViewModel> call, Response<CurrentPlanVieViewModel> response) {
                 if (response.isSuccessful()) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     try {
                         CurrentPlanVieViewModel listModel = response.body();
                         binding.tvHeader.setText(listModel.getResponseData().getPlan());
@@ -169,7 +169,7 @@ public class CurrentPlanFragment extends Fragment {
                                     return;
                                 }
                                 mLastClickTime = SystemClock.elapsedRealtime();
-                                showProgressBar();
+                                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                 Call<PayNowDetailsModel> listCall = APIClient.getClient().getPayNowDetails(UserID, listModel.getResponseData().getCardId(),
                                         listModel.getResponseData().getPlanId(), listModel.getResponseData().getPlanFlag(),
                                         listModel.getResponseData().getInvoicePayId(), listModel.getResponseData().getStatus());
@@ -177,7 +177,7 @@ public class CurrentPlanFragment extends Fragment {
                                     @Override
                                     public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
                                         if (response.isSuccessful()) {
-                                            hideProgressBar();
+                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                             PayNowDetailsModel listModel1 = response.body();
                                             BWSApplication.showToast(listModel1.getResponseMessage(), getActivity());
                                             getActivity().finish();
@@ -186,7 +186,7 @@ public class CurrentPlanFragment extends Fragment {
 
                                     @Override
                                     public void onFailure(Call<PayNowDetailsModel> call, Throwable t) {
-                                        hideProgressBar();
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                     }
                                 });
                             });
@@ -208,7 +208,7 @@ public class CurrentPlanFragment extends Fragment {
 
             @Override
             public void onFailure(Call<CurrentPlanVieViewModel> call, Throwable t) {
-                hideProgressBar();
+                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             }
         });
     }
@@ -252,27 +252,6 @@ public class CurrentPlanFragment extends Fragment {
                 super(binding.getRoot());
                 this.binding = binding;
             }
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

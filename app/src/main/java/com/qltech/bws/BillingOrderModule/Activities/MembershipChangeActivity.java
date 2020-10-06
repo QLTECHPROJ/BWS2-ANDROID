@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,6 +40,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
     ActivityMembershipChangeBinding binding;
     Context ctx;
     String UserID;
+    Activity activity;
     public static String renewPlanFlag, renewPlanId;
     MembershipPlanAdapter membershipPlanAdapter;
 
@@ -47,6 +49,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_membership_change);
         ctx = MembershipChangeActivity.this;
+        activity = MembershipChangeActivity.this;
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -72,13 +75,13 @@ public class MembershipChangeActivity extends AppCompatActivity {
 
     private void prepareMembershipData() {
         if (BWSApplication.isNetworkConnected(this)) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<PlanListBillingModel> listCall = APIClient.getClient().getPlanListBilling(UserID);
             listCall.enqueue(new Callback<PlanListBillingModel>() {
                 @Override
                 public void onResponse(Call<PlanListBillingModel> call, Response<PlanListBillingModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         PlanListBillingModel membershipPlanListModel = response.body();
                         if (membershipPlanListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
@@ -101,7 +104,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<PlanListBillingModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {
@@ -210,27 +213,6 @@ public class MembershipChangeActivity extends AppCompatActivity {
                 super(binding.getRoot());
                 this.binding = binding;
             }
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

@@ -66,13 +66,13 @@ public class InvoiceReceiptFragment extends DialogFragment {
 
     private void prepareData() {
         if (BWSApplication.isNetworkConnected(getActivity())) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<InvoiceDetailModel> listCall = APIClient.getClient().getInvoiceDetailPlaylist(UserID, InvoiceID, "1"); /*Flag = 0 Stagging Flag = 1 Live*/
             listCall.enqueue(new Callback<InvoiceDetailModel>() {
                 @Override
                 public void onResponse(Call<InvoiceDetailModel> call, Response<InvoiceDetailModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         InvoiceDetailModel listModel = response.body();
                         binding.tvFromTitle.setText("From");
                         binding.tvDateTitle.setText("Order Date:");
@@ -118,32 +118,11 @@ public class InvoiceReceiptFragment extends DialogFragment {
 
                 @Override
                 public void onFailure(Call<InvoiceDetailModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 }
             });
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

@@ -170,7 +170,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                     public void onError(Exception error) {
                         Log.e("error.........", "" + error.toString());
                         BWSApplication.showToast("Invalid Card Details", getApplicationContext());
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
 
                     @Override
@@ -179,12 +179,12 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                         Log.e("strToken.............", "" + strToken);
                         if (!strToken.equalsIgnoreCase("")) {
                             if (BWSApplication.isNetworkConnected(context)) {
-                                showProgressBar();
+                                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo);
                                 listCall.enqueue(new Callback<AddCardModel>() {
                                     @Override
                                     public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {
-                                        hideProgressBar();
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         if (response.isSuccessful()) {
                                             AddCardModel cardModel = response.body();
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
@@ -212,12 +212,12 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onFailure(Call<AddCardModel> call, Throwable t) {
-                                        hideProgressBar();
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     }
                                 });
                             } else {
                                 BWSApplication.showToast(getString(R.string.no_server_found), context);
-                                hideProgressBar();
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             }
                         }
                     }
@@ -284,27 +284,6 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
             d.dismiss();
         });
         d.show();
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static class CreditCardFormatTextWatcher implements TextWatcher {

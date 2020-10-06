@@ -1,5 +1,6 @@
 package com.qltech.bws.MembershipModule.Activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -41,6 +42,7 @@ public class MembershipActivity extends AppCompatActivity {
     Context ctx;
     MembershipFaqAdapter adapter;
     private long mLastClickTime = 0;
+    Activity activity;
 //    String PlanPosition, PlanID, PlanAmount, PlanCurrency, PlanInterval, PlanImage, PlanTenure, PlanNextRenewal, SubName;
 
     @Override
@@ -48,12 +50,8 @@ public class MembershipActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_membership);
         ctx = MembershipActivity.this;
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        activity = MembershipActivity.this;
+        binding.llBack.setOnClickListener(view -> finish());
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
         binding.rvList.setLayoutManager(mLayoutManager);
@@ -68,13 +66,13 @@ public class MembershipActivity extends AppCompatActivity {
         binding.rvFaqList.setItemAnimator(new DefaultItemAnimator());
 
         if (BWSApplication.isNetworkConnected(this)) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<FaqListModel> listCall = APIClient.getClient().getFaqLists();
             listCall.enqueue(new Callback<FaqListModel>() {
                 @Override
                 public void onResponse(Call<FaqListModel> call, Response<FaqListModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         FaqListModel listModel = response.body();
                         binding.tvFaqTitle.setText(R.string.f_A_Q);
                         adapter = new MembershipFaqAdapter(listModel.getResponseData(), ctx, binding.rvFaqList, binding.tvFound);
@@ -84,7 +82,7 @@ public class MembershipActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<FaqListModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {
@@ -95,13 +93,13 @@ public class MembershipActivity extends AppCompatActivity {
 
     private void prepareMembershipData() {
         if (BWSApplication.isNetworkConnected(this)) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<MembershipPlanListModel> listCall = APIClient.getClient().getMembershipPlanList();
             listCall.enqueue(new Callback<MembershipPlanListModel>() {
                 @Override
                 public void onResponse(Call<MembershipPlanListModel> call, Response<MembershipPlanListModel> response) {
                     if (response.isSuccessful()) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         MembershipPlanListModel membershipPlanListModel = response.body();
                         if (membershipPlanListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             binding.btnFreeJoin.setVisibility(View.VISIBLE);
@@ -130,7 +128,7 @@ public class MembershipActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<MembershipPlanListModel> call, Throwable t) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
         } else {
@@ -203,27 +201,6 @@ public class MembershipActivity extends AppCompatActivity {
                 super(binding.getRoot());
                 this.binding = binding;
             }
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

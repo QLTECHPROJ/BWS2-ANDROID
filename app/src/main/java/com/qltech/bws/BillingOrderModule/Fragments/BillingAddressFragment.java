@@ -69,7 +69,7 @@ public class BillingAddressFragment extends Fragment {
                 } else if (binding.etPostCode.getText().toString().equalsIgnoreCase("")) {
                     binding.tlPostCode.setError("Please provide a postal code");
                 } else {
-                    showProgressBar();
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     Call<BillingAddressSaveModel> listCall = APIClient.getClient().getBillingAddressSave(UserID,
                             binding.etName.getText().toString(), binding.etEmail.getText().toString(),
                             binding.etCountry.getText().toString(), binding.etAddressLine1.getText().toString(),
@@ -80,7 +80,7 @@ public class BillingAddressFragment extends Fragment {
                         @Override
                         public void onResponse(Call<BillingAddressSaveModel> call, Response<BillingAddressSaveModel> response) {
                             if (response.isSuccessful()) {
-                                hideProgressBar();
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                 BillingAddressSaveModel listModel = response.body();
                                 BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                                 getActivity().finish();
@@ -89,7 +89,7 @@ public class BillingAddressFragment extends Fragment {
 
                         @Override
                         public void onFailure(Call<BillingAddressSaveModel> call, Throwable t) {
-                            hideProgressBar();
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         }
                     });
                 }
@@ -102,13 +102,13 @@ public class BillingAddressFragment extends Fragment {
     }
 
     private void getPrepareData() {
-        showProgressBar();
+        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
         Call<BillingAddressViewModel> listCall = APIClient.getClient().getBillingAddressView(UserID);
         listCall.enqueue(new Callback<BillingAddressViewModel>() {
             @Override
             public void onResponse(Call<BillingAddressViewModel> call, Response<BillingAddressViewModel> response) {
                 if (response.isSuccessful()) {
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     BillingAddressViewModel listModel = response.body();
                     if (listModel.getResponseData().getName().equalsIgnoreCase("") ||
                             listModel.getResponseData().getName().equalsIgnoreCase(" ") ||
@@ -132,29 +132,8 @@ public class BillingAddressFragment extends Fragment {
 
             @Override
             public void onFailure(Call<BillingAddressViewModel> call, Throwable t) {
-                hideProgressBar();
+                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             }
         });
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

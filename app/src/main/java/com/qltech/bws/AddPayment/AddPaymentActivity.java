@@ -162,7 +162,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                 binding.tlName.setError("");
                 binding.tlNumber.setError("");
                 binding.txtError.setText("");
-                showProgressBar();
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 final String strCardNo = binding.etNumber.getText().toString().trim().replaceAll("\\s+", "");
                 int months = binding1.MonthPicker.getValue();
                 int Years = binding1.YearPicker.getValue();
@@ -173,7 +173,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                     public void onError(Exception error) {
                         Log.e("error.........", "" + error.toString());
                         BWSApplication.showToast("Invalid Card Details", context);
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
 
                     @Override
@@ -182,12 +182,12 @@ public class AddPaymentActivity extends AppCompatActivity {
                         Log.e("strToken.............", "" + strToken);
                         if (!strToken.equalsIgnoreCase("")) {
                             if (BWSApplication.isNetworkConnected(context)) {
-                                showProgressBar();
+                                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 Call<AddCardModel> listCall = APIClient.getClient().getAddCard(userId, strToken);
                                 listCall.enqueue(new Callback<AddCardModel>() {
                                     @Override
                                     public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {
-                                        hideProgressBar();
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         if (response.isSuccessful()) {
                                             AddCardModel cardModel = response.body();
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
@@ -209,13 +209,13 @@ public class AddPaymentActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onFailure(Call<AddCardModel> call, Throwable t) {
-                                        hideProgressBar();
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     }
 
                                 });
                             } else {
                                 BWSApplication.showToast(getString(R.string.no_server_found), context);
-                                hideProgressBar();
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             }
                         }
                     }
@@ -278,27 +278,6 @@ public class AddPaymentActivity extends AppCompatActivity {
             d.dismiss();
         });
         d.show();
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

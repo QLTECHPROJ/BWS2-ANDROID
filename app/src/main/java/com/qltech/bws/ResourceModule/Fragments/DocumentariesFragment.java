@@ -15,7 +15,6 @@ import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -61,14 +60,14 @@ public class DocumentariesFragment extends Fragment {
     }
 
     void prepareData() {
-        showProgressBar();
+        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
         Call<ResourceListModel> listCall = APIClient.getClient().getResourcLists(UserID, CONSTANTS.FLAG_TWO, Category);
         listCall.enqueue(new Callback<ResourceListModel>() {
             @Override
             public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
                 if (response.isSuccessful()) {
                     ResourceListModel listModel = response.body();
-                    hideProgressBar();
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     DocumentariesAdapter adapter = new DocumentariesAdapter(listModel.getResponseData(), getActivity(), documentaries);
                     binding.rvDocumentariesList.setAdapter(adapter);
 
@@ -84,30 +83,9 @@ public class DocumentariesFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ResourceListModel> call, Throwable t) {
-                hideProgressBar();
+                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             }
         });
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public class DocumentariesAdapter extends RecyclerView.Adapter<DocumentariesAdapter.MyViewHolder> {

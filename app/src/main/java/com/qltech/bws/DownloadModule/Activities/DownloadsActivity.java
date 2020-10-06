@@ -61,13 +61,13 @@ public class DownloadsActivity extends AppCompatActivity {
 
     public void prepareData() {
 /*        if (BWSApplication.isNetworkConnected(this)) {
-            showProgressBar();
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<DownloadlistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID);
             listCall.enqueue(new Callback<DownloadlistModel>() {
                 @Override
                 public void onResponse(Call<DownloadlistModel> call, Response<DownloadlistModel> response) {
                     if (response.isSuccessful()) {*/
-//                        hideProgressBar();
+//                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
 
         audioList = new ArrayList<>();
         playlistList = new ArrayList<>();
@@ -112,7 +112,7 @@ public class DownloadsActivity extends AppCompatActivity {
 
        @Override
        public void onFailure(Call<DownloadlistModel> call, Throwable t) {
-           hideProgressBar();
+           BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
        }
    });
 } else {
@@ -162,19 +162,6 @@ public class DownloadsActivity extends AppCompatActivity {
             return totalTabs;
         }
 
-
-/*    public void hideProgressBar() {
-        binding.progressBarHolder.setVisibility(View.GONE);
-        binding.progressBar.setVisibility(View.GONE);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }
-
-    public void showProgressBar() {
-        binding.progressBarHolder.setVisibility(View.VISIBLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        binding.progressBar.setVisibility(View.VISIBLE);
-        binding.progressBar.invalidate();
-    }*/
     }
 }
 

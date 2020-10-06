@@ -2,6 +2,7 @@ package com.qltech.bws.BillingOrderModule.Activities;
 
 import androidx.databinding.DataBindingUtil;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -41,14 +42,16 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     ActivityCancelMembershipBinding binding;
     Context ctx;
     String UserID, CancelId = "";
+    Activity activity;
     private static final int RECOVERY_DIALOG_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cancel_membership);
-
         ctx = CancelMembershipActivity.this;
+        activity = CancelMembershipActivity.this;
+
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {
@@ -137,13 +140,13 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
                 tvconfirm.setOnClickListener(v -> {
                     if (BWSApplication.isNetworkConnected(ctx)) {
-                        showProgressBar();
+                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, binding.edtCancelBox.getText().toString());
                         listCall.enqueue(new Callback<CancelPlanModel>() {
                             @Override
                             public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
                                 if (response.isSuccessful()) {
-                                    hideProgressBar();
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     CancelPlanModel model = response.body();
                                     BWSApplication.showToast(model.getResponseMessage(), ctx);
                                     dialog.dismiss();
@@ -155,7 +158,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 
                             @Override
                             public void onFailure(Call<CancelPlanModel> call, Throwable t) {
-                                hideProgressBar();
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             }
                         });
                     } else {
@@ -182,27 +185,6 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         resumeMedia();
         isPause = false;
         finish();
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

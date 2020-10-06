@@ -191,13 +191,13 @@ public class ViewAllPlaylistFragment extends Fragment {
 
         if (BWSApplication.isNetworkConnected(getActivity())) {
             try {
-                showProgressBar();
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 Call<ViewAllPlayListModel> listCall = APIClient.getClient().getViewAllPlayLists(UserID, GetLibraryID);
                 listCall.enqueue(new Callback<ViewAllPlayListModel>() {
                     @Override
                     public void onResponse(Call<ViewAllPlayListModel> call, Response<ViewAllPlayListModel> response) {
                         if (response.isSuccessful()) {
-                            hideProgressBar();
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                             ViewAllPlayListModel listModel = response.body();
                             binding.tvTitle.setText(listModel.getResponseData().getView());
                             PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
@@ -207,7 +207,7 @@ public class ViewAllPlaylistFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<ViewAllPlayListModel> call, Throwable t) {
-                        hideProgressBar();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     }
                 });
             } catch (Exception e) {
@@ -216,27 +216,6 @@ public class ViewAllPlaylistFragment extends Fragment {
 
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-        }
-    }
-
-    private void hideProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showProgressBar() {
-        try {
-            binding.progressBarHolder.setVisibility(View.VISIBLE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -335,7 +314,8 @@ public class ViewAllPlaylistFragment extends Fragment {
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) { player = 1;
+            protected void onPostExecute(Void aVoid) {
+                player = 1;
                 if (isPrepare || isMediaStart || isPause) {
                     stopMedia();
                 }
