@@ -888,24 +888,29 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2 = new ArrayList<>();
             playlistSongs2 = playlistSongs;
             if (downloadAudioDetailsList.size() != 0) {
-                for (int x = 0; x < playlistSongs.size(); x++) {
                     for (int y = 0; y < downloadAudioDetailsList.size(); y++) {
-                        if (playlistSongs2.size() != 0) {
-                            if (playlistSongs2.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
-                                playlistSongs2.remove(x);
-                                int size = playlistSongs2.size();
-                                if(size == 0){
+                        if(playlistSongs2.size()==0){
+                        break;
+                    }else {
+                        for (int x = 0; x < playlistSongs2.size(); x++) {
+                            if (playlistSongs2.size() != 0) {
+                                if (playlistSongs2.get(x).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
+                                    playlistSongs2.remove(x);
+                                }
+                                if (playlistSongs2.size()==0){
                                     break;
                                 }
-                            }
+                            } else break;
                         }
                     }
                 }
             }
-            for (int x = 0; x < playlistSongs2.size(); x++) {
-                name.add(playlistSongs2.get(x).getName());
-                url.add(playlistSongs2.get(x).getAudioFile());
-                downloadPlaylistId.add(playlistSongs2.get(x).getPlaylistID());
+            if(playlistSongs2.size()!=0) {
+                for (int x = 0; x < playlistSongs2.size(); x++) {
+                    name.add(playlistSongs2.get(x).getName());
+                    url.add(playlistSongs2.get(x).getAudioFile());
+                    downloadPlaylistId.add(playlistSongs2.get(x).getPlaylistID());
+                }
             }
             byte[] encodedBytes = new byte[1024];
             SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
