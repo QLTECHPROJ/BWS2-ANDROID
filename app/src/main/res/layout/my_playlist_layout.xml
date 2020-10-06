@@ -126,6 +126,18 @@
             android:visibility="gone"
             android:padding="@dimen/_8sdp"
             android:layout_weight="0.13">
+            <ProgressBar
+                android:id="@+id/pbProgress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@drawable/circular_shape"
+                android:indeterminate="false"
+                android:max="100"
+                android:visibility="gone"
+                android:indeterminateTint="@color/green"
+                android:progressDrawable="@drawable/circular_progress_bar" />
 
             <ImageView
                 android:id="@+id/ivDownloads"

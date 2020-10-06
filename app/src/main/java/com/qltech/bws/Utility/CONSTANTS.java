@@ -109,9 +109,9 @@ public class CONSTANTS {
     public static final String PREF_KEY_DownloadName = "Name";
     public static final String PREF_KEY_DownloadUrl = "Url";
     public static final String PREF_KEY_DownloadPlaylistId = "downloadPlaylistId";
-    public static final String PREF_KEY_removedDownloadPlaylist = "removedPlaylistId";
-    public static final String PREF_KEY_removedDownloadName = "removedName";
-    public static final String PREF_KEY_removedDownloadPlaylistId = "removedDownloadPlaylistId";
+//    public static final String PREF_KEY_removedDownloadPlaylist = "removedPlaylistId";
+//    public static final String PREF_KEY_removedDownloadName = "removedName";
+//    public static final String PREF_KEY_removedDownloadPlaylistId = "removedDownloadPlaylistId";
     public static final String PREF_KEY_CardID = "CardID";
     public static final String PREF_KEY_Name = "Name";
     public static final String PREF_KEY_Image = "Image";

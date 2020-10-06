@@ -89,7 +89,7 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
             encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
             saveFile(encodedBytes, FileUtils.getFilePath(context, fileNameList.get(0)));
 //                    saveAllMedia(playlistSongsList, encodedBytes, FileUtils.getFilePath(context, fileNameList.get(i)));
-            SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_removedDownloadPlaylist, MODE_PRIVATE);
+            /*SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_removedDownloadPlaylist, MODE_PRIVATE);
             Gson gson1 = new Gson();
             String json = sharedx.getString(CONSTANTS.PREF_KEY_removedDownloadName, String.valueOf(gson1));
             String json2 = sharedx.getString(CONSTANTS.PREF_KEY_removedDownloadPlaylistId, String.valueOf(gson1));
@@ -107,7 +107,7 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
             String playlistIdJson1 = gson1.toJson(removedPlaylistDownloadId);
             editor1.putString(CONSTANTS.PREF_KEY_removedDownloadName, nameJson1);
             editor1.putString(CONSTANTS.PREF_KEY_removedDownloadPlaylistId, playlistIdJson1);
-            editor1.commit();
+            editor1.commit();*/
 
             fileNameList.remove(0);
             audioFile.remove(0);
