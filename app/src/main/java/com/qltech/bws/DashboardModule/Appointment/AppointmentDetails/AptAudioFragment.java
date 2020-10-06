@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,6 +45,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.filename;
@@ -118,12 +120,22 @@ public class AptAudioFragment extends Fragment {
     public class AudioListAdapter extends RecyclerView.Adapter<AudioListAdapter.MyViewHolder> {
         public FragmentManager f_manager;
         Context ctx;
+        List<String> fileNameList= new ArrayList<>();
+
         private ArrayList<AppointmentDetailModel.Audio> listModelList;
         Runnable UpdateSongTime1;
         public AudioListAdapter(ArrayList<AppointmentDetailModel.Audio> listModelList, Context ctx, FragmentManager f_manager) {
             this.listModelList = listModelList;
             this.ctx = ctx;
             this.f_manager = f_manager;
+            SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            Gson gson = new Gson();
+            String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+            if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                fileNameList = gson.fromJson(json, type);
+            }
         }
 
         @NonNull
@@ -140,21 +152,30 @@ public class AptAudioFragment extends Fragment {
              UpdateSongTime1 = new Runnable() {
                 @Override
                 public void run() {
-                    if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audiolist.getName())){
-                        if(downloadProgress <100) {
-                            holder.binding.pbProgress.setProgress(downloadProgress);
-                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                        }else{
-                            holder.binding.pbProgress.setVisibility(View.GONE);
-                            handler1.removeCallbacks(UpdateSongTime1);
+                    for(int i = 0;i<fileNameList.size();i++) {
+                        if (fileNameList.contains(listModelList.get(position).getName())) {
+                            if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
+                                if (downloadProgress < 100) {
+                                    holder.binding.pbProgress.setProgress(downloadProgress);
+                                    holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                                } else {
+                                    holder.binding.pbProgress.setVisibility(View.GONE);
+                                    handler1.removeCallbacks(UpdateSongTime1);
+                                }
+                            }
                         }
-                    }else{
-                        holder.binding.pbProgress.setVisibility(View.GONE);
-                        handler1.removeCallbacks(UpdateSongTime1);
                     }
                     handler1.postDelayed(this, 10);
                 }
             };
+            if(fileNameList.size()!=0) {
+                if (fileNameList.contains(listModelList.get(position).getName())) {
+                    holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                    handler1.postDelayed(UpdateSongTime1, 10);
+                } else {
+                    holder.binding.pbProgress.setVisibility(View.GONE);
+                }
+            }
             holder.binding.tvTitle.setText(audiolist.getName());
             if (audiolist.getAudioDirection().equalsIgnoreCase("")) {
                 holder.binding.tvTime.setVisibility(View.GONE);
@@ -316,15 +337,13 @@ public class AptAudioFragment extends Fragment {
     private void enableDownload(RelativeLayout llDownload, ImageView ivDownload) {
         llDownload.setClickable(true);
         llDownload.setEnabled(true);
-        ivDownload.setColorFilter(Color.argb(100, 0, 0, 0));
-        ivDownload.setAlpha(255);
+        ivDownload.setColorFilter(getActivity().getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
         ivDownload.setImageResource(R.drawable.ic_download_white_icon);
     }
 
     private void disableDownload(RelativeLayout llDownload, ImageView ivDownload) {
         ivDownload.setImageResource(R.drawable.ic_download_white_icon);
-        ivDownload.setColorFilter(Color.argb(99, 99, 99, 99));
-        ivDownload.setAlpha(255);
+        ivDownload.setColorFilter(getActivity().getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
         llDownload.setClickable(false);
         llDownload.setEnabled(false);
     }

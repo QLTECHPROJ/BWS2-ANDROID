@@ -109,9 +109,9 @@
             android:layout_centerInParent="true"
             android:background="@drawable/circular_shape"
             android:indeterminate="false"
-            android:max="100"
             android:visibility="gone"
-            android:indeterminateTint="@color/green"
+            android:max="100"
+            android:indeterminateTint="@color/dark_yellow"
             android:progressDrawable="@drawable/circular_progress_bar" />
         <LinearLayout
             android:id="@+id/llRemoveAudio"

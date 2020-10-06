@@ -136,7 +136,7 @@
                 android:indeterminate="false"
                 android:max="100"
                 android:visibility="gone"
-                android:indeterminateTint="@color/green"
+                android:indeterminateTint="@color/dark_yellow"
                 android:progressDrawable="@drawable/circular_progress_bar" />
 
             <ImageView

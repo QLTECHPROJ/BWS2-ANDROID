@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.text.Editable;
 import android.text.Selection;
@@ -82,6 +83,35 @@ public class MyPlaylistActivity extends AppCompatActivity {
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     DownloadPlaylistDetails downloadPlaylistDetails;
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
+    List<String> fileNameList,playlistDownloadId, remainAudio;
+    private Handler handler1;
+    private Runnable UpdateSongTime1 = new Runnable() {
+        @Override
+        public void run() {
+            getDownloadData();
+            if (fileNameList.size() != 0) {
+                for (int i = 0; i < fileNameList.size(); i++) {
+                    if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
+                        remainAudio.add(playlistDownloadId.get(i));
+                    }
+                }
+                if (remainAudio.size() < downloadPlaylistDetailsList.size()) {
+                    int total = downloadPlaylistDetailsList.size();
+                    int remain = remainAudio.size();
+                    long progressPercent = remain * 100 / total;
+                    int downloadProgress = (int) progressPercent;
+                    if (downloadProgress < 100) {
+                        binding.pbProgress.setProgress(downloadProgress);
+                        binding.pbProgress.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.pbProgress.setVisibility(View.GONE);
+                        handler1.removeCallbacks(UpdateSongTime1);
+                    }
+                }
+                handler1.postDelayed(this, 10);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +119,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_playlist);
         ctx = MyPlaylistActivity.this;
         activity = MyPlaylistActivity.this;
+        handler1 = new Handler();
+        fileNameList = new ArrayList<>();
+        playlistDownloadId = new ArrayList<>();
+        remainAudio = new ArrayList<>();
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -105,14 +139,46 @@ public class MyPlaylistActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ComeFindAudio = 1;
+                handler1.removeCallbacks(UpdateSongTime1);
                 finish();
             }
         });
+        getDownloadData();
 
         binding.llDownload.setOnClickListener(view -> callDownload());
         getPrepareData();
     }
-
+    private void getDownloadData() {
+     /*   SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_removedDownloadPlaylist, MODE_PRIVATE);
+        Gson gson1 = new Gson();
+        String json = sharedx.getString(CONSTANTS.PREF_KEY_removedDownloadName, String.valueOf(gson1));
+        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_removedDownloadPlaylistId, String.valueOf(gson1));
+        if (!json.equalsIgnoreCase(String.valueOf(gson1))) {
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+            removedFileNameList = gson1.fromJson(json, type);
+            removedPlaylistDownloadId = gson1.fromJson(json2, type);
+        }*/
+        SharedPreferences sharedy = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+        String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+        String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+            fileNameList = gson.fromJson(jsony, type);
+            playlistDownloadId = gson.fromJson(jsonq, type);
+            if(playlistDownloadId.size()!=0){
+                playlistDownloadId.contains(PlaylistID);
+                handler1.postDelayed(UpdateSongTime1,60);
+            }
+        }else{
+            fileNameList = new ArrayList<>();
+            playlistDownloadId = new ArrayList<>();
+            remainAudio = new ArrayList<>();
+        }
+    }
     public List<DownloadAudioDetails> GetAllMedia() {
 
         class GetTask extends AsyncTask<Void, Void, Void> {
@@ -271,6 +337,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         ComeFindAudio = 1;
+        handler1.removeCallbacks(UpdateSongTime1);
         finish();
     }
 

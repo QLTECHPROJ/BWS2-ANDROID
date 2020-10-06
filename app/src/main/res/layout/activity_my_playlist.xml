@@ -262,13 +262,28 @@
                     android:gravity="center_vertical"
                     android:visibility="gone">
 
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                    <ProgressBar
+                        android:id="@+id/pbProgress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="@dimen/_55sdp"
+                        android:layout_height="@dimen/_55sdp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/circular_shape"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:visibility="gone"
+                        android:indeterminateTint="@color/dark_yellow"
+                        android:progressDrawable="@drawable/circular_progress_bar" />
                     <ImageView
                         android:id="@+id/ivDownloads"
                         android:layout_width="@dimen/_56sdp"
                         android:layout_height="@dimen/_50sdp"
                         android:padding="@dimen/_15sdp"
                         android:src="@drawable/ic_download_white_icon" />
-
+                    </RelativeLayout>
                     <TextView
                         android:id="@+id/tvDownload"
                         android:layout_width="match_parent"

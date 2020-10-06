@@ -62,7 +62,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     public static String comefromDownload = "";
     Runnable UpdateSongTime1;
     private Handler handler1;
-    List<String> fileNameList;
+    List<String> fileNameList=new ArrayList<>();
     public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, String UserID,
                                  FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
         this.listModelList = listModelList;
@@ -98,7 +98,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             @Override
             public void run() {
                 for(int i = 0;i<fileNameList.size();i++) {
-                    if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName())) {
+                    if (fileNameList.contains(listModelList.get(position).getName())) {
                         if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
                             if (downloadProgress < 100) {
                                 holder.binding.pbProgress.setProgress(downloadProgress);
@@ -107,25 +107,20 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                                 holder.binding.pbProgress.setVisibility(View.GONE);
                                 handler1.removeCallbacks(UpdateSongTime1);
                             }
-                        } else {
-                            holder.binding.pbProgress.setVisibility(View.GONE);
-                            handler1.removeCallbacks(UpdateSongTime1);
                         }
                     }
                 }
                 handler1.postDelayed(this, 10);
             }
         };
-        for(int i = 0;i<fileNameList.size();i++){
-            if(fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName())){
+        if(fileNameList.size()!=0) {
+            if (fileNameList.contains(listModelList.get(position).getName())) {
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
                 handler1.postDelayed(UpdateSongTime1, 10);
-            }else{
+            } else {
                 holder.binding.pbProgress.setVisibility(View.GONE);
-                handler1.removeCallbacks(UpdateSongTime1);
             }
         }
-
         holder.binding.tvTitle.setText(listModelList.get(position).getName());
         holder.binding.tvTime.setText(listModelList.get(position).getAudioDuration());
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,

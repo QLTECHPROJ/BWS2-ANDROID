@@ -77,20 +77,22 @@ public class AddQueueActivity extends AppCompatActivity {
     private long mLastClickTime = 0;
     SharedPreferences shared;
     private Handler handler1;
+    List<String> fileNameList;
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
-            if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
-                if(downloadProgress <100) {
-                    binding.pbProgress.setProgress(downloadProgress);
-                    binding.pbProgress.setVisibility(View.VISIBLE);
-                }else{
-                    binding.pbProgress.setVisibility(View.GONE);
-                    handler1.removeCallbacks(UpdateSongTime1);
+            for(int i = 0;i<fileNameList.size();i++) {
+                if (fileNameList.contains(audioFileName)) {
+                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
+                        if (downloadProgress < 100) {
+                            binding.pbProgress.setProgress(downloadProgress);
+                            binding.pbProgress.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.pbProgress.setVisibility(View.GONE);
+                            handler1.removeCallbacks(UpdateSongTime1);
+                        }
+                    }
                 }
-            }else{
-                binding.pbProgress.setVisibility(View.GONE);
-                handler1.removeCallbacks(UpdateSongTime1);
             }
             handler1.postDelayed(this, 10);
         }
@@ -104,9 +106,18 @@ public class AddQueueActivity extends AppCompatActivity {
         activity = AddQueueActivity.this;
         oneAudioDetailsList = new ArrayList<>();
         handler1 = new Handler();
+        fileNameList = new ArrayList<>();
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         mData = new ArrayList<>();
+        SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+        Gson gson1 = new Gson();
+        String json11 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+        if (!json11.equalsIgnoreCase(String.valueOf(gson1))) {
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+            fileNameList = gson1.fromJson(json11, type);
+        }
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -138,13 +149,15 @@ public class AddQueueActivity extends AppCompatActivity {
         if (getIntent().hasExtra("PlaylistAudioId")) {
             PlaylistAudioId = getIntent().getStringExtra("PlaylistAudioId");
         }
-        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
-            handler1.postDelayed(UpdateSongTime1, 10);
-        }else{
-            binding.pbProgress.setVisibility(View.GONE);
-            handler1.removeCallbacks(UpdateSongTime1);
+        if(fileNameList.size()!=0) {
+            if (fileNameList.contains(audioFileName)) {
+                binding.pbProgress.setVisibility(View.VISIBLE);
+                handler1.postDelayed(UpdateSongTime1, 10);
+            } else {
+                binding.pbProgress.setVisibility(View.GONE);
+                handler1.removeCallbacks(UpdateSongTime1);
+            }
         }
-
         if (getIntent().hasExtra("play")) {
             play = getIntent().getStringExtra("play");
         } else {
