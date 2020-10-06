@@ -6,11 +6,13 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -43,6 +45,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
+import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.downloadProgress;
+import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
@@ -55,13 +59,14 @@ public class AptAudioFragment extends Fragment {
     ArrayList<AppointmentDetailModel.Audio> appointmentDetail;
     List<DownloadAudioDetails> oneAudioDetailsList;
     public static int comeRefreshData = 0;
+    private Handler handler1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_audio, container, false);
         View view = binding.getRoot();
         oneAudioDetailsList = new ArrayList<>();
-
+        handler1 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         appointmentDetail = new ArrayList<>();
@@ -79,7 +84,7 @@ public class AptAudioFragment extends Fragment {
         return view;
     }
 
-    public void GetMedia(String AudioFile, Context ctx, String download, LinearLayout llDownload, ImageView ivDownload) {
+    public void GetMedia(String AudioFile, Context ctx, String download, RelativeLayout llDownload, ImageView ivDownload) {
         oneAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
@@ -114,7 +119,7 @@ public class AptAudioFragment extends Fragment {
         public FragmentManager f_manager;
         Context ctx;
         private ArrayList<AppointmentDetailModel.Audio> listModelList;
-
+        Runnable UpdateSongTime1;
         public AudioListAdapter(ArrayList<AppointmentDetailModel.Audio> listModelList, Context ctx, FragmentManager f_manager) {
             this.listModelList = listModelList;
             this.ctx = ctx;
@@ -132,12 +137,36 @@ public class AptAudioFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             AppointmentDetailModel.Audio audiolist = listModelList.get(position);
+             UpdateSongTime1 = new Runnable() {
+                @Override
+                public void run() {
+                    if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audiolist.getName())){
+                        if(downloadProgress <100) {
+                            holder.binding.pbProgress.setProgress(downloadProgress);
+                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                        }else{
+                            holder.binding.pbProgress.setVisibility(View.GONE);
+                            handler1.removeCallbacks(UpdateSongTime1);
+                        }
+                    }else{
+                        holder.binding.pbProgress.setVisibility(View.GONE);
+                        handler1.removeCallbacks(UpdateSongTime1);
+                    }
+                    handler1.postDelayed(this, 10);
+                }
+            };
             holder.binding.tvTitle.setText(audiolist.getName());
             if (audiolist.getAudioDirection().equalsIgnoreCase("")) {
                 holder.binding.tvTime.setVisibility(View.GONE);
             } else {
                 holder.binding.tvTime.setVisibility(View.VISIBLE);
                 holder.binding.tvTime.setText(audiolist.getAudioDirection());
+            }
+            if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audiolist.getName())){
+                handler1.postDelayed(UpdateSongTime1, 10);
+            }else{
+                holder.binding.pbProgress.setVisibility(View.GONE);
+                handler1.removeCallbacks(UpdateSongTime1);
             }
             GetMedia(audiolist.getAudioFile(), getActivity(), audiolist.getDownload(), holder.binding.llDownload, holder.binding.ivDownload);
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
@@ -213,6 +242,7 @@ public class AptAudioFragment extends Fragment {
                 downloadPlaylistId.add("");
                 DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
                 downloadMedia.encrypt1(url1, name1);
+                handler1.postDelayed(UpdateSongTime1, 10);
                 String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
                 SaveMedia(new byte[1024], dirPath, listModelList.get(position), holder.binding.llDownload);
             });
@@ -228,7 +258,7 @@ public class AptAudioFragment extends Fragment {
             });
         }
 
-        private void SaveMedia(byte[] encodeBytes, String dirPath, AppointmentDetailModel.Audio audio, LinearLayout llDownload) {
+        private void SaveMedia(byte[] encodeBytes, String dirPath, AppointmentDetailModel.Audio audio, RelativeLayout llDownload) {
             class SaveMedia extends AsyncTask<Void, Void, Void> {
 
                 @Override
@@ -283,7 +313,7 @@ public class AptAudioFragment extends Fragment {
         }
     }
 
-    private void enableDownload(LinearLayout llDownload, ImageView ivDownload) {
+    private void enableDownload(RelativeLayout llDownload, ImageView ivDownload) {
         llDownload.setClickable(true);
         llDownload.setEnabled(true);
         ivDownload.setColorFilter(Color.argb(100, 0, 0, 0));
@@ -291,7 +321,7 @@ public class AptAudioFragment extends Fragment {
         ivDownload.setImageResource(R.drawable.ic_download_white_icon);
     }
 
-    private void disableDownload(LinearLayout llDownload, ImageView ivDownload) {
+    private void disableDownload(RelativeLayout llDownload, ImageView ivDownload) {
         ivDownload.setImageResource(R.drawable.ic_download_white_icon);
         ivDownload.setColorFilter(Color.argb(99, 99, 99, 99));
         ivDownload.setAlpha(255);

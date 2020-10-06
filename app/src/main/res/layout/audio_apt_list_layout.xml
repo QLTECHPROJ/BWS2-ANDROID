@@ -75,7 +75,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/llDownload"
             android:layout_width="@dimen/_0sdp"
             android:layout_height="wrap_content"
@@ -83,6 +83,18 @@
             android:layout_weight="0.12"
             android:gravity="center"
             android:padding="@dimen/_8sdp">
+            <ProgressBar
+                android:id="@+id/pbProgress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@drawable/circular_shape"
+                android:indeterminate="false"
+                android:max="100"
+                android:visibility="gone"
+                android:indeterminateTint="@color/green"
+                android:progressDrawable="@drawable/circular_progress_bar" />
 
             <ImageView
                 android:id="@+id/ivDownload"
@@ -91,7 +103,7 @@
                 android:padding="@dimen/_8sdp"
                 android:src="@drawable/ic_download_icon" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/llRemoveAudio"

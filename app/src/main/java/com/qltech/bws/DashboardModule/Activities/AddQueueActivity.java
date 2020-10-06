@@ -547,12 +547,12 @@ public class AddQueueActivity extends AppCompatActivity {
         downloadPlaylistId.add("");
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         downloadMedia.encrypt1(url1, name1);
-        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
+//        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
             handler1.postDelayed(UpdateSongTime1, 10);
-        }else{
-            binding.pbProgress.setVisibility(View.GONE);
-            handler1.removeCallbacks(UpdateSongTime1);
-        }
+//        }else{
+//            binding.pbProgress.setVisibility(View.GONE);
+//            handler1.removeCallbacks(UpdateSongTime1);
+//        }
         String dirPath = FileUtils.getFilePath(getApplicationContext(), Name);
         SaveMedia(new byte[1024], dirPath, i);
 

@@ -847,7 +847,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 }
                             }
                         }
-                        adpater.notifyItemRemoved(position);
+                  //      adpater.notifyItemRemoved(position);
                         prepareData(UserID, PlaylistID);
                         BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                     }
@@ -924,6 +924,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 String urlJson = gson.toJson(url);
                 String nameJson = gson.toJson(name);
                 String playlistIdJson = gson.toJson(downloadPlaylistId);
+                fileNameList = name;
+                playlistDownloadId = downloadPlaylistId;
                 editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
                 editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
@@ -1207,6 +1209,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         StartDragListener startDragListener;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
+        Runnable UpdateSongTime2;
 
         public PlayListsAdpater(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
                                 String Created, StartDragListener startDragListener) {
@@ -1229,30 +1232,30 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            Runnable UpdateSongTime2 = new Runnable() {
+            UpdateSongTime2 = new Runnable() {
                 @Override
                 public void run() {
 //                getDownloadData();
-                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
-                        if (downloadProgress < 100) {
+                    if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
+                        if(downloadProgress <100) {
                             holder.binding.pbProgress.setProgress(downloadProgress);
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                        } else {
+                        }else{
                             holder.binding.pbProgress.setVisibility(View.GONE);
                             handler1.removeCallbacks(UpdateSongTime1);
                         }
-                    } else {
+                    }else{
                         holder.binding.pbProgress.setVisibility(View.GONE);
-                        handler2.removeCallbacks(UpdateSongTime1);
+                        handler2.removeCallbacks(UpdateSongTime2);
                     }
                     handler2.postDelayed(this, 10);
                 }
             };
             final ArrayList<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
-            if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(mData.get(position).getName())) {
+            if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(mData.get(position).getName())){
                 name = mData.get(position).getName();
                 handler2.postDelayed(UpdateSongTime2, 10);
-            } else {
+            }else{
                 holder.binding.pbProgress.setVisibility(View.GONE);
                 handler2.removeCallbacks(UpdateSongTime2);
             }
@@ -1341,7 +1344,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 name = mData.get(position).getName();
                 handler2.postDelayed(UpdateSongTime2, 10);
                 callDownload(mData.get(position).getID(), mData.get(position).getAudioFile(), mData.get(position).getName(), listFilterData, position, holder.binding.llDownload, holder.binding.ivDownloads);
-
             });
             try {
                 holder.binding.llRemove.setOnClickListener(view -> callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId(), mData, position));

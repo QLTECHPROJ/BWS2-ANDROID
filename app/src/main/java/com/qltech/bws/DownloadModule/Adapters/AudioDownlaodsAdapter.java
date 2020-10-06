@@ -3,6 +3,7 @@ package com.qltech.bws.DownloadModule.Adapters;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.qltech.bws.EncryptDecryptUtils.DownloadMedia;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
@@ -32,9 +35,13 @@ import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.DownloadsLayoutBinding;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.downloadProgress;
+import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
@@ -53,7 +60,9 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     TextView tvFound;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     public static String comefromDownload = "";
-
+    Runnable UpdateSongTime1;
+    private Handler handler1;
+    List<String> fileNameList;
     public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, String UserID,
                                  FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
         this.listModelList = listModelList;
@@ -64,6 +73,15 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         this.llError = llError;
         this.rvDownloadsList = rvDownloadsList;
         this.tvFound = tvFound;
+        handler1 = new Handler();
+        SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+            fileNameList = gson.fromJson(json, type);
+        }
     }
 
     @NonNull
@@ -76,6 +94,38 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        UpdateSongTime1 = new Runnable() {
+            @Override
+            public void run() {
+                for(int i = 0;i<fileNameList.size();i++) {
+                    if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName())) {
+                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
+                            if (downloadProgress < 100) {
+                                holder.binding.pbProgress.setProgress(downloadProgress);
+                                holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                            } else {
+                                holder.binding.pbProgress.setVisibility(View.GONE);
+                                handler1.removeCallbacks(UpdateSongTime1);
+                            }
+                        } else {
+                            holder.binding.pbProgress.setVisibility(View.GONE);
+                            handler1.removeCallbacks(UpdateSongTime1);
+                        }
+                    }
+                }
+                handler1.postDelayed(this, 10);
+            }
+        };
+        for(int i = 0;i<fileNameList.size();i++){
+            if(fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName())){
+                holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                handler1.postDelayed(UpdateSongTime1, 10);
+            }else{
+                holder.binding.pbProgress.setVisibility(View.GONE);
+                handler1.removeCallbacks(UpdateSongTime1);
+            }
+        }
+
         holder.binding.tvTitle.setText(listModelList.get(position).getName());
         holder.binding.tvTime.setText(listModelList.get(position).getAudioDuration());
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
