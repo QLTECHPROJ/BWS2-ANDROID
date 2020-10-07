@@ -88,7 +88,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         DownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                , R.layout.downloads_layout, parent, false);
+                , R.layout.audio_downloads_layout, parent, false);
         return new MyViewHolder(v);
     }
 
