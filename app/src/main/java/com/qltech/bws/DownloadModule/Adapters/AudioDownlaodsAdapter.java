@@ -31,6 +31,7 @@ import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.databinding.AudioDownloadsLayoutBinding;
 import com.qltech.bws.databinding.DownloadsLayoutBinding;
 
 import java.lang.reflect.Type;
@@ -87,7 +88,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        DownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+        AudioDownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
                 , R.layout.audio_downloads_layout, parent, false);
         return new MyViewHolder(v);
     }
@@ -104,7 +105,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                                 holder.binding.pbProgress.setProgress(downloadProgress);
                                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
                             } else {
-                                holder.binding.pbProgress.setVisibility(View.GONE);
+                                holder.binding.pbProgress.setVisibility(View.INVISIBLE);
                                 handler1.removeCallbacks(UpdateSongTime1);
                             }
                         }
@@ -118,7 +119,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
                 handler1.postDelayed(UpdateSongTime1, 500);
             } else {
-                holder.binding.pbProgress.setVisibility(View.GONE);
+                holder.binding.pbProgress.setVisibility(View.INVISIBLE);
             }
         }
         holder.binding.tvTitle.setText(listModelList.get(position).getName());
@@ -265,9 +266,9 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        DownloadsLayoutBinding binding;
+        AudioDownloadsLayoutBinding binding;
 
-        public MyViewHolder(DownloadsLayoutBinding binding) {
+        public MyViewHolder(AudioDownloadsLayoutBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

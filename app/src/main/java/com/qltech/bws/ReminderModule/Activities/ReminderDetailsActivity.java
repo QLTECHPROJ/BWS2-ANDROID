@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Models.DeleteRemiderModel;
 import com.qltech.bws.ReminderModule.Models.RemiderDetailsModel;
@@ -47,6 +48,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Account.AccountFragment.IsLock;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.pauseMedia;
+import static com.qltech.bws.Utility.MusicService.resumeMedia;
 
 public class ReminderDetailsActivity extends AppCompatActivity {
     ActivityReminderDetailsBinding binding;
@@ -138,29 +143,53 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         }
 
         binding.btnDeleteReminder.setOnClickListener(view -> {
-            if (BWSApplication.isNetworkConnected(ctx)) {
-                Call<DeleteRemiderModel> listCall = APIClient.getClient().getDeleteRemiderStatus(UserId,
-                        TextUtils.join(",", remiderIds));
-                listCall.enqueue(new Callback<DeleteRemiderModel>() {
-                    @Override
-                    public void onResponse(Call<DeleteRemiderModel> call, Response<DeleteRemiderModel> response) {
-                        if (response.isSuccessful()) {
-                            DeleteRemiderModel model = response.body();
-                            remiderIds.clear();
-                            BWSApplication.showToast(model.getResponseMessage(), ctx);
-                            prepareData();
-                            finish();
+            final Dialog dialog = new Dialog(ctx);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.delete_reminder);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+            final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+            final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+
+            dialog.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                    return true;
+                }
+                return false;
+            });
+
+            tvconfirm.setOnClickListener(v -> {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    Call<DeleteRemiderModel> listCall = APIClient.getClient().getDeleteRemiderStatus(UserId,
+                            TextUtils.join(",", remiderIds));
+                    listCall.enqueue(new Callback<DeleteRemiderModel>() {
+                        @Override
+                        public void onResponse(Call<DeleteRemiderModel> call, Response<DeleteRemiderModel> response) {
+                            if (response.isSuccessful()) {
+                                DeleteRemiderModel model = response.body();
+                                remiderIds.clear();
+                                BWSApplication.showToast(model.getResponseMessage(), ctx);
+                                prepareData();
+                                finish();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<DeleteRemiderModel> call, Throwable t) {
-                    }
-                });
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-            }
+                        @Override
+                        public void onFailure(Call<DeleteRemiderModel> call, Throwable t) {
+                        }
+                    });
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
+            });
 
+            tvGoBack.setOnClickListener(v -> {
+                dialog.dismiss();
+            });
+            dialog.show();
+            dialog.setCancelable(false);
         });
     }
 
@@ -215,28 +244,21 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
                 }
             });
-            binding.llClose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    remiderIds.clear();
-                    binding.cbChecked.setChecked(false);
-                }
+            binding.llClose.setOnClickListener(view -> {
+                remiderIds.clear();
+                binding.cbChecked.setChecked(false);
             });
-            binding.cbChecked.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(binding.cbChecked.isChecked()){
-                        remiderIds.clear();
-                        for(int i = 0;i<model.size();i++){
-                            remiderIds.add(model.get(i).getReminderId());
-                        }
-                    }else{
-                        remiderIds.clear();
+            binding.cbChecked.setOnClickListener(view -> {
+                if(binding.cbChecked.isChecked()){
+                    remiderIds.clear();
+                    for(int i = 0;i<model.size();i++){
+                        remiderIds.add(model.get(i).getReminderId());
                     }
-                    Log.e("remiderIds", TextUtils.join(",", remiderIds));
-
-                    notifyDataSetChanged();
+                }else{
+                    remiderIds.clear();
                 }
+                Log.e("remiderIds", TextUtils.join(",", remiderIds));
+                notifyDataSetChanged();
             });
 
             if (remiderIds.contains(model.get(position).getReminderId())) {

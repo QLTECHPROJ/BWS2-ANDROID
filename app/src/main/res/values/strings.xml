@@ -52,6 +52,7 @@
     <string name="Cancel_Subscription">Cancel Subscription</string>
     <string name="Cancel">Cancel</string>
     <string name="cancel_quotes">Are you sure you want to cancel your subscription?</string>
+    <string name="reminder_quotes">Are you sure you want to delete your reminder?</string>
     <string name="go_back">Go Back</string>
     <string name="Country">Country</string>
     <string name="Postcode">Postcode</string>

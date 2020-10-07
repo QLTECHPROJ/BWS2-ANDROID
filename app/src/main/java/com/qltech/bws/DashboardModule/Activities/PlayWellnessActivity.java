@@ -193,12 +193,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 if(downloadProgress <=100) {
                     binding.pbProgress.setProgress(downloadProgress);
                     binding.pbProgress.setVisibility(View.VISIBLE);
+                    binding.ivDownloads.setVisibility(View.GONE);
                 }else{
                     binding.pbProgress.setVisibility(View.GONE);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
                     handler1.removeCallbacks(UpdateSongTime1);
                 }
             }else{
                 binding.pbProgress.setVisibility(View.GONE);
+                binding.ivDownloads.setVisibility(View.VISIBLE);
+                binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                 handler1.removeCallbacks(UpdateSongTime1);
             }
             handler1.postDelayed(this, 500);
