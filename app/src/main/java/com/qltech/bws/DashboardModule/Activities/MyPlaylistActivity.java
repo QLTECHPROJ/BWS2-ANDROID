@@ -433,7 +433,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             }
 
                             binding.llFind.setOnClickListener(view -> {
-                                ComeFindAudio = 1;
+                                ComeFindAudio = 2;
                                 finish();
                             });
                             if (model.getResponseData().getPlaylistMastercat().equalsIgnoreCase("")) {

@@ -449,11 +449,17 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void searchClear(EditText searchEditText) {
         if (ComeFindAudio == 1) {
+            binding.searchView.clearFocus();
+            searchEditText.setText("");
+            binding.searchView.setQuery("", false);
+            ComeFindAudio = 0;
+        }else if (ComeFindAudio == 2){
             binding.searchView.requestFocus();
             searchEditText.setText("");
             binding.searchView.setQuery("", false);
             ComeFindAudio = 0;
         }
+
     }
 
     private void prepareData(String UserId, String PlaylistId) {
