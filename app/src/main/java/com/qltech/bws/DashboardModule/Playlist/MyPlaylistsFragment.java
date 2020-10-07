@@ -668,36 +668,40 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             removedFileNameList = gson1.fromJson(json, type);
             removedPlaylistDownloadId = gson1.fromJson(json2, type);
         }*/
-        SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-        String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-        String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
-            Type type = new TypeToken<List<String>>() {
-            }.getType();
-            fileNameList = gson.fromJson(jsony, type);
-            playlistDownloadId = gson.fromJson(jsonq, type);
-            remainAudio = new ArrayList<>();
-            if (playlistDownloadId.size() != 0) {
-                playlistDownloadId.contains(PlaylistID);
-                for (int i = 0; i < fileNameList.size(); i++) {
-                    if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
-                        remainAudio.add(playlistDownloadId.get(i));
-                    }
-                }
-                if (downloadPlaylistDetailsList.size() != 0) {
-                    if (remainAudio.size() < SongListSize) {
-                        handler1.postDelayed(UpdateSongTime1, 500);
-                    }
-                }
-                //
-            }
-        } else {
-            fileNameList = new ArrayList<>();
-            playlistDownloadId = new ArrayList<>();
-            remainAudio = new ArrayList<>();
-        }
+     try {
+         SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+         Gson gson = new Gson();
+         String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+         String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+         String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+         if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
+             Type type = new TypeToken<List<String>>() {
+             }.getType();
+             fileNameList = gson.fromJson(jsony, type);
+             playlistDownloadId = gson.fromJson(jsonq, type);
+             remainAudio = new ArrayList<>();
+             if (playlistDownloadId.size() != 0) {
+                 playlistDownloadId.contains(PlaylistID);
+                 for (int i = 0; i < fileNameList.size(); i++) {
+                     if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
+                         remainAudio.add(playlistDownloadId.get(i));
+                     }
+                 }
+                 if (downloadPlaylistDetailsList.size() != 0) {
+                     if (remainAudio.size() < SongListSize) {
+                         handler1.postDelayed(UpdateSongTime1, 500);
+                     }
+                 }
+                 //
+             }
+         } else {
+             fileNameList = new ArrayList<>();
+             playlistDownloadId = new ArrayList<>();
+             remainAudio = new ArrayList<>();
+         }
+     } catch (Exception e) {
+         e.printStackTrace();
+     }
     }
 
     private void setData(SubPlayListModel.ResponseData listModel) {
