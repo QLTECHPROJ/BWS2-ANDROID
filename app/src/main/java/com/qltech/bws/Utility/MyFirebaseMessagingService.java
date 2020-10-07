@@ -57,7 +57,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //        Log.e("AAAAAAAAAAAAAAAAAAAAA", "" + remoteMessage.toString());
 //        String tag = remoteMessage.getData().get("tag");
 
-//        FirebaseMessaging.getInstance().subscribeToTopic("YupIT");
+//        FirebaseMessaging.getInstance().subscribeToTopic("BWS");
 
 //        image = getBitmapFromURL(img);
 
@@ -135,7 +135,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             importance = NotificationManager.IMPORTANCE_HIGH;
         }
         try {
-            if (flag != null && flag.equalsIgnoreCase("Reminder")) {
+            if (flag != null && flag.equalsIgnoreCase("Playlist")) {
                 /*Bundle bundle = new Bundle();
                 Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                 FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
@@ -150,28 +150,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .replace(R.id.flContainer, myPlaylistsFragment)
                         .commit();*/
                 resultIntent = new Intent(this, DashboardActivity.class);
-                /*resultIntent.putExtra(CONSTANTS.back_flag, CONSTANTS.FLAG_ONE);
-                resultIntent.putExtra(CONSTANTS.refer_a_freind, CONSTANTS.FLAG_ONE);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
+                resultIntent.putExtra("id", id);
                 resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);*/
+                resultIntent.putExtra("body", message);
                 taskStackBuilder.addParentStack(DashboardActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                 resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            } /*else if (flag != null && flag.equalsIgnoreCase(CONSTANTS.refer_restaurant)) {
-                resultIntent = new Intent(this, ShareAndEarnActivity.class);
-                resultIntent.putExtra(CONSTANTS.back_flag, CONSTANTS.FLAG_ONE);
-                resultIntent.putExtra(CONSTANTS.refer_a_freind, CONSTANTS.FLAG_TWO);
-                resultIntent.putExtra(CONSTANTS.notification, "0");
-                resultIntent.putExtra(CONSTANTS.title, title);
-                resultIntent.putExtra(CONSTANTS.message, message);
-                taskStackBuilder.addParentStack(NavigationActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            }*/ else {
+            } else {
                 resultIntent = new Intent(this, DashboardActivity.class);
-//                resultIntent.putExtra(CONSTANTS.flag, flag);
-//                resultIntent.putExtra(CONSTANTS.id, id);
                 taskStackBuilder.addParentStack(DashboardActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                 resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -184,7 +170,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 notificationChannel = new NotificationChannel(channelId, channelName, importance);
                 notificationChannel.enableLights(true);
                 notificationChannel.enableVibration(true);
-                notificationChannel.setDescription("YupIt Notification");
+                notificationChannel.setDescription("BWS Notification");
                 notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                 notificationBuilder = new NotificationCompat.Builder(this, notificationChannel.getId());
             } else {

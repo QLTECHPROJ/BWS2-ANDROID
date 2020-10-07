@@ -120,6 +120,7 @@ public class AddQueueActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         myPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
         PlaylistId = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
         if (!json.equalsIgnoreCase(String.valueOf(gson))) {
@@ -820,6 +821,9 @@ public class AddQueueActivity extends AppCompatActivity {
                         } else if (play.equalsIgnoreCase("myPlayList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.VISIBLE);
+                        } else if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
+                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llRemovePlaylist.setVisibility(View.GONE);
                         } else {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
@@ -879,7 +883,7 @@ public class AddQueueActivity extends AppCompatActivity {
                             binding.llViewQueue.setClickable(true);
                             binding.llViewQueue.setEnabled(true);
                             binding.ivViewQueue.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
-                        }else{
+                        } else {
                             binding.llViewQueue.setClickable(false);
                             binding.llViewQueue.setEnabled(false);
                             binding.ivViewQueue.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
