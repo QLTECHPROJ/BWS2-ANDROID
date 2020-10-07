@@ -226,6 +226,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                                             dialog.show();
                                                             dialog.setCancelable(false);
                                                         } else {
+                                                            BWSApplication.showToast(listModels.getResponseMessage(), ctx);
                                                             dialog.dismiss();
                                                             finish();
                                                         }
@@ -301,6 +302,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         dialog.show();
                                         dialog.setCancelable(false);
                                     } else {
+                                        BWSApplication.showToast(listModels.getResponseMessage(), ctx);
                                         finish();
                                     }
                                 }

@@ -81,7 +81,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
                                 android:padding="@dimen/_4sdp"
-                                android:src="@color/dark_blue_gray" />
+                                android:src="@color/blue" />
 
                             <TextView
                                 android:id="@+id/tvLetter"
@@ -89,7 +89,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
                                 android:fontFamily="@font/montserrat_semi_bold"
-                                android:textColor="#A6B0CF"
+                                android:textColor="@color/white"
                                 android:textSize="@dimen/_46sdp" />
                         </RelativeLayout>
 
