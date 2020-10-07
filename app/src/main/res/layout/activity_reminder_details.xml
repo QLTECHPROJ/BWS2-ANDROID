@@ -84,6 +84,23 @@
                     android:textColor="@color/blue"
                     android:textSize="@dimen/_13sdp" />
 
+                <CheckBox
+                    android:id="@+id/cbChecked"
+                    style="@android:style/Widget.CompoundButton.CheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_16sdp"
+                    android:layout_alignParentRight="true"
+                    android:background="@android:color/transparent"
+                    android:button="@drawable/checkbox_btn_background"
+                    android:gravity="center_vertical|left"
+                    android:layoutDirection="rtl"
+                    android:overScrollMode="never"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp"
+                    android:visibility="visible" />
+
+<!--
                 <ImageView
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
@@ -91,6 +108,7 @@
                     android:src="@drawable/ic_close_white_icon"
                     android:layout_alignParentRight="true"
                     app:tint="@color/black" />
+-->
 
             </RelativeLayout>
 
