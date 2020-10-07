@@ -31,6 +31,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.gson.Gson;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
@@ -293,7 +294,6 @@ public class AccountFragment extends Fragment {
         edit1.remove(CONSTANTS.PREF_KEY_DownloadPlaylistId);
         edit1.clear();
         edit1.commit();
-
         SharedPreferences shareds = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_CardID, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shareds.edit();
         editor.remove(CONSTANTS.PREF_KEY_CardID);

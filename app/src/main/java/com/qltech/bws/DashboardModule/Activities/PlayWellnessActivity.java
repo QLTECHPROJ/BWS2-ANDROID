@@ -190,7 +190,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         @Override
         public void run() {
             if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
-                if(downloadProgress <100) {
+                if(downloadProgress <=100) {
                     binding.pbProgress.setProgress(downloadProgress);
                     binding.pbProgress.setVisibility(View.VISIBLE);
                 }else{
@@ -633,6 +633,18 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         url1.add(url);
         name1.add(name);
         downloadPlaylistId.add("");
+        if (url1.size() != 0) {
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String urlJson = gson.toJson(url1);
+            String nameJson = gson.toJson(name1);
+            String playlistIdJson = gson.toJson(downloadPlaylistId);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+            editor.commit();
+        }
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         downloadMedia.encrypt1(url1, name1);
         if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){

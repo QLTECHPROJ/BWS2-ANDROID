@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -93,9 +92,10 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     QueueAdapter adapter;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     ItemTouchHelper touchHelper;
+    int mypos = 0;
+    long totalDuration;
     private long mLastClickTime = 0;
     private Handler handler;
-    int mypos = 0;
     //    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
@@ -105,25 +105,44 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             if (queuePlay) {
                 if (listSize != 0) {
                     if (!BWSApplication.isNetworkConnected(ctx)) {
-                        t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                        if (mediaPlayer != null) {
+                            totalDuration = mediaPlayer.getDuration();
+                        } else {
+                            t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                        }
                     } else {
-                        t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                        if (mediaPlayer != null) {
+                            totalDuration = mediaPlayer.getDuration();
+                        } else {
+                            t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                        }
                     }
                 } else {
                     stopMedia();
                 }
             } else if (audioPlay) {
                 if (!BWSApplication.isNetworkConnected(ctx)) {
-                    t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                    if (mediaPlayer != null) {
+                        totalDuration = mediaPlayer.getDuration();
+                    } else {
+                        t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                    }
                 } else {
-                    t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                    if (mediaPlayer != null) {
+                        totalDuration = mediaPlayer.getDuration();
+                    } else {
+                        t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                    }
                 }
             }
-            long totalDuration;
             if (!BWSApplication.isNetworkConnected(ctx)) {
                 totalDuration = mediaPlayer.getDuration();
             } else {
-                totalDuration = t.getTime();
+                if (mediaPlayer != null) {
+                    totalDuration = mediaPlayer.getDuration();
+                } else {
+                    totalDuration = t.getTime();
+                }
             }
             long currentDuration = getStartTime();
 
@@ -905,8 +924,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
                 setInIt(listModel.getName(), listModel.getAudiomastercat(),
                         listModel.getImageFile(), listModel.getAudioDuration());
-                if(queuePlay)
-                addToQueueModelList.remove(mypos);
+                if (queuePlay)
+                    addToQueueModelList.remove(mypos);
                 savePrefQueue(position1, true, false, addToQueueModelList, ctx);
                 position = position1;
                 getPrepareShowData(position);
@@ -919,13 +938,19 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             notifyDataSetChanged();
         }
 
-        public void callRemoveList(int position) {
-            String Name = listModelList.get(position).getName();
-            listModelList.remove(position);
+        public void callRemoveList(int position1) {
             for (int i = 0; i < addToQueueModelList.size(); i++) {
-                if (addToQueueModelList.get(i).getName().equalsIgnoreCase(Name))
+                if (addToQueueModelList.get(i).getName().equalsIgnoreCase(binding.tvName.getText().toString()))
                     addToQueueModelList.remove(i);
             }
+            setInIt(listModelList.get(position).getName(), listModelList.get(position).getAudiomastercat(),
+                    listModelList.get(position).getImageFile(), listModelList.get(position).getAudioDuration());
+            String Name = listModelList.get(position1).getName();
+            listModelList.remove(position1);
+       /*     for (int i = 0; i < addToQueueModelList.size(); i++) {
+                if (addToQueueModelList.get(i).getName().equalsIgnoreCase(Name))
+                    addToQueueModelList.remove(i);
+            }*/
             notifyDataSetChanged();
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -952,17 +977,18 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 for (int i = fromPosition; i > toPosition; i--) {
                     Collections.swap(listModelList, i, i - 1);
                 }
-            }    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            }
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
-            String json="";
-            if(queuePlay) {
+            String json = "";
+            if (queuePlay) {
                 ArrayList<AddToQueueModel> listModelList1 = new ArrayList<>();
                 listModelList1.clear();
                 listModelList1 = listModelList;
                 listModelList1.add(addToQueueModelList.get(mypos));
                 json = gson.toJson(listModelList1);
-            }else{
+            } else {
                 json = gson.toJson(listModelList);
             }
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);

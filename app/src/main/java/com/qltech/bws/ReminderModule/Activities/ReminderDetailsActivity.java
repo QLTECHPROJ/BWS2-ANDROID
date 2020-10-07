@@ -166,7 +166,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
     public class RemiderDetailsAdapter extends RecyclerView.Adapter<RemiderDetailsAdapter.MyViewHolder> {
         private List<RemiderDetailsModel.ResponseData> model;
-        public int mSelectedItem = -1;
 
         public RemiderDetailsAdapter(List<RemiderDetailsModel.ResponseData> model) {
             this.model = model;
@@ -189,16 +188,15 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
             holder.bind.cbChecked.setOnCheckedChangeListener((compoundButton, b) -> {
                 if (holder.bind.cbChecked.isChecked()) {
-                    mSelectedItem = getAdapterPosition();
-                    notifyDataSetChanged();
-                    if (!remiderIds.contains(model.get(mSelectedItem).getReminderId())) {
-                        remiderIds.add(model.get(mSelectedItem).getReminderId());
+//                    notifyDataSetChanged();
+                    if (!remiderIds.contains(model.get(position).getReminderId())) {
+                        remiderIds.add(model.get(position).getReminderId());
                         Log.e("remiderIds", TextUtils.join(",", remiderIds));
                     } else {
 
                     }
                 } else {
-                    remiderIds.remove(model.get(mSelectedItem).getReminderId());
+                    remiderIds.remove(model.get(position).getReminderId());
                     Log.e("remiderIds", TextUtils.join(",", remiderIds));
                 }
                 if (remiderIds.size() == 0) {

@@ -82,7 +82,7 @@ public class AddQueueActivity extends AppCompatActivity {
         @Override
         public void run() {
             if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
-                if (downloadProgress < 100) {
+                if (downloadProgress <= 100) {
                     binding.pbProgress.setProgress(downloadProgress);
                     binding.pbProgress.setVisibility(View.VISIBLE);
                 } else {
@@ -683,7 +683,20 @@ public class AddQueueActivity extends AppCompatActivity {
         url1.add(audioFile);
         name1.add(Name);
         downloadPlaylistId.add("");
+        if (url1.size() != 0) {
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String urlJson = gson.toJson(url1);
+            String nameJson = gson.toJson(name1);
+            String playlistIdJson = gson.toJson(downloadPlaylistId);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+            editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+            editor.commit();
+        }
         fileNameList = url1;
+        callDisableDownload();
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         downloadMedia.encrypt1(url1, name1);
 //        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
@@ -743,8 +756,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                binding.llDownload.setClickable(false);
-                binding.llDownload.setEnabled(false);
+               callDisableDownload();
                 super.onPostExecute(aVoid);
             }
         }
@@ -1026,7 +1038,7 @@ public class AddQueueActivity extends AppCompatActivity {
     private void callDisableDownload() {
         binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
         binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-        binding.tvDownloads.setTextColor(activity.getResources().getColor(R.color.light_gray));
+        binding.tvDownloads.setTextColor(activity.getResources().getColor(R.color.white));
         binding.llDownload.setClickable(false);
         binding.llDownload.setEnabled(false);
     }

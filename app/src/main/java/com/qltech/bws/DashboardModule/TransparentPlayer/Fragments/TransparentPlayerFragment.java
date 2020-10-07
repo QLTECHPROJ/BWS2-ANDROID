@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -86,8 +85,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     boolean downloadPlay = false;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     Activity activity;
+    long totalDuration;
     private Handler handler;
-//        private AudioManager mAudioManager;
+    //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -98,28 +98,48 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 if (queuePlay) {
                     if (listSize != 0) {
                         if (!BWSApplication.isNetworkConnected(getActivity())) {
-                            t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                            if (mediaPlayer != null) {
+                                totalDuration = mediaPlayer.getDuration();
+                            } else {
+                                t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                            }
                         } else {
-                            t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                            if (mediaPlayer != null) {
+                                totalDuration = mediaPlayer.getDuration();
+                            } else {
+                                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                            }
                         }
                     } else {
                         stopMedia();
                     }
                 } else if (audioPlay) {
                     if (!BWSApplication.isNetworkConnected(getActivity())) {
-                        t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                        if (mediaPlayer != null) {
+                            totalDuration = mediaPlayer.getDuration();
+                        } else {
+                            t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                        }
                     } else {
-                        t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                        if (mediaPlayer != null) {
+                            totalDuration = mediaPlayer.getDuration();
+                        } else {
+                            t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                        }
                     }
                 }
-                long totalDuration;
+
                 if (!BWSApplication.isNetworkConnected(getActivity())) {
                     if (mediaPlayer != null) {
                         totalDuration = mediaPlayer.getDuration();
                     } else
                         totalDuration = t.getTime();
                 } else {
-                    totalDuration = t.getTime();
+                    if (mediaPlayer != null) {
+                        totalDuration = mediaPlayer.getDuration();
+                    } else {
+                        totalDuration = t.getTime();
+                    }
                 }
                 long currentDuration = getStartTime();
 
@@ -168,7 +188,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             param.setMargins(0, 0, 0, 0);
             binding.llLayout.setLayoutParams(param);
-        }else {
+        } else {
             LinearLayout.LayoutParams paramm = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             paramm.setMargins(0, 0, 0, 94);
             binding.llLayout.setLayoutParams(paramm);

@@ -73,7 +73,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     public static int deleteFrg = 0;
     public static int ComeFindAudio = 0;
     ActivityMyPlaylistBinding binding;
-    String UserID, PlaylistID, Download;
+    String UserID, PlaylistID, Download="";
     Context ctx;
     Activity activity;
     public static int comeAddPlaylist = 0;
@@ -97,7 +97,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                     long progressPercent = remain * 100 / total;
                     int downloadProgress1 = (int) progressPercent;
                     if(SongListSize == 1){
-                        if (downloadProgress < 100) {
+                        if (downloadProgress <= 100) {
                             binding.pbProgress.setProgress(downloadProgress);
                             binding.pbProgress.setVisibility(View.VISIBLE);
                         }
@@ -135,8 +135,9 @@ public class MyPlaylistActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
         }
+        getPrepareData();
         downloadAudioDetailsList = GetAllMedia();
-        downloadPlaylistDetailsList = GetPlaylistDetail(PlaylistID);
+        downloadPlaylistDetailsList = GetPlaylistDetail();
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,7 +149,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
         getDownloadData();
 
         binding.llDownload.setOnClickListener(view -> callDownload());
-        getPrepareData();
     }
     private void getDownloadData() {
      /*   SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_removedDownloadPlaylist, MODE_PRIVATE);
@@ -517,6 +517,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
                             binding.llDownload.setVisibility(View.VISIBLE);
 
+/*
                             binding.llDownload.setOnClickListener(view -> {
                                 if (BWSApplication.isNetworkConnected(ctx)) {
                                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
@@ -542,6 +543,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), getString(R.string.no_server_found), Toast.LENGTH_SHORT).show();
                                 }
                             });
+*/
 
                             String[] elements = model.getResponseData().getPlaylistSubcat().split(",");
                             List<String> direction = Arrays.asList(elements);
@@ -688,7 +690,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         }
     }
 
-    private List<DownloadPlaylistDetails> GetPlaylistDetail(String download) {
+    private List<DownloadPlaylistDetails> GetPlaylistDetail() {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -702,12 +704,14 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if (downloadPlaylistDetailsList.size() != 0 || RefreshNew.equalsIgnoreCase("1") || RefreshIconData == 0) {
+                if (downloadPlaylistDetailsList.size() != 0 || RefreshIconData==0) {
                     enableDisableDownload(false);
-                } else if (download.equalsIgnoreCase("1") || RefreshNew.equalsIgnoreCase("1") || RefreshIconData == 0) {
+                } else if (Download.equalsIgnoreCase("1")) {
                     enableDisableDownload(false);
-                } else if (download.equalsIgnoreCase("0") || RefreshNew.equalsIgnoreCase("0") || download.equalsIgnoreCase("") ||
+                } else if (Download.equalsIgnoreCase("0") || Download.equalsIgnoreCase("") ||
                         RefreshIconData != 0) {
+                    enableDisableDownload(true);
+                }else if(downloadPlaylistDetailsList.size() == 0 && RefreshIconData!=0){
                     enableDisableDownload(true);
                 }
                 super.onPostExecute(aVoid);
@@ -731,7 +735,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             binding.llDownload.setClickable(false);
             binding.llDownload.setEnabled(false);
             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-            binding.tvDownload.setTextColor(getResources().getColor(R.color.light_gray));
+            binding.tvDownload.setTextColor(getResources().getColor(R.color.white));
         }
     }
 }

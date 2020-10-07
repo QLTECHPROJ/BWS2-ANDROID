@@ -100,7 +100,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 for (int f = 0; f < listModelList.size(); f++) {
                     if (fileNameList.contains(listModelList.get(f).getName())) {
                         if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(f).getName())) {
-                            if (downloadProgress < 100) {
+                            if (downloadProgress <= 100) {
                                 holder.binding.pbProgress.setProgress(downloadProgress);
                                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
                             } else {

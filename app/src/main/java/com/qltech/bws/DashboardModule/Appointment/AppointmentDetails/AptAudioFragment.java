@@ -154,7 +154,7 @@ public class AptAudioFragment extends Fragment {
                 @Override
                 public void run() {
                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(Name)) {
-                       if (downloadProgress < 100) {
+                       if (downloadProgress <= 100) {
                            holder.binding.pbProgress.setProgress(downloadProgress);
                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
                        } else {
