@@ -82,26 +82,35 @@
             android:layout_gravity="center"
             android:layout_weight="0.12"
             android:gravity="center"
-            android:padding="@dimen/_8sdp">
+            android:padding="@dimen/_5sdp">
+
             <ProgressBar
                 android:id="@+id/pbProgress"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:background="@drawable/circular_shape"
+                android:background="@drawable/circular_shapes"
                 android:indeterminate="false"
-                android:max="100"
-                android:visibility="gone"
                 android:indeterminateTint="@color/dark_yellow"
-                android:progressDrawable="@drawable/circular_progress_bar" />
+                android:max="100"
+                android:progress="50"
+                android:progressDrawable="@drawable/circular_progress_bars"
+                android:visibility="gone" />
 
-            <ImageView
-                android:id="@+id/ivDownload"
-                android:layout_width="@dimen/_38sdp"
-                android:layout_height="@dimen/_38sdp"
-                android:padding="@dimen/_8sdp"
-                android:src="@drawable/ic_download_icon" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/ivDownload"
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"
+                    android:padding="@dimen/_8sdp"
+                    android:src="@drawable/ic_download_icon" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -112,13 +121,13 @@
             android:layout_gravity="center"
             android:layout_weight="0.12"
             android:gravity="center"
-            android:padding="@dimen/_8sdp">
+            android:padding="@dimen/_6sdp">
 
             <ImageView
                 android:id="@+id/ivArrange"
-                android:layout_width="@dimen/_38sdp"
-                android:layout_height="@dimen/_38sdp"
-                android:padding="@dimen/_8sdp"
+                android:layout_width="@dimen/_36sdp"
+                android:layout_height="@dimen/_36sdp"
+                android:padding="@dimen/_6sdp"
                 android:src="@drawable/add_icon" />
 
         </LinearLayout>

@@ -61,7 +61,7 @@ import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.filename;
 
 public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
-    String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comeFrom = "",audioFileName,
+    String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comeFrom = "", audioFileName,
             AudioFile = "", PlaylistAudioId = "";
     Context ctx;
     Activity activity;
@@ -81,15 +81,15 @@ public class AddQueueActivity extends AppCompatActivity {
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
-           if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
-               if (downloadProgress < 100) {
-                   binding.pbProgress.setProgress(downloadProgress);
-                   binding.pbProgress.setVisibility(View.VISIBLE);
-               } else {
-                   binding.pbProgress.setVisibility(View.GONE);
-                   handler1.removeCallbacks(UpdateSongTime1);
-               }
-           }
+            if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
+                if (downloadProgress < 100) {
+                    binding.pbProgress.setProgress(downloadProgress);
+                    binding.pbProgress.setVisibility(View.VISIBLE);
+                } else {
+                    binding.pbProgress.setVisibility(View.GONE);
+                    handler1.removeCallbacks(UpdateSongTime1);
+                }
+            }
             handler1.postDelayed(this, 500);
         }
     };
@@ -145,7 +145,7 @@ public class AddQueueActivity extends AppCompatActivity {
         if (getIntent().hasExtra("PlaylistAudioId")) {
             PlaylistAudioId = getIntent().getStringExtra("PlaylistAudioId");
         }
-        if(fileNameList.size()!=0) {
+        if (fileNameList.size() != 0) {
             if (fileNameList.contains(audioFileName)) {
                 binding.pbProgress.setVisibility(View.VISIBLE);
                 handler1.postDelayed(UpdateSongTime1, 500);
@@ -159,6 +159,7 @@ public class AddQueueActivity extends AppCompatActivity {
         } else {
             play = "";
         }
+
         if (getIntent().hasExtra("comeFrom")) {
             comeFrom = getIntent().getStringExtra("comeFrom");
             position = getIntent().getIntExtra("position", 0);
@@ -403,8 +404,8 @@ public class AddQueueActivity extends AppCompatActivity {
             addToQueueModel.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
         }
         if (addToQueueModelList.size() == 0) {
-        BWSApplication.showToast("Audio has been added to queue", ctx);
-        addToQueueModelList.add(addToQueueModel);
+            BWSApplication.showToast("Audio has been added to queue", ctx);
+            addToQueueModelList.add(addToQueueModel);
         } else {
             for (int x = 0; x < addToQueueModelList.size(); x++) {
                 if (addToQueueModelList.get(x).getAudioFile().equals(addToQueueModel.getAudioFile())) {
@@ -545,7 +546,7 @@ public class AddQueueActivity extends AppCompatActivity {
             List<String> fileNameList = gson1.fromJson(json, type);
             List<String> audioFile1 = gson1.fromJson(json1, type);
             List<String> playlistId1 = gson1.fromJson(json2, type);
-            if(fileNameList.size()!=0) {
+            if (fileNameList.size() != 0) {
                 url1.addAll(audioFile1);
                 name1.addAll(fileNameList);
                 downloadPlaylistId.addAll(playlistId1);
@@ -558,7 +559,7 @@ public class AddQueueActivity extends AppCompatActivity {
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         downloadMedia.encrypt1(url1, name1);
 //        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
-            handler1.postDelayed(UpdateSongTime1, 500);
+        handler1.postDelayed(UpdateSongTime1, 500);
 //        }else{
 //            binding.pbProgress.setVisibility(View.GONE);
 //            handler1.removeCallbacks(UpdateSongTime1);
@@ -686,160 +687,169 @@ public class AddQueueActivity extends AppCompatActivity {
                         if (play.equalsIgnoreCase("play")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.VISIBLE);
+                        } else if (play.equalsIgnoreCase("playlist")) {
+                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llRemovePlaylist.setVisibility(View.GONE);
+                        }  else if (play.equalsIgnoreCase("myPlayList")) {
+                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llRemovePlaylist.setVisibility(View.VISIBLE);
                         } else {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
                         }
-                        if (myPlaylist.equalsIgnoreCase("myPlaylist")) {
-                            binding.llRemovePlaylist.setVisibility(View.VISIBLE);
-                        } else {
-                            binding.llRemovePlaylist.setVisibility(View.GONE);
-                        }
-                        DirectionModel directionModel = response.body();
-                        int ix = position;
-                        if (!comeFrom.equalsIgnoreCase("")) {
-                            AudioFile = mData.get(ix).getAudioFile();
-                            PlaylistId = mData.get(ix).getPlaylistID();
-                            audioFileName = mData.get(ix).getName();
-                        } else {
-                            AudioFile = mainPlayModelList.get(ix).getAudioFile();
-                            PlaylistId = mainPlayModelList.get(ix).getPlaylistID();
-                            audioFileName = mainPlayModelList.get(ix).getName();
-                        }
-                        if (PlaylistId == null) {
-                            PlaylistId = "";
-                        } else {
-                            PlaylistId = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        }
-                        GetMedia(AudioFile, activity, directionModel.getResponseData().get(0).getDownload(), PlaylistId);
-                        binding.cvImage.setVisibility(View.VISIBLE);
-                        binding.llLike.setVisibility(View.VISIBLE);
-                        binding.llAddPlaylist.setVisibility(View.VISIBLE);
-                        binding.llAddQueue.setVisibility(View.VISIBLE);
-                        binding.llDownload.setVisibility(View.VISIBLE);
-                        binding.llShuffle.setVisibility(View.VISIBLE);
-                        binding.llRepeat.setVisibility(View.VISIBLE);
-                        binding.llViewQueue.setVisibility(View.VISIBLE);
-                        Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile()).thumbnail(0.05f)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                    /*if (myPlaylist.equalsIgnoreCase("myPlaylist")) {
+                        binding.llRemovePlaylist.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.llRemovePlaylist.setVisibility(View.GONE);
+                    }*/
+                    DirectionModel directionModel = response.body();
+                    int ix = position;
+                    if (!comeFrom.equalsIgnoreCase("")) {
+                        AudioFile = mData.get(ix).getAudioFile();
+                        PlaylistId = mData.get(ix).getPlaylistID();
+                        audioFileName = mData.get(ix).getName();
+                    } else {
+                        AudioFile = mainPlayModelList.get(ix).getAudioFile();
+                        PlaylistId = mainPlayModelList.get(ix).getPlaylistID();
+                        audioFileName = mainPlayModelList.get(ix).getName();
+                    }
+                    if (PlaylistId == null) {
+                        PlaylistId = "";
+                    } else {
+                        PlaylistId = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    }
+                    GetMedia(AudioFile, activity, directionModel.getResponseData().get(0).getDownload(), PlaylistId);
+                    binding.cvImage.setVisibility(View.VISIBLE);
+                    binding.llLike.setVisibility(View.VISIBLE);
+                    binding.llAddPlaylist.setVisibility(View.VISIBLE);
+                    binding.llAddQueue.setVisibility(View.VISIBLE);
+                    binding.llDownload.setVisibility(View.VISIBLE);
+                    binding.llShuffle.setVisibility(View.VISIBLE);
+                    binding.llRepeat.setVisibility(View.VISIBLE);
+                    binding.llViewQueue.setVisibility(View.VISIBLE);
+                    Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile()).thumbnail(0.05f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
-                        if (directionModel.getResponseData().get(0).getAudioDescription().equalsIgnoreCase("")) {
-                            binding.tvTitleDec.setVisibility(View.GONE);
-                            binding.tvSubDec.setVisibility(View.GONE);
-                        } else {
-                            binding.tvTitleDec.setVisibility(View.VISIBLE);
-                            binding.tvSubDec.setVisibility(View.VISIBLE);
-                        }
+                    if (directionModel.getResponseData().get(0).getAudioDescription().equalsIgnoreCase("")) {
+                        binding.tvTitleDec.setVisibility(View.GONE);
+                        binding.tvSubDec.setVisibility(View.GONE);
+                    } else {
+                        binding.tvTitleDec.setVisibility(View.VISIBLE);
+                        binding.tvSubDec.setVisibility(View.VISIBLE);
+                    }
 
-                        binding.tvSubDec.setText(directionModel.getResponseData().get(0).getAudioDescription());
-                        int linecount = binding.tvSubDec.getLineCount();
-                        if (linecount >= 4) {
-                            binding.tvReadMore.setVisibility(View.VISIBLE);
-                        } else {
-                            binding.tvReadMore.setVisibility(View.GONE);
-                        }
+                    binding.tvSubDec.setText(directionModel.getResponseData().get(0).getAudioDescription());
+                    int linecount = binding.tvSubDec.getLineCount();
+                    if (linecount >= 4) {
+                        binding.tvReadMore.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.tvReadMore.setVisibility(View.GONE);
+                    }
 
-                        binding.tvReadMore.setOnClickListener(view -> {
-                            final Dialog dialog = new Dialog(ctx);
-                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            dialog.setContentView(R.layout.full_desc_layout);
-                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                            final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
-                            final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
-                            tvDesc.setText(directionModel.getResponseData().get(0).getAudioDescription());
+                    binding.tvReadMore.setOnClickListener(view -> {
+                        final Dialog dialog = new Dialog(ctx);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setContentView(R.layout.full_desc_layout);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                        final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
+                        final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
+                        tvDesc.setText(directionModel.getResponseData().get(0).getAudioDescription());
 
-                            dialog.setOnKeyListener((v, keyCode, event) -> {
-                                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                    dialog.dismiss();
-                                    return true;
-                                }
-                                return false;
-                            });
-
-                            tvClose.setOnClickListener(v -> dialog.dismiss());
-                            dialog.show();
-                            dialog.setCancelable(false);
-                        });
-
-                        Like = directionModel.getResponseData().get(0).getLike();
-                        Download = directionModel.getResponseData().get(0).getDownload();
-                        binding.tvName.setText(directionModel.getResponseData().get(0).getName());
-                        if(directionModel.getResponseData().get(0).getAudiomastercat().equalsIgnoreCase("")){
-                            binding.tvDesc.setVisibility(View.GONE);
-                        }else {
-                            binding.tvDesc.setVisibility(View.VISIBLE);
-                            binding.tvDesc.setText(directionModel.getResponseData().get(0).getAudiomastercat());
-                        }
-                        binding.tvDuration.setText(directionModel.getResponseData().get(0).getAudioDuration());
-
-                        if (directionModel.getResponseData().get(0).getAudioDirection().equalsIgnoreCase("")) {
-                            binding.tvSubDire.setText("");
-                            binding.tvSubDire.setVisibility(View.GONE);
-                            binding.tvDire.setVisibility(View.GONE);
-                        } else {
-                            binding.tvSubDire.setText(directionModel.getResponseData().get(0).getAudioDirection());
-                            binding.tvSubDire.setVisibility(View.VISIBLE);
-                            binding.tvDire.setVisibility(View.VISIBLE);
-                        }
-
-                        if (directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")) {
-                            binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                        } else if (!directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("0")) {
-                            binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
-                        }
-
-                        binding.llAddPlaylist.setOnClickListener(view -> {
-                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                return;
+                        dialog.setOnKeyListener((v, keyCode, event) -> {
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                dialog.dismiss();
+                                return true;
                             }
-                            mLastClickTime = SystemClock.elapsedRealtime();
-                            Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                            i.putExtra("AudioId", AudioId);
-                            i.putExtra("PlaylistID", "");
-                            startActivity(i);
-                            finish();
+                            return false;
                         });
 
-                        binding.llViewQueue.setOnClickListener(view -> {
-                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                return;
-                            }
-                            mLastClickTime = SystemClock.elapsedRealtime();
-                            Intent i = new Intent(ctx, ViewQueueActivity.class);
-                            i.putExtra("ComeFromQueue", "1");
-                            i.putExtra("ID", AudioId);
-                            i.putExtra("play", play);
-                            startActivity(i);
-                            finish();
-                        });
+                        tvClose.setOnClickListener(v -> dialog.dismiss());
+                        dialog.show();
+                        dialog.setCancelable(false);
+                    });
 
-                        if (directionModel.getResponseData().get(0).getAudioSubCategory().equalsIgnoreCase("")) {
-                            binding.rvDirlist.setVisibility(View.GONE);
-                        } else {
-                            binding.rvDirlist.setVisibility(View.VISIBLE);
-                            String[] elements = directionModel.getResponseData().get(0).getAudioSubCategory().split(",");
-                            List<String> direction = Arrays.asList(elements);
+                    Like = directionModel.getResponseData().get(0).getLike();
+                    Download = directionModel.getResponseData().get(0).getDownload();
+                    binding.tvName.setText(directionModel.getResponseData().get(0).getName());
+                    if (directionModel.getResponseData().get(0).getAudiomastercat().equalsIgnoreCase("")) {
+                        binding.tvDesc.setVisibility(View.GONE);
+                    } else {
+                        binding.tvDesc.setVisibility(View.VISIBLE);
+                        binding.tvDesc.setText(directionModel.getResponseData().get(0).getAudiomastercat());
+                    }
+                    binding.tvDuration.setText(directionModel.getResponseData().get(0).getAudioDuration());
 
-                            DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
-                            RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
-                            binding.rvDirlist.setLayoutManager(recentlyPlayed);
-                            binding.rvDirlist.setItemAnimator(new DefaultItemAnimator());
-                            binding.rvDirlist.setAdapter(directionAdapter);
+                    if (directionModel.getResponseData().get(0).getAudioDirection().equalsIgnoreCase("")) {
+                        binding.tvSubDire.setText("");
+                        binding.tvSubDire.setVisibility(View.GONE);
+                        binding.tvDire.setVisibility(View.GONE);
+                    } else {
+                        binding.tvSubDire.setText(directionModel.getResponseData().get(0).getAudioDirection());
+                        binding.tvSubDire.setVisibility(View.VISIBLE);
+                        binding.tvDire.setVisibility(View.VISIBLE);
+                    }
+
+                    if (directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("1")) {
+                        binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                    } else if (!directionModel.getResponseData().get(0).getLike().equalsIgnoreCase("0")) {
+                        binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
+                    }
+
+                    binding.llAddPlaylist.setOnClickListener(view -> {
+                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                            return;
                         }
+                        mLastClickTime = SystemClock.elapsedRealtime();
+                        Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                        i.putExtra("AudioId", AudioId);
+                        i.putExtra("PlaylistID", "");
+                        startActivity(i);
+                        finish();
+                    });
+
+                    binding.llViewQueue.setOnClickListener(view -> {
+                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                            return;
+                        }
+                        mLastClickTime = SystemClock.elapsedRealtime();
+                        Intent i = new Intent(ctx, ViewQueueActivity.class);
+                        i.putExtra("ComeFromQueue", "1");
+                        i.putExtra("ID", AudioId);
+                        i.putExtra("play", play);
+                        startActivity(i);
+                        finish();
+                    });
+
+                    if (directionModel.getResponseData().get(0).getAudioSubCategory().equalsIgnoreCase("")) {
+                        binding.rvDirlist.setVisibility(View.GONE);
+                    } else {
+                        binding.rvDirlist.setVisibility(View.VISIBLE);
+                        String[] elements = directionModel.getResponseData().get(0).getAudioSubCategory().split(",");
+                        List<String> direction = Arrays.asList(elements);
+
+                        DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
+                        RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
+                        binding.rvDirlist.setLayoutManager(recentlyPlayed);
+                        binding.rvDirlist.setItemAnimator(new DefaultItemAnimator());
+                        binding.rvDirlist.setAdapter(directionAdapter);
                     }
                 }
+            }
 
-                @Override
-                public void onFailure(Call<DirectionModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                    BWSApplication.showToast(t.getMessage(), ctx);
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-        }
+            @Override
+            public void onFailure (Call < DirectionModel > call, Throwable t){
+                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                BWSApplication.showToast(t.getMessage(), ctx);
+            }
+        });
+    } else
+
+    {
+        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
     }
+
+}
 
     public void GetMedia(String AudioFile, Context ctx, String download, String PlayListId) {
 

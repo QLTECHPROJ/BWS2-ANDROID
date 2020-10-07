@@ -1354,7 +1354,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
             holder.binding.llMore.setOnClickListener(view -> {
                 Intent i = new Intent(ctx, AddQueueActivity.class);
-                i.putExtra("play", "");
+                i.putExtra("play", "myPlayList");
                 i.putExtra("ID", mData.get(position).getID());
                 i.putExtra("PlaylistAudioId", mData.get(position).getPlaylistAudioId());
                 i.putExtra("position", position);
@@ -1567,7 +1567,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
             holder.binding.llMore.setOnClickListener(view -> {
                 Intent i = new Intent(ctx, AddQueueActivity.class);
-                i.putExtra("play", "");
+                i.putExtra("play", "playlist");
                 i.putExtra("ID", mData.get(position).getID());
                 i.putExtra("PlaylistAudioId", mData.get(position).getPlaylistAudioId());
                 i.putExtra("position", position);
