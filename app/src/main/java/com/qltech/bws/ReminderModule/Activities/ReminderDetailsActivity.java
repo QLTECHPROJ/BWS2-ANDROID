@@ -74,18 +74,14 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
         binding.btnAddReminder.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(ctx)) {
-                if (IsLock.equalsIgnoreCase("1")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                    Intent i = new Intent(ctx, ReminderActivity.class);
-                    i.putExtra("ComeFrom", "");
-                    i.putExtra("PlaylistID", "");
-                    i.putExtra("PlaylistName", "");
-                    i.putExtra("Time", "");
-                    i.putExtra("Day", "");
-                    startActivity(i);
-                    finish();
-                }
+                Intent i = new Intent(ctx, ReminderActivity.class);
+                i.putExtra("ComeFrom", "");
+                i.putExtra("PlaylistID", "");
+                i.putExtra("PlaylistName", "");
+                i.putExtra("Time", "");
+                i.putExtra("Day", "");
+                startActivity(i);
+                finish();
             } else {
                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
             }

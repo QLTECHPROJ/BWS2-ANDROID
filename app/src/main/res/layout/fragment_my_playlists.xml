@@ -95,16 +95,17 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:layout_centerInParent="true"
-                                        android:background="@drawable/circular_shape"
+                                        android:background="@drawable/circular_shapes"
                                         android:indeterminate="false"
                                         android:max="100"
                                         android:visibility="gone"
                                         android:indeterminateTint="@color/dark_yellow"
-                                        android:progressDrawable="@drawable/circular_progress_bar" />
+                                        android:progressDrawable="@drawable/circular_progress_bars" />
                                     <ImageView
                                         android:id="@+id/ivDownloads"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content" />
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerInParent="true"/>
 
                                 </RelativeLayout>
 
