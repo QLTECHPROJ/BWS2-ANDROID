@@ -30,6 +30,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.qltech.bws.DashboardModule.Activities.DashboardActivity;
 import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.qltech.bws.R;
+import com.qltech.bws.ReminderModule.Activities.ReminderDetailsActivity;
 
 import java.util.Random;
 
@@ -149,7 +150,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 fragmentManager1.beginTransaction()
                         .replace(R.id.flContainer, myPlaylistsFragment)
                         .commit();*/
-                resultIntent = new Intent(this, DashboardActivity.class);
+                resultIntent = new Intent(this, ReminderDetailsActivity.class);
                 resultIntent.putExtra("id", id);
                 resultIntent.putExtra(CONSTANTS.title, title);
                 resultIntent.putExtra("body", message);

@@ -45,10 +45,10 @@
             android:id="@+id/rvReminderDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            android:paddingBottom="@dimen/_80sdp"
+            android:layout_below="@id/rlLayout"
             android:layout_marginTop="@dimen/_18sdp"
-            android:layout_below="@id/rlLayout"/>
+            android:overScrollMode="never"
+            android:paddingBottom="@dimen/_80sdp" />
 
         <LinearLayout
             android:id="@+id/llError"
@@ -56,8 +56,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tvFound"
@@ -80,7 +80,6 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:visibility="gone"
             android:layout_marginHorizontal="@dimen/_30sdp"
             android:layout_marginBottom="@dimen/_24sdp"
             android:background="@drawable/extra_round_cornor"
@@ -89,7 +88,26 @@
             android:paddingVertical="@dimen/_4sdp"
             android:text="@string/Add_New_Reminder"
             android:textColor="@color/white"
-            android:textSize="@dimen/_14sdp" />
+            android:textSize="@dimen/_14sdp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnDeleteReminder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_24sdp"
+            android:background="@drawable/extra_round_cornor"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingHorizontal="@dimen/_55sdp"
+            android:paddingVertical="@dimen/_4sdp"
+            android:text="@string/Delete_Reminder"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"

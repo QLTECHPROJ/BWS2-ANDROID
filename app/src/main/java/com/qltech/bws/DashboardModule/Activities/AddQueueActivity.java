@@ -812,7 +812,12 @@ public class AddQueueActivity extends AppCompatActivity {
                 public void onResponse(Call<DirectionModel> call, Response<DirectionModel> response) {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        if (play.equalsIgnoreCase("play")) {
+
+
+                        if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
+                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llRemovePlaylist.setVisibility(View.GONE);
+                        }else if (play.equalsIgnoreCase("play")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.VISIBLE);
                         } else if (play.equalsIgnoreCase("playlist")) {
@@ -821,18 +826,11 @@ public class AddQueueActivity extends AppCompatActivity {
                         } else if (play.equalsIgnoreCase("myPlayList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.VISIBLE);
-                        } else if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
-                            binding.llOptions.setVisibility(View.VISIBLE);
-                            binding.llRemovePlaylist.setVisibility(View.GONE);
                         } else {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
                         }
-                    /*if (myPlaylist.equalsIgnoreCase("myPlaylist")) {
-                        binding.llRemovePlaylist.setVisibility(View.VISIBLE);
-                    } else {
-                        binding.llRemovePlaylist.setVisibility(View.GONE);
-                    }*/
+
                         DirectionModel directionModel = response.body();
                         int ix = position;
                         if (!comeFrom.equalsIgnoreCase("")) {

@@ -20,18 +20,29 @@
                 android:layout_marginLeft="@dimen/_16sdp"
                 android:layout_weight="0.10"
                 android:gravity="center"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <CheckBox
+                    android:id="@+id/cbChecked"
+                    style="@android:style/Widget.CompoundButton.CheckBox"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:button="@drawable/checkbox_btn_background"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center_vertical|left"
+                    android:layoutDirection="rtl"
+                    android:overScrollMode="never"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15sdp"
+                    android:visibility="visible" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_16sdp"
-                android:layout_weight="0.82"
+                android:layout_weight="0.72"
                 android:orientation="vertical">
 
                 <TextView
