@@ -1231,7 +1231,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable/*, StartDragListener*/, ItemMoveCallback.ItemTouchHelperContract {
         Context ctx;
         String UserID, Created, name;
-        List<String> disableName;
         StartDragListener startDragListener;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
@@ -1305,7 +1304,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                 if (downloadAudioDetailsList.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile()) &&
                         downloadAudioDetailsList.get(i).getPlaylistId().equalsIgnoreCase(mData.get(position).getPlaylistID()) ) {
-                    disableName.add(mData.get(position).getName());
+                    //disableName.add(mData.get(position).getName());
                     disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
                 } else {
                     enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);

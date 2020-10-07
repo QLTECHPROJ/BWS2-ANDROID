@@ -295,7 +295,7 @@ public class ReminderActivity extends AppCompatActivity {
                 } else {
                     String sendTime = binding.tvTime.getText().toString();
                     SimpleDateFormat simpleDateFormat1x = new SimpleDateFormat("hh:mm a");
-                    simpleDateFormat1x.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    simpleDateFormat1x.setTimeZone(TimeZone.getTimeZone("GMT+8"));
                     Date currdatex = new Date();
                     try {
                         currdatex = simpleDateFormat1x.parse(sendTime);
