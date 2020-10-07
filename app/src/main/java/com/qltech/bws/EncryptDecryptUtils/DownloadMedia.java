@@ -29,6 +29,7 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
     public static int downloadError = 2;
     public static String filename = "";
     public static int downloadProgress = 0;
+    public static boolean isDownloading = false;
     Context context;
     byte[] encodedBytes;
     List<String> fileNameList,audioFile,playlistDownloadId,removedFileNameList,removedPlaylistDownloadId;
@@ -52,10 +53,18 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
 
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME/*, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs*/) {
         BWSApplication.showToast("Downloading file...", context);
+        isDownloading = true;
         fileNameList = FILE_NAME;
         audioFile = DOWNLOAD_AUDIO_URL;
-        playlistSongsList = new ArrayList<>();/*
-        playlistSongsList = playlistSongs;*/
+        playlistSongsList = new ArrayList<>();
+        SharedPreferences sharedx = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+        if (!json2.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+            playlistDownloadId = gson.fromJson(json2, type);
+        }
         filename = FILE_NAME.get(0);
         PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(context), FILE_NAME.get(0)).build().setOnProgressListener(progress -> {
             long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
@@ -117,7 +126,7 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
             Gson gson = new Gson();
             String urlJson = gson.toJson(audioFile);
             String nameJson = gson.toJson(fileNameList);
-            String playlistIdJson = gson.toJson(fileNameList);
+            String playlistIdJson = gson.toJson(playlistDownloadId);
             editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
             editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
@@ -127,11 +136,13 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
             } else {
                 downloadProgress = 0;
                 filename = "";
+                isDownloading = false;
                 BWSApplication.showToast("Download Complete...", context);
             }
         } catch (Exception e) {
             e.printStackTrace();
             downloadError = 1;
+            isDownloading = false;
             Log.e("error in encrypt", e.getMessage());
         } /*else {
             try {
