@@ -41,14 +41,33 @@
 
         </RelativeLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvReminderDetails"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:layout_below="@id/rlLayout"
-            android:layout_marginTop="@dimen/_18sdp"
-            android:overScrollMode="never"
-            android:paddingBottom="@dimen/_80sdp" />
+            android:layout_marginTop="@dimen/_14sdp">
+
+            <TextView
+                android:id="@+id/tvSelectAll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="Select all"
+                android:textAllCaps="true"
+                android:visibility="gone"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_15sdp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvReminderDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:paddingBottom="@dimen/_80sdp" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/llError"

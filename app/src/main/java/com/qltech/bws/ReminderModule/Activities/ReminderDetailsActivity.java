@@ -93,6 +93,199 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        prepareData();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    private void prepareData() {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+            Call<RemiderDetailsModel> listCall = APIClient.getClient().getGetReminderStatus(UserId);
+            listCall.enqueue(new Callback<RemiderDetailsModel>() {
+                @Override
+                public void onResponse(Call<RemiderDetailsModel> call, Response<RemiderDetailsModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        RemiderDetailsModel listModel = response.body();
+                        listReminderModel = listModel;
+                        adapter = new RemiderDetailsAdapter(listModel.getResponseData());
+                        binding.rvReminderDetails.setAdapter(adapter);
+                        binding.btnAddReminder.setVisibility(View.VISIBLE);
+                        if (listModel.getResponseData().size() == 0) {
+                            binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvReminderDetails.setVisibility(View.GONE);
+                        } else {
+                            binding.llError.setVisibility(View.GONE);
+                            binding.rvReminderDetails.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<RemiderDetailsModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+
+        binding.btnDeleteReminder.setOnClickListener(view -> {
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                Call<DeleteRemiderModel> listCall = APIClient.getClient().getDeleteRemiderStatus(UserId,
+                        TextUtils.join(",", remiderIds));
+                listCall.enqueue(new Callback<DeleteRemiderModel>() {
+                    @Override
+                    public void onResponse(Call<DeleteRemiderModel> call, Response<DeleteRemiderModel> response) {
+                        if (response.isSuccessful()) {
+                            DeleteRemiderModel model = response.body();
+                            remiderIds.clear();
+                            BWSApplication.showToast(model.getResponseMessage(), ctx);
+                            prepareData();
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DeleteRemiderModel> call, Throwable t) {
+                    }
+                });
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            }
+
+        });
+    }
+
+    public class RemiderDetailsAdapter extends RecyclerView.Adapter<RemiderDetailsAdapter.MyViewHolder> {
+        private List<RemiderDetailsModel.ResponseData> model;
+        public int mSelectedItem = -1;
+
+        public RemiderDetailsAdapter(List<RemiderDetailsModel.ResponseData> model) {
+            this.model = model;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            RemiderDetailsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.remider_details_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.bind.tvName.setText(model.get(position).getPlaylistName());
+            holder.bind.tvDate.setText(model.get(position).getReminderDay());
+            holder.bind.tvTime.setText(model.get(position).getReminderTime());
+            PlaylistId = model.get(position).getPlaylistId();
+
+            holder.bind.cbChecked.setOnCheckedChangeListener((compoundButton, b) -> {
+                if (holder.bind.cbChecked.isChecked()) {
+                    mSelectedItem = getAdapterPosition();
+                    notifyDataSetChanged();
+                    if (!remiderIds.contains(model.get(mSelectedItem).getReminderId())) {
+                        remiderIds.add(model.get(mSelectedItem).getReminderId());
+                        Log.e("remiderIds", TextUtils.join(",", remiderIds));
+                    } else {
+
+                    }
+                } else {
+                    remiderIds.remove(model.get(mSelectedItem).getReminderId());
+                    Log.e("remiderIds", TextUtils.join(",", remiderIds));
+                }
+                if (remiderIds.size() == 0) {
+                    binding.btnAddReminder.setVisibility(View.VISIBLE);
+                    binding.btnDeleteReminder.setVisibility(View.GONE);
+                } else {
+                    binding.btnAddReminder.setVisibility(View.GONE);
+                    binding.btnDeleteReminder.setVisibility(View.VISIBLE);
+                }
+            });
+
+            if (model.get(position).getIsCheck().equalsIgnoreCase("1")) {
+                holder.bind.switchStatus.setChecked(true);
+            } else {
+                holder.bind.switchStatus.setChecked(false);
+            }
+            if (model.get(position).getIsLock().equalsIgnoreCase("1")) {
+                holder.bind.switchStatus.setClickable(false);
+                holder.bind.switchStatus.setEnabled(false);
+                holder.bind.llSwitchStatus.setClickable(true);
+                holder.bind.llSwitchStatus.setEnabled(true);
+                holder.bind.llSwitchStatus.setOnClickListener(view -> BWSApplication.showToast("Please re-activate your membership plan", ctx));
+            } else if (model.get(position).getIsLock().equalsIgnoreCase("0") || model.get(position).getIsLock().equalsIgnoreCase("")) {
+                holder.bind.switchStatus.setClickable(true);
+                holder.bind.switchStatus.setEnabled(true);
+                holder.bind.llSwitchStatus.setClickable(false);
+                holder.bind.llSwitchStatus.setEnabled(false);
+                holder.bind.switchStatus.setOnCheckedChangeListener((compoundButton, checked) -> {
+                    if (checked) {
+                        prepareSwitchStatus("1");
+                    } else {
+                        prepareSwitchStatus("0");
+                    }
+                });
+            }
+
+            holder.bind.llMainLayout.setOnClickListener(view -> {
+                Intent i = new Intent(ctx, ReminderActivity.class);
+                i.putExtra("ComeFrom", "1");
+                i.putExtra("PlaylistID", model.get(position).getPlaylistId());
+                i.putExtra("PlaylistName", model.get(position).getPlaylistName());
+                i.putExtra("Time", model.get(position).getReminderTime());
+                i.putExtra("Day", model.get(position).getRDay());
+                startActivity(i);
+                finish();
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return model.size();
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            RemiderDetailsLayoutBinding bind;
+
+            public MyViewHolder(RemiderDetailsLayoutBinding bind) {
+                super(bind.getRoot());
+                this.bind = bind;
+            }
+        }
+    }
+
+    private void prepareSwitchStatus(String reminderStatus) {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+            Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserId, PlaylistId, reminderStatus);/*set 1 or not 0 */
+            listCall.enqueue(new Callback<ReminderStatusModel>() {
+                @Override
+                public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        ReminderStatusModel listModel = response.body();
+                        BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ReminderStatusModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+    }
+
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -162,199 +355,4 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             return super.getSwipeDirs(recyclerView, viewHolder);
         }
     };
-
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
-    private void prepareData() {
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<RemiderDetailsModel> listCall = APIClient.getClient().getGetReminderStatus(UserId);
-            listCall.enqueue(new Callback<RemiderDetailsModel>() {
-                @Override
-                public void onResponse(Call<RemiderDetailsModel> call, Response<RemiderDetailsModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        RemiderDetailsModel listModel = response.body();
-                        listReminderModel = listModel;
-                        adapter = new RemiderDetailsAdapter(listModel.getResponseData());
-                        binding.rvReminderDetails.setAdapter(adapter);
-                        binding.btnAddReminder.setVisibility(View.VISIBLE);
-                        if (listModel.getResponseData().size() == 0) {
-                            binding.llError.setVisibility(View.VISIBLE);
-                            binding.rvReminderDetails.setVisibility(View.GONE);
-                        } else {
-                            binding.llError.setVisibility(View.GONE);
-                            binding.rvReminderDetails.setVisibility(View.VISIBLE);
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<RemiderDetailsModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-        }
-
-        binding.btnDeleteReminder.setOnClickListener(view -> {
-            if (BWSApplication.isNetworkConnected(ctx)) {
-                Call<DeleteRemiderModel> listCall = APIClient.getClient().getDeleteRemiderStatus(UserId,
-                        TextUtils.join(",", remiderIds));
-                listCall.enqueue(new Callback<DeleteRemiderModel>() {
-                    @Override
-                    public void onResponse(Call<DeleteRemiderModel> call, Response<DeleteRemiderModel> response) {
-                        if (response.isSuccessful()) {
-                            DeleteRemiderModel model = response.body();
-                            BWSApplication.showToast(model.getResponseMessage(), ctx);
-                            prepareData();
-                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<DeleteRemiderModel> call, Throwable t) {
-                    }
-                });
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-            }
-
-        });
-    }
-
-    public class RemiderDetailsAdapter extends RecyclerView.Adapter<RemiderDetailsAdapter.MyViewHolder> {
-        private List<RemiderDetailsModel.ResponseData> model;
-        public int mSelectedItem = -1;
-
-        public RemiderDetailsAdapter(List<RemiderDetailsModel.ResponseData> model) {
-            this.model = model;
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            RemiderDetailsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.remider_details_layout, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.bind.tvName.setText(model.get(position).getPlaylistName());
-            holder.bind.tvDate.setText(model.get(position).getReminderDay());
-            holder.bind.tvTime.setText(model.get(position).getReminderTime());
-            PlaylistId = model.get(position).getPlaylistId();
-
-            if (remiderIds.size() == 0) {
-                binding.btnAddReminder.setVisibility(View.VISIBLE);
-                binding.btnDeleteReminder.setVisibility(View.GONE);
-            } else {
-                binding.btnAddReminder.setVisibility(View.GONE);
-                binding.btnDeleteReminder.setVisibility(View.VISIBLE);
-            }
-
-            if (model.get(position).getIsCheck().equalsIgnoreCase("1")) {
-                holder.bind.switchStatus.setChecked(true);
-            } else {
-                holder.bind.switchStatus.setChecked(false);
-            }
-            if (model.get(position).getIsLock().equalsIgnoreCase("1")) {
-                holder.bind.switchStatus.setClickable(false);
-                holder.bind.switchStatus.setEnabled(false);
-                holder.bind.llSwitchStatus.setClickable(true);
-                holder.bind.llSwitchStatus.setEnabled(true);
-                holder.bind.llSwitchStatus.setOnClickListener(view -> BWSApplication.showToast("Please re-activate your membership plan", ctx));
-            } else if (model.get(position).getIsLock().equalsIgnoreCase("0") || model.get(position).getIsLock().equalsIgnoreCase("")) {
-                holder.bind.switchStatus.setClickable(true);
-                holder.bind.switchStatus.setEnabled(true);
-                holder.bind.llSwitchStatus.setClickable(false);
-                holder.bind.llSwitchStatus.setEnabled(false);
-                holder.bind.switchStatus.setOnCheckedChangeListener((compoundButton, checked) -> {
-                    if (checked) {
-                        prepareSwitchStatus("1");
-                    } else {
-                        prepareSwitchStatus("0");
-                    }
-                });
-            }
-
-            holder.bind.llMainLayout.setOnClickListener(view -> {
-                Intent i = new Intent(ctx, ReminderActivity.class);
-                i.putExtra("ComeFrom", "1");
-                i.putExtra("PlaylistID", model.get(position).getPlaylistId());
-                i.putExtra("PlaylistName", model.get(position).getPlaylistName());
-                i.putExtra("Time", model.get(position).getReminderTime());
-                i.putExtra("Day", model.get(position).getRDay());
-                startActivity(i);
-                finish();
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return model.size();
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            RemiderDetailsLayoutBinding bind;
-
-            public MyViewHolder(RemiderDetailsLayoutBinding bind) {
-                super(bind.getRoot());
-                this.bind = bind;
-
-                bind.cbChecked.setOnCheckedChangeListener((compoundButton, b) -> {
-                    if (remiderIds.size() == 0) {
-                        binding.btnAddReminder.setVisibility(View.VISIBLE);
-                        binding.btnDeleteReminder.setVisibility(View.GONE);
-                    } else {
-                        binding.btnAddReminder.setVisibility(View.GONE);
-                        binding.btnDeleteReminder.setVisibility(View.VISIBLE);
-                    }
-
-                    if (bind.cbChecked.isChecked()) {
-                        mSelectedItem = getAdapterPosition();
-                        notifyDataSetChanged();
-                        if (!remiderIds.contains(model.get(mSelectedItem).getReminderId())) {
-                            remiderIds.add(model.get(mSelectedItem).getReminderId());
-                            Log.e("remiderIds", TextUtils.join(",", remiderIds));
-                        } else {
-
-                        }
-                    } else {
-                        remiderIds.remove(model.get(mSelectedItem).getReminderId());
-                        Log.e("remiderIds", TextUtils.join(",", remiderIds));
-                    }
-                });
-            }
-        }
-    }
-
-    private void prepareSwitchStatus(String reminderStatus) {
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserId, PlaylistId, reminderStatus);/*set 1 or not 0 */
-            listCall.enqueue(new Callback<ReminderStatusModel>() {
-                @Override
-                public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        ReminderStatusModel listModel = response.body();
-                        BWSApplication.showToast(listModel.getResponseMessage(), activity);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ReminderStatusModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-        }
-    }
 }
