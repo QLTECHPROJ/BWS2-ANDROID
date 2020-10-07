@@ -193,9 +193,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
 
         binding.llMore.setOnClickListener(view13 -> {
+            handler1.removeCallbacks(UpdateSongTime1);
+            handler2.removeCallbacks(UpdateSongTime2);
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
             i.putExtra("PlaylistID", PlaylistID);
             startActivity(i);
+
         });
 
         binding.tvSearch.setOnClickListener(view14 -> {
@@ -859,7 +862,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         SucessModel listModel = response.body();
                         mData.remove(position);
-                        if(mData.size()==0){
+                        if (mData.size() == 0) {
                             enableDisableDownload(false);
                         }
                         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -871,11 +874,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                 if (pID.equalsIgnoreCase(PlaylistID)) {
                                     if (mData.size() != 0) {
-                                        if ( position < mData.size() - 1) {
+                                        if (position < mData.size() - 1) {
                                             pos = pos + 1;
                                         } else if (position == mData.size() - 1) {
                                             pos = 0;
-                                        }else if(pos == position){
+                                        } else if (pos == position) {
 
                                         }
 
@@ -1284,7 +1287,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 @Override
                 public void run() {
                     for (int f = 0; f < listModelList.size(); f++) {
-                        if(fileNameList.size()!=0) {
+                        if (fileNameList.size() != 0) {
                             for (int i = 0; i < fileNameList.size(); i++) {
                                 if (fileNameList.get(i).equalsIgnoreCase(mData.get(f).getName())) {
                                     if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(mData.get(f).getName())) {
@@ -1304,12 +1307,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
             };
             if (fileNameList.size() != 0) {
-                if (fileNameList.contains(mData.get(position).getName())) {
-                    holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                    handler2.postDelayed(UpdateSongTime2, 500);
-                } else {
+                for (int i = 0; i < fileNameList.size(); i++) {
+                    if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                        holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                        handler2.postDelayed(UpdateSongTime2, 500);
+                    }
+                }/*else {
                     holder.binding.pbProgress.setVisibility(View.GONE);
-                }
+                }*/
             }
             holder.binding.tvTitleA.setText(mData.get(position).getName());
             holder.binding.tvTitleB.setText(mData.get(position).getName());
@@ -1329,7 +1334,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             String id = mData.get(position).getID();
 //            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);
             for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                if (downloadAudioDetailsList.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile())) {
+                if (downloadAudioDetailsList.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile())
+                && downloadAudioDetailsList.get(i).getPlaylistId().equalsIgnoreCase("")) {
                     //disableName.add(mData.get(position).getName());
                     disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
                     break;

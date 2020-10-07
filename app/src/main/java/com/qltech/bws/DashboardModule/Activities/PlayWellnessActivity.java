@@ -919,7 +919,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getaudioByPlaylist(AudioFile, PlayListId);
+                        .getaudioByPlaylist(AudioFile, "");
                 return null;
             }
 
