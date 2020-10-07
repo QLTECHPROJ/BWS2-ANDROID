@@ -102,14 +102,26 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     if (!BWSApplication.isNetworkConnected(ctx)) {
                         if (downloadAudioDetailsList.size() != 0) {
                             endtimetext = downloadAudioDetailsList.get(0).getAudioDuration();
-                            t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                            if (mediaPlayer != null) {
+                                totalDuration = mediaPlayer.getDuration();
+                            }else {
+                                t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                            }
                         } else {
                             endtimetext = addToQueueModelList.get(position).getAudioDuration();
-                            t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                            if (mediaPlayer != null) {
+                                totalDuration = mediaPlayer.getDuration();
+                            }else{
+                                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                            }
                         }
                     } else {
                         endtimetext = addToQueueModelList.get(position).getAudioDuration();
-                        t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                        if (mediaPlayer != null) {
+                            totalDuration = mediaPlayer.getDuration();
+                        }else{
+                            t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                        }
                     }
                 } else {
                     stopMedia();
@@ -118,11 +130,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 if (!BWSApplication.isNetworkConnected(ctx)) {
                     if (downloadAudioDetailsList.size() != 0) {
                         endtimetext = downloadAudioDetailsList.get(0).getAudioDuration();
-                        t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                        if (mediaPlayer != null) {
+                            totalDuration = mediaPlayer.getDuration();
+                        }else {
+                            t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                        }
                     } else {
                         endtimetext = mainPlayModelList.get(position).getAudioDuration();
                         if (mediaPlayer != null) {
-                            t = Time.valueOf("00:" + mediaPlayer.getDuration());
+                            totalDuration = mediaPlayer.getDuration();
                         }else{
                             t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
                         }
@@ -130,8 +146,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 } else {
                     endtimetext = mainPlayModelList.get(position).getAudioDuration();
                     if (mediaPlayer != null) {
-                        t = Time.valueOf("00:" + mediaPlayer.getDuration());
-                    }else{
+                        totalDuration = mediaPlayer.getDuration();
+                    }else {
                         t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
                     }
                 }
@@ -142,14 +158,17 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 } else
                     totalDuration = t.getTime();
             } else {
-                totalDuration = t.getTime();
+                if (mediaPlayer != null) {
+                    totalDuration = mediaPlayer.getDuration();
+                } else
+                    totalDuration = t.getTime();
             }
             currentDuration = getStartTime();
 
             int progress = getProgressPercentage(currentDuration, totalDuration);
             //Log.d("Progress", ""+progress);
             startTime = getStartTime();
-            if (currentDuration == totalDuration) {
+            if (currentDuration == totalDuration && currentDuration != getStartTime()) {
                 binding.tvStartTime.setText(endtimetext);
             } else if (isPause) {
                 binding.simpleSeekbar.setProgress(oTime);

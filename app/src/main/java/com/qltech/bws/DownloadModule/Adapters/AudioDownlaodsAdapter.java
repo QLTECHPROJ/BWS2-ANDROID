@@ -73,6 +73,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         this.rvDownloadsList = rvDownloadsList;
         this.tvFound = tvFound;
         handler1 = new Handler();
+        downloadAudioDetailsList = new ArrayList<>();
         SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
@@ -212,6 +213,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                listModelList = new ArrayList<>();
                 listModelList = GetAllMedia(ctx);
                 super.onPostExecute(aVoid);
             }
@@ -224,7 +226,6 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
-                downloadAudioDetailsList = new ArrayList<>();
                 downloadAudioDetailsList = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
