@@ -121,11 +121,19 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
                     } else {
                         endtimetext = mainPlayModelList.get(position).getAudioDuration();
-                        t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                        if (mediaPlayer != null) {
+                            t = Time.valueOf("00:" + mediaPlayer.getDuration());
+                        }else{
+                            t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                        }
                     }
                 } else {
                     endtimetext = mainPlayModelList.get(position).getAudioDuration();
-                    t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                    if (mediaPlayer != null) {
+                        t = Time.valueOf("00:" + mediaPlayer.getDuration());
+                    }else{
+                        t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                    }
                 }
             }
             if (!BWSApplication.isNetworkConnected(ctx)) {
@@ -222,7 +230,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);*/
         if (BWSApplication.isNetworkConnected(ctx)) {
-            if (IsLock.equalsIgnoreCase("0")) {
+            if (!IsLock.equalsIgnoreCase("1")) {
                 binding.llMore.setClickable(true);
                 binding.llMore.setEnabled(true);
                 binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -237,7 +245,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         if (BWSApplication.isNetworkConnected(ctx)) {
-            if (IsLock.equalsIgnoreCase("0")) {
+            if (!IsLock.equalsIgnoreCase("1")) {
                 binding.llViewQueue.setClickable(true);
                 binding.llViewQueue.setEnabled(true);
                 binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -1306,7 +1314,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }.getType();
         mainPlayModelList = gson.fromJson(json, type);
         if (BWSApplication.isNetworkConnected(ctx)) {
-            if (IsLock.equalsIgnoreCase("0")) {
+            if (!IsLock.equalsIgnoreCase("1")) {
                 binding.llMore.setClickable(true);
                 binding.llMore.setEnabled(true);
                 binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -1321,7 +1329,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         if (BWSApplication.isNetworkConnected(ctx)) {
-            if (IsLock.equalsIgnoreCase("0")) {
+            if (!IsLock.equalsIgnoreCase("1")) {
                 binding.llViewQueue.setClickable(true);
                 binding.llViewQueue.setEnabled(true);
                 binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);

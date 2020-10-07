@@ -74,6 +74,32 @@ public class AudioFragment extends Fragment {
 
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+        String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+            fileNameList = gson.fromJson(json, type);
+            audioFile = gson.fromJson(json1, type);
+            /*if(json2.equalsIgnoreCase(String.valueOf(gson))){
+                playlistDownloadId = new ArrayList<>();
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                String playlistIdJson = gson.toJson(playlistDownloadId);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                editor.commit();
+                SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+                json2 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+            }*/
+            playlistDownloadId = gson.fromJson(json2, type);
+            if (fileNameList.size() != 0) {
+                DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
+                downloadMedia.encrypt1(audioFile, fileNameList/*, playlistSongs*/);
+            }
+        }
         prepareData();
         return view;
     }
@@ -267,32 +293,7 @@ public class AudioFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-        String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
-            Type type = new TypeToken<List<String>>() {
-            }.getType();
-            fileNameList = gson.fromJson(json, type);
-            audioFile = gson.fromJson(json1, type);
-            /*if(json2.equalsIgnoreCase(String.valueOf(gson))){
-                playlistDownloadId = new ArrayList<>();
-                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                String playlistIdJson = gson.toJson(playlistDownloadId);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                editor.commit();
-                SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-                json2 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-            }*/
-            playlistDownloadId = gson.fromJson(json2, type);
-            if (fileNameList.size() != 0) {
-                DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
-                downloadMedia.encrypt1(audioFile, fileNameList/*, playlistSongs*/);
-            }
-        }
+
         prepareData();
     }
 

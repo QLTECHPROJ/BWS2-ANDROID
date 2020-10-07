@@ -126,13 +126,19 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         @Override
         public void run() {
             if (fileNameList.size() != 0) {
-                if (remainAudio.size() < SongListSize) {
+                if (remainAudio.size() <= SongListSize) {
                     int total = SongListSize;
                     int remain = remainAudio.size();
                     long progressPercent = remain * 100 / total;
-                    int downloadProgress = (int) progressPercent;
-                    if (downloadProgress < 100) {
-                        binding.pbProgress.setProgress(downloadProgress);
+                    int downloadProgress1 = (int) progressPercent;
+                    if(SongListSize == 1){
+                        if (downloadProgress < 100) {
+                            binding.pbProgress.setProgress(downloadProgress);
+                            binding.pbProgress.setVisibility(View.VISIBLE);
+                        }
+                    }else
+                    if (downloadProgress1 < 100) {
+                        binding.pbProgress.setProgress(downloadProgress1);
                         binding.pbProgress.setVisibility(View.VISIBLE);
                     } else {
                         binding.pbProgress.setVisibility(View.GONE);
