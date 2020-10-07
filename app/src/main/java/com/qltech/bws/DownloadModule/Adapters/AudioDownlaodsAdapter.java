@@ -121,6 +121,8 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             } else {
                 holder.binding.pbProgress.setVisibility(View.INVISIBLE);
             }
+        }else {
+            holder.binding.pbProgress.setVisibility(View.INVISIBLE);
         }
         holder.binding.tvTitle.setText(listModelList.get(position).getName());
         holder.binding.tvTime.setText(listModelList.get(position).getAudioDuration());

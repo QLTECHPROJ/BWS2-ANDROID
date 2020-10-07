@@ -149,11 +149,16 @@ public class AddQueueActivity extends AppCompatActivity {
         if (fileNameList.size() != 0) {
             if (fileNameList.contains(audioFileName)) {
                 binding.pbProgress.setVisibility(View.VISIBLE);
+                binding.ivDownloads.setVisibility(View.GONE);
                 handler1.postDelayed(UpdateSongTime1, 500);
             } else {
                 binding.pbProgress.setVisibility(View.GONE);
+                binding.ivDownloads.setVisibility(View.VISIBLE);
                 handler1.removeCallbacks(UpdateSongTime1);
             }
+        }else {
+            binding.pbProgress.setVisibility(View.VISIBLE);
+            binding.ivDownloads.setVisibility(View.GONE);
         }
         if (getIntent().hasExtra("play")) {
             play = getIntent().getStringExtra("play");

@@ -205,6 +205,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                 handler1.removeCallbacks(UpdateSongTime1);
             }
+            binding.pbProgress.setVisibility(View.GONE);
+            binding.ivDownloads.setVisibility(View.VISIBLE);
             handler1.postDelayed(this, 500);
         }
     };
