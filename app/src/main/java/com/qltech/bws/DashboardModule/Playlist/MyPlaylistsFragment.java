@@ -952,9 +952,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         remainAudio.add(playlistDownloadId.get(i));
                     }
                 }
+                SongListSize = playlistSongs.size();
                 handler1.postDelayed(UpdateSongTime1, 500);
             }
-            SongListSize = playlistSongs.size();
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
             savePlaylist();
