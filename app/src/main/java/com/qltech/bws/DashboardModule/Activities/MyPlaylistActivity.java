@@ -425,12 +425,9 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 binding.llFind.setVisibility(View.VISIBLE);
                             }
 
-                            binding.llFind.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    ComeFindAudio = 1;
-                                    finish();
-                                }
+                            binding.llFind.setOnClickListener(view -> {
+                                ComeFindAudio = 1;
+                                finish();
                             });
                             if (model.getResponseData().getPlaylistMastercat().equalsIgnoreCase("")) {
                                 binding.tvDesc.setVisibility(View.GONE);

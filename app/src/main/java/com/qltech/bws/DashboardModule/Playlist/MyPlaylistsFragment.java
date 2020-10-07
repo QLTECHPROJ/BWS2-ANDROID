@@ -403,6 +403,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callBack() {
+        binding.searchView.requestFocus();
         handler1.removeCallbacks(UpdateSongTime1);
         handler2.removeCallbacks(UpdateSongTime2);
         if (comefrom_search == 2) {
@@ -442,7 +443,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void searchClear(EditText searchEditText) {
         if (ComeFindAudio == 1) {
-            binding.searchView.clearFocus();
+            binding.searchView.requestFocus();
             searchEditText.setText("");
             binding.searchView.setQuery("", false);
             ComeFindAudio = 0;
@@ -678,21 +679,21 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             fileNameList = gson.fromJson(jsony, type);
             playlistDownloadId = gson.fromJson(jsonq, type);
             remainAudio = new ArrayList<>();
-            if(playlistDownloadId.size()!=0){
+            if (playlistDownloadId.size() != 0) {
                 playlistDownloadId.contains(PlaylistID);
                 for (int i = 0; i < fileNameList.size(); i++) {
                     if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
                         remainAudio.add(playlistDownloadId.get(i));
                     }
                 }
-                if(downloadPlaylistDetailsList.size()!=0){
+                if (downloadPlaylistDetailsList.size() != 0) {
                     if (remainAudio.size() < SongListSize) {
-                        handler1.postDelayed(UpdateSongTime1,500);
+                        handler1.postDelayed(UpdateSongTime1, 500);
                     }
                 }
-             //
+                //
             }
-        }else{
+        } else {
             fileNameList = new ArrayList<>();
             playlistDownloadId = new ArrayList<>();
             remainAudio = new ArrayList<>();
@@ -1276,7 +1277,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     handler2.postDelayed(this, 500);
                 }
             };
-            if(fileNameList.size()!=0) {
+            if (fileNameList.size() != 0) {
                 if (fileNameList.contains(mData.get(position).getName())) {
                     holder.binding.pbProgress.setVisibility(View.VISIBLE);
                     handler2.postDelayed(UpdateSongTime2, 500);
@@ -1303,7 +1304,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);
             for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                 if (downloadAudioDetailsList.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile()) &&
-                        downloadAudioDetailsList.get(i).getPlaylistId().equalsIgnoreCase(mData.get(position).getPlaylistID()) ) {
+                        downloadAudioDetailsList.get(i).getPlaylistId().equalsIgnoreCase(mData.get(position).getPlaylistID())) {
                     //disableName.add(mData.get(position).getName());
                     disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
                 } else {
