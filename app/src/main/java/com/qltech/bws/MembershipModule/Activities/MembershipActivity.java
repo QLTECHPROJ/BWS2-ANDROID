@@ -106,7 +106,7 @@ public class MembershipActivity extends AppCompatActivity {
                             binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
                             binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
                             binding.tvTag.setText("Access More Than 65 Audio Programs.");
-                            binding.tvText.setText("By clicking on Register or Sign up you agree to our T&amp;Cs, Privacy Policy &amp; Disclaimer");
+                            binding.tvText.setText(getString(R.string.privacy_policy_t_n_c));
 
                             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 29,
                                     5, 3, 1.1f, 29);

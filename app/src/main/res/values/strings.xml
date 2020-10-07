@@ -12,7 +12,7 @@
     <string name="mobile_number">Mobile Number</string>
     <string name="enter_your_code">Enter your code</string>
     <string name="phone_number">Phone Number</string>
-    <string name="send_code_text">We will send You a code by SMS to confirm your phone number.</string>
+    <string name="send_code_text">We will send you a code by SMS to confirm your phone number.</string>
     <string name="register_text"><u>Not a Member? Register</u></string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="privacy_policy_t_n_c">By clicking on Register or Sign up you agree to our T&amp;Cs, Privacy Policy &amp; Disclaimer</string>

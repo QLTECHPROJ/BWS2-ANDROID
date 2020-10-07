@@ -154,7 +154,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 if (!binding.etCalendar.getText().toString().isEmpty()) {
                     dob = binding.etCalendar.getText().toString();
                     SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
-                    Date newDate = null;
+                    Date newDate = new Date();
                     try {
                         newDate = spf.parse(dob);
                     } catch (ParseException e) {

@@ -90,7 +90,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     List<DownloadAudioDetails> downloadAudioDetailsList;
     private long mLastClickTime = 0, totalDuration, currentDuration;
     private Handler handler;
-    private Handler handler1;
+//    private Handler handler1;
 //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
@@ -186,7 +186,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             handler.postDelayed(this, 100);
         }
     };
-    private Runnable UpdateSongTime1 = new Runnable() {
+  /*  private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
             if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
@@ -205,11 +205,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                 handler1.removeCallbacks(UpdateSongTime1);
             }
-            binding.pbProgress.setVisibility(View.GONE);
-            binding.ivDownloads.setVisibility(View.VISIBLE);
             handler1.postDelayed(this, 500);
         }
-    };
+    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,7 +215,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //        overridePendingTransition(R.anim.enter, R.anim.exit);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_wellness);
         handler = new Handler();
-        handler1 = new Handler();
+//        handler1 = new Handler();
         ctx = PlayWellnessActivity.this;
         activity = PlayWellnessActivity.this;
         addToQueueModelList = new ArrayList<>();
@@ -285,12 +283,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         getPrepareShowData(position);
-        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
+     /*   if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
             handler1.postDelayed(UpdateSongTime1, 500);
          }else{
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
-        }
+        }*/
         callRepeatShuffle();
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
@@ -653,12 +651,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         downloadMedia.encrypt1(url1, name1);
-        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
+  /*      if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
             handler1.postDelayed(UpdateSongTime1, 500);
         }else{
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
-        }
+        }*/
         SaveMedia(EncodeBytes, FileUtils.getFilePath(getApplicationContext(), name));
    /*     if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);

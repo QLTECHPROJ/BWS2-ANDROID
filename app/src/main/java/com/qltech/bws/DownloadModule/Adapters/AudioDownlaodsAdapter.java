@@ -58,10 +58,10 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     RecyclerView rvDownloadsList;
     TextView tvFound;
     List<DownloadAudioDetails> downloadAudioDetailsList;
-    Runnable UpdateSongTime1;
-    List<String> fileNameList = new ArrayList<>();
+//    Runnable UpdateSongTime1;
+//    List<String> fileNameList = new ArrayList<>();
     private List<DownloadAudioDetails> listModelList;
-    private Handler handler1;
+//    private Handler handler1;
 
     public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, String UserID,
                                  FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
@@ -73,7 +73,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         this.llError = llError;
         this.rvDownloadsList = rvDownloadsList;
         this.tvFound = tvFound;
-        handler1 = new Handler();
+//        handler1 = new Handler();
         downloadAudioDetailsList = new ArrayList<>();
         SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
         Gson gson = new Gson();
@@ -81,7 +81,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         if (!json.equalsIgnoreCase(String.valueOf(gson))) {
             Type type = new TypeToken<List<String>>() {
             }.getType();
-            fileNameList = gson.fromJson(json, type);
+//            fileNameList = gson.fromJson(json, type);
         }
     }
 
@@ -95,6 +95,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+/*
         UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {
@@ -114,7 +115,8 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 handler1.postDelayed(this, 500);
             }
         };
-        if (fileNameList.size() != 0) {
+*/
+    /*    if (fileNameList.size() != 0) {
             if (fileNameList.contains(listModelList.get(position).getName())) {
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
                 handler1.postDelayed(UpdateSongTime1, 500);
@@ -123,7 +125,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             }
         }else {
             holder.binding.pbProgress.setVisibility(View.INVISIBLE);
-        }
+        }*/
         holder.binding.tvTitle.setText(listModelList.get(position).getName());
         holder.binding.tvTime.setText(listModelList.get(position).getAudioDuration());
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,

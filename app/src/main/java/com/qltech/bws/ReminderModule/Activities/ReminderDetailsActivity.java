@@ -247,6 +247,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             binding.llClose.setOnClickListener(view -> {
                 remiderIds.clear();
                 binding.cbChecked.setChecked(false);
+                notifyDataSetChanged();
             });
             binding.cbChecked.setOnClickListener(view -> {
                 if(binding.cbChecked.isChecked()){

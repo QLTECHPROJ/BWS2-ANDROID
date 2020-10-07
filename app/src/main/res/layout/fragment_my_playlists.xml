@@ -263,9 +263,9 @@
                                 android:layout_toRightOf="@id/button1"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
-                                android:text="Search for audios"
+                                android:text=""
                                 android:textColor="@color/light_gray"
-                                android:textSize="@dimen/_16sdp"
+                                android:textSize="@dimen/_14sdp"
                                 android:visibility="gone" />
 
                             <androidx.appcompat.widget.SearchView
@@ -279,7 +279,7 @@
                                 android:theme="@style/WallSearchView"
                                 android:visibility="gone"
                                 app:queryBackground="@null"
-                                app:queryHint="Search for audios"
+                                app:queryHint=""
                                 app:searchHintIcon="@null"
                                 app:searchIcon="@null" />
 

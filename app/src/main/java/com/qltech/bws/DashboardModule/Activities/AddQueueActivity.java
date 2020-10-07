@@ -75,8 +75,9 @@ public class AddQueueActivity extends AppCompatActivity {
     Boolean queuePlay, audioPlay;
     List<DownloadAudioDetails> oneAudioDetailsList;
     SharedPreferences shared;
-    List<String> fileNameList;
+//    List<String> fileNameList;
     private long mLastClickTime = 0;
+/*
     private Handler handler1;
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
@@ -93,6 +94,7 @@ public class AddQueueActivity extends AppCompatActivity {
             handler1.postDelayed(this, 500);
         }
     };
+*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,8 +103,8 @@ public class AddQueueActivity extends AppCompatActivity {
         ctx = AddQueueActivity.this;
         activity = AddQueueActivity.this;
         oneAudioDetailsList = new ArrayList<>();
-        handler1 = new Handler();
-        fileNameList = new ArrayList<>();
+      /*  handler1 = new Handler();
+        fileNameList = new ArrayList<>();*/
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         mData = new ArrayList<>();
@@ -112,7 +114,7 @@ public class AddQueueActivity extends AppCompatActivity {
         if (!json11.equalsIgnoreCase(String.valueOf(gson1))) {
             Type type = new TypeToken<List<String>>() {
             }.getType();
-            fileNameList = gson1.fromJson(json11, type);
+//            fileNameList = gson1.fromJson(json11, type);
         }
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -146,7 +148,7 @@ public class AddQueueActivity extends AppCompatActivity {
         if (getIntent().hasExtra("PlaylistAudioId")) {
             PlaylistAudioId = getIntent().getStringExtra("PlaylistAudioId");
         }
-        if (fileNameList.size() != 0) {
+     /*   if (fileNameList.size() != 0) {
             if (fileNameList.contains(audioFileName)) {
                 binding.pbProgress.setVisibility(View.VISIBLE);
                 binding.ivDownloads.setVisibility(View.GONE);
@@ -159,7 +161,7 @@ public class AddQueueActivity extends AppCompatActivity {
         }else {
             binding.pbProgress.setVisibility(View.VISIBLE);
             binding.ivDownloads.setVisibility(View.GONE);
-        }
+        }*/
         if (getIntent().hasExtra("play")) {
             play = getIntent().getStringExtra("play");
         } else {
@@ -700,12 +702,12 @@ public class AddQueueActivity extends AppCompatActivity {
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
             editor.commit();
         }
-        fileNameList = url1;
+//        fileNameList = url1;
         callDisableDownload();
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         downloadMedia.encrypt1(url1, name1);
 //        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
-        handler1.postDelayed(UpdateSongTime1, 500);
+//        handler1.postDelayed(UpdateSongTime1, 500);
 //        }else{
 //            binding.pbProgress.setVisibility(View.GONE);
 //            handler1.removeCallbacks(UpdateSongTime1);

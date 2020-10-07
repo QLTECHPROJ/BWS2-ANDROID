@@ -84,7 +84,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     DownloadPlaylistDetails downloadPlaylistDetails;
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
-    List<String> fileNameList,playlistDownloadId, remainAudio;
+  /*  List<String> fileNameList,playlistDownloadId, remainAudio;
     private Handler handler1;
     int SongListSize = 0;
     private Runnable UpdateSongTime1 = new Runnable() {
@@ -114,7 +114,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 handler1.postDelayed(this, 10);
             }
         }
-    };
+    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,10 +122,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_playlist);
         ctx = MyPlaylistActivity.this;
         activity = MyPlaylistActivity.this;
-        handler1 = new Handler();
+        /*handler1 = new Handler();
         fileNameList = new ArrayList<>();
         playlistDownloadId = new ArrayList<>();
-        remainAudio = new ArrayList<>();
+        remainAudio = new ArrayList<>();*/
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -143,7 +143,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ComeFindAudio = 1;
-                handler1.removeCallbacks(UpdateSongTime1);
+//                handler1.removeCallbacks(UpdateSongTime1);
                 finish();
             }
         });
@@ -151,8 +151,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
         binding.llDownload.setOnClickListener(view -> callDownload());
     }
-    private void getDownloadData() {
-     /*   SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_removedDownloadPlaylist, MODE_PRIVATE);
+  /*  private void getDownloadData() {
+     *//*   SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_removedDownloadPlaylist, MODE_PRIVATE);
         Gson gson1 = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_removedDownloadName, String.valueOf(gson1));
         String json2 = sharedx.getString(CONSTANTS.PREF_KEY_removedDownloadPlaylistId, String.valueOf(gson1));
@@ -161,7 +161,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             }.getType();
             removedFileNameList = gson1.fromJson(json, type);
             removedPlaylistDownloadId = gson1.fromJson(json2, type);
-        }*/
+        }*//*
         try {
             SharedPreferences sharedy = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
             Gson gson = new Gson();
@@ -196,7 +196,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }    public List<DownloadAudioDetails> GetAllMedia() {
+    }*/    public List<DownloadAudioDetails> GetAllMedia() {
 
         class GetTask extends AsyncTask<Void, Void, Void> {
 
@@ -282,14 +282,14 @@ public class MyPlaylistActivity extends AppCompatActivity {
             String urlJson = gson.toJson(url);
             String nameJson = gson.toJson(name);
             String playlistIdJson = gson.toJson(downloadPlaylistId);
-            fileNameList = name;
-            playlistDownloadId = downloadPlaylistId;
+//            fileNameList = name;
+//            playlistDownloadId = downloadPlaylistId;
             editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
             editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
             editor.commit();
         }
-        SongListSize = playlistSongsList.size();
+//        SongListSize = playlistSongsList.size();
         savePlaylist();
         saveAllMedia(playlistSongsList, encodedBytes);
 
@@ -365,7 +365,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         ComeFindAudio = 1;
-        handler1.removeCallbacks(UpdateSongTime1);
+//        handler1.removeCallbacks(UpdateSongTime1);
         finish();
     }
 
@@ -409,10 +409,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             } else {
                                 binding.ivRestaurantImage.setImageResource(R.drawable.ic_playlist_bg);
                             }
-                            SongListSize = model.getResponseData().getPlaylistSongs().size();
+//                            SongListSize = model.getResponseData().getPlaylistSongs().size();
                             Download = model.getResponseData().getDownload();
                             binding.llAddPlaylist.setVisibility(View.VISIBLE);
-                            getDownloadData();
+//                            getDownloadData();
                             binding.llAddPlaylist.setOnClickListener(view -> {
                                 comeAddPlaylist = 1;
                                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
