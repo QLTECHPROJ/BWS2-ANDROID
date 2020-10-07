@@ -191,6 +191,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 //                    notifyDataSetChanged();
                     if (!remiderIds.contains(model.get(position).getReminderId())) {
                         remiderIds.add(model.get(position).getReminderId());
+                        binding.tvSelectAll.setText(String.valueOf(remiderIds.size())+" selected");
                         Log.e("remiderIds", TextUtils.join(",", remiderIds));
                     } else {
 
@@ -207,6 +208,11 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     binding.llSelectAll.setVisibility(View.VISIBLE);
                     binding.btnAddReminder.setVisibility(View.GONE);
                     binding.btnDeleteReminder.setVisibility(View.VISIBLE);
+                }
+                if(remiderIds.size() == model.size()){
+                    binding.cbChecked.setChecked(true);
+                    binding.tvSelectAll.setText(String.valueOf(remiderIds.size())+" selected");
+
                 }
             });
             binding.llClose.setOnClickListener(new View.OnClickListener() {
@@ -235,11 +241,13 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
             if (remiderIds.contains(model.get(position).getReminderId())) {
                 holder.bind.cbChecked.setChecked(true);
+                binding.tvSelectAll.setText(String.valueOf(remiderIds.size())+" selected");
             } else {
                 holder.bind.cbChecked.setChecked(false);
             }
             if(remiderIds.size() == model.size()){
                 binding.cbChecked.setChecked(true);
+                binding.tvSelectAll.setText(String.valueOf(remiderIds.size())+" selected");
             }
             if (model.get(position).getIsCheck().equalsIgnoreCase("1")) {
                 holder.bind.switchStatus.setChecked(true);
