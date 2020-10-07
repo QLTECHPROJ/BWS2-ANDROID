@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
-                    android:text="@string/enter_otp"
+                    android:text="@string/enter_sms"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_26sdp" />
 

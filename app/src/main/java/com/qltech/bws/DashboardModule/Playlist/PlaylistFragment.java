@@ -481,22 +481,19 @@ public class PlaylistFragment extends Fragment {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
-            holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (IsLock.equalsIgnoreCase("1")) {
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                    } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                        holder.binding.ivLock.setVisibility(View.GONE);
-                        if(MyDownloads.equalsIgnoreCase("1")){
-                           getMedia(listModelList.get(position).getPlaylistID());
-                        }else{
-                            callMyPlaylistsFragment("0", listModelList.get(position).getPlaylistID(), listModelList.get(position).getPlaylistName(),
-                                    listModelList.get(position).getPlaylistImage(), MyDownloads);
-                        }
-
+            holder.binding.rlMainLayout.setOnClickListener(view -> {
+                if (IsLock.equalsIgnoreCase("1")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    if(MyDownloads.equalsIgnoreCase("1")){
+                       getMedia(listModelList.get(position).getPlaylistID());
+                    }else{
+                        callMyPlaylistsFragment("0", listModelList.get(position).getPlaylistID(), listModelList.get(position).getPlaylistName(),
+                                listModelList.get(position).getPlaylistImage(), MyDownloads);
                     }
+
                 }
             });
 

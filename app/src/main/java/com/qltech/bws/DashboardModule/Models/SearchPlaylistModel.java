@@ -121,6 +121,15 @@ public class SearchPlaylistModel implements Parcelable {
         @SerializedName("Download")
         @Expose
         private String download;
+        @SerializedName("TotalAudio")
+        @Expose
+        private String totalAudio;
+        @SerializedName("Totalhour")
+        @Expose
+        private String totalhour;
+        @SerializedName("Totalminute")
+        @Expose
+        private String totalminute;
 
         public ResponseData(Parcel in) {
             iD = in.readString();
@@ -131,6 +140,9 @@ public class SearchPlaylistModel implements Parcelable {
             masterCat = in.readString();
             subCat = in.readString();
             download = in.readString();
+            totalAudio = in.readString();
+            totalhour = in.readString();
+            totalminute = in.readString();
         }
 
         public String getID() {
@@ -163,6 +175,30 @@ public class SearchPlaylistModel implements Parcelable {
 
         public void setDesc(String desc) {
             this.desc = desc;
+        }
+
+        public String getTotalAudio() {
+            return totalAudio;
+        }
+
+        public void setTotalAudio(String totalAudio) {
+            this.totalAudio = totalAudio;
+        }
+
+        public String getTotalhour() {
+            return totalhour;
+        }
+
+        public void setTotalhour(String totalhour) {
+            this.totalhour = totalhour;
+        }
+
+        public String getTotalminute() {
+            return totalminute;
+        }
+
+        public void setTotalminute(String totalminute) {
+            this.totalminute = totalminute;
         }
 
         public String getImage() {
@@ -212,6 +248,9 @@ public class SearchPlaylistModel implements Parcelable {
             parcel.writeString(masterCat);
             parcel.writeString(subCat);
             parcel.writeString(download);
+            parcel.writeString(totalAudio);
+            parcel.writeString(totalhour);
+            parcel.writeString(totalminute);
         }
     }
 }

@@ -718,7 +718,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void setData(SubPlayListModel.ResponseData listModel) {
         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
-                4, 2, 1.2f, 0);
+                5, 3, 1f, 0);
         binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);

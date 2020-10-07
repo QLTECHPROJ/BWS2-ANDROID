@@ -25,7 +25,7 @@ import com.qltech.bws.databinding.ActivityLoginBinding;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+/* TODO Privacy policy & T&c link LoginActivity & membershipactivity*/
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
     String Name = "", Code = "", MobileNo = "";

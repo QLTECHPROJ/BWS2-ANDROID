@@ -280,7 +280,7 @@ public class UserProfileActivity extends AppCompatActivity {
                         if (viewModel.getResponseData().getDOB().equalsIgnoreCase("0000-00-00")) {
                             binding.etCalendar.setText("");
                         } else {
-                            String date = viewModel.getResponseData().getDOB();
+                            /*String date = viewModel.getResponseData().getDOB();
                             SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
                             if (!date.isEmpty()) {
                                 Date newDate = null;
@@ -290,9 +290,9 @@ public class UserProfileActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                 spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
-                                date = spf.format(newDate);
-                                binding.etCalendar.setText(date);
-                            }
+                                date = spf.format(newDate);*/
+                                binding.etCalendar.setText(viewModel.getResponseData().getDOB());
+//                            }
                         }
 
                         if (!viewModel.getResponseData().getEmail().equalsIgnoreCase("")

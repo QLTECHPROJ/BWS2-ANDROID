@@ -293,7 +293,6 @@ public class AudioFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         prepareData();
     }
 

@@ -235,6 +235,22 @@ public class ViewAllSearchFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(PlaylistModel.get(position).getName());
             holder.binding.pbProgress.setVisibility(View.GONE);
+
+            if (PlaylistModel.get(position).getTotalAudio().equalsIgnoreCase("") ||
+                    PlaylistModel.get(position).getTotalAudio().equalsIgnoreCase("0") &&
+                            PlaylistModel.get(position).getTotalhour().equalsIgnoreCase("")
+                            && PlaylistModel.get(position).getTotalminute().equalsIgnoreCase("")) {
+                holder.binding.tvTime.setText("0 Audio | 0h 0m");
+            } else {
+                if (PlaylistModel.get(position).getTotalminute().equalsIgnoreCase("")) {
+                    holder.binding.tvTime.setText(PlaylistModel.get(position).getTotalAudio() + " Audio | "
+                            + PlaylistModel.get(position).getTotalhour() + "h 0m");
+                } else {
+                    holder.binding.tvTime.setText(PlaylistModel.get(position).getTotalAudio() +
+                            " Audios | " + PlaylistModel.get(position).getTotalhour() + "h " + PlaylistModel.get(position).getTotalminute() + "m");
+                }
+            }
+
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());

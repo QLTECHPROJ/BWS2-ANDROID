@@ -8,6 +8,8 @@
 
     <string name="sign_in">Sign in</string>
     <string name="enter_phone_number">Enter Phone Number</string>
+    <string name="enter_mobile_number">Enter Mobile Number</string>
+    <string name="mobile_number">Mobile Number</string>
     <string name="enter_your_code">Enter your code</string>
     <string name="phone_number">Phone Number</string>
     <string name="send_code_text">We will send You a code by SMS to confirm your phone number.</string>
@@ -17,8 +19,9 @@
     <string name="get_the_code">Get SMS code</string>
     <string name="choose_your_country">Choose your country</string>
     <string name="enter_otp">Enter OTP</string>
+    <string name="enter_sms">Enter SMS Code</string>
     <string name="resent_sms">Resend SMS</string>
-    <string name="edit_phone_number">Edit phone number</string>
+    <string name="edit_phone_number">Edit mobile number</string>
     <string name="t_n_c">Terms &amp; Conditions</string>
     <string name="title_activity_dashboard">MainActivity</string>
     <string name="title_audio">AUDIO</string>

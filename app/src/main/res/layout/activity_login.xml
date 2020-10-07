@@ -55,7 +55,7 @@
                     android:layout_marginTop="@dimen/_6sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center"
-                    android:text="@string/enter_phone_number"
+                    android:text="@string/enter_mobile_number"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_14sdp" />
 
@@ -75,7 +75,7 @@
                             android:id="@+id/rlCountrySelect"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingVertical="@dimen/_5sdp">
+                            android:paddingVertical="@dimen/_6sdp">
 
                             <TextView
                                 android:id="@+id/tvCountry"
@@ -116,7 +116,7 @@
                                 android:layout_weight="0.18"
                                 android:gravity="center"
                                 android:fontFamily="@font/montserrat_medium"
-                                android:paddingVertical="@dimen/_11sdp"
+                                android:paddingVertical="@dimen/_12sdp"
                                 android:paddingHorizontal="@dimen/_4sdp"
                                 android:textColor="@color/dark_blue_gray"
                                 android:textSize="@dimen/_16sdp" />
@@ -142,8 +142,8 @@
                                     android:textCursorDrawable="@null"
                                     android:backgroundTint="@color/dim_light_gray"
                                     android:fontFamily="@font/montserrat_medium"
-                                    android:hint="@string/phone_number"
-                                    android:paddingVertical="@dimen/_11sdp"
+                                    android:hint="@string/mobile_number"
+                                    android:paddingVertical="@dimen/_12sdp"
                                     android:paddingHorizontal="@dimen/_16sdp"
                                     android:textColor="@color/dark_blue_gray"
                                     android:textSize="@dimen/_16sdp" />
