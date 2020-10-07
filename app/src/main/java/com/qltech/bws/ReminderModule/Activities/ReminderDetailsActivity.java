@@ -200,14 +200,47 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     Log.e("remiderIds", TextUtils.join(",", remiderIds));
                 }
                 if (remiderIds.size() == 0) {
+                    binding.llSelectAll.setVisibility(View.GONE);
                     binding.btnAddReminder.setVisibility(View.VISIBLE);
                     binding.btnDeleteReminder.setVisibility(View.GONE);
                 } else {
+                    binding.llSelectAll.setVisibility(View.VISIBLE);
                     binding.btnAddReminder.setVisibility(View.GONE);
                     binding.btnDeleteReminder.setVisibility(View.VISIBLE);
                 }
             });
+            binding.llClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    remiderIds.clear();
+                    binding.cbChecked.setChecked(false);
+                }
+            });
+            binding.cbChecked.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(binding.cbChecked.isChecked()){
+                        remiderIds.clear();
+                        for(int i = 0;i<model.size();i++){
+                            remiderIds.add(model.get(i).getReminderId());
+                        }
+                    }else{
+                        remiderIds.clear();
+                    }
+                    Log.e("remiderIds", TextUtils.join(",", remiderIds));
 
+                    notifyDataSetChanged();
+                }
+            });
+
+            if (remiderIds.contains(model.get(position).getReminderId())) {
+                holder.bind.cbChecked.setChecked(true);
+            } else {
+                holder.bind.cbChecked.setChecked(false);
+            }
+            if(remiderIds.size() == model.size()){
+                binding.cbChecked.setChecked(true);
+            }
             if (model.get(position).getIsCheck().equalsIgnoreCase("1")) {
                 holder.bind.switchStatus.setChecked(true);
             } else {

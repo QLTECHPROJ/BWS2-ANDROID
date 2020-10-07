@@ -128,8 +128,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 if (remainAudio.size() <= SongListSize) {
                     int total = SongListSize;
                     int remain = remainAudio.size();
-                    int complate = total = remain;
-                    long progressPercent = remain * 100 / total;
+                    int complate = total - remain;
+                    long progressPercent = complate * 100 / total;
                     int downloadProgress1 = (int) progressPercent;
                     if (SongListSize == 1) {
                         if (downloadProgress <= 100) {
