@@ -9,7 +9,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.View;
@@ -56,8 +55,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
-import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.downloadProgress;
-import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
@@ -79,7 +76,7 @@ public class AddQueueActivity extends AppCompatActivity {
     Boolean queuePlay, audioPlay;
     List<DownloadAudioDetails> oneAudioDetailsList;
     SharedPreferences shared;
-//    List<String> fileNameList;
+    //    List<String> fileNameList;
     private long mLastClickTime = 0;
 /*
     private Handler handler1;
@@ -462,7 +459,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                     if (pID.equalsIgnoreCase(PlaylistId)) {
                                         if (mData.size() != 0) {
-                                            if (pos == position && position < mData.size() - 1){
+                                            if (pos == position && position < mData.size() - 1) {
                                                 pos = pos;
                                                 if (isPrepare || isMediaStart || isPause) {
                                                     stopMedia();
@@ -478,7 +475,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                                 isPause = false;
                                                 isMediaStart = false;
                                                 isPrepare = false;
-                                            } else if (pos < position && pos < mData.size() - 1){
+                                            } else if (pos < position && pos < mData.size() - 1) {
                                                 pos = pos;
                                             } else if (pos > position && pos == mData.size()) {
                                                 pos = pos - 1;
@@ -523,18 +520,16 @@ public class AddQueueActivity extends AppCompatActivity {
                                             editor1.commit();
                                         }
                                     }
-                                }else{
+                                } else {
                                     mainPlayModelList.remove(position);
                                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                     if (pID.equalsIgnoreCase(PlaylistId)) {
                                         if (mainPlayModelList.size() != 0) {
-                                            if (pos == position && position < mainPlayModelList.size() - 1){
+                                            if (pos < mainPlayModelList.size() - 1) {
                                                 pos = pos;
-                                            } else if (pos == position && position == mainPlayModelList.size() - 1) {
+                                            } else if (pos == mainPlayModelList.size() - 1) {
                                                 pos = 0;
-                                            }else if(pos < position && pos < mainPlayModelList.size() - 1){
-                                                pos = pos;
-                                            } else if (pos > position && pos == mainPlayModelList.size()) {
+                                            } else if (pos > mainPlayModelList.size()) {
                                                 pos = pos - 1;
                                             }
                                             if (isPrepare || isMediaStart || isPause) {
@@ -718,7 +713,7 @@ public class AddQueueActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-               callDisableDownload();
+                callDisableDownload();
                 super.onPostExecute(aVoid);
             }
         }
@@ -791,7 +786,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
-                        }else if (play.equalsIgnoreCase("play")) {
+                        } else if (play.equalsIgnoreCase("play")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.VISIBLE);
                         } else if (play.equalsIgnoreCase("playlist")) {
