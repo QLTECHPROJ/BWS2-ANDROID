@@ -806,6 +806,34 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         touchHelper = new ItemTouchHelper(callback);
                         touchHelper.attachToRecyclerView(binding.rvPlayLists);
                         binding.rvPlayLists.setAdapter(adpater);
+                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                        if (audioPlay) {
+                            if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                                if (pID.equalsIgnoreCase(PlaylistID)) {
+                                    SharedPreferences shareddd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = shareddd.edit();
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(listModel.getPlaylistSongs());
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                                    editor.putInt(CONSTANTS.PREF_KEY_position, pos);
+                                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistID);
+                                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist");
+                                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                                    editor.commit();
+                                    Fragment fragment = new TransparentPlayerFragment();
+                                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                                    fragmentManager1.beginTransaction()
+                                            .add(R.id.flContainer, fragment)
+                                            .commit();
+                                }
+                            }
+                        }
                     } else {
                         adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
                         binding.rvPlayLists.setAdapter(adpater2);
@@ -881,13 +909,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                 if (pID.equalsIgnoreCase(PlaylistID)) {
                                     if (mData.size() != 0) {
-                                        if (position < mData.size() - 1) {
-                                            pos = pos + 1;
-                                        } else if (position == mData.size() - 1) {
+                                        if (pos == position && position < mData.size() - 1) {
+//                                            pos = pos + 1;
+                                            callTransparentFrag(pos, getActivity(), mData, "myPlaylist");
+                                        } else if (pos == position && position == mData.size() - 1) {
                                             pos = 0;
-                                        } else if (pos == position) {
-
-                                        }
+                                            callTransparentFrag(pos, getActivity(), mData, "myPlaylist");
+                                        } else if (pos < position && pos < mData.size() - 1) {
+                                            saveToPref(pos, mData);
+                                        } else if (pos > position && pos == mData.size()) {
+                                            pos = pos - 1;
+                                            saveToPref(pos, mData);
+                                        }/*else if(pos != position || pos > mData.size()){}*/
 
 //                                        callTransparentFrag(pos, getActivity(), mData, "myPlaylist");
                                     } else {
@@ -900,6 +933,26 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         prepareData(UserID, PlaylistID);
                         BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                     }
+                }
+
+                private void saveToPref(int pos, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> mData) {
+                    SharedPreferences shareddd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shareddd.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(mData);
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, pos);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistID);
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist");
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                    editor.commit();
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flContainer, fragment)
+                            .commit();
                 }
 
                 @Override
@@ -1440,6 +1493,54 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             changedAudio.clear();
             for (int i = 0; i < listModelList.size(); i++) {
                 changedAudio.add(listModelList.get(i).getID());
+            }
+
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+            if (audioPlay) {
+                if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                    if (pID.equalsIgnoreCase(PlaylistID)) {
+                        if (fromPosition == pos) {
+                            pos = toPosition;
+                        }/* else if (toPosition == pos) {
+                            if (action == 0) {
+                                pos = pos + 1;
+                            } else if (action == 1) {
+                                pos = pos - 1;
+                            }
+                        }*/ else if (fromPosition < pos && toPosition > pos) {
+                            pos = pos - 1;
+                        } else if ((fromPosition > pos && toPosition > pos) || (fromPosition < pos && toPosition < pos)) {
+                            pos = pos;
+                        } else if (fromPosition > pos && toPosition < pos) {
+                            pos = pos + 1;
+                        } else if (fromPosition > pos && toPosition == pos) {
+                            pos = pos - 1;
+                        } else if (fromPosition < pos && toPosition == pos) {
+                            pos = pos + 1;
+                        }
+                        SharedPreferences shareddd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shareddd.edit();
+                        Gson gson = new Gson();
+                        String json = gson.toJson(listModelList);
+                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, pos);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistID);
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist");
+                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                        editor.commit();
+                        Fragment fragment = new TransparentPlayerFragment();
+                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                        fragmentManager1.beginTransaction()
+                                .add(R.id.flContainer, fragment)
+                                .commit();
+                    }
+                }
             }
             callDragApi();
 

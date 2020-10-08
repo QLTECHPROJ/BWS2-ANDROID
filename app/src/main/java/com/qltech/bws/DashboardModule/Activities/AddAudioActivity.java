@@ -96,11 +96,11 @@ public class AddAudioActivity extends AppCompatActivity {
             finish();
         });
 
-        RecyclerView.LayoutManager suggested = new LinearLayoutManager(AddAudioActivity.this, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager suggested = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvSuggestedList.setLayoutManager(suggested);
         binding.rvSuggestedList.setItemAnimator(new DefaultItemAnimator());
 
-        RecyclerView.LayoutManager serachList = new LinearLayoutManager(AddAudioActivity.this, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager serachList = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvSerachList.setLayoutManager(serachList);
         binding.rvSerachList.setItemAnimator(new DefaultItemAnimator());
 
@@ -158,7 +158,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         SuggestedModel listModel = response.body();
                         binding.tvSuggested.setText(R.string.Suggested);
-                        SuggestedAdpater suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), AddAudioActivity.this);
+                        SuggestedAdpater suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), ctx);
                         binding.rvSuggestedList.setAdapter(suggestedAdpater);
                     }
                 }

@@ -447,23 +447,24 @@ public class AddQueueActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         SucessModel listModel = response.body();
-                        if (!comeFrom.equalsIgnoreCase("")) {
-                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                            mData.remove(position);
-                            int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                            if (audioPlay) {
-                                if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                        if (audioPlay) {
+                            if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                                if (!comeFrom.equalsIgnoreCase("")) {
+                                    mData.remove(position);
                                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                     if (pID.equalsIgnoreCase(PlaylistId)) {
                                         if (mData.size() != 0) {
-                                            if (pos == position && position < mData.size() - 1) {
-                                                pos = pos + 1;
+                                            if ((pos == position && position < mData.size() - 1) || (pos < position && pos < mData.size() - 1)) {
+                                                pos = pos;
                                             } else if (pos == position && position == mData.size() - 1) {
                                                 pos = 0;
+                                            }  else if (pos > position && pos == mData.size()) {
+                                                pos = pos - 1;
                                             }
-
                                             SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                             SharedPreferences.Editor editor = sharedd.edit();
                                             Gson gson = new Gson();
@@ -476,7 +477,6 @@ public class AddQueueActivity extends AppCompatActivity {
                                             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, myPlaylist);
                                             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                                             editor.commit();
-
                                             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
                                             }.getType();
                                             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
@@ -502,38 +502,26 @@ public class AddQueueActivity extends AppCompatActivity {
                                             String jsonz = gsonz.toJson(mainPlayModelList);
                                             editor1.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
                                             editor1.commit();
-
-//                                        callTransparentFrag(pos, getActivity(), mData, "myPlaylist");
-                                        } else {
-
                                         }
                                     }
-                                }
-                            }
-                        } else {
-                          /*  SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                            mainPlayModelList.remove(position);
-                            int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                            if (audioPlay) {
-                                if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                                }else{
+                                    mainPlayModelList.remove(position);
                                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                     if (pID.equalsIgnoreCase(PlaylistId)) {
                                         if (mainPlayModelList.size() != 0) {
-                                            if (pos == position && position < mainPlayModelList.size() - 1) {
-                                                pos = pos + 1;
+                                            if ((pos == position && position < mainPlayModelList.size() - 1) || (pos < position && pos < mainPlayModelList.size() - 1)) {
+                                                pos = pos;
                                             } else if (pos == position && position == mainPlayModelList.size() - 1) {
                                                 pos = 0;
+                                            } else if (pos > position && pos == mainPlayModelList.size()) {
+                                                pos = pos - 1;
                                             }
-
                                             SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                             SharedPreferences.Editor editor = sharedd.edit();
                                             Gson gson = new Gson();
                                             String json = gson.toJson(mainPlayModelList);
-                                           sxv editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                                            editor.putInt(CONSTANTS.PREF_KEY_position, pos);
                                             editor.putString(CONSTANTS.PREF_KEY_audioList, json);
+                                            editor.putInt(CONSTANTS.PREF_KEY_position, pos);
                                             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                                             editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                                             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistId);
@@ -541,71 +529,11 @@ public class AddQueueActivity extends AppCompatActivity {
                                             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                                             editor.commit();
 
-                                            Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
-                                            }.getType();
-                                            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
-                                            listSize = arrayList.size();
-                                            for (int i = 0; i < listSize; i++) {
-                                                MainPlayModel mainPlayModel = new MainPlayModel();
-                                                mainPlayModel.setID(arrayList.get(i).getID());
-                                                mainPlayModel.setName(arrayList.get(i).getName());
-                                                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                                                mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistID());
-                                                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
-                                                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
-                                                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                                                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                                                mainPlayModel.setLike(arrayList.get(i).getLike());
-                                                mainPlayModel.setDownload(arrayList.get(i).getDownload());
-                                                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
-                                                mainPlayModelList.add(mainPlayModel);
-                                            }
-                                            SharedPreferences sharedz = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                                            SharedPreferences.Editor editor1 = sharedz.edit();
-                                            Gson gsonz = new Gson();
-                                            editor1.commit();
-
-//                                        callTransparentFrag(pos, getActivity(), mData, "myPlaylist");
-                                        } else {
-
                                         }
-                                    }
-                                }
-                            }*/
-
-                        }
-                      /*  SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                       String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                       int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                        if(audioPlay){
-                            if(AudioFlag.equalsIgnoreCase("SubPlayList")){
-                                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                                if(pID.equalsIgnoreCase(PlaylistID)){
-                                    if(mData.size()!=0) {
-                                        if(pos == position && position<mData.size()-1){
-                                            pos = pos+1;
-                                        }else if(pos == position && position == mData.size()-1){
-                                            pos = 0;
-                                        }
-                                        SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedx.edit();
-                                        Gson gson = new Gson();
-                                        String json = gson.toJson(listModelList);
-                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, pID);
-                                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, myPlaylist);
-                                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
-                                        editor.commit();
-                                    }else{
-
                                     }
                                 }
                             }
-                        }*/
+                        }
                         finish();
                     }
                 }
