@@ -1518,9 +1518,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         } else if (fromPosition > pos && toPosition < pos) {
                             pos = pos + 1;
                         } else if (fromPosition > pos && toPosition == pos) {
-                            pos = pos - 1;
-                        } else if (fromPosition < pos && toPosition == pos) {
                             pos = pos + 1;
+                        } else if (fromPosition < pos && toPosition == pos) {
+                            pos = pos - 1;
                         }
                         SharedPreferences shareddd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shareddd.edit();
