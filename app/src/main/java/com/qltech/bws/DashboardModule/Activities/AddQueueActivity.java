@@ -58,6 +58,10 @@ import retrofit2.Response;
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.filename;
+import static com.qltech.bws.Utility.MusicService.isMediaStart;
+import static com.qltech.bws.Utility.MusicService.isPause;
+import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class AddQueueActivity extends AppCompatActivity {
     ActivityQueueBinding binding;
@@ -458,13 +462,28 @@ public class AddQueueActivity extends AppCompatActivity {
                                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                     if (pID.equalsIgnoreCase(PlaylistId)) {
                                         if (mData.size() != 0) {
-                                            if ((pos == position && position < mData.size() - 1) || (pos < position && pos < mData.size() - 1)) {
+                                            if (pos == position && position < mData.size() - 1){
                                                 pos = pos;
+                                                if (isPrepare || isMediaStart || isPause) {
+                                                    stopMedia();
+                                                }
+                                                isPause = false;
+                                                isMediaStart = false;
+                                                isPrepare = false;
                                             } else if (pos == position && position == mData.size() - 1) {
                                                 pos = 0;
-                                            }  else if (pos > position && pos == mData.size()) {
+                                                if (isPrepare || isMediaStart || isPause) {
+                                                    stopMedia();
+                                                }
+                                                isPause = false;
+                                                isMediaStart = false;
+                                                isPrepare = false;
+                                            } else if (pos < position && pos < mData.size() - 1){
+                                                pos = pos;
+                                            } else if (pos > position && pos == mData.size()) {
                                                 pos = pos - 1;
                                             }
+
                                             SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                             SharedPreferences.Editor editor = sharedd.edit();
                                             Gson gson = new Gson();
@@ -509,13 +528,21 @@ public class AddQueueActivity extends AppCompatActivity {
                                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                     if (pID.equalsIgnoreCase(PlaylistId)) {
                                         if (mainPlayModelList.size() != 0) {
-                                            if ((pos == position && position < mainPlayModelList.size() - 1) || (pos < position && pos < mainPlayModelList.size() - 1)) {
+                                            if (pos == position && position < mainPlayModelList.size() - 1){
                                                 pos = pos;
                                             } else if (pos == position && position == mainPlayModelList.size() - 1) {
                                                 pos = 0;
+                                            }else if(pos < position && pos < mainPlayModelList.size() - 1){
+                                                pos = pos;
                                             } else if (pos > position && pos == mainPlayModelList.size()) {
                                                 pos = pos - 1;
                                             }
+                                            if (isPrepare || isMediaStart || isPause) {
+                                                stopMedia();
+                                            }
+                                            isPause = false;
+                                            isMediaStart = false;
+                                            isPrepare = false;
                                             SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                             SharedPreferences.Editor editor = sharedd.edit();
                                             Gson gson = new Gson();
