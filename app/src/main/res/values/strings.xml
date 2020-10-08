@@ -210,4 +210,5 @@
     <string name="t_n_cs">T&amp;Cs</string>
     <string name="privacy_policys">, Privacy Policy </string>
     <string name="disclaimers">&amp; Disclaimer</string>
+    <string name="playlist_or_audio_search">Add or search for audio, playlist</string>
 </resources>

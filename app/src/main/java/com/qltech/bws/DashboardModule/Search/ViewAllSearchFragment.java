@@ -25,7 +25,7 @@ import com.qltech.bws.BWSApplication;
 import com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity;
 import com.qltech.bws.DashboardModule.Models.SearchPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SuggestedModel;
-import com.qltech.bws.DashboardModule.Playlist.PlaylistFragment;
+import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -34,9 +34,9 @@ import com.qltech.bws.databinding.DownloadsLayoutBinding;
 import com.qltech.bws.databinding.FragmentViewAllSearchBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 
 public class ViewAllSearchFragment extends Fragment {
@@ -47,8 +47,7 @@ public class ViewAllSearchFragment extends Fragment {
     ArrayList<SuggestedModel.ResponseData> AudiolistModel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_all_search, container, false);
         view = binding.getRoot();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -183,6 +182,30 @@ public class ViewAllSearchFragment extends Fragment {
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
+
+            holder.binding.llMainLayout.setOnClickListener(view -> {
+                if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                } else if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("0") || AudiolistModel.get(position).getIsLock().equalsIgnoreCase("")) {
+                    comefrom_search = 1;
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("New", "0");
+                    bundle.putString("PlaylistID", AudiolistModel.get(position).getID());
+                    bundle.putString("PlaylistName", AudiolistModel.get(position).getName());
+                    bundle.putString("MyDownloads", "0");
+                    myPlaylistsFragment.setArguments(bundle);
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.flContainer, myPlaylistsFragment)
+                            .commit();
+                }
+            });
+
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);

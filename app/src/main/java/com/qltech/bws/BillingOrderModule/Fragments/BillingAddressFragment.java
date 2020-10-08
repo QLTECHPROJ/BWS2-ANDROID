@@ -36,7 +36,6 @@ public class BillingAddressFragment extends Fragment {
         View view = binding.getRoot();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
         getPrepareData();
 
         binding.btnSave.setOnClickListener(view1 -> {
@@ -97,7 +96,6 @@ public class BillingAddressFragment extends Fragment {
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
             }
         });
-
         return view;
     }
 

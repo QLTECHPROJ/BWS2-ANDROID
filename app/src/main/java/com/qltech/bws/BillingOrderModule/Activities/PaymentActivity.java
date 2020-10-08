@@ -262,6 +262,7 @@ public class PaymentActivity extends AppCompatActivity {
                                     adapter = new AllCardsAdapter(cardListModel.getResponseData(), ImgV, progressBarHolder, rvCardList);
                                     rvCardList.setAdapter(adapter);
                                 }
+                                BWSApplication.showToast(cardListModel.getResponseMessage(), activity);
                             } else {
                                 BWSApplication.showToast(cardListModel.getResponseMessage(), context);
                             }
@@ -317,6 +318,7 @@ public class PaymentActivity extends AppCompatActivity {
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                 prepareCardList();
                                                 dialog.dismiss();
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), activity);
                                             } else {
                                                 BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                             }

@@ -181,7 +181,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, 0, 0, 114);
+        params.setMargins(0, 0, 0, 120);
         binding.llLayout.setLayoutParams(params);
 
         if (comefromDownload.equalsIgnoreCase("1")) {
@@ -190,7 +190,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.llLayout.setLayoutParams(param);
         } else {
             LinearLayout.LayoutParams paramm = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            paramm.setMargins(0, 0, 0, 114);
+            paramm.setMargins(0, 0, 0, 120);
             binding.llLayout.setLayoutParams(paramm);
 
         }

@@ -54,6 +54,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
     ActivityCheckoutOtpBinding binding;
     CountDownTimer countDownTimer;
     private long mLastClickTime = 0;
+    public static int comeRegister = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +103,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
+            comeRegister = 1;
             Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
             i.putExtra("MobileNo", MobileNo);
             i.putExtra("Name", Name);

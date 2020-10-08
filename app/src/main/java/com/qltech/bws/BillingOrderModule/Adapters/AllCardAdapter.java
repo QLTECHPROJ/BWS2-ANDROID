@@ -108,8 +108,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                 listCall.enqueue(new Callback<CardListModel>() {
                     @Override
                     public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
-                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
-                        {
+                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);{
                             CardListModel cardListModel = response.body();
                             if (cardListModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
                                 if (cardListModel.getResponseData().size() == 0) {
@@ -120,6 +119,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                                     adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList);
                                     rvCardList.setAdapter(adapter);
                                 }
+                                BWSApplication.showToast(cardListModel.getResponseMessage(), activity);
                             } else {
                                 BWSApplication.showToast(cardListModel.getResponseMessage(), activity);
                             }
@@ -177,6 +177,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                                         if (cardModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
                                             getCardList();
                                             dialog.dismiss();
+                                            BWSApplication.showToast(cardModel.getResponseMessage(), activity);
                                         } else {
                                             BWSApplication.showToast(cardModel.getResponseMessage(), activity);
                                         }

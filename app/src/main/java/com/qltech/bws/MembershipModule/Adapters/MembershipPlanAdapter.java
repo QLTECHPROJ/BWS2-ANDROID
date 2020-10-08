@@ -92,7 +92,7 @@ public class MembershipPlanAdapter extends RecyclerView.Adapter<MembershipPlanAd
         btnFreeJoin.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 ctx.startActivity(i);
-            }else {
+            } else {
                 BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
             }
         });

@@ -103,7 +103,7 @@ public class CurrentPlanFragment extends Fragment {
                         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
                         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
                         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-                        binding.ivRestaurantImage.setImageResource(R.drawable.current_plan_image);
+                        binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner);
 
                         if (listModel.getResponseData().getActivate().equalsIgnoreCase("")) {
                             binding.tvPlan.setText("");

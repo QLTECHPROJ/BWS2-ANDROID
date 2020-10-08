@@ -46,6 +46,7 @@ public class OtpActivity extends AppCompatActivity {
     Activity activity;
     CountDownTimer countDownTimer;
     private long mLastClickTime = 0;
+    public static int comeLogin  = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,7 @@ public class OtpActivity extends AppCompatActivity {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
+            comeLogin = 1;
             Intent i = new Intent(OtpActivity.this, LoginActivity.class);
             i.putExtra("Name", Name);
             i.putExtra("Code", Code);

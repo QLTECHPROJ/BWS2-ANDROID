@@ -55,11 +55,12 @@ import static com.qltech.bws.Utility.MusicService.resumeMedia;
 
 public class ReminderDetailsActivity extends AppCompatActivity {
     ActivityReminderDetailsBinding binding;
-    String UserId, PlaylistId;
+    String UserId;
     Context ctx;
     Activity activity;
     ArrayList<String> remiderIds = new ArrayList<>();
     RemiderDetailsAdapter adapter;
+    public static String comeBack = "";
     RemiderDetailsModel listReminderModel;
 
     @Override
@@ -78,7 +79,9 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         /*ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(binding.rvReminderDetails);*/
 
-        binding.llBack.setOnClickListener(view -> finish());
+        binding.llBack.setOnClickListener(view -> {
+            finish();
+        });
 
         prepareData();
 
@@ -213,21 +216,18 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             holder.bind.tvName.setText(model.get(position).getPlaylistName());
             holder.bind.tvDate.setText(model.get(position).getReminderDay());
             holder.bind.tvTime.setText(model.get(position).getReminderTime());
-            PlaylistId = model.get(position).getPlaylistId();
 
             holder.bind.cbChecked.setOnCheckedChangeListener((compoundButton, b) -> {
                 if (holder.bind.cbChecked.isChecked()) {
 //                    notifyDataSetChanged();
                     if (!remiderIds.contains(model.get(position).getReminderId())) {
                         remiderIds.add(model.get(position).getReminderId());
-                        binding.tvSelectAll.setText(String.valueOf(remiderIds.size())+" selected");
-                        Log.e("remiderIds", TextUtils.join(",", remiderIds));
+                        binding.tvSelectAll.setText(String.valueOf(remiderIds.size()) + " selected");
                     } else {
-
                     }
                 } else {
                     remiderIds.remove(model.get(position).getReminderId());
-                    Log.e("remiderIds", TextUtils.join(",", remiderIds));
+                    binding.tvSelectAll.setText(String.valueOf(remiderIds.size()) + " selected");
                 }
                 if (remiderIds.size() == 0) {
                     binding.llSelectAll.setVisibility(View.GONE);
@@ -238,24 +238,27 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     binding.btnAddReminder.setVisibility(View.GONE);
                     binding.btnDeleteReminder.setVisibility(View.VISIBLE);
                 }
-                if(remiderIds.size() == model.size()){
+                if (remiderIds.size() == model.size()) {
                     binding.cbChecked.setChecked(true);
-                    binding.tvSelectAll.setText(String.valueOf(remiderIds.size())+" selected");
-
+                    binding.tvSelectAll.setText(String.valueOf(remiderIds.size()) + " selected");
                 }
+                Log.e("remiderIds", TextUtils.join(",", remiderIds));
             });
+
             binding.llClose.setOnClickListener(view -> {
                 remiderIds.clear();
+                binding.llSelectAll.setVisibility(View.GONE);
                 binding.cbChecked.setChecked(false);
                 notifyDataSetChanged();
             });
+
             binding.cbChecked.setOnClickListener(view -> {
-                if(binding.cbChecked.isChecked()){
+                if (binding.cbChecked.isChecked()) {
                     remiderIds.clear();
-                    for(int i = 0;i<model.size();i++){
-                        remiderIds.add(model.get(i).getReminderId());
-                    }
-                }else{
+                    for (int i = 0; i < model.size(); i++) {
+                        remiderIds.add(model.get(i).getReminderId()); }
+                } else {
+                    binding.llSelectAll.setVisibility(View.GONE);
                     remiderIds.clear();
                 }
                 Log.e("remiderIds", TextUtils.join(",", remiderIds));
@@ -264,13 +267,14 @@ public class ReminderDetailsActivity extends AppCompatActivity {
 
             if (remiderIds.contains(model.get(position).getReminderId())) {
                 holder.bind.cbChecked.setChecked(true);
-                binding.tvSelectAll.setText(String.valueOf(remiderIds.size())+" selected");
+                binding.tvSelectAll.setText(String.valueOf(remiderIds.size()) + " selected");
             } else {
                 holder.bind.cbChecked.setChecked(false);
+                binding.tvSelectAll.setText(String.valueOf(remiderIds.size()) + " selected");
             }
-            if(remiderIds.size() == model.size()){
+            if (remiderIds.size() == model.size()) {
                 binding.cbChecked.setChecked(true);
-                binding.tvSelectAll.setText(String.valueOf(remiderIds.size())+" selected");
+                binding.tvSelectAll.setText(String.valueOf(remiderIds.size()) + " selected");
             }
             if (model.get(position).getIsCheck().equalsIgnoreCase("1")) {
                 holder.bind.switchStatus.setChecked(true);
@@ -290,9 +294,9 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 holder.bind.llSwitchStatus.setEnabled(false);
                 holder.bind.switchStatus.setOnCheckedChangeListener((compoundButton, checked) -> {
                     if (checked) {
-                        prepareSwitchStatus("1");
+                        prepareSwitchStatus("1", model.get(position).getPlaylistId());
                     } else {
-                        prepareSwitchStatus("0");
+                        prepareSwitchStatus("0", model.get(position).getPlaylistId());
                     }
                 });
             }
@@ -324,10 +328,10 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void prepareSwitchStatus(String reminderStatus) {
+    private void prepareSwitchStatus(String reminderStatus, String PlaylistID) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserId, PlaylistId, reminderStatus);/*set 1 or not 0 */
+            Call<ReminderStatusModel> listCall = APIClient.getClient().getReminderStatus(UserId, PlaylistID, reminderStatus);/*set 1 or not 0 */
             listCall.enqueue(new Callback<ReminderStatusModel>() {
                 @Override
                 public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {

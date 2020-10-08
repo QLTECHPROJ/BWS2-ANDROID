@@ -538,8 +538,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             }
 
                             if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
-                                searchEditText.setHint("Add or search for audio, playlist");
-                                binding.tvSearch.setHint("Add or search for audio, playlist");
+                                searchEditText.setHint(R.string.playlist_or_audio_search);
+                                binding.tvSearch.setHint(R.string.playlist_or_audio_search);
 //                                binding.tvSearch.setTextSize(14);
                             } else {
                                 searchEditText.setHint("Search for audios");

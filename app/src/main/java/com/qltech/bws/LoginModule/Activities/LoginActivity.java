@@ -25,6 +25,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.LoginModule.Activities.OtpActivity.comeLogin;
+
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
     String Name = "", Code = "", MobileNo = "";
@@ -74,15 +76,21 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         });
 
+        if (comeLogin == 1) {
+            binding.edtNumber.requestFocus();
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+
         binding.tvtncs.setOnClickListener(view -> {
             Intent i = new Intent(ctx, TncActivity.class);
-            i.putExtra(CONSTANTS.Web,"Tnc");
+            i.putExtra(CONSTANTS.Web, "Tnc");
             startActivity(i);
         });
 
         binding.tvPrivacyPolicys.setOnClickListener(view -> {
             Intent i = new Intent(ctx, TncActivity.class);
-            i.putExtra(CONSTANTS.Web,"PrivacyPolicy");
+            i.putExtra(CONSTANTS.Web, "PrivacyPolicy");
             startActivity(i);
         });
 

@@ -98,4 +98,8 @@
     <style name="Theme.SlideAnimWindow" parent="AppTheme">
         <item name="android:windowAnimationStyle">@style/SlideAnimation</item>
     </style>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/blue</item>
+    </style>
 </resources>

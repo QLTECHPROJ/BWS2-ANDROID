@@ -29,6 +29,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.MembershipModule.Activities.CheckoutOtpActivity.comeRegister;
+
 public class CheckoutGetCodeActivity extends AppCompatActivity {
     ActivityCheckoutGetCodeBinding binding;
     String Name = "", Code = "", MobileNo = "";
@@ -68,6 +70,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             binding.edtNumber.setText(MobileNo);
         }
 
+
         binding.llBack.setOnClickListener(view -> {
 //                Intent i = new Intent(ctx, OrderSummaryActivity.class);
 //                i.putParcelableArrayListExtra("PlanData",listModelList);
@@ -93,6 +96,11 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         });
+        if (comeRegister == 1) {
+            binding.edtNumber.requestFocus();
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
 
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInputFromWindow(binding.edtNumber.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
