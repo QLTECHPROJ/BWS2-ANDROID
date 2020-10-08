@@ -3,6 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.qltech.bws">
 
+    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission
+        android:name="android.permission.CAMERA"
+        android:required="true" />
+
     <application
         android:name=".BWSApplication"
         android:allowBackup="true"
@@ -16,15 +40,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DownloadModule.Activities.DownloadedPlaylist"></activity>
-
         <activity
-            android:name=".BillingOrderModule.Activities.PaymentActivity"
+            android:name=".WebView.TncActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
-            android:name=".ReminderModule.Activities.SelectPlaylistActivity"
+            android:name=".DownloadModule.Activities.DownloadedPlaylist"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".BillingOrderModule.Activities.PaymentActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -44,7 +73,6 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".ResourceModule.Activities.ResourceActivity"
             android:configChanges="orientation|screenSize"
@@ -55,7 +83,6 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".DashboardModule.Activities.AddPlaylistActivity"
             android:configChanges="orientation|screenSize"
@@ -72,6 +99,7 @@
             android:name=".MyService"
             android:enabled="true"
             android:exported="true" />
+
         <activity
             android:name=".DashboardModule.Activities.AddAudioActivity"
             android:configChanges="orientation|screenSize"
@@ -201,12 +229,14 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/square_app_icon" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -216,6 +246,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <service
             android:name=".Utility.MusicService"
             tools:ignore="Instantiatable" />
@@ -228,30 +259,5 @@
             </intent-filter>
         </service>
     </application>
-    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
-
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:resizeable="true"
-        android:smallScreens="true"
-        android:xlargeScreens="true" />
-
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-    <uses-permission
-        android:name="android.permission.CAMERA"
-        android:required="true" />
 
 </manifest>

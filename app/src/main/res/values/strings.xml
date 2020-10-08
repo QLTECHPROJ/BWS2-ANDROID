@@ -15,7 +15,7 @@
     <string name="send_code_text">We will send you a code by SMS to confirm your phone number.</string>
     <string name="register_text"><u>Not a Member? Register</u></string>
     <string name="privacy_policy">Privacy Policy</string>
-    <string name="privacy_policy_t_n_c">By clicking on Register or Sign up you agree to our T&amp;Cs, Privacy Policy &amp; Disclaimer</string>
+    <string name="privacy_policy_t_n_c">By clicking on Register or Sign up you agree to our</string>
     <string name="get_the_code">Get SMS code</string>
     <string name="choose_your_country">Choose your country</string>
     <string name="enter_otp">Enter OTP</string>
@@ -206,4 +206,8 @@
     <string name="delete_payment_quotes">Are you sure you want to delete the payment card ?</string>
     <string name="sucess_playlist">Sucessfully added to playlist</string>
     <string name="Guest">Guest</string>
+    <string name="membership_title">Access More Than 65 Audio Programs.</string>
+    <string name="t_n_cs">T&amp;Cs</string>
+    <string name="privacy_policys">, Privacy Policy </string>
+    <string name="disclaimers">&amp; Disclaimer</string>
 </resources>

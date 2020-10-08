@@ -2,11 +2,11 @@ package com.qltech.bws.MembershipModule.Activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.FaqModule.Models.FaqListModel;
 import com.qltech.bws.MembershipModule.Adapters.MembershipPlanAdapter;
@@ -25,7 +24,9 @@ import com.qltech.bws.MembershipModule.Adapters.SubscriptionAdapter;
 import com.qltech.bws.MembershipModule.Models.MembershipPlanListModel;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
+import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
+import com.qltech.bws.WebView.TncActivity;
 import com.qltech.bws.databinding.ActivityMembershipBinding;
 import com.qltech.bws.databinding.AudioFaqLayoutBinding;
 
@@ -105,8 +106,23 @@ public class MembershipActivity extends AppCompatActivity {
                             binding.btnFreeJoin.setVisibility(View.VISIBLE);
                             binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
                             binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
-                            binding.tvTag.setText("Access More Than 65 Audio Programs.");
+                            binding.tvTag.setText(R.string.membership_title);
                             binding.tvText.setText(getString(R.string.privacy_policy_t_n_c));
+                            binding.tvtncs.setText(getString(R.string.t_n_cs));
+                            binding.tvPrivacyPolicys.setText(getString(R.string.privacy_policys));
+                            binding.tvDisclaimers.setText(getString(R.string.disclaimers));
+
+                            binding.tvtncs.setOnClickListener(view -> {
+                                Intent i = new Intent(ctx, TncActivity.class);
+                                i.putExtra(CONSTANTS.Web, "Tnc");
+                                startActivity(i);
+                            });
+
+                            binding.tvPrivacyPolicys.setOnClickListener(view -> {
+                                Intent i = new Intent(ctx, TncActivity.class);
+                                i.putExtra(CONSTANTS.Web, "PrivacyPolicy");
+                                startActivity(i);
+                            });
 
                             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 29,
                                     5, 3, 1.1f, 29);

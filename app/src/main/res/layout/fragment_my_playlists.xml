@@ -95,17 +95,18 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:layout_centerInParent="true"
-                                        android:background="@drawable/circular_shapes"
+                                        android:background="@drawable/circular_shapem"
                                         android:indeterminate="false"
-                                        android:max="100"
-                                        android:visibility="gone"
                                         android:indeterminateTint="@color/dark_yellow"
-                                        android:progressDrawable="@drawable/circular_progress_bars" />
+                                        android:max="100"
+                                        android:progressDrawable="@drawable/circular_progress_barm"
+                                        android:visibility="gone" />
+
                                     <ImageView
                                         android:id="@+id/ivDownloads"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"/>
+                                        android:layout_centerInParent="true" />
 
                                 </RelativeLayout>
 
@@ -365,9 +366,9 @@
                 android:id="@+id/llExtra"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_70sdp"
-                android:orientation="horizontal"
-                android:background="@color/white"
                 android:layout_alignParentBottom="true"
+                android:background="@color/white"
+                android:orientation="horizontal"
                 android:visibility="gone"></LinearLayout>
 
             <LinearLayout

@@ -1145,7 +1145,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public void GetMedia(String url, Context ctx, String download, RelativeLayout llDownload, ImageView ivDownloads) {
         oneAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
 
@@ -1168,9 +1167,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 } else {
                     enableDownload(llDownload, ivDownloads);
                 }
-
                 super.onPostExecute(aVoid);
-
             }
         }
 
