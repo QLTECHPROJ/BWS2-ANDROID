@@ -55,6 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.qltech.bws.DashboardModule.Activities.AddQueueActivity.comeFromAddToQueue;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.downloadProgress;
@@ -166,10 +167,30 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             currentDuration = getStartTime();
 
             int progress = getProgressPercentage(currentDuration, totalDuration);
+            if (currentDuration == 0 && !isPause) {
+                binding.progressBar.setVisibility(View.VISIBLE);
+                binding.llProgressBar.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.llPlay.setVisibility(View.GONE);
+            } else if (currentDuration > 1 && !isPause) {
+                binding.progressBar.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+            } else if (currentDuration >= 1 && isPause) {
+                binding.progressBar.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.llPlay.setVisibility(View.VISIBLE);
+            }
             //Log.d("Progress", ""+progress);
             startTime = getStartTime();
-            if (currentDuration == totalDuration && currentDuration != getStartTime()) {
+            long diff = totalDuration - currentDuration;
+            if(diff < 15){
+                callComplete();
+            }if (currentDuration == totalDuration && currentDuration != getStartTime()) {
                 binding.tvStartTime.setText(endtimetext);
+                callComplete();
             } else if (isPause) {
                 binding.simpleSeekbar.setProgress(oTime);
                 int timeeee = progressToTimer(oTime, (int) (totalDuration));
@@ -973,6 +994,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     binding.llPause.setVisibility(View.VISIBLE);
                     binding.llPlay.setVisibility(View.GONE);
                 } else {
+                    binding.llProgressBar.setVisibility(View.VISIBLE);
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+                    binding.llPlay.setVisibility(View.GONE);
                     callMedia();
                 }
                 super.onPostExecute(aVoid);
@@ -1266,9 +1291,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     position = position + 1;
                     getPrepareShowData(position);
                 } else {
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    stopMedia();
+                    if (listSize == 1) {
+                        binding.llPlay.setVisibility(View.VISIBLE);
+                        binding.llPause.setVisibility(View.GONE);
+                        binding.llProgressBar.setVisibility(View.GONE);
+                        binding.progressBar.setVisibility(View.GONE);
+                        stopMedia();
+                    } else {
+                        position = 0;
+                        getPrepareShowData(position);
+                    }
                 }
             }
         }
@@ -1309,7 +1341,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callBack() {
-        handler.removeCallbacks(UpdateSongTime);
+//        handler.removeCallbacks(UpdateSongTime);
         player = 1;
         if (binding.llPause.getVisibility() == View.VISIBLE) {
             isPause = false;
@@ -1398,10 +1430,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
             }
         }
+        if(comeFromAddToQueue){
+            getPrepareShowData(position);
+            comeFromAddToQueue = false;
+        }
         if (listSize == 1) {
             position = 0;
         }
-        if (isPrepare && !isMediaStart) {
+       /* if (isPrepare && !isMediaStart) {
             callMedia();
         } else if ((isMediaStart && isPlaying()) && !isPause) {
             binding.llPlay.setVisibility(View.GONE);
@@ -1413,7 +1449,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llPause.setVisibility(View.GONE);
             binding.llProgressBar.setVisibility(View.GONE);
             binding.progressBar.setVisibility(View.GONE);
-        }
+        }*/
         super.onResume();
     }
 

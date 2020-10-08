@@ -133,26 +133,26 @@
                                     android:src="@drawable/ic_all_pause_icon"
                                     android:visibility="gone" />
 
-                                <LinearLayout
+                           <!--     <LinearLayout
                                     android:id="@+id/llProgress"
                                     android:layout_width="@dimen/_0sdp"
                                     android:layout_height="match_parent"
-                                    android:gravity="center"
-                                    android:layout_weight="0.13"
-                                    android:visibility="gone"
-                                    android:layout_marginLeft="@dimen/_13sdp"
-                                    android:layout_marginTop="@dimen/_8sdp"
-                                    android:layout_marginBottom="@dimen/_8sdp">
+                                    android:gravity="center">-->
 
                                     <ProgressBar
                                         android:id="@+id/progressBar"
-                                        android:layout_width="@dimen/_33sdp"
+                                        android:layout_width="@dimen/_0sdp"
                                         android:layout_height="@dimen/_33sdp"
                                         android:indeterminateTint="@color/blue"
                                         android:scaleType="fitXY"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_weight="0.13"
+                                        android:layout_marginLeft="@dimen/_13sdp"
+                                        android:layout_marginTop="@dimen/_8sdp"
+                                        android:layout_marginBottom="@dimen/_8sdp"
                                         android:visibility="visible" />
 
-                                </LinearLayout>
+<!--                                </LinearLayout>-->
 
                                 <ImageView
                                     android:id="@+id/ivPlay"

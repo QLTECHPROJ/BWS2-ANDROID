@@ -63,7 +63,6 @@ import static com.qltech.bws.Utility.MusicService.getProgressPercentage;
 import static com.qltech.bws.Utility.MusicService.getStartTime;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
-import static com.qltech.bws.Utility.MusicService.isPlaying;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.isPreparing;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
@@ -144,6 +143,32 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 long currentDuration = getStartTime();
 
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
+                if (player == 1) {
+                    if (currentDuration == 0 && !isPause) {
+                        binding.progressBar.setVisibility(View.VISIBLE);
+//                        binding.llProgress.setVisibility(View.VISIBLE);
+                        binding.ivPause.setVisibility(View.GONE);
+                        binding.ivPlay.setVisibility(View.GONE);
+                    } else if (currentDuration > 1 && !isPause) {
+                        binding.progressBar.setVisibility(View.GONE);
+                        binding.ivPause.setVisibility(View.VISIBLE);
+                        binding.ivPlay.setVisibility(View.GONE);
+                    } else if (currentDuration >= 1 && isPause) {
+                        binding.progressBar.setVisibility(View.GONE);
+                        binding.ivPause.setVisibility(View.GONE);
+                        binding.ivPlay.setVisibility(View.VISIBLE);
+                    }
+                }else{
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.ivPause.setVisibility(View.GONE);
+                    binding.ivPlay.setVisibility(View.VISIBLE);
+                }
+                long diff = totalDuration - currentDuration;
+                if(diff < 15){
+                    callComplete();
+                }  if (currentDuration == totalDuration && currentDuration != getStartTime()) {
+                    callComplete();
+                }
                 //Log.d("Progress", ""+progress);
                 if (isPause) {
                     binding.simpleSeekbar.setProgress(oTime);
@@ -194,7 +219,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.llLayout.setLayoutParams(paramm);
 
         }
-
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -264,7 +288,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
                 editor.commit();
                 getPrepareShowData();
-                getPrepareShowData();
             } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 Type type = new TypeToken<AppointmentDetailModel.Audio>() {
                 }.getType();
@@ -291,7 +314,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 String jsonz = gsonz.toJson(mainPlayModelList);
                 editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
                 editor.commit();
-                getPrepareShowData();
                 getPrepareShowData();
             } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
                 Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
@@ -321,7 +343,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
                 editor.commit();
                 getPrepareShowData();
-                getPrepareShowData();
             } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
                 Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
                 }.getType();
@@ -348,7 +369,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 String jsonz = gsonz.toJson(mainPlayModelList);
                 editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
                 editor.commit();
-                getPrepareShowData();
                 getPrepareShowData();
             } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
                 Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
@@ -377,7 +397,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
                 editor.commit();
                 getPrepareShowData();
-                getPrepareShowData();
             }
         }
         if (listSize == 1) {
@@ -403,13 +422,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             } else {
                 resumeMedia();
                 binding.progressBar.setVisibility(View.GONE);
-                binding.llProgress.setVisibility(View.GONE);
+//                binding.llProgress.setVisibility(View.GONE);
                 binding.ivPlay.setVisibility(View.GONE);
                 binding.ivPause.setVisibility(View.VISIBLE);
                 isPause = false;
             }
             player = 1;
-            handler.postDelayed(UpdateSongTime, 500);
+            handler.postDelayed(UpdateSongTime, 50);
         });
 
         return view;
@@ -458,39 +477,28 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             protected void onPostExecute(Void aVoid) {
                 if (player == 1) {
                     binding.progressBar.setVisibility(View.GONE);
-                    binding.llProgress.setVisibility(View.GONE);
+//                    binding.llProgress.setVisibility(View.GONE);
                     if (isPause) {
                         binding.progressBar.setVisibility(View.GONE);
-                        binding.llProgress.setVisibility(View.GONE);
+//                        binding.llProgress.setVisibility(View.GONE);
                         binding.ivPause.setVisibility(View.GONE);
                         binding.ivPlay.setVisibility(View.VISIBLE);
                         binding.simpleSeekbar.setProgress(oTime);
-                    } else if (!isPrepare && !isMediaStart) {
+                    } else if (isMediaStart && !isPause) {
+                        binding.progressBar.setVisibility(View.GONE);
+//                        binding.llProgress.setVisibility(View.GONE);
+                        binding.ivPause.setVisibility(View.VISIBLE);
+                        binding.ivPlay.setVisibility(View.GONE);
+                    } else {
                         binding.progressBar.setVisibility(View.VISIBLE);
-                        binding.llProgress.setVisibility(View.VISIBLE);
+//                        binding.llProgress.setVisibility(View.VISIBLE);
                         binding.ivPause.setVisibility(View.GONE);
                         binding.ivPlay.setVisibility(View.GONE);
                         callMedia();
-
-                       /* play(Uri.parse(audioFile));
-                        new Handler().postDelayed(() -> {
-                            binding.progressBar.setVisibility(View.VISIBLE);
-                            binding.llProgress.setVisibility(View.VISIBLE);
-                            binding.ivPlay.setVisibility(View.GONE);
-                            binding.ivPause.setVisibility(View.GONE);
-                        }, 2 * 1000);
-
-                        play(Uri.parse(audioFile));
-                        playMedia();*/
-                    } else {
-                        binding.progressBar.setVisibility(View.GONE);
-                        binding.llProgress.setVisibility(View.GONE);
-                        binding.ivPause.setVisibility(View.VISIBLE);
-                        binding.ivPlay.setVisibility(View.GONE);
                     }
                 } else {
                     binding.progressBar.setVisibility(View.GONE);
-                    binding.llProgress.setVisibility(View.GONE);
+//                    binding.llProgress.setVisibility(View.GONE);
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
                 }
@@ -544,9 +552,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             });
         }
         startTime = getStartTime();
-        handler.postDelayed(UpdateSongTime, 500);
+        handler.postDelayed(UpdateSongTime, 50);
         addToRecentPlay();
         binding.llPlayearMain.setOnClickListener(view -> {
+            handler.removeCallbacks(UpdateSongTime);
             if (player == 0) {
                 player = 1;
             }
@@ -575,19 +584,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {
-        binding.progressBar.setVisibility(View.VISIBLE);
-        binding.llProgress.setVisibility(View.VISIBLE);
-        binding.ivPlay.setVisibility(View.GONE);
-        binding.ivPause.setVisibility(View.GONE);
         if (null == mediaPlayer) {
             mediaPlayer = new MediaPlayer();
             Log.e("Playinggggg", "Playinggggg");
         }
         try {
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.llProgress.setVisibility(View.VISIBLE);
-            binding.ivPlay.setVisibility(View.GONE);
-            binding.ivPause.setVisibility(View.GONE);
             if (mediaPlayer == null)
                 mediaPlayer = new MediaPlayer();
             if (mediaPlayer.isPlaying()) {
@@ -604,10 +605,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mediaPlayer.setDataSource(audioFile);
                 Log.e("Playinggggxxxxx", "Startinggg1xxxxx");
             }
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.llProgress.setVisibility(View.VISIBLE);
-            binding.ivPlay.setVisibility(View.GONE);
-            binding.ivPause.setVisibility(View.GONE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaPlayer.setAudioAttributes(
                         new AudioAttributes
@@ -628,17 +625,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 Log.e("Playinggggg", "Startinggg");
                 mediaPlayer.start();
                 isMediaStart = true;
-                binding.progressBar.setVisibility(View.GONE);
-                binding.llProgress.setVisibility(View.GONE);
-                binding.ivPlay.setVisibility(View.GONE);
-                binding.ivPause.setVisibility(View.VISIBLE);
             });
         }
     }
 
     private void callMedia() {
         binding.progressBar.setVisibility(View.VISIBLE);
-        binding.llProgress.setVisibility(View.VISIBLE);
+//        binding.llProgress.setVisibility(View.VISIBLE);
         binding.ivPlay.setVisibility(View.GONE);
         binding.ivPause.setVisibility(View.GONE);
         FileDescriptor fileDescriptor = null;
@@ -656,7 +649,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                mediaPlayer.setDataSource(audioFile);
                     } else {
                         binding.progressBar.setVisibility(View.GONE);
-                        binding.llProgress.setVisibility(View.GONE);
+//                        binding.llProgress.setVisibility(View.GONE);
                         binding.ivPlay.setVisibility(View.VISIBLE);
                         binding.ivPause.setVisibility(View.GONE);
                         BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
@@ -673,7 +666,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                mediaPlayer.setDataSource(audioFile);
             } else {
                 binding.progressBar.setVisibility(View.GONE);
-                binding.llProgress.setVisibility(View.GONE);
+//                binding.llProgress.setVisibility(View.GONE);
                 binding.ivPlay.setVisibility(View.VISIBLE);
                 binding.ivPause.setVisibility(View.GONE);
                 BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
@@ -742,10 +735,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 if (position < (listSize - 1)) {
                     position = position + 1;
                     getPrepareShowData();
-                } else {
-                    binding.ivPlay.setVisibility(View.VISIBLE);
-                    binding.ivPause.setVisibility(View.GONE);
-                    stopMedia();
+                }else {
+                    if (listSize == 1) {
+                        binding.ivPlay.setVisibility(View.VISIBLE);
+                        binding.ivPause.setVisibility(View.GONE);
+                        stopMedia();
+                    } else {
+                        position = 0;
+                        getPrepareShowData();
+                    }
                 }
             }
         }
@@ -804,7 +802,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     public void updateProgressBar() {
-        handler.postDelayed(UpdateSongTime, 500);
+        handler.postDelayed(UpdateSongTime, 50);
     }
 
     @Override
@@ -848,15 +846,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
-        if (isPrepare && !isMediaStart) {
+      /*  if (isPrepare && !isMediaStart) {
             callMedia();
-        } else if ((isMediaStart && isPlaying()) && !isPause) {
+        } else if (isMediaStart && !isPause) {
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.VISIBLE);
         } else {
-            binding.ivPlay.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.GONE);
-        }
+        }*/
         super.onResume();
     }
 

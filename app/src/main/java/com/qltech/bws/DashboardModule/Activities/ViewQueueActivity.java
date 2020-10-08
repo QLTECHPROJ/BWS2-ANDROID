@@ -147,7 +147,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             long currentDuration = getStartTime();
 
             int progress = getProgressPercentage(currentDuration, totalDuration);
-            if (currentDuration == totalDuration) {
+            long diff = totalDuration - currentDuration;
+            if(diff < 15){
+                callComplete();
+            }if (currentDuration == totalDuration && currentDuration != getStartTime()) {
+                callComplete();
             } else if (isPause) {
                 binding.simpleSeekbar.setProgress(oTime);
             } else {
@@ -678,9 +682,14 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     position = position + 1;
                     getPrepareShowData(position);
                 } else {
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    stopMedia();
+                    if (listSize == 1) {
+                        binding.llPlay.setVisibility(View.VISIBLE);
+                        binding.llPause.setVisibility(View.GONE);
+                        stopMedia();
+                    } else {
+                        position = 0;
+                        getPrepareShowData(position);
+                    }
                 }
             }
         }

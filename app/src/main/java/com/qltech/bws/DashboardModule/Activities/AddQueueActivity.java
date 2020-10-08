@@ -73,6 +73,7 @@ public class AddQueueActivity extends AppCompatActivity {
     MainPlayModel mainPlayMode;
     AddToQueueModel addToQueueModel;
     int position, listSize;
+    public static boolean comeFromAddToQueue = false;
     Boolean queuePlay, audioPlay;
     List<DownloadAudioDetails> oneAudioDetailsList;
     SharedPreferences shared;
@@ -452,8 +453,15 @@ public class AddQueueActivity extends AppCompatActivity {
                         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                         int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+
                         if (audioPlay) {
                             if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                                Gson gson12 = new Gson();
+                                String json12 = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson12));
+                                Type type1 = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+                                }.getType();
+                                ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList1 = gson12.fromJson(json12, type1);
+
                                 if (!comeFrom.equalsIgnoreCase("")) {
                                     mData.remove(position);
                                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
@@ -519,9 +527,11 @@ public class AddQueueActivity extends AppCompatActivity {
                                             editor1.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
                                             editor1.commit();
                                         }
+                                        comeFromAddToQueue = true;
                                     }
                                 } else {
-                                    mainPlayModelList.remove(position);
+                                    mainPlayModelList.remove(pos);
+                                    arrayList1.remove(pos);
                                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
                                     if (pID.equalsIgnoreCase(PlaylistId)) {
                                         if (mainPlayModelList.size() != 0) {
@@ -538,10 +548,13 @@ public class AddQueueActivity extends AppCompatActivity {
                                             isPause = false;
                                             isMediaStart = false;
                                             isPrepare = false;
+
                                             SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                             SharedPreferences.Editor editor = sharedd.edit();
                                             Gson gson = new Gson();
                                             String json = gson.toJson(mainPlayModelList);
+                                            String json1 = gson.toJson(mData);
+                                            editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
                                             editor.putString(CONSTANTS.PREF_KEY_audioList, json);
                                             editor.putInt(CONSTANTS.PREF_KEY_position, pos);
                                             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
@@ -550,7 +563,7 @@ public class AddQueueActivity extends AppCompatActivity {
                                             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, myPlaylist);
                                             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                                             editor.commit();
-
+                                            comeFromAddToQueue = true;
                                         }
                                     }
                                 }
