@@ -120,7 +120,6 @@ public class AudioFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
                 if (downloadAudioDetailsList.size() != 0) {
                     for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                         MainAudioModel.ResponseData.Detail detail = new MainAudioModel.ResponseData.Detail();
@@ -401,7 +400,6 @@ public class AudioFragment extends Fragment {
                     holder.binding.rvMainAudio.setLayoutManager(recentlyPlayed);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
                     holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);
-
                     if (listModelList.get(position).getDetails() != null &&
                             listModelList.get(position).getDetails().size() > 6) {
                         holder.binding.tvViewAll.setVisibility(View.VISIBLE);

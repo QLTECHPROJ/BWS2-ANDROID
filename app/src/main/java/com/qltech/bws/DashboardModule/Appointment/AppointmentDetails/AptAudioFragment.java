@@ -3,7 +3,6 @@ package com.qltech.bws.DashboardModule.Appointment.AppointmentDetails;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -57,7 +55,7 @@ import static com.qltech.bws.Utility.MusicService.stopMedia;
 public class AptAudioFragment extends Fragment {
     public FragmentManager f_manager;
     FragmentAptAudioBinding binding;
-    String PlaylistId, UserID;
+    String UserID;
     ArrayList<AppointmentDetailModel.Audio> appointmentDetail;
     List<DownloadAudioDetails> oneAudioDetailsList;
     public static int comeRefreshData = 0;

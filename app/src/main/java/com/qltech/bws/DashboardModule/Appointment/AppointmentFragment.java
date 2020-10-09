@@ -48,8 +48,7 @@ public class AppointmentFragment extends Fragment {
     String UserID, appointmentName, appointmentMainName, appointmentImage, AudioFlag;
     Activity activity;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_appointment, container, false);
         View view = binding.getRoot();
         activity = getActivity();

@@ -101,7 +101,7 @@
                         android:layout_marginLeft="@dimen/_10sdp"
                         android:layout_marginRight="@dimen/_10sdp"
                         android:overScrollMode="never"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:paddingTop="@dimen/_8sdp" />
 
                     <LinearLayout

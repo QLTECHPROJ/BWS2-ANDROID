@@ -9,7 +9,7 @@
 
         <ImageView
             android:id="@+id/ivFiltered"
-            android:layout_width="@dimen/_20sdp"
+            android:layout_width="@dimen/_18sdp"
             android:layout_height="@dimen/_18sdp"
             android:layout_gravity="center"
             android:visibility="invisible"
@@ -19,8 +19,8 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:layout_marginBottom="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginBottom="@dimen/_6sdp"
             android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/black"
             android:textSize="@dimen/_16sdp" />

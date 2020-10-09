@@ -17,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
@@ -27,6 +28,7 @@ import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPla
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentSessionsBinding;
 import com.qltech.bws.databinding.SessionListLayoutBinding;
 
@@ -155,6 +157,11 @@ public class SessionsFragment extends Fragment {
                                 SessionListModel listModel = response.body();
                                 if (listModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                     binding.tvSessionTitle.setText(listModel.getResponseData().get(0).getCatName());
+                                    MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
+                                            5, 3, 1f, 0);
+                                    binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+                                    binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+                                    binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
                                     Glide.with(getActivity()).load(listModel.getResponseData().get(0).getImage()).thumbnail(0.05f)
                                             .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                                     SessionListAdapter appointmentsAdapter = new SessionListAdapter(listModel.getResponseData(), getActivity(), f_manager);

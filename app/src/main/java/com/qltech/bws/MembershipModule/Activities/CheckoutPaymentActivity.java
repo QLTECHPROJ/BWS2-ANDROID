@@ -108,8 +108,8 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
             }
         });
-        MeasureRatio measureRatio = BWSApplication.measureRatio(CheckoutPaymentActivity.this, 18,
-                5, 3, 1f, 18);
+        MeasureRatio measureRatio = BWSApplication.measureRatio(CheckoutPaymentActivity.this, 0,
+                5, 3, 1f, 0);
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);

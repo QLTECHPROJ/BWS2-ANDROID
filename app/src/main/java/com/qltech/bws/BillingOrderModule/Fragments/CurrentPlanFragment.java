@@ -98,8 +98,8 @@ public class CurrentPlanFragment extends Fragment {
                     try {
                         CurrentPlanVieViewModel listModel = response.body();
                         binding.tvHeader.setText(listModel.getResponseData().getPlan());
-                        MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 29,
-                                5, 3, 1.1f, 29);
+                        MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
+                                5, 3, 1f, 0);
                         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
                         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
                         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);

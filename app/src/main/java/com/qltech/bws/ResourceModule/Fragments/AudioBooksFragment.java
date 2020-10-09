@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -25,6 +26,7 @@ import com.qltech.bws.ResourceModule.Activities.ResourceDetailsActivity;
 import com.qltech.bws.ResourceModule.Models.ResourceListModel;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.AudioBooksLayoutBinding;
 import com.qltech.bws.databinding.BannerImageBinding;
 import com.qltech.bws.databinding.FragmentAudioBooksBinding;
@@ -144,6 +146,11 @@ public class AudioBooksFragment extends Fragment {
                 case ListItem.TYPE_BANNER:
                     break;
             }*/
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                    1, 1, 0.44f, 0);
+            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.tvTitle.setText(listModelList.get(position).getTitle());
             holder.binding.tvCreator.setText(listModelList.get(position).getAuthor());
             Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.05f)

@@ -2,6 +2,7 @@ package com.qltech.bws.DashboardModule.Audio.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(listModelList.get(position).getName());
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 10,
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 16,
                 1, 1, 0.28f, 10);
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());

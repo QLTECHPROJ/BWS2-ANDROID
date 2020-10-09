@@ -67,10 +67,10 @@
                                 <LinearLayout
                                     android:layout_width="@dimen/_0sdp"
                                     android:layout_height="match_parent"
-                                    android:layout_marginLeft="@dimen/_13sdp"
+                                    android:layout_marginLeft="@dimen/_12sdp"
                                     android:layout_marginTop="@dimen/_4sdp"
                                     android:layout_marginBottom="@dimen/_8sdp"
-                                    android:layout_weight="0.13"
+                                    android:layout_weight="0.15"
                                     android:gravity="center">
 
                                     <androidx.cardview.widget.CardView
@@ -91,7 +91,7 @@
                                 <LinearLayout
                                     android:layout_width="@dimen/_0sdp"
                                     android:layout_height="match_parent"
-                                    android:layout_marginLeft="@dimen/_13sdp"
+                                    android:layout_marginLeft="@dimen/_8sdp"
                                     android:layout_marginTop="@dimen/_8sdp"
                                     android:layout_marginBottom="@dimen/_8sdp"
                                     android:layout_weight="0.7"
@@ -125,6 +125,7 @@
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="@dimen/_13sdp"
                                     android:layout_marginTop="@dimen/_8sdp"
+                                    android:layout_marginRight="@dimen/_12sdp"
                                     android:layout_marginBottom="@dimen/_8sdp"
                                     android:layout_weight="0.13"
                                     android:padding="@dimen/_13sdp"
@@ -132,26 +133,27 @@
                                     android:src="@drawable/ic_all_pause_icon"
                                     android:visibility="gone" />
 
-                           <!--     <LinearLayout
-                                    android:id="@+id/llProgress"
+                                <!--     <LinearLayout
+                                         android:id="@+id/llProgress"
+                                         android:layout_width="@dimen/_0sdp"
+                                         android:layout_height="match_parent"
+                                         android:gravity="center">-->
+
+                                <ProgressBar
+                                    android:id="@+id/progressBar"
                                     android:layout_width="@dimen/_0sdp"
-                                    android:layout_height="match_parent"
-                                    android:gravity="center">-->
+                                    android:layout_height="@dimen/_33sdp"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginLeft="@dimen/_8sdp"
+                                    android:layout_marginTop="@dimen/_4sdp"
+                                    android:layout_marginRight="@dimen/_12sdp"
+                                    android:layout_marginBottom="@dimen/_4sdp"
+                                    android:layout_weight="0.13"
+                                    android:indeterminateTint="@color/blue"
+                                    android:scaleType="fitXY"
+                                    android:visibility="visible" />
 
-                                    <ProgressBar
-                                        android:id="@+id/progressBar"
-                                        android:layout_width="@dimen/_0sdp"
-                                        android:layout_height="@dimen/_33sdp"
-                                        android:indeterminateTint="@color/blue"
-                                        android:scaleType="fitXY"
-                                        android:layout_gravity="center_vertical"
-                                        android:layout_weight="0.13"
-                                        android:layout_marginLeft="@dimen/_13sdp"
-                                        android:layout_marginTop="@dimen/_8sdp"
-                                        android:layout_marginBottom="@dimen/_8sdp"
-                                        android:visibility="visible" />
-
-<!--                                </LinearLayout>-->
+                                <!--                                </LinearLayout>-->
 
                                 <ImageView
                                     android:id="@+id/ivPlay"
@@ -159,6 +161,7 @@
                                     android:layout_height="match_parent"
                                     android:layout_marginLeft="@dimen/_13sdp"
                                     android:layout_marginTop="@dimen/_8sdp"
+                                    android:layout_marginRight="@dimen/_12sdp"
                                     android:layout_marginBottom="@dimen/_8sdp"
                                     android:layout_weight="0.13"
                                     android:padding="@dimen/_13sdp"

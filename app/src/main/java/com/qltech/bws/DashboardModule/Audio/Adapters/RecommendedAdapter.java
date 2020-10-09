@@ -2,6 +2,7 @@ package com.qltech.bws.DashboardModule.Audio.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,14 +60,15 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(listModelList.get(position).getName());
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 20,
-                1, 1, 0.48f, 20);
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 16,
+                1, 1, 0.44f, 10);
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-
+        /*Log.e("width......", String.valueOf(holder.binding.ivRestaurantImage.getLayoutParams().height));
+        Log.e("height...", String.valueOf(holder.binding.ivRestaurantImage.getLayoutParams().width));*/
         if (IsLock.equalsIgnoreCase("1")) {
             if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                 holder.binding.ivLock.setVisibility(View.GONE);

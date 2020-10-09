@@ -8,12 +8,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityResourceDetailsBinding;
 
 public class ResourceDetailsActivity extends AppCompatActivity {
@@ -65,6 +67,11 @@ public class ResourceDetailsActivity extends AppCompatActivity {
             binding.tvCreator.setText(author);
             binding.tvSubTitle.setText(description);
 
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                    1, 1, 0.44f, 0);
+            binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(ctx).load(image).thumbnail(0.05f).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
             binding.btnComplete.setOnClickListener(view -> {
@@ -86,6 +93,7 @@ public class ResourceDetailsActivity extends AppCompatActivity {
                     startActivity(i);
                 }
             });
+
             binding.ivIos.setOnClickListener(view -> {
                 if (linkTwo.equalsIgnoreCase("")) {
                     BWSApplication.showToast("Not Available", ctx);

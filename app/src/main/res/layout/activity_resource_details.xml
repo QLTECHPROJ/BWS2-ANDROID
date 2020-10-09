@@ -56,16 +56,15 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_26sdp"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/_24sdp"
                     app:cardCornerRadius="@dimen/_10sdp"
                     app:cardElevation="@dimen/_40sdp">
 
                     <ImageView
                         android:id="@+id/ivRestaurantImage"
-                        android:layout_width="@dimen/_210sdp"
-                        android:layout_height="@dimen/_210sdp"
-                        android:scaleType="fitXY" />
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -73,9 +72,9 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:ellipsize="end"
                     android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:ellipsize="end"
                     android:fontFamily="@font/montserrat_bold"
                     android:gravity="center_horizontal"
                     android:maxLines="2"
@@ -86,9 +85,9 @@
                     android:id="@+id/tvCreator"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:ellipsize="end"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="center_horizontal"
                     android:maxLines="1"
@@ -103,9 +102,9 @@
                     android:layout_marginTop="@dimen/_14sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="start"
-                    android:paddingBottom="@dimen/_85sdp"
                     android:justificationMode="inter_word"
                     android:lineSpacingExtra="@dimen/_4sdp"
+                    android:paddingBottom="@dimen/_85sdp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp" />
             </LinearLayout>

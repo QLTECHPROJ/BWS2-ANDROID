@@ -145,7 +145,7 @@ public class MembershipActivity extends AppCompatActivity {
                                 final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
                                 final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
                                 tvTitle.setText(R.string.Disclaimer);
-                                tvDesc.setText("You shall be able to select the audio you wish to play after the disclaimer. In case the disclaimer has not started, click on the play icon on the player.");
+                                tvDesc.setText(R.string.Disclaimer_text);
                                 dialog.setOnKeyListener((v, keyCode, event) -> {
                                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                                         dialog.dismiss();
@@ -158,8 +158,8 @@ public class MembershipActivity extends AppCompatActivity {
                                 dialog.show();
                                 dialog.setCancelable(false);
                             });
-                            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 29,
-                                    5, 3, 1.1f, 29);
+                            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                                    5, 3, 1f, 0);
                             binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
                             binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
                             binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);

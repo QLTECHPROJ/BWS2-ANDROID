@@ -111,8 +111,8 @@ public class DocumentariesFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModelList.get(position).getTitle());
             holder.binding.tvCreator.setText(listModelList.get(position).getAuthor());
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 2,
-                    4, 2, 0.8f, 2);
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                    25, 11, 0.80f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);

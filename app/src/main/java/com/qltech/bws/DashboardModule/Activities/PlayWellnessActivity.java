@@ -263,7 +263,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
 
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                1, 1, 1f, 30);
+                1, 1, 0.84f, 0);
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);

@@ -81,6 +81,8 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Account.AccountFragment.ComeScreenReminder;
+import static com.qltech.bws.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
+import static com.qltech.bws.DashboardModule.Activities.AddAudioActivity.addToSearch;
 import static com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity.MyPlaylistId;
 import static com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity.addToPlayList;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
@@ -220,6 +222,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             searchEditText.setText("");
             binding.searchView.setQuery("", false);
         });
+
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String search) {
@@ -400,7 +403,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             addToPlayList = false;
         } else {
             prepareData(UserID, PlaylistID);
-        }
+        }/* else if (addToSearch) {
+            prepareData(UserID, MyPlaylistIds);
+            addToSearch = false;
+        }*/
         if (comeRename == 1) {
             prepareData(UserID, PlaylistID);
         }

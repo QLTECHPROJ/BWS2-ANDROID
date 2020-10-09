@@ -88,13 +88,13 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.rlImageUpload.setOnClickListener(view -> selectImage());
         binding.btnSave.setOnClickListener(view -> profileUpdate());
 
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 20,
-                1, 1, 0.4f, 20);
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                1, 1, 0.32f, 0);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
 
-        MeasureRatio measureRatios = BWSApplication.measureRatio(ctx, 20,
-                1, 1, 0.4f, 20);
+        MeasureRatio measureRatios = BWSApplication.measureRatio(ctx, 0,
+                1, 1, 0.32f, 0);
         binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
         binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
     }

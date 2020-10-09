@@ -104,7 +104,7 @@
                                     android:id="@+id/rlCountrySelect"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:paddingVertical="@dimen/_5sdp">
+                                    android:paddingVertical="@dimen/_6sdp">
 
                                     <TextView
                                         android:id="@+id/tvCountry"
@@ -143,7 +143,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_weight="0.18"
                                         android:fontFamily="@font/montserrat_medium"
-                                        android:paddingVertical="@dimen/_11sdp"
+                                        android:paddingVertical="@dimen/_12sdp"
                                         android:paddingLeft="@dimen/_16sdp"
                                         android:text="+61"
                                         android:textColor="@color/dark_blue_gray"
@@ -166,8 +166,8 @@
                                         android:maxLength="10"
                                         android:backgroundTint="@color/dim_light_gray"
                                         android:fontFamily="@font/montserrat_medium"
-                                        android:hint="@string/phone_number"
-                                        android:paddingVertical="@dimen/_11sdp"
+                                        android:hint="@string/mobile_number"
+                                        android:paddingVertical="@dimen/_12sdp"
                                         android:paddingHorizontal="@dimen/_16sdp"
                                         android:textColor="@color/dark_blue_gray"
                                         android:textSize="@dimen/_16sdp" />

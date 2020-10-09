@@ -23,8 +23,8 @@ public class ThankYouMpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_thank_you_membership);
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ThankYouMpActivity.this, 20,
-                5, 6, 0.4f, 20);
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ThankYouMpActivity.this, 0,
+                5, 6, 0.4f, 0);
         binding.ivLogo.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivLogo.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivLogo.setScaleType(ImageView.ScaleType.FIT_XY);

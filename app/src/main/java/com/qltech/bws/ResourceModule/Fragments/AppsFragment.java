@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -25,6 +26,7 @@ import com.qltech.bws.ResourceModule.Activities.ResourceDetailsActivity;
 import com.qltech.bws.ResourceModule.Models.ResourceListModel;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
+import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.AppsListLayoutBinding;
 import com.qltech.bws.databinding.FragmentAppsBinding;
 
@@ -108,6 +110,12 @@ public class AppsFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModelList.get(position).getTitle());
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                    1, 1, 0.44f, 0);
+            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+
             Glide.with(ctx).load(listModelList.get(position).getImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
