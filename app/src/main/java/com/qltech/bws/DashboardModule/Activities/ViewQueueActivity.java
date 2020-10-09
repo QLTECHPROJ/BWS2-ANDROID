@@ -148,9 +148,10 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
             int progress = getProgressPercentage(currentDuration, totalDuration);
             long diff = totalDuration - currentDuration;
-            if(diff < 15){
+            if (diff < 15) {
                 callComplete();
-            }if (currentDuration == totalDuration && currentDuration != getStartTime()) {
+            }
+            if (currentDuration == totalDuration && currentDuration != getStartTime()) {
                 callComplete();
             } else if (isPause) {
                 binding.simpleSeekbar.setProgress(oTime);
@@ -268,126 +269,135 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         });
 
         binding.llnext.setOnClickListener(view -> {
-            stopMedia();
-            isMediaStart = false;
-            isPrepare = false;
-            isPause = false;
-            if (IsRepeat.equalsIgnoreCase("1")) {
-                // repeat is on play same song again
-                if (position < listSize - 1) {
-                    position = position + 1;
-                } else {
-                    position = 0;
-                }
-                getPrepareShowData(position);
-            } else if (IsRepeat.equalsIgnoreCase("0")) {
-                getPrepareShowData(position);
-            } else if (IsShuffle.equalsIgnoreCase("1")) {
-                // shuffle is on - play a random song
-                if (queuePlay) {
-                    adapter.callRemoveList(position);
-                    listSize = addToQueueModelList.size();
-                    if (listSize == 0) {
-                        stopMedia();
-                    } else if (listSize == 1) {
-                        stopMedia();
+
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                stopMedia();
+                isMediaStart = false;
+                isPrepare = false;
+                isPause = false;
+                if (IsRepeat.equalsIgnoreCase("1")) {
+                    // repeat is on play same song again
+                    if (position < listSize - 1) {
+                        position = position + 1;
+                    } else {
+                        position = 0;
+                    }
+                    getPrepareShowData(position);
+                } else if (IsRepeat.equalsIgnoreCase("0")) {
+                    getPrepareShowData(position);
+                } else if (IsShuffle.equalsIgnoreCase("1")) {
+                    // shuffle is on - play a random song
+                    if (queuePlay) {
+                        adapter.callRemoveList(position);
+                        listSize = addToQueueModelList.size();
+                        if (listSize == 0) {
+                            stopMedia();
+                        } else if (listSize == 1) {
+                            stopMedia();
+                        } else {
+                            Random random = new Random();
+                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                            getPrepareShowData(position);
+                        }
                     } else {
                         Random random = new Random();
                         position = random.nextInt((listSize - 1) - 0 + 1) + 0;
                         getPrepareShowData(position);
                     }
                 } else {
-                    Random random = new Random();
-                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                    getPrepareShowData(position);
-                }
-            } else {
-                if (queuePlay) {
-                    adapter.callRemoveList(position);
-                    listSize = addToQueueModelList.size();
-                    if (position < listSize - 1) {
-                        getPrepareShowData(position);
-                    } else {
-                        if (listSize == 0) {
-                            savePrefQueue(0, false, true, addToQueueModelList, ctx);
-                            stopMedia();
+                    if (queuePlay) {
+                        adapter.callRemoveList(position);
+                        listSize = addToQueueModelList.size();
+                        if (position < listSize - 1) {
+                            getPrepareShowData(position);
                         } else {
+                            if (listSize == 0) {
+                                savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                                stopMedia();
+                            } else {
+                                position = 0;
+                                getPrepareShowData(position);
+                            }
+                        }
+                    } else {
+                        if (position < listSize - 1) {
+                            position = position + 1;
+                            getPrepareShowData(position);
+                        } else if (listSize != 1) {
                             position = 0;
                             getPrepareShowData(position);
                         }
                     }
-                } else {
-                    if (position < listSize - 1) {
-                        position = position + 1;
-                        getPrepareShowData(position);
-                    } else if (listSize != 1) {
-                        position = 0;
-                        getPrepareShowData(position);
-                    }
                 }
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
         });
 
         binding.llprev.setOnClickListener(view -> {
-            stopMedia();
-            isMediaStart = false;
-            isPrepare = false;
-            isPause = false;
-            if (IsRepeat.equalsIgnoreCase("1")) {
-                // repeat is on play same song again
-                if (position > 0) {
-                    position = position - 1;
-                    getPrepareShowData(position);
-                } else if (listSize != 1) {
-                    position = listSize - 1;
-                    getPrepareShowData(position);
-                }
-            } else if (IsRepeat.equalsIgnoreCase("0")) {
-                getPrepareShowData(position);
-            } else if (IsShuffle.equalsIgnoreCase("1")) {
-                // shuffle is on - play a random song
-                if (queuePlay) {
-                    adapter.callRemoveList(position);
-                    listSize = addToQueueModelList.size();
-                    if (listSize == 0) {
-                        stopMedia();
-                    } else if (listSize == 1) {
-                        stopMedia();
-                    } else {
-                        Random random = new Random();
-                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                        getPrepareShowData(position);
-                    }
-                } else {
-                    Random random = new Random();
-                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                    getPrepareShowData(position);
-                }
-            } else {
-                if (queuePlay) {
-                    adapter.callRemoveList(position);
-                    listSize = addToQueueModelList.size();
-                    if (position > 0) {
-                        getPrepareShowData(position - 1);
-                    } else {
-                        if (listSize == 0) {
-                            savePrefQueue(0, false, true, addToQueueModelList, ctx);
-                            stopMedia();
-                        } else {
-                            position = 0;
-                            getPrepareShowData(position);
-                        }
-                    }
-                } else {
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                stopMedia();
+                isMediaStart = false;
+                isPrepare = false;
+                isPause = false;
+                if (IsRepeat.equalsIgnoreCase("1")) {
+                    // repeat is on play same song again
                     if (position > 0) {
                         position = position - 1;
-
                         getPrepareShowData(position);
                     } else if (listSize != 1) {
                         position = listSize - 1;
                         getPrepareShowData(position);
                     }
+                } else if (IsRepeat.equalsIgnoreCase("0")) {
+                    getPrepareShowData(position);
+                } else if (IsShuffle.equalsIgnoreCase("1")) {
+                    // shuffle is on - play a random song
+                    if (queuePlay) {
+                        adapter.callRemoveList(position);
+                        listSize = addToQueueModelList.size();
+                        if (listSize == 0) {
+                            stopMedia();
+                        } else if (listSize == 1) {
+                            stopMedia();
+                        } else {
+                            Random random = new Random();
+                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                            getPrepareShowData(position);
+                        }
+                    } else {
+                        Random random = new Random();
+                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                        getPrepareShowData(position);
+                    }
+                } else {
+                    if (queuePlay) {
+                        adapter.callRemoveList(position);
+                        listSize = addToQueueModelList.size();
+                        if (position > 0) {
+                            getPrepareShowData(position - 1);
+                        } else {
+                            if (listSize == 0) {
+                                savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                                stopMedia();
+                            } else {
+                                position = 0;
+                                getPrepareShowData(position);
+                            }
+                        }
+                    } else {
+                        if (position > 0) {
+                            position = position - 1;
+
+                            getPrepareShowData(position);
+                        } else if (listSize != 1) {
+                            position = listSize - 1;
+                            getPrepareShowData(position);
+                        }
+                    }
                 }
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
         });
     }
@@ -924,21 +934,25 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 return false;
             });
             holder.binding.llMainLayout.setOnClickListener(view -> {
-                if (isPrepare || isMediaStart || isPause) {
-                    stopMedia();
-                }
-                isPause = false;
-                isPrepare = false;
-                isMediaStart = false;
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    if (isPrepare || isMediaStart || isPause) {
+                        stopMedia();
+                    }
+                    isPause = false;
+                    isPrepare = false;
+                    isMediaStart = false;
 
-                setInIt(listModel.getName(), listModel.getAudiomastercat(),
-                        listModel.getImageFile(), listModel.getAudioDuration());
-                if (queuePlay)
-                    addToQueueModelList.remove(mypos);
-                savePrefQueue(position1, true, false, addToQueueModelList, ctx);
-                position = position1;
-                getPrepareShowData(position);
-                callRemoveList1(position1);
+                    setInIt(listModel.getName(), listModel.getAudiomastercat(),
+                            listModel.getImageFile(), listModel.getAudioDuration());
+                    if (queuePlay)
+                        addToQueueModelList.remove(mypos);
+                    savePrefQueue(position1, true, false, addToQueueModelList, ctx);
+                    position = position1;
+                    getPrepareShowData(position);
+                    callRemoveList1(position1);
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
             });
         }
 

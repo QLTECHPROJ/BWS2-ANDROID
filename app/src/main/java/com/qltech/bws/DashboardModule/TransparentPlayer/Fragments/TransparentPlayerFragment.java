@@ -65,6 +65,7 @@ import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.isPreparing;
+import static com.qltech.bws.Utility.MusicService.isprogressbar;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
@@ -559,10 +560,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             if (player == 0) {
                 player = 1;
             }
-            if (binding.ivPause.getVisibility() == View.VISIBLE) {
+            if (binding.ivPause.getVisibility() == View.VISIBLE && binding.progressBar.getVisibility() == View.GONE) {
                 isPause = false;
-            } else if (binding.ivPlay.getVisibility() == View.VISIBLE) {
+            } else if (binding.ivPlay.getVisibility() == View.VISIBLE && binding.progressBar.getVisibility() == View.GONE) {
                 isPause = true;
+            }else if(binding.progressBar.getVisibility() == View.VISIBLE){
+                isprogressbar = true;
             }
             Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -636,6 +639,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         binding.ivPause.setVisibility(View.GONE);
         FileDescriptor fileDescriptor = null;
         if (downloadAudioDetailsList.size() != 0) {
+            binding.progressBar.setVisibility(View.VISIBLE);
+//        binding.llProgress.setVisibility(View.VISIBLE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.GONE);
             DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
             try {
                 byte[] decrypt = null;

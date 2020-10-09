@@ -71,6 +71,7 @@ import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPlaying;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.isPreparing;
+import static com.qltech.bws.Utility.MusicService.isprogressbar;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
@@ -167,7 +168,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             currentDuration = getStartTime();
 
             int progress = getProgressPercentage(currentDuration, totalDuration);
-            if (currentDuration == 0 && !isPause) {
+            if(isprogressbar){
+                binding.progressBar.setVisibility(View.VISIBLE);
+                binding.llProgressBar.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.llPlay.setVisibility(View.GONE);
+            }else
+            if (currentDuration == 0 && isprogressbar) {
                 binding.progressBar.setVisibility(View.VISIBLE);
                 binding.llProgressBar.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
@@ -988,12 +995,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
                             TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
 //                    resumeMedia();
-                } else if (isMediaStart && !isPause) {
+                } /*else if (isMediaStart && !isPause) {
                     binding.llProgressBar.setVisibility(View.GONE);
                     binding.progressBar.setVisibility(View.GONE);
                     binding.llPause.setVisibility(View.VISIBLE);
                     binding.llPlay.setVisibility(View.GONE);
-                } else {
+                } */else {
                     binding.llProgressBar.setVisibility(View.VISIBLE);
                     binding.progressBar.setVisibility(View.VISIBLE);
                     binding.llPause.setVisibility(View.GONE);
@@ -1341,7 +1348,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callBack() {
-//        handler.removeCallbacks(UpdateSongTime);
+        handler.removeCallbacks(UpdateSongTime);
         player = 1;
         if (binding.llPause.getVisibility() == View.VISIBLE) {
             isPause = false;
