@@ -67,6 +67,7 @@
     <string name="Add_New_Card">Add New Card</string>
     <string name="FAQ">FAQ</string>
     <string name="disclaimer"><b>Disclaimer:</b> The Brain Wellness Spa offers a unique, alternative and drug free method created by our founder Terri Bowman aimed to assist people encountering struggles in their daily lives, to find inner peace and overcome negative thoughts and emotions (the Brain Wellness Spa Method).\n\nThe Brain Wellness Spa Method is not a scientific method. \n\nThe testimonials of our clients speak for themselves and we are so proud of the incredible results they have achieved – we want to help you and are committed to assisting you find a way to live a better life. However, as with any service, we accept that it may not be right for everyone and that results may vary from client to client. Accordingly, we make no promises or representations that our service will work for you but we invite you to try it for yourself.</string>
+    <string name="Disclaimer">Disclaimer</string>
     <string name="Audio">Audio</string>
     <string name="Playlist">Playlist</string>
     <string name="Help">Help</string>
@@ -207,8 +208,8 @@
     <string name="sucess_playlist">Sucessfully added to playlist</string>
     <string name="Guest">Guest</string>
     <string name="membership_title">Access More Than 65 Audio Programs.</string>
-    <string name="t_n_cs">T&amp;Cs</string>
-    <string name="privacy_policys">, Privacy Policy </string>
-    <string name="disclaimers">&amp; Disclaimer</string>
+    <string name="t_n_cs"><u>T&amp;Cs</u></string>
+    <string name="privacy_policys">, <u>Privacy Policy</u> </string>
+    <string name="disclaimers">&amp; <u>Disclaimer</u></string>
     <string name="playlist_or_audio_search">Add or search for audio, playlist</string>
 </resources>

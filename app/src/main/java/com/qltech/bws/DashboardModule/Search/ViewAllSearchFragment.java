@@ -183,29 +183,6 @@ public class ViewAllSearchFragment extends Fragment {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
-            holder.binding.llMainLayout.setOnClickListener(view -> {
-                if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
-                } else if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("0") || AudiolistModel.get(position).getIsLock().equalsIgnoreCase("")) {
-                    comefrom_search = 1;
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("New", "0");
-                    bundle.putString("PlaylistID", AudiolistModel.get(position).getID());
-                    bundle.putString("PlaylistName", AudiolistModel.get(position).getName());
-                    bundle.putString("MyDownloads", "0");
-                    myPlaylistsFragment.setArguments(bundle);
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .replace(R.id.flContainer, myPlaylistsFragment)
-                            .commit();
-                }
-            });
-
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
@@ -290,6 +267,30 @@ public class ViewAllSearchFragment extends Fragment {
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
+
+            holder.binding.llMainLayout.setOnClickListener(view -> {
+                if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
+                    comefrom_search = 1;
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("New", "0");
+                    bundle.putString("PlaylistID", PlaylistModel.get(position).getID());
+                    bundle.putString("PlaylistName", PlaylistModel.get(position).getName());
+                    bundle.putString("MyDownloads", "0");
+                    myPlaylistsFragment.setArguments(bundle);
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.flContainer, myPlaylistsFragment)
+                            .commit();
+                }
+            });
+
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);

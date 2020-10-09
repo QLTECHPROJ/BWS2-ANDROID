@@ -10,17 +10,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/_10sdp"
             android:orientation="horizontal"
+            android:paddingVertical="@dimen/_10sdp"
             android:weightSum="1">
 
             <LinearLayout
                 android:id="@+id/llChecked"
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/_13sdp"
-                android:layout_weight="0.10"
+                android:layout_weight="0.15"
                 android:gravity="center"
+                android:paddingLeft="@dimen/_13sdp"
+                android:paddingRight="@dimen/_16sdp"
                 android:visibility="visible">
 
                 <CheckBox
@@ -41,15 +42,14 @@
             <LinearLayout
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_16sdp"
-                android:layout_weight="0.72"
+                android:layout_weight="0.67"
+                android:paddingRight="@dimen/_25sdp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/_25sdp"
                     android:fontFamily="@font/montserrat_medium"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp" />
@@ -58,8 +58,7 @@
                     android:id="@+id/tvDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    android:layout_marginRight="@dimen/_25sdp"
+                    android:paddingTop="@dimen/_3sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp" />
@@ -68,11 +67,10 @@
                     android:id="@+id/tvTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    android:layout_marginRight="@dimen/_25sdp"
+                    android:paddingTop="@dimen/_3sdp"
                     android:fontFamily="@font/montserrat_bold"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_17sdp" />
+                    android:textSize="@dimen/_16sdp" />
 
             </LinearLayout>
 
@@ -81,14 +79,14 @@
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginRight="@dimen/_8sdp"
-                android:layout_weight="0.18">
+                android:layout_weight="0.18"
+                android:paddingRight="@dimen/_8sdp">
 
                 <Switch
                     android:id="@+id/switchStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_8sdp"
+                    android:paddingHorizontal="@dimen/_8sdp"
                     android:fontFamily="@font/montserrat_semi_bold"
                     android:textColor="@color/light_black"
                     android:textSize="@dimen/_13sdp" />
@@ -97,10 +95,9 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="1.5dp"
             android:background="#EEEEEE" />
-
-
     </LinearLayout>
 </layout>

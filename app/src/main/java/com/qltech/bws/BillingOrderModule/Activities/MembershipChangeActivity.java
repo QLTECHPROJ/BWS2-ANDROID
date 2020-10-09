@@ -86,13 +86,12 @@ public class MembershipChangeActivity extends AppCompatActivity {
                         if (membershipPlanListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                             binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
                             binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
-
-                           /* MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 29,
+                            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 29,
                                     5, 3, 1.1f, 29);
                             binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
                             binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
                             binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-                            binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner);*/
+                            binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner);
 
                             membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan()
                                     , ctx, binding.btnFreeJoin);

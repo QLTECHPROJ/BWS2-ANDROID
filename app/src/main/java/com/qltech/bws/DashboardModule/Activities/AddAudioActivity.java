@@ -4,12 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,9 +25,13 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.DashboardModule.Models.SearchPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.SuggestedModel;
 import com.qltech.bws.DashboardModule.Models.SuggestionAudiosModel;
+import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
+import com.qltech.bws.DashboardModule.Search.SearchFragment;
+import com.qltech.bws.DashboardModule.Search.ViewAllSearchFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -32,11 +39,14 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.ActivityAddAudioBinding;
 import com.qltech.bws.databinding.DownloadsLayoutBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
 
 public class AddAudioActivity extends AppCompatActivity {
     ActivityAddAudioBinding binding;
@@ -104,6 +114,9 @@ public class AddAudioActivity extends AppCompatActivity {
         binding.rvSerachList.setLayoutManager(serachList);
         binding.rvSerachList.setItemAnimator(new DefaultItemAnimator());
 
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
+        binding.rvPlayList.setItemAnimator(new DefaultItemAnimator());
+        binding.rvPlayList.setLayoutManager(manager);
         prepareSuggestedData();
     }
 
@@ -157,14 +170,65 @@ public class AddAudioActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         SuggestedModel listModel = response.body();
-                        binding.tvSuggested.setText(R.string.Suggested);
+                        binding.tvSuggestedAudios.setText(R.string.Suggested_Audios);
+                        binding.tvSAViewAll.setVisibility(View.VISIBLE);
                         SuggestedAdpater suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), ctx);
                         binding.rvSuggestedList.setAdapter(suggestedAdpater);
+
+                        binding.tvSAViewAll.setOnClickListener(view -> {
+                            Fragment fragment = new ViewAllSearchFragment();
+                            FragmentManager fragmentManager1 = getSupportFragmentManager();
+                            fragmentManager1.beginTransaction()
+                                    .add(R.id.flContainer, fragment)
+                                    .commit();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("Name", "Suggested Audios");
+                            bundle.putParcelableArrayList("AudiolistModel", listModel.getResponseData());
+                            fragment.setArguments(bundle);
+                        });
                     }
                 }
 
                 @Override
                 public void onFailure(Call<SuggestedModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+            Call<SearchPlaylistModel> listCall = APIClient.getClient().getSuggestedPlayLists(UserID);
+            listCall.enqueue(new Callback<SearchPlaylistModel>() {
+                @Override
+                public void onResponse(Call<SearchPlaylistModel> call, Response<SearchPlaylistModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        SearchPlaylistModel listModel = response.body();
+                        binding.tvSuggestedPlaylist.setText(R.string.Suggested_Playlist);
+                        binding.tvSPViewAll.setVisibility(View.VISIBLE);
+
+                        SuggestedPlayListsAdpater suggestedAdpater = new SuggestedPlayListsAdpater(listModel.getResponseData());
+                        binding.rvPlayList.setAdapter(suggestedAdpater);
+
+                        binding.tvSPViewAll.setOnClickListener(view -> {
+                            Fragment fragment = new ViewAllSearchFragment();
+                            FragmentManager fragmentManager1 = getSupportFragmentManager();
+                            fragmentManager1.beginTransaction()
+                                    .add(R.id.flContainer, fragment)
+                                    .commit();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("Name", "Suggested Playlist");
+                            bundle.putParcelableArrayList("PlaylistModel", listModel.getResponseData());
+                            fragment.setArguments(bundle);
+                        });
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SearchPlaylistModel> call, Throwable t) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
@@ -337,4 +401,111 @@ public class AddAudioActivity extends AppCompatActivity {
             }
         }
     }
+
+    public class SuggestedPlayListsAdpater extends RecyclerView.Adapter<SuggestedPlayListsAdpater.MyViewHolder> {
+        private List<SearchPlaylistModel.ResponseData> PlaylistModel;
+
+        public SuggestedPlayListsAdpater(List<SearchPlaylistModel.ResponseData> PlaylistModel) {
+            this.PlaylistModel = PlaylistModel;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            DownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.downloads_layout, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.binding.tvTitle.setText(PlaylistModel.get(position).getName());
+            holder.binding.pbProgress.setVisibility(View.GONE);
+
+            if (PlaylistModel.get(position).getTotalAudio().equalsIgnoreCase("") ||
+                    PlaylistModel.get(position).getTotalAudio().equalsIgnoreCase("0") &&
+                            PlaylistModel.get(position).getTotalhour().equalsIgnoreCase("")
+                            && PlaylistModel.get(position).getTotalminute().equalsIgnoreCase("")) {
+                holder.binding.tvTime.setText("0 Audio | 0h 0m");
+            } else {
+                if (PlaylistModel.get(position).getTotalminute().equalsIgnoreCase("")) {
+                    holder.binding.tvTime.setText(PlaylistModel.get(position).getTotalAudio() + " Audio | "
+                            + PlaylistModel.get(position).getTotalhour() + "h 0m");
+                } else {
+                    holder.binding.tvTime.setText(PlaylistModel.get(position).getTotalAudio() +
+                            " Audios | " + PlaylistModel.get(position).getTotalhour() + "h " + PlaylistModel.get(position).getTotalminute() + "m");
+                }
+            }
+
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                    1, 1, 0.12f, 0);
+            holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            Glide.with(ctx).load(PlaylistModel.get(position).getImage()).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+            if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
+                BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
+                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
+
+          /*  holder.binding.llMainLayout.setOnClickListener(view -> {
+                if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
+                    comefrom_search = 1;
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("New", "0");
+                    bundle.putString("PlaylistID", PlaylistModel.get(position).getID());
+                    bundle.putString("PlaylistName", PlaylistModel.get(position).getName());
+                    bundle.putString("MyDownloads", "0");
+                    myPlaylistsFragment.setArguments(bundle);
+                    FragmentManager fragmentManager1 = getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.flContainer, myPlaylistsFragment)
+                            .commit();
+                }
+            });*/
+
+            holder.binding.llRemoveAudio.setOnClickListener(view -> {
+                if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                    i.putExtra("AudioId", "");
+                    i.putExtra("PlaylistID", PlaylistModel.get(position).getID());
+                    startActivity(i);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return PlaylistModel.size();
+        }
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            DownloadsLayoutBinding binding;
+
+            public MyViewHolder(DownloadsLayoutBinding binding) {
+                super(binding.getRoot());
+                this.binding = binding;
+            }
+        }
+    }
+
 }

@@ -1,13 +1,18 @@
 package com.qltech.bws.MembershipModule.Activities;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -124,6 +129,29 @@ public class MembershipActivity extends AppCompatActivity {
                                 startActivity(i);
                             });
 
+                            binding.tvDisclaimers.setOnClickListener(view -> {
+                                final Dialog dialog = new Dialog(ctx);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.full_desc_layout);
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+                                final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
+                                final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
+                                tvTitle.setText(R.string.Disclaimer);
+                                tvDesc.setText("You shall be able to select the audio you wish to play after the disclaimer. In case the disclaimer has not started, click on the play icon on the player.");
+                                dialog.setOnKeyListener((v, keyCode, event) -> {
+                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                        dialog.dismiss();
+                                        return true;
+                                    }
+                                    return false;
+                                });
+
+                                tvClose.setOnClickListener(v -> dialog.dismiss());
+                                dialog.show();
+                                dialog.setCancelable(false);
+                            });
                             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 29,
                                     5, 3, 1.1f, 29);
                             binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
