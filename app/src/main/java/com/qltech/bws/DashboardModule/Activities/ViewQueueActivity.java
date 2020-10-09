@@ -148,10 +148,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
             int progress = getProgressPercentage(currentDuration, totalDuration);
             long diff = totalDuration - currentDuration;
-            if (diff < 15) {
-                callComplete();
-            }
-            if (currentDuration == totalDuration && currentDuration != getStartTime()) {
+
+            if (currentDuration == totalDuration && currentDuration != 0) {
                 callComplete();
             } else if (isPause) {
                 binding.simpleSeekbar.setProgress(oTime);

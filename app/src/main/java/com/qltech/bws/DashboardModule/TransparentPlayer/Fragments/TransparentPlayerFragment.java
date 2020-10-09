@@ -165,9 +165,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     binding.ivPlay.setVisibility(View.VISIBLE);
                 }
                 long diff = totalDuration - currentDuration;
-                if(diff < 15){
-                    callComplete();
-                }  if (currentDuration == totalDuration && currentDuration != getStartTime()) {
+                if (currentDuration == totalDuration && currentDuration != 0) {
                     callComplete();
                 }
                 //Log.d("Progress", ""+progress);
