@@ -558,11 +558,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             if (player == 0) {
                 player = 1;
             }
-            if (binding.ivPause.getVisibility() == View.VISIBLE && binding.progressBar.getVisibility() == View.GONE) {
+            if (!isPause && binding.progressBar.getVisibility() == View.GONE) {
                 isPause = false;
-            } else if (binding.ivPlay.getVisibility() == View.VISIBLE && binding.progressBar.getVisibility() == View.GONE) {
+                isprogressbar = false;
+            } else if (isPause && binding.progressBar.getVisibility() == View.GONE) {
                 isPause = true;
-            }else if(binding.progressBar.getVisibility() == View.VISIBLE){
+                isprogressbar = false;
+            }else if(binding.progressBar.getVisibility() == View.VISIBLE && (binding.ivPause.getVisibility() == View.GONE && binding.ivPlay.getVisibility() == View.GONE)){
                 isprogressbar = true;
             }
             Intent i = new Intent(getActivity(), PlayWellnessActivity.class);

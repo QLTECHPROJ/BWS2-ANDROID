@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.View;
@@ -55,6 +56,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
+import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.downloadProgress;
+import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
@@ -77,26 +80,32 @@ public class AddQueueActivity extends AppCompatActivity {
     Boolean queuePlay, audioPlay;
     List<DownloadAudioDetails> oneAudioDetailsList;
     SharedPreferences shared;
-    //    List<String> fileNameList;
+    Handler handler1;
+        List<String> fileNameList;
     private long mLastClickTime = 0;
-/*
-    private Handler handler1;
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
-            if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
-                if (downloadProgress <= 100) {
+            if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
+                if(downloadProgress <=100) {
                     binding.pbProgress.setProgress(downloadProgress);
                     binding.pbProgress.setVisibility(View.VISIBLE);
-                } else {
+                    binding.ivDownloads.setVisibility(View.GONE);
+                }else{
                     binding.pbProgress.setVisibility(View.GONE);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
                     handler1.removeCallbacks(UpdateSongTime1);
                 }
+            }else{
+                binding.pbProgress.setVisibility(View.GONE);
+                binding.ivDownloads.setVisibility(View.VISIBLE);
+                binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                handler1.removeCallbacks(UpdateSongTime1);
             }
             handler1.postDelayed(this, 500);
         }
     };
-*/
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +114,8 @@ public class AddQueueActivity extends AppCompatActivity {
         ctx = AddQueueActivity.this;
         activity = AddQueueActivity.this;
         oneAudioDetailsList = new ArrayList<>();
-      /*  handler1 = new Handler();
-        fileNameList = new ArrayList<>();*/
+        handler1 = new Handler();
+        fileNameList = new ArrayList<>();
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         mData = new ArrayList<>();
@@ -150,20 +159,12 @@ public class AddQueueActivity extends AppCompatActivity {
         if (getIntent().hasExtra("PlaylistAudioId")) {
             PlaylistAudioId = getIntent().getStringExtra("PlaylistAudioId");
         }
-     /*   if (fileNameList.size() != 0) {
-            if (fileNameList.contains(audioFileName)) {
-                binding.pbProgress.setVisibility(View.VISIBLE);
-                binding.ivDownloads.setVisibility(View.GONE);
-                handler1.postDelayed(UpdateSongTime1, 500);
-            } else {
-                binding.pbProgress.setVisibility(View.GONE);
-                binding.ivDownloads.setVisibility(View.VISIBLE);
-                handler1.removeCallbacks(UpdateSongTime1);
-            }
-        }else {
-            binding.pbProgress.setVisibility(View.VISIBLE);
-            binding.ivDownloads.setVisibility(View.GONE);
-        }*/
+        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
+            handler1.postDelayed(UpdateSongTime1, 500);
+        }else{
+            binding.pbProgress.setVisibility(View.GONE);
+            handler1.removeCallbacks(UpdateSongTime1);
+        }
         if (getIntent().hasExtra("play")) {
             play = getIntent().getStringExtra("play");
         } else {
@@ -419,9 +420,15 @@ public class AddQueueActivity extends AppCompatActivity {
         } else {
             for (int x = 0; x < addToQueueModelList.size(); x++) {
                 if (addToQueueModelList.get(x).getAudioFile().equals(addToQueueModel.getAudioFile())) {
-                    addToQueueModel = new AddToQueueModel();
-                    BWSApplication.showToast("Already in Queue", ctx);
-                    break;
+                    if(queuePlay && addToQueueModelList.get(position).getAudioFile().equals(addToQueueModel.getAudioFile())){
+                        BWSApplication.showToast("Audio has been added to queue", ctx);
+                        addToQueueModelList.add(addToQueueModel);
+                        break;
+                    }else{
+                        addToQueueModel = new AddToQueueModel();
+                        BWSApplication.showToast("Already in Queue", ctx);
+                        break;
+                    }
                 } else if (x == (addToQueueModelList.size() - 1)) {
                     BWSApplication.showToast("Audio has been added to queue", ctx);
                     addToQueueModelList.add(addToQueueModel);
@@ -669,12 +676,12 @@ public class AddQueueActivity extends AppCompatActivity {
         callDisableDownload();
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         downloadMedia.encrypt1(url1, name1);
-//        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
-//        handler1.postDelayed(UpdateSongTime1, 500);
-//        }else{
-//            binding.pbProgress.setVisibility(View.GONE);
-//            handler1.removeCallbacks(UpdateSongTime1);
-//        }
+        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
+            handler1.postDelayed(UpdateSongTime1, 500);
+        }else{
+            binding.pbProgress.setVisibility(View.GONE);
+            handler1.removeCallbacks(UpdateSongTime1);
+        }
         String dirPath = FileUtils.getFilePath(getApplicationContext(), Name);
         SaveMedia(new byte[1024], dirPath, i);
 

@@ -56,6 +56,8 @@ import retrofit2.Response;
 import static com.qltech.bws.DashboardModule.Activities.AddQueueActivity.comeFromAddToQueue;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
 import static com.qltech.bws.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.downloadProgress;
+import static com.qltech.bws.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.qltech.bws.Utility.MusicService.SeekTo;
 import static com.qltech.bws.Utility.MusicService.ToBackward;
 import static com.qltech.bws.Utility.MusicService.ToForward;
@@ -86,7 +88,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     List<DownloadAudioDetails> downloadAudioDetailsList;
     private long mLastClickTime = 0, totalDuration, currentDuration;
     private Handler handler;
-    //    private Handler handler1;
+        private Handler handler1;
 //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
@@ -202,7 +204,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             handler.postDelayed(this, 100);
         }
     };
-  /*  private Runnable UpdateSongTime1 = new Runnable() {
+    private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
             if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
@@ -223,7 +225,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             handler1.postDelayed(this, 500);
         }
-    };*/
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,7 +233,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //        overridePendingTransition(R.anim.enter, R.anim.exit);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_wellness);
         handler = new Handler();
-//        handler1 = new Handler();
+        handler1 = new Handler();
         ctx = PlayWellnessActivity.this;
         activity = PlayWellnessActivity.this;
         addToQueueModelList = new ArrayList<>();
@@ -299,12 +301,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         getPrepareShowData(position);
-     /*   if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
+
+        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
             handler1.postDelayed(UpdateSongTime1, 500);
          }else{
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
-        }*/
+        }
         callRepeatShuffle();
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
@@ -683,12 +686,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         downloadMedia.encrypt1(url1, name1);
-  /*      if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
+        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
             handler1.postDelayed(UpdateSongTime1, 500);
         }else{
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
-        }*/
+        }
         SaveMedia(EncodeBytes, FileUtils.getFilePath(getApplicationContext(), name));
    /*     if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
@@ -999,12 +1002,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
                             TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
 //                    resumeMedia();
-                } /*else if (isMediaStart && !isPause) {
+                } else if (isMediaStart && !isPause) {
                     binding.llProgressBar.setVisibility(View.GONE);
                     binding.progressBar.setVisibility(View.GONE);
                     binding.llPause.setVisibility(View.VISIBLE);
                     binding.llPlay.setVisibility(View.GONE);
-                } */ else {
+                }  else {
                     binding.llProgressBar.setVisibility(View.VISIBLE);
                     binding.progressBar.setVisibility(View.VISIBLE);
                     binding.llPause.setVisibility(View.GONE);
