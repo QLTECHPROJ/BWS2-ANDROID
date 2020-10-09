@@ -1428,6 +1428,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llViewQueue.setEnabled(false);
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
+        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
+            handler1.postDelayed(UpdateSongTime1, 500);
+        }else{
+            binding.pbProgress.setVisibility(View.GONE);
+            handler1.removeCallbacks(UpdateSongTime1);
+        }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

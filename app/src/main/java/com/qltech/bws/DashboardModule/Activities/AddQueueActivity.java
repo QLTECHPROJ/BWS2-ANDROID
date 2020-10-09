@@ -64,6 +64,7 @@ import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.stopMedia;
 
 public class AddQueueActivity extends AppCompatActivity {
+    public static boolean comeFromAddToQueue = false;
     ActivityQueueBinding binding;
     String play, UserID, PlaylistId, AudioId, Like, Download, IsRepeat, IsShuffle, myPlaylist = "", comeFrom = "", audioFileName,
             AudioFile = "", PlaylistAudioId = "", AudioFlag;
@@ -76,27 +77,26 @@ public class AddQueueActivity extends AppCompatActivity {
     MainPlayModel mainPlayMode;
     AddToQueueModel addToQueueModel;
     int position, listSize;
-    public static boolean comeFromAddToQueue = false;
     Boolean queuePlay, audioPlay;
     List<DownloadAudioDetails> oneAudioDetailsList;
     SharedPreferences shared;
     Handler handler1;
-        List<String> fileNameList;
+    List<String> fileNameList;
     private long mLastClickTime = 0;
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
-            if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
-                if(downloadProgress <=100) {
+            if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
+                if (downloadProgress <= 100) {
                     binding.pbProgress.setProgress(downloadProgress);
                     binding.pbProgress.setVisibility(View.VISIBLE);
                     binding.ivDownloads.setVisibility(View.GONE);
-                }else{
+                } else {
                     binding.pbProgress.setVisibility(View.GONE);
                     binding.ivDownloads.setVisibility(View.VISIBLE);
                     handler1.removeCallbacks(UpdateSongTime1);
                 }
-            }else{
+            } else {
                 binding.pbProgress.setVisibility(View.GONE);
                 binding.ivDownloads.setVisibility(View.VISIBLE);
                 binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
@@ -159,9 +159,9 @@ public class AddQueueActivity extends AppCompatActivity {
         if (getIntent().hasExtra("PlaylistAudioId")) {
             PlaylistAudioId = getIntent().getStringExtra("PlaylistAudioId");
         }
-        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
+        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
             handler1.postDelayed(UpdateSongTime1, 500);
-        }else{
+        } else {
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
         }
@@ -259,7 +259,18 @@ public class AddQueueActivity extends AppCompatActivity {
 
         binding.llShuffle.setOnClickListener(view -> callShuffle());
 
-        binding.llRemovePlaylist.setOnClickListener(view -> callRemoveFromPlayList());
+        binding.llRemovePlaylist.setOnClickListener(view -> {
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistId)&& mainPlayModelList.size() == 1) {
+                BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
+            } else {
+                callRemoveFromPlayList();
+            }
+        });
 
         binding.llBack.setOnClickListener(view -> {
             /*  Intent i = new Intent(ctx, PlayWellnessActivity.class);
@@ -420,11 +431,11 @@ public class AddQueueActivity extends AppCompatActivity {
         } else {
             for (int x = 0; x < addToQueueModelList.size(); x++) {
                 if (addToQueueModelList.get(x).getAudioFile().equals(addToQueueModel.getAudioFile())) {
-                    if(queuePlay && addToQueueModelList.get(position).getAudioFile().equals(addToQueueModel.getAudioFile())){
+                    if (queuePlay && addToQueueModelList.get(position).getAudioFile().equals(addToQueueModel.getAudioFile())) {
                         BWSApplication.showToast("Audio has been added to queue", ctx);
                         addToQueueModelList.add(addToQueueModel);
                         break;
-                    }else{
+                    } else {
                         addToQueueModel = new AddToQueueModel();
                         BWSApplication.showToast("Already in Queue", ctx);
                         break;
@@ -555,12 +566,27 @@ public class AddQueueActivity extends AppCompatActivity {
                                             isPause = false;
                                             isMediaStart = false;
                                             isPrepare = false;
-
+                                            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = new ArrayList<>();
+                                            for (int i = 0; i < mainPlayModelList.size(); i++) {
+                                                SubPlayListModel.ResponseData.PlaylistSong mainPlayModel = new SubPlayListModel.ResponseData.PlaylistSong();
+                                                mainPlayModel.setID(mainPlayModelList.get(i).getID());
+                                                mainPlayModel.setName(mainPlayModelList.get(i).getName());
+                                                mainPlayModel.setAudioFile(mainPlayModelList.get(i).getAudioFile());
+                                                mainPlayModel.setPlaylistID(mainPlayModelList.get(i).getPlaylistID());
+                                                mainPlayModel.setAudioDirection(mainPlayModelList.get(i).getAudioDirection());
+                                                mainPlayModel.setAudiomastercat(mainPlayModelList.get(i).getAudiomastercat());
+                                                mainPlayModel.setAudioSubCategory(mainPlayModelList.get(i).getAudioSubCategory());
+                                                mainPlayModel.setImageFile(mainPlayModelList.get(i).getImageFile());
+                                                mainPlayModel.setLike(mainPlayModelList.get(i).getLike());
+                                                mainPlayModel.setDownload(mainPlayModelList.get(i).getDownload());
+                                                mainPlayModel.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
+                                                arrayList.add(mainPlayModel);
+                                            }
                                             SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                             SharedPreferences.Editor editor = sharedd.edit();
                                             Gson gson = new Gson();
                                             String json = gson.toJson(mainPlayModelList);
-                                            String json1 = gson.toJson(mData);
+                                            String json1 = gson.toJson(arrayList);
                                             editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
                                             editor.putString(CONSTANTS.PREF_KEY_audioList, json);
                                             editor.putInt(CONSTANTS.PREF_KEY_position, pos);
@@ -676,9 +702,9 @@ public class AddQueueActivity extends AppCompatActivity {
         callDisableDownload();
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         downloadMedia.encrypt1(url1, name1);
-        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)){
+        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
             handler1.postDelayed(UpdateSongTime1, 500);
-        }else{
+        } else {
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
         }
@@ -830,6 +856,12 @@ public class AddQueueActivity extends AppCompatActivity {
                             AudioFile = mainPlayModelList.get(ix).getAudioFile();
                             PlaylistId = mainPlayModelList.get(ix).getPlaylistID();
                             audioFileName = mainPlayModelList.get(ix).getName();
+                        }
+                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
+                            handler1.postDelayed(UpdateSongTime1, 500);
+                        } else {
+                            binding.pbProgress.setVisibility(View.GONE);
+                            handler1.removeCallbacks(UpdateSongTime1);
                         }
                         if (PlaylistId == null) {
                             PlaylistId = "";
