@@ -133,12 +133,28 @@ public class ReminderActivity extends AppCompatActivity {
 //            TimeZone tz = c.getTimeZone();
 //            c.setTimeZone(TimeZone.getTimeZone("GMT"));
 //            Log.e("GMTTTTTT", tz.getDisplayName());
+            SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
+            simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+//            }
+            DateFormat df = DateFormat.getTimeInstance();
+            String gmtTime = df.format(new Date());
+            Date currdate = new Date();
+            try {
+                currdate = simpleDateFormat1.parse(gmtTime);
+                Log.e("currant currdate !!!!", String.valueOf(currdate));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            currantTime = simpleDateFormat1.format(currdate);
             String[] time = currantTime.split(":");
             String min[] = time[1].split(" ");
             mHour = Integer.parseInt(time[0]);
 //            mHour = c.get(Calendar.HOUR_OF_DAY);
             mMinute = Integer.parseInt(min[0]);
             String displayAmPm = min[1];
+            if(displayAmPm.equalsIgnoreCase("p.m.")){
+                mHour = mHour + 12;
+            }
             timePickerDialog = new TimePickerDialog(ReminderActivity.this, R.style.TimePickerTheme,
                     (view1, hourOfDay, minute) -> {
                         if (hourOfDay < 10) {
