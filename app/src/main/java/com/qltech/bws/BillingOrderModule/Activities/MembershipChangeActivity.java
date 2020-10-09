@@ -15,11 +15,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Models.PlanListBillingModel;
 import com.qltech.bws.MembershipModule.Activities.OrderSummaryActivity;
@@ -50,7 +48,6 @@ public class MembershipChangeActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_membership_change);
         ctx = MembershipChangeActivity.this;
         activity = MembershipChangeActivity.this;
-
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 

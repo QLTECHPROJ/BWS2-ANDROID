@@ -258,6 +258,18 @@
                             android:textSize="@dimen/_12sdp" />
 
                         <TextView
+                            android:id="@+id/tvAnd"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_3sdp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center"
+                            android:paddingTop="@dimen/_2sdp"
+                            android:text="@string/and"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <TextView
                             android:id="@+id/tvDisclaimers"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

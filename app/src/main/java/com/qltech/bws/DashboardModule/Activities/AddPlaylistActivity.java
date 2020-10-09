@@ -29,6 +29,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.PlaylistingModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
+import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.Utility.APIClient;
@@ -229,6 +230,45 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                                             BWSApplication.showToast(listModels.getResponseMessage(), ctx);
                                                             dialog.dismiss();
                                                             finish();
+                                                            /*final Dialog dialog = new Dialog(ctx);
+                                                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                                            dialog.setContentView(R.layout.go_to_playlist);
+                                                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+                                                            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                                            final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+                                                            final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+
+                                                            dialog.setOnKeyListener((v, keyCode, event) -> {
+                                                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                                                    dialog.dismiss();
+                                                                    return true;
+                                                                }
+                                                                return false;
+                                                            });
+
+                                                            rlCreate.setOnClickListener(view2 -> {
+                                                                addToPlayList = true;
+                                                                MyPlaylistId = listsModel.getResponseData().getId();
+                                                                dialog.dismiss();
+                                                                Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                                                                Bundle bundle = new Bundle();
+                                                                bundle.putString("New", "0");
+                                                                bundle.putString("PlaylistID", listsModel.getResponseData().getId());
+                                                                bundle.putString("PlaylistName", listsModel.getResponseData().getName());
+                                                                bundle.putString("MyDownloads", "0");
+                                                                myPlaylistsFragment.setArguments(bundle);
+                                                                FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                                                fragmentManager1.beginTransaction()
+                                                                        .replace(R.id.flContainer, myPlaylistsFragment)
+                                                                        .commit();
+                                                            });
+
+                                                            tvCancel.setOnClickListener(v -> {
+                                                                dialog.dismiss();
+                                                                finish();
+                                                            });
+                                                            dialog.show();
+                                                            dialog.setCancelable(false);*/
                                                         }
                                                     }
                                                 }
@@ -304,6 +344,45 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     } else {
                                         BWSApplication.showToast(listModels.getResponseMessage(), ctx);
                                         finish();
+                                        /*final Dialog dialog = new Dialog(ctx);
+                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        dialog.setContentView(R.layout.go_to_playlist);
+                                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+                                        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                        final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+                                        final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+
+                                        dialog.setOnKeyListener((v, keyCode, event) -> {
+                                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                                dialog.dismiss();
+                                                return true;
+                                            }
+                                            return false;
+                                        });
+
+                                        rlCreate.setOnClickListener(view2 -> {
+                                            addToPlayList = true;
+                                            MyPlaylistId = listModel.get(position).getID();
+                                            dialog.dismiss();
+                                            Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("New", "0");
+                                            bundle.putString("PlaylistID", listModel.get(position).getID());
+                                            bundle.putString("PlaylistName", listModel.get(position).getName());
+                                            bundle.putString("MyDownloads", "0");
+                                            myPlaylistsFragment.setArguments(bundle);
+                                            FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                            fragmentManager1.beginTransaction()
+                                                    .replace(R.id.flContainer, myPlaylistsFragment)
+                                                    .commit();
+                                        });
+
+                                        tvCancel.setOnClickListener(v -> {
+                                            dialog.dismiss();
+                                            finish();
+                                        });
+                                        dialog.show();
+                                        dialog.setCancelable(false);*/
                                     }
                                 }
                             }

@@ -162,6 +162,7 @@ public class OtpActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        comeLogin = 0;
         Intent i = new Intent(OtpActivity.this, LoginActivity.class);
         i.putExtra("Name", Name);
         i.putExtra("Code", Code);

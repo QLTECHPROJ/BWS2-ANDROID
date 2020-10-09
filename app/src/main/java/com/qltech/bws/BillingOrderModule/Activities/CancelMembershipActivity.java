@@ -13,7 +13,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -63,7 +62,6 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         if (isMediaStart) {
             pauseMedia();
         } else {
-
         }
         binding.youtubeView.initialize(AppUtils.DEVELOPER_KEY, this);
 

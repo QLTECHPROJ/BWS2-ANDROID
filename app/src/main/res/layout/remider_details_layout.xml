@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/llMainLayout"
@@ -14,37 +14,38 @@
             android:paddingVertical="@dimen/_10sdp"
             android:weightSum="1">
 
-            <LinearLayout
-                android:id="@+id/llChecked"
+            <!--  <LinearLayout
+                  android:id="@+id/llChecked"
+                  android:layout_width="@dimen/_0sdp"
+                  android:layout_height="match_parent"
+                  android:gravity="center"
+                  android:paddingLeft="@dimen/_13sdp"
+                  android:paddingRight="@dimen/_16sdp"
+                  android:visibility="visible">-->
+
+            <CheckBox
+                android:id="@+id/cbChecked"
+                style="@android:style/Widget.CompoundButton.CheckBox"
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.15"
+                android:background="@android:color/transparent"
+                android:button="@drawable/checkbox_btn_background"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:paddingLeft="@dimen/_13sdp"
-                android:paddingRight="@dimen/_16sdp"
-                android:visibility="visible">
-
-                <CheckBox
-                    android:id="@+id/cbChecked"
-                    style="@android:style/Widget.CompoundButton.CheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:button="@drawable/checkbox_btn_background"
-                    android:gravity="center_vertical|left"
-                    android:layoutDirection="rtl"
-                    android:overScrollMode="never"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp"
-                    android:visibility="visible" />
-            </LinearLayout>
+                android:layout_marginLeft="@dimen/_15sdp"
+                android:overScrollMode="never"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:visibility="visible"/>
+            <!--            </LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.67"
-                android:paddingRight="@dimen/_25sdp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingRight="@dimen/_25sdp">
 
                 <TextView
                     android:id="@+id/tvName"
@@ -58,8 +59,8 @@
                     android:id="@+id/tvDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/_3sdp"
                     android:fontFamily="@font/montserrat_regular"
+                    android:paddingTop="@dimen/_3sdp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp" />
 
@@ -67,8 +68,8 @@
                     android:id="@+id/tvTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/_3sdp"
                     android:fontFamily="@font/montserrat_bold"
+                    android:paddingTop="@dimen/_3sdp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_16sdp" />
 
@@ -86,8 +87,8 @@
                     android:id="@+id/switchStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/_8sdp"
                     android:fontFamily="@font/montserrat_semi_bold"
+                    android:paddingHorizontal="@dimen/_8sdp"
                     android:textColor="@color/light_black"
                     android:textSize="@dimen/_13sdp" />
 

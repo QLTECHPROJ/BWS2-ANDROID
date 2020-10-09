@@ -912,7 +912,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             binding.tvCategory.setText(listModel.getAudiomastercat());
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.12f, 0);
+                    1, 1, 0, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);

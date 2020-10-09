@@ -934,7 +934,6 @@ public class AddQueueActivity extends AppCompatActivity {
                             i.putExtra("AudioId", AudioId);
                             i.putExtra("PlaylistID", "");
                             startActivity(i);
-                            finish();
                         });
 
                         binding.llViewQueue.setOnClickListener(view -> {

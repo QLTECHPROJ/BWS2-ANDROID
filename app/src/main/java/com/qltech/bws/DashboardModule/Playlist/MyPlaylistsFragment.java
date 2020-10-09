@@ -281,7 +281,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadPlaylistDetailsList = DatabaseClient
                         .getInstance(activity)
                         .getaudioDatabase()
@@ -311,10 +310,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private List<DownloadPlaylistDetails> GetPlaylistDetail2() {
         class GetTask extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadPlaylistDetailsList = DatabaseClient
                         .getInstance(activity)
                         .getaudioDatabase()

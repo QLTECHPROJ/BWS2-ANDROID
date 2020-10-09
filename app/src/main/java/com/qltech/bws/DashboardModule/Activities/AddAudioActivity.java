@@ -176,7 +176,11 @@ public class AddAudioActivity extends AppCompatActivity {
                         binding.rvSuggestedList.setAdapter(suggestedAdpater);
 
                         binding.tvSAViewAll.setOnClickListener(view -> {
-                            Fragment fragment = new ViewAllSearchFragment();
+                            Intent i = new Intent(ctx,ViewSuggestedActivity.class);
+                            i.putExtra("Name", "Suggested Audios");
+                            i.putParcelableArrayListExtra("AudiolistModel", listModel.getResponseData());
+                            startActivity(i);
+                            /*Fragment fragment = new ViewAllSearchFragment();
                             FragmentManager fragmentManager1 = getSupportFragmentManager();
                             fragmentManager1.beginTransaction()
                                     .add(R.id.flContainer, fragment)
@@ -184,7 +188,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             Bundle bundle = new Bundle();
                             bundle.putString("Name", "Suggested Audios");
                             bundle.putParcelableArrayList("AudiolistModel", listModel.getResponseData());
-                            fragment.setArguments(bundle);
+                            fragment.setArguments(bundle);*/
                         });
                     }
                 }
@@ -214,7 +218,11 @@ public class AddAudioActivity extends AppCompatActivity {
                         binding.rvPlayList.setAdapter(suggestedAdpater);
 
                         binding.tvSPViewAll.setOnClickListener(view -> {
-                            Fragment fragment = new ViewAllSearchFragment();
+                            Intent i = new Intent(ctx,ViewSuggestedActivity.class);
+                            i.putExtra("Name", "Suggested Playlist");
+                            i.putParcelableArrayListExtra("PlaylistModel", listModel.getResponseData());
+                            startActivity(i);
+                            /*Fragment fragment = new ViewAllSearchFragment();
                             FragmentManager fragmentManager1 = getSupportFragmentManager();
                             fragmentManager1.beginTransaction()
                                     .add(R.id.flContainer, fragment)
@@ -222,7 +230,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             Bundle bundle = new Bundle();
                             bundle.putString("Name", "Suggested Playlist");
                             bundle.putParcelableArrayList("PlaylistModel", listModel.getResponseData());
-                            fragment.setArguments(bundle);
+                            fragment.setArguments(bundle);*/
                         });
                     }
                 }
@@ -278,6 +286,22 @@ public class AddAudioActivity extends AppCompatActivity {
             Glide.with(ctx).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+
+            /*if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                        || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                }
+            } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0")
+                    || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }*/
+
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 String AudioID = modelList.get(position).getID();
                 if (BWSApplication.isNetworkConnected(ctx)) {
@@ -350,12 +374,26 @@ public class AddAudioActivity extends AppCompatActivity {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
 
-            holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (listModel.get(position).getIsLock().equalsIgnoreCase("1")) {
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                    } else if (listModel.get(position).getIsLock().equalsIgnoreCase("0") || listModel.get(position).getIsLock().equalsIgnoreCase("")) {
+            if (listModel.get(position).getIsLock().equalsIgnoreCase("1")) {
+                if (listModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                } else if (listModel.get(position).getIsPlay().equalsIgnoreCase("0")
+                        || listModel.get(position).getIsPlay().equalsIgnoreCase("")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                }
+            } else if (listModel.get(position).getIsLock().equalsIgnoreCase("0")
+                    || listModel.get(position).getIsLock().equalsIgnoreCase("")) {
+                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                holder.binding.ivLock.setVisibility(View.GONE);
+            }
+
+            holder.binding.llRemoveAudio.setOnClickListener(view -> {
+                if (listModel.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    if (listModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                        holder.binding.ivLock.setVisibility(View.GONE);
                         String AudioID = listModel.get(position).getID();
                         if (BWSApplication.isNetworkConnected(ctx)) {
                             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
@@ -378,6 +416,34 @@ public class AddAudioActivity extends AppCompatActivity {
                         } else {
                             BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
+                    } else if (listModel.get(position).getIsPlay().equalsIgnoreCase("0")
+                            || listModel.get(position).getIsPlay().equalsIgnoreCase("")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    }
+                } else if (listModel.get(position).getIsLock().equalsIgnoreCase("0") || listModel.get(position).getIsLock().equalsIgnoreCase("")) {
+                    String AudioID = listModel.get(position).getID();
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID, "");
+                        listCall.enqueue(new Callback<SucessModel>() {
+                            @Override
+                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                if (response.isSuccessful()) {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                    SucessModel listModel = response.body();
+                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SucessModel> call, Throwable t) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            }
+                        });
+                    } else {
+                        BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                     }
                 }
             });
@@ -495,7 +561,11 @@ public class AddAudioActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return PlaylistModel.size();
+            if (10 > PlaylistModel.size()) {
+                return PlaylistModel.size();
+            } else {
+                return 10;
+            }
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {

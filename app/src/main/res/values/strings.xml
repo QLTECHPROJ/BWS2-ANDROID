@@ -209,7 +209,10 @@
     <string name="Guest">Guest</string>
     <string name="membership_title">Access More Than 65 Audio Programs.</string>
     <string name="t_n_cs"><u>T&amp;Cs</u></string>
+    <string name="t_n_csm">T&amp;Cs,</string>
+    <string name="privacy_policysm">Privacy Policy </string>
     <string name="privacy_policys">, <u>Privacy Policy</u> </string>
-    <string name="disclaimers">&amp; <u>Disclaimer</u></string>
+    <string name="disclaimers"><u>Disclaimer</u></string>
     <string name="playlist_or_audio_search">Add or search for audio, playlist</string>
+    <string name="and">and</string>
 </resources>

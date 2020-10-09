@@ -15,7 +15,6 @@ import android.text.style.ReplacementSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -24,7 +23,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import com.bumptech.glide.Glide;
 import com.qltech.bws.AddPayment.Model.AddCardModel;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;

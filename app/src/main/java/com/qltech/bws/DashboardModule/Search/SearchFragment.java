@@ -298,9 +298,14 @@ public class SearchFragment extends Fragment {
             holder.binding.tvTitle.setText(modelList.get(position).getName());
 
             if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
-                BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
+                if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                        || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                }
             } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
@@ -311,9 +316,19 @@ public class SearchFragment extends Fragment {
                 holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
                 holder.binding.llRemoveAudio.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                        if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                            holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                            holder.binding.ivLock.setVisibility(View.GONE);
+                            Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                            i.putExtra("AudioId", modelList.get(position).getID());
+                            i.putExtra("PlaylistID", "");
+                            startActivity(i);
+                        } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                                || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                            holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                            holder.binding.ivLock.setVisibility(View.VISIBLE);
+                            BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                        }
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
@@ -419,17 +434,33 @@ public class SearchFragment extends Fragment {
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
             if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
-                BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
+                if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                        || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                }
             } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                        holder.binding.ivLock.setVisibility(View.GONE);
+                        Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                        i.putExtra("AudioId", modelList.get(position).getID());
+                        i.putExtra("PlaylistID", "");
+                        startActivity(i);
+                    } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                            || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    }
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                 } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);

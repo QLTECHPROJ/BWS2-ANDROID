@@ -90,6 +90,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
+            comeRegister = 0;
             Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
             i.putExtra("MobileNo", MobileNo);
             i.putExtra("Name", Name);
@@ -182,6 +183,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        comeRegister = 0;
         Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
         i.putExtra("MobileNo", MobileNo);
         i.putExtra("Name", Name);

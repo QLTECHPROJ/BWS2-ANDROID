@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,10 +116,13 @@ public class MembershipActivity extends AppCompatActivity {
                             binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
                             binding.tvTag.setText(R.string.membership_title);
                             binding.tvText.setText(getString(R.string.privacy_policy_t_n_c));
-                            binding.tvtncs.setText(getString(R.string.t_n_cs));
-                            binding.tvPrivacyPolicys.setText(getString(R.string.privacy_policys));
-                            binding.tvDisclaimers.setText(getString(R.string.disclaimers));
-
+                            binding.tvtncs.setText(getString(R.string.t_n_csm));
+                            binding.tvPrivacyPolicys.setText(getString(R.string.privacy_policysm));
+                            binding.tvAnd.setText(getString(R.string.and));
+                            binding.tvDisclaimers.setText(R.string.disclaimers);
+                            binding.tvtncs.getPaint().setUnderlineText(true);
+                            binding.tvPrivacyPolicys.getPaint().setUnderlineText(true);
+                            binding.tvDisclaimers.getPaint().setUnderlineText(true);
                             binding.tvtncs.setOnClickListener(view -> {
                                 Intent i = new Intent(ctx, TncActivity.class);
                                 i.putExtra(CONSTANTS.Web, "Tnc");

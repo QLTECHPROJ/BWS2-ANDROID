@@ -138,6 +138,7 @@ public class ReminderActivity extends AppCompatActivity {
             mHour = Integer.parseInt(time[0]);
 //            mHour = c.get(Calendar.HOUR_OF_DAY);
             mMinute = Integer.parseInt(min[0]);
+            String displayAmPm = min[1];
             timePickerDialog = new TimePickerDialog(ReminderActivity.this, R.style.TimePickerTheme,
                     (view1, hourOfDay, minute) -> {
                         if (hourOfDay < 10) {

@@ -96,6 +96,9 @@ public class SuggestedModel implements Parcelable {
         @SerializedName("IsLock")
         @Expose
         private String isLock;
+        @SerializedName("IsPlay")
+        @Expose
+        private String isPlay;
         @SerializedName("AudioFile")
         @Expose
         private String audioFile;
@@ -133,6 +136,7 @@ public class SuggestedModel implements Parcelable {
             audioSubCategory = in.readString();
             like = in.readString();
             download = in.readString();
+            isPlay = in.readString();
         }
 
         @Override
@@ -148,6 +152,7 @@ public class SuggestedModel implements Parcelable {
             dest.writeString(audioSubCategory);
             dest.writeString(like);
             dest.writeString(download);
+            dest.writeString(isPlay);
         }
 
         @Override
@@ -237,6 +242,14 @@ public class SuggestedModel implements Parcelable {
 
         public void setAudioSubCategory(String audioSubCategory) {
             this.audioSubCategory = audioSubCategory;
+        }
+
+        public String getIsPlay() {
+            return isPlay;
+        }
+
+        public void setIsPlay(String isPlay) {
+            this.isPlay = isPlay;
         }
 
         public String getLike() {

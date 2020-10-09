@@ -229,7 +229,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             holder.bind.view.setClickable(false);
             holder.bind.view.setEnabled(false);
 
-            holder.bind.llChecked.setOnClickListener(new View.OnClickListener() {
+            /*holder.bind.llChecked.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (holder.bind.cbChecked.isChecked()) {
@@ -258,19 +258,19 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     }
                     Log.e("remiderIds", TextUtils.join(",", remiderIds));
                 }
-            });
+            });*/
 
             holder.bind.cbChecked.setOnCheckedChangeListener((compoundButton, b) -> {
                 if (holder.bind.cbChecked.isChecked()) {
 //                    notifyDataSetChanged();
                     if (!remiderIds.contains(model.get(position).getReminderId())) {
                         remiderIds.add(model.get(position).getReminderId());
-                        binding.tvSelectAll.setText(String.valueOf(remiderIds.size()) + " selected");
+                        binding.tvSelectAll.setText(remiderIds.size() + " selected");
                     } else {
                     }
                 } else {
                     remiderIds.remove(model.get(position).getReminderId());
-                    binding.tvSelectAll.setText(String.valueOf(remiderIds.size()) + " selected");
+                    binding.tvSelectAll.setText(remiderIds.size() + " selected");
                 }
                 if (remiderIds.size() == 0) {
                     binding.llSelectAll.setVisibility(View.GONE);
@@ -283,7 +283,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 }
                 if (remiderIds.size() == model.size()) {
                     binding.cbChecked.setChecked(true);
-                    binding.tvSelectAll.setText(String.valueOf(remiderIds.size()) + " selected");
+                    binding.tvSelectAll.setText(remiderIds.size() + " selected");
                 }
                 Log.e("remiderIds", TextUtils.join(",", remiderIds));
             });
