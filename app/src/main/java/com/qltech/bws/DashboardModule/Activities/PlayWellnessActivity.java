@@ -329,6 +329,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         binding.llDownload.setOnClickListener(view -> callDownload());
 
         binding.llMore.setOnClickListener(view -> {
+            handler1.removeCallbacks(UpdateSongTime1);
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
             }
@@ -343,6 +344,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         });
 
         binding.llViewQueue.setOnClickListener(view -> {
+            handler1.removeCallbacks(UpdateSongTime1);
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
             }
@@ -1357,6 +1359,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     private void callBack() {
         handler.removeCallbacks(UpdateSongTime);
+        handler1.removeCallbacks(UpdateSongTime1);
         player = 1;
         if (binding.llPause.getVisibility() == View.VISIBLE) {
             isPause = false;
