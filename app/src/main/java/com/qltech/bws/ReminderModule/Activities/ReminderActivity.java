@@ -102,13 +102,13 @@ public class ReminderActivity extends AppCompatActivity {
 
         if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//                Clock clock = Clock.systemDefaultZone();
-//                String timezone = (String.valueOf(clock.getZone()));
-//                simpleDateFormat1.setTimeZone(TimeZone.getTimeZone(timezone));
-//            }else {
-            simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-//            }
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                Clock clock = Clock.systemDefaultZone();
+                String timezone = (String.valueOf(clock.getZone()));
+                simpleDateFormat1.setTimeZone(TimeZone.getTimeZone(timezone));
+            }else {
+//            simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+            }
             DateFormat df = DateFormat.getTimeInstance();
             String gmtTime = df.format(new Date());
             Date currdate = new Date();

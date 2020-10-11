@@ -11,15 +11,10 @@ import com.downloader.Error;
 import com.downloader.OnDownloadListener;
 import com.downloader.PRDownloader;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
-import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
-import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.CONSTANTS;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.qltech.bws.EncryptDecryptUtils.FileUtils.saveFile;
@@ -32,8 +27,7 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
     public static boolean isDownloading = false;
     Context context;
     byte[] encodedBytes;
-    List<String> fileNameList,audioFile,playlistDownloadId,removedFileNameList,removedPlaylistDownloadId;
-    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
+    List<String> fileNameList, audioFile, playlistDownloadId;
 
     public DownloadMedia(Context context) {
         this.context = context;
@@ -51,24 +45,17 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
         return encodedBytes;
     }*/
 
-    public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME/*, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs*/) {
+    public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID/*, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs*/) {
         BWSApplication.showToast("Downloading file...", context);
         isDownloading = true;
         fileNameList = FILE_NAME;
         audioFile = DOWNLOAD_AUDIO_URL;
-        playlistSongsList = new ArrayList<>();
-        SharedPreferences sharedx = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-        if (!json2.equalsIgnoreCase(String.valueOf(gson))) {
-            Type type = new TypeToken<List<String>>() {
-            }.getType();
-            playlistDownloadId = gson.fromJson(json2, type);
-        }
+        playlistDownloadId = PLAYLIST_ID;
         filename = FILE_NAME.get(0);
         PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(context), FILE_NAME.get(0)).build().setOnProgressListener(progress -> {
             long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
             downloadProgress = (int) progressPercent;
+            updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress,"Start");
 //        progressBarOne.setProgress((int) progressPercent);
 //        textViewProgressOne.setText(BWSApplication.getProgressDisplayLine(progress.currentBytes, progress.totalBytes));
 //        progressBarOne.setIndeterminate(false);
@@ -117,7 +104,7 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
             editor1.putString(CONSTANTS.PREF_KEY_removedDownloadName, nameJson1);
             editor1.putString(CONSTANTS.PREF_KEY_removedDownloadPlaylistId, playlistIdJson1);
             editor1.commit();*/
-
+            updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), 100, "Compete");
             fileNameList.remove(0);
             audioFile.remove(0);
             playlistDownloadId.remove(0);
@@ -132,7 +119,7 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
             editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
             editor.commit();
             if (fileNameList.size() != 0) {
-                encrypt1(audioFile, fileNameList);
+                encrypt1(audioFile, fileNameList, playlistDownloadId);
             } else {
                 downloadProgress = 0;
                 filename = "";
@@ -165,40 +152,25 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
         downloadError = 1;
     }
 
-    private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes, String filePath) {
+    private void updateMediaByDownloadProgress(String filename, String PlaylistId, int progress, String Status) {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
-                for (int i = 0; i < playlistSongs.size(); i++) {
-                    downloadAudioDetails.setID(playlistSongs.get(i).getID());
-                    downloadAudioDetails.setName(playlistSongs.get(i).getName());
-                    downloadAudioDetails.setAudioFile(playlistSongs.get(i).getAudioFile());
-                    downloadAudioDetails.setAudioDirection(playlistSongs.get(i).getAudioDirection());
-                    downloadAudioDetails.setAudiomastercat(playlistSongs.get(i).getAudiomastercat());
-                    downloadAudioDetails.setAudioSubCategory(playlistSongs.get(i).getAudioSubCategory());
-                    downloadAudioDetails.setImageFile(playlistSongs.get(i).getImageFile());
-                    downloadAudioDetails.setLike(playlistSongs.get(i).getLike());
-                    downloadAudioDetails.setDownload("1");
-                    downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
-                    downloadAudioDetails.setIsSingle("0");
-                    downloadAudioDetails.setPlaylistId(playlistSongs.get(i).getPlaylistID());
-                    downloadAudioDetails.setEncodedBytes(encodedBytes);
-                    downloadAudioDetails.setDirPath(filePath);
-                    DatabaseClient.getInstance(context)
-                            .getaudioDatabase()
-                            .taskDao()
-                            .insertMedia(downloadAudioDetails);
-                }
+                DatabaseClient.getInstance(context)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .updateMediaByDownloadProgress(Status, progress, PlaylistId, filename);
 
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
-//                llDownload.setClickable(false);
-//                llDownload.setEnabled(false);
+                if(!PlaylistId.equalsIgnoreCase("")){
+
+                }
+
                 super.onPostExecute(aVoid);
             }
         }

@@ -49,8 +49,11 @@ public interface AudioDetailsDao {
     @Query("SELECT * FROM playlist_table ORDER BY uid ASC")
     List<DownloadPlaylistDetails> getAllPlaylist();
 
-    @Query("UPDATE audio_table SET Download =:Download,IsSingle =:IsSingle,PlaylistId =:PlaylistId WHERE ID =:ID")
-    void updateMediaByDownload(String Download,String IsSingle,String PlaylistId,String ID );
+    @Query("UPDATE audio_table SET IsDownload =:IsDownload WHERE Name =:Name and PlaylistId =:PlaylistId")
+    void updateMediaByDownload(String IsDownload,String PlaylistId,String Name);
+
+    @Query("UPDATE audio_table SET IsDownload =:IsDownload,DownloadProgress =:DownloadProgress WHERE Name =:Name and PlaylistId =:PlaylistId")
+    void updateMediaByDownloadProgress(String IsDownload,int DownloadProgress,String PlaylistId,String Name );
 
     @Query("DELETE FROM audio_table")
     void deleteAll();

@@ -43,17 +43,17 @@ public class DownloadAudioDetails implements Serializable {
     @ColumnInfo(name = "AudioDuration")
     private String AudioDuration;
 
-    @ColumnInfo(name = "EncodedBytes")
-    private byte[] EncodedBytes;
-
-    @ColumnInfo(name = "dirPath")
-    private String dirPath;
-
     @ColumnInfo(name = "PlaylistId")
     private String PlaylistId;
 
     @ColumnInfo(name = "IsSingle")
     private String IsSingle;
+
+    @ColumnInfo(name = "IsDownload")
+    private String IsDownload;
+
+    @ColumnInfo(name = "DownloadProgress")
+    private int DownloadProgress;
 
     public int getUid() {
         return uid;
@@ -143,22 +143,6 @@ public class DownloadAudioDetails implements Serializable {
         AudioDuration = audioDuration;
     }
 
-    public byte[] getEncodedBytes() {
-        return EncodedBytes;
-    }
-
-    public void setEncodedBytes(byte[] encodedBytes) {
-        EncodedBytes = encodedBytes;
-    }
-
-    public String getDirPath() {
-        return dirPath;
-    }
-
-    public void setDirPath(String dirPath) {
-        this.dirPath = dirPath;
-    }
-
     public String getPlaylistId() {
         return PlaylistId;
     }
@@ -173,5 +157,21 @@ public class DownloadAudioDetails implements Serializable {
 
     public void setIsSingle(String isSingle) {
         IsSingle = isSingle;
+    }
+
+    public String getIsDownload() {
+        return IsDownload;
+    }
+
+    public void setIsDownload(String isDownload) {
+        IsDownload = isDownload;
+    }
+
+    public int getDownloadProgress() {
+        return DownloadProgress;
+    }
+
+    public void setDownloadProgress(int downloadProgress) {
+        DownloadProgress = downloadProgress;
     }
 }

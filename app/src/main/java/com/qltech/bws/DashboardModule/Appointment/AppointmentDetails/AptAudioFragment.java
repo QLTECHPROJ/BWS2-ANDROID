@@ -119,7 +119,7 @@ public class AptAudioFragment extends Fragment {
         public FragmentManager f_manager;
         Context ctx;
         String Name;
-        List<String> fileNameList= new ArrayList<>();
+        List<String> fileNameList = new ArrayList<>(),playlistDownloadId = new ArrayList<>();
 
         private ArrayList<AppointmentDetailModel.Audio> listModelList;
         Runnable UpdateSongTime1;
@@ -148,29 +148,71 @@ public class AptAudioFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             AppointmentDetailModel.Audio audiolist = listModelList.get(position);
-             UpdateSongTime1 = new Runnable() {
+            UpdateSongTime1 = new Runnable() {
                 @Override
                 public void run() {
-                   if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(Name)) {
-                       if (downloadProgress <= 100) {
-                           holder.binding.pbProgress.setProgress(downloadProgress);
-                           holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                       } else {
-                           holder.binding.pbProgress.setVisibility(View.GONE);
-                           handler1.removeCallbacks(UpdateSongTime1);
-                       }
-                   }
-                    handler1.postDelayed(this, 500);
+                    for (int f = 0; f < listModelList.size(); f++) {
+                        if (fileNameList.size() != 0) {
+                            for (int i = 0; i < fileNameList.size(); i++) {
+                                if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(f).getName())) {
+                                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(f).getName())) {
+                                        if (downloadProgress <= 100) {
+                                            notifyItemChanged(f);
+                                         /*   holder.binding.pbProgress.setProgress(downloadProgress);
+                                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                                            holder.binding.ivDownloads.setVisibility(View.GONE);*/
+                                        } else {
+                                            holder.binding.pbProgress.setVisibility(View.GONE);
+                                            //                                            handler2.removeCallbacks(UpdateSongTime2);
+                                            getDownloadData();
+                                        }
+                                    } else {
+                                        notifyItemChanged(f);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (downloadProgress == 0) {
+                        notifyDataSetChanged();
+                        getDownloadData();
+                    }
+                    handler1.postDelayed(this, 300);
                 }
             };
-            if(fileNameList.size()!=0) {
-                if (fileNameList.contains(listModelList.get(position).getName())) {
-                    holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                    handler1.postDelayed(UpdateSongTime1, 500);
-                } else {
-                    holder.binding.pbProgress.setVisibility(View.GONE);
+            if (fileNameList.size() != 0) {
+             /*   for (int i = 0; i < fileNameList.size(); i++) {
+                    if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                        holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                        holder.binding.ivDownloads.setVisibility(View.GONE);
+                        isDownloading++;
+                        break;
+                    }else{
+                        holder.binding.pbProgress.setVisibility(View.GONE);
+                    }
+                }*/
+                for (int i = 0; i < fileNameList.size(); i++) {
+                    if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
+                            if (downloadProgress <= 100) {
+                                if (downloadProgress == 100) {
+                                    holder.binding.pbProgress.setVisibility(View.GONE);
+                                } else {
+                                    holder.binding.pbProgress.setProgress(downloadProgress);
+                                    holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                                }
+                            } else {
+                                holder.binding.pbProgress.setVisibility(View.GONE);
+//                                handler2.removeCallbacks(UpdateSongTime2);
+                            }
+                        } else {
+                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                            handler1.postDelayed(UpdateSongTime1, 300);
+                        }
+                    }
                 }
             }
+
             holder.binding.tvTitle.setText(audiolist.getName());
             if (audiolist.getAudioDirection().equalsIgnoreCase("")) {
                 holder.binding.tvTime.setVisibility(View.GONE);
@@ -257,7 +299,7 @@ public class AptAudioFragment extends Fragment {
                 name1.add(Name);
                 downloadPlaylistId.add("");
                 DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
-                downloadMedia.encrypt1(url1, name1);
+                downloadMedia.encrypt1(url1, name1,downloadPlaylistId);
                 fileNameList = url1;
                 handler1.postDelayed(UpdateSongTime1, 500);
                 String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
@@ -273,6 +315,31 @@ public class AptAudioFragment extends Fragment {
                     startActivity(i);
                 }
             });
+        }
+        private void getDownloadData() {
+            try {
+                SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+                Gson gson = new Gson();
+                String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+                String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+                if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
+                    Type type = new TypeToken<List<String>>() {
+                    }.getType();
+                    fileNameList = gson.fromJson(jsony, type);
+                    playlistDownloadId = gson.fromJson(jsonq, type);
+                    if (fileNameList.size() != 0) {
+                        handler1.postDelayed(UpdateSongTime1, 500);
+                    } else {
+                        fileNameList = new ArrayList<>();
+                        playlistDownloadId = new ArrayList<>();
+                    }
+                } else {
+                    fileNameList = new ArrayList<>();
+                    playlistDownloadId = new ArrayList<>();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         private void SaveMedia(byte[] encodeBytes, String dirPath, AppointmentDetailModel.Audio audio, RelativeLayout llDownload) {
@@ -294,8 +361,8 @@ public class AptAudioFragment extends Fragment {
                     downloadAudioDetails.setAudioDuration(audio.getAudioDuration());
                     downloadAudioDetails.setIsSingle("1");
                     downloadAudioDetails.setPlaylistId("");
-                    downloadAudioDetails.setEncodedBytes(encodeBytes);
-                    downloadAudioDetails.setDirPath(dirPath);
+                    downloadAudioDetails.setIsDownload("pending");
+                    downloadAudioDetails.setDownloadProgress(0);
 
                     DatabaseClient.getInstance(getActivity().getApplicationContext())
                             .getaudioDatabase()

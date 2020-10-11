@@ -687,7 +687,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             editor.commit();
         }
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-        downloadMedia.encrypt1(url1, name1);
+        downloadMedia.encrypt1(url1, name1,downloadPlaylistId);
         if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
             handler1.postDelayed(UpdateSongTime1, 500);
         }else{
@@ -762,9 +762,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     downloadAudioDetails.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
                     downloadAudioDetails.setIsSingle("1");
                     downloadAudioDetails.setPlaylistId("");
+                    downloadAudioDetails.setIsDownload("pending");
+                    downloadAudioDetails.setDownloadProgress(0);
                 }
-                downloadAudioDetails.setEncodedBytes(EncodeBytes);
-                downloadAudioDetails.setDirPath(dirPath);
 
                 DatabaseClient.getInstance(getApplicationContext())
                         .getaudioDatabase()

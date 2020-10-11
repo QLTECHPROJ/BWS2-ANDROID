@@ -701,7 +701,7 @@ public class AddQueueActivity extends AppCompatActivity {
 //        fileNameList = url1;
         callDisableDownload();
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-        downloadMedia.encrypt1(url1, name1);
+        downloadMedia.encrypt1(url1, name1,downloadPlaylistId);
         if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
             handler1.postDelayed(UpdateSongTime1, 500);
         } else {
@@ -732,6 +732,8 @@ public class AddQueueActivity extends AppCompatActivity {
                     downloadAudioDetails.setAudioDuration(mData.get(i).getAudioDuration());
                     downloadAudioDetails.setIsSingle("1");
                     downloadAudioDetails.setPlaylistId("");
+                    downloadAudioDetails.setIsDownload("pending");
+                    downloadAudioDetails.setDownloadProgress(0);
                 } else {
                     downloadAudioDetails.setID(mainPlayModelList.get(i).getID());
                     downloadAudioDetails.setName(mainPlayModelList.get(i).getName());
@@ -746,10 +748,9 @@ public class AddQueueActivity extends AppCompatActivity {
                     downloadAudioDetails.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
                     downloadAudioDetails.setIsSingle("1");
                     downloadAudioDetails.setPlaylistId("");
+                    downloadAudioDetails.setIsDownload("pending");
+                    downloadAudioDetails.setDownloadProgress(0);
                 }
-
-                downloadAudioDetails.setEncodedBytes(encodeBytes);
-                downloadAudioDetails.setDirPath(dirPath);
                 DatabaseClient.getInstance(activity)
                         .getaudioDatabase()
                         .taskDao()

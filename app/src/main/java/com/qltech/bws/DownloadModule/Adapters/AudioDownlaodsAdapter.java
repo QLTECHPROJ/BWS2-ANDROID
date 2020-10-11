@@ -34,7 +34,6 @@ import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.AudioDownloadsLayoutBinding;
-import com.qltech.bws.databinding.DownloadsLayoutBinding;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -60,10 +59,10 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     RecyclerView rvDownloadsList;
     TextView tvFound;
     List<DownloadAudioDetails> downloadAudioDetailsList;
-    //    Runnable UpdateSongTime1;
-//    List<String> fileNameList = new ArrayList<>();
+    Runnable UpdateSongTime1;
+    List<String> fileNameList = new ArrayList<>(),playlistDownloadId = new ArrayList<>();
     private List<DownloadAudioDetails> listModelList;
-//    private Handler handler1;
+    private Handler handler1;
 
     public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, String UserID,
                                  FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList, TextView tvFound) {
@@ -75,7 +74,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         this.llError = llError;
         this.rvDownloadsList = rvDownloadsList;
         this.tvFound = tvFound;
-//        handler1 = new Handler();
+        handler1 = new Handler();
         downloadAudioDetailsList = new ArrayList<>();
         SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
         Gson gson = new Gson();
@@ -85,6 +84,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             }.getType();
 //            fileNameList = gson.fromJson(json, type);
         }
+        getDownloadData();
     }
 
     @NonNull
@@ -97,27 +97,38 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-/*
         UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {
                 for (int f = 0; f < listModelList.size(); f++) {
-                    if (fileNameList.contains(listModelList.get(f).getName())) {
-                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(f).getName())) {
-                            if (downloadProgress <= 100) {
-                                holder.binding.pbProgress.setProgress(downloadProgress);
-                                holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                            } else {
-                                holder.binding.pbProgress.setVisibility(View.INVISIBLE);
-                                handler1.removeCallbacks(UpdateSongTime1);
+                    if (fileNameList.size() != 0) {
+                        for (int i = 0; i < fileNameList.size(); i++) {
+                            if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(f).getName())) {
+                                if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(f).getName())) {
+                                    if (downloadProgress <= 100) {
+                                        notifyItemChanged(f);
+                                         /*   holder.binding.pbProgress.setProgress(downloadProgress);
+                                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                                            holder.binding.ivDownloads.setVisibility(View.GONE);*/
+                                    } else {
+                                        holder.binding.pbProgress.setVisibility(View.GONE);
+ //                                            handler2.removeCallbacks(UpdateSongTime2);
+                                        getDownloadData();
+                                    }
+                                } else {
+                                    notifyItemChanged(f);
+                                }
                             }
                         }
                     }
                 }
-                handler1.postDelayed(this, 500);
+                if (downloadProgress == 0) {
+                    notifyDataSetChanged();
+                    getDownloadData();
+                }
+                handler1.postDelayed(this, 300);
             }
         };
-*/
     /*    if (fileNameList.size() != 0) {
             if (fileNameList.contains(listModelList.get(position).getName())) {
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
@@ -128,6 +139,41 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         }else {
             holder.binding.pbProgress.setVisibility(View.INVISIBLE);
         }*/
+        if (fileNameList.size() != 0) {
+             /*   for (int i = 0; i < fileNameList.size(); i++) {
+                    if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                        holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                        holder.binding.ivDownloads.setVisibility(View.GONE);
+                        isDownloading++;
+                        break;
+                    }else{
+                        holder.binding.pbProgress.setVisibility(View.GONE);
+                    }
+                }*/
+            for (int i = 0; i < fileNameList.size(); i++) {
+                if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
+                        if (downloadProgress <= 100) {
+                            if (downloadProgress == 100) {
+                                holder.binding.pbProgress.setVisibility(View.GONE);
+                            } else {
+                                holder.binding.pbProgress.setProgress(downloadProgress);
+                                holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            holder.binding.pbProgress.setVisibility(View.GONE);
+//                                handler2.removeCallbacks(UpdateSongTime2);
+                        }
+                    } else {
+                        holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                        handler1.postDelayed(UpdateSongTime1, 300);
+                    }
+                }
+            }
+        }
+        else{
+            holder.binding.pbProgress.setVisibility(View.GONE);
+        }
         holder.binding.tvTitle.setText(listModelList.get(position).getName());
         holder.binding.tvTime.setText(listModelList.get(position).getAudioDuration());
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
@@ -206,6 +252,32 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
             }
         });
+    }
+
+    private void getDownloadData() {
+        try {
+            SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            Gson gson = new Gson();
+            String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+            String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+            if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                fileNameList = gson.fromJson(jsony, type);
+                playlistDownloadId = gson.fromJson(jsonq, type);
+                if (fileNameList.size() != 0) {
+                    handler1.postDelayed(UpdateSongTime1, 500);
+                } else {
+                    fileNameList = new ArrayList<>();
+                    playlistDownloadId = new ArrayList<>();
+                }
+            } else {
+                fileNameList = new ArrayList<>();
+                playlistDownloadId = new ArrayList<>();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void deleteDownloadFile(Context applicationContext, String audioFile, String audioName, int position) {
