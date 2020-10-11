@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
             Code = getIntent().getStringExtra(CONSTANTS.Code);
             MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
         }
-
+        binding.edtNumber.addTextChangedListener(loginTextWatcher);
         if (Code.equalsIgnoreCase("") || Name.equalsIgnoreCase("")) {
             binding.tvCountryCode.setText(R.string.code);
             binding.tvCountry.setText(R.string.Australia);
@@ -206,4 +208,29 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
+    private TextWatcher loginTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String number = binding.edtNumber.getText().toString().trim();
+            if (!number.isEmpty()) {
+                binding.btnSendCode.setEnabled(true);
+                binding.btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else {
+                binding.btnSendCode.setEnabled(false);
+                binding.btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
 }

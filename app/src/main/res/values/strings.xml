@@ -174,7 +174,7 @@
     <string name="invalid_cvv_error">Hey! Seems like the CVV is out of whack. Fancy a retry?</string>
     <string name="blank_card_no_error">Hey! I\'ll need you to add card number</string>
     <string name="blank_card_holder_name_error">Hey! I\'ll need you to add cardholder name</string>
-    <string name="Audio_Book">Audio Book</string>
+    <string name="Audio_Book">Audio Books</string>
     <string name="Podcasts">Podcasts</string>
     <string name="Apps">Apps</string>
     <string name="Website">Website</string>

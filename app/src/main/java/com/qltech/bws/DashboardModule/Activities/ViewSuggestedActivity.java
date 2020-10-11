@@ -90,10 +90,10 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvMainAudio.setLayoutManager(layoutManager);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
-        if (Name.equalsIgnoreCase("Suggested Audios")) {
+        if (Name.equalsIgnoreCase("Recommended  Audios")) {
             AudiosListAdpater suggestedAdpater = new AudiosListAdpater(AudiolistsModel);
             binding.rvMainAudio.setAdapter(suggestedAdpater);
-        } else if (Name.equalsIgnoreCase("Suggested Playlist")) {
+        } else if (Name.equalsIgnoreCase("Recommended Playlist")) {
             SuggestionPlayListsAdpater adpater = new SuggestionPlayListsAdpater(PlaylistModel);
             binding.rvMainAudio.setAdapter(adpater);
         }

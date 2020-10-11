@@ -79,6 +79,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         year = Calendar.getInstance().get(Calendar.YEAR);
         month = Calendar.getInstance().get(Calendar.MONTH);
         month = month + 1;
@@ -121,7 +122,10 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
 
         AddPaymentActivity.CreditCardFormatTextWatcher tv = new AddPaymentActivity.CreditCardFormatTextWatcher(binding.etNumber);
         binding.etNumber.addTextChangedListener(tv);
-
+        binding.etName.addTextChangedListener(addCardTextWatcher);
+        binding.etNumber.addTextChangedListener(addCardTextWatcher);
+        binding.etCvv.addTextChangedListener(addCardTextWatcher);
+        binding.textMonth.addTextChangedListener(addCardTextWatcher);
         binding.btnPayment.setOnClickListener(view -> {
             if (binding.textMonth.getText().toString().equalsIgnoreCase("Expiry Date")
                     && a == 0 && binding.etNumber.getText().toString().equalsIgnoreCase("")
@@ -231,7 +235,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         finish();
     }
 
-    /*  private TextWatcher addCardTextWatcher = new TextWatcher() {
+      private TextWatcher addCardTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
@@ -249,14 +253,14 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
             } else {
                 binding.btnPayment.setEnabled(false);
                 binding.btnPayment.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.btnPayment.setBackgroundResource(R.drawable.gray_extra_round_corners);
+                binding.btnPayment.setBackgroundResource(R.drawable.gray_round_cornor);
             }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
         }
-    };*/
+    };
 
     public void showYearDialog() {
         binding1.MonthPicker.setMaxValue(12);

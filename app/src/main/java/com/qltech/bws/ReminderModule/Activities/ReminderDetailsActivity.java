@@ -341,6 +341,16 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 holder.bind.switchStatus.setChecked(false);
             }
             if (model.get(position).getIsLock().equalsIgnoreCase("1")) {
+               /* if (model.get(position).getIsActive().equalsIgnoreCase("1")) {
+                    holder.bind.switchStatus.setClickable(false);
+                    holder.bind.switchStatus.setEnabled(false);
+                    holder.bind.llSwitchStatus.setClickable(true);
+                    holder.bind.llSwitchStatus.setEnabled(true);
+                    holder.bind.llSwitchStatus.setOnClickListener(view -> {
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    });
+                } else if(model.get(position).getIsActive().equalsIgnoreCase("0")
+                || model.get(position).getIsActive().equalsIgnoreCase("")){*/
                 holder.bind.switchStatus.setClickable(false);
                 holder.bind.switchStatus.setEnabled(false);
                 holder.bind.llSwitchStatus.setClickable(true);
@@ -351,6 +361,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     i.putExtra("ComeFrom", "Plan");
                     startActivity(i);
                 });
+//                }
             } else if (model.get(position).getIsLock().equalsIgnoreCase("0") || model.get(position).getIsLock().equalsIgnoreCase("")) {
                 holder.bind.switchStatus.setClickable(true);
                 holder.bind.switchStatus.setEnabled(true);

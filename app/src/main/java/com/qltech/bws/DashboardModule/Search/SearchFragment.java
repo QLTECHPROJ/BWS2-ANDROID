@@ -217,7 +217,7 @@ public class SearchFragment extends Fragment {
                                     .replace(R.id.flContainer, fragment)
                                     .commit();
                             Bundle bundle = new Bundle();
-                            bundle.putString("Name", "Suggested Audios");
+                            bundle.putString("Name", "Recommended  Audios");
                             bundle.putParcelableArrayList("AudiolistModel", listModel.getResponseData());
                             fragment.setArguments(bundle);
                         });
@@ -255,7 +255,7 @@ public class SearchFragment extends Fragment {
                                     .replace(R.id.flContainer, fragment)
                                     .commit();
                             Bundle bundle = new Bundle();
-                            bundle.putString("Name", "Suggested Playlist");
+                            bundle.putString("Name", "Recommended Playlist");
                             bundle.putParcelableArrayList("PlaylistModel", listModel.getResponseData());
                             fragment.setArguments(bundle);
                         });

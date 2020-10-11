@@ -16,18 +16,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.DatePicker;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -93,12 +89,15 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
 
+        binding.etUser.addTextChangedListener(userTextWatcher);
+        binding.etCalendar.addTextChangedListener(userTextWatcher);
+        binding.etMobileNumber.addTextChangedListener(userTextWatcher);
+        binding.etEmail.addTextChangedListener(userTextWatcher);
         MeasureRatio measureRatios = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.32f, 0);
         binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
         binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
     }
-
 
     void profileUpdate() {
         binding.flUser.setError("");
@@ -265,13 +264,13 @@ public class UserProfileActivity extends AppCompatActivity {
                             binding.etUser.setText(viewModel.getResponseData().getName());
                         }
                         String Name = viewModel.getResponseData().getName();
-                        String Letter = Name.substring(0,1);
+                        String Letter = Name.substring(0, 1);
                         profilePicPath = viewModel.getResponseData().getImage();
-                        if (profilePicPath.equalsIgnoreCase("")){
+                        if (profilePicPath.equalsIgnoreCase("")) {
                             binding.civProfile.setVisibility(View.GONE);
                             binding.rlLetter.setVisibility(View.VISIBLE);
                             binding.tvLetter.setText(Letter);
-                        }else {
+                        } else {
                             binding.civProfile.setVisibility(View.VISIBLE);
                             binding.rlLetter.setVisibility(View.GONE);
                             Glide.with(getApplicationContext()).load(profilePicPath)
@@ -294,7 +293,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                 }
                                 spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
                                 date = spf.format(newDate);*/
-                                binding.etCalendar.setText(viewModel.getResponseData().getDOB());
+                            binding.etCalendar.setText(viewModel.getResponseData().getDOB());
 //                            }
                         }
 
@@ -332,7 +331,9 @@ public class UserProfileActivity extends AppCompatActivity {
                         binding.etCalendar.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                setDate();
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    setDate();
+                                }
                             }
                         });
 
@@ -486,7 +487,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .thumbnail(1f).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                                .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
                                                 .skipMemoryCache(false).into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                     }
@@ -573,4 +574,31 @@ public class UserProfileActivity extends AppCompatActivity {
         imageFilePath = image.getAbsolutePath();
         return image;
     }
+
+    TextWatcher userTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String User = binding.etUser.getText().toString().trim();
+            String Calendar = binding.etCalendar.getText().toString().trim();
+            String MobileNumber = binding.etMobileNumber.getText().toString().trim();
+            String Email = binding.etEmail.getText().toString().trim();
+            if (!User.isEmpty() && !Calendar.isEmpty() && !MobileNumber.isEmpty() && !Email.isEmpty()) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else {
+                binding.btnSave.setEnabled(false);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
 }

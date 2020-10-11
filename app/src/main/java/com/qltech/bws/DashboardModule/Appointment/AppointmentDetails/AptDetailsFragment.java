@@ -31,7 +31,7 @@ public class AptDetailsFragment extends Fragment {
             appointmentDetail = getArguments().getParcelable("AppointmentDetail");
         }
         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
-                1, 1, 0.12f, 0);
+                1, 1, 0.24f, 0);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
 

@@ -230,7 +230,7 @@ public class AddAudioActivity extends AppCompatActivity {
 
                         binding.tvSAViewAll.setOnClickListener(view -> {
                             Intent i = new Intent(ctx, ViewSuggestedActivity.class);
-                            i.putExtra("Name", "Suggested Audios");
+                            i.putExtra("Name", "Recommended  Audios");
                             i.putExtra("PlaylistID", PlaylistID);
                             i.putParcelableArrayListExtra("AudiolistModel", listModel.getResponseData());
                             startActivity(i);
@@ -265,7 +265,7 @@ public class AddAudioActivity extends AppCompatActivity {
 
                         binding.tvSPViewAll.setOnClickListener(view -> {
                             Intent i = new Intent(ctx, ViewSuggestedActivity.class);
-                            i.putExtra("Name", "Suggested Playlist");
+                            i.putExtra("Name", "Recommended Playlist");
                             i.putExtra("PlaylistID", PlaylistID);
                             i.putParcelableArrayListExtra("PlaylistModel", listModel.getResponseData());
                             startActivity(i);

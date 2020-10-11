@@ -15,11 +15,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -152,7 +155,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
                 final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-                final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+                final Button btnSendCode = dialog.findViewById(R.id.btnSendCode);
 
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -162,7 +165,33 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     return false;
                 });
 
-                rlCreate.setOnClickListener(view1 -> {
+                TextWatcher popupTextWatcher = new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        String number = edtCreate.getText().toString().trim();
+                        if (!number.isEmpty()) {
+                            btnSendCode.setEnabled(true);
+                            btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                            btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
+                        } else {
+                            btnSendCode.setEnabled(false);
+                            btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                            btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                    }
+                };
+
+
+                edtCreate.addTextChangedListener(popupTextWatcher);
+                btnSendCode.setOnClickListener(view1 -> {
                     if (edtCreate.getText().toString().equalsIgnoreCase("")) {
                         BWSApplication.showToast("Please provide the playlist's name", ctx);
                     } else {

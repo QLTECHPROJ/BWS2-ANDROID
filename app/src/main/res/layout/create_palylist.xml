@@ -53,26 +53,18 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/rlCreate"
+            <Button
+                android:id="@+id/btnSendCode"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_42sdp"
-                android:layout_gravity="center"
                 android:layout_marginHorizontal="@dimen/_16sdp"
-                android:background="@drawable/rounded_white_corner">
-
-                <TextView
-                    android:id="@+id/tvAction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:text="Create"
-                    android:textAllCaps="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_14sdp" />
-
-            </RelativeLayout>
+                android:background="@drawable/gray_round_cornor"
+                android:fontFamily="@font/montserrat_medium"
+                android:paddingHorizontal="@dimen/_55sdp"
+                android:paddingVertical="@dimen/_4sdp"
+                android:enabled="false"
+                android:text="Create"
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/tvCancel"

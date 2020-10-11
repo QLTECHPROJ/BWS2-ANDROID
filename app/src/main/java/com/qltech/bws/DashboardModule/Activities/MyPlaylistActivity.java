@@ -14,11 +14,13 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.text.Editable;
 import android.text.Selection;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -617,11 +619,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                                 final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
                                 final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-                                final TextView tvAction = dialog.findViewById(R.id.tvAction);
                                 final TextView tvHeading = dialog.findViewById(R.id.tvHeading);
-                                final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+                                final Button btnSendCode = dialog.findViewById(R.id.btnSendCode);
                                 tvHeading.setText(R.string.Rename_your_playlist);
-                                tvAction.setText(R.string.Save);
+                                btnSendCode.setText(R.string.Save);
                                 edtCreate.requestFocus();
                                 edtCreate.setText(model.getResponseData().getPlaylistName());
                                 int position1 = edtCreate.getText().length();
@@ -636,7 +637,34 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                     return false;
                                 });
 
-                                rlCreate.setOnClickListener(view1 -> {
+                                TextWatcher popupTextWatcher = new TextWatcher() {
+                                    @Override
+                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                    }
+
+                                    @Override
+                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                        String number = edtCreate.getText().toString().trim();
+                                        if (!number.isEmpty()) {
+                                            btnSendCode.setEnabled(true);
+                                            btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                                            btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
+                                        } else {
+                                            btnSendCode.setEnabled(false);
+                                            btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                                            btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void afterTextChanged(Editable s) {
+                                    }
+                                };
+
+
+                                edtCreate.addTextChangedListener(popupTextWatcher);
+
+                                btnSendCode.setOnClickListener(view1 -> {
                                     if (edtCreate.getText().toString().equalsIgnoreCase("")) {
                                         BWSApplication.showToast("Please provide the playlist's name", ctx);
                                     } else {

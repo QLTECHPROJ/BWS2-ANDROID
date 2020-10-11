@@ -67,6 +67,9 @@ public class RemiderDetailsModel {
         @SerializedName("IsLock")
         @Expose
         private String IsLock;
+        @SerializedName("IsActive")
+        @Expose
+        private String IsActive;
         @SerializedName("RDay")
         @Expose
         private String RDay;
@@ -131,6 +134,14 @@ public class RemiderDetailsModel {
 
         public void setIsLock(String isLock) {
             IsLock = isLock;
+        }
+
+        public String getIsActive() {
+            return IsActive;
+        }
+
+        public void setIsActive(String isActive) {
+            IsActive = isActive;
         }
 
         public String getReminderId() {

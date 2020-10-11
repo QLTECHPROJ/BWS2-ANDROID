@@ -193,11 +193,12 @@
                     android:id="@+id/btnSendCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/extra_round_cornor"
+                    android:background="@drawable/gray_round_cornor"
                     android:fontFamily="@font/montserrat_medium"
                     android:paddingHorizontal="@dimen/_55sdp"
                     android:paddingVertical="@dimen/_4sdp"
                     android:text="@string/get_the_code"
+                    android:enabled="false"
                     android:textColor="@color/white" />
 
                 <TextView

@@ -191,10 +191,11 @@
                     android:id="@+id/btnSendCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_otp_code_next"
+                    android:background="@drawable/gray_round_cornor"
                     android:paddingHorizontal="@dimen/_90sdp"
                     android:paddingVertical="@dimen/_4sdp"
                     android:text="NEXT"
+                    android:enabled="false"
                     android:fontFamily="@font/montserrat_medium"
                     android:textColor="@color/white" />
 

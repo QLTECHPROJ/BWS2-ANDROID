@@ -135,10 +135,10 @@ public class ViewAllSearchFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainAudio.setLayoutManager(layoutManager);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
-        if (Name.equalsIgnoreCase("Suggested Audios")) {
+        if (Name.equalsIgnoreCase("Recommended  Audios")) {
             SuggestionAudioListsAdpater suggestedAdpater = new SuggestionAudioListsAdpater(AudiolistModel, getActivity());
             binding.rvMainAudio.setAdapter(suggestedAdpater);
-        } else if (Name.equalsIgnoreCase("Suggested Playlist")) {
+        } else if (Name.equalsIgnoreCase("Recommended Playlist")) {
             SuggestionPlayListsAdpater suggestedAdpater = new SuggestionPlayListsAdpater(PlaylistModel, getActivity());
             binding.rvMainAudio.setAdapter(suggestedAdpater);
         }

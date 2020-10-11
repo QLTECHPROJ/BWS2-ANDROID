@@ -249,6 +249,15 @@ public class OtpActivity extends AppCompatActivity {
             String OTP2 = binding.edtOTP2.getText().toString().trim();
             String OTP3 = binding.edtOTP3.getText().toString().trim();
             String OTP4 = binding.edtOTP4.getText().toString().trim();
+            if (!OTP1.isEmpty() && !OTP2.isEmpty() && !OTP3.isEmpty() && !OTP4.isEmpty()) {
+                binding.btnSendCode.setEnabled(true);
+                binding.btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else {
+                binding.btnSendCode.setEnabled(false);
+                binding.btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
+            }
         }
 
         @Override
