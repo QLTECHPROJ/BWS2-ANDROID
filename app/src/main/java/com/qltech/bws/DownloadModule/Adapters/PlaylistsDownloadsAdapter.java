@@ -59,9 +59,10 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     List<DownloadPlaylistDetails> playlistList;
     LinearLayout llError;
     TextView tvFound;
+    int count;
     RecyclerView rvDownloadsList;
-    //    Runnable UpdateSongTime1;
-//    Handler handler1;
+        Runnable UpdateSongTime1;
+    Handler handler1;
     List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), remainAudio = new ArrayList<>();
     private List<DownloadPlaylistDetails> listModelList;
 
@@ -75,7 +76,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         this.llError = llError;
         this.tvFound = tvFound;
         this.rvDownloadsList = rvDownloadsList;
-//        handler1 = new Handler();
+        handler1 = new Handler();
         playlistWiseAudioDetails = new ArrayList<>();
         oneAudioDetailsList = new ArrayList<>();
 //        getDownloadData();
@@ -93,36 +94,15 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(listModelList.get(position).getPlaylistName());
-      /*  UpdateSongTime1 = new Runnable() {
+        UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {
-                if (fileNameList.size() != 0) {
-                    for (int f = 0; f < listModelList.size(); f++) {
-                        if (remainAudio.size() < listModelList.size()) {
-                            int total = listModelList.size();
-                            int remain = remainAudio.size();
-                            long progressPercent = remain * 100 / total;
-                            int downloadProgress = (int) progressPercent;
-                            if (downloadProgress < 100) {
-                                holder.binding.pbProgress.setProgress(downloadProgress);
-                                holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                            } else {
-                                holder.binding.pbProgress.setVisibility(View.GONE);
-                                handler1.removeCallbacks(UpdateSongTime1);
-                            }
-                        }
-                    }
-                    handler1.postDelayed(this, 500);
-                    getDownloadData();
-                }*//*if() {
-                    for(int i = 0;i<fileNameList.size();i++){
-                        if(playlistDownloadId.get(i).equalsIgnoreCase("")){
-                            remainAudio2.add(playlistDownloadId.get(i));
-                        }
-                    }
-                }*//*
+                for(int i = 0;i<listModelList.size();i++){
+                    getMediaByPer(listModelList.get(i).getPlaylistID(),listModelList.get(i).getTotalAudio(),holder.binding.pbProgress);
+                }
+
             }
-        };*/
+        };
      /*   if(fileNameList.size()!=0){
             if(playlistDownloadId.contains(listModelList.get(position).getPlaylistID())){
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
@@ -131,6 +111,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 holder.binding.pbProgress.setVisibility(View.GONE);
             }
         }*/
+        getMediaByPer(listModelList.get(position).getPlaylistID(),listModelList.get(position).getTotalAudio(),holder.binding.pbProgress);
         if (listModelList.get(position).getTotalAudio().equalsIgnoreCase("") ||
                 listModelList.get(position).getTotalAudio().equalsIgnoreCase("0") &&
                         listModelList.get(position).getTotalhour().equalsIgnoreCase("")
@@ -190,6 +171,39 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 playlistWiseAudioDetails = GetPlaylistMedia(listModelList.get(position).getPlaylistID());
             }
         });
+    }
+
+    private void getMediaByPer(String playlistID, String totalAudio, ProgressBar pbProgress) {
+        class getMediaByPer extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+               count= DatabaseClient.getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getCountDownloadProgress("Compete",playlistID);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if(count<Integer.parseInt(totalAudio)){
+                    long progressPercent = count * 100 / Integer.parseInt(totalAudio);
+                    int downloadProgress1 = (int) progressPercent;
+                    pbProgress.setVisibility(View.VISIBLE);
+                    pbProgress.setProgress(downloadProgress1);
+                    handler1.postDelayed(UpdateSongTime1,500);
+                }else{
+                    pbProgress.setVisibility(View.GONE);
+                    handler1.removeCallbacks(UpdateSongTime1);
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        getMediaByPer st = new getMediaByPer();
+        st.execute();
     }
 
   /*  void getDownloadData() {

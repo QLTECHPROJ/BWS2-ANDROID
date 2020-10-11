@@ -55,6 +55,12 @@ public interface AudioDetailsDao {
     @Query("UPDATE audio_table SET IsDownload =:IsDownload,DownloadProgress =:DownloadProgress WHERE Name =:Name and PlaylistId =:PlaylistId")
     void updateMediaByDownloadProgress(String IsDownload,int DownloadProgress,String PlaylistId,String Name );
 
+    @Query("SELECT COUNT(Name) FROM audio_table WHERE PlaylistId =:PlaylistId and IsDownload =:IsDownload")
+    int getCountDownloadProgress(String IsDownload,String PlaylistId);
+
+//    @Query("SELECT COUNT(DISTINCT ProductID) FROM item_table")
+//    int getunique();
+
     @Query("DELETE FROM audio_table")
     void deleteAll();
     @Query("DELETE FROM playlist_table")

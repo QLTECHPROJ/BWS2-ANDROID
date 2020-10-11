@@ -26,6 +26,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -119,12 +120,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     List<String> fileNameList, playlistDownloadId, remainAudio;
     ItemTouchHelper touchHelper;
     Runnable UpdateSongTime2;
-    int SongListSize = 0;
+    int SongListSize = 0,count;
     private Handler handler1, handler2;
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
-            if (fileNameList.size() != 0) {
+            getMediaByPer(PlaylistID,SongListSize);
+
+/*            if (fileNameList.size() != 0) {
                 if (remainAudio.size() <= SongListSize) {
                     int total = SongListSize;
                     int remain = remainAudio.size();
@@ -159,12 +162,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
                 getDownloadData();
                 handler1.postDelayed(this, 500);
-            } else {
+            }else {
                 binding.pbProgress.setVisibility(View.GONE);
                 binding.ivDownloads.setVisibility(View.VISIBLE);
                 handler1.removeCallbacks(UpdateSongTime1);
                 getDownloadData();
-            }
+            }*/
         }
     };
 
@@ -181,7 +184,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         oneAudioDetailsList = new ArrayList<>();
         fileNameList = new ArrayList<>();
         playlistDownloadId = new ArrayList<>();
-        remainAudio = new ArrayList<>();
+//        remainAudio = new ArrayList<>();
         playlistWiseAudioDetails = new ArrayList<>();
         downloadPlaylistDetailsList = new ArrayList<>();
         playlistSongsList = new ArrayList<>();
@@ -193,8 +196,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             PlaylistImage = getArguments().getString("PlaylistImage");
             MyDownloads = getArguments().getString("MyDownloads");
         }
-
-
         binding.llBack.setOnClickListener(view1 -> callBack());
         if (BWSApplication.isNetworkConnected(getActivity()) && !MyDownloads.equalsIgnoreCase("1")) {
             binding.llMore.setVisibility(View.VISIBLE);
@@ -560,6 +561,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 e.printStackTrace();
                             }
                             getDownloadData();
+                            SongListSize = listModel.getResponseData().getPlaylistSongs().size();
+                            getMediaByPer(PlaylistId,SongListSize);
                             if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
                                 searchEditText.setHint(R.string.playlist_or_audio_search);
                                 binding.tvSearch.setHint(R.string.playlist_or_audio_search);
@@ -694,7 +697,38 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
+    private void getMediaByPer(String playlistID, int totalAudio) {
+        class getMediaByPer extends AsyncTask<Void, Void, Void> {
 
+            @Override
+            protected Void doInBackground(Void... voids) {
+                count= DatabaseClient.getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getCountDownloadProgress("Compete",playlistID);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if(count < totalAudio){
+                    long progressPercent = count * 100 / totalAudio;
+                    int downloadProgress1 = (int) progressPercent;
+                    binding.pbProgress.setVisibility(View.VISIBLE);
+                    binding.pbProgress.setProgress(downloadProgress1);
+                    handler1.postDelayed(UpdateSongTime1,500);
+                }else{
+                    binding.pbProgress.setVisibility(View.GONE);
+                    handler1.removeCallbacks(UpdateSongTime1);
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        getMediaByPer st = new getMediaByPer();
+        st.execute();
+    }
     private void getDownloadData() {
         try {
             SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
@@ -707,7 +741,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }.getType();
                 fileNameList = gson.fromJson(jsony, type);
                 playlistDownloadId = gson.fromJson(jsonq, type);
-                remainAudio = new ArrayList<>();
+               /* remainAudio = new ArrayList<>();
                 if (playlistDownloadId.size() != 0) {
                     playlistDownloadId.contains(PlaylistID);
                     for (int i = 0; i < fileNameList.size(); i++) {
@@ -725,11 +759,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     fileNameList = new ArrayList<>();
                     playlistDownloadId = new ArrayList<>();
                     remainAudio = new ArrayList<>();
-                }
+                }*/
             } else {
                 fileNameList = new ArrayList<>();
                 playlistDownloadId = new ArrayList<>();
-                remainAudio = new ArrayList<>();
+//                remainAudio = new ArrayList<>();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1034,12 +1068,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                 editor.commit();
-                remainAudio = new ArrayList<>();
+                /*remainAudio = new ArrayList<>();
                 for (int i = 0; i < fileNameList.size(); i++) {
                     if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
                         remainAudio.add(playlistDownloadId.get(i));
                     }
-                }
+                }*/
                 SongListSize = playlistSongs.size();
                 handler1.postDelayed(UpdateSongTime1, 500);
             }

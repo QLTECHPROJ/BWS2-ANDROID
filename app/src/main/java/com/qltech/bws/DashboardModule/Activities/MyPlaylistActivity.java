@@ -86,12 +86,12 @@ public class MyPlaylistActivity extends AppCompatActivity {
     DownloadPlaylistDetails downloadPlaylistDetails;
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
     List<String> fileNameList, playlistDownloadId, remainAudio;
-    int SongListSize = 0;
+    int SongListSize = 0,count;
     private Handler handler1;
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
-            if (fileNameList.size() != 0) {
+/*            if (fileNameList.size() != 0) {
                 if (remainAudio.size() <= SongListSize) {
                     int total = SongListSize;
                     int remain = remainAudio.size();
@@ -131,7 +131,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 binding.ivDownloads.setVisibility(View.VISIBLE);
                 handler1.removeCallbacks(UpdateSongTime1);
                 getDownloadData();
-            }
+            }*/
+            getMediaByPer(PlaylistID,SongListSize);
         }
     };
 
@@ -169,6 +170,38 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
 
         binding.llDownload.setOnClickListener(view -> callDownload());
+    }
+    private void getMediaByPer(String playlistID, int totalAudio) {
+        class getMediaByPer extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                count= DatabaseClient.getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getCountDownloadProgress("Compete",playlistID);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if(count < totalAudio){
+                    long progressPercent = count * 100 / totalAudio;
+                    int downloadProgress1 = (int) progressPercent;
+                    binding.pbProgress.setVisibility(View.VISIBLE);
+                    binding.pbProgress.setProgress(downloadProgress1);
+                    handler1.postDelayed(UpdateSongTime1,500);
+                }else{
+                    binding.pbProgress.setVisibility(View.GONE);
+                    handler1.removeCallbacks(UpdateSongTime1);
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        getMediaByPer st = new getMediaByPer();
+        st.execute();
     }
     private void getDownloadData() {
         try {
@@ -424,6 +457,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 binding.ivRestaurantImage.setImageResource(R.drawable.ic_playlist_bg);
                             }
                             getDownloadData();
+                            SongListSize = model.getResponseData().getPlaylistSongs().size();
+                            getMediaByPer(PlaylistID,SongListSize);
 //                            SongListSize = model.getResponseData().getPlaylistSongs().size();
                             Download = model.getResponseData().getDownload();
                             binding.llAddPlaylist.setVisibility(View.VISIBLE);
