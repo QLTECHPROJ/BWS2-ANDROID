@@ -192,10 +192,12 @@ public class MyPlaylistActivity extends AppCompatActivity {
                     long progressPercent = count * 100 / totalAudio;
                     int downloadProgress1 = (int) progressPercent;
                     binding.pbProgress.setVisibility(View.VISIBLE);
+                    binding.ivDownloads.setVisibility(View.GONE);
                     binding.pbProgress.setProgress(downloadProgress1);
                     handler1.postDelayed(UpdateSongTime1,500);
                 }else{
                     binding.pbProgress.setVisibility(View.GONE);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
                     handler1.removeCallbacks(UpdateSongTime1);
                 }
                 super.onPostExecute(aVoid);

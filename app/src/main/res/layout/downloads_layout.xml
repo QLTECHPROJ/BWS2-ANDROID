@@ -110,6 +110,7 @@
             android:background="@drawable/circular_shapes"
             android:indeterminate="false"
             android:max="100"
+            android:visibility="gone"
             android:layout_margin="@dimen/_8sdp"
             android:indeterminateTint="@color/dark_yellow"
             android:progressDrawable="@drawable/circular_progress_bars" />
