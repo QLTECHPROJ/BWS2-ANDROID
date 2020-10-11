@@ -2,6 +2,7 @@ package com.qltech.bws.DownloadModule.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -25,6 +26,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
@@ -58,7 +60,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     LinearLayout llError;
     TextView tvFound;
     RecyclerView rvDownloadsList;
-//    Runnable UpdateSongTime1;
+    //    Runnable UpdateSongTime1;
 //    Handler handler1;
     List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), remainAudio = new ArrayList<>();
     private List<DownloadPlaylistDetails> listModelList;
@@ -161,9 +163,12 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
 
         holder.binding.llMainLayout.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")) {
-                BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
+//      TODO          BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                i.putExtra("ComeFrom", "Plan");
+                ctx.startActivity(i);
             } else if (IsLock.equalsIgnoreCase("0")
                     || IsLock.equalsIgnoreCase("")) {
                 playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());

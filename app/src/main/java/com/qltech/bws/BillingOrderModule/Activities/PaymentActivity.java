@@ -59,7 +59,7 @@ public class PaymentActivity extends AppCompatActivity {
     ActivityPaymentBinding binding;
     AllCardsAdapter adapter;
     Context context;
-    String card_id, userId, TrialPeriod, comeFrom = "";
+    String card_id, userId, TrialPeriod, comeFrom = "", ComesTrue;
     Activity activity;
     int position;
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
@@ -71,7 +71,6 @@ public class PaymentActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_payment);
         context = PaymentActivity.this;
         activity = PaymentActivity.this;
-
         SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         userId = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
@@ -88,9 +87,15 @@ public class PaymentActivity extends AppCompatActivity {
                 listModelList = getIntent().getParcelableArrayListExtra("PlanData");
             }
         }
+
+        if (getIntent() != null) {
+            ComesTrue = getIntent().getStringExtra("ComesTrue");
+        }
+
         binding.llBack.setOnClickListener(view -> {
             Intent i = new Intent(context, OrderSummaryActivity.class);
             i.putExtra("comeFrom", "membership");
+            i.putExtra("ComesTrue", ComesTrue);
             i.putParcelableArrayListExtra("PlanData", listModelList2);
             i.putExtra("TrialPeriod", "");
             i.putExtra("position", position);
@@ -172,7 +177,6 @@ public class PaymentActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
-
                                 } else {
                                     BWSApplication.showToast(cardListModel.getResponseMessage(), context);
                                 }
@@ -213,8 +217,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            CardsListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.cards_list_layout, parent, false);
+            CardsListLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.cards_list_layout, parent, false);
             return new MyViewHolder(v);
         }
 
@@ -225,11 +228,8 @@ public class PaymentActivity extends AppCompatActivity {
             holder.binding.tvCardNo.setText(getString(R.string.first_card_chars) + listModel.getLast4());
             holder.binding.tvExpiryTime.setText("Valid: " + listModel.getExpMonth() + "/" +
                     listModel.getExpYear());
-            Glide.with(context).load(listModel.getImage())
-                    .thumbnail(0.05f)
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(holder.binding.ivCardimg);
+            Glide.with(context).load(listModel.getImage()).thumbnail(0.05f).crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.binding.ivCardimg);
             if (listModel.getIsDefault().equalsIgnoreCase(CONSTANTS.FLAG_ONE)) {
                 holder.binding.ivCheck.setImageResource(R.drawable.ic_checked_icon);
                 card_id = listModel.getCustomer();
@@ -275,7 +275,6 @@ public class PaymentActivity extends AppCompatActivity {
                     BWSApplication.showToast(getString(R.string.no_server_found), context);
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
-
             });
 
             holder.binding.rlRemoveCard.setOnClickListener(view -> {
@@ -368,6 +367,7 @@ public class PaymentActivity extends AppCompatActivity {
     public void onBackPressed() {
         Intent i = new Intent(PaymentActivity.this, OrderSummaryActivity.class);
         i.putExtra("comeFrom", "membership");
+        i.putExtra("ComesTrue", ComesTrue);
         i.putParcelableArrayListExtra("PlanData", listModelList2);
         i.putExtra("TrialPeriod", "");
         i.putExtra("position", position);

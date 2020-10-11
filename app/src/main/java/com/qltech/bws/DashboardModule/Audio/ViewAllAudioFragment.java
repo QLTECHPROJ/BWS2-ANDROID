@@ -1,6 +1,7 @@
 package com.qltech.bws.DashboardModule.Audio;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.DashboardModule.Models.ViewAllAudioListModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.R;
@@ -269,7 +271,10 @@ public class ViewAllAudioFragment extends Fragment {
                         } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                                 || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                             holder.binding.ivLock.setVisibility(View.VISIBLE);
-                            BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+//         TODO                   BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                            Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                            i.putExtra("ComeFrom", "Plan");
+                            startActivity(i);
                         }
                     } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
@@ -290,11 +295,11 @@ public class ViewAllAudioFragment extends Fragment {
                             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = shared.edit();
                             Gson gson = new Gson();
-                            String json="";
-                            if(Name.equalsIgnoreCase(getString(R.string.top_categories))){
+                            String json = "";
+                            if (Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                                 json = gson.toJson(listModelList);
                                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "TopCategories");
-                            }else{
+                            } else {
                                 json = gson.toJson(listModelList.get(position));
                                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
                             }
@@ -378,7 +383,10 @@ public class ViewAllAudioFragment extends Fragment {
                         } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                                 || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                             holder.binding.ivLock.setVisibility(View.VISIBLE);
-                            BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+//       TODO                     BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                            Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                            i.putExtra("ComeFrom", "Plan");
+                            startActivity(i);
                         }
                     } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);

@@ -153,6 +153,7 @@ public class CurrentPlanFragment extends Fragment {
                                 }
                                 mLastClickTime = SystemClock.elapsedRealtime();
                                 Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                                i.putExtra("ComeFrom","");
                                 startActivity(i);
                                 getActivity().finish();
                             });

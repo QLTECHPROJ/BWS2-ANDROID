@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
 import com.qltech.bws.R;
@@ -50,7 +51,6 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cancel_membership);
         ctx = CancelMembershipActivity.this;
         activity = CancelMembershipActivity.this;
-
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {
@@ -63,6 +63,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
             pauseMedia();
         } else {
         }
+
         binding.youtubeView.initialize(AppUtils.DEVELOPER_KEY, this);
 
         binding.cbOne.setOnClickListener(view -> {
@@ -198,8 +199,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     }
 
     @Override
-    public void onInitializationFailure(YouTubePlayer.Provider
-                                                provider, YouTubeInitializationResult errorReason) {
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult errorReason) {
         if (errorReason.isUserRecoverableError()) {
             errorReason.getErrorDialog(this, RECOVERY_DIALOG_REQUEST).show();
         } else {

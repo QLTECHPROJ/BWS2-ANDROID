@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.BillingOrderModule.Models.CancelPlanModel;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Models.DeleteRemiderModel;
@@ -344,7 +345,12 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                 holder.bind.switchStatus.setEnabled(false);
                 holder.bind.llSwitchStatus.setClickable(true);
                 holder.bind.llSwitchStatus.setEnabled(true);
-                holder.bind.llSwitchStatus.setOnClickListener(view -> BWSApplication.showToast("Please re-activate your membership plan", ctx));
+                holder.bind.llSwitchStatus.setOnClickListener(view -> {
+//       TODO             BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    startActivity(i);
+                });
             } else if (model.get(position).getIsLock().equalsIgnoreCase("0") || model.get(position).getIsLock().equalsIgnoreCase("")) {
                 holder.bind.switchStatus.setClickable(true);
                 holder.bind.switchStatus.setEnabled(true);

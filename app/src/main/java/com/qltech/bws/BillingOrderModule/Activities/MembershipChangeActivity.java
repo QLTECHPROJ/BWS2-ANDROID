@@ -37,7 +37,7 @@ import retrofit2.Response;
 public class MembershipChangeActivity extends AppCompatActivity {
     ActivityMembershipChangeBinding binding;
     Context ctx;
-    String UserID;
+    String UserID, ComeFrom;
     Activity activity;
     public static String renewPlanFlag, renewPlanId;
     MembershipPlanAdapter membershipPlanAdapter;
@@ -52,10 +52,12 @@ public class MembershipChangeActivity extends AppCompatActivity {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
         binding.llBack.setOnClickListener(view -> {
-            Intent i = new Intent(MembershipChangeActivity.this, BillingOrderActivity.class);
-            startActivity(i);
-            finish();
+            callback();
         });
+
+        if (getIntent() != null) {
+            ComeFrom = getIntent().getStringExtra("ComeFrom");
+        }
 
         RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvPlanList.setLayoutManager(mLayoutManager1);
@@ -63,11 +65,25 @@ public class MembershipChangeActivity extends AppCompatActivity {
         prepareMembershipData();
     }
 
+
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(MembershipChangeActivity.this, BillingOrderActivity.class);
-        startActivity(i);
-        finish();
+        callback();
+    }
+
+    private void callback() {
+        if (ComeFrom.equalsIgnoreCase("Plan")) {
+            finish();
+        } else if (ComeFrom.equalsIgnoreCase("")) {
+            Intent i = new Intent(ctx, BillingOrderActivity.class);
+            startActivity(i);
+            finish();
+        } else {
+            Intent i = new Intent(ctx, BillingOrderActivity.class);
+            startActivity(i);
+            finish();
+        }
+
     }
 
     private void prepareMembershipData() {
@@ -192,6 +208,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
             renewPlanId = listModel.getPlanID();
             i = new Intent(ctx, OrderSummaryActivity.class);
             i.putExtra("comeFrom", "membership");
+            i.putExtra("ComesTrue",ComeFrom);
             i.putParcelableArrayListExtra("PlanData", listModelList);
             i.putExtra("TrialPeriod", "");
             i.putExtra("position", position);

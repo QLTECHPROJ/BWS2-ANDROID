@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
-import com.qltech.bws.BillingOrderModule.Activities.BillingOrderActivity;
 import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.BillingOrderModule.Activities.PaymentActivity;
 import com.qltech.bws.BillingOrderModule.Models.PlanListBillingModel;
@@ -24,7 +22,7 @@ import java.util.ArrayList;
 
 public class OrderSummaryActivity extends AppCompatActivity {
     ActivityOrderSummaryBinding binding;
-    String TrialPeriod, comeFrom = "", UserId, renewPlanFlag, renewPlanId;
+    String TrialPeriod, comeFrom = "", UserId, renewPlanFlag, renewPlanId, ComesTrue;
     private ArrayList<MembershipPlanListModel.Plan> listModelList;
     ArrayList<PlanListBillingModel.ResponseData.Plan> listModelList2;
     int position;
@@ -50,6 +48,9 @@ public class OrderSummaryActivity extends AppCompatActivity {
             }
         }
 
+        if (getIntent() != null) {
+            ComesTrue = getIntent().getStringExtra("ComesTrue");
+        }
         if (!comeFrom.equalsIgnoreCase("")) {
             binding.tvTrialPeriod.setVisibility(View.GONE);
             binding.tvPlanInterval.setText(listModelList2.get(position).getPlanInterval() + " Membership");
@@ -72,6 +73,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
         binding.llBack.setOnClickListener(view -> {
             if (!comeFrom.equalsIgnoreCase("")) {
                 Intent i = new Intent(OrderSummaryActivity.this, MembershipChangeActivity.class);
+                i.putExtra("ComeFrom", ComesTrue);
                 startActivity(i);
                 finish();
             } else {
@@ -86,6 +88,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
                 Intent i = new Intent(OrderSummaryActivity.this, PaymentActivity.class);
+                i.putExtra("ComesTrue", ComesTrue);
                 i.putExtra("comeFrom", "membership");
                 i.putParcelableArrayListExtra("PlanData", listModelList2);
                 i.putExtra("TrialPeriod", "");
@@ -110,6 +113,7 @@ public class OrderSummaryActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (!comeFrom.equalsIgnoreCase("")) {
             Intent i = new Intent(OrderSummaryActivity.this, MembershipChangeActivity.class);
+            i.putExtra("ComeFrom", ComesTrue);
             startActivity(i);
             finish();
         } else {

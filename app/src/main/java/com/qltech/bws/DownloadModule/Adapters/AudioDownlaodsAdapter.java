@@ -1,6 +1,7 @@
 package com.qltech.bws.DownloadModule.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -24,6 +25,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
@@ -58,7 +60,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     RecyclerView rvDownloadsList;
     TextView tvFound;
     List<DownloadAudioDetails> downloadAudioDetailsList;
-//    Runnable UpdateSongTime1;
+    //    Runnable UpdateSongTime1;
 //    List<String> fileNameList = new ArrayList<>();
     private List<DownloadAudioDetails> listModelList;
 //    private Handler handler1;
@@ -148,7 +150,10 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             if (IsLock.equalsIgnoreCase("1")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
-                BWSApplication.showToast("Please re-activate your membership plan", ctx);
+//      TODO          BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                i.putExtra("ComeFrom", "Plan");
+                ctx.startActivity(i);
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 comefromDownload = "1";
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);

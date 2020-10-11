@@ -2,6 +2,7 @@ package com.qltech.bws.DashboardModule.Playlist;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -31,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.DashboardModule.Models.CreatePlaylistModel;
 import com.qltech.bws.DashboardModule.Models.MainPlayListModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
@@ -66,6 +68,7 @@ public class PlaylistFragment extends Fragment {
     String UserID, Check = "", AudioFlag;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false);
         View view = binding.getRoot();
@@ -286,7 +289,10 @@ public class PlaylistFragment extends Fragment {
             binding.rlCreatePlaylist.setOnClickListener(view -> {
                 if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                     binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+//      TODO              BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    startActivity(i);
                 } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     binding.ivLock.setVisibility(View.GONE);
@@ -394,6 +400,7 @@ public class PlaylistFragment extends Fragment {
             }
         }
     }
+
     private void getMedia(String playlistID) {
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
@@ -407,7 +414,8 @@ public class PlaylistFragment extends Fragment {
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) { player = 1;
+            protected void onPostExecute(Void aVoid) {
+                player = 1;
                 if (isPrepare || isMediaStart || isPause) {
                     stopMedia();
                 }
@@ -484,12 +492,15 @@ public class PlaylistFragment extends Fragment {
             holder.binding.rlMainLayout.setOnClickListener(view -> {
                 if (IsLock.equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+//       TODO             BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    startActivity(i);
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    if(MyDownloads.equalsIgnoreCase("1")){
-                       getMedia(listModelList.get(position).getPlaylistID());
-                    }else{
+                    if (MyDownloads.equalsIgnoreCase("1")) {
+                        getMedia(listModelList.get(position).getPlaylistID());
+                    } else {
                         callMyPlaylistsFragment("0", listModelList.get(position).getPlaylistID(), listModelList.get(position).getPlaylistName(),
                                 listModelList.get(position).getPlaylistImage(), MyDownloads);
                     }

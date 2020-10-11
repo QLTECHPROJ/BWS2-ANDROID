@@ -21,11 +21,10 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.DashboardModule.Models.SearchPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
 import com.qltech.bws.DashboardModule.Models.SuggestedModel;
-import com.qltech.bws.DashboardModule.Playlist.MyPlaylistsFragment;
-import com.qltech.bws.DashboardModule.Search.ViewAllSearchFragment;
 import com.qltech.bws.R;
 import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
@@ -39,15 +38,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.qltech.bws.DashboardModule.Search.SearchFragment.comefrom_search;
-
 public class ViewSuggestedActivity extends AppCompatActivity {
     ActivityViewSuggestedBinding binding;
     Activity activity;
     Context ctx;
     String UserID, AudioFlag, Name, PlaylistID;
+    ArrayList<SuggestedModel.ResponseData> AudiolistsModel;
     ArrayList<SearchPlaylistModel.ResponseData> PlaylistModel;
-    ArrayList<SuggestedModel.ResponseData> AudiolistModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +69,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
         }
         if (getIntent() != null) {
-            AudiolistModel = getIntent().getParcelableArrayListExtra("AudiolistModel");
+            AudiolistsModel = getIntent().getParcelableArrayListExtra("AudiolistModel");
         }
 
         if (getIntent() != null) {
@@ -94,21 +91,19 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         binding.rvMainAudio.setLayoutManager(layoutManager);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
         if (Name.equalsIgnoreCase("Suggested Audios")) {
-            SuggestionAudioListAdpater suggestedAdpater = new SuggestionAudioListAdpater(AudiolistModel, ctx);
+            AudiosListAdpater suggestedAdpater = new AudiosListAdpater(AudiolistsModel);
             binding.rvMainAudio.setAdapter(suggestedAdpater);
         } else if (Name.equalsIgnoreCase("Suggested Playlist")) {
-            SuggestionPlayListsAdpater adpater = new SuggestionPlayListsAdpater(PlaylistModel, ctx);
+            SuggestionPlayListsAdpater adpater = new SuggestionPlayListsAdpater(PlaylistModel);
             binding.rvMainAudio.setAdapter(adpater);
         }
     }
 
-    public class SuggestionAudioListAdpater extends RecyclerView.Adapter<SuggestionAudioListAdpater.MyViewHolder> {
-        Context ctx;
-        private ArrayList<SuggestedModel.ResponseData> AudiolistModel;
+    public class AudiosListAdpater extends RecyclerView.Adapter<AudiosListAdpater.MyViewHolder> {
+        private ArrayList<SuggestedModel.ResponseData> AudiolistsModel;
 
-        public SuggestionAudioListAdpater(ArrayList<SuggestedModel.ResponseData> AudiolistModel, Context ctx) {
-            this.AudiolistModel = AudiolistModel;
-            this.ctx = ctx;
+        public AudiosListAdpater(ArrayList<SuggestedModel.ResponseData> AudiolistsModel) {
+            this.AudiolistsModel = AudiolistsModel;
         }
 
         @NonNull
@@ -116,84 +111,123 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             DownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
                     , R.layout.downloads_layout, parent, false);
-            return new SuggestionAudioListAdpater.MyViewHolder(v);
+            return new MyViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.binding.tvTitle.setText(AudiolistModel.get(position).getName());
-            holder.binding.tvTime.setText(AudiolistModel.get(position).getAudioDuration());
-            holder.binding.pbProgress.setVisibility(View.GONE);
+            holder.binds.tvTitle.setText(AudiolistsModel.get(position).getName());
+            holder.binds.tvTime.setText(AudiolistsModel.get(position).getAudioDuration());
+            holder.binds.pbProgress.setVisibility(View.GONE);
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
-            holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            Glide.with(ctx).load(AudiolistModel.get(position).getImageFile()).thumbnail(0.05f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
-            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-            if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
-                if (AudiolistModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                } else if (AudiolistModel.get(position).getIsPlay().equalsIgnoreCase("0")
-                        || AudiolistModel.get(position).getIsPlay().equalsIgnoreCase("")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+            holder.binds.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binds.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            Glide.with(ctx).load(AudiolistsModel.get(position).getImageFile()).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binds.ivRestaurantImage);
+            holder.binds.ivIcon.setImageResource(R.drawable.add_icon);
+            holder.binds.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+            if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("1")) {
+                if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                    holder.binds.ivBackgroundImage.setVisibility(View.GONE);
+                    holder.binds.ivLock.setVisibility(View.GONE);
+                } else if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("0")
+                        || AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("")) {
+                    holder.binds.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binds.ivLock.setVisibility(View.VISIBLE);
                 }
-            } else if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("0") || AudiolistModel.get(position).getIsLock().equalsIgnoreCase("")) {
-                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                holder.binding.ivLock.setVisibility(View.GONE);
+            } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("0")
+                    || AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("")) {
+                holder.binds.ivBackgroundImage.setVisibility(View.GONE);
+                holder.binds.ivLock.setVisibility(View.GONE);
             }
 
-            holder.binding.llRemoveAudio.setOnClickListener(view -> {
-                if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
-                    if (AudiolistModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                        holder.binding.ivLock.setVisibility(View.GONE);
-                        Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                        i.putExtra("AudioId", AudiolistModel.get(position).getID());
-                        i.putExtra("PlaylistID", "");
+            holder.binds.llRemoveAudio.setOnClickListener(view -> {
+                if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                        holder.binds.ivBackgroundImage.setVisibility(View.GONE);
+                        holder.binds.ivLock.setVisibility(View.GONE);
+                        if (BWSApplication.isNetworkConnected(ctx)) {
+                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudiolistsModel.get(position).getID(), PlaylistID, "");
+                            listCall.enqueue(new Callback<SucessModel>() {
+                                @Override
+                                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                    if (response.isSuccessful()) {
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        SucessModel listModels = response.body();
+                                        BWSApplication.showToast(listModels.getResponseMessage(), ctx);
+                                        finish();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<SucessModel> call, Throwable t) {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                }
+                            });
+                        } else {
+                            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                        }
+                    } else if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("0")
+                            || AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("")) {
+                        holder.binds.ivBackgroundImage.setVisibility(View.VISIBLE);
+                        holder.binds.ivLock.setVisibility(View.VISIBLE);
+//             TODO           BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                        i.putExtra("ComeFrom", "Plan");
                         startActivity(i);
-                    } else if (AudiolistModel.get(position).getIsPlay().equalsIgnoreCase("0")
-                            || AudiolistModel.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
                     }
-                } else if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("0") || AudiolistModel.get(position).getIsLock().equalsIgnoreCase("")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                    i.putExtra("AudioId", AudiolistModel.get(position).getID());
-                    i.putExtra("PlaylistID", "");
-                    startActivity(i);
+                } else if (AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("0")
+                        || AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("")) {
+                    holder.binds.ivBackgroundImage.setVisibility(View.GONE);
+                    holder.binds.ivLock.setVisibility(View.GONE);
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudiolistsModel.get(position).getID(), PlaylistID, "");
+                        listCall.enqueue(new Callback<SucessModel>() {
+                            @Override
+                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                if (response.isSuccessful()) {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                    SucessModel listModels = response.body();
+                                    BWSApplication.showToast(listModels.getResponseMessage(), ctx);
+                                    finish();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SucessModel> call, Throwable t) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            }
+                        });
+                    } else {
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    }
                 }
             });
         }
 
         @Override
         public int getItemCount() {
-            return AudiolistModel.size();
+            return AudiolistsModel.size();
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
-            DownloadsLayoutBinding binding;
+            DownloadsLayoutBinding binds;
 
-            public MyViewHolder(DownloadsLayoutBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
+            public MyViewHolder(DownloadsLayoutBinding binds) {
+                super(binds.getRoot());
+                this.binds = binds;
             }
         }
     }
 
     public class SuggestionPlayListsAdpater extends RecyclerView.Adapter<SuggestionPlayListsAdpater.MyViewHolder> {
-        Context ctx;
         private ArrayList<SearchPlaylistModel.ResponseData> PlaylistModel;
 
-        public SuggestionPlayListsAdpater(ArrayList<SearchPlaylistModel.ResponseData> PlaylistModel, Context ctx) {
+        public SuggestionPlayListsAdpater(ArrayList<SearchPlaylistModel.ResponseData> PlaylistModel) {
             this.PlaylistModel = PlaylistModel;
-            this.ctx = ctx;
         }
 
         @NonNull
@@ -233,7 +267,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
             if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
-                BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
             } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
@@ -245,7 +278,11 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+//         TODO           BWSApplication.showToast("Please re-activate your membership plan", ctx);
+
+                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                        i.putExtra("ComeFrom","Plan");
+                        startActivity(i);
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     comefrom_search = 1;
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
@@ -266,9 +303,12 @@ public class ViewSuggestedActivity extends AppCompatActivity {
 
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
-                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+//      TODO              BWSApplication.showToast("Please re-activate your membership plan", ctx);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    startActivity(i);
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);

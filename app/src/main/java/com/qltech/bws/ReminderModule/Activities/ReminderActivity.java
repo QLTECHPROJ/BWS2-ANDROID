@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.qltech.bws.BWSApplication;
+import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.R;
 import com.qltech.bws.ReminderModule.Models.SelectPlaylistModel;
 import com.qltech.bws.ReminderModule.Models.SetReminderModel;
@@ -152,7 +153,7 @@ public class ReminderActivity extends AppCompatActivity {
 //            mHour = c.get(Calendar.HOUR_OF_DAY);
             mMinute = Integer.parseInt(min[0]);
             String displayAmPm = min[1];
-            if(displayAmPm.equalsIgnoreCase("p.m") || displayAmPm.equalsIgnoreCase("PM")){
+            if (displayAmPm.equalsIgnoreCase("p.m") || displayAmPm.equalsIgnoreCase("PM")) {
                 mHour = mHour + 12;
             }
             timePickerDialog = new TimePickerDialog(ReminderActivity.this, R.style.TimePickerTheme,
@@ -303,7 +304,10 @@ public class ReminderActivity extends AppCompatActivity {
         }
         binding.btnSave.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")) {
-                BWSApplication.showToast("Please re-activate your membership plan", context);
+//      TODO          BWSApplication.showToast("Please re-activate your membership plan", context);
+                Intent i = new Intent(context, MembershipChangeActivity.class);
+                i.putExtra("ComeFrom", "Plan");
+                startActivity(i);
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 if (PlaylistName.equalsIgnoreCase("")) {
                     BWSApplication.showToast("Please select playlist name", context);

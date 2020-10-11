@@ -127,15 +127,15 @@ public class SuggestedModel implements Parcelable {
             iD = in.readString();
             name = in.readString();
             isLock = in.readString();
-            audioFile = in.readString();
-            isLock = in.readString();
+            isPlay = in.readString();
             imageFile = in.readString();
+            audioFile = in.readString();
             audioDuration = in.readString();
+            audioDirection = in.readString();
             audiomastercat = in.readString();
             audioSubCategory = in.readString();
             like = in.readString();
             download = in.readString();
-            isPlay = in.readString();
         }
 
         @Override
@@ -143,15 +143,15 @@ public class SuggestedModel implements Parcelable {
             dest.writeString(iD);
             dest.writeString(name);
             dest.writeString(isLock);
-            dest.writeString(audioFile);
+            dest.writeString(isPlay);
             dest.writeString(imageFile);
+            dest.writeString(audioFile);
             dest.writeString(audioDuration);
             dest.writeString(audioDirection);
             dest.writeString(audiomastercat);
             dest.writeString(audioSubCategory);
             dest.writeString(like);
             dest.writeString(download);
-            dest.writeString(isPlay);
         }
 
         @Override

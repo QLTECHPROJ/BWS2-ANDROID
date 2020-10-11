@@ -96,7 +96,9 @@
     <string name="give_playlist_name">Give your playlist a name.</string>
     <string name="Your_Created">Your Created</string>
     <string name="Suggested_Audios">Suggested Audios</string>
+    <string name="Recommended_Audios">Recommended  Audios</string>
     <string name="Suggested_Playlist">Suggested Playlist</string>
+    <string name="Recommendeds_Playlist">Recommended Playlist</string>
     <string name="View_order_details">View order details</string>
     <string name="Payment_information">Payment information</string>
     <string name="Order_summary">Order summary</string>

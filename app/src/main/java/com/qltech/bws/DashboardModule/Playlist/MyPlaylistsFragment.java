@@ -81,8 +81,6 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Account.AccountFragment.ComeScreenReminder;
-import static com.qltech.bws.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
-import static com.qltech.bws.DashboardModule.Activities.AddAudioActivity.addToSearch;
 import static com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity.MyPlaylistId;
 import static com.qltech.bws.DashboardModule.Activities.AddPlaylistActivity.addToPlayList;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
@@ -226,7 +224,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String search) {
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                binding.searchView.clearFocus();
+//                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 return false;
             }
 
