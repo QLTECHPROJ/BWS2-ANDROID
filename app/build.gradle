@@ -6,7 +6,7 @@ android {
     buildToolsVersion "30.0.1"
 
     defaultConfig {
-        applicationId "com.qltech.bws"
+        applicationId "com.brainwellnessspa"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1

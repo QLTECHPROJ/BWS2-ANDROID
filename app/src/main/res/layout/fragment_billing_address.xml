@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".BillingOrderModule.Fragments.BillingAddressFragment">
+        tools:context="com.brainwellnessspa.BillingOrderModule.Fragments.BillingAddressFragment">
 
         <RelativeLayout
             android:layout_width="match_parent"

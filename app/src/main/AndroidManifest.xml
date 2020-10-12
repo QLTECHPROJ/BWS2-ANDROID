@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.qltech.bws">
+    package="com.brainwellnessspa">
 
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
@@ -28,7 +28,7 @@
         android:required="true" />
 
     <application
-        android:name=".BWSApplication"
+        android:name="com.brainwellnessspa.BWSApplication"
         android:allowBackup="true"
         android:fullBackupContent="false"
         android:hardwareAccelerated="true"
@@ -41,53 +41,53 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".DashboardModule.Activities.ViewSuggestedActivity"
+            android:name="com.brainwellnessspa.DashboardModule.Activities.ViewSuggestedActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".WebView.TncActivity"
+            android:name="com.brainwellnessspa.WebView.TncActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DownloadModule.Activities.DownloadedPlaylist"
+            android:name="com.brainwellnessspa.DownloadModule.Activities.DownloadedPlaylist"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".BillingOrderModule.Activities.PaymentActivity"
+            android:name="com.brainwellnessspa.BillingOrderModule.Activities.PaymentActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ReminderModule.Activities.ReminderDetailsActivity"
+            android:name="com.brainwellnessspa.ReminderModule.Activities.ReminderDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ResourceModule.Activities.ResourceDetailsActivity"
+            android:name="com.brainwellnessspa.ResourceModule.Activities.ResourceDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".BillingOrderModule.Activities.MembershipChangeActivity"
+            android:name="com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ResourceModule.Activities.ResourceActivity"
+            android:name="com.brainwellnessspa.ResourceModule.Activities.ResourceActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Activities.MyPlaylistActivity"
+            android:name="com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Activities.AddPlaylistActivity"
+            android:name="com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -98,98 +98,93 @@
             </intent-filter>
         </receiver>
         -->
-        <service
-            android:name=".MyService"
-            android:enabled="true"
-            android:exported="true" />
-
         <activity
-            android:name=".DashboardModule.Activities.AddAudioActivity"
+            android:name="com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Activities.ViewQueueActivity"
+            android:name="com.brainwellnessspa.DashboardModule.Activities.ViewQueueActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Activities.AddQueueActivity"
+            android:name="com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Activities.PlayWellnessActivity"
+            android:name="com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".MembershipModule.Activities.CheckoutPaymentActivity"
+            android:name="com.brainwellnessspa.MembershipModule.Activities.CheckoutPaymentActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".MembershipModule.Activities.CheckoutOtpActivity"
+            android:name="com.brainwellnessspa.MembershipModule.Activities.CheckoutOtpActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".MembershipModule.Activities.CheckoutGetCodeActivity"
+            android:name="com.brainwellnessspa.MembershipModule.Activities.CheckoutGetCodeActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".MembershipModule.Activities.OrderSummaryActivity"
+            android:name="com.brainwellnessspa.MembershipModule.Activities.OrderSummaryActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".MembershipModule.Activities.MembershipActivity"
+            android:name="com.brainwellnessspa.MembershipModule.Activities.MembershipActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ReminderModule.Activities.ReminderActivity"
+            android:name="com.brainwellnessspa.ReminderModule.Activities.ReminderActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".FaqModule.Activities.AudioFaqActivity"
+            android:name="com.brainwellnessspa.FaqModule.Activities.AudioFaqActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".FaqModule.Activities.FaqActivity"
+            android:name="com.brainwellnessspa.FaqModule.Activities.FaqActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".AddPayment.AddPaymentActivity"
+            android:name="com.brainwellnessspa.AddPayment.AddPaymentActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".BillingOrderModule.Activities.CancelMembershipActivity"
+            android:name="com.brainwellnessspa.BillingOrderModule.Activities.CancelMembershipActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".BillingOrderModule.Activities.BillingOrderActivity"
+            android:name="com.brainwellnessspa.BillingOrderModule.Activities.BillingOrderActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".InvoiceModule.Activities.InvoiceActivity"
+            android:name="com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DownloadModule.Activities.DownloadsActivity"
+            android:name="com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".SplashModule.SplashScreenActivity"
+            android:name="com.brainwellnessspa.SplashModule.SplashScreenActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoTitle"
@@ -201,34 +196,34 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UserModule.Activities.UserProfileActivity"
+            android:name="com.brainwellnessspa.UserModule.Activities.UserProfileActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".MembershipModule.Activities.ThankYouMpActivity"
+            android:name="com.brainwellnessspa.MembershipModule.Activities.ThankYouMpActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".DashboardModule.Activities.DashboardActivity"
+            android:name="com.brainwellnessspa.DashboardModule.Activities.DashboardActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_dashboard"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoTitle"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".LoginModule.Activities.OtpActivity"
+            android:name="com.brainwellnessspa.LoginModule.Activities.OtpActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".LoginModule.Activities.CountrySelectActivity"
+            android:name="com.brainwellnessspa.LoginModule.Activities.CountrySelectActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".LoginModule.Activities.LoginActivity"
+            android:name="com.brainwellnessspa.LoginModule.Activities.LoginActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -251,10 +246,10 @@
         </provider>
 
         <service
-            android:name=".Utility.MusicService"
+            android:name="com.brainwellnessspa.Utility.MusicService"
             tools:ignore="Instantiatable" />
         <service
-            android:name=".Utility.MyFirebaseMessagingService"
+            android:name="com.brainwellnessspa.Utility.MyFirebaseMessagingService"
             android:exported="false"
             tools:ignore="ExportedService">
             <intent-filter>

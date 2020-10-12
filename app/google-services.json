@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:91036146776:android:27454bd178fb147c497e2d",
         "android_client_info": {
-          "package_name": "com.qltech.bws"
+          "package_name": "com.brainwellnessspa"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "91036146776-64fsrh05leff4bksig28tiuop6au3hht.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.qltech.bws",
+            "package_name": "com.brainwellnessspa",
             "certificate_hash": "828101783c6090836fcf12ee11204a3d81652248"
           }
         },

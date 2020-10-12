@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".MembershipModule.Activities.MembershipActivity">
+        tools:context="com.brainwellnessspa.MembershipModule.Activities.MembershipActivity">
 
         <RelativeLayout
             android:id="@+id/rlLayout"

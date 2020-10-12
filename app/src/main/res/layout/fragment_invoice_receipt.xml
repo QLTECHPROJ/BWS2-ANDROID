@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/dialog_background"
-        tools:context=".InvoiceModule.Fragments.InvoiceReceiptFragment">
+        tools:context="com.brainwellnessspa.InvoiceModule.Fragments.InvoiceReceiptFragment">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"

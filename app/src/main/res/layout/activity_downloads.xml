@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/flContainer"
         android:background="@color/white"
-        tools:context=".DownloadModule.Activities.DownloadsActivity">
+        tools:context="com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity">
 
         <RelativeLayout
             android:id="@+id/rlMainLayout"
