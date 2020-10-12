@@ -70,6 +70,7 @@ import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPlaying;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.isStop;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
 import static com.qltech.bws.Utility.MusicService.pauseMedia;
@@ -149,7 +150,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             int progress = getProgressPercentage(currentDuration, totalDuration);
             long diff = totalDuration - currentDuration;
 
-            if (currentDuration == totalDuration && currentDuration != 0) {
+            if (currentDuration == totalDuration && currentDuration != 0&& !isStop) {
                 callComplete();
             } else if (isPause) {
                 binding.simpleSeekbar.setProgress(oTime);

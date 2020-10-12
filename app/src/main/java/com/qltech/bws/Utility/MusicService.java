@@ -268,6 +268,7 @@ public class MusicService extends Service {
                 mediaPlayer.stop();
                 isMediaStart = false;
                 isPrepare = false;
+                isStop = true;
             }
         } catch (IllegalStateException e) {
             e.printStackTrace();

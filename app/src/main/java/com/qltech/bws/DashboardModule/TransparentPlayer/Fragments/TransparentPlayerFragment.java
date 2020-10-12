@@ -65,6 +65,7 @@ import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
 import static com.qltech.bws.Utility.MusicService.isPreparing;
+import static com.qltech.bws.Utility.MusicService.isStop;
 import static com.qltech.bws.Utility.MusicService.isprogressbar;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
@@ -146,7 +147,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
                 if (player == 1) {
-                    if (currentDuration == 0 && !isPause) {
+                    if (currentDuration == 0 &&( !isPause || !isStop)) {
                         binding.progressBar.setVisibility(View.VISIBLE);
 //                        binding.llProgress.setVisibility(View.VISIBLE);
                         binding.ivPause.setVisibility(View.GONE);
@@ -166,7 +167,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     binding.ivPlay.setVisibility(View.VISIBLE);
                 }
                 long diff = totalDuration - currentDuration;
-                if (currentDuration == totalDuration && currentDuration != 0) {
+                if (currentDuration == totalDuration && currentDuration != 0&& !isStop) {
                     callComplete();
                 }
                 //Log.d("Progress", ""+progress);
@@ -176,7 +177,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     binding.simpleSeekbar.setProgress(progress);
                 }
                 // Running this thread after 100 milliseconds
-                handler.postDelayed(this, 500);
+                handler.postDelayed(this, 100);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -67,6 +67,7 @@ import static com.qltech.bws.Utility.MusicService.getStartTime;
 import static com.qltech.bws.Utility.MusicService.isMediaStart;
 import static com.qltech.bws.Utility.MusicService.isPause;
 import static com.qltech.bws.Utility.MusicService.isPrepare;
+import static com.qltech.bws.Utility.MusicService.isStop;
 import static com.qltech.bws.Utility.MusicService.isprogressbar;
 import static com.qltech.bws.Utility.MusicService.mediaPlayer;
 import static com.qltech.bws.Utility.MusicService.oTime;
@@ -88,6 +89,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     List<DownloadAudioDetails> downloadAudioDetailsList;
     private long mLastClickTime = 0, totalDuration, currentDuration;
     private Handler handler;
+    long diff1=0;
+    int diffCount=0;
         private Handler handler1;
 //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -186,8 +189,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             //Log.d("Progress", ""+progress);
             startTime = getStartTime();
-            long diff = totalDuration - currentDuration;
-            if (currentDuration == totalDuration && currentDuration != 0) {
+            long diff = diff1;
+            diff1 = totalDuration - currentDuration;
+            if(diff == diff1){
+
+            }
+
+            if (currentDuration == totalDuration && currentDuration != 0 && !isStop) {
                 binding.tvStartTime.setText(endtimetext);
                 callComplete();
             } else if (isPause) {
@@ -1386,7 +1394,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callBack() {
-        handler.removeCallbacks(UpdateSongTime);
+//        handler.removeCallbacks(UpdateSongTime);
         handler1.removeCallbacks(UpdateSongTime1);
         player = 1;
         if (binding.llPause.getVisibility() == View.VISIBLE) {
