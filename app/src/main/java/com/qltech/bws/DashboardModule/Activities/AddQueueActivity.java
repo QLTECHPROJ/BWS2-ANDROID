@@ -80,9 +80,10 @@ public class AddQueueActivity extends AppCompatActivity {
     Boolean queuePlay, audioPlay;
     List<DownloadAudioDetails> oneAudioDetailsList;
     SharedPreferences shared;
-    Handler handler1;
-    List<String> fileNameList;
+//    Handler handler1;
+//    List<String> fileNameList;
     private long mLastClickTime = 0;
+/*
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
@@ -105,6 +106,7 @@ public class AddQueueActivity extends AppCompatActivity {
             handler1.postDelayed(this, 500);
         }
     };
+*/
 
 
     @Override
@@ -114,19 +116,19 @@ public class AddQueueActivity extends AppCompatActivity {
         ctx = AddQueueActivity.this;
         activity = AddQueueActivity.this;
         oneAudioDetailsList = new ArrayList<>();
-        handler1 = new Handler();
-        fileNameList = new ArrayList<>();
+//        handler1 = new Handler();
+//        fileNameList = new ArrayList<>();
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         mData = new ArrayList<>();
-        SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+        /*SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
         Gson gson1 = new Gson();
         String json11 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
         if (!json11.equalsIgnoreCase(String.valueOf(gson1))) {
             Type type = new TypeToken<List<String>>() {
             }.getType();
 //            fileNameList = gson1.fromJson(json11, type);
-        }
+        }*/
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -159,12 +161,12 @@ public class AddQueueActivity extends AppCompatActivity {
         if (getIntent().hasExtra("PlaylistAudioId")) {
             PlaylistAudioId = getIntent().getStringExtra("PlaylistAudioId");
         }
-        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
+      /*  if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
             handler1.postDelayed(UpdateSongTime1, 500);
         } else {
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
-        }
+        }*/
         if (getIntent().hasExtra("play")) {
             play = getIntent().getStringExtra("play");
         } else {
@@ -702,12 +704,12 @@ public class AddQueueActivity extends AppCompatActivity {
         callDisableDownload();
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         downloadMedia.encrypt1(url1, name1,downloadPlaylistId);
-        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
+        /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
             handler1.postDelayed(UpdateSongTime1, 500);
         } else {
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
-        }
+        }*/
         String dirPath = FileUtils.getFilePath(getApplicationContext(), Name);
         SaveMedia(new byte[1024], dirPath, i);
 
@@ -833,6 +835,9 @@ public class AddQueueActivity extends AppCompatActivity {
                         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
+                        }  else if (play.equalsIgnoreCase("TopCategories")) {
+                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llRemovePlaylist.setVisibility(View.GONE);
                         } else if (play.equalsIgnoreCase("play")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.VISIBLE);
@@ -858,12 +863,12 @@ public class AddQueueActivity extends AppCompatActivity {
                             PlaylistId = mainPlayModelList.get(ix).getPlaylistID();
                             audioFileName = mainPlayModelList.get(ix).getName();
                         }
-                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
+                        /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
                             handler1.postDelayed(UpdateSongTime1, 500);
                         } else {
                             binding.pbProgress.setVisibility(View.GONE);
                             handler1.removeCallbacks(UpdateSongTime1);
-                        }
+                        }*/
                         if (PlaylistId == null) {
                             PlaylistId = "";
                         } else {

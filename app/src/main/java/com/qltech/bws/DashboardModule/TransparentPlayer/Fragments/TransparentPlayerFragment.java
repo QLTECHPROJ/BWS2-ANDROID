@@ -85,6 +85,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     boolean downloadPlay = false;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     Activity activity;
+    Context ctx;
     long totalDuration;
     private Handler handler;
     //        private AudioManager mAudioManager;
@@ -97,7 +98,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 Time t = Time.valueOf("00:00:00");
                 if (queuePlay) {
                     if (listSize != 0) {
-                        if (!BWSApplication.isNetworkConnected(getActivity())) {
+                        if (!BWSApplication.isNetworkConnected(ctx)) {
                             if (mediaPlayer != null) {
                                 totalDuration = mediaPlayer.getDuration();
                             } else {
@@ -114,7 +115,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         stopMedia();
                     }
                 } else if (audioPlay) {
-                    if (!BWSApplication.isNetworkConnected(getActivity())) {
+                    if (!BWSApplication.isNetworkConnected(ctx)) {
                         if (mediaPlayer != null) {
                             totalDuration = mediaPlayer.getDuration();
                         } else {
@@ -129,7 +130,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     }
                 }
 
-                if (!BWSApplication.isNetworkConnected(getActivity())) {
+                if (!BWSApplication.isNetworkConnected(ctx)) {
                     if (mediaPlayer != null) {
                         totalDuration = mediaPlayer.getDuration();
                     } else
@@ -187,14 +188,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_transparent_player, container, false);
         View view = binding.getRoot();
+        activity = getActivity();
+        ctx = getActivity();
         mainPlayModelList = new ArrayList<>();
         addToQueueModelList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
-        SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         handler = new Handler();
-        activity = getActivity();
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
@@ -223,10 +225,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
-        SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+        SharedPreferences Status = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
-    /*    mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+    /*    mAudioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);*/
         if (queuePlay) {
@@ -252,7 +254,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
 //            }
-                SharedPreferences sharedz = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedz.edit();
                 Gson gsonz = new Gson();
                 String jsonz = gsonz.toJson(mainPlayModelList);
@@ -280,7 +282,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
 //                }
-                SharedPreferences sharedz = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedz.edit();
                 Gson gsonz = new Gson();
                 String jsonz = gsonz.toJson(mainPlayModelList);
@@ -307,14 +309,43 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
 //                }
-                SharedPreferences sharedz = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedz.edit();
                 Gson gsonz = new Gson();
                 String jsonz = gsonz.toJson(mainPlayModelList);
                 editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
                 editor.commit();
                 getPrepareShowData();
-            } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
+            } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                }.getType();
+                ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
+//                listSize = arrayList.size();
+//                for (int i = 0; i < listSize; i++) {
+                int i = 0;
+                    mainPlayModel = new MainPlayModel();
+                    mainPlayModel.setID(arrayList.get(i).getID());
+                    mainPlayModel.setName(arrayList.get(i).getName());
+                    mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                    mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistId());
+                    mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                    mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                    mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                    mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                    mainPlayModel.setLike(arrayList.get(i).getLike());
+                    mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                    mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                    mainPlayModelList.add(mainPlayModel);
+                    downloadPlay = true;
+//                }
+                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedz.edit();
+                Gson gsonz = new Gson();
+                String jsonz = gsonz.toJson(mainPlayModelList);
+                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+                editor.commit();
+                getPrepareShowData();
+            }  else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
                 Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
                 }.getType();
                 ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
@@ -335,7 +366,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     mainPlayModelList.add(mainPlayModel);
                     downloadPlay = true;
                 }
-                SharedPreferences sharedz = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedz.edit();
                 Gson gsonz = new Gson();
                 String jsonz = gsonz.toJson(mainPlayModelList);
@@ -362,7 +393,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                     mainPlayModelList.add(mainPlayModel);
                 }
-                SharedPreferences sharedz = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedz.edit();
                 Gson gsonz = new Gson();
                 String jsonz = gsonz.toJson(mainPlayModelList);
@@ -389,7 +420,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                     mainPlayModelList.add(mainPlayModel);
                 }
-                SharedPreferences sharedz = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedz.edit();
                 Gson gsonz = new Gson();
                 String jsonz = gsonz.toJson(mainPlayModelList);
@@ -434,7 +465,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void addToRecentPlay() {
-        if (BWSApplication.isNetworkConnected(getActivity())) {
+        if (BWSApplication.isNetworkConnected(ctx)) {
 //            BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
             Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(id, UserID);
             listCall.enqueue(new Callback<SucessModel>() {
@@ -452,7 +483,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
 
@@ -523,8 +554,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 id = addToQueueModelList.get(position).getID();
                 name = addToQueueModelList.get(position).getName();
                 audioFile = addToQueueModelList.get(position).getAudioFile();
-                GetMedia(audioFile, getActivity());
-                Glide.with(getActivity()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
+                GetMedia(audioFile, ctx);
+                Glide.with(ctx).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                 binding.tvTitle.setText(addToQueueModelList.get(position).getName());
                 binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
@@ -538,8 +569,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             id = mainPlayModelList.get(position).getID();
             name = mainPlayModelList.get(position).getName();
             audioFile = mainPlayModelList.get(position).getAudioFile();
-            GetMedia(audioFile, getActivity());
-            Glide.with(getActivity()).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+            GetMedia(audioFile, ctx);
+            Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
             binding.tvTitle.setText(mainPlayModelList.get(position).getName());
             binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
@@ -567,10 +598,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }else if(binding.progressBar.getVisibility() == View.VISIBLE && (binding.ivPause.getVisibility() == View.GONE && binding.ivPlay.getVisibility() == View.GONE)){
                 isprogressbar = true;
             }
-            Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
+            Intent i = new Intent(ctx, PlayWellnessActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            getActivity().startActivity(i);
-            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            ctx.startActivity(i);
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
             String json = gson.toJson(mainPlayModelList);
@@ -643,15 +674,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //        binding.llProgress.setVisibility(View.VISIBLE);
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.GONE);
-            DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
+            DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
             try {
                 byte[] decrypt = null;
                 decrypt = downloadMedia.decrypt(name);
                 if (decrypt != null) {
-                    fileDescriptor = FileUtils.getTempFileDescriptor(getActivity().getApplicationContext(), decrypt);
+                    fileDescriptor = FileUtils.getTempFileDescriptor(ctx.getApplicationContext(), decrypt);
                     setMediaPlayer("1", fileDescriptor);
                 } else {
-                    if (BWSApplication.isNetworkConnected(getActivity())) {
+                    if (BWSApplication.isNetworkConnected(ctx)) {
                         setMediaPlayer("0", fileDescriptor);
 //                mediaPlayer.setDataSource(audioFile);
                     } else {
@@ -659,7 +690,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                        binding.llProgress.setVisibility(View.GONE);
                         binding.ivPlay.setVisibility(View.VISIBLE);
                         binding.ivPause.setVisibility(View.GONE);
-                        BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                     }
                 }
             } catch (IOException e) {
@@ -668,7 +699,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         } else {
 //                            play(Uri.parse(audioFile));
 //                            playMedia();
-            if (BWSApplication.isNetworkConnected(getActivity())) {
+            if (BWSApplication.isNetworkConnected(ctx)) {
                 setMediaPlayer("0", fileDescriptor);
 //                mediaPlayer.setDataSource(audioFile);
             } else {
@@ -676,7 +707,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                binding.llProgress.setVisibility(View.GONE);
                 binding.ivPlay.setVisibility(View.VISIBLE);
                 binding.ivPause.setVisibility(View.GONE);
-                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
 
         }
@@ -731,7 +762,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     getPrepareShowData();
                 } else {
                     if (listSize == 0) {
-                        savePrefQueue(0, false, true, addToQueueModelList, getActivity());
+                        savePrefQueue(0, false, true, addToQueueModelList, ctx);
                         stopMedia();
                     } else {
                         position = 0;
@@ -748,13 +779,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         binding.ivPause.setVisibility(View.GONE);
                         stopMedia();
                     } else {
-                        position = 0;
-                        getPrepareShowData();
+                        binding.ivPlay.setVisibility(View.VISIBLE);
+                        binding.ivPause.setVisibility(View.GONE);
+                        stopMedia();
+//                        position = 0;
+//                        getPrepareShowData();
                     }
                 }
             }
         }
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
@@ -829,7 +863,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onResume() {
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         Gson gson = new Gson();
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
@@ -850,7 +884,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         if (listSize == 1) {
             position = 0;
         }
-        SharedPreferences Status = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
+        SharedPreferences Status = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
       /*  if (isPrepare && !isMediaStart) {

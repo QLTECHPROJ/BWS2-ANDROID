@@ -393,7 +393,7 @@
                         android:layout_width="@dimen/_55sdp"
                         android:layout_height="@dimen/_55sdp">
 
-                        <ProgressBar
+                        <!--<ProgressBar
                             android:id="@+id/pbProgress"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="@dimen/_55sdp"
@@ -404,7 +404,7 @@
                             android:indeterminateTint="@color/dark_yellow"
                             android:max="100"
                             android:progressDrawable="@drawable/circular_progress_barsm"
-                            android:visibility="gone" />
+                            android:visibility="gone" />-->
 
                         <ImageView
                             android:id="@+id/ivDownloads"

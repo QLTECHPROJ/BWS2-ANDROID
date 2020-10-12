@@ -89,11 +89,11 @@ public class MyPlaylistActivity extends AppCompatActivity {
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
     List<String> fileNameList, playlistDownloadId, remainAudio;
     int SongListSize = 0,count;
-    private Handler handler1;
+  /*  private Handler handler1;
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
-/*            if (fileNameList.size() != 0) {
+*//*            if (fileNameList.size() != 0) {
                 if (remainAudio.size() <= SongListSize) {
                     int total = SongListSize;
                     int remain = remainAudio.size();
@@ -133,10 +133,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 binding.ivDownloads.setVisibility(View.VISIBLE);
                 handler1.removeCallbacks(UpdateSongTime1);
                 getDownloadData();
-            }*/
-            getMediaByPer(PlaylistID,SongListSize);
+            }*//*
+//            getMediaByPer(PlaylistID,SongListSize);
         }
-    };
+    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +144,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_my_playlist);
         ctx = MyPlaylistActivity.this;
         activity = MyPlaylistActivity.this;
-        handler1 = new Handler();
+//        handler1 = new Handler();
         fileNameList = new ArrayList<>();
         playlistDownloadId = new ArrayList<>();
         remainAudio = new ArrayList<>();
@@ -173,7 +173,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
         binding.llDownload.setOnClickListener(view -> callDownload());
     }
-    private void getMediaByPer(String playlistID, int totalAudio) {
+  /*  private void getMediaByPer(String playlistID, int totalAudio) {
         class getMediaByPer extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -188,17 +188,20 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if(count < totalAudio){
-                    long progressPercent = count * 100 / totalAudio;
-                    int downloadProgress1 = (int) progressPercent;
-                    binding.pbProgress.setVisibility(View.VISIBLE);
-                    binding.ivDownloads.setVisibility(View.GONE);
-                    binding.pbProgress.setProgress(downloadProgress1);
-                    handler1.postDelayed(UpdateSongTime1,500);
-                }else{
-                    binding.pbProgress.setVisibility(View.GONE);
-                    binding.ivDownloads.setVisibility(View.VISIBLE);
-                    handler1.removeCallbacks(UpdateSongTime1);
+                downloadPlaylistDetailsList = GetPlaylistDetail();
+                if(downloadPlaylistDetailsList.size()!=0) {
+                    if (count < totalAudio) {
+                        long progressPercent = count * 100 / totalAudio;
+                        int downloadProgress1 = (int) progressPercent;
+                        binding.pbProgress.setVisibility(View.VISIBLE);
+                        binding.ivDownloads.setVisibility(View.GONE);
+                        binding.pbProgress.setProgress(downloadProgress1);
+                        handler1.postDelayed(UpdateSongTime1, 300);
+                    } else {
+                        binding.pbProgress.setVisibility(View.GONE);
+                        binding.ivDownloads.setVisibility(View.VISIBLE);
+                        handler1.removeCallbacks(UpdateSongTime1);
+                    }
                 }
                 super.onPostExecute(aVoid);
             }
@@ -206,7 +209,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
         getMediaByPer st = new getMediaByPer();
         st.execute();
-    }
+    }*/
+/*
     private void getDownloadData() {
         try {
             SharedPreferences sharedy = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
@@ -247,6 +251,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+*/
     public List<DownloadAudioDetails> GetAllMedia() {
 
         class GetTask extends AsyncTask<Void, Void, Void> {
@@ -303,7 +308,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             url.add(playlistSongs2.get(x).getAudioFile());
             downloadPlaylistId.add(playlistSongs2.get(x).getPlaylistID());
         }
-        enableDisableDownload(false);
+        enableDisableDownload(false,"orange");
         byte[] encodedBytes = new byte[1024];
 
         SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
@@ -363,6 +368,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             protected void onPostExecute(Void aVoid) {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
+//                getMediaByPer(PlaylistID,SongListSize);
                 super.onPostExecute(aVoid);
             }
         }
@@ -404,7 +410,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             protected void onPostExecute(Void aVoid) {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
-                enableDisableDownload(false);
+                enableDisableDownload(false,"orange");
                 super.onPostExecute(aVoid);
             }
         }
@@ -460,9 +466,9 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             } else {
                                 binding.ivRestaurantImage.setImageResource(R.drawable.ic_playlist_bg);
                             }
-                            getDownloadData();
+//                            getDownloadData();
                             SongListSize = model.getResponseData().getPlaylistSongs().size();
-                            getMediaByPer(PlaylistID,SongListSize);
+//                            getMediaByPer(PlaylistID,SongListSize);
 //                            SongListSize = model.getResponseData().getPlaylistSongs().size();
                             Download = model.getResponseData().getDownload();
                             binding.llAddPlaylist.setVisibility(View.VISIBLE);
@@ -789,15 +795,17 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if (downloadPlaylistDetailsList.size() != 0 || RefreshIconData==0) {
-                    enableDisableDownload(false);
-                } else if (Download.equalsIgnoreCase("1")) {
-                    enableDisableDownload(false);
+                if (downloadPlaylistDetailsList.size() != 0) {
+                    enableDisableDownload(false,"orange");
+                } else if ( RefreshIconData==0) {
+                    enableDisableDownload(false,"gray");
+                }else if (Download.equalsIgnoreCase("1")) {
+                    enableDisableDownload(false,"orange");
                 } else if (Download.equalsIgnoreCase("0") || Download.equalsIgnoreCase("") ||
                         RefreshIconData != 0) {
-                    enableDisableDownload(true);
+                    enableDisableDownload(true,"white");
                 }else if(downloadPlaylistDetailsList.size() == 0 && RefreshIconData!=0){
-                    enableDisableDownload(true);
+                    enableDisableDownload(true,"white");
                 }
                 super.onPostExecute(aVoid);
 
@@ -808,7 +816,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         return downloadPlaylistDetailsList;
     }
 
-    private void enableDisableDownload(boolean b) {
+    private void enableDisableDownload(boolean b,String color) {
         if (b) {
             binding.llDownload.setClickable(true);
             binding.llDownload.setEnabled(true);
@@ -819,7 +827,11 @@ public class MyPlaylistActivity extends AppCompatActivity {
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.llDownload.setClickable(false);
             binding.llDownload.setEnabled(false);
-            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+            if(color.equalsIgnoreCase("gray")){
+                binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+            }else if(color.equalsIgnoreCase("orange")){
+                binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+            }
             binding.tvDownload.setTextColor(getResources().getColor(R.color.white));
         }
     }

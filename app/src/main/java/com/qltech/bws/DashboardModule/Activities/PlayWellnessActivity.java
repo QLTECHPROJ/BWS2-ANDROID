@@ -122,6 +122,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         }
                     }
                 } else {
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
                     stopMedia();
                 }
             } else if (audioPlay) {
@@ -335,6 +337,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(ctx, AddQueueActivity.class);
+            if(AudioFlag.equalsIgnoreCase("TopCategories")){
+                i.putExtra("play", "TopCategories");
+            }else
             i.putExtra("play", "play");
             i.putExtra("ID", id);
             i.putExtra("position", position);
@@ -528,6 +533,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         } else {
                             if (listSize == 0) {
                                 savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                                binding.llPlay.setVisibility(View.VISIBLE);
+                                binding.llPause.setVisibility(View.GONE);
                                 stopMedia();
                             } else {
                                 position = 0;
@@ -621,6 +628,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 endtimetext = addToQueueModelList.get(position).getAudioDuration();
                 t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
             } else {
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
                 stopMedia();
             }
         } else if (audioPlay) {
@@ -1271,8 +1280,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 addToQueueModelList.remove(position);
                 listSize = addToQueueModelList.size();
                 if (listSize == 0) {
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
                     stopMedia();
                 } else if (listSize == 1) {
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
                     stopMedia();
                 } else {
                     Random random = new Random();
@@ -1301,6 +1314,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 } else {
                     if (listSize == 0) {
                         savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                        binding.llPlay.setVisibility(View.VISIBLE);
+                        binding.llPause.setVisibility(View.GONE);
                         stopMedia();
                     } else {
                         position = 0;
@@ -1313,10 +1328,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     getPrepareShowData(position);
                 } else {
                     if (listSize == 1) {
+                        binding.llPlay.setVisibility(View.VISIBLE);
+                        binding.llPause.setVisibility(View.GONE);
                         stopMedia();
                     } else {
-                        position = 0;
-                        getPrepareShowData(position);
+                        binding.llPlay.setVisibility(View.VISIBLE);
+                        binding.llPause.setVisibility(View.GONE);
+                        stopMedia();
+//                        position = 0;
+//                        getPrepareShowData(position);
                     }
                 }
             }

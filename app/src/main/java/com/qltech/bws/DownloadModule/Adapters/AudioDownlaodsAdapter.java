@@ -229,14 +229,14 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = shared.edit();
                     Gson gson = new Gson();
-                    String json = gson.toJson(listModelList);
+                    String json = gson.toJson(listModelList.get(position));
                     editor.putString(CONSTANTS.PREF_KEY_modelList, json);
                     editor.putInt(CONSTANTS.PREF_KEY_position, position);
                     editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                     editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                     editor.commit();
                 } catch (Exception e) {
                     e.printStackTrace();

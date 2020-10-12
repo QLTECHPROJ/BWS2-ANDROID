@@ -301,7 +301,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         return view;
     }
 
-    private List<DownloadPlaylistDetails> GetPlaylistDetail(String download, SubPlayListModel listModel) {
+    private List<DownloadPlaylistDetails> GetPlaylistDetail(String download) {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -315,13 +315,15 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if (downloadPlaylistDetailsList.size() != 0 || /*New.equalsIgnoreCase("1") ||*/ RefreshIcon == 0) {
-                    enableDisableDownload(false);
-                } else if (download.equalsIgnoreCase("1") ||/* New.equalsIgnoreCase("1") ||*/ RefreshIcon == 0) {
-                    enableDisableDownload(false);
+                if (downloadPlaylistDetailsList.size() != 0 /*New.equalsIgnoreCase("1") ||*/ ) {
+                    enableDisableDownload(false,"orange");
+                } else if (RefreshIcon == 0) {
+                    enableDisableDownload(false,"gray");
+                }else if (download.equalsIgnoreCase("1") /* New.equalsIgnoreCase("1") ||*/) {
+                    enableDisableDownload(false,"orange");
                 } else if (download.equalsIgnoreCase("0") || download.equalsIgnoreCase("") ||
                         New.equalsIgnoreCase("0") || RefreshIcon != 0) {
-                    enableDisableDownload(true);
+                    enableDisableDownload(true,"white");
                 }
                 super.onPostExecute(aVoid);
             }
@@ -364,7 +366,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         return downloadPlaylistDetailsList;
     }
 
-    private void enableDisableDownload(boolean b) {
+    private void enableDisableDownload(boolean b,String color) {
         if (b) {
             binding.llDownloads.setClickable(true);
             binding.llDownloads.setEnabled(true);
@@ -374,7 +376,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.llDownloads.setClickable(false);
             binding.llDownloads.setEnabled(false);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-            binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+            if(color.equalsIgnoreCase("gray")){
+                binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+            }else if(color.equalsIgnoreCase("orange")){
+                binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+            }
         }
     }
 
@@ -417,6 +423,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             callBack();
             deleteFrg = 0;
         } else if (addToPlayList) {
+            PlaylistID = MyPlaylistId;
             prepareData(UserID, MyPlaylistId);
             addToPlayList = false;
         } else {
@@ -679,7 +686,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
                             setData(listModel.getResponseData());
                             downloadAudioDetailsList = GetAllMedia();
-                            downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData().getDownload(), listModel);
+                            downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData().getDownload());
                             playlistWiseAudioDetails = GetMedia();
                         }
                     }
@@ -712,17 +719,21 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if(count < totalAudio){
-                    long progressPercent = count * 100 / totalAudio;
-                    int downloadProgress1 = (int) progressPercent;
-                    binding.pbProgress.setVisibility(View.VISIBLE);
-                    binding.ivDownloads.setVisibility(View.GONE);
-                    binding.pbProgress.setProgress(downloadProgress1);
-                    handler1.postDelayed(UpdateSongTime1,500);
-                }else{
-                    binding.pbProgress.setVisibility(View.GONE);
-                    binding.ivDownloads.setVisibility(View.VISIBLE);
-                    handler1.removeCallbacks(UpdateSongTime1);
+                downloadPlaylistDetailsList = GetPlaylistDetail(downloadPlaylistDetails.getDownload());
+
+                if(downloadPlaylistDetailsList.size()!=0) {
+                    if (count < totalAudio) {
+                        long progressPercent = count * 100 / totalAudio;
+                        int downloadProgress1 = (int) progressPercent;
+                        binding.pbProgress.setVisibility(View.VISIBLE);
+                        binding.ivDownloads.setVisibility(View.GONE);
+                        binding.pbProgress.setProgress(downloadProgress1);
+                        handler1.postDelayed(UpdateSongTime1, 300);
+                    } else {
+                        binding.pbProgress.setVisibility(View.GONE);
+                        binding.ivDownloads.setVisibility(View.VISIBLE);
+                        handler1.removeCallbacks(UpdateSongTime1);
+                    }
                 }
                 super.onPostExecute(aVoid);
             }
@@ -839,7 +850,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     binding.rvPlayLists.setAdapter(adpater2);
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                     binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                    enableDisableDownload(false);
+                    enableDisableDownload(false,"orange");
                     binding.llReminder.setClickable(false);
                     binding.llReminder.setEnabled(false);
                     binding.ivReminder.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
@@ -944,7 +955,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         SucessModel listModel = response.body();
                         mData.remove(position);
                         if (mData.size() == 0) {
-                            enableDisableDownload(false);
+                            enableDisableDownload(false,"gray");
                         }
                         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -1006,7 +1017,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     private void callDownload(String id, String audioFile, String Name, ArrayList<SubPlayListModel.ResponseData.PlaylistSong>
             playlistSongs, int position, RelativeLayout llDownload, ImageView ivDownloads) {
         if (id.isEmpty() && Name.isEmpty() && audioFile.isEmpty()) {
-            enableDisableDownload(false);
+            enableDisableDownload(false,"orange");
             List<String> url = new ArrayList<>();
             List<String> name = new ArrayList<>();
             List<String> downloadPlaylistId = new ArrayList<>();
@@ -1077,8 +1088,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
                 }*/
                 SongListSize = playlistSongs.size();
-                handler1.postDelayed(UpdateSongTime1, 500);
+                handler1.postDelayed(UpdateSongTime1, 300);
             }
+            binding.pbProgress.setVisibility(View.VISIBLE);
+            binding.ivDownloads.setVisibility(View.GONE);
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
             savePlaylist();
@@ -1126,7 +1139,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
             String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
             SaveMedia(new byte[1024], dirPath, playlistSongs, position, llDownload, ivDownloads);
-            handler2.postDelayed(UpdateSongTime2, 300);
+            handler2.postDelayed(UpdateSongTime2, 200);
         }
     }
 
@@ -1145,6 +1158,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             protected void onPostExecute(Void aVoid) {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
+                getMediaByPer(PlaylistID,SongListSize);
                 super.onPostExecute(aVoid);
             }
         }
@@ -1197,7 +1211,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
 
-                enableDisableDownload(false);
+                enableDisableDownload(false,"orange");
                 super.onPostExecute(aVoid);
             }
         }
@@ -1453,7 +1467,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         } else {
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                             holder.binding.ivDownloads.setVisibility(View.GONE);
-                            handler2.postDelayed(UpdateSongTime2, 300);
+                            handler2.postDelayed(UpdateSongTime2, 200);
                         }
                     }
                 }

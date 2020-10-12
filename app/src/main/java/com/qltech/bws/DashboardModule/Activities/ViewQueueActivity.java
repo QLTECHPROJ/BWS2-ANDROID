@@ -695,8 +695,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                         binding.llPause.setVisibility(View.GONE);
                         stopMedia();
                     } else {
-                        position = 0;
-                        getPrepareShowData(position);
+                        binding.llPlay.setVisibility(View.VISIBLE);
+                        binding.llPause.setVisibility(View.GONE);
+                        stopMedia();
+//                        position = 0;
+//                        getPrepareShowData(position);
                     }
                 }
             }
