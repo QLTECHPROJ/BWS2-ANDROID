@@ -574,7 +574,7 @@ public class UserProfileActivity extends AppCompatActivity {
             String Calendar = binding.etCalendar.getText().toString().trim();
             String MobileNumber = binding.etMobileNumber.getText().toString().trim();
             String Email = binding.etEmail.getText().toString().trim();
-            if (!User.isEmpty() && !Calendar.isEmpty() && !MobileNumber.isEmpty() && !Email.isEmpty()) {
+            if (!User.isEmpty() || !Calendar.isEmpty() || !MobileNumber.isEmpty() || !Email.isEmpty()) {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);

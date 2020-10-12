@@ -157,9 +157,9 @@ public class BillingAddressFragment extends Fragment {
             String City = binding.etCity.getText().toString().trim();
             String State = binding.etState.getText().toString().trim();
             String PostCode = binding.etPostCode.getText().toString().trim();
-            if (!Name.isEmpty() && !Email.isEmpty() && !MobileNumber.isEmpty()
-                    && !Country.isEmpty() && !AddressLine1.isEmpty()
-                    && !City.isEmpty() && !State.isEmpty() && !PostCode.isEmpty()) {
+            if (!Name.isEmpty() || !Email.isEmpty() || !MobileNumber.isEmpty()
+                    || !Country.isEmpty() || !AddressLine1.isEmpty()
+                    || !City.isEmpty() || !State.isEmpty() || !PostCode.isEmpty()) {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);

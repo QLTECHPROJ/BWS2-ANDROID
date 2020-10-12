@@ -377,22 +377,14 @@ public class ReminderActivity extends AppCompatActivity {
     }
 
     public void RefreshButton() {
-        if (PlaylistName.equalsIgnoreCase("") && remiderDays.size() == 0) {
-            binding.btnSave.setEnabled(false);
-            binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-            binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
-        } else if (PlaylistName.equalsIgnoreCase("")) {
-            binding.btnSave.setEnabled(false);
-            binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-            binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
-        } else if (remiderDays.size() == 0) {
-            binding.btnSave.setEnabled(false);
-            binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-            binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
-        } else {
+        if (!PlaylistName.equalsIgnoreCase("") || remiderDays.size() != 0) {
             binding.btnSave.setEnabled(true);
             binding.btnSave.setTextColor(getResources().getColor(R.color.white));
             binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+        } else {
+            binding.btnSave.setEnabled(false);
+            binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+            binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
         }
     }
 

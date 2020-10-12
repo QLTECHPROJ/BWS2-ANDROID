@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -90,8 +91,8 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        DownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                , R.layout.downloads_layout, parent, false);
+        AudioDownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                , R.layout.audio_downloads_layout, parent, false);
         return new MyViewHolder(v);
     }
 
@@ -210,7 +211,6 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
 
     private void getMediaByPer(String playlistID, String totalAudio, ProgressBar pbProgress) {
         class getMediaByPer extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
                 count = DatabaseClient.getInstance(ctx)
@@ -467,9 +467,9 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        DownloadsLayoutBinding binding;
+        AudioDownloadsLayoutBinding binding;
 
-        public MyViewHolder(DownloadsLayoutBinding binding) {
+        public MyViewHolder(AudioDownloadsLayoutBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

@@ -243,7 +243,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
             String CardName = binding.etName.getText().toString().trim();
             String Month = binding.textMonth.getText().toString().trim();
             String CVV = binding.etCvv.getText().toString().trim();
-            if (!CardNo.isEmpty() && !CardName.isEmpty() && !Month.isEmpty() && !CVV.isEmpty()) {
+            if (!CardNo.isEmpty() || !CardName.isEmpty() || !Month.isEmpty() || !CVV.isEmpty()) {
                 binding.btnPayment.setEnabled(true);
                 binding.btnPayment.setTextColor(getResources().getColor(R.color.white));
                 binding.btnPayment.setBackgroundResource(R.drawable.extra_round_cornor);

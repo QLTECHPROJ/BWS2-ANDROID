@@ -63,21 +63,18 @@ public class AddPaymentActivity extends AppCompatActivity {
             ComePayment = getIntent().getStringExtra("ComePayment");
         }
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ComePayment.equalsIgnoreCase("1")) {
-                    Intent i = new Intent(context, BillingOrderActivity.class);
-                    i.putExtra("payment", 1);
-                    startActivity(i);
-                    finish();
-                } else if (ComePayment.equalsIgnoreCase("2")) {
-                    Intent i = new Intent(context, PaymentActivity.class);
-                    startActivity(i);
-                    finish();
-                } else {
-                    finish();
-                }
+        binding.llBack.setOnClickListener(view -> {
+            if (ComePayment.equalsIgnoreCase("1")) {
+                Intent i = new Intent(context, BillingOrderActivity.class);
+                i.putExtra("payment", 1);
+                startActivity(i);
+                finish();
+            } else if (ComePayment.equalsIgnoreCase("2")) {
+                Intent i = new Intent(context, PaymentActivity.class);
+                startActivity(i);
+                finish();
+            } else {
+                finish();
             }
         });
         binding.llBack.setOnClickListener(view -> finish());
@@ -92,10 +89,10 @@ public class AddPaymentActivity extends AppCompatActivity {
         binding1 = DataBindingUtil.inflate(LayoutInflater.from(context),
                 R.layout.yeardialog, null, false);
         d.setContentView(binding1.getRoot());
-     /*   binding.etNumber.addTextChangedListener(addCardTextWatcher);
+        binding.etNumber.addTextChangedListener(addCardTextWatcher);
         binding.etName.addTextChangedListener(addCardTextWatcher);
         binding.textMonth.addTextChangedListener(addCardTextWatcher);
-        binding.etCvv.addTextChangedListener(addCardTextWatcher);*/
+        binding.etCvv.addTextChangedListener(addCardTextWatcher);
 
         binding.etNumber.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -236,7 +233,7 @@ public class AddPaymentActivity extends AppCompatActivity {
             String CardName = binding.etName.getText().toString().trim();
             String Month = binding.textMonth.getText().toString().trim();
             String CVV = binding.etCvv.getText().toString().trim();
-            if (!CardNo.isEmpty() && !CardName.isEmpty() && !Month.isEmpty() && !CVV.isEmpty()) {
+            if (!CardNo.isEmpty() || !CardName.isEmpty() || !Month.isEmpty() || !CVV.isEmpty()) {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
