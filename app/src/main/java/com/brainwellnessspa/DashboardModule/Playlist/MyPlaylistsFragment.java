@@ -167,7 +167,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 handler1.removeCallbacks(UpdateSongTime1);
                 getDownloadData();
             }*/
-            handler1.postDelayed(this, 300);
+            handler1.postDelayed(this, 500);
         }
     };
 
@@ -733,7 +733,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                              binding.pbProgress.setVisibility(View.VISIBLE);
                              binding.ivDownloads.setVisibility(View.GONE);
                              binding.pbProgress.setProgress(downloadProgress1);
-                             handler1.postDelayed(UpdateSongTime1, 300);
+                             handler1.postDelayed(UpdateSongTime1, 500);
                          }
                     } else {
                         binding.pbProgress.setVisibility(View.GONE);
@@ -1114,7 +1114,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
                 }*/
                 SongListSize = playlistSongs.size();
-                handler1.postDelayed(UpdateSongTime1, 300);
+                handler1.postDelayed(UpdateSongTime1, 500);
             }
             binding.pbProgress.setVisibility(View.VISIBLE);
             binding.ivDownloads.setVisibility(View.GONE);

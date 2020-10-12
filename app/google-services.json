@@ -1,43 +1,43 @@
 {
   "project_info": {
-    "project_number": "91036146776",
-    "firebase_url": "https://brain-wellness-spa.firebaseio.com",
-    "project_id": "brain-wellness-spa",
-    "storage_bucket": "brain-wellness-spa.appspot.com"
+    "project_number": "139951188296",
+    "firebase_url": "https://brain-wellness-spa-d4ac0.firebaseio.com",
+    "project_id": "brain-wellness-spa-d4ac0",
+    "storage_bucket": "brain-wellness-spa-d4ac0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:91036146776:android:27454bd178fb147c497e2d",
+        "mobilesdk_app_id": "1:139951188296:android:e98df657440cfaa3722b7d",
         "android_client_info": {
           "package_name": "com.brainwellnessspa"
         }
       },
       "oauth_client": [
         {
-          "client_id": "91036146776-64fsrh05leff4bksig28tiuop6au3hht.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.brainwellnessspa",
-            "certificate_hash": "828101783c6090836fcf12ee11204a3d81652248"
-          }
-        },
-        {
-          "client_id": "91036146776-0iem2p971c70a0d35hbtcprnv7v2js5b.apps.googleusercontent.com",
+          "client_id": "139951188296-hv2c05o2vu22rlaiemj4a979nt83u5ah.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCTz485MCEm-NDlflbx_lK5aReshu2lnhE"
+          "current_key": "AIzaSyBOpWjRnWxRqQhOXcLW1hwFt9sGna5jy_Q"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "91036146776-0iem2p971c70a0d35hbtcprnv7v2js5b.apps.googleusercontent.com",
+              "client_id": "139951188296-hv2c05o2vu22rlaiemj4a979nt83u5ah.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "139951188296-56kdtp8mr6ap9up6dtj67hjjpbtql5ir.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.brainwellnessspa",
+                "app_store_id": "12"
+              }
             }
           ]
         }
