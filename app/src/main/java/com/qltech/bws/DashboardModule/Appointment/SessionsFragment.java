@@ -110,7 +110,7 @@ public class SessionsFragment extends Fragment {
 
     private void prepareSessionList() {
         try {
-            if(IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")){
+            if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
                 editorr.remove(CONSTANTS.PREF_KEY_modelList);
@@ -236,21 +236,18 @@ public class SessionsFragment extends Fragment {
                 holder.binding.tvStatus.setBackgroundResource(R.drawable.green_text_background);
             }
 
-            holder.binding.cvSetSession.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Fragment appointmentDetailsFragment = new AppointmentDetailsFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("appointmentId", listModel.getId());
-                    bundle.putString("appointmentMainName", appointmentMainName);
-                    bundle.putString("appointmentName", appointmentName);
-                    bundle.putString("appointmentImage", appointmentImage);
-                    appointmentDetailsFragment.setArguments(bundle);
-                    fragmentManager1.beginTransaction()
-                            .addToBackStack("AppointmentDetailsFragment")
-                            .replace(R.id.flContainer, appointmentDetailsFragment).commit();
-                }
+            holder.binding.cvSetSession.setOnClickListener(view -> {
+                Fragment appointmentDetailsFragment = new AppointmentDetailsFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                Bundle bundle = new Bundle();
+                bundle.putString("appointmentId", listModel.getId());
+                bundle.putString("appointmentMainName", appointmentMainName);
+                bundle.putString("appointmentName", appointmentName);
+                bundle.putString("appointmentImage", appointmentImage);
+                appointmentDetailsFragment.setArguments(bundle);
+                fragmentManager1.beginTransaction()
+                        .addToBackStack("AppointmentDetailsFragment")
+                        .add(R.id.flContainer, appointmentDetailsFragment).commit();
             });
         }
 

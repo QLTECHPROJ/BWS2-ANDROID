@@ -284,6 +284,8 @@ public class PlaylistFragment extends Fragment {
             });
             if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                 binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("2")) {
+                binding.ivLock.setVisibility(View.VISIBLE);
             } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
                     || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
                 binding.ivLock.setVisibility(View.GONE);
@@ -292,10 +294,12 @@ public class PlaylistFragment extends Fragment {
             binding.rlCreatePlaylist.setOnClickListener(view -> {
                 if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                     binding.ivLock.setVisibility(View.VISIBLE);
-//      TODO              BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                     Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
                     i.putExtra("ComeFrom", "Plan");
                     startActivity(i);
+                } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("2")) {
+                    binding.ivLock.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
                 } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsLock().equalsIgnoreCase("")) {
                     binding.ivLock.setVisibility(View.GONE);
@@ -514,17 +518,21 @@ public class PlaylistFragment extends Fragment {
 
             if (IsLock.equalsIgnoreCase("1")) {
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+            } else  if (IsLock.equalsIgnoreCase("2")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            }else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
             holder.binding.rlMainLayout.setOnClickListener(view -> {
                 if (IsLock.equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-//       TODO             BWSApplication.showToast("Please re-activate your membership plan", ctx);
                     Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
                     i.putExtra("ComeFrom", "Plan");
                     startActivity(i);
+                } else if (IsLock.equalsIgnoreCase("2")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     if (MyDownloads.equalsIgnoreCase("1")) {
@@ -536,7 +544,6 @@ public class PlaylistFragment extends Fragment {
 
                 }
             });
-
         }
 
         @Override

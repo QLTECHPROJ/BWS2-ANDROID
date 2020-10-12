@@ -311,10 +311,11 @@
             android:layout_centerHorizontal="true"
             android:layout_marginHorizontal="@dimen/_33sdp"
             android:layout_marginBottom="@dimen/_25sdp"
-            android:background="@drawable/extra_round_cornor"
+            android:background="@drawable/gray_extra_round_corners"
             android:fontFamily="@font/montserrat_bold"
             android:paddingVertical="@dimen/_2sdp"
             android:text="@string/Save"
+            android:enabled="false"
             android:textColor="@color/white" />
 
         <LinearLayout

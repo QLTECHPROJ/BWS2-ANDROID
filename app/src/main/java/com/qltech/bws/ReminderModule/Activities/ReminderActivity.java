@@ -88,6 +88,9 @@ public class ReminderActivity extends AppCompatActivity {
             Day = getIntent().getStringExtra("Day");
         }
 
+        RefreshButton();
+        ShowPlaylistName();
+
         binding.llBack.setOnClickListener(view -> {
             if (ComeScreenReminder == 1) {
                 Intent i = new Intent(context, ReminderDetailsActivity.class);
@@ -98,15 +101,13 @@ public class ReminderActivity extends AppCompatActivity {
             }
         });
 
-        ShowPlaylistName();
-
         if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 Clock clock = Clock.systemDefaultZone();
                 String timezone = (String.valueOf(clock.getZone()));
                 simpleDateFormat1.setTimeZone(TimeZone.getTimeZone(timezone));
-            }else {
+            } else {
 //            simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+8"));
             }
             DateFormat df = DateFormat.getTimeInstance();
@@ -214,30 +215,37 @@ public class ReminderActivity extends AppCompatActivity {
 
         binding.llSunday.setOnClickListener(view -> {
             DaysSelection("0", binding.tvSunday);
+            RefreshButton();
         });
 
         binding.llMonday.setOnClickListener(view -> {
             DaysSelection("1", binding.tvMonday);
+            RefreshButton();
         });
 
         binding.llTuesday.setOnClickListener(view -> {
             DaysSelection("2", binding.tvTuesday);
+            RefreshButton();
         });
 
         binding.llWednesday.setOnClickListener(view -> {
             DaysSelection("3", binding.tvWednesday);
+            RefreshButton();
         });
 
         binding.llThursday.setOnClickListener(view -> {
             DaysSelection("4", binding.tvThursday);
+            RefreshButton();
         });
 
         binding.llFriday.setOnClickListener(view -> {
             DaysSelection("5", binding.tvFriday);
+            RefreshButton();
         });
 
         binding.llSaturday.setOnClickListener(view -> {
             DaysSelection("6", binding.tvSaturday);
+            RefreshButton();
         });
 
         if (ComeFrom.equalsIgnoreCase("")) {
@@ -278,6 +286,7 @@ public class ReminderActivity extends AppCompatActivity {
     }
 
     private void ShowDaysSelection(String value, TextView textView) {
+        RefreshButton();
         remiderDays.add(value);
         textView.setTextColor(getResources().getColor(R.color.extra_light_blue));
         textView.setBackground(getResources().getDrawable(R.drawable.fill_transparent_bg));
@@ -304,10 +313,11 @@ public class ReminderActivity extends AppCompatActivity {
         }
         binding.btnSave.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")) {
-//      TODO          BWSApplication.showToast("Please re-activate your membership plan", context);
                 Intent i = new Intent(context, MembershipChangeActivity.class);
                 i.putExtra("ComeFrom", "Plan");
                 startActivity(i);
+            } else if (IsLock.equalsIgnoreCase("2")) {
+                BWSApplication.showToast("Please re-activate your membership plan", context);
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 if (PlaylistName.equalsIgnoreCase("")) {
                     BWSApplication.showToast("Please select playlist name", context);
@@ -361,6 +371,32 @@ public class ReminderActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        RefreshButton();
+    }
+
+    public void RefreshButton() {
+        if (PlaylistName.equalsIgnoreCase("") && remiderDays.size() == 0) {
+            binding.btnSave.setEnabled(false);
+            binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+            binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
+        } else if (PlaylistName.equalsIgnoreCase("")) {
+            binding.btnSave.setEnabled(false);
+            binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+            binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
+        } else if (remiderDays.size() == 0) {
+            binding.btnSave.setEnabled(false);
+            binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+            binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
+        } else {
+            binding.btnSave.setEnabled(true);
+            binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+            binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+        }
     }
 
     private void prepareData(RecyclerView rvSelectPlaylist, LinearLayout llError, ProgressBar progressBar, FrameLayout progressBarHolder) {
@@ -438,6 +474,7 @@ public class ReminderActivity extends AppCompatActivity {
                     PlaylistName = model.get(mSelectedItem).getName();
                     ShowPlaylistName();
                     dialog.dismiss();
+                    RefreshButton();
                 });
             }
         }

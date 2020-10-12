@@ -273,14 +273,18 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);*/
         if (BWSApplication.isNetworkConnected(ctx)) {
-            if (!IsLock.equalsIgnoreCase("1")) {
-                binding.llMore.setClickable(true);
-                binding.llMore.setEnabled(true);
-                binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-            } else {
+            if (IsLock.equalsIgnoreCase("1")) {
                 binding.llMore.setClickable(false);
                 binding.llMore.setEnabled(false);
                 binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } if (IsLock.equalsIgnoreCase("2")) {
+                binding.llMore.setClickable(false);
+                binding.llMore.setEnabled(false);
+                binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llMore.setClickable(true);
+                binding.llMore.setEnabled(true);
+                binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else {
             binding.llMore.setClickable(false);
@@ -288,14 +292,18 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         if (BWSApplication.isNetworkConnected(ctx)) {
-            if (!IsLock.equalsIgnoreCase("1")) {
-                binding.llViewQueue.setClickable(true);
-                binding.llViewQueue.setEnabled(true);
-                binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-            } else {
+            if (IsLock.equalsIgnoreCase("1")) {
                 binding.llViewQueue.setClickable(false);
                 binding.llViewQueue.setEnabled(false);
                 binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            }if (IsLock.equalsIgnoreCase("2")) {
+                binding.llViewQueue.setClickable(false);
+                binding.llViewQueue.setEnabled(false);
+                binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llViewQueue.setClickable(true);
+                binding.llViewQueue.setEnabled(true);
+                binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else {
             binding.llViewQueue.setClickable(false);
@@ -1419,14 +1427,18 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }.getType();
         mainPlayModelList = gson.fromJson(json, type);
         if (BWSApplication.isNetworkConnected(ctx)) {
-            if (!IsLock.equalsIgnoreCase("1")) {
-                binding.llMore.setClickable(true);
-                binding.llMore.setEnabled(true);
-                binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-            } else {
+            if (IsLock.equalsIgnoreCase("1")) {
                 binding.llMore.setClickable(false);
                 binding.llMore.setEnabled(false);
                 binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            }if (IsLock.equalsIgnoreCase("2")) {
+                binding.llMore.setClickable(false);
+                binding.llMore.setEnabled(false);
+                binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llMore.setClickable(true);
+                binding.llMore.setEnabled(true);
+                binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else {
             binding.llMore.setClickable(false);
@@ -1434,14 +1446,18 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         if (BWSApplication.isNetworkConnected(ctx)) {
-            if (!IsLock.equalsIgnoreCase("1")) {
-                binding.llViewQueue.setClickable(true);
-                binding.llViewQueue.setEnabled(true);
-                binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-            } else {
+            if (IsLock.equalsIgnoreCase("1")) {
                 binding.llViewQueue.setClickable(false);
                 binding.llViewQueue.setEnabled(false);
                 binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            }if (IsLock.equalsIgnoreCase("2")) {
+                binding.llViewQueue.setClickable(false);
+                binding.llViewQueue.setEnabled(false);
+                binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                binding.llViewQueue.setClickable(true);
+                binding.llViewQueue.setEnabled(true);
+                binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else {
             binding.llViewQueue.setClickable(false);

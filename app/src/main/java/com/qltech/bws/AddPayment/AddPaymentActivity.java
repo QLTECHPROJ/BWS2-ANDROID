@@ -121,7 +121,10 @@ public class AddPaymentActivity extends AppCompatActivity {
 
         CreditCardFormatTextWatcher tv = new CreditCardFormatTextWatcher(binding.etNumber);
         binding.etNumber.addTextChangedListener(tv);
-
+        binding.etName.addTextChangedListener(addCardTextWatcher);
+        binding.etNumber.addTextChangedListener(addCardTextWatcher);
+        binding.etCvv.addTextChangedListener(addCardTextWatcher);
+        binding.textMonth.addTextChangedListener(addCardTextWatcher);
         binding.btnSave.setOnClickListener(view -> {
             if (binding.textMonth.getText().toString().equalsIgnoreCase("Expiry Date")
                     && a == 0 && binding.etNumber.getText().toString().equalsIgnoreCase("")
@@ -222,7 +225,7 @@ public class AddPaymentActivity extends AppCompatActivity {
         });
     }
 
-/*    private TextWatcher addCardTextWatcher = new TextWatcher() {
+    private TextWatcher addCardTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
@@ -239,7 +242,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
             } else {
                 binding.btnSave.setEnabled(false);
-                binding.btnSave.setTextColor(getResources().getColor(R.color.light_gray));
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
             }
         }
@@ -248,7 +251,6 @@ public class AddPaymentActivity extends AppCompatActivity {
         public void afterTextChanged(Editable s) {
         }
     };
-*/
 
     public void showYearDialog() {
         binding1.MonthPicker.setMaxValue(12);

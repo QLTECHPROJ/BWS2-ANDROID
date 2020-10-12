@@ -1,16 +1,23 @@
 package com.qltech.bws.DownloadModule.Adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,11 +34,14 @@ import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
+import com.qltech.bws.DashboardModule.Models.SucessModel;
+import com.qltech.bws.DashboardModule.Playlist.PlaylistFragment;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.qltech.bws.EncryptDecryptUtils.FileUtils;
 import com.qltech.bws.R;
 import com.qltech.bws.RoomDataBase.DatabaseClient;
 import com.qltech.bws.RoomDataBase.DownloadAudioDetails;
+import com.qltech.bws.Utility.APIClient;
 import com.qltech.bws.Utility.CONSTANTS;
 import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.AudioDownloadsLayoutBinding;
@@ -39,6 +49,10 @@ import com.qltech.bws.databinding.AudioDownloadsLayoutBinding;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.qltech.bws.DashboardModule.Activities.DashboardActivity.player;
@@ -61,7 +75,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     TextView tvFound;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     Runnable UpdateSongTime1;
-    List<String> fileNameList = new ArrayList<>(),playlistDownloadId = new ArrayList<>();
+    List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
     private List<DownloadAudioDetails> listModelList;
     private Handler handler1;
 
@@ -113,7 +127,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                                             holder.binding.ivDownloads.setVisibility(View.GONE);*/
                                     } else {
                                         holder.binding.pbProgress.setVisibility(View.GONE);
- //                                            handler2.removeCallbacks(UpdateSongTime2);
+                                        //                                            handler2.removeCallbacks(UpdateSongTime2);
                                         getDownloadData();
                                     }
                                 } else {
@@ -171,8 +185,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     }
                 }
             }
-        }
-        else{
+        } else {
             holder.binding.pbProgress.setVisibility(View.GONE);
         }
         holder.binding.tvTitle.setText(listModelList.get(position).getName());
@@ -188,6 +201,9 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         if (IsLock.equalsIgnoreCase("1")) {
             holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
             holder.binding.ivLock.setVisibility(View.VISIBLE);
+        }else if (IsLock.equalsIgnoreCase("2")) {
+            holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+            holder.binding.ivLock.setVisibility(View.VISIBLE);
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
             holder.binding.ivBackgroundImage.setVisibility(View.GONE);
             holder.binding.ivLock.setVisibility(View.GONE);
@@ -197,10 +213,13 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             if (IsLock.equalsIgnoreCase("1")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
-//      TODO          BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 Intent i = new Intent(ctx, MembershipChangeActivity.class);
                 i.putExtra("ComeFrom", "Plan");
                 ctx.startActivity(i);
+            } else if (IsLock.equalsIgnoreCase("2")) {
+                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+                BWSApplication.showToast("Please re-activate your membership plan", ctx);
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 comefromDownload = "1";
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
@@ -265,13 +284,37 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             }
         });
 
-        holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        holder.binding.llRemoveAudio.setOnClickListener(view -> {
+            final Dialog dialog = new Dialog(ctx);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.logout_layout);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+            final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+            final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+            final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+            final Button Btn = dialog.findViewById(R.id.Btn);
+            tvTitle.setText("Remove audio");
+            tvHeader.setText("Are you sure you want to remove " + listModelList.get(position).getName() +"audio?");
+            Btn.setText("Confirm");
+            dialog.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                }
+                return false;
+            });
+
+            Btn.setOnClickListener(v -> {
                 String AudioFile = listModelList.get(position).getAudioFile();
                 String AudioName = listModelList.get(position).getName();
                 deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
-            }
+                dialog.dismiss();
+            });
+
+            tvGoBack.setOnClickListener(v -> dialog.dismiss());
+            dialog.show();
+            dialog.setCancelable(false);
         });
     }
 

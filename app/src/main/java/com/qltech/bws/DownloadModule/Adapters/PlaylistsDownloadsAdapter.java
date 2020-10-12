@@ -1,14 +1,19 @@
 package com.qltech.bws.DownloadModule.Adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -62,7 +67,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     TextView tvFound;
     int count;
     RecyclerView rvDownloadsList;
-        Runnable UpdateSongTime1;
+    Runnable UpdateSongTime1;
     Handler handler1;
     List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), remainAudio = new ArrayList<>();
     private List<DownloadPlaylistDetails> listModelList;
@@ -98,8 +103,8 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {
-                for(int i = 0;i<listModelList.size();i++){
-                    getMediaByPer(listModelList.get(i).getPlaylistID(),listModelList.get(i).getTotalAudio(),holder.binding.pbProgress);
+                for (int i = 0; i < listModelList.size(); i++) {
+                    getMediaByPer(listModelList.get(i).getPlaylistID(), listModelList.get(i).getTotalAudio(), holder.binding.pbProgress);
                 }
 
             }
@@ -112,7 +117,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 holder.binding.pbProgress.setVisibility(View.GONE);
             }
         }*/
-        getMediaByPer(listModelList.get(position).getPlaylistID(),listModelList.get(position).getTotalAudio(),holder.binding.pbProgress);
+        getMediaByPer(listModelList.get(position).getPlaylistID(), listModelList.get(position).getTotalAudio(), holder.binding.pbProgress);
         if (listModelList.get(position).getTotalAudio().equalsIgnoreCase("") ||
                 listModelList.get(position).getTotalAudio().equalsIgnoreCase("0") &&
                         listModelList.get(position).getTotalhour().equalsIgnoreCase("")
@@ -138,6 +143,9 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         if (IsLock.equalsIgnoreCase("1")) {
             holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
             holder.binding.ivLock.setVisibility(View.VISIBLE);
+        } else if (IsLock.equalsIgnoreCase("2")) {
+            holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+            holder.binding.ivLock.setVisibility(View.VISIBLE);
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
             holder.binding.ivBackgroundImage.setVisibility(View.GONE);
             holder.binding.ivLock.setVisibility(View.GONE);
@@ -147,10 +155,13 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             if (IsLock.equalsIgnoreCase("1")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
-//      TODO          BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 Intent i = new Intent(ctx, MembershipChangeActivity.class);
                 i.putExtra("ComeFrom", "Plan");
                 ctx.startActivity(i);
+            }if (IsLock.equalsIgnoreCase("2")) {
+                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+                BWSApplication.showToast("Please re-activate your membership plan", ctx);
             } else if (IsLock.equalsIgnoreCase("0")
                     || IsLock.equalsIgnoreCase("")) {
                 playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());
@@ -166,11 +177,35 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 ctx.finish();*/
             }
         });
-        holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        holder.binding.llRemoveAudio.setOnClickListener(view -> {
+            final Dialog dialog = new Dialog(ctx);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.logout_layout);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+            final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+            final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+            final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+            final Button Btn = dialog.findViewById(R.id.Btn);
+            tvTitle.setText("Remove audio");
+            tvHeader.setText("Are you sure you want to remove " + listModelList.get(position).getPlaylistName() +"audio?");
+            Btn.setText("Confirm");
+            dialog.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                }
+                return false;
+            });
+
+            Btn.setOnClickListener(v -> {
                 playlistWiseAudioDetails = GetPlaylistMedia(listModelList.get(position).getPlaylistID());
-            }
+                dialog.dismiss();
+            });
+
+            tvGoBack.setOnClickListener(v -> dialog.dismiss());
+            dialog.show();
+            dialog.setCancelable(false);
         });
     }
 
@@ -179,23 +214,23 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
 
             @Override
             protected Void doInBackground(Void... voids) {
-               count= DatabaseClient.getInstance(ctx)
+                count = DatabaseClient.getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getCountDownloadProgress("Compete",playlistID);
+                        .getCountDownloadProgress("Compete", playlistID);
 
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if(count<Integer.parseInt(totalAudio)){
+                if (count < Integer.parseInt(totalAudio)) {
                     long progressPercent = count * 100 / Integer.parseInt(totalAudio);
                     int downloadProgress1 = (int) progressPercent;
                     pbProgress.setVisibility(View.VISIBLE);
                     pbProgress.setProgress(downloadProgress1);
-                    handler1.postDelayed(UpdateSongTime1,500);
-                }else{
+                    handler1.postDelayed(UpdateSongTime1, 500);
+                } else {
                     pbProgress.setVisibility(View.GONE);
                     handler1.removeCallbacks(UpdateSongTime1);
                 }

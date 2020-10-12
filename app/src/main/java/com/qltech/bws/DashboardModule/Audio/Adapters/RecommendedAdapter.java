@@ -81,73 +81,40 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                     || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
             }
+        } else if (IsLock.equalsIgnoreCase("2")) {
+            if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                holder.binding.ivLock.setVisibility(View.GONE);
+            } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                    || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
+            }
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
             holder.binding.ivLock.setVisibility(View.GONE);
         }
 
-        holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                if(queuePlay){
-                    int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
-                    ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
-                    Gson gson = new Gson();
-                    String json1 = shared1.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
-                    if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
-                        Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
-                        }.getType();
-                        addToQueueModelList = gson.fromJson(json1, type1);
-                    }
-                    addToQueueModelList.remove(position1);
-                    SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared2.edit();
-                    String json = gson.toJson(addToQueueModelList);
-                    editor.putString(CONSTANTS.PREF_KEY_queueList, json);
-                    editor.commit();
+        holder.binding.llMainLayout.setOnClickListener(view -> {
+//       TODO                 Active and cancelled = 0, InActive = 1, Suspeded = 2
+            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+            if(queuePlay){
+                int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
+                ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
+                Gson gson = new Gson();
+                String json1 = shared1.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
+                if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
+                    Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
+                    }.getType();
+                    addToQueueModelList = gson.fromJson(json1, type1);
                 }
-                if (IsLock.equalsIgnoreCase("1")) {
-                    if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        holder.binding.ivLock.setVisibility(View.GONE);
-                        try {
-                            player = 1;
-                            if (isPrepare || isMediaStart || isPause) {
-                                stopMedia();
-                            }
-                            isPause = false;
-                            isMediaStart = false;
-                            isPrepare = false;
-                            Fragment fragment = new TransparentPlayerFragment();
-                            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();
-
-                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = shared.edit();
-                            Gson gson = new Gson();
-                            String json = gson.toJson(listModelList.get(position));
-                            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
-                            editor.commit();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
-                            || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-//            TODO            BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                        i.putExtra("ComeFrom", "Plan");
-                        ctx.startActivity(i);
-                    }
-                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                addToQueueModelList.remove(position1);
+                SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared2.edit();
+                String json = gson.toJson(addToQueueModelList);
+                editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+                editor.commit();
+            }
+            if (IsLock.equalsIgnoreCase("1")) {
+                if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
                     try {
                         player = 1;
@@ -178,6 +145,80 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                        || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    ctx.startActivity(i);
+                }
+            } else if (IsLock.equalsIgnoreCase("2")) {
+                if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                    try {
+                        player = 1;
+                        if (isPrepare || isMediaStart || isPause) {
+                            stopMedia();
+                        }
+                        isPause = false;
+                        isMediaStart = false;
+                        isPrepare = false;
+                        Fragment fragment = new TransparentPlayerFragment();
+                        FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+                        fragmentManager1.beginTransaction()
+                                .add(R.id.flContainer, fragment)
+                                .commit();
+
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        Gson gson = new Gson();
+                        String json = gson.toJson(listModelList.get(position));
+                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
+                        editor.commit();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                        || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                }
+            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                holder.binding.ivLock.setVisibility(View.GONE);
+                try {
+                    player = 1;
+                    if (isPrepare || isMediaStart || isPause) {
+                        stopMedia();
+                    }
+                    isPause = false;
+                    isMediaStart = false;
+                    isPrepare = false;
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flContainer, fragment)
+                            .commit();
+
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(listModelList.get(position));
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
+                    editor.commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

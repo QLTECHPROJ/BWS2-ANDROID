@@ -276,7 +276,6 @@ public class UserProfileActivity extends AppCompatActivity {
                             Glide.with(getApplicationContext()).load(profilePicPath)
                                     .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .skipMemoryCache(false).into(binding.civProfile);
-
                         }
 
                         if (viewModel.getResponseData().getDOB().equalsIgnoreCase("0000-00-00")) {
@@ -323,11 +322,6 @@ public class UserProfileActivity extends AppCompatActivity {
                             binding.etMobileNumber.setClickable(true);
                         }
 
-//                        if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("1")) { /*Enable */
-                        binding.btnSave.setBackgroundResource(R.drawable.gray_extra_round_corners);
-                        binding.btnSave.setClickable(true);
-                        binding.btnSave.setEnabled(true);
-
                         binding.etCalendar.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -336,12 +330,6 @@ public class UserProfileActivity extends AppCompatActivity {
                                 }
                             }
                         });
-
-                        /*  } else if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("0")) { *//*Disable *//*
-                            binding.btnSave.setBackgroundResource(R.drawable.gray_extra_light_round_corners);
-                            binding.btnSave.setClickable(false);
-                            binding.btnSave.setEnabled(false);
-                        }*/
 
                         if ((viewModel.getResponseData().getIsVerify().equalsIgnoreCase("0"))) {
                             binding.ivCheckEmail.setVisibility(View.GONE);

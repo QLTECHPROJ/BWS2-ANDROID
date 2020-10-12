@@ -349,7 +349,6 @@ public class AddAudioActivity extends AppCompatActivity {
                                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                             SucessModel listModel = response.body();
                                             BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                            finish();
                                         }
                                     }
 
@@ -365,10 +364,41 @@ public class AddAudioActivity extends AppCompatActivity {
                                 || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                             holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                             holder.binding.ivLock.setVisibility(View.VISIBLE);
-//         TODO                   BWSApplication.showToast("Please re-activate your membership plan", ctx);
                             Intent i = new Intent(ctx, MembershipChangeActivity.class);
                             i.putExtra("ComeFrom", "Plan");
                             startActivity(i);
+                        }
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
+                        if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                            holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                            holder.binding.ivLock.setVisibility(View.GONE);
+                            String AudioID = modelList.get(position).getID();
+                            if (BWSApplication.isNetworkConnected(ctx)) {
+                                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID, "");
+                                listCall.enqueue(new Callback<SucessModel>() {
+                                    @Override
+                                    public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                        if (response.isSuccessful()) {
+                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                            SucessModel listModel = response.body();
+                                            BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<SucessModel> call, Throwable t) {
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                    }
+                                });
+                            } else {
+                                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                            }
+                        } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
+                                || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
+                            holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                            holder.binding.ivLock.setVisibility(View.VISIBLE);
+                            BWSApplication.showToast("Please re-activate your membership plan", ctx);
                         }
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
@@ -384,7 +414,6 @@ public class AddAudioActivity extends AppCompatActivity {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         SucessModel listModel = response.body();
                                         BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                        finish();
                                     }
                                 }
 
@@ -405,10 +434,13 @@ public class AddAudioActivity extends AppCompatActivity {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
-//             TODO           BWSApplication.showToast("Please re-activate your membership plan", ctx);
                         Intent i = new Intent(ctx, MembershipChangeActivity.class);
                         i.putExtra("ComeFrom", "Plan");
                         startActivity(i);
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
@@ -436,14 +468,18 @@ public class AddAudioActivity extends AppCompatActivity {
                         }
                     }
                 });
-                holder.binding.llMainLayout.setOnClickListener(view -> {
+
+               /* holder.binding.llMainLayout.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
-//            TODO            BWSApplication.showToast("Please re-activate your membership plan", ctx);
                         Intent i = new Intent(ctx, MembershipChangeActivity.class);
                         i.putExtra("ComeFrom", "Plan");
                         startActivity(i);
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         comefrom_search = 1;
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
@@ -460,7 +496,7 @@ public class AddAudioActivity extends AppCompatActivity {
                                 .replace(R.id.flContainer, myPlaylistsFragment)
                                 .commit();
                     }
-                });
+                });*/
             }
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
@@ -549,7 +585,6 @@ public class AddAudioActivity extends AppCompatActivity {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         SucessModel listModel = response.body();
                                         BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                        finish();
                                     }
                                 }
 
@@ -565,10 +600,41 @@ public class AddAudioActivity extends AppCompatActivity {
                             || listModel.get(position).getIsPlay().equalsIgnoreCase("")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
-//          TODO              BWSApplication.showToast("Please re-activate your membership plan", ctx);
                         Intent i = new Intent(ctx, MembershipChangeActivity.class);
                         i.putExtra("ComeFrom", "Plan");
                         startActivity(i);
+                    }
+                } else if (listModel.get(position).getIsLock().equalsIgnoreCase("2")) {
+                    if (listModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                        holder.binding.ivLock.setVisibility(View.GONE);
+                        String AudioID = listModel.get(position).getID();
+                        if (BWSApplication.isNetworkConnected(ctx)) {
+                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID, "");
+                            listCall.enqueue(new Callback<SucessModel>() {
+                                @Override
+                                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                                    if (response.isSuccessful()) {
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        SucessModel listModel = response.body();
+                                        BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<SucessModel> call, Throwable t) {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                }
+                            });
+                        } else {
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                        }
+                    } else if (listModel.get(position).getIsPlay().equalsIgnoreCase("0")
+                            || listModel.get(position).getIsPlay().equalsIgnoreCase("")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
                     }
                 } else if (listModel.get(position).getIsLock().equalsIgnoreCase("0") || listModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     String AudioID = listModel.get(position).getID();
@@ -582,7 +648,6 @@ public class AddAudioActivity extends AppCompatActivity {
                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     SucessModel listModel = response.body();
                                     BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                    finish();
                                 }
                             }
 
@@ -663,6 +728,9 @@ public class AddAudioActivity extends AppCompatActivity {
             if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
+            } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("2")) {
+                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                holder.binding.ivLock.setVisibility(View.VISIBLE);
             } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
@@ -672,11 +740,13 @@ public class AddAudioActivity extends AppCompatActivity {
                 if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-//       TODO            BWSApplication.showToast("Please re-activate your membership plan", ctx);
-
                     Intent i = new Intent(ctx, MembershipChangeActivity.class);
                         i.putExtra("ComeFrom","Plan");
                         startActivity(i);
+                } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                   BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
@@ -701,10 +771,13 @@ public class AddAudioActivity extends AppCompatActivity {
                 if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-//          TODO          BWSApplication.showToast("Please re-activate your membership plan", ctx);
                     Intent i = new Intent(ctx, MembershipChangeActivity.class);
                     i.putExtra("ComeFrom", "Plan");
                     startActivity(i);
+                } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("2")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);

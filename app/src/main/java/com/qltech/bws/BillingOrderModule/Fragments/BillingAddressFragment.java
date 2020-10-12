@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +39,14 @@ public class BillingAddressFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         getPrepareData();
-
+        binding.etName.addTextChangedListener(billingTextWatcher);
+        binding.etEmail.addTextChangedListener(billingTextWatcher);
+        binding.etMobileNumber.addTextChangedListener(billingTextWatcher);
+        binding.etCountry.addTextChangedListener(billingTextWatcher);
+        binding.etAddressLine1.addTextChangedListener(billingTextWatcher);
+        binding.etCity.addTextChangedListener(billingTextWatcher);
+        binding.etState.addTextChangedListener(billingTextWatcher);
+        binding.etPostCode.addTextChangedListener(billingTextWatcher);
         binding.btnSave.setOnClickListener(view1 -> {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 binding.tlName.setError("");
@@ -134,4 +143,38 @@ public class BillingAddressFragment extends Fragment {
             }
         });
     }
+
+    private TextWatcher billingTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String Name = binding.etName.getText().toString().trim();
+            String Email = binding.etEmail.getText().toString().trim();
+            String MobileNumber = binding.etMobileNumber.getText().toString().trim();
+            String Country = binding.etCountry.getText().toString().trim();
+            String AddressLine1 = binding.etAddressLine1.getText().toString().trim();
+            String City = binding.etCity.getText().toString().trim();
+            String State = binding.etState.getText().toString().trim();
+            String PostCode = binding.etPostCode.getText().toString().trim();
+            if (!Name.isEmpty() && !Email.isEmpty() && !MobileNumber.isEmpty()
+                    && !Country.isEmpty() && !AddressLine1.isEmpty()
+                    && !City.isEmpty() && !State.isEmpty() && !PostCode.isEmpty()) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else {
+                binding.btnSave.setEnabled(false);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
 }
