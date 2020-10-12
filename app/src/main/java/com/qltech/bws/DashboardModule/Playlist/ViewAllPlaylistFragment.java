@@ -25,8 +25,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qltech.bws.BWSApplication;
 import com.qltech.bws.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.ViewAllAudioListModel;
 import com.qltech.bws.DashboardModule.Models.ViewAllPlayListModel;
 import com.qltech.bws.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
@@ -40,6 +42,7 @@ import com.qltech.bws.Utility.MeasureRatio;
 import com.qltech.bws.databinding.FragmentViewAllPlaylistBinding;
 import com.qltech.bws.databinding.PlaylistCustomLayoutBinding;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -320,6 +323,26 @@ public class ViewAllPlaylistFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                if(queuePlay){
+                    int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
+                    ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
+                    Gson gson = new Gson();
+                    String json1 = shared1.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
+                    if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
+                        Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
+                        }.getType();
+                        addToQueueModelList = gson.fromJson(json1, type1);
+                    }
+                    addToQueueModelList.remove(position1);
+                    SharedPreferences shared2 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared2.edit();
+                    String json = gson.toJson(addToQueueModelList);
+                    editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+                    editor.commit();
+
+                }
                 player = 1;
                 if (isPrepare || isMediaStart || isPause) {
                     stopMedia();

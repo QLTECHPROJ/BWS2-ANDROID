@@ -65,11 +65,11 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
 
     public byte[] decrypt(String FILE_NAME) {
         byte[] decryptedBytes = null;
-        BWSApplication.showToast("Retrieve file...", context);
+//        BWSApplication.showToast("Retrieve file...", context);
         try {
             byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, FILE_NAME));
             decryptedBytes = EncryptDecryptUtils.decode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
-            BWSApplication.showToast("File Retrieve Done", context);
+//            BWSApplication.showToast("File Retrieve Done", context);
             return decryptedBytes;
         } catch (Exception e) {
 //            BWSApplication.showToast("File Decryption failed.\nException: " + e.getMessage(), context);

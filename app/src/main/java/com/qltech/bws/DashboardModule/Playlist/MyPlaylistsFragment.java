@@ -50,6 +50,7 @@ import com.qltech.bws.BillingOrderModule.Models.CardModel;
 import com.qltech.bws.DashboardModule.Activities.AddAudioActivity;
 import com.qltech.bws.DashboardModule.Activities.AddQueueActivity;
 import com.qltech.bws.DashboardModule.Activities.MyPlaylistActivity;
+import com.qltech.bws.DashboardModule.Models.AddToQueueModel;
 import com.qltech.bws.DashboardModule.Models.ReminderStatusPlaylistModel;
 import com.qltech.bws.DashboardModule.Models.SubPlayListModel;
 import com.qltech.bws.DashboardModule.Models.SucessModel;
@@ -168,6 +169,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 handler1.removeCallbacks(UpdateSongTime1);
                 getDownloadData();
             }*/
+            handler1.postDelayed(this, 300);
         }
     };
 
@@ -722,13 +724,19 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 downloadPlaylistDetailsList = GetPlaylistDetail(downloadPlaylistDetails.getDownload());
 
                 if(downloadPlaylistDetailsList.size()!=0) {
-                    if (count < totalAudio) {
-                        long progressPercent = count * 100 / totalAudio;
-                        int downloadProgress1 = (int) progressPercent;
-                        binding.pbProgress.setVisibility(View.VISIBLE);
-                        binding.ivDownloads.setVisibility(View.GONE);
-                        binding.pbProgress.setProgress(downloadProgress1);
-                        handler1.postDelayed(UpdateSongTime1, 300);
+                    if (count <= totalAudio) {
+                         if(count == totalAudio){
+                            binding.pbProgress.setVisibility(View.GONE);
+                            binding.ivDownloads.setVisibility(View.VISIBLE);
+                            handler1.removeCallbacks(UpdateSongTime1);
+                        }else {
+                             long progressPercent = count * 100 / totalAudio;
+                             int downloadProgress1 = (int) progressPercent;
+                             binding.pbProgress.setVisibility(View.VISIBLE);
+                             binding.ivDownloads.setVisibility(View.GONE);
+                             binding.pbProgress.setProgress(downloadProgress1);
+                             handler1.postDelayed(UpdateSongTime1, 300);
+                         }
                     } else {
                         binding.pbProgress.setVisibility(View.GONE);
                         binding.ivDownloads.setVisibility(View.VISIBLE);
@@ -904,6 +912,26 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void callTransparentFrag(int position, Context ctx, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList,
                                      String myPlaylist) {
+        SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+        if(queuePlay){
+            int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
+            ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
+            Gson gson = new Gson();
+            String json1 = shared1.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
+            if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
+                }.getType();
+                addToQueueModelList = gson.fromJson(json1, type1);
+            }
+            addToQueueModelList.remove(position1);
+            SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared2.edit();
+            String json = gson.toJson(addToQueueModelList);
+            editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+            editor.commit();
+
+        }
         player = 1;
         if (isPrepare || isMediaStart || isPause) {
             stopMedia();

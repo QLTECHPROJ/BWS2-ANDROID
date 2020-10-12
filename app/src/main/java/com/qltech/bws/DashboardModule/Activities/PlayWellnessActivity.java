@@ -420,7 +420,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             isMediaStart = false;
             isPrepare = false;
             isPause = false;
-            if (IsRepeat.equalsIgnoreCase("1")) {
+            if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
                 // repeat is on play same song again
                 if (position < listSize - 1) {
                     position = position + 1;
@@ -428,9 +428,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     position = 0;
                 }
                 getPrepareShowData(position);
-            } else if (IsRepeat.equalsIgnoreCase("0")) {
+            }/* else if (IsRepeat.equalsIgnoreCase("0")) {
                 getPrepareShowData(position);
-            } else if (IsShuffle.equalsIgnoreCase("1")) {
+            }*/ else if (IsShuffle.equalsIgnoreCase("1")) {
                 // shuffle is on - play a random song
                 if (queuePlay) {
                     if (BWSApplication.isNetworkConnected(ctx)) {
@@ -489,7 +489,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             isMediaStart = false;
             isPrepare = false;
             isPause = false;
-            if (IsRepeat.equalsIgnoreCase("1")) {
+            if (IsRepeat.equalsIgnoreCase("1")||IsRepeat.equalsIgnoreCase("0")) {
                 // repeat is on play same song again
                 if (position > 0) {
                     position = position - 1;
@@ -498,9 +498,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     position = listSize - 1;
                     getPrepareShowData(position);
                 }
-            } else if (IsRepeat.equalsIgnoreCase("0")) {
+            }/* else if (IsRepeat.equalsIgnoreCase("0")) {
                 getPrepareShowData(position);
-            } else if (IsShuffle.equalsIgnoreCase("1")) {
+            }*/ else if (IsShuffle.equalsIgnoreCase("1")) {
                 // shuffle is on - play a random song
                 if (queuePlay) {
                     if (BWSApplication.isNetworkConnected(ctx)) {
@@ -952,7 +952,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 }
             });
         } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+//            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
 
