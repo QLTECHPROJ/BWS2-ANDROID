@@ -189,7 +189,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
             final Button Btn = dialog.findViewById(R.id.Btn);
             tvTitle.setText("Remove audio");
-            tvHeader.setText("Are you sure you want to remove " + listModelList.get(position).getPlaylistName() +"audio?");
+            tvHeader.setText("Are you sure you want to remove " + listModelList.get(position).getPlaylistName() +" playlist?");
             Btn.setText("Confirm");
             dialog.setOnKeyListener((v, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
