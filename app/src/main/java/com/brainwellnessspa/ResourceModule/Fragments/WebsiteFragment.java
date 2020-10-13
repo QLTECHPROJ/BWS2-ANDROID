@@ -126,7 +126,7 @@ public class WebsiteFragment extends Fragment {
                 i.putExtra("title", listModelList.get(position).getTitle());
                 i.putExtra("linkOne", listModelList.get(position).getResourceLink1());
                 i.putExtra("linkTwo", listModelList.get(position).getResourceLink2());
-                i.putExtra("image", listModelList.get(position).getImage());
+                i.putExtra("image", listModelList.get(position).getDetailimage());
                 i.putExtra("description", listModelList.get(position).getDescription());
                 startActivity(i);
             });

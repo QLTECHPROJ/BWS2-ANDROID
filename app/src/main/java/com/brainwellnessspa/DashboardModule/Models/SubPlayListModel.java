@@ -82,6 +82,9 @@ public class SubPlayListModel {
         @SerializedName("PlaylistImage")
         @Expose
         private String playlistImage;
+        @SerializedName("PlaylistImageDetail")
+        @Expose
+        private String playlistImageDetail;
         @SerializedName("TotalAudio")
         @Expose
         private String totalAudio;
@@ -117,6 +120,7 @@ public class SubPlayListModel {
             playlistMastercat = in.readString();
             playlistSubcat = in.readString();
             playlistImage = in.readString();
+            playlistImageDetail = in.readString();
             totalAudio = in.readString();
             totalDuration = in.readString();
             totalhour = in.readString();
@@ -261,6 +265,14 @@ public class SubPlayListModel {
             this.reminderDay = reminderDay;
         }
 
+        public String getPlaylistImageDetail() {
+            return playlistImageDetail;
+        }
+
+        public void setPlaylistImageDetail(String playlistImageDetail) {
+            this.playlistImageDetail = playlistImageDetail;
+        }
+
         public String getPlaylistImage() {
             return playlistImage;
         }
@@ -290,6 +302,7 @@ public class SubPlayListModel {
             parcel.writeString(playlistMastercat);
             parcel.writeString(playlistSubcat);
             parcel.writeString(playlistImage);
+            parcel.writeString(playlistImageDetail);
             parcel.writeString(totalAudio);
             parcel.writeString(totalDuration);
             parcel.writeString(totalhour);

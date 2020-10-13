@@ -70,6 +70,9 @@ public class ResourceListModel {
         @SerializedName("ResourceDesc")
         @Expose
         private String description;
+        @SerializedName("Detailimage")
+        @Expose
+        private String detailimage;
         @SerializedName("image")
         @Expose
         private String image;
@@ -97,6 +100,14 @@ public class ResourceListModel {
 
         public void setTitle(String title) {
             this.title = title;
+        }
+
+        public String getDetailimage() {
+            return detailimage;
+        }
+
+        public void setDetailimage(String detailimage) {
+            this.detailimage = detailimage;
         }
 
         public String getType() {

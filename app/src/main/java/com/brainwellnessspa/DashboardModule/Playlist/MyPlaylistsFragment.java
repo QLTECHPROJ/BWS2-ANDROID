@@ -263,9 +263,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
         });
 
-        RecyclerView.LayoutManager suggestedList = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        binding.rvSuggestedList.setLayoutManager(suggestedList);
-        binding.rvSuggestedList.setItemAnimator(new DefaultItemAnimator());
         RecyclerView.LayoutManager playList = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPlayLists.setLayoutManager(playList);
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());

@@ -77,7 +77,6 @@ public class AddPaymentActivity extends AppCompatActivity {
                 finish();
             }
         });
-        binding.llBack.setOnClickListener(view -> finish());
 
         context = AddPaymentActivity.this;
         activity = AddPaymentActivity.this;

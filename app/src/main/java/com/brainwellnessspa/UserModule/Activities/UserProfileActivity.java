@@ -276,7 +276,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             binding.civProfile.setVisibility(View.VISIBLE);
                             binding.rlLetter.setVisibility(View.GONE);
                             Glide.with(getApplicationContext()).load(profilePicPath)
-                                    .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .thumbnail(0.1f)
                                     .skipMemoryCache(false).into(binding.civProfile);
                         }
 
@@ -462,7 +462,7 @@ public class UserProfileActivity extends AppCompatActivity {
         if (requestCode == CONTENT_REQUEST && resultCode == Activity.RESULT_OK) {
             try {
                 Glide.with(this).load(imageFilePath)
-                        .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .thumbnail(0.1f)
                         .skipMemoryCache(false).into(binding.civProfile);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
@@ -477,7 +477,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                                .thumbnail(0.1f)
                                                 .skipMemoryCache(false).into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                     }
@@ -499,7 +499,7 @@ public class UserProfileActivity extends AppCompatActivity {
             if (data != null) {
                 Uri selectedImageUri = data.getData();
                 Glide.with(this).load(selectedImageUri)
-                        .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .thumbnail(0.1f)
                         .skipMemoryCache(false).into(binding.civProfile);
                 if (BWSApplication.isNetworkConnected(ctx)) {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
@@ -516,7 +516,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         profilePicPath = addProfileModel.getResponseData().getProfileImage();
                                         Glide.with(getApplicationContext()).load(profilePicPath)
-                                                .thumbnail(0.1f).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                                .thumbnail(0.1f)
                                                 .skipMemoryCache(false).into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
                                     }
