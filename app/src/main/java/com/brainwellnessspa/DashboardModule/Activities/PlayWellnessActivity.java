@@ -169,7 +169,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             currentDuration = getStartTime();
 
             Log.e("myProgress old!!!",String.valueOf(myProgress));
-            if(myProgress == currentDuration && myProgress!=0){
+            if(myProgress == currentDuration && myProgress!=0 && !isPause){
                 Log.e("myProgress",String.valueOf(myProgress));
                 myCount++;
                 Log.e("myCount",String.valueOf(myCount));
@@ -1417,7 +1417,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callBack() {
-//        handler.removeCallbacks(UpdateSongTime);
+        handler.removeCallbacks(UpdateSongTime);
         handler1.removeCallbacks(UpdateSongTime1);
         player = 1;
         if (binding.llPause.getVisibility() == View.VISIBLE) {

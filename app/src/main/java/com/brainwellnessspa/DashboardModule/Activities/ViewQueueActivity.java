@@ -149,7 +149,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             currentDuration = getStartTime();
 
             Log.e("myProgress old!!!",String.valueOf(myProgress));
-            if(myProgress == currentDuration && myProgress!=0){
+            if(myProgress == currentDuration && myProgress!=0 && !isPause){
                 Log.e("myProgress",String.valueOf(myProgress));
                 myCount++;
                 Log.e("myCount",String.valueOf(myCount));
@@ -243,6 +243,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         callAdapterMethod();
         binding.llNowPlaying.setOnClickListener(view -> {
+            handler.removeCallbacks(UpdateSongTime);
             if (binding.llPause.getVisibility() == View.VISIBLE) {
                 isPause = false;
             }
