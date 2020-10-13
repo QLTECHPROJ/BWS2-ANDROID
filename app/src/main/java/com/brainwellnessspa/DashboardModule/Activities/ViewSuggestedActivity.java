@@ -145,27 +145,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binds.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binds.ivLock.setVisibility(View.GONE);
-                        if (BWSApplication.isNetworkConnected(ctx)) {
-                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudiolistsModel.get(position).getID(), PlaylistID, "");
-                            listCall.enqueue(new Callback<SucessModel>() {
-                                @Override
-                                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                                    if (response.isSuccessful()) {
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                        SucessModel listModels = response.body();
-                                        BWSApplication.showToast(listModels.getResponseMessage(), ctx);
-                                    }
-                                }
+                        callAddAudioToPlaylist(AudiolistsModel.get(position).getID(),"","0");
 
-                                @Override
-                                public void onFailure(Call<SucessModel> call, Throwable t) {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                }
-                            });
-                        } else {
-                            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                        }
                     } else if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("")) {
                         holder.binds.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -178,27 +159,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binds.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binds.ivLock.setVisibility(View.GONE);
-                        if (BWSApplication.isNetworkConnected(ctx)) {
-                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudiolistsModel.get(position).getID(), PlaylistID, "");
-                            listCall.enqueue(new Callback<SucessModel>() {
-                                @Override
-                                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                                    if (response.isSuccessful()) {
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                        SucessModel listModels = response.body();
-                                        BWSApplication.showToast(listModels.getResponseMessage(), ctx);
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<SucessModel> call, Throwable t) {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                }
-                            });
-                        } else {
-                            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                        }
+                        callAddAudioToPlaylist(AudiolistsModel.get(position).getID(),"","0");
                     } else if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("")) {
                         holder.binds.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -209,27 +170,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         || AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binds.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binds.ivLock.setVisibility(View.GONE);
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudiolistsModel.get(position).getID(), PlaylistID, "");
-                        listCall.enqueue(new Callback<SucessModel>() {
-                            @Override
-                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                                if (response.isSuccessful()) {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                    SucessModel listModels = response.body();
-                                    BWSApplication.showToast(listModels.getResponseMessage(), ctx);
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<SucessModel> call, Throwable t) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            }
-                        });
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                    }
+                    callAddAudioToPlaylist(AudiolistsModel.get(position).getID(),"","0");
                 }
             });
         }
@@ -347,28 +288,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, "", PlaylistID, PlaylistModel.get(position).getID());
-                        listCall.enqueue(new Callback<SucessModel>() {
-                            @Override
-                            public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                                if (response.isSuccessful()) {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                    SucessModel listModels = response.body();
-                                    BWSApplication.showToast(listModels.getResponseMessage(), ctx);
-                                    finish();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<SucessModel> call, Throwable t) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            }
-                        });
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                    }
+                    callAddAudioToPlaylist("",PlaylistModel.get(position).getID(),"1");
                 }
             });
         }
@@ -385,6 +305,33 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 super(binding.getRoot());
                 this.binding = binding;
             }
+        }
+    }
+
+    private void callAddAudioToPlaylist(String AudioID, String FromPlaylistId, String s1) {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+            Call<SucessModel> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID, FromPlaylistId);
+            listCall.enqueue(new Callback<SucessModel>() {
+                @Override
+                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        SucessModel listModels = response.body();
+                        BWSApplication.showToast(listModels.getResponseMessage(), ctx);
+                        if(s1.equalsIgnoreCase("1")){
+                            finish();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SucessModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
 }
