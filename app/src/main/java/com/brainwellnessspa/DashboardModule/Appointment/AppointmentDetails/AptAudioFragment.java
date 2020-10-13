@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -330,10 +331,19 @@ public class AptAudioFragment extends Fragment {
             holder.binding.llRemoveAudio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                    i.putExtra("AudioId", listModelList.get(position).getID());
-                    i.putExtra("PlaylistID", "");
-                    startActivity(i);
+                    if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")){
+                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                        i.putExtra("ComeFrom", "Plan");
+                        ctx.startActivity(i);
+                    }else if (listModelList.get(position).getIsLock().equalsIgnoreCase("2")){
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    }else if (listModelList.get(position).getIsLock().equalsIgnoreCase("0") ||
+                            listModelList.get(position).getIsLock().equalsIgnoreCase("")){
+                        Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                        i.putExtra("AudioId", listModelList.get(position).getID());
+                        i.putExtra("PlaylistID", "");
+                        startActivity(i);
+                    }
                 }
             });
         }

@@ -58,7 +58,7 @@ import retrofit2.Response;
 public class UserProfileActivity extends AppCompatActivity {
     ActivityUserProfileBinding binding;
     Context ctx;
-    String UserID, profilePicPath = "", tryafter = "Try after 5 minutes";
+    String UserID, profilePicPath = "", tryafter = "Try after 5 minutes", UserName, UserCalendar, UserMobileNumber, UserEmail;
     File image;
     Activity activity;
     CharSequence[] options;
@@ -83,16 +83,10 @@ public class UserProfileActivity extends AppCompatActivity {
 
         binding.rlImageUpload.setOnClickListener(view -> selectImage());
         binding.btnSave.setOnClickListener(view -> profileUpdate());
-
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.32f, 0);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-
-        binding.etUser.addTextChangedListener(userTextWatcher);
-        binding.etCalendar.addTextChangedListener(userTextWatcher);
-        binding.etMobileNumber.addTextChangedListener(userTextWatcher);
-        binding.etEmail.addTextChangedListener(userTextWatcher);
         MeasureRatio measureRatios = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.32f, 0);
         binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
@@ -255,7 +249,10 @@ public class UserProfileActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         ProfileViewModel viewModel = response.body();
-
+                        binding.etUser.addTextChangedListener(userTextWatcher);
+                        binding.etCalendar.addTextChangedListener(userTextWatcher);
+                        binding.etMobileNumber.addTextChangedListener(userTextWatcher);
+                        binding.etEmail.addTextChangedListener(userTextWatcher);
                         if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
                                 viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
                                 viewModel.getResponseData().getName() == null) {
@@ -263,6 +260,11 @@ public class UserProfileActivity extends AppCompatActivity {
                         } else {
                             binding.etUser.setText(viewModel.getResponseData().getName());
                         }
+                        UserName = viewModel.getResponseData().getName();
+                        UserCalendar = viewModel.getResponseData().getDOB();
+                        UserMobileNumber = viewModel.getResponseData().getPhoneNumber();
+                        UserEmail = viewModel.getResponseData().getEmail();
+
                         String Name = viewModel.getResponseData().getName();
                         String Letter = Name.substring(0, 1);
                         profilePicPath = viewModel.getResponseData().getImage();
@@ -574,14 +576,16 @@ public class UserProfileActivity extends AppCompatActivity {
             String Calendar = binding.etCalendar.getText().toString().trim();
             String MobileNumber = binding.etMobileNumber.getText().toString().trim();
             String Email = binding.etEmail.getText().toString().trim();
-            if (!User.isEmpty() || !Calendar.isEmpty() || !MobileNumber.isEmpty() || !Email.isEmpty()) {
-                binding.btnSave.setEnabled(true);
-                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
-            } else {
+
+            if (User.equalsIgnoreCase(UserName) || Calendar.equalsIgnoreCase(UserCalendar)
+                    || MobileNumber.equalsIgnoreCase(UserMobileNumber) || Email.equalsIgnoreCase(UserEmail)) {
                 binding.btnSave.setEnabled(false);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
+            } else {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
             }
         }
 
