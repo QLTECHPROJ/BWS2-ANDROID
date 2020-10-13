@@ -80,6 +80,7 @@
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.18"
+                        android:clickable="false"
                         android:gravity="right">
 
                         <ImageView
@@ -87,6 +88,7 @@
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginTop="@dimen/_10sdp"
+                            app:tint="@color/light_gray"
                             android:src="@drawable/ic_menu_icon" />
 
                     </LinearLayout>
@@ -460,6 +462,7 @@
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.2"
+                        android:clickable="false"
                         android:gravity="center">
 
 
@@ -467,7 +470,8 @@
                             android:id="@+id/ivViewQueue"
                             android:layout_width="@dimen/_17sdp"
                             android:layout_height="@dimen/_17sdp"
-                            android:src="@drawable/ic_music_list_icon" />
+                            android:src="@drawable/ic_music_list_icon"
+                            app:tint="@color/light_gray" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

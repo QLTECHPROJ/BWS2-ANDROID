@@ -577,11 +577,27 @@ public class UserProfileActivity extends AppCompatActivity {
             String MobileNumber = binding.etMobileNumber.getText().toString().trim();
             String Email = binding.etEmail.getText().toString().trim();
 
-            if (User.equalsIgnoreCase(UserName) || Calendar.equalsIgnoreCase(UserCalendar)
-                    || MobileNumber.equalsIgnoreCase(UserMobileNumber) || Email.equalsIgnoreCase(UserEmail)) {
+            if (User.equalsIgnoreCase(UserName) && Calendar.equalsIgnoreCase(UserCalendar)
+                    && MobileNumber.equalsIgnoreCase(UserMobileNumber) && Email.equalsIgnoreCase(UserEmail)) {
                 binding.btnSave.setEnabled(false);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
+            } else if (!User.equalsIgnoreCase(UserName)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            }else if (!Calendar.equalsIgnoreCase(UserCalendar)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            }else if (!MobileNumber.equalsIgnoreCase(UserMobileNumber)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            }else if (!Email.equalsIgnoreCase(UserEmail)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
             } else {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));

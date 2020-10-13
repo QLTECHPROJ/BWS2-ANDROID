@@ -89,10 +89,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     List<DownloadAudioDetails> downloadAudioDetailsList;
     private long mLastClickTime = 0, totalDuration, currentDuration;
     private Handler handler;
-    long diff1=0;
-    int diffCount=0;
-        private Handler handler1;
-//        private AudioManager mAudioManager;
+    long diff1 = 0;
+    int diffCount = 0;
+    private Handler handler1;
+    //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -191,7 +191,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             startTime = getStartTime();
             long diff = diff1;
             diff1 = totalDuration - currentDuration;
-            if(diff == diff1){
+            if (diff == diff1) {
 
             }
 
@@ -217,17 +217,17 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
-            if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
-                if(downloadProgress <=100) {
+            if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
+                if (downloadProgress <= 100) {
                     binding.pbProgress.setProgress(downloadProgress);
                     binding.pbProgress.setVisibility(View.VISIBLE);
                     binding.ivDownloads.setVisibility(View.GONE);
-                }else{
+                } else {
                     binding.pbProgress.setVisibility(View.GONE);
                     binding.ivDownloads.setVisibility(View.VISIBLE);
                     handler1.removeCallbacks(UpdateSongTime1);
                 }
-            }else{
+            } else {
                 binding.pbProgress.setVisibility(View.GONE);
                 binding.ivDownloads.setVisibility(View.VISIBLE);
                 binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
@@ -285,7 +285,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llMore.setClickable(false);
                 binding.llMore.setEnabled(false);
                 binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            } if (IsLock.equalsIgnoreCase("2")) {
+            } else if (IsLock.equalsIgnoreCase("2")) {
                 binding.llMore.setClickable(false);
                 binding.llMore.setEnabled(false);
                 binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -304,7 +304,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llViewQueue.setClickable(false);
                 binding.llViewQueue.setEnabled(false);
                 binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            }if (IsLock.equalsIgnoreCase("2")) {
+            } else if (IsLock.equalsIgnoreCase("2")) {
                 binding.llViewQueue.setClickable(false);
                 binding.llViewQueue.setEnabled(false);
                 binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -320,9 +320,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }
         getPrepareShowData(position);
 
-        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
+        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
             handler1.postDelayed(UpdateSongTime1, 500);
-         }else{
+        } else {
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
         }
@@ -353,10 +353,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(ctx, AddQueueActivity.class);
-            if(AudioFlag.equalsIgnoreCase("TopCategories")){
+            if (AudioFlag.equalsIgnoreCase("TopCategories")) {
                 i.putExtra("play", "TopCategories");
-            }else
-            i.putExtra("play", "play");
+            } else
+                i.putExtra("play", "play");
             i.putExtra("ID", id);
             i.putExtra("position", position);
             i.putExtra("PlaylistAudioId", "");
@@ -505,7 +505,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             isMediaStart = false;
             isPrepare = false;
             isPause = false;
-            if (IsRepeat.equalsIgnoreCase("1")||IsRepeat.equalsIgnoreCase("0")) {
+            if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
                 // repeat is on play same song again
                 if (position > 0) {
                     position = position - 1;
@@ -712,10 +712,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             editor.commit();
         }
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-        downloadMedia.encrypt1(url1, name1,downloadPlaylistId);
-        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
+        downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
             handler1.postDelayed(UpdateSongTime1, 500);
-        }else{
+        } else {
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
         }
@@ -1034,7 +1034,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     binding.progressBar.setVisibility(View.GONE);
                     binding.llPause.setVisibility(View.VISIBLE);
                     binding.llPlay.setVisibility(View.GONE);
-                }  else {
+                } else {
                     binding.llProgressBar.setVisibility(View.VISIBLE);
                     binding.progressBar.setVisibility(View.VISIBLE);
                     binding.llPause.setVisibility(View.GONE);
@@ -1439,7 +1439,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llMore.setClickable(false);
                 binding.llMore.setEnabled(false);
                 binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            }if (IsLock.equalsIgnoreCase("2")) {
+            } else if (IsLock.equalsIgnoreCase("2")) {
                 binding.llMore.setClickable(false);
                 binding.llMore.setEnabled(false);
                 binding.ivMore.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -1458,7 +1458,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llViewQueue.setClickable(false);
                 binding.llViewQueue.setEnabled(false);
                 binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            }if (IsLock.equalsIgnoreCase("2")) {
+            } else if (IsLock.equalsIgnoreCase("2")) {
                 binding.llViewQueue.setClickable(false);
                 binding.llViewQueue.setEnabled(false);
                 binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -1472,9 +1472,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llViewQueue.setEnabled(false);
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
-        if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)){
+        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
             handler1.postDelayed(UpdateSongTime1, 500);
-        }else{
+        } else {
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
         }

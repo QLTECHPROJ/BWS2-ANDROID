@@ -27,7 +27,8 @@ import retrofit2.Response;
 
 public class BillingAddressFragment extends Fragment {
     FragmentBillingAddressBinding binding;
-    String UserID;
+    String UserID, UserName, UserEmail, UserMobileNumber, UserCountry, UserAddressLine1, UserCity, UserState, UserPostCode;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,6 +123,14 @@ public class BillingAddressFragment extends Fragment {
                     } else {
                         binding.etName.setText(listModel.getResponseData().getName());
                     }
+                    UserName = listModel.getResponseData().getName();
+                    UserEmail = listModel.getResponseData().getEmail();
+                    UserMobileNumber = listModel.getResponseData().getPhoneNumber();
+                    UserCountry = listModel.getResponseData().getCountry();
+                    UserAddressLine1 = listModel.getResponseData().getAddress1();
+                    UserCity = listModel.getResponseData().getSuburb();
+                    UserState = listModel.getResponseData().getState();
+                    UserPostCode = listModel.getResponseData().getPostcode();
                     binding.etEmail.setText(listModel.getResponseData().getEmail());
                     binding.etMobileNumber.setText(listModel.getResponseData().getPhoneNumber());
                     binding.etMobileNumber.setEnabled(false);
@@ -157,16 +166,51 @@ public class BillingAddressFragment extends Fragment {
             String City = binding.etCity.getText().toString().trim();
             String State = binding.etState.getText().toString().trim();
             String PostCode = binding.etPostCode.getText().toString().trim();
-            if (!Name.isEmpty() || !Email.isEmpty() || !MobileNumber.isEmpty()
-                    || !Country.isEmpty() || !AddressLine1.isEmpty()
-                    || !City.isEmpty() || !State.isEmpty() || !PostCode.isEmpty()) {
+
+            if (Name.equalsIgnoreCase(UserName) && Email.equalsIgnoreCase(UserEmail) && MobileNumber.equalsIgnoreCase(UserMobileNumber)
+                    && Country.equalsIgnoreCase(UserCountry) && AddressLine1.equalsIgnoreCase(UserAddressLine1)
+                    && City.equalsIgnoreCase(UserCity) && State.equalsIgnoreCase(UserState)
+                    && PostCode.equalsIgnoreCase(UserPostCode)) {
+                binding.btnSave.setEnabled(false);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
+            } else if (!Name.equalsIgnoreCase(UserName)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else if (!Email.equalsIgnoreCase(UserEmail)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else if (!MobileNumber.equalsIgnoreCase(UserMobileNumber)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else if (!Country.equalsIgnoreCase(UserCountry)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else if (!AddressLine1.equalsIgnoreCase(UserAddressLine1)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else if (!City.equalsIgnoreCase(UserCity)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else if (!State.equalsIgnoreCase(UserState)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else if (!PostCode.equalsIgnoreCase(UserPostCode)) {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
             } else {
-                binding.btnSave.setEnabled(false);
+                binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+
             }
         }
 
