@@ -93,8 +93,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     QueueAdapter adapter;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     ItemTouchHelper touchHelper;
-    int mypos = 0;
-    long totalDuration;
+    int mypos = 0,myCount;
+    long totalDuration,currentDuration,myProgress;
     private long mLastClickTime = 0;
     private Handler handler;
     //    private AudioManager mAudioManager;
@@ -145,8 +145,21 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     totalDuration = t.getTime();
                 }
             }
-            long currentDuration = getStartTime();
+            myProgress = currentDuration;
+            currentDuration = getStartTime();
 
+            Log.e("myProgress old!!!",String.valueOf(myProgress));
+            if(myProgress == currentDuration && myProgress!=0){
+                Log.e("myProgress",String.valueOf(myProgress));
+                myCount++;
+                Log.e("myCount",String.valueOf(myCount));
+
+                if(myCount == 500){
+                    Log.e("myCount complete",String.valueOf(myCount));
+                    callComplete();
+                    myCount = 0;
+                }
+            }
             int progress = getProgressPercentage(currentDuration, totalDuration);
             long diff = totalDuration - currentDuration;
 

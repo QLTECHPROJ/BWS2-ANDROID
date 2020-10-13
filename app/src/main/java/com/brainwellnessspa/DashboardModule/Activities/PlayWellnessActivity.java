@@ -80,19 +80,18 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener, OnProgressListener*/ {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url;
-    int startTime = 0, endTime = 0, position, listSize;
+    int startTime = 0, endTime = 0, position, listSize,myCount,progress;
     Context ctx;
     Activity activity;
     Boolean queuePlay, audioPlay;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     List<DownloadAudioDetails> downloadAudioDetailsList;
-    private long mLastClickTime = 0, totalDuration, currentDuration;
+    private long mLastClickTime = 0, totalDuration, currentDuration = 0;
     private Handler handler;
-    long diff1 = 0;
-    int diffCount = 0;
-    private Handler handler1;
-    //        private AudioManager mAudioManager;
+    long myProgress=0;
+        private Handler handler1;
+//        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -166,9 +165,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 } else
                     totalDuration = t.getTime();
             }
+            myProgress = currentDuration;
             currentDuration = getStartTime();
 
-            int progress = getProgressPercentage(currentDuration, totalDuration);
+            Log.e("myProgress old!!!",String.valueOf(myProgress));
+            if(myProgress == currentDuration && myProgress!=0){
+                Log.e("myProgress",String.valueOf(myProgress));
+                myCount++;
+                Log.e("myCount",String.valueOf(myCount));
+
+                if(myCount == 500){
+                    Log.e("myCount complete",String.valueOf(myCount));
+                    callComplete();
+                    myCount = 0;
+                }
+            }
+            progress = getProgressPercentage(currentDuration, totalDuration);
             if (currentDuration == 0 && isprogressbar) {
                 binding.progressBar.setVisibility(View.VISIBLE);
                 binding.llProgressBar.setVisibility(View.VISIBLE);
@@ -1039,7 +1051,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
             }
         }
-
         GetMedia st = new GetMedia();
         st.execute();
     }
@@ -1230,29 +1241,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llPause.setVisibility(View.GONE);
             isPause = false;
             DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+            getDownloadMedia(downloadMedia);
 
-            try {
-                byte[] decrypt = null;
-                decrypt = downloadMedia.decrypt(name);
-                if (decrypt != null) {
-                    fileDescriptor = FileUtils.getTempFileDescriptor(getApplicationContext(), decrypt);
-//                    play2(fileDescriptor);
-//                    playMedia();
-                    setMediaPlayer("1", fileDescriptor);
-                } else {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        setMediaPlayer("0", fileDescriptor);
-                    } else {
-                        binding.progressBar.setVisibility(View.GONE);
-                        binding.llProgressBar.setVisibility(View.GONE);
-                        binding.llPlay.setVisibility(View.VISIBLE);
-                        binding.llPause.setVisibility(View.GONE);
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         } else {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 binding.llProgressBar.setVisibility(View.VISIBLE);
@@ -1269,7 +1259,46 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
         }
     }
+    private void getDownloadMedia(DownloadMedia downloadMedia) {
+        class getDownloadMedia extends AsyncTask<Void, Void, Void> {
+            FileDescriptor fileDescriptor = null;
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    byte[] decrypt = null;
+                    decrypt = downloadMedia.decrypt(name);
+                    if (decrypt != null) {
+                        fileDescriptor = FileUtils.getTempFileDescriptor(getApplicationContext(), decrypt);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if(fileDescriptor!=null){
+                setMediaPlayer("1", fileDescriptor);
+                }else{
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        setMediaPlayer("0", fileDescriptor);
+                    } else {
+                        binding.progressBar.setVisibility(View.GONE);
+                        binding.llProgressBar.setVisibility(View.GONE);
+                        binding.llPlay.setVisibility(View.VISIBLE);
+                        binding.llPause.setVisibility(View.GONE);
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    }
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        getDownloadMedia st = new getDownloadMedia();
+        st.execute();
+    }
     private void callComplete() {
         handler.removeCallbacks(UpdateSongTime);
         isPrepare = false;
