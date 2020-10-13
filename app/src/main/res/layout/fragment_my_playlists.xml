@@ -12,11 +12,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never">
-
                 <RelativeLayout
                     android:id="@+id/rlMainLayout"
                     android:layout_width="match_parent"
@@ -231,65 +226,69 @@
                         android:orientation="vertical"
                         android:visibility="visible">
 
-                        <RelativeLayout
-                            android:id="@+id/rlSearch"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_48sdp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/_16sdp"
-                            android:layout_marginTop="@dimen/_16sdp"
-                            android:layout_marginRight="@dimen/_16sdp"
-                            android:layout_weight="2"
-                            android:background="@drawable/rounded_extra_gray_corner"
-                            android:visibility="gone">
+                            android:layout_height="@dimen/_84sdp">
 
-                            <ImageView
-                                android:id="@+id/button1"
-                                android:layout_width="@dimen/_16sdp"
-                                android:layout_height="@dimen/_16sdp"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="@dimen/_14sdp"
-                                android:src="@drawable/ic_search_icon"
-                                app:tint="@color/dark_blue_gray" />
-
-                            <TextView
-                                android:id="@+id/tvSearch"
+                            <RelativeLayout
+                                android:id="@+id/rlSearch"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
+                                android:layout_height="@dimen/_48sdp"
+                                android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="@dimen/_16sdp"
-                                android:layout_marginTop="@dimen/_20sdp"
+                                android:layout_marginTop="@dimen/_15sdp"
                                 android:layout_marginRight="@dimen/_16sdp"
-                                android:layout_toRightOf="@id/button1"
-                                android:fontFamily="@font/montserrat_bold"
-                                android:gravity="start"
-                                android:text=""
-                                android:textColor="@color/light_gray"
-                                android:textSize="@dimen/_14sdp"
-                                android:visibility="gone" />
+                                android:layout_weight="2"
+                                android:background="@drawable/rounded_extra_gray_corner"
+                                android:visibility="visible">
 
-                            <androidx.appcompat.widget.SearchView
-                                android:id="@+id/searchView"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_centerVertical="true"
-                                android:layout_toRightOf="@id/button1"
-                                android:iconifiedByDefault="false"
-                                android:singleLine="true"
-                                android:theme="@style/WallSearchView"
-                                android:visibility="gone"
-                                app:queryBackground="@null"
-                                app:queryHint=""
-                                app:searchHintIcon="@null"
-                                app:searchIcon="@null" />
+                                <ImageView
+                                    android:id="@+id/button1"
+                                    android:layout_width="@dimen/_16sdp"
+                                    android:layout_height="@dimen/_16sdp"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="@dimen/_14sdp"
+                                    android:src="@drawable/ic_search_icon"
+                                    app:tint="@color/dark_blue_gray" />
 
+                                <TextView
+                                    android:id="@+id/tvSearch"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="@dimen/_16sdp"
+                                    android:layout_marginTop="@dimen/_20sdp"
+                                    android:layout_marginRight="@dimen/_16sdp"
+                                    android:layout_toRightOf="@id/button1"
+                                    android:fontFamily="@font/montserrat_bold"
+                                    android:gravity="start"
+                                    android:text=""
+                                    android:textColor="@color/light_gray"
+                                    android:textSize="@dimen/_14sdp"
+                                    android:visibility="gone" />
 
-                        </RelativeLayout>
+                                <androidx.appcompat.widget.SearchView
+                                    android:id="@+id/searchView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerVertical="true"
+                                    android:layout_toRightOf="@id/button1"
+                                    android:iconifiedByDefault="false"
+                                    android:singleLine="true"
+                                    android:theme="@style/WallSearchView"
+                                    android:visibility="gone"
+                                    app:queryBackground="@null"
+                                    app:queryHint=""
+                                    app:searchHintIcon="@null"
+                                    app:searchIcon="@null" />
+                            </RelativeLayout>
+                        </LinearLayout>
+
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvSuggestedList"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/_10sdp"
                             android:layout_marginRight="@dimen/_10sdp"
                             android:overScrollMode="never"
@@ -313,7 +312,7 @@
                         <LinearLayout
                             android:id="@+id/llSpace"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="match_parent">
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/rvPlayLists"
@@ -357,9 +356,6 @@
                         </LinearLayout>
                     </LinearLayout>
                 </RelativeLayout>
-
-
-            </androidx.core.widget.NestedScrollView>
 
             <LinearLayout
                 android:id="@+id/llExtra"

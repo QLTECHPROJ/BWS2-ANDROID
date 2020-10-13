@@ -222,7 +222,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);*/
         binding.rvQueueList.setFocusable(false);
-        binding.nestedScroll.requestFocus();
+//        binding.nestedScroll.requestFocus();
 
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
