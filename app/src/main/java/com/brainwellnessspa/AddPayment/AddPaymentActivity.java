@@ -65,9 +65,6 @@ public class AddPaymentActivity extends AppCompatActivity {
 
         binding.llBack.setOnClickListener(view -> {
             if (ComePayment.equalsIgnoreCase("1")) {
-                Intent i = new Intent(context, BillingOrderActivity.class);
-                i.putExtra("payment", 1);
-                startActivity(i);
                 finish();
             } else if (ComePayment.equalsIgnoreCase("2")) {
                 Intent i = new Intent(context, PaymentActivity.class);
@@ -279,9 +276,6 @@ public class AddPaymentActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (ComePayment.equalsIgnoreCase("1")) {
-            Intent i = new Intent(AddPaymentActivity.this, BillingOrderActivity.class);
-            i.putExtra("payment", 1);
-            startActivity(i);
             finish();
         } else if (ComePayment.equalsIgnoreCase("2")) {
             Intent i = new Intent(context, PaymentActivity.class);

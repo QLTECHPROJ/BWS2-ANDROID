@@ -491,7 +491,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     private void prepareData(String UserId, String PlaylistId) {
         if (comefrom_search == 3) {
             binding.llExtra.setVisibility(View.VISIBLE);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.setMargins(10, 8, 10, 260);
             binding.llSpace.setLayoutParams(params);
         }
@@ -530,11 +530,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             .commit();
                 }
 
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.setMargins(10, 8, 10, 260);
                 binding.llSpace.setLayoutParams(params);
             } else {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.setMargins(10, 8, 10, 50);
                 binding.llSpace.setLayoutParams(params);
             }
