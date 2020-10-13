@@ -287,7 +287,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 } */else if (IsShuffle.equalsIgnoreCase("1")) {
                     // shuffle is on - play a random song
                     if (queuePlay) {
-                        adapter.callRemoveList(position);
+                        adapter.callRemoveList(position,"1");
                         listSize = addToQueueModelList.size();
                         if (listSize == 0) {
                             stopMedia();
@@ -305,7 +305,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     }
                 } else {
                     if (queuePlay) {
-                        adapter.callRemoveList(position);
+                        adapter.callRemoveList(position,"1");
                         listSize = addToQueueModelList.size();
                         if (position < listSize - 1) {
                             getPrepareShowData(position);
@@ -353,7 +353,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 } */else if (IsShuffle.equalsIgnoreCase("1")) {
                     // shuffle is on - play a random song
                     if (queuePlay) {
-                        adapter.callRemoveList(position);
+                        adapter.callRemoveList(position,"1");
                         listSize = addToQueueModelList.size();
                         if (listSize == 0) {
                             stopMedia();
@@ -371,7 +371,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     }
                 } else {
                     if (queuePlay) {
-                        adapter.callRemoveList(position);
+                        adapter.callRemoveList(position,"1");
                         listSize = addToQueueModelList.size();
                         if (position > 0) {
                             getPrepareShowData(position - 1);
@@ -651,7 +651,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         } else if (IsShuffle.equalsIgnoreCase("1")) {
             // shuffle is on - play a random song
             if (queuePlay) {
-                adapter.callRemoveList(position);
+                adapter.callRemoveList(position,"1");
                 listSize = addToQueueModelList.size();
                 if (listSize == 0) {
                     stopMedia();
@@ -674,7 +674,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             }
         } else {
             if (queuePlay) {
-                adapter.callRemoveList(position);
+                adapter.callRemoveList(position,"1");
                 listSize = addToQueueModelList.size();
                 if (position < listSize - 1) {
                     getPrepareShowData(position);
@@ -923,7 +923,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             Glide.with(ctx).load(listModel.getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            holder.binding.llRemove.setOnClickListener(view -> callRemoveList(position1));
+            holder.binding.llRemove.setOnClickListener(view -> callRemoveList(position1,"0"));
             holder.binding.llSort.setOnTouchListener((v, event) -> {
                 if (event.getAction() ==
                         MotionEvent.ACTION_DOWN) {
@@ -963,7 +963,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             notifyDataSetChanged();
         }
 
-        public void callRemoveList(int position1) {
+        public void callRemoveList(int position1,String s) {
             for (int i = 0; i < addToQueueModelList.size(); i++) {
                 if (addToQueueModelList.get(i).getName().equalsIgnoreCase(binding.tvName.getText().toString()))
                     addToQueueModelList.remove(i);
@@ -983,7 +983,9 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             String json = gson.toJson(addToQueueModelList);
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);
             editor.commit();
+            if(s.equalsIgnoreCase("0")){
             BWSApplication.showToast("The audio has been removed from the queue", ctx);
+            }
             addToQueueModelList2 = listModelList;
         }
 

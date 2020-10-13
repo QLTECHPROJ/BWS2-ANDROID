@@ -189,11 +189,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             //Log.d("Progress", ""+progress);
             startTime = getStartTime();
-            long diff = diff1;
-            diff1 = totalDuration - currentDuration;
-            if(diff == diff1){
-
-            }
 
             if (currentDuration == totalDuration && currentDuration != 0 && !isStop) {
                 binding.tvStartTime.setText(endtimetext);
