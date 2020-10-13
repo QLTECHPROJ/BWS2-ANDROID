@@ -9,6 +9,7 @@ import com.brainwellnessspa.BillingOrderModule.Models.CardModel;
 import com.brainwellnessspa.BillingOrderModule.Models.CurrentPlanVieViewModel;
 import com.brainwellnessspa.BillingOrderModule.Models.PayNowDetailsModel;
 import com.brainwellnessspa.BillingOrderModule.Models.PlanListBillingModel;
+import com.brainwellnessspa.DashboardModule.Models.AddToPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
 import com.brainwellnessspa.DashboardModule.Models.CreatePlaylistModel;
@@ -230,10 +231,10 @@ public interface APIInterface {
     /* TODO MyPlaylistsFragment */
     @POST("addaudiotoplaylist")
     @FormUrlEncoded
-    Call<SucessModel> getAddSearchAudioFromPlaylist(@Field("UserID") String userID,
-                                                    @Field("AudioId") String audioId,
-                                                    @Field("PlaylistId") String playlistId,
-                                                    @Field("FromPlaylistId") String fromPlaylistId);
+    Call<AddToPlaylist> getAddSearchAudioFromPlaylist(@Field("UserID") String userID,
+                                                      @Field("AudioId") String audioId,
+                                                      @Field("PlaylistId") String playlistId,
+                                                      @Field("FromPlaylistId") String fromPlaylistId);
 
     /* TODO BillingAddressFragment */
     @POST("billingaddress")

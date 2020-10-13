@@ -121,61 +121,61 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     Runnable UpdateSongTime2;
     int SongListSize = 0,count;
     private Handler handler1, handler2;
-    private Runnable UpdateSongTime1 = new Runnable() {
-        @Override
-        public void run() {
-            getMediaByPer(PlaylistID,SongListSize);
-
-/*            if (fileNameList.size() != 0) {
-                if (remainAudio.size() <= SongListSize) {
-                    int total = SongListSize;
-                    int remain = remainAudio.size();
-                    int complate = total - remain;
-                    long progressPercent = complate * 100 / total;
-                    int downloadProgress1 = (int) progressPercent;
-                    if (SongListSize == 1) {
-                        if (downloadProgress <= 100) {
-                            binding.pbProgress.setProgress(downloadProgress);
-                            binding.pbProgress.setVisibility(View.VISIBLE);
-                            binding.ivDownloads.setVisibility(View.GONE);
-                            if (downloadProgress == 100) {
-                                getDownloadData();
-                            }
-                        }
-                    } else if (downloadProgress1 <= 100) {
-                        if (downloadProgress1 == 100) {
-                            getDownloadData();
-                            binding.pbProgress.setVisibility(View.GONE);
-                            binding.ivDownloads.setVisibility(View.VISIBLE);
-                            handler1.removeCallbacks(UpdateSongTime1);
-                        } else {
-                            binding.pbProgress.setProgress(downloadProgress1);
-                            binding.pbProgress.setVisibility(View.VISIBLE);
-                            binding.ivDownloads.setVisibility(View.GONE);
-                        }
-                    } else {
-                        binding.pbProgress.setVisibility(View.GONE);
-                        binding.ivDownloads.setVisibility(View.VISIBLE);
-                        handler1.removeCallbacks(UpdateSongTime1);
-                    }
-                }
-                getDownloadData();
-                handler1.postDelayed(this, 500);
-            }else {
-                binding.pbProgress.setVisibility(View.GONE);
-                binding.ivDownloads.setVisibility(View.VISIBLE);
-                handler1.removeCallbacks(UpdateSongTime1);
-                getDownloadData();
-            }*/
-            handler1.postDelayed(this, 500);
-        }
-    };
+//    private Runnable UpdateSongTime1 = new Runnable() {
+//        @Override
+//        public void run() {
+//            getMediaByPer(PlaylistID,SongListSize);
+//
+///*            if (fileNameList.size() != 0) {
+//                if (remainAudio.size() <= SongListSize) {
+//                    int total = SongListSize;
+//                    int remain = remainAudio.size();
+//                    int complate = total - remain;
+//                    long progressPercent = complate * 100 / total;
+//                    int downloadProgress1 = (int) progressPercent;
+//                    if (SongListSize == 1) {
+//                        if (downloadProgress <= 100) {
+//                            binding.pbProgress.setProgress(downloadProgress);
+//                            binding.pbProgress.setVisibility(View.VISIBLE);
+//                            binding.ivDownloads.setVisibility(View.GONE);
+//                            if (downloadProgress == 100) {
+//                                getDownloadData();
+//                            }
+//                        }
+//                    } else if (downloadProgress1 <= 100) {
+//                        if (downloadProgress1 == 100) {
+//                            getDownloadData();
+//                            binding.pbProgress.setVisibility(View.GONE);
+//                            binding.ivDownloads.setVisibility(View.VISIBLE);
+//                            handler1.removeCallbacks(UpdateSongTime1);
+//                        } else {
+//                            binding.pbProgress.setProgress(downloadProgress1);
+//                            binding.pbProgress.setVisibility(View.VISIBLE);
+//                            binding.ivDownloads.setVisibility(View.GONE);
+//                        }
+//                    } else {
+//                        binding.pbProgress.setVisibility(View.GONE);
+//                        binding.ivDownloads.setVisibility(View.VISIBLE);
+//                        handler1.removeCallbacks(UpdateSongTime1);
+//                    }
+//                }
+//                getDownloadData();
+//                handler1.postDelayed(this, 500);
+//            }else {
+//                binding.pbProgress.setVisibility(View.GONE);
+//                binding.ivDownloads.setVisibility(View.VISIBLE);
+//                handler1.removeCallbacks(UpdateSongTime1);
+//                getDownloadData();
+//            }*/
+//            handler1.postDelayed(this, 500);
+//        }
+//    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
         view = binding.getRoot();
-        handler1 = new Handler();
+//        handler1 = new Handler();
         handler2 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -212,7 +212,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
 
         binding.llMore.setOnClickListener(view13 -> {
-            handler1.removeCallbacks(UpdateSongTime1);
+//            handler1.removeCallbacks(UpdateSongTime1);
             handler2.removeCallbacks(UpdateSongTime2);
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
             i.putExtra("PlaylistID", PlaylistID);
@@ -438,9 +438,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callBack() {
+//        handler1.removeCallbacks(UpdateSongTime1);
+//        handler2.removeCallbacks(UpdateSongTime2);
         binding.searchView.requestFocus();
-        handler1.removeCallbacks(UpdateSongTime1);
-        handler2.removeCallbacks(UpdateSongTime2);
         if (comefrom_search == 2) {
             Bundle bundle = new Bundle();
             Fragment playlistFragment = new ViewAllPlaylistFragment();
@@ -726,19 +726,20 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                          if(count == totalAudio){
                             binding.pbProgress.setVisibility(View.GONE);
                             binding.ivDownloads.setVisibility(View.VISIBLE);
-                            handler1.removeCallbacks(UpdateSongTime1);
+//                            handler1.removeCallbacks(UpdateSongTime1);
                         }else {
                              long progressPercent = count * 100 / totalAudio;
                              int downloadProgress1 = (int) progressPercent;
                              binding.pbProgress.setVisibility(View.VISIBLE);
                              binding.ivDownloads.setVisibility(View.GONE);
                              binding.pbProgress.setProgress(downloadProgress1);
-                             handler1.postDelayed(UpdateSongTime1, 500);
+                             getMediaByPer(playlistID,totalAudio);
+//                             handler1.postDelayed(UpdateSongTime1, 500);
                          }
                     } else {
                         binding.pbProgress.setVisibility(View.GONE);
                         binding.ivDownloads.setVisibility(View.VISIBLE);
-                        handler1.removeCallbacks(UpdateSongTime1);
+//                        handler1.removeCallbacks(UpdateSongTime1);
                     }
                 }
                 super.onPostExecute(aVoid);
@@ -869,34 +870,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         touchHelper = new ItemTouchHelper(callback);
                         touchHelper.attachToRecyclerView(binding.rvPlayLists);
                         binding.rvPlayLists.setAdapter(adpater);
-                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                        int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                        if (audioPlay) {
-                            if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
-                                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                                if (pID.equalsIgnoreCase(PlaylistID)) {
-                                    SharedPreferences shareddd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = shareddd.edit();
-                                    Gson gson = new Gson();
-                                    String json = gson.toJson(listModel.getPlaylistSongs());
-                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                                    editor.putInt(CONSTANTS.PREF_KEY_position, pos);
-                                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistID);
-                                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist");
-                                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
-                                    editor.commit();
-                                    Fragment fragment = new TransparentPlayerFragment();
-                                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                                    fragmentManager1.beginTransaction()
-                                            .add(R.id.flContainer, fragment)
-                                            .commit();
-                                }
-                            }
-                        }
                     } else {
                         adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
                         binding.rvPlayLists.setAdapter(adpater2);
@@ -1114,7 +1087,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
                 }*/
                 SongListSize = playlistSongs.size();
-                handler1.postDelayed(UpdateSongTime1, 500);
+//                handler1.postDelayed(UpdateSongTime1, 500);
             }
             binding.pbProgress.setVisibility(View.VISIBLE);
             binding.ivDownloads.setVisibility(View.GONE);

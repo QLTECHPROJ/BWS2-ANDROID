@@ -459,7 +459,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 isPause = false;
             }
             player = 1;
-            handler.postDelayed(UpdateSongTime, 50);
+            handler.postDelayed(UpdateSongTime, 100);
         });
 
         return view;
@@ -560,21 +560,24 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                 binding.tvTitle.setText(addToQueueModelList.get(position).getName());
                 binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
-
+                handler.postDelayed(UpdateSongTime, 100);
             }
         } else if (audioPlay) {
             listSize = mainPlayModelList.size();
             if (listSize == 1) {
                 position = 0;
             }
-            id = mainPlayModelList.get(position).getID();
-            name = mainPlayModelList.get(position).getName();
-            audioFile = mainPlayModelList.get(position).getAudioFile();
-            GetMedia(audioFile, ctx);
-            Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-            binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
+            if(listSize != 0) {
+                id = mainPlayModelList.get(position).getID();
+                name = mainPlayModelList.get(position).getName();
+                audioFile = mainPlayModelList.get(position).getAudioFile();
+                GetMedia(audioFile, ctx);
+                Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+                binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
+                handler.postDelayed(UpdateSongTime, 100);
+            }
         }
         binding.simpleSeekbar.setClickable(true);
         if (isMediaStart) {
@@ -583,7 +586,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             });
         }
         startTime = getStartTime();
-        handler.postDelayed(UpdateSongTime, 50);
+
         addToRecentPlay();
         binding.llPlayearMain.setOnClickListener(view -> {
             handler.removeCallbacks(UpdateSongTime);
@@ -844,7 +847,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     public void updateProgressBar() {
-        handler.postDelayed(UpdateSongTime, 50);
+        handler.postDelayed(UpdateSongTime, 100);
     }
 
     @Override

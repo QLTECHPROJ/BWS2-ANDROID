@@ -53,6 +53,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
+import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
+import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
+import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+
 public class AccountFragment extends Fragment {
     public static String IsLock = "";
     public static int ComeScreenReminder = 0;
@@ -270,6 +275,10 @@ public class AccountFragment extends Fragment {
     void DeleteCall() {
         DeletallLocalCart();
         DeletallLocalCart1();
+        if(isMediaStart){
+            stopMedia();
+            releasePlayer();
+        }
         SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREF_KEY_UserID);
