@@ -29,6 +29,8 @@ import com.brainwellnessspa.ReminderModule.Activities.ReminderDetailsActivity;
 
 import java.util.Random;
 
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.ComeNotification;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final String NOTIFICATION_CHANNEL_ID = "10001";
     NotificationManager notificationManager;
@@ -143,7 +145,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 fragmentManager1.beginTransaction()
                         .replace(R.id.flContainer, myPlaylistsFragment)
                         .commit();*/
-                resultIntent = new Intent(this, ReminderDetailsActivity.class);
+                ComeNotification = 1;
+                resultIntent = new Intent(this, DashboardActivity.class);
                 resultIntent.putExtra("id", id);
                 resultIntent.putExtra(CONSTANTS.title, title);
                 resultIntent.putExtra("body", message);

@@ -20,6 +20,7 @@ public class DashboardActivity extends AppCompatActivity {
     public static int player = 0;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
+    private static final int ComeNotification = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,13 @@ public class DashboardActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
-
+        if(ComeNotification == 1){
+            binding.navView.setSelectedItemId(R.id.navigation_playlist);
+        }else{
+            if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
+                binding.navView.setSelectedItemId(R.id.navigation_audio);
+            }
+        }
      /*   String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         try {
             if (!AudioFlag.equalsIgnoreCase("0")) {

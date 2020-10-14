@@ -54,7 +54,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {
             finish();
-            resumeMedia();
+//            resumeMedia();
+//            isPause = false;
         });
 
         if (isMediaStart) {
@@ -62,7 +63,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         } else {
         }
 
-        binding.youtubeView.initialize(AppUtils.DEVELOPER_KEY, this);
+        binding.youtubeView.initialize("AIzaSyD43ZM6bESb_pdSPzgcuCzKy8yD_45mlT8", this);
 
         binding.cbOne.setOnClickListener(view -> {
             binding.cbOne.setChecked(true);
@@ -178,20 +179,30 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (isMediaStart) {
+            pauseMedia();
+        } else {
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         finish();
-        resumeMedia();
+//        resumeMedia();
+//        isPause = false;
     }
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer
-            player, boolean wasRestored) {
+            youTubePlayer, boolean wasRestored) {
         if (!wasRestored) {
-            player.loadVideo(AppUtils.YOUTUBE_VIDEO_CODE);
-            player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+            youTubePlayer.cueVideo("y1rfRW6WX08");
+            youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
       /*      PlayerUIController uiController = youTubePlayerView.getPlayerUIController();
             player.showVideoTitle(false);*/
-            player.setShowFullscreenButton(true);
+            youTubePlayer.setShowFullscreenButton(true);
         }
     }
 
@@ -209,7 +220,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RECOVERY_DIALOG_REQUEST) {
-            getYouTubePlayerProvider().initialize(AppUtils.DEVELOPER_KEY, this);
+            getYouTubePlayerProvider().initialize("AIzaSyD43ZM6bESb_pdSPzgcuCzKy8yD_45mlT8", this);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.brainwellnessspa.DashboardModule.Audio;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.BillingOrderModule.Activities.CancelMembershipActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.brainwellnessspa.BWSApplication;
@@ -72,6 +74,7 @@ public class AudioFragment extends Fragment {
 
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+
         if (!isDownloading) {
             SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
             Gson gson = new Gson();
