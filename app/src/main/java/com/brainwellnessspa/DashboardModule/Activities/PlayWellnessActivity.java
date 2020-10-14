@@ -1167,7 +1167,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 callAllDisable(false);
 
             } else {
-                isDisclaimer = 2;
+                isDisclaimer = 0;
                 callAllDisable(true);
             }
             if (mainPlayModelList.get(position).getPlaylistID() == null) {
@@ -1183,8 +1183,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             binding.tvTitle.setText(mainPlayModelList.get(position).getAudiomastercat());
             binding.tvDesc.setText(mainPlayModelList.get(position).getAudioSubCategory());
-            Glide.with(getApplicationContext()).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+            if(url.equalsIgnoreCase("")){
+                Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+            }else {
+                Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+            }
 
             if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
@@ -1200,7 +1205,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
-        binding.simpleSeekbar.setClickable(true);
+
         handler.postDelayed(UpdateSongTime, 100);
         BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
     }
@@ -1328,7 +1333,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         handler.removeCallbacks(UpdateSongTime);
         if (audioPlay) {
             if (url.equalsIgnoreCase("") || url.isEmpty()) {
-                isDisclaimer = 2;
+                isDisclaimer = 0;
                 disclaimerPlayed = 1;
                 isRemoved = true;
             }
@@ -1565,7 +1570,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 callAllDisable(false);
 
             } else {
-                isDisclaimer = 2;
+                isDisclaimer = 0;
                 callAllDisable(true);
             }
         }
@@ -1630,6 +1635,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llLike.setClickable(true);
             binding.llLike.setEnabled(true);
             binding.llLike.setAlpha(1f);
+            binding.simpleSeekbar.setClickable(true);
         } else {
             binding.llPlay.setClickable(false);
             binding.llPlay.setEnabled(false);
@@ -1667,6 +1673,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llLike.setClickable(false);
             binding.llLike.setEnabled(false);
             binding.llLike.setAlpha(0.7f);
+            binding.simpleSeekbar.setClickable(false);
         }
     }
 

@@ -520,7 +520,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
         mainPlayModel.setAudiomastercat("");
         mainPlayModel.setAudioSubCategory("");
-        mainPlayModel.setImageFile("https://brainwellnessspa.com.au/Bws-consumer-panel/html/image/pre_session_audio.jpg");
+        mainPlayModel.setImageFile("");
         mainPlayModel.setLike("");
         mainPlayModel.setDownload("");
         mainPlayModel.setAudioDuration("0:48");
@@ -640,8 +640,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 name = mainPlayModelList.get(position).getName();
                 audioFile = mainPlayModelList.get(position).getAudioFile();
                 GetMedia(audioFile, ctx);
-                Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                if(audioFile.equalsIgnoreCase("")){
+                    Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                }else {
+                    Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                }
                 binding.tvTitle.setText(mainPlayModelList.get(position).getName());
                 binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
                 handler.postDelayed(UpdateSongTime, 100);
@@ -654,17 +659,18 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 binding.ivPause.setEnabled(false);
                 binding.ivPlay.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
                 binding.ivPause.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+                binding.simpleSeekbar.setClickable(false);
             }else{
-                isDisclaimer = 2;
+                isDisclaimer = 0;
                 binding.ivPlay.setClickable(true);
                 binding.ivPlay.setEnabled(true);
                 binding.ivPause.setClickable(true);
                 binding.ivPause.setEnabled(true);
+                binding.simpleSeekbar.setClickable(true);
                 binding.ivPlay.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                 binding.ivPause.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
             }
         }
-        binding.simpleSeekbar.setClickable(true);
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
@@ -687,9 +693,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             } else if (binding.progressBar.getVisibility() == View.VISIBLE && (binding.ivPause.getVisibility() == View.GONE && binding.ivPlay.getVisibility() == View.GONE)) {
                 isprogressbar = true;
             }
-            Intent i = new Intent(ctx, PlayWellnessActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            ctx.startActivity(i);
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -701,6 +704,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
+            Intent i = new Intent(ctx, PlayWellnessActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            ctx.startActivity(i);
 
 //            simpleNotification();
         });
@@ -824,7 +830,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     private void callComplete() {
         if (audioPlay) {
             if (audioFile.equalsIgnoreCase("") || audioFile.isEmpty()) {
-                isDisclaimer = 2;
+                isDisclaimer = 0;
                 disclaimerPlayed = 1;
                 isRemoved = true;
             }
@@ -1012,14 +1018,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setEnabled(false);
             binding.ivPause.setClickable(false);
             binding.ivPause.setEnabled(false);
+            binding.simpleSeekbar.setClickable(false);
             binding.ivPlay.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
             binding.ivPause.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
         }else{
-            isDisclaimer = 2;
+            isDisclaimer = 0;
             binding.ivPlay.setClickable(true);
             binding.ivPlay.setEnabled(true);
             binding.ivPause.setClickable(true);
             binding.ivPause.setEnabled(true);
+            binding.simpleSeekbar.setClickable(true);
             binding.ivPlay.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
             binding.ivPause.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
         }

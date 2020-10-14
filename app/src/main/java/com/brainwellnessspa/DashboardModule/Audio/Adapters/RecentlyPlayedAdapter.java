@@ -135,7 +135,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                         Gson gson = new Gson();
                         String json = gson.toJson(listModelList.get(position));
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
                         editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                         editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                         editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -175,7 +175,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                         Gson gson = new Gson();
                         String json = gson.toJson(listModelList.get(position));
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
                         editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                         editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                         editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -200,6 +200,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                     isPause = false;
                     isMediaStart = false;
                     isPrepare = false;
+                    isRemoved = false;
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
@@ -210,7 +211,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                     Gson gson = new Gson();
                     String json = gson.toJson(listModelList.get(position));
                     editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, 0);
                     editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                     editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");

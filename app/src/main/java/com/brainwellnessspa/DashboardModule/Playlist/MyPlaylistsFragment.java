@@ -92,6 +92,7 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.ViewAllPlaylistFragment.GetPlaylistLibraryID;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isRemoved;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity.ComeFrom_Playlist;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
@@ -915,6 +916,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         isPause = false;
         isMediaStart = false;
         isPrepare = false;
+        isRemoved = false;
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
@@ -1106,6 +1108,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.ivDownloads.setVisibility(View.GONE);
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
+            getMediaByPer(PlaylistID,SongListSize);
             savePlaylist();
             saveAllMedia(playlistSongsList, encodedBytes);
         } else {

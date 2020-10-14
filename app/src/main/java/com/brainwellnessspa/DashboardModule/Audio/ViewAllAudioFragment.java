@@ -326,7 +326,7 @@ public class ViewAllAudioFragment extends Fragment {
                                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
                             }
                             editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.putInt(CONSTANTS.PREF_KEY_position, 0);
                             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                             editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -373,7 +373,7 @@ public class ViewAllAudioFragment extends Fragment {
                                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
                             }
                             editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.putInt(CONSTANTS.PREF_KEY_position, 0);
                             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                             editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -417,7 +417,7 @@ public class ViewAllAudioFragment extends Fragment {
                             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
                         }
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
                         editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                         editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                         editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -549,7 +549,7 @@ public class ViewAllAudioFragment extends Fragment {
                             Gson gson = new Gson();
                             String json = gson.toJson(listModelList.get(position));
                             editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.putInt(CONSTANTS.PREF_KEY_position, 0);
                             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                             editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
