@@ -160,7 +160,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     myCount++;
                     Log.e("myCount",String.valueOf(myCount));
 
-                    if(myCount == 150){
+                    if(myCount == 50){
                         Log.e("myCount complete",String.valueOf(myCount));
                         callComplete();
                         myCount = 0;
@@ -234,8 +234,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         params.setMargins(0, 0, 0, 130);
         binding.llLayout.setLayoutParams(params);
 
-        if (comefromDownload.equalsIgnoreCase("1") && (AudioFlag.equalsIgnoreCase("DownloadListAudio")
-                || AudioFlag.equalsIgnoreCase("Downloadlist"))) {
+        if (comefromDownload.equalsIgnoreCase("1")) {
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             param.setMargins(0, 0, 0, 0);
             binding.llLayout.setLayoutParams(param);
@@ -639,7 +638,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 id = mainPlayModelList.get(position).getID();
                 name = mainPlayModelList.get(position).getName();
                 audioFile = mainPlayModelList.get(position).getAudioFile();
-                GetMedia(audioFile, ctx);
                 if(audioFile.equalsIgnoreCase("")){
                     Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                             .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
@@ -649,6 +647,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
                 binding.tvTitle.setText(mainPlayModelList.get(position).getName());
                 binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
+                GetMedia(audioFile, ctx);
                 handler.postDelayed(UpdateSongTime, 100);
             }
             if(audioFile.equalsIgnoreCase("") || audioFile.isEmpty()){
@@ -833,8 +832,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 isDisclaimer = 0;
                 disclaimerPlayed = 1;
                 isRemoved = true;
+                mainPlayModelList.remove(0);
             }
-            mainPlayModelList.remove(0);
         }
         isPrepare = false;
         isMediaStart = false;
@@ -892,7 +891,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     }
                 }
             } else {
-                if (position < (listSize - 1)) {
+                if(listSize == 1) {
+                    binding.ivPlay.setVisibility(View.VISIBLE);
+                    binding.ivPause.setVisibility(View.GONE);
+                    stopMedia();
+                }else if (position < (listSize - 1)) {
                     position = position + 1;
                     getPrepareShowData();
                 } else {

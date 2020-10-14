@@ -178,7 +178,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 myCount++;
                 Log.e("myCount", String.valueOf(myCount));
 
-                if (myCount == 150) {
+                if (myCount == 50) {
                     Log.e("myCount complete", String.valueOf(myCount));
                     callComplete();
                     myCount = 0;
@@ -1336,8 +1336,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 isDisclaimer = 0;
                 disclaimerPlayed = 1;
                 isRemoved = true;
+                mainPlayModelList.remove(0);
             }
-            mainPlayModelList.remove(0);
         }
         isPrepare = false;
         isMediaStart = false;
