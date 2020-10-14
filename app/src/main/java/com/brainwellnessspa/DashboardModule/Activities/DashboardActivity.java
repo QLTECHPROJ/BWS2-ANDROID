@@ -20,7 +20,7 @@ public class DashboardActivity extends AppCompatActivity {
     public static int player = 0;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
-    private static final int ComeNotification = 0;
+    public static int ComeNotification = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

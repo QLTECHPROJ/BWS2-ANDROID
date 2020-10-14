@@ -47,6 +47,7 @@ import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isRemoved;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
@@ -273,6 +274,7 @@ public class AptAudioFragment extends Fragment {
                     isMediaStart = false;
                     isPrepare = false;
                     disclaimer = false;
+                    isRemoved = false;
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()

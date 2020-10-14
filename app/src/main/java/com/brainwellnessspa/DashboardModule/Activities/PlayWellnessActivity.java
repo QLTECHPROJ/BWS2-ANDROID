@@ -59,6 +59,7 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.disclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isRemoved;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
@@ -683,52 +684,53 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callDownload() {
-        disableDownload();
-        byte[] EncodeBytes = new byte[1024];
-        List<String> url1 = new ArrayList<>();
-        List<String> name1 = new ArrayList<>();
-        List<String> downloadPlaylistId = new ArrayList<>();
-        SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-        Gson gson1 = new Gson();
-        String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
-        String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
-        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
-        if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
-            Type type = new TypeToken<List<String>>() {
-            }.getType();
-            List<String> fileNameList = gson1.fromJson(json, type);
-            List<String> audioFile1 = gson1.fromJson(json1, type);
-            List<String> playlistId1 = gson1.fromJson(json2, type);
-            if (fileNameList.size() != 0) {
-                url1.addAll(audioFile1);
-                name1.addAll(fileNameList);
-                downloadPlaylistId.addAll(playlistId1);
+        if(!url.equalsIgnoreCase("")) {
+            disableDownload();
+            byte[] EncodeBytes = new byte[1024];
+            List<String> url1 = new ArrayList<>();
+            List<String> name1 = new ArrayList<>();
+            List<String> downloadPlaylistId = new ArrayList<>();
+            SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            Gson gson1 = new Gson();
+            String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson1));
+            String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson1));
+            String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson1));
+            if (!json1.equalsIgnoreCase(String.valueOf(gson1))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                List<String> fileNameList = gson1.fromJson(json, type);
+                List<String> audioFile1 = gson1.fromJson(json1, type);
+                List<String> playlistId1 = gson1.fromJson(json2, type);
+                if (fileNameList.size() != 0) {
+                    url1.addAll(audioFile1);
+                    name1.addAll(fileNameList);
+                    downloadPlaylistId.addAll(playlistId1);
+                }
             }
-        }
-        url1.add(url);
-        name1.add(name);
-        downloadPlaylistId.add("");
-        if (url1.size() != 0) {
-            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = shared.edit();
-            Gson gson = new Gson();
-            String urlJson = gson.toJson(url1);
-            String nameJson = gson.toJson(name1);
-            String playlistIdJson = gson.toJson(downloadPlaylistId);
-            editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-            editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-            editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-            editor.commit();
-        }
-        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-        downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
-        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
-            handler1.postDelayed(UpdateSongTime1, 500);
-        } else {
-            binding.pbProgress.setVisibility(View.GONE);
-            handler1.removeCallbacks(UpdateSongTime1);
-        }
-        SaveMedia(EncodeBytes, FileUtils.getFilePath(getApplicationContext(), name));
+            url1.add(url);
+            name1.add(name);
+            downloadPlaylistId.add("");
+            if (url1.size() != 0) {
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+                String urlJson = gson.toJson(url1);
+                String nameJson = gson.toJson(name1);
+                String playlistIdJson = gson.toJson(downloadPlaylistId);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                editor.commit();
+            }
+            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+            downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+            if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
+                handler1.postDelayed(UpdateSongTime1, 500);
+            } else {
+                binding.pbProgress.setVisibility(View.GONE);
+                handler1.removeCallbacks(UpdateSongTime1);
+            }
+            SaveMedia(EncodeBytes, FileUtils.getFilePath(getApplicationContext(), name));
    /*     if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
             Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, id, PlaylistId);
@@ -762,6 +764,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }*/
+        }
     }
 
     private void SaveMedia(byte[] EncodeBytes, String dirPath) {
@@ -1000,8 +1003,20 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if (downloadAudioDetailsList.size() != 0) {
-                    if (downloadAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
+                if(!AudioFile.equalsIgnoreCase("")) {
+                    if (downloadAudioDetailsList.size() != 0) {
+                        if (downloadAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                            binding.llDownload.setClickable(false);
+                            binding.llDownload.setEnabled(false);
+                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                        } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
+                            binding.llDownload.setClickable(true);
+                            binding.llDownload.setEnabled(true);
+                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                        }
+                    } else if (download.equalsIgnoreCase("1")) {
                         binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                         binding.llDownload.setClickable(false);
                         binding.llDownload.setEnabled(false);
@@ -1012,16 +1027,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                         binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                     }
-                } else if (download.equalsIgnoreCase("1")) {
-                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                    binding.llDownload.setClickable(false);
-                    binding.llDownload.setEnabled(false);
-                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
-                    binding.llDownload.setClickable(true);
-                    binding.llDownload.setEnabled(true);
-                    binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-                    binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                 }
            /* if (!isMediaStart) {
              callMedia();
@@ -1325,6 +1330,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (url.equalsIgnoreCase("") || url.isEmpty()) {
                 isDisclaimer = 2;
                 disclaimerPlayed = 1;
+                isRemoved = true;
             }
             mainPlayModelList.remove(0);
         }

@@ -95,6 +95,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     long myProgress=0;
     public static int isDisclaimer = 0;
     public static boolean disclaimer = false;
+    public static boolean isRemoved = false;
 
     //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -265,7 +266,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //            listSize = arrayList.size();
 //            for (int i = 0; i < listSize; i++) {
 
-                addDeclaimer();
+                if(!isRemoved) {
+                    addDeclaimer();
+                }
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.getID());
                 mainPlayModel.setName(arrayList.getName());
@@ -294,7 +297,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 ViewAllAudioListModel.ResponseData.Detail arrayList = gson.fromJson(json, type);
 //            listSize = arrayList.size();
 //                for (int i = 0; i < listSize; i++) {
-                addDeclaimer();
+                if(!isRemoved) {
+                    addDeclaimer();
+                }
 
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.getID());
@@ -323,8 +328,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 AppointmentDetailModel.Audio arrayList = gson.fromJson(json, type);
 //            listSize = arrayList.size();
 //                for (int i = 0; i < listSize; i++) {
-                addDeclaimer();
-
+                if(!isRemoved) {
+                    addDeclaimer();
+                }
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.getID());
                 mainPlayModel.setName(arrayList.getName());
@@ -352,8 +358,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 DownloadAudioDetails arrayList = gson.fromJson(json, type);
 //                listSize = arrayList.size();
 //                for (int i = 0; i < listSize; i++) {
-                addDeclaimer();
-
+                if(!isRemoved) {
+                    addDeclaimer();
+                }
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.getID());
                 mainPlayModel.setName(arrayList.getName());
@@ -381,8 +388,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }.getType();
                 ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
                 listSize = arrayList.size();
-                addDeclaimer();
-
+                if(!isRemoved) {
+                    addDeclaimer();
+                }
                 for (int i = 0; i < listSize; i++) {
                     mainPlayModel = new MainPlayModel();
                     mainPlayModel.setID(arrayList.get(i).getID());
@@ -411,8 +419,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }.getType();
                 ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
                 listSize = arrayList.size();
-                addDeclaimer();
-
+                if(!isRemoved) {
+                    addDeclaimer();
+                }
                 for (int i = 0; i < listSize; i++) {
                     mainPlayModel = new MainPlayModel();
                     mainPlayModel.setID(arrayList.get(i).getID());
@@ -817,6 +826,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             if (audioFile.equalsIgnoreCase("") || audioFile.isEmpty()) {
                 isDisclaimer = 2;
                 disclaimerPlayed = 1;
+                isRemoved = true;
             }
             mainPlayModelList.remove(0);
         }

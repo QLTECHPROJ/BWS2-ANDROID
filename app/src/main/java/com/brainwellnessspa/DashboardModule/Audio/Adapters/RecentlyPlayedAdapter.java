@@ -34,6 +34,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isRemoved;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
@@ -123,6 +124,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                         isMediaStart = false;
                         isPrepare = false;
                         disclaimer = false;
+                        isRemoved = false;
                         Fragment fragment = new TransparentPlayerFragment();
                         FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
@@ -162,6 +164,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                         isMediaStart = false;
                         isPrepare = false;
                         disclaimer = false;
+                        isRemoved = false;
                         Fragment fragment = new TransparentPlayerFragment();
                         FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
