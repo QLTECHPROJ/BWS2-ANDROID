@@ -54,7 +54,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {
             finish();
-//            resumeMedia();
+            resumeMedia();
         });
 
         if (isMediaStart) {
@@ -180,7 +180,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     @Override
     public void onBackPressed() {
         finish();
-//            resumeMedia();
+        resumeMedia();
     }
 
     @Override
