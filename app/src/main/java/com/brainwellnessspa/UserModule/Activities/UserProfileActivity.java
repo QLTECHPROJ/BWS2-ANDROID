@@ -99,45 +99,22 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.tlCalendar.setError("");
         binding.tlEmail.setError("");
         if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
-                binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
-                binding.etMobileNumber.getText().toString().equalsIgnoreCase("") &&
                 binding.etEmail.getText().toString().equalsIgnoreCase("")) {
-            binding.flUser.setError("Please enter your full name");
-            binding.tlCalendar.setError("please enter date of birth");
-            binding.tlMobileNumber.setError("please enter mobile number");
-            binding.tlEmail.setError("Please provide a valid email address");
-        } else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
-                binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
-                binding.etEmail.getText().toString().equalsIgnoreCase("")) {
-            binding.flUser.setError("Please enter your full name");
-            binding.tlCalendar.setError("please enter date of birth");
-            binding.tlEmail.setError("Please provide a valid email address");
+            binding.flUser.setError("Name is required");
+            binding.tlEmail.setError("Email address is required");
         } else if (!binding.etUser.getText().toString().equalsIgnoreCase("") &&
-                binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
                 binding.etEmail.getText().toString().equalsIgnoreCase("")) {
-            binding.tlCalendar.setError("please enter date of birth");
-            binding.tlEmail.setError("Please provide a valid email address");
+            binding.tlEmail.setError("Email address is required");
         } else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
-                binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
                 !binding.etEmail.getText().toString().equalsIgnoreCase("")) {
-            binding.flUser.setError("Please enter your full name");
-            binding.tlCalendar.setError("please enter date of birth");
-        } else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
-                !binding.etCalendar.getText().toString().equalsIgnoreCase("") &&
-                binding.etEmail.getText().toString().equalsIgnoreCase("")) {
-            binding.flUser.setError("Please enter your full name");
-            binding.tlEmail.setError("Please provide a valid email address");
+            binding.flUser.setError("Name is required");
         } else if (binding.etUser.getText().toString().equalsIgnoreCase("")) {
-            binding.flUser.setError("Please enter your full name");
-        } else if (binding.etCalendar.getText().toString().equalsIgnoreCase("")) {
-            binding.tlCalendar.setError("please enter date of birth");
-        } else if (binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
-            binding.tlMobileNumber.setError("please enter mobile number");
+            binding.flUser.setError("Name is required");
         } else if (binding.etEmail.getText().toString().equalsIgnoreCase("")) {
-            binding.tlEmail.setError("Please enter your email address");
+            binding.tlEmail.setError("Email address is required");
         } else if (!binding.etEmail.getText().toString().equalsIgnoreCase("")
                 && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
-            binding.tlEmail.setError("Please provide a valid email address");
+            binding.tlEmail.setError("Please enter a valid email address");
         } else {
             binding.flUser.setError("");
             binding.tlCalendar.setError("");

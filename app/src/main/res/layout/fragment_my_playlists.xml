@@ -9,6 +9,7 @@
         android:background="@color/white">
 
         <RelativeLayout
+            android:id="@+id/rlMainLayouts"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

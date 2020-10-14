@@ -154,17 +154,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void prepareData() {
-        if (binding.edtNumber.getText().toString().isEmpty()) {
-            binding.edtNumber.setFocusable(true);
-            binding.edtNumber.requestFocus();
-            binding.txtError.setVisibility(View.VISIBLE);
-            binding.txtError.setText(getString(R.string.Please_enter_your_mobile_number));
-        } else if (binding.edtNumber.getText().toString().length() == 1 || binding.edtNumber.getText().toString().length() < 8 ||
+        if (binding.edtNumber.getText().toString().length() == 1 || binding.edtNumber.getText().toString().length() < 8 ||
                 binding.edtNumber.getText().toString().length() > 10) {
             binding.edtNumber.setFocusable(true);
             binding.edtNumber.requestFocus();
             binding.txtError.setVisibility(View.VISIBLE);
-            binding.txtError.setText(getString(R.string.not_valid_mobile_number));
+            binding.txtError.setText(getString(R.string.not_valids_mobile_number));
         } else {
             binding.txtError.setVisibility(View.GONE);
             if (BWSApplication.isNetworkConnected(ctx)) {

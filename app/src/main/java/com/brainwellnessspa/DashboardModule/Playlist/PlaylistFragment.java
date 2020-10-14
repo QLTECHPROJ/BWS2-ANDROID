@@ -89,7 +89,7 @@ public class PlaylistFragment extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
         binding.rvMainPlayList.setItemAnimator(new DefaultItemAnimator());
-        if(ComeNotification == 1){
+        if (ComeNotification == 1) {
             Bundle bundle = new Bundle();
             Fragment myPlaylistsFragment = new MyPlaylistsFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -365,35 +365,31 @@ public class PlaylistFragment extends Fragment {
                     });
 
                     btnSendCode.setOnClickListener(view1 -> {
-                        if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                            BWSApplication.showToast("Please provide the playlist's name", getActivity());
-                        } else {
-                            if (BWSApplication.isNetworkConnected(getActivity())) {
-                                Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
-                                listCall.enqueue(new Callback<CreatePlaylistModel>() {
-                                    @Override
-                                    public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
-                                        if (response.isSuccessful()) {
-                                            CreatePlaylistModel listModel = response.body();
-                                            if (listModel.getResponseData().getIscreated().equalsIgnoreCase("0")) {
-                                                BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
-                                            } else if (listModel.getResponseData().getIscreated().equalsIgnoreCase("1") ||
-                                                    listModel.getResponseData().getIscreated().equalsIgnoreCase("")) {
-                                                callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0");
-                                                dialog.dismiss();
-                                            }
-
+                        if (BWSApplication.isNetworkConnected(getActivity())) {
+                            Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
+                            listCall.enqueue(new Callback<CreatePlaylistModel>() {
+                                @Override
+                                public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
+                                    if (response.isSuccessful()) {
+                                        CreatePlaylistModel listModel = response.body();
+                                        if (listModel.getResponseData().getIscreated().equalsIgnoreCase("0")) {
+                                            BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
+                                        } else if (listModel.getResponseData().getIscreated().equalsIgnoreCase("1") ||
+                                                listModel.getResponseData().getIscreated().equalsIgnoreCase("")) {
+                                            callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0");
+                                            dialog.dismiss();
                                         }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                     }
-                                });
-                            } else {
-                                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-                            }
+                                }
+
+                                @Override
+                                public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                                }
+                            });
+                        } else {
+                            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                         }
                     });
 
@@ -538,9 +534,9 @@ public class PlaylistFragment extends Fragment {
 
             if (IsLock.equalsIgnoreCase("1")) {
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else  if (IsLock.equalsIgnoreCase("2")) {
+            } else if (IsLock.equalsIgnoreCase("2")) {
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
-            }else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 

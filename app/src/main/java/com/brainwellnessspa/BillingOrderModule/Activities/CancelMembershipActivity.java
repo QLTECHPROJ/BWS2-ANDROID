@@ -112,7 +112,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
             }
             if (CancelId.equalsIgnoreCase("4") &&
                     binding.edtCancelBox.getText().toString().equalsIgnoreCase("")) {
-                BWSApplication.showToast("Please enter reason", ctx);
+                BWSApplication.showToast("Cancellation reason is required", ctx);
             } else {
                 final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

@@ -174,7 +174,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_medium"
                             android:gravity="center_vertical"
-                            android:text="@string/Help"
+                            android:text="@string/General"
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_14sdp" />
                     </LinearLayout>

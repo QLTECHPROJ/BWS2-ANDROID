@@ -999,7 +999,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);
             editor.commit();
             if(s.equalsIgnoreCase("0")){
-            BWSApplication.showToast("The audio has been removed from the queue", ctx);
+            BWSApplication.showToast("Removed from the queue", ctx);
             }
             addToQueueModelList2 = listModelList;
         }

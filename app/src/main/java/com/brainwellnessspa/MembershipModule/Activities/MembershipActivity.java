@@ -73,7 +73,7 @@ public class MembershipActivity extends AppCompatActivity {
 
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<FaqListModel> listCall = APIClient.getClient().getFaqLists();
+            Call<FaqListModel> listCall = APIClient.getClient().getFaqListings();
             listCall.enqueue(new Callback<FaqListModel>() {
                 @Override
                 public void onResponse(Call<FaqListModel> call, Response<FaqListModel> response) {

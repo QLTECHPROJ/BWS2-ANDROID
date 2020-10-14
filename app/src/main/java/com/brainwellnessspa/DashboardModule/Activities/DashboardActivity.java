@@ -111,7 +111,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
 
             this.doubleBackToExitPressedOnce = true;
-            BWSApplication.showToast("Press again to exit.", DashboardActivity.this);
+            BWSApplication.showToast("Press again to exit", DashboardActivity.this);
 
             new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
         } else {

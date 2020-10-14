@@ -152,6 +152,10 @@ public interface APIInterface {
     @GET("faqlist")
     Call<FaqListModel> getFaqLists();
 
+    /* TODO AudioFaqActivity */
+    @GET("faqlistmembership")
+    Call<FaqListModel> getFaqListings();
+
     /* TODO UserProfileActivity */
     @POST("profiledetail")
     @FormUrlEncoded

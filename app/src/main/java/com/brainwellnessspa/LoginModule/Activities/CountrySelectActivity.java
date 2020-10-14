@@ -45,7 +45,7 @@ public class CountrySelectActivity extends AppCompatActivity {
 //    int position;
     Context ctx;
     Activity activity;
-    String Name, Code, MobileNo, Check;
+    String Name, Code, MobileNo, Check,searchFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +106,7 @@ public class CountrySelectActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String search) {
                 try {
                     adapter.getFilter().filter(search);
+                    searchFilter = search;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -234,6 +235,7 @@ public class CountrySelectActivity extends AppCompatActivity {
                 protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                     if (listFilterData.size() == 0) {
                         binding.tvFound.setVisibility(View.VISIBLE);
+                        binding.tvFound.setText("Couldn't find "+ searchFilter +". Try searching again");
                         binding.rvCountryList.setVisibility(View.GONE);
                     } else {
                         binding.tvFound.setVisibility(View.GONE);

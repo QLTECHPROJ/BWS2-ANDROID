@@ -57,24 +57,24 @@ public class BillingAddressFragment extends Fragment {
                 binding.tlState.setError("");
                 binding.tlPostCode.setError("");
                 if (binding.etName.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlName.setError("Please enter your full name");
+                    binding.tlName.setError("Name is required");
                 } else if (binding.etEmail.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlEmail.setError("Please enter your email address");
+                    binding.tlEmail.setError("Email address is required");
                 } else if (!binding.etEmail.getText().toString().equalsIgnoreCase("")
                         && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
-                    binding.tlEmail.setError("Please provide a valid email address");
+                    binding.tlEmail.setError("Please enter a valid email address");
                 } else if (binding.etMobileNumber.getText().toString().equalsIgnoreCase("")) {
                     binding.tlMobileNumber.setError("please enter mobile number");
                 } else if (binding.etCountry.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlCountry.setError("Please provide valid country details");
+                    binding.tlCountry.setError("Please enter a valid country");
                 } else if (binding.etAddressLine1.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlAddressLine1.setError("Please provide the address details");
+                    binding.tlAddressLine1.setError("Address Line is required");
                 } else if (binding.etCity.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlCity.setError("Please provide suburb/town/city details");
+                    binding.tlCity.setError("Suburb / Town / City is required");
                 } else if (binding.etState.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlState.setError("Please provide the state you reside in");
+                    binding.tlState.setError("State is required");
                 } else if (binding.etPostCode.getText().toString().equalsIgnoreCase("")) {
-                    binding.tlPostCode.setError("Please provide a postal code");
+                    binding.tlPostCode.setError("Postcode is required");
                 } else {
                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                     Call<BillingAddressSaveModel> listCall = APIClient.getClient().getBillingAddressSave(UserID,

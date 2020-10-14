@@ -44,7 +44,7 @@ public class OtpActivity extends AppCompatActivity {
     Activity activity;
     CountDownTimer countDownTimer;
     private long mLastClickTime = 0;
-    public static int comeLogin  = 0;
+    public static int comeLogin = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,54 +104,47 @@ public class OtpActivity extends AppCompatActivity {
                     });
                     fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
                 }
-                if (binding.edtOTP1.getText().toString().equalsIgnoreCase("") ||
-                        binding.edtOTP2.getText().toString().equalsIgnoreCase("") ||
-                        binding.edtOTP3.getText().toString().equalsIgnoreCase("") ||
-                        binding.edtOTP4.getText().toString().equalsIgnoreCase("")) {
-                    binding.txtError.setText("Please enter the OTP");
-                    binding.txtError.setVisibility(View.VISIBLE);
-                } else {
-                    if (BWSApplication.isNetworkConnected(OtpActivity.this)) {
-                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        Call<OtpModel> listCall = APIClient.getClient().getAuthOtps(
-                                binding.edtOTP1.getText().toString() + "" +
-                                        binding.edtOTP2.getText().toString() + "" +
-                                        binding.edtOTP3.getText().toString() + "" +
-                                        binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE,
-                                Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), MobileNo, CONSTANTS.FLAG_ZERO);
-                        listCall.enqueue(new Callback<OtpModel>() {
-                            @Override
-                            public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
-                                if (response.isSuccessful()) {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                    OtpModel otpModel = response.body();
-                                    if (otpModel.getResponseData().getError().equalsIgnoreCase("0") ||
-                                            otpModel.getResponseData().getError().equalsIgnoreCase("")) {
-                                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = shared.edit();
-                                        editor.putString(CONSTANTS.PREF_KEY_UserID, otpModel.getResponseData().getUserID());
-                                        editor.putString(CONSTANTS.PREF_KEY_MobileNo, otpModel.getResponseData().getPhoneNumber());
-                                        editor.commit();
-                                        BWSApplication.showToast(otpModel.getResponseMessage(), OtpActivity.this);
-                                        Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
-                                        startActivity(i);
-                                        finish();
-                                    } else if (otpModel.getResponseData().getError().equalsIgnoreCase("1")) {
-                                        binding.txtError.setText(otpModel.getResponseMessage());
-                                        binding.txtError.setVisibility(View.VISIBLE);
-                                    }
+                if (BWSApplication.isNetworkConnected(OtpActivity.this)) {
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                    Call<OtpModel> listCall = APIClient.getClient().getAuthOtps(
+                            binding.edtOTP1.getText().toString() + "" +
+                                    binding.edtOTP2.getText().toString() + "" +
+                                    binding.edtOTP3.getText().toString() + "" +
+                                    binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE,
+                            Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), MobileNo, CONSTANTS.FLAG_ZERO);
+                    listCall.enqueue(new Callback<OtpModel>() {
+                        @Override
+                        public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
+                            if (response.isSuccessful()) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                OtpModel otpModel = response.body();
+                                if (otpModel.getResponseData().getError().equalsIgnoreCase("0") ||
+                                        otpModel.getResponseData().getError().equalsIgnoreCase("")) {
+                                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = shared.edit();
+                                    editor.putString(CONSTANTS.PREF_KEY_UserID, otpModel.getResponseData().getUserID());
+                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo, otpModel.getResponseData().getPhoneNumber());
+                                    editor.commit();
+                                    BWSApplication.showToast(otpModel.getResponseMessage(), OtpActivity.this);
+                                    Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
+                                    startActivity(i);
+                                    finish();
+                                } else if (otpModel.getResponseData().getError().equalsIgnoreCase("1")) {
+                                    binding.txtError.setText(otpModel.getResponseMessage());
+                                    binding.txtError.setVisibility(View.VISIBLE);
                                 }
                             }
+                        }
 
-                            @Override
-                            public void onFailure(Call<OtpModel> call, Throwable t) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            }
-                        });
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), OtpActivity.this);
-                    }
+                        @Override
+                        public void onFailure(Call<OtpModel> call, Throwable t) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        }
+                    });
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), OtpActivity.this);
                 }
+
             }
         });
 

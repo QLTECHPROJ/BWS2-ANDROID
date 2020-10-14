@@ -666,34 +666,31 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 edtCreate.addTextChangedListener(popupTextWatcher);
 
                                 btnSendCode.setOnClickListener(view1 -> {
-                                    if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                                        BWSApplication.showToast("Please provide the playlist's name", ctx);
-                                    } else {
-                                        if (BWSApplication.isNetworkConnected(ctx)) {
-                                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                            Call<RenamePlaylistModel> listCall1 = APIClient.getClient().getRenamePlaylist(UserID, PlaylistID, edtCreate.getText().toString());
-                                            listCall1.enqueue(new Callback<RenamePlaylistModel>() {
-                                                @Override
-                                                public void onResponse(Call<RenamePlaylistModel> call1, Response<RenamePlaylistModel> response1) {
-                                                    if (response1.isSuccessful()) {
-                                                        comeRename = 1;
-                                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                                        RenamePlaylistModel listModel = response1.body();
-                                                        BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                                        dialog.dismiss();
-                                                        finish();
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onFailure(Call<RenamePlaylistModel> call1, Throwable t) {
+                                    if (BWSApplication.isNetworkConnected(ctx)) {
+                                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        Call<RenamePlaylistModel> listCall1 = APIClient.getClient().getRenamePlaylist(UserID, PlaylistID, edtCreate.getText().toString());
+                                        listCall1.enqueue(new Callback<RenamePlaylistModel>() {
+                                            @Override
+                                            public void onResponse(Call<RenamePlaylistModel> call1, Response<RenamePlaylistModel> response1) {
+                                                if (response1.isSuccessful()) {
+                                                    comeRename = 1;
                                                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                                    RenamePlaylistModel listModel = response1.body();
+                                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                                    dialog.dismiss();
+                                                    finish();
                                                 }
-                                            });
-                                        } else {
-                                            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                                        }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<RenamePlaylistModel> call1, Throwable t) {
+                                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                            }
+                                        });
+                                    } else {
+                                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                                     }
+
                                 });
                                 tvCancel.setOnClickListener(v -> dialog.dismiss());
                                 dialog.show();

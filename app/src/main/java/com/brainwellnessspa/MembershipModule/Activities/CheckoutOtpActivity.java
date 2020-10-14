@@ -128,49 +128,41 @@ public class CheckoutOtpActivity extends AppCompatActivity {
                 });
                 fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
             }
-            if (binding.edtOTP1.getText().toString().equalsIgnoreCase("") ||
-                    binding.edtOTP2.getText().toString().equalsIgnoreCase("") ||
-                    binding.edtOTP3.getText().toString().equalsIgnoreCase("") ||
-                    binding.edtOTP4.getText().toString().equalsIgnoreCase("")) {
-                binding.txtError.setText("Please enter the OTP");
-                binding.txtError.setVisibility(View.VISIBLE);
-            } else {
-                if (BWSApplication.isNetworkConnected(CheckoutOtpActivity.this)) {
-                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                    String deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                    Call<OtpModel> listCall = APIClient.getClient().getAuthOtps1(
-                            binding.edtOTP1.getText().toString() + "" +
-                                    binding.edtOTP2.getText().toString() + "" +
-                                    binding.edtOTP3.getText().toString() + "" +
-                                    binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE, deviceid
-                            , MobileNo, CONSTANTS.FLAG_ONE);
-                    listCall.enqueue(new Callback<OtpModel>() {
-                        @Override
-                        public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
-                            if (response.isSuccessful()) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                OtpModel otpModel = response.body();
-                                if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                    Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
-                                    i.putExtra("MobileNo", MobileNo);
-                                    startActivity(i);
-                                    finish();
-                                } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                    binding.txtError.setText(otpModel.getResponseMessage());
-                                    binding.txtError.setVisibility(View.VISIBLE);
-                                }
+            if (BWSApplication.isNetworkConnected(CheckoutOtpActivity.this)) {
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                String deviceid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                Call<OtpModel> listCall = APIClient.getClient().getAuthOtps1(
+                        binding.edtOTP1.getText().toString() + "" +
+                                binding.edtOTP2.getText().toString() + "" +
+                                binding.edtOTP3.getText().toString() + "" +
+                                binding.edtOTP4.getText().toString(), fcm_id, CONSTANTS.FLAG_ONE, deviceid
+                        , MobileNo, CONSTANTS.FLAG_ONE);
+                listCall.enqueue(new Callback<OtpModel>() {
+                    @Override
+                    public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            OtpModel otpModel = response.body();
+                            if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
+                                i.putExtra("MobileNo", MobileNo);
+                                startActivity(i);
+                                finish();
+                            } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                binding.txtError.setText(otpModel.getResponseMessage());
+                                binding.txtError.setVisibility(View.VISIBLE);
                             }
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<OtpModel> call, Throwable t) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                    @Override
+                    public void onFailure(Call<OtpModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
 
-                        }
-                    });
-                } else {
-                    BWSApplication.showToast(getString(R.string.no_server_found), getApplicationContext());
-                }
+                    }
+                });
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getApplicationContext());
             }
         });
 

@@ -199,6 +199,19 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             PlaylistImage = getArguments().getString("PlaylistImage");
             MyDownloads = getArguments().getString("MyDownloads");
         }
+        binding.rlMainLayouts.setClickable(false);
+        binding.rlMainLayouts.setEnabled(false);
+        binding.llMainLayout.setClickable(false);
+        binding.llMainLayout.setEnabled(false);
+        binding.rlLayout.setClickable(false);
+        binding.rlLayout.setEnabled(false);
+        binding.ivBanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.ivBanner.setClickable(false);
+                binding.ivBanner.setEnabled(false);
+            }
+        });
         binding.llBack.setOnClickListener(view1 -> callBack());
         if (BWSApplication.isNetworkConnected(getActivity()) && !MyDownloads.equalsIgnoreCase("1")) {
             binding.llMore.setVisibility(View.VISIBLE);
@@ -1503,14 +1516,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         BWSApplication.showToast("The audio shall sort after the disclaimer", ctx);
                     }
                 } else {
-                if (event.getAction() ==
-                        MotionEvent.ACTION_DOWN) {
-                    startDragListener.requestDrag(holder);
-                }
-                if (event.getAction() ==
-                        MotionEvent.ACTION_UP) {
-                    startDragListener.requestDrag(holder);
-                }
+                    if (event.getAction() ==
+                            MotionEvent.ACTION_DOWN) {
+                        startDragListener.requestDrag(holder);
+                    }
+                    if (event.getAction() ==
+                            MotionEvent.ACTION_UP) {
+                        startDragListener.requestDrag(holder);
+                    }
                 }
                 return false;
             });
@@ -1783,6 +1796,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                     if (listFilterData.size() == 0) {
                         binding.llError.setVisibility(View.VISIBLE);
+                        binding.tvFound.setText("Couldn't find '" + SearchFlag + "'. Try searching again");
                         binding.rvPlayLists.setVisibility(View.GONE);
                     } else {
                         binding.llError.setVisibility(View.GONE);
@@ -1954,7 +1968,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                     if (listFilterData.size() == 0) {
                         binding.llError.setVisibility(View.VISIBLE);
-                        binding.tvFound.setText("Search term not found please use another one");
+                        binding.tvFound.setText("Couldn't find " + SearchFlag + ". Try searching again");
                         binding.rvPlayLists.setVisibility(View.GONE);
                     } else {
                         binding.llError.setVisibility(View.GONE);

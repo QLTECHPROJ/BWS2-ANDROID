@@ -325,7 +325,7 @@ public class AddQueueActivity extends AppCompatActivity {
                 } else
                     binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-                BWSApplication.showToast("Shuffle mode has been turned on", ctx);
+//                BWSApplication.showToast("Shuffle mode has been turned on", ctx);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else if (IsShuffle.equalsIgnoreCase("1")) {
@@ -334,7 +334,7 @@ public class AddQueueActivity extends AppCompatActivity {
             editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
             editor.commit();
             IsShuffle = "";
-            BWSApplication.showToast("Shuffle mode has been turned off", ctx);
+//            BWSApplication.showToast("Shuffle mode has been turned off", ctx);
             binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
@@ -356,7 +356,7 @@ public class AddQueueActivity extends AppCompatActivity {
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             IsRepeat = "0";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
-            BWSApplication.showToast("Repeat mode has been turned on", ctx);
+//            BWSApplication.showToast("Repeat mode has been turned on", ctx);
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         } else if (IsRepeat.equalsIgnoreCase("0")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
@@ -366,11 +366,11 @@ public class AddQueueActivity extends AppCompatActivity {
             if (listSize == 1) {
                 editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
                 IsRepeat = "";
-                BWSApplication.showToast("Repeat mode has been turned off", ctx);
+//                BWSApplication.showToast("Repeat mode has been turned off", ctx);
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {
-                BWSApplication.showToast("Repeat mode has been turned on", ctx);
+//                BWSApplication.showToast("Repeat mode has been turned on", ctx);
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             }
@@ -388,7 +388,7 @@ public class AddQueueActivity extends AppCompatActivity {
             IsRepeat = "";
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-            BWSApplication.showToast("Repeat mode has been turned off", ctx);
+//            BWSApplication.showToast("Repeat mode has been turned off", ctx);
         }
     }
 
@@ -425,22 +425,22 @@ public class AddQueueActivity extends AppCompatActivity {
             addToQueueModel.setAudioDuration(mainPlayModelList.get(i).getAudioDuration());
         }
         if (addToQueueModelList.size() == 0) {
-            BWSApplication.showToast("Audio has been added to queue", ctx);
+            BWSApplication.showToast("Added to the queue", ctx);
             addToQueueModelList.add(addToQueueModel);
         } else {
             for (int x = 0; x < addToQueueModelList.size(); x++) {
                 if (addToQueueModelList.get(x).getAudioFile().equals(addToQueueModel.getAudioFile())) {
                     if (queuePlay && addToQueueModelList.get(position).getAudioFile().equals(addToQueueModel.getAudioFile())) {
-                        BWSApplication.showToast("Audio has been added to queue", ctx);
+                        BWSApplication.showToast("Added to the queue", ctx);
                         addToQueueModelList.add(addToQueueModel);
                         break;
                     } else {
                         addToQueueModel = new AddToQueueModel();
-                        BWSApplication.showToast("Already in Queue", ctx);
+                        BWSApplication.showToast("Audio already in queue", ctx);
                         break;
                     }
                 } else if (x == (addToQueueModelList.size() - 1)) {
-                    BWSApplication.showToast("Audio has been added to queue", ctx);
+                    BWSApplication.showToast("Added to the queue", ctx);
                     addToQueueModelList.add(addToQueueModel);
                     break;
                 }

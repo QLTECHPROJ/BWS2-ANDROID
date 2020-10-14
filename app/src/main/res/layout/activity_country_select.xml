@@ -123,7 +123,6 @@
             android:layout_marginHorizontal="@dimen/_28sdp"
             android:fontFamily="@font/montserrat_regular"
             android:gravity="center"
-            android:text="Search term not found please use another one"
             android:textColor="@color/white"
             android:textSize="@dimen/_16sdp"
             android:visibility="gone" />

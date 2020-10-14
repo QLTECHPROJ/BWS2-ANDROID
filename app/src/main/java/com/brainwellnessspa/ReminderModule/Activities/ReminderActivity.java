@@ -377,7 +377,7 @@ public class ReminderActivity extends AppCompatActivity {
     }
 
     public void RefreshButton() {
-        if (!PlaylistName.equalsIgnoreCase("") || remiderDays.size() != 0) {
+        if (!PlaylistName.equalsIgnoreCase("") && remiderDays.size() != 0) {
             binding.btnSave.setEnabled(true);
             binding.btnSave.setTextColor(getResources().getColor(R.color.white));
             binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);

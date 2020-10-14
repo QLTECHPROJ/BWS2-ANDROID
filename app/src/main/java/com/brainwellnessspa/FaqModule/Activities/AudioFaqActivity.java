@@ -39,7 +39,7 @@ public class AudioFaqActivity extends AppCompatActivity {
         if (Flag.equalsIgnoreCase("Audio")) {
             binding.tvTitle.setText(R.string.Audio);
         } else if (Flag.equalsIgnoreCase("Help")) {
-            binding.tvTitle.setText(R.string.Help);
+            binding.tvTitle.setText("General");
         } else if (Flag.equalsIgnoreCase("Playlist")) {
             binding.tvTitle.setText(R.string.Playlist);
         }
