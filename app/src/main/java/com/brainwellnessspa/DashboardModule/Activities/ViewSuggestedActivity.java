@@ -254,6 +254,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                            } else {
+                                callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
                             }
                         } else {
                             callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
@@ -277,6 +279,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                            } else {
+                                callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
                             }
                         } else {
                             callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
@@ -298,6 +302,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                        }else {
+                            callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
                         }
                     } else {
                         callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
@@ -426,6 +432,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                        } else {
+                            callAddAudioToPlaylist("", PlaylistModel.get(position).getID(), "1");
                         }
                     } else {
                         callAddAudioToPlaylist("", PlaylistModel.get(position).getID(), "1");

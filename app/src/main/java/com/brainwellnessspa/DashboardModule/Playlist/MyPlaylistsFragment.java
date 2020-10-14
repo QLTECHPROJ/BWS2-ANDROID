@@ -1923,14 +1923,33 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 holder.binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             }
             holder.binding.llMore.setOnClickListener(view -> {
-                Intent i = new Intent(ctx, AddQueueActivity.class);
-                i.putExtra("play", "playlist");
-                i.putExtra("ID", mData.get(position).getID());
-                i.putExtra("PlaylistAudioId", mData.get(position).getPlaylistAudioId());
-                i.putExtra("position", position);
-                i.putParcelableArrayListExtra("data", mData);
-                i.putExtra("comeFrom", "myPlayList");
-                startActivity(i);
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                    if (isDisclaimer == 1) {
+                        BWSApplication.showToast("You can see details after the disclaimer", ctx);
+                    } else {
+                        Intent i = new Intent(ctx, AddQueueActivity.class);
+                        i.putExtra("play", "playlist");
+                        i.putExtra("ID", mData.get(position).getID());
+                        i.putExtra("PlaylistAudioId", mData.get(position).getPlaylistAudioId());
+                        i.putExtra("position", position);
+                        i.putParcelableArrayListExtra("data", mData);
+                        i.putExtra("comeFrom", "myPlayList");
+                        startActivity(i);
+                    }
+                }else{
+                    Intent i = new Intent(ctx, AddQueueActivity.class);
+                    i.putExtra("play", "playlist");
+                    i.putExtra("ID", mData.get(position).getID());
+                    i.putExtra("PlaylistAudioId", mData.get(position).getPlaylistAudioId());
+                    i.putExtra("position", position);
+                    i.putParcelableArrayListExtra("data", mData);
+                    i.putExtra("comeFrom", "myPlayList");
+                    startActivity(i);
+                }
             });
         }
 

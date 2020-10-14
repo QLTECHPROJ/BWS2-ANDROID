@@ -48,37 +48,23 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_marginTop="@dimen/_8sdp"
-                            android:layout_weight="0.5"
+                            android:layout_weight="0.45"
+                            android:orientation="vertical"
                             android:gravity="center_horizontal"
-                            android:visibility="gone">
+                            android:visibility="visible">
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/_16sdp"
                                 android:layout_marginRight="@dimen/_9sdp">
 
                                 <ImageView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:scaleType="fitXY"
-                                    android:src="@drawable/ic_playlist_image" />
-
-                                <TextView
-                                    android:layout_width="match_parent"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentBottom="true"
-                                    android:background="@drawable/gradient"
-                                    android:fontFamily="@font/montserrat_semi_bold"
-                                    android:gravity="start"
-                                    android:maxLines="2"
-                                    android:paddingLeft="@dimen/_13sdp"
-                                    android:paddingTop="@dimen/_8sdp"
-                                    android:paddingRight="@dimen/_13sdp"
-                                    android:paddingBottom="@dimen/_8sdp"
-                                    android:text="@string/Create_playlist"
-                                    android:textColor="@color/white"
-                                    android:textSize="@dimen/_15sdp" />
+                                    android:scaleType="fitXY"
+                                    app:layout_constraintDimensionRatio="1:1"
+                                    android:src="@drawable/ic_create_playlist" />
 
                                 <ImageView
                                     android:id="@+id/ivLock"
@@ -93,8 +79,23 @@
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
 
-
                             </RelativeLayout>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:fontFamily="@font/montserrat_semi_bold"
+                                android:gravity="start"
+                                android:layout_marginLeft="@dimen/_16sdp"
+                                android:layout_marginRight="@dimen/_9sdp"
+                                android:maxLines="2"
+                                android:paddingLeft="@dimen/_13sdp"
+                                android:paddingTop="@dimen/_8sdp"
+                                android:paddingRight="@dimen/_13sdp"
+                                android:paddingBottom="@dimen/_8sdp"
+                                android:text="@string/Add_playlist1"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_15sdp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -102,7 +103,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/_9sdp"
                             android:layout_marginRight="@dimen/_16sdp"
-                            android:layout_weight="0.5"
+                            android:layout_weight="0.60"
                             android:gravity="center_horizontal" />
 
                     </LinearLayout>

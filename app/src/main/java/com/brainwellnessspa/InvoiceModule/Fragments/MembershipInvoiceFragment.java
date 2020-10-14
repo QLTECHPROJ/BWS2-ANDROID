@@ -65,6 +65,7 @@ public class MembershipInvoiceFragment extends Fragment {
         binding.rvAIList.setLayoutManager(mLayoutManager);
         binding.rvAIList.setItemAnimator(new DefaultItemAnimator());
 
+        binding.tvFound.setText("Your membership invoices will appear here");
         if (memberShipList.size() != 0) {
             getDataList(memberShipList);
             binding.llError.setVisibility(View.GONE);

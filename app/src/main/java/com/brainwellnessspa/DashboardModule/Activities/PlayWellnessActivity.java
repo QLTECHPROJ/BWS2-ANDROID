@@ -1455,7 +1455,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callBack() {
-        handler.removeCallbacks(UpdateSongTime);
+//        handler.removeCallbacks(UpdateSongTime);
         handler1.removeCallbacks(UpdateSongTime1);
         player = 1;
         if (binding.llPause.getVisibility() == View.VISIBLE) {
@@ -1635,7 +1635,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llLike.setClickable(true);
             binding.llLike.setEnabled(true);
             binding.llLike.setAlpha(1f);
+            binding.rlSeekbar.setClickable(true);
+            binding.rlSeekbar.setEnabled(true);
             binding.simpleSeekbar.setClickable(true);
+            binding.simpleSeekbar.setEnabled(true);
+//            binding.simpleSeekbar.set
         } else {
             binding.llPlay.setClickable(false);
             binding.llPlay.setEnabled(false);
@@ -1673,7 +1677,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llLike.setClickable(false);
             binding.llLike.setEnabled(false);
             binding.llLike.setAlpha(0.7f);
+            binding.rlSeekbar.setClickable(false);
+            binding.rlSeekbar.setEnabled(false);
             binding.simpleSeekbar.setClickable(false);
+            binding.simpleSeekbar.setEnabled(false);
         }
     }
 

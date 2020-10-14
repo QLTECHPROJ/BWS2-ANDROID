@@ -43,7 +43,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
 //        binding.tvFound.setText("Audio you are searching for is not available in the list");
         playlistList = new ArrayList<>();
-        binding.tvFound.setText("Playlist you are searching for is not available ");
+        binding.tvFound.setText("Your downloaded playlists will appear here");
         GetAllMedia(getActivity());
 /*
         try {

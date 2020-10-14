@@ -418,12 +418,12 @@ public class AccountFragment extends Fragment {
                                     dialog.dismiss();
                                 });
                                 dialog.show();
-                                dialog.setCancelable(false);
+                                dialog.setCancelable(false);Premium Team Plan one
                             }*/
                         });
 
                         if (viewModel.getResponseData().getOrderTotal().equalsIgnoreCase("")) {
-                            binding.tvCrtPlan.setText("Current plan: $0.00 / month");
+                            binding.tvCrtPlan.setText("Premium Team Plan one");
                         } else {
                             if (viewModel.getResponseData().getPlanperiod().equalsIgnoreCase("")) {
                                 binding.tvCrtPlan.setText("Current plan: " + viewModel.getResponseData().getOrderTotal());

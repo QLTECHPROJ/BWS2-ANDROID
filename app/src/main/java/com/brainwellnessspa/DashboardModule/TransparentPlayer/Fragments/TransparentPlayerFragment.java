@@ -659,6 +659,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 binding.ivPlay.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
                 binding.ivPause.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
                 binding.simpleSeekbar.setClickable(false);
+                binding.simpleSeekbar.setEnabled(false);
             }else{
                 isDisclaimer = 0;
                 binding.ivPlay.setClickable(true);
@@ -666,6 +667,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 binding.ivPause.setClickable(true);
                 binding.ivPause.setEnabled(true);
                 binding.simpleSeekbar.setClickable(true);
+                binding.simpleSeekbar.setEnabled(true);
                 binding.ivPlay.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                 binding.ivPause.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
             }
@@ -679,7 +681,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
         addToRecentPlay();
         binding.llPlayearMain.setOnClickListener(view -> {
-            handler.removeCallbacks(UpdateSongTime);
             if (player == 0) {
                 player = 1;
             }
@@ -1022,6 +1023,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPause.setClickable(false);
             binding.ivPause.setEnabled(false);
             binding.simpleSeekbar.setClickable(false);
+            binding.flProgress.setClickable(false);
+            binding.flProgress.setEnabled(false);
             binding.ivPlay.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
             binding.ivPause.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
         }else{
@@ -1031,6 +1034,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPause.setClickable(true);
             binding.ivPause.setEnabled(true);
             binding.simpleSeekbar.setClickable(true);
+            binding.flProgress.setClickable(true);
+            binding.flProgress.setEnabled(true);
             binding.ivPlay.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
             binding.ivPause.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
         }

@@ -212,6 +212,7 @@
                 android:weightSum="1">
 
                 <RelativeLayout
+                    android:id="@+id/rlSeekbar"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_0sdp"
                     android:layout_weight="0.34"

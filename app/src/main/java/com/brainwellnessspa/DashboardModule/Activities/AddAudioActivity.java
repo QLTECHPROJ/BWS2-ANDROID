@@ -301,6 +301,8 @@ public class AddAudioActivity extends AppCompatActivity {
                             if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                                 if (isDisclaimer == 1) {
                                     BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                                }else{
+                                    callAddSearchAudio(AudioID, "0", "");
                                 }
                             } else {
                                 callAddSearchAudio(AudioID, "0", "");
@@ -325,6 +327,8 @@ public class AddAudioActivity extends AppCompatActivity {
                             if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                                 if (isDisclaimer == 1) {
                                     BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                                }else{
+                                    callAddSearchAudio(AudioID, "0", "");
                                 }
                             } else {
                                 callAddSearchAudio(AudioID, "0", "");
@@ -346,6 +350,8 @@ public class AddAudioActivity extends AppCompatActivity {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                            }else{
+                                callAddSearchAudio(AudioID, "0", "");
                             }
                         } else {
                             callAddSearchAudio(AudioID, "0", "");
@@ -376,6 +382,8 @@ public class AddAudioActivity extends AppCompatActivity {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                            }else{
+                                callAddSearchAudio("", "1", modelList.get(position).getID());
                             }
                         } else {
                             callAddSearchAudio("", "1", modelList.get(position).getID());
@@ -591,6 +599,8 @@ public class AddAudioActivity extends AppCompatActivity {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                            }else{
+                                callAddSearchAudio(AudioID, "0", "");
                             }
                         } else {
                             callAddSearchAudio(AudioID, "0", "");
@@ -615,6 +625,8 @@ public class AddAudioActivity extends AppCompatActivity {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                            }else{
+                                callAddSearchAudio(AudioID, "0", "");
                             }
                         } else {
                             callAddSearchAudio(AudioID, "0", "");
@@ -634,6 +646,8 @@ public class AddAudioActivity extends AppCompatActivity {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                        }else{
+                            callAddSearchAudio(AudioID, "0", "");
                         }
                     } else {
                         callAddSearchAudio(AudioID, "0", "");
@@ -767,6 +781,8 @@ public class AddAudioActivity extends AppCompatActivity {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                        }else{
+                            callAddSearchAudio("", "1", PlaylistModel.get(position).getID());
                         }
                     } else {
                         callAddSearchAudio("", "1", PlaylistModel.get(position).getID());

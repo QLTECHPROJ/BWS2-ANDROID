@@ -45,7 +45,7 @@ public class AudioDownloadsFragment extends Fragment {
 
         audioList = new ArrayList<>();
         audioList = GetAllMedia(getActivity());
-        binding.tvFound.setText("Audio you are searching for is not available in the list");
+        binding.tvFound.setText("Your downloaded audios will appear here");
        /* try {
             if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

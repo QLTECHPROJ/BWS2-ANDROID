@@ -64,6 +64,7 @@ public class AppointmentInvoiceFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvAIList.setLayoutManager(mLayoutManager);
         binding.rvAIList.setItemAnimator(new DefaultItemAnimator());
+        binding.tvFound.setText("Your appointment invoices will appear here");
         if (appointmentList.size() != 0) {
             getDataList(appointmentList);
             binding.llError.setVisibility(View.GONE);

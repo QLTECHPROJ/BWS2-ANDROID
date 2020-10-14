@@ -395,9 +395,12 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                                             if (isDisclaimer == 1) {
                                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                                            }else{
+                                                callAddPlaylistFromPlaylist(PlaylistID, dialog, "0");
                                             }
                                         } else {
                                             callAddPlaylistFromPlaylist(PlaylistID, dialog, "0");
+
                                         }
                                     }
                                 }
@@ -428,6 +431,9 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                        }else{
+                            final Dialog dialogx = new Dialog(ctx);
+                            callAddPlaylistFromPlaylist(PlaylistID, dialogx, "1");
                         }
                     } else {
                         final Dialog dialogx = new Dialog(ctx);
