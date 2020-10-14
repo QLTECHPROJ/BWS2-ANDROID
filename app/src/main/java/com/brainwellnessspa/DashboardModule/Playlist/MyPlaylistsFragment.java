@@ -19,7 +19,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -1108,7 +1107,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.ivDownloads.setVisibility(View.GONE);
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
-            getMediaByPer(PlaylistID,SongListSize);
+            getMediaByPer(PlaylistID, SongListSize);
             savePlaylist();
             saveAllMedia(playlistSongsList, encodedBytes);
         } else {
@@ -1495,6 +1494,15 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             holder.binding.tvTimeA.setText(mData.get(position).getAudioDuration());
             holder.binding.tvTimeB.setText(mData.get(position).getAudioDuration());
             holder.binding.llSort.setOnTouchListener((v, event) -> {
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                    if (isDisclaimer == 1) {
+                        BWSApplication.showToast("The audio shall sort after the disclaimer", ctx);
+                    }
+                } else {
                 if (event.getAction() ==
                         MotionEvent.ACTION_DOWN) {
                     startDragListener.requestDrag(holder);
@@ -1502,6 +1510,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 if (event.getAction() ==
                         MotionEvent.ACTION_UP) {
                     startDragListener.requestDrag(holder);
+                }
                 }
                 return false;
             });
@@ -1559,7 +1568,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     callTransparentFrag(position, ctx, listModelList, "myPlaylist");
                 }
             });
-
             if (Created.equalsIgnoreCase("1")) {
                 holder.binding.llMore.setVisibility(View.GONE);
                 holder.binding.llCenterLayoutA.setVisibility(View.GONE);
@@ -1616,10 +1624,16 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                    if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID) && mData.size() == 1) {
-                        BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                        if (isDisclaimer == 1) {
+                            BWSApplication.showToast("The audio shall remove after the disclaimer", ctx);
+                        }
                     } else {
-                        callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId(), mData, position);
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID) && mData.size() == 1) {
+                            BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
+                        } else {
+                            callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId(), mData, position);
+                        }
                     }
                 });
 

@@ -49,6 +49,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+
 public class AddAudioActivity extends AppCompatActivity {
     ActivityAddAudioBinding binding;
     Context ctx;
@@ -292,7 +294,17 @@ public class AddAudioActivity extends AppCompatActivity {
                             holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                             holder.binding.ivLock.setVisibility(View.GONE);
                             String AudioID = modelList.get(position).getID();
-                            callAddSearchAudio(AudioID, "0", "");
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                                if (isDisclaimer == 1) {
+                                    BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                                }
+                            } else {
+                                callAddSearchAudio(AudioID, "0", "");
+                            }
                         } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
                                 || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                             holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -306,7 +318,17 @@ public class AddAudioActivity extends AppCompatActivity {
                             holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                             holder.binding.ivLock.setVisibility(View.GONE);
                             String AudioID = modelList.get(position).getID();
-                            callAddSearchAudio(AudioID, "0", "");
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                                if (isDisclaimer == 1) {
+                                    BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                                }
+                            } else {
+                                callAddSearchAudio(AudioID, "0", "");
+                            }
                         } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
                                 || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                             holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -317,7 +339,17 @@ public class AddAudioActivity extends AppCompatActivity {
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
                         String AudioID = modelList.get(position).getID();
-                        callAddSearchAudio(AudioID, "0", "");
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                            if (isDisclaimer == 1) {
+                                BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                            }
+                        } else {
+                            callAddSearchAudio(AudioID, "0", "");
+                        }
                     }
                 });
             } else if (modelList.get(position).getIscategory().equalsIgnoreCase("0")) {
@@ -337,8 +369,17 @@ public class AddAudioActivity extends AppCompatActivity {
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
-
-                        callAddSearchAudio("", "1", modelList.get(position).getID());
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                            if (isDisclaimer == 1) {
+                                BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                            }
+                        } else {
+                            callAddSearchAudio("", "1", modelList.get(position).getID());
+                        }
                     }
                 });
 
@@ -543,7 +584,17 @@ public class AddAudioActivity extends AppCompatActivity {
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
                         String AudioID = listModel.get(position).getID();
-                        callAddSearchAudio(AudioID, "0", "");
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                            if (isDisclaimer == 1) {
+                                BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                            }
+                        } else {
+                            callAddSearchAudio(AudioID, "0", "");
+                        }
                     } else if (listModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModel.get(position).getIsPlay().equalsIgnoreCase("")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -557,7 +608,17 @@ public class AddAudioActivity extends AppCompatActivity {
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
                         String AudioID = listModel.get(position).getID();
-                        callAddSearchAudio(AudioID, "0", "");
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                            if (isDisclaimer == 1) {
+                                BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                            }
+                        } else {
+                            callAddSearchAudio(AudioID, "0", "");
+                        }
                     } else if (listModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModel.get(position).getIsPlay().equalsIgnoreCase("")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -566,7 +627,17 @@ public class AddAudioActivity extends AppCompatActivity {
                     }
                 } else if (listModel.get(position).getIsLock().equalsIgnoreCase("0") || listModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     String AudioID = listModel.get(position).getID();
-                    callAddSearchAudio(AudioID, "0", "");
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                        if (isDisclaimer == 1) {
+                            BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                        }
+                    } else {
+                        callAddSearchAudio(AudioID, "0", "");
+                    }
                 }
             });
         }
@@ -689,7 +760,17 @@ public class AddAudioActivity extends AppCompatActivity {
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    callAddSearchAudio("", "1", PlaylistModel.get(position).getID());
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                        if (isDisclaimer == 1) {
+                            BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                        }
+                    } else {
+                        callAddSearchAudio("", "1", PlaylistModel.get(position).getID());
+                    }
                 }
             });
         }

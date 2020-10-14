@@ -41,6 +41,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+
 public class ViewSuggestedActivity extends AppCompatActivity {
     ActivityViewSuggestedBinding binding;
     Activity activity;
@@ -245,8 +247,17 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binds.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binds.ivLock.setVisibility(View.GONE);
-                        callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
-
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                            if (isDisclaimer == 1) {
+                                BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                            }
+                        } else {
+                            callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
+                        }
                     } else if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("")) {
                         holder.binds.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -259,7 +270,17 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binds.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binds.ivLock.setVisibility(View.GONE);
-                        callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                            if (isDisclaimer == 1) {
+                                BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                            }
+                        } else {
+                            callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
+                        }
                     } else if (AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || AudiolistsModel.get(position).getIsPlay().equalsIgnoreCase("")) {
                         holder.binds.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -270,7 +291,17 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         || AudiolistsModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binds.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binds.ivLock.setVisibility(View.GONE);
-                    callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                        if (isDisclaimer == 1) {
+                            BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                        }
+                    } else {
+                        callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
+                    }
                 }
             });
         }
@@ -388,7 +419,17 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    callAddAudioToPlaylist("", PlaylistModel.get(position).getID(), "1");
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                        if (isDisclaimer == 1) {
+                            BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                        }
+                    } else {
+                        callAddAudioToPlaylist("", PlaylistModel.get(position).getID(), "1");
+                    }
                 }
             });
         }
