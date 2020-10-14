@@ -97,6 +97,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     long totalDuration,currentDuration,myProgress;
     private long mLastClickTime = 0;
     private Handler handler;
+    boolean addSong = false;
     //    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
@@ -1023,11 +1024,12 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
             String json = "";
-            if (queuePlay) {
+            if (queuePlay && !addSong) {
                 ArrayList<AddToQueueModel> listModelList1 = new ArrayList<>();
                 listModelList1.clear();
                 listModelList1 = listModelList;
                 listModelList1.add(addToQueueModelList.get(mypos));
+                addSong = true;
                 json = gson.toJson(listModelList1);
             } else {
                 json = gson.toJson(listModelList);

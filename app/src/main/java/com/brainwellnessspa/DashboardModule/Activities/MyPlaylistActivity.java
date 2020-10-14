@@ -701,61 +701,69 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             });
 
                             binding.llDelete.setOnClickListener(view -> {
-                                final Dialog dialog = new Dialog(ctx);
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog.setContentView(R.layout.delete_playlist);
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                                if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                                    BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", ctx);
+                                } else {
+                                    final Dialog dialog = new Dialog(ctx);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.setContentView(R.layout.delete_playlist);
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                                final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
-                                final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
-                                tvHeader.setText("Are you sure you want to delete " + model.getResponseData().getPlaylistName() + "  playlist?");
-                                dialog.setOnKeyListener((v, keyCode, event) -> {
-                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                        dialog.dismiss();
-                                        Fragment playlistFragment = new PlaylistFragment();
-                                        FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                        fragmentManager1.beginTransaction()
-                                                .add(R.id.flContainer, playlistFragment)
-                                                .commit();
-                                        Bundle bundle = new Bundle();
-                                        playlistFragment.setArguments(bundle);
-                                        return true;
-                                    }
-                                    return false;
-                                });
+                                    final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                                    final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+                                    final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+                                    tvHeader.setText("Are you sure you want to delete " + model.getResponseData().getPlaylistName() + "  playlist?");
+                                    dialog.setOnKeyListener((v, keyCode, event) -> {
+                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                            dialog.dismiss();
+                                            Fragment playlistFragment = new PlaylistFragment();
+                                            FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                            fragmentManager1.beginTransaction()
+                                                    .add(R.id.flContainer, playlistFragment)
+                                                    .commit();
+                                            Bundle bundle = new Bundle();
+                                            playlistFragment.setArguments(bundle);
+                                            return true;
+                                        }
+                                        return false;
+                                    });
 
-                                tvconfirm.setOnClickListener(v -> {
-                                    if (BWSApplication.isNetworkConnected(ctx)) {
-                                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                        Call<SucessModel> listCall12 = APIClient.getClient().getDeletePlaylist(UserID, PlaylistID);
-                                        listCall12.enqueue(new Callback<SucessModel>() {
-                                            @Override
-                                            public void onResponse(Call<SucessModel> call12, Response<SucessModel> response12) {
-                                                if (response12.isSuccessful()) {
-                                                    deleteFrg = 1;
-                                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                                    SucessModel listModel = response12.body();
-                                                    dialog.dismiss();
-                                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                                    finish();
+                                    tvconfirm.setOnClickListener(v -> {
+                                        if (BWSApplication.isNetworkConnected(ctx)) {
+                                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                            Call<SucessModel> listCall12 = APIClient.getClient().getDeletePlaylist(UserID, PlaylistID);
+                                            listCall12.enqueue(new Callback<SucessModel>() {
+                                                @Override
+                                                public void onResponse(Call<SucessModel> call12, Response<SucessModel> response12) {
+                                                    if (response12.isSuccessful()) {
+                                                        deleteFrg = 1;
+                                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                                        SucessModel listModel = response12.body();
+                                                        dialog.dismiss();
+                                                        BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                                        finish();
+                                                    }
                                                 }
-                                            }
 
-                                            @Override
-                                            public void onFailure(Call<SucessModel> call12, Throwable t) {
-                                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                            }
-                                        });
-                                    } else {
-                                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                                    }
-                                });
+                                                @Override
+                                                public void onFailure(Call<SucessModel> call12, Throwable t) {
+                                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                                }
+                                            });
+                                        } else {
+                                            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                                        }
+                                    });
 
-                                tvGoBack.setOnClickListener(v -> dialog.dismiss());
-                                dialog.show();
-                                dialog.setCancelable(false);
+                                    tvGoBack.setOnClickListener(v -> dialog.dismiss());
+                                    dialog.show();
+                                    dialog.setCancelable(false);
+                                }
                             });
 
                         }

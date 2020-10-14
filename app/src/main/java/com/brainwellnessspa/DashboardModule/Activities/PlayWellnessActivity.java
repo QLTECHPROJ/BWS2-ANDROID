@@ -21,10 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
@@ -39,6 +35,10 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityPlayWellnessBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -56,6 +56,9 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity.comeFromAddToQueue;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.disclaimer;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
@@ -80,18 +83,18 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener, OnProgressListener*/ {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url;
-    int startTime = 0, endTime = 0, position, listSize,myCount,progress;
+    int startTime = 0, endTime = 0, position, listSize, myCount, progress;
     Context ctx;
     Activity activity;
     Boolean queuePlay, audioPlay;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     List<DownloadAudioDetails> downloadAudioDetailsList;
+    long myProgress = 0;
     private long mLastClickTime = 0, totalDuration, currentDuration = 0;
     private Handler handler;
-    long myProgress=0;
-        private Handler handler1;
-//        private AudioManager mAudioManager;
+    private Handler handler1;
+    //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -168,14 +171,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             myProgress = currentDuration;
             currentDuration = getStartTime();
 
-            Log.e("myProgress old!!!",String.valueOf(myProgress));
-            if(myProgress == currentDuration && myProgress!=0 && !isPause){
-                Log.e("myProgress",String.valueOf(myProgress));
+            Log.e("myProgress old!!!", String.valueOf(myProgress));
+            if (myProgress == currentDuration && myProgress != 0 && !isPause) {
+                Log.e("myProgress", String.valueOf(myProgress));
                 myCount++;
-                Log.e("myCount",String.valueOf(myCount));
+                Log.e("myCount", String.valueOf(myCount));
 
-                if(myCount == 150){
-                    Log.e("myCount complete",String.valueOf(myCount));
+                if (myCount == 150) {
+                    Log.e("myCount complete", String.valueOf(myCount));
                     callComplete();
                     myCount = 0;
                 }
@@ -1145,9 +1148,23 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         } else if (audioPlay) {
             listSize = mainPlayModelList.size();
+            if (listSize == 2) {
+                if (mainPlayModelList.get(0).getAudioFile().equalsIgnoreCase("") && !disclaimer) {
+                    disclaimer = true;
+                    position = 0;
+                }
+            }
             id = mainPlayModelList.get(position).getID();
             name = mainPlayModelList.get(position).getName();
             url = mainPlayModelList.get(position).getAudioFile();
+            if (url.equalsIgnoreCase("") || url.isEmpty()) {
+                isDisclaimer = 1;
+                callAllDisable(false);
+
+            } else {
+                isDisclaimer = 2;
+                callAllDisable(true);
+            }
             if (mainPlayModelList.get(position).getPlaylistID() == null) {
                 mainPlayModelList.get(position).setPlaylistID("");
             }
@@ -1259,9 +1276,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
         }
     }
+
     private void getDownloadMedia(DownloadMedia downloadMedia) {
         class getDownloadMedia extends AsyncTask<Void, Void, Void> {
             FileDescriptor fileDescriptor = null;
+
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
@@ -1279,9 +1298,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if(fileDescriptor!=null){
-                setMediaPlayer("1", fileDescriptor);
-                }else{
+                if (fileDescriptor != null) {
+                    setMediaPlayer("1", fileDescriptor);
+                } else {
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         setMediaPlayer("0", fileDescriptor);
                     } else {
@@ -1299,8 +1318,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         getDownloadMedia st = new getDownloadMedia();
         st.execute();
     }
+
     private void callComplete() {
         handler.removeCallbacks(UpdateSongTime);
+        if (audioPlay) {
+            if (url.equalsIgnoreCase("") || url.isEmpty()) {
+                isDisclaimer = 2;
+                disclaimerPlayed = 1;
+            }
+            mainPlayModelList.remove(0);
+        }
         isPrepare = false;
         isMediaStart = false;
         isPause = false;
@@ -1520,6 +1547,21 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
                 binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
             }
+            if (listSize == 2) {
+                if (mainPlayModelList.get(0).getAudioFile().equalsIgnoreCase("") && !disclaimer) {
+                    disclaimer = true;
+                    position = 0;
+                }
+            }
+            url = mainPlayModelList.get(position).getAudioFile();
+            if (url.equalsIgnoreCase("") || url.isEmpty()) {
+                isDisclaimer = 1;
+                callAllDisable(false);
+
+            } else {
+                isDisclaimer = 2;
+                callAllDisable(true);
+            }
         }
         if (comeFromAddToQueue) {
             getPrepareShowData(position);
@@ -1542,6 +1584,84 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.progressBar.setVisibility(View.GONE);
         }*/
         super.onResume();
+    }
+
+    private void callAllDisable(boolean b) {
+        if (b) {
+            binding.llPlay.setClickable(true);
+            binding.llPlay.setEnabled(true);
+            binding.llPlay.setAlpha(1f);
+            binding.llPause.setClickable(true);
+            binding.llPause.setEnabled(true);
+            binding.llPause.setAlpha(1f);
+            binding.llnext.setClickable(true);
+            binding.llnext.setEnabled(true);
+            binding.llnext.setAlpha(1f);
+            binding.llprev.setClickable(true);
+            binding.llprev.setEnabled(true);
+            binding.llprev.setAlpha(1f);
+            binding.llForwardSec.setClickable(true);
+            binding.llForwardSec.setEnabled(true);
+            binding.llForwardSec.setAlpha(1f);
+            binding.llBackWordSec.setClickable(true);
+            binding.llBackWordSec.setEnabled(true);
+            binding.llBackWordSec.setAlpha(1f);
+            binding.llMore.setClickable(true);
+            binding.llMore.setEnabled(true);
+            binding.llMore.setAlpha(1f);
+            binding.llViewQueue.setClickable(true);
+            binding.llViewQueue.setEnabled(true);
+            binding.llViewQueue.setAlpha(1f);
+            binding.llDownload.setClickable(true);
+            binding.llDownload.setEnabled(true);
+            binding.llDownload.setAlpha(1f);
+            binding.llRepeat.setClickable(true);
+            binding.llRepeat.setEnabled(true);
+            binding.llRepeat.setAlpha(1f);
+            binding.llShuffle.setClickable(true);
+            binding.llShuffle.setEnabled(true);
+            binding.llShuffle.setAlpha(1f);
+            binding.llLike.setClickable(true);
+            binding.llLike.setEnabled(true);
+            binding.llLike.setAlpha(1f);
+        } else {
+            binding.llPlay.setClickable(false);
+            binding.llPlay.setEnabled(false);
+            binding.llPlay.setAlpha(0.7f);
+            binding.llPause.setClickable(false);
+            binding.llPause.setEnabled(false);
+            binding.llPause.setAlpha(0.7f);
+            binding.llnext.setClickable(false);
+            binding.llnext.setEnabled(false);
+            binding.llnext.setAlpha(0.7f);
+            binding.llprev.setClickable(false);
+            binding.llprev.setEnabled(false);
+            binding.llprev.setAlpha(0.7f);
+            binding.llForwardSec.setClickable(false);
+            binding.llForwardSec.setEnabled(false);
+            binding.llForwardSec.setAlpha(0.7f);
+            binding.llBackWordSec.setClickable(false);
+            binding.llBackWordSec.setEnabled(false);
+            binding.llBackWordSec.setAlpha(0.7f);
+            binding.llMore.setClickable(false);
+            binding.llMore.setEnabled(false);
+            binding.llMore.setAlpha(0.7f);
+            binding.llViewQueue.setClickable(false);
+            binding.llViewQueue.setEnabled(false);
+            binding.llViewQueue.setAlpha(0.7f);
+            binding.llDownload.setClickable(false);
+            binding.llDownload.setEnabled(false);
+            binding.llDownload.setAlpha(0.7f);
+            binding.llRepeat.setClickable(false);
+            binding.llRepeat.setEnabled(false);
+            binding.llRepeat.setAlpha(0.7f);
+            binding.llShuffle.setClickable(false);
+            binding.llShuffle.setEnabled(false);
+            binding.llShuffle.setAlpha(0.7f);
+            binding.llLike.setClickable(false);
+            binding.llLike.setEnabled(false);
+            binding.llLike.setAlpha(0.7f);
+        }
     }
 
     @Override

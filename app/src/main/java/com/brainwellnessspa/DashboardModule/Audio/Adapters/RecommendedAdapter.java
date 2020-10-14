@@ -38,6 +38,8 @@ import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.disclaimer;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.disclaimer;
 public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.MyViewHolder> {
     Context ctx;
     FragmentActivity activity;
@@ -120,6 +122,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                         isPause = false;
                         isMediaStart = false;
                         isPrepare = false;
+                        disclaimer = false;
                         Fragment fragment = new TransparentPlayerFragment();
                         FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
@@ -159,6 +162,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                         isPause = false;
                         isMediaStart = false;
                         isPrepare = false;
+                        disclaimer = false;
                         Fragment fragment = new TransparentPlayerFragment();
                         FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
@@ -195,6 +199,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                     isPause = false;
                     isMediaStart = false;
                     isPrepare = false;
+                    disclaimer = false;
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                     fragmentManager1.beginTransaction()

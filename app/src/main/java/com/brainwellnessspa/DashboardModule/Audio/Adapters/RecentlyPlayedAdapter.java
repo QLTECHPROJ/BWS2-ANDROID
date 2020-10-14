@@ -37,6 +37,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.disclaimer;
 
 public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder> {
     Context ctx;
@@ -121,6 +122,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                         isPause = false;
                         isMediaStart = false;
                         isPrepare = false;
+                        disclaimer = false;
                         Fragment fragment = new TransparentPlayerFragment();
                         FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
@@ -159,6 +161,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                         isPause = false;
                         isMediaStart = false;
                         isPrepare = false;
+                        disclaimer = false;
                         Fragment fragment = new TransparentPlayerFragment();
                         FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                         fragmentManager1.beginTransaction()

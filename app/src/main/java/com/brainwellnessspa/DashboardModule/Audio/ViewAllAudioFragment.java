@@ -54,6 +54,8 @@ import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.disclaimer;
+
 public class ViewAllAudioFragment extends Fragment {
     public static boolean viewallAudio = false;
     public static int ComeFromAudioViewAll = 0;
@@ -303,6 +305,7 @@ public class ViewAllAudioFragment extends Fragment {
                             isPause = false;
                             isMediaStart = false;
                             isPrepare = false;
+                            disclaimer = false;
 //                            RefreshData();
                             Fragment fragment = new TransparentPlayerFragment();
                             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -348,6 +351,7 @@ public class ViewAllAudioFragment extends Fragment {
                             isPause = false;
                             isMediaStart = false;
                             isPrepare = false;
+                            disclaimer = false;
 //                            RefreshData();
                             Fragment fragment = new TransparentPlayerFragment();
                             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -390,6 +394,7 @@ public class ViewAllAudioFragment extends Fragment {
                         isPause = false;
                         isMediaStart = false;
                         isPrepare = false;
+                        disclaimer = false;
 //                            RefreshData();
                         Fragment fragment = new TransparentPlayerFragment();
                         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -528,6 +533,7 @@ public class ViewAllAudioFragment extends Fragment {
                             isPause = false;
                             isMediaStart = false;
                             isPrepare = false;
+                            disclaimer = false;
                             Fragment fragment = new TransparentPlayerFragment();
                             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                             fragmentManager1.beginTransaction()

@@ -38,6 +38,7 @@ import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.disclaimer;
 public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyViewHolder> {
     Context ctx;
     FragmentActivity activity;
@@ -117,6 +118,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                     isPause = false;
                     isMediaStart = false;
                     isPrepare = false;
+                    disclaimer = false;
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
                     fragmentManager1.beginTransaction()

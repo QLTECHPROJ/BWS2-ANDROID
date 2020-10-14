@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -58,6 +58,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
@@ -80,7 +81,7 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener*/ {
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
-    int position = 0, startTime, listSize;
+    int position = 0, startTime, listSize,myCount,progress;
     MainPlayModel mainPlayModel;
     Boolean queuePlay, audioPlay;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -89,9 +90,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     List<DownloadAudioDetails> downloadAudioDetailsList;
     Activity activity;
     Context ctx;
-    long totalDuration;
+    private long mLastClickTime = 0, totalDuration, currentDuration = 0;
     private Handler handler;
-    public static boolean declaimer = false;
+    long myProgress=0;
+    public static int isDisclaimer = 0;
+    public static boolean disclaimer = false;
 
     //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -147,7 +150,21 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         totalDuration = t.getTime();
                     }
                 }
-                long currentDuration = getStartTime();
+                myProgress = currentDuration;
+                currentDuration = getStartTime();
+
+                Log.e("myProgress old!!!",String.valueOf(myProgress));
+                if(myProgress == currentDuration && myProgress!=0 && !isPause){
+                    Log.e("myProgress",String.valueOf(myProgress));
+                    myCount++;
+                    Log.e("myCount",String.valueOf(myCount));
+
+                    if(myCount == 150){
+                        Log.e("myCount complete",String.valueOf(myCount));
+                        callComplete();
+                        myCount = 0;
+                    }
+                }
 
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
                 if (player == 1) {
@@ -248,20 +265,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //            listSize = arrayList.size();
 //            for (int i = 0; i < listSize; i++) {
 
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.getID());
-                mainPlayModel.setName(arrayList.getName());
-                mainPlayModel.setAudioFile("");
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.getImageFile());
-                mainPlayModel.setLike(arrayList.getLike());
-                mainPlayModel.setDownload(arrayList.getDownload());
-                mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-
+                addDeclaimer();
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.getID());
                 mainPlayModel.setName(arrayList.getName());
@@ -290,19 +294,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 ViewAllAudioListModel.ResponseData.Detail arrayList = gson.fromJson(json, type);
 //            listSize = arrayList.size();
 //                for (int i = 0; i < listSize; i++) {
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.getID());
-                mainPlayModel.setName(arrayList.getName());
-                mainPlayModel.setAudioFile("");
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.getImageFile());
-                mainPlayModel.setLike(arrayList.getLike());
-                mainPlayModel.setDownload(arrayList.getDownload());
-                mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
+                addDeclaimer();
 
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.getID());
@@ -331,19 +323,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 AppointmentDetailModel.Audio arrayList = gson.fromJson(json, type);
 //            listSize = arrayList.size();
 //                for (int i = 0; i < listSize; i++) {
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.getID());
-                mainPlayModel.setName(arrayList.getName());
-                mainPlayModel.setAudioFile("");
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.getImageFile());
-                mainPlayModel.setLike(arrayList.getLike());
-                mainPlayModel.setDownload(arrayList.getDownload());
-                mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
+                addDeclaimer();
 
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.getID());
@@ -372,19 +352,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 DownloadAudioDetails arrayList = gson.fromJson(json, type);
 //                listSize = arrayList.size();
 //                for (int i = 0; i < listSize; i++) {
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.getID());
-                mainPlayModel.setName(arrayList.getName());
-                mainPlayModel.setAudioFile("");
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.getImageFile());
-                mainPlayModel.setLike(arrayList.getLike());
-                mainPlayModel.setDownload(arrayList.getDownload());
-                mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
+                addDeclaimer();
 
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.getID());
@@ -413,19 +381,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }.getType();
                 ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
                 listSize = arrayList.size();
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(position).getID());
-                mainPlayModel.setName(arrayList.get(position).getName());
-                mainPlayModel.setAudioFile("");
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
-                mainPlayModel.setLike(arrayList.get(position).getLike());
-                mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
+                addDeclaimer();
 
                 for (int i = 0; i < listSize; i++) {
                     mainPlayModel = new MainPlayModel();
@@ -455,19 +411,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }.getType();
                 ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
                 listSize = arrayList.size();
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(position).getID());
-                mainPlayModel.setName(arrayList.get(position).getName());
-                mainPlayModel.setAudioFile("");
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
-                mainPlayModel.setLike(arrayList.get(position).getLike());
-                mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
+                addDeclaimer();
 
                 for (int i = 0; i < listSize; i++) {
                     mainPlayModel = new MainPlayModel();
@@ -496,20 +440,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }.getType();
                 ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
                 listSize = arrayList.size();
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(position).getID());
-                mainPlayModel.setName(arrayList.get(position).getName());
-                mainPlayModel.setAudioFile("");
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.get(position).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(position).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(position).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(position).getImageFile());
-                mainPlayModel.setLike(arrayList.get(position).getLike());
-                mainPlayModel.setDownload(arrayList.get(position).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(position).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-
+                if(isDisclaimer == 0 && disclaimerPlayed == 0){
+                    addDeclaimer();
+                }
                 for (int i = 0; i < listSize; i++) {
                     mainPlayModel = new MainPlayModel();
                     mainPlayModel.setID(arrayList.get(i).getID());
@@ -570,6 +503,19 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void addDeclaimer() {
+        mainPlayModel = new MainPlayModel();
+        mainPlayModel.setID("0");
+        mainPlayModel.setName("Disclaimer");
+        mainPlayModel.setAudioFile("");
+        mainPlayModel.setPlaylistID("");
+        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+        mainPlayModel.setAudiomastercat("");
+        mainPlayModel.setAudioSubCategory("");
+        mainPlayModel.setImageFile("https://brainwellnessspa.com.au/Bws-consumer-panel/html/image/pre_session_audio.jpg");
+        mainPlayModel.setLike("");
+        mainPlayModel.setDownload("");
+        mainPlayModel.setAudioDuration("0:48");
+        mainPlayModelList.add(mainPlayModel);
     }
 
     private void addToRecentPlay() {
@@ -672,8 +618,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         } else if (audioPlay) {
             listSize = mainPlayModelList.size();
             if(listSize == 2){
-                if(mainPlayModelList.get(0).getAudioFile().equalsIgnoreCase("") && !declaimer){
-                    declaimer = true;
+                if(mainPlayModelList.get(0).getAudioFile().equalsIgnoreCase("") && !disclaimer){
+                    disclaimer = true;
                     position = 0;
                 }
             }
@@ -692,15 +638,21 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 handler.postDelayed(UpdateSongTime, 100);
             }
             if(audioFile.equalsIgnoreCase("") || audioFile.isEmpty()){
+                isDisclaimer = 1;
                 binding.ivPlay.setClickable(false);
                 binding.ivPlay.setEnabled(false);
                 binding.ivPause.setClickable(false);
                 binding.ivPause.setEnabled(false);
+                binding.ivPlay.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+                binding.ivPause.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
             }else{
+                isDisclaimer = 2;
                 binding.ivPlay.setClickable(true);
                 binding.ivPlay.setEnabled(true);
                 binding.ivPause.setClickable(true);
                 binding.ivPause.setEnabled(true);
+                binding.ivPlay.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+                binding.ivPause.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
             }
         }
         binding.simpleSeekbar.setClickable(true);
@@ -861,6 +813,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void callComplete() {
+        if (audioPlay) {
+            if (audioFile.equalsIgnoreCase("") || audioFile.isEmpty()) {
+                isDisclaimer = 2;
+                disclaimerPlayed = 1;
+            }
+            mainPlayModelList.remove(0);
+        }
         isPrepare = false;
         isMediaStart = false;
         if (IsRepeat.equalsIgnoreCase("1")) {
@@ -1029,8 +988,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             listSize = mainPlayModelList.size();
         }
         if(listSize == 2){
-            if(mainPlayModelList.get(0).getAudioFile().equalsIgnoreCase("")&&!declaimer){
-                declaimer = true;
+            if(mainPlayModelList.get(0).getAudioFile().equalsIgnoreCase("")&&!disclaimer){
+                disclaimer = true;
                 position = 0;
             }
         }
@@ -1038,15 +997,21 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             position = 0;
         }
         if(audioFile.equalsIgnoreCase("") || audioFile.isEmpty()){
+            isDisclaimer = 1;
             binding.ivPlay.setClickable(false);
             binding.ivPlay.setEnabled(false);
             binding.ivPause.setClickable(false);
             binding.ivPause.setEnabled(false);
+            binding.ivPlay.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
+            binding.ivPause.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
         }else{
+            isDisclaimer = 2;
             binding.ivPlay.setClickable(true);
             binding.ivPlay.setEnabled(true);
             binding.ivPause.setClickable(true);
             binding.ivPause.setEnabled(true);
+            binding.ivPlay.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+            binding.ivPause.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
         }
         SharedPreferences Status = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");

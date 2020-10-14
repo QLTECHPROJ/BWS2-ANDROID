@@ -53,6 +53,7 @@ import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.disclaimer;
 
 public class AptAudioFragment extends Fragment {
     public FragmentManager f_manager;
@@ -271,6 +272,7 @@ public class AptAudioFragment extends Fragment {
                     isPause = false;
                     isMediaStart = false;
                     isPrepare = false;
+                    disclaimer = false;
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()

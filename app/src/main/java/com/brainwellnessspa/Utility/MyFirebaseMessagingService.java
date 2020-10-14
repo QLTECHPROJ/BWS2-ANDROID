@@ -44,6 +44,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAGs = "MyFirebaseIDService";
     public static String fcm_Tocken;
     Context context;
+    public static String Notification_PlaylistId= "";
+    public static String Notification_PlaylistName= "";
     MyFirebaseMessagingService activity;
 
     @Override
@@ -149,6 +151,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 resultIntent = new Intent(this, DashboardActivity.class);
                 resultIntent.putExtra("id", id);
                 resultIntent.putExtra(CONSTANTS.title, title);
+                Notification_PlaylistId = id;
+                Notification_PlaylistName = title;
                 resultIntent.putExtra("body", message);
                 taskStackBuilder.addParentStack(DashboardActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
