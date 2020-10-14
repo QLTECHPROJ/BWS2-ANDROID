@@ -376,18 +376,33 @@ public class AccountFragment extends Fragment {
                         } else {
                             binding.tvName.setText(viewModel.getResponseData().getName());
                         }
-                        String Name = viewModel.getResponseData().getName();
-                        String Letter = Name.substring(0, 1);
-                        String profilePicPath = viewModel.getResponseData().getImage();
-                        IsLock = viewModel.getResponseData().getIsLock();
-                        if (profilePicPath.equalsIgnoreCase("")) {
-                            binding.civProfile.setVisibility(View.GONE);
-                            binding.rlLetter.setVisibility(View.VISIBLE);
-                            binding.tvLetter.setText(Letter);
-                        } else {
-                            binding.civProfile.setVisibility(View.VISIBLE);
-                            binding.rlLetter.setVisibility(View.GONE);
-                            Glide.with(ctx).load(profilePicPath).thumbnail(1f).dontAnimate().into(binding.civProfile);
+                        if(viewModel.getResponseData().getName().equalsIgnoreCase("")){
+                            String Letter = "G";
+                            String profilePicPath = viewModel.getResponseData().getImage();
+                            IsLock = viewModel.getResponseData().getIsLock();
+                            if (profilePicPath.equalsIgnoreCase("")) {
+                                binding.civProfile.setVisibility(View.GONE);
+                                binding.rlLetter.setVisibility(View.VISIBLE);
+                                binding.tvLetter.setText(Letter);
+                            } else {
+                                binding.civProfile.setVisibility(View.VISIBLE);
+                                binding.rlLetter.setVisibility(View.GONE);
+                                Glide.with(ctx).load(profilePicPath).thumbnail(1f).dontAnimate().into(binding.civProfile);
+                            }
+                        }else {
+                            String Name = viewModel.getResponseData().getName();
+                            String Letter = Name.substring(0, 1);
+                            String profilePicPath = viewModel.getResponseData().getImage();
+                            IsLock = viewModel.getResponseData().getIsLock();
+                            if (profilePicPath.equalsIgnoreCase("")) {
+                                binding.civProfile.setVisibility(View.GONE);
+                                binding.rlLetter.setVisibility(View.VISIBLE);
+                                binding.tvLetter.setText(Letter);
+                            } else {
+                                binding.civProfile.setVisibility(View.VISIBLE);
+                                binding.rlLetter.setVisibility(View.GONE);
+                                Glide.with(ctx).load(profilePicPath).thumbnail(1f).dontAnimate().into(binding.civProfile);
+                            }
                         }
 
 

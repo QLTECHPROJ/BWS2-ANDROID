@@ -161,7 +161,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                 int Years = binding1.YearPicker.getValue();
                 Card card = new Card(strCardNo, months, Years, binding.etCvv.getText().toString());
 
-                new Stripe().createToken(card, getString(R.string.stipe_test_key), new TokenCallback() {
+                new Stripe().createToken(card, getString(R.string.stipe_live_key), new TokenCallback() {
                     @Override
                     public void onError(Exception error) {
                         Log.e("error.........", "" + error.toString());
