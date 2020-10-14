@@ -90,7 +90,7 @@ public class AddAudioActivity extends AppCompatActivity {
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String search) {
-                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                binding.searchView.clearFocus();
                 return false;
             }
 
@@ -165,46 +165,6 @@ public class AddAudioActivity extends AppCompatActivity {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
-
-    /*private void prepareSearchData(String search, EditText searchEditText, String PlaylistID) {
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<SuggestionAudiosModel> listCall = APIClient.getClient().getAddSearchAudio(search, PlaylistID);
-            listCall.enqueue(new Callback<SuggestionAudiosModel>() {
-                @Override
-                public void onResponse(Call<SuggestionAudiosModel> call, Response<SuggestionAudiosModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        SuggestionAudiosModel listModel = response.body();
-                        if (!searchEditText.getText().toString().equalsIgnoreCase("")) {
-                            if (listModel.getResponseData().size() == 0) {
-                                binding.rvSerachList.setVisibility(View.GONE);
-                                binding.llError.setVisibility(View.VISIBLE);
-                                binding.tvFound.setText("Search term not found please use another one");
-                            } else {
-                                binding.llError.setVisibility(View.GONE);
-                                binding.rvSerachList.setVisibility(View.VISIBLE);
-                                adpater = new SerachListAdpater(listModel.getResponseData(), ctx, binding.rvSerachList, UserID, PlaylistID);
-                                binding.rvSerachList.setAdapter(adpater);
-                            }
-                        } else if (searchEditText.getText().toString().equalsIgnoreCase("")) {
-                            binding.rvSerachList.setAdapter(null);
-                            binding.rvSerachList.setVisibility(View.GONE);
-                            binding.llError.setVisibility(View.GONE);
-                        }
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<SuggestionAudiosModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-        }
-    }*/
 
     private void prepareSuggestedData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
@@ -332,7 +292,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                             holder.binding.ivLock.setVisibility(View.GONE);
                             String AudioID = modelList.get(position).getID();
-                            callAddSearchAudio(AudioID,"0","");
+                            callAddSearchAudio(AudioID, "0", "");
                         } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
                                 || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                             holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -346,7 +306,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                             holder.binding.ivLock.setVisibility(View.GONE);
                             String AudioID = modelList.get(position).getID();
-                            callAddSearchAudio(AudioID,"0","");
+                            callAddSearchAudio(AudioID, "0", "");
                         } else if (modelList.get(position).getIsPlay().equalsIgnoreCase("0")
                                 || modelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                             holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -357,7 +317,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
                         String AudioID = modelList.get(position).getID();
-                        callAddSearchAudio(AudioID,"0","");
+                        callAddSearchAudio(AudioID, "0", "");
                     }
                 });
             } else if (modelList.get(position).getIscategory().equalsIgnoreCase("0")) {
@@ -378,7 +338,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
 
-                        callAddSearchAudio("","1", modelList.get(position).getID());
+                        callAddSearchAudio("", "1", modelList.get(position).getID());
                     }
                 });
 
@@ -436,7 +396,7 @@ public class AddAudioActivity extends AppCompatActivity {
         }
     }
 
-    private void callAddSearchAudio( String AudioID,String s,String FromPlaylistId) {
+    private void callAddSearchAudio(String AudioID, String s, String FromPlaylistId) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<AddToPlaylist> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioID, PlaylistID, FromPlaylistId);
@@ -492,8 +452,8 @@ public class AddAudioActivity extends AppCompatActivity {
                                     playlistSongs.add(mainPlayModel);
                                 }
 
-                                for(int i = 0;i<mainPlayModelList.size();i++){
-                                    if(mainPlayModelList.get(i).getID().equalsIgnoreCase(id)){
+                                for (int i = 0; i < mainPlayModelList.size(); i++) {
+                                    if (mainPlayModelList.get(i).getID().equalsIgnoreCase(id)) {
                                         pos = i;
                                         break;
                                     }
@@ -515,7 +475,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             }
                         }
                         BWSApplication.showToast(listModels.getResponseMessage(), ctx);
-                        if(s.equalsIgnoreCase("1")){
+                        if (s.equalsIgnoreCase("1")) {
                             finish();
                         }
                     }
@@ -583,7 +543,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
                         String AudioID = listModel.get(position).getID();
-                        callAddSearchAudio(AudioID,"0","");
+                        callAddSearchAudio(AudioID, "0", "");
                     } else if (listModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModel.get(position).getIsPlay().equalsIgnoreCase("")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -597,7 +557,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
                         String AudioID = listModel.get(position).getID();
-                        callAddSearchAudio(AudioID,"0","");
+                        callAddSearchAudio(AudioID, "0", "");
                     } else if (listModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModel.get(position).getIsPlay().equalsIgnoreCase("")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -606,7 +566,7 @@ public class AddAudioActivity extends AppCompatActivity {
                     }
                 } else if (listModel.get(position).getIsLock().equalsIgnoreCase("0") || listModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     String AudioID = listModel.get(position).getID();
-                    callAddSearchAudio(AudioID,"0","");
+                    callAddSearchAudio(AudioID, "0", "");
                 }
             });
         }
@@ -729,7 +689,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    callAddSearchAudio("","1",PlaylistModel.get(position).getID());
+                    callAddSearchAudio("", "1", PlaylistModel.get(position).getID());
                 }
             });
         }

@@ -99,7 +99,7 @@ public class AudioFragment extends Fragment {
                 playlistDownloadId = gson.fromJson(json2, type);
                 if (fileNameList.size() != 0) {
                     DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
-                    downloadMedia.encrypt1(audioFile, fileNameList,playlistDownloadId/*, playlistSongs*/);
+                    downloadMedia.encrypt1(audioFile, fileNameList, playlistDownloadId/*, playlistSongs*/);
                 }
             }
         }

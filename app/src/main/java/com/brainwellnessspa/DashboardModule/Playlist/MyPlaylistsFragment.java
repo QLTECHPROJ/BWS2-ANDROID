@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -246,21 +247,25 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             @Override
             public boolean onQueryTextSubmit(String search) {
                 binding.searchView.clearFocus();
-//                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String search) {
-                try {
-                    if (adpater2 != null) {
-                        adpater2.getFilter().filter(search);
-                        SearchFlag = search;
-                        Log.e("searchsearch", "" + search);
+                if (searchEditText.getText().toString().equalsIgnoreCase("")) {
+
+                } else {
+                    try {
+                        if (adpater2 != null) {
+                            adpater2.getFilter().filter(search);
+                            SearchFlag = search;
+                            Log.e("searchsearch", "" + search);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+
                 return false;
             }
         });
@@ -411,6 +416,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
+            binding.searchView.clearFocus();
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 callBack();
                 return true;
@@ -437,9 +443,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callBack() {
-//        handler1.removeCallbacks(UpdateSongTime1);
-//        handler2.removeCallbacks(UpdateSongTime2);
-        binding.searchView.requestFocus();
+        binding.searchView.clearFocus();
         if (comefrom_search == 2) {
             Bundle bundle = new Bundle();
             Fragment playlistFragment = new ViewAllPlaylistFragment();
