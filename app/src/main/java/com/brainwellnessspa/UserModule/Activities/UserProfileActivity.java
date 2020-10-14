@@ -480,6 +480,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                                 .thumbnail(0.1f)
                                                 .skipMemoryCache(false).into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
+                                        profileViewData(ctx);
                                     }
                                 }
 
@@ -519,6 +520,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                                 .thumbnail(0.1f)
                                                 .skipMemoryCache(false).into(binding.civProfile);
                                         BWSApplication.showToast(addProfileModel.getResponseMessage(), ctx);
+                                        profileViewData(ctx);
                                     }
                                 }
 
@@ -586,15 +588,15 @@ public class UserProfileActivity extends AppCompatActivity {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
-            }else if (!Calendar.equalsIgnoreCase(UserCalendar)) {
+            } else if (!Calendar.equalsIgnoreCase(UserCalendar)) {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
-            }else if (!MobileNumber.equalsIgnoreCase(UserMobileNumber)) {
+            } else if (!MobileNumber.equalsIgnoreCase(UserMobileNumber)) {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
-            }else if (!Email.equalsIgnoreCase(UserEmail)) {
+            } else if (!Email.equalsIgnoreCase(UserEmail)) {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);

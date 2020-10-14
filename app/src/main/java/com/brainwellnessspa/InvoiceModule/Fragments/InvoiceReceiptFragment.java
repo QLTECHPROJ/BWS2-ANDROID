@@ -109,7 +109,17 @@ public class InvoiceReceiptFragment extends DialogFragment {
                         }
 
                         binding.tvGst.setText("$" + listModel.getResponseData().getGstAmount());
-                        binding.tvOrderTotalAmount.setText("$" + listModel.getResponseData().getTotalAmount());
+                        if (listModel.getResponseData().getTotalAmount().equalsIgnoreCase("0.00")){
+                            binding.tvText.setVisibility(View.GONE);
+                            binding.views.setVisibility(View.GONE);
+                            binding.tvPaymentDetails.setVisibility(View.GONE);
+                            binding.tvOrderTotalAmount.setText("$" + listModel.getResponseData().getTotalAmount());
+                        }else {
+                            binding.tvText.setVisibility(View.VISIBLE);
+                            binding.views.setVisibility(View.VISIBLE);
+                            binding.tvPaymentDetails.setVisibility(View.VISIBLE);
+                            binding.tvOrderTotalAmount.setText("$" + listModel.getResponseData().getTotalAmount());
+                        }
                     }
                 }
 

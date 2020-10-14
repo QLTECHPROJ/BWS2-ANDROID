@@ -221,6 +221,7 @@
                             android:gravity="left"
                             android:paddingHorizontal="@dimen/_13sdp"
                             android:paddingTop="@dimen/_13sdp"
+                            android:visibility="gone"
                             android:text="Payment Method:"
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_16sdp" />
@@ -233,6 +234,7 @@
                             android:fontFamily="@font/montserrat_regular"
                             android:paddingHorizontal="@dimen/_13sdp"
                             android:paddingBottom="@dimen/_13sdp"
+                            android:visibility="gone"
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_12sdp" />
 
@@ -240,6 +242,7 @@
                             android:id="@+id/views"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_1sdp"
+                            android:visibility="gone"
                             android:background="#EEEEEE" />
 
                         <TextView

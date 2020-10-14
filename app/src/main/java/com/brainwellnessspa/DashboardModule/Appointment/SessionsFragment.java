@@ -40,6 +40,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Appointment.AppointmentDetailsFragment.ComeFromAppointmentDetail;
+import static com.brainwellnessspa.DashboardModule.Appointment.AppointmentDetailsFragment.ComesessionScreen;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 
 public class SessionsFragment extends Fragment {
@@ -96,16 +97,18 @@ public class SessionsFragment extends Fragment {
     }
 
     private void callBack() {
-        Bundle bundle = new Bundle();
-        Fragment appointmentFragment = new AppointmentFragment();
-        bundle.putString("appointmentMainName", appointmentMainName);
-        bundle.putString("appointmentName", appointmentName);
-        bundle.putString("appointmentImage", appointmentImage);
-        appointmentFragment.setArguments(bundle);
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .replace(R.id.flContainer, appointmentFragment)
-                .commit();
+        if (ComesessionScreen == 1){
+            Bundle bundle = new Bundle();
+            Fragment appointmentFragment = new AppointmentFragment();
+            bundle.putString("appointmentMainName", appointmentMainName);
+            bundle.putString("appointmentName", appointmentName);
+            bundle.putString("appointmentImage", appointmentImage);
+            appointmentFragment.setArguments(bundle);
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .replace(R.id.flContainer, appointmentFragment)
+                    .commit();
+        }
     }
 
     private void prepareSessionList() {
@@ -247,7 +250,7 @@ public class SessionsFragment extends Fragment {
                 appointmentDetailsFragment.setArguments(bundle);
                 fragmentManager1.beginTransaction()
                         .addToBackStack("AppointmentDetailsFragment")
-                        .add(R.id.flContainer, appointmentDetailsFragment).commit();
+                        .replace(R.id.flContainer, appointmentDetailsFragment).commit();
             });
         }
 

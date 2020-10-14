@@ -70,8 +70,6 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-        /*Log.e("width......", String.valueOf(holder.binding.ivRestaurantImage.getLayoutParams().height));
-        Log.e("height...", String.valueOf(holder.binding.ivRestaurantImage.getLayoutParams().width));*/
         if (IsLock.equalsIgnoreCase("1")) {
             if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                 holder.binding.ivLock.setVisibility(View.GONE);

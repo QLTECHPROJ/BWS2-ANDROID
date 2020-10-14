@@ -256,7 +256,7 @@ public class AppointmentFragment extends Fragment {
                     sessionsFragment.setArguments(bundle);
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, sessionsFragment).commit();
+                            .replace(R.id.flContainer, sessionsFragment).commit();
                 }
             });
         }
