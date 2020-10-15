@@ -125,7 +125,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     Runnable UpdateSongTime2;
     int SongListSize = 0, count;
     private Handler handler1, handler2;
-
 //    private Runnable UpdateSongTime1 = new Runnable() {
 //        @Override
 //        public void run() {

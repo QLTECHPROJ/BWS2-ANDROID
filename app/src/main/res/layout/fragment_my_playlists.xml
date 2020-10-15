@@ -13,12 +13,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="false"
+            android:background="@color/white"
             android:enabled="false">
 
                 <RelativeLayout
                     android:id="@+id/rlMainLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@color/white"
                     android:layout_marginBottom="@dimen/_18sdp"
                     android:clickable="false"
                     android:enabled="false">
@@ -28,6 +30,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_210sdp"
                         android:clickable="false"
+                        android:background="@color/white"
                         android:enabled="false">
 
                         <ImageView
@@ -140,6 +143,8 @@
                             android:layout_alignParentBottom="true"
                             android:background="@drawable/transparent_gradient"
                             android:orientation="vertical"
+                            android:clickable="false"
+                            android:enabled="false"
                             android:paddingBottom="@dimen/_16sdp">
 
                             <TextView
@@ -150,6 +155,8 @@
                                 android:fontFamily="@font/montserrat_semi_bold"
                                 android:gravity="start"
                                 android:text="Playlist"
+                                android:clickable="false"
+                                android:enabled="false"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_15sdp"
                                 android:visibility="gone" />
@@ -164,6 +171,8 @@
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
                                 android:maxLines="1"
+                                android:clickable="false"
+                                android:enabled="false"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_22sdp" />
 
@@ -175,6 +184,8 @@
                                 android:layout_marginTop="@dimen/_6sdp"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:gravity="start"
+                                android:clickable="false"
+                                android:enabled="false"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_15sdp" />
 
