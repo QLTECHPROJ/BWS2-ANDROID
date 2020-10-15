@@ -307,6 +307,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void MakeArray() {
+        shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+
         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();
@@ -490,9 +493,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
-            if (isDisclaimer == 0 && disclaimerPlayed == 0) {
-                addDeclaimer();
-            }
+//            if (isDisclaimer == 0 && disclaimerPlayed == 0) {
+//                addDeclaimer();
+//            }
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
@@ -511,6 +514,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
+            String json = gson.toJson(arrayList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
@@ -519,6 +524,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void MakeArray2() {
+        shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
@@ -690,9 +696,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
-            if (isDisclaimer == 0 && disclaimerPlayed == 0) {
-                addDeclaimer();
-            }
+//            if (isDisclaimer == 0 && disclaimerPlayed == 0) {
+//                addDeclaimer();
+//            }
             for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
@@ -1029,7 +1035,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         if (audioPlay) {
             if (audioFile.equalsIgnoreCase("") || audioFile.isEmpty()) {
                 isDisclaimer = 0;
-                disclaimerPlayed = 1;
+//                disclaimerPlayed = 1;
                 isRemoved = true;
                 isPlayingDisclaimer = false;
                 removeArray();
@@ -1191,6 +1197,19 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
             arrayList.remove(0);
 
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String json = gson.toJson(arrayList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        }else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+            Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+            }.getType();
+            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
+            arrayList.remove(0);
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();

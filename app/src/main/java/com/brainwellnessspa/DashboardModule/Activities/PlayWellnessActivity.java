@@ -1355,7 +1355,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         if (audioPlay) {
             if (url.equalsIgnoreCase("") || url.isEmpty()) {
                 isDisclaimer = 0;
-                disclaimerPlayed = 1;
+//                disclaimerPlayed = 1;
                 isRemoved = true;
                 removeArray();
                 mainPlayModelList.remove(0);
@@ -1549,6 +1549,19 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
+        }else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+            Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+            }.getType();
+            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json1, type);
+            arrayList.remove(0);
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String json = gson.toJson(arrayList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
         }
         MakeArray2();
     }
@@ -1726,9 +1739,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
-            if(isDisclaimer == 0 && disclaimerPlayed == 0){
-                addDeclaimer();
-            }
+
             for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
