@@ -97,6 +97,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     public static int isDisclaimer = 0;
     public static boolean disclaimer = false,isPlayingDisclaimer = false;
     public static boolean isRemoved = false,newClick = false;
+    String json;
+    Gson gson;
 
     //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -155,7 +157,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 myProgress = currentDuration;
                 currentDuration = getStartTime();
 
-                Log.e("myProgress old!!!",String.valueOf(myProgress));
+//                Log.e("myProgress old!!!",String.valueOf(myProgress));
                 if(myProgress == currentDuration && myProgress!=0 && !isPause){
 //                    Log.e("myProgress",String.valueOf(myProgress));
                     myCount++;
@@ -222,8 +224,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         handler = new Handler();
           shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        Gson gson = new Gson();
-        String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+        gson = new Gson();
+        json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
             Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
@@ -259,222 +261,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         if (queuePlay) {
             getPrepareShowData();
         } else if (audioPlay) {
-            if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
-                Type type = new TypeToken<MainAudioModel.ResponseData.Detail>() {
-                }.getType();
-                MainAudioModel.ResponseData.Detail arrayList = gson.fromJson(json, type);
-//            listSize = arrayList.size();
-//            for (int i = 0; i < listSize; i++) {
-
-                if(!isRemoved || newClick/* && !isPlayingDisclaimer && newClick*/) {
-                    addDeclaimer();
-                }
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.getID());
-                mainPlayModel.setName(arrayList.getName());
-                mainPlayModel.setAudioFile(arrayList.getAudioFile());
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.getImageFile());
-                mainPlayModel.setLike(arrayList.getLike());
-                mainPlayModel.setDownload(arrayList.getDownload());
-                mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-                //}
-                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedz.edit();
-                Gson gsonz = new Gson();
-                String jsonz = gsonz.toJson(mainPlayModelList);
-                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-                editor.commit();
-                getPrepareShowData();
-
-            } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
-                Type type = new TypeToken<ViewAllAudioListModel.ResponseData.Detail>() {
-                }.getType();
-                ViewAllAudioListModel.ResponseData.Detail arrayList = gson.fromJson(json, type);
-//            listSize = arrayList.size();
-//                for (int i = 0; i < listSize; i++) {
-                if(!isRemoved || newClick/* && !isPlayingDisclaimer && newClick*/) {
-                    addDeclaimer();
-                }
-
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.getID());
-                mainPlayModel.setName(arrayList.getName());
-                mainPlayModel.setAudioFile(arrayList.getAudioFile());
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.getImageFile());
-                mainPlayModel.setLike(arrayList.getLike());
-                mainPlayModel.setDownload(arrayList.getDownload());
-                mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-//                }
-                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedz.edit();
-                Gson gsonz = new Gson();
-                String jsonz = gsonz.toJson(mainPlayModelList);
-                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-                editor.commit();
-                getPrepareShowData();
-            } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
-                Type type = new TypeToken<AppointmentDetailModel.Audio>() {
-                }.getType();
-                AppointmentDetailModel.Audio arrayList = gson.fromJson(json, type);
-//            listSize = arrayList.size();
-//                for (int i = 0; i < listSize; i++) {
-                if(!isRemoved || newClick/* && !isPlayingDisclaimer && newClick*/) {
-                    addDeclaimer();
-                }
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.getID());
-                mainPlayModel.setName(arrayList.getName());
-                mainPlayModel.setAudioFile(arrayList.getAudioFile());
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.getImageFile());
-                mainPlayModel.setLike(arrayList.getLike());
-                mainPlayModel.setDownload(arrayList.getDownload());
-                mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-//                }
-                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedz.edit();
-                Gson gsonz = new Gson();
-                String jsonz = gsonz.toJson(mainPlayModelList);
-                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-                editor.commit();
-                getPrepareShowData();
-            } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-                Type type = new TypeToken<DownloadAudioDetails>() {
-                }.getType();
-                DownloadAudioDetails arrayList = gson.fromJson(json, type);
-//                listSize = arrayList.size();
-//                for (int i = 0; i < listSize; i++) {
-                if(!isRemoved || newClick/* && !isPlayingDisclaimer && newClick*/) {
-                    addDeclaimer();
-                }
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.getID());
-                mainPlayModel.setName(arrayList.getName());
-                mainPlayModel.setAudioFile(arrayList.getAudioFile());
-                mainPlayModel.setPlaylistID(arrayList.getPlaylistId());
-                mainPlayModel.setAudioDirection(arrayList.getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.getImageFile());
-                mainPlayModel.setLike(arrayList.getLike());
-                mainPlayModel.setDownload(arrayList.getDownload());
-                mainPlayModel.setAudioDuration(arrayList.getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-                downloadPlay = true;
-//                }
-                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedz.edit();
-                Gson gsonz = new Gson();
-                String jsonz = gsonz.toJson(mainPlayModelList);
-                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-                editor.commit();
-                getPrepareShowData();
-            } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
-                Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
-                }.getType();
-                ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
-                listSize = arrayList.size();
-                if(!isRemoved || newClick/* && !isPlayingDisclaimer && newClick*/) {
-                    addDeclaimer();
-                }
-                for (int i = 0; i < listSize; i++) {
-                    mainPlayModel = new MainPlayModel();
-                    mainPlayModel.setID(arrayList.get(i).getID());
-                    mainPlayModel.setName(arrayList.get(i).getName());
-                    mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                    mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistId());
-                    mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
-                    mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
-                    mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                    mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                    mainPlayModel.setLike(arrayList.get(i).getLike());
-                    mainPlayModel.setDownload(arrayList.get(i).getDownload());
-                    mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
-                    mainPlayModelList.add(mainPlayModel);
-                    downloadPlay = true;
-                }
-                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedz.edit();
-                Gson gsonz = new Gson();
-                String jsonz = gsonz.toJson(mainPlayModelList);
-                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-                editor.commit();
-                getPrepareShowData();
-            } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
-                Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
-                }.getType();
-                ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
-                listSize = arrayList.size();
-                if(!isRemoved || newClick/* && !isPlayingDisclaimer && newClick*/) {
-                    addDeclaimer();
-                }
-                for (int i = 0; i < listSize; i++) {
-                    mainPlayModel = new MainPlayModel();
-                    mainPlayModel.setID(arrayList.get(i).getID());
-                    mainPlayModel.setName(arrayList.get(i).getName());
-                    mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                    mainPlayModel.setPlaylistID("");
-                    mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
-                    mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
-                    mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                    mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                    mainPlayModel.setLike(arrayList.get(i).getLike());
-                    mainPlayModel.setDownload(arrayList.get(i).getDownload());
-                    mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
-                    mainPlayModelList.add(mainPlayModel);
-                }
-                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedz.edit();
-                Gson gsonz = new Gson();
-                String jsonz = gsonz.toJson(mainPlayModelList);
-                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-                editor.commit();
-                getPrepareShowData();
-            } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
-                Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
-                }.getType();
-                ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
-                listSize = arrayList.size();
-                if(isDisclaimer == 0 && disclaimerPlayed == 0){
-                    addDeclaimer();
-                }
-                for (int i = 0; i < listSize; i++) {
-                    mainPlayModel = new MainPlayModel();
-                    mainPlayModel.setID(arrayList.get(i).getID());
-                    mainPlayModel.setName(arrayList.get(i).getName());
-                    mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                    mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistID());
-                    mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
-                    mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
-                    mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                    mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                    mainPlayModel.setLike(arrayList.get(i).getLike());
-                    mainPlayModel.setDownload(arrayList.get(i).getDownload());
-                    mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
-                    mainPlayModelList.add(mainPlayModel);
-                }
-                SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedz.edit();
-                Gson gsonz = new Gson();
-                String jsonz = gsonz.toJson(mainPlayModelList);
-                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-                editor.commit();
-                getPrepareShowData();
-            }
+            MakeArray();
         }
         if (listSize == 1) {
             IsShuffle = "";
@@ -509,6 +296,416 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         });
 
         return view;
+    }
+
+    private void MakeArray() {
+        if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
+            Type type = new TypeToken< ArrayList<MainAudioModel.ResponseData.Detail>>() {
+            }.getType();
+            ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
+            listSize = arrayList.size();
+            for (int i = 0; i < listSize; i++) {
+                /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
+                    addDeclaimer();
+                }*/
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+            getPrepareShowData();
+
+        } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
+            Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
+            }.getType();
+            ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
+            listSize = arrayList.size();
+            for (int i = 0; i < listSize; i++) {
+                /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
+                    addDeclaimer();
+                }*/
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+            getPrepareShowData();
+        } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+            Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
+            }.getType();
+            ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
+            listSize = arrayList.size();
+            for (int i = 0; i < listSize; i++) {
+                /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
+                    addDeclaimer();
+                }*/
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+            getPrepareShowData();
+        } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+            Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+            }.getType();
+            ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
+            listSize = arrayList.size();
+            for (int i = 0; i < listSize; i++) {
+                /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
+                    addDeclaimer();
+                }*/
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+            getPrepareShowData();
+        } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
+            Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+            }.getType();
+            ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
+            listSize = arrayList.size();
+
+            for (int i = 0; i < listSize; i++) {
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistId());
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+                downloadPlay = true;
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+            getPrepareShowData();
+        } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
+            Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+            }.getType();
+            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
+            listSize = arrayList.size();
+
+            for (int i = 0; i < listSize; i++) {
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+            getPrepareShowData();
+        } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+            Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+            }.getType();
+            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
+            listSize = arrayList.size();
+            if(isDisclaimer == 0 && disclaimerPlayed == 0){
+                addDeclaimer();
+            }
+            for (int i = 0; i < listSize; i++) {
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistID());
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+            getPrepareShowData();
+        }
+    }
+    private void MakeArray2() {
+        json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+        if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
+            Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
+            }.getType();
+            ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
+            for (int i = 0; i < listSize; i++) {
+                /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
+                    addDeclaimer();
+                }*/
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+
+        } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
+            Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
+            }.getType();
+            ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
+            for (int i = 0; i < listSize; i++) {
+                /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
+                    addDeclaimer();
+                }*/
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+            Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
+            }.getType();
+            ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
+            for (int i = 0; i < listSize; i++) {
+                /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
+                    addDeclaimer();
+                }*/
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+            Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+            }.getType();
+            ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
+            for (int i = 0; i < listSize; i++) {
+                /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
+                    addDeclaimer();
+                }*/
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
+            Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+            }.getType();
+            ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
+
+            for (int i = 0; i < listSize; i++) {
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistId());
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+                downloadPlay = true;
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
+            Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+            }.getType();
+            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
+
+            for (int i = 0; i < listSize; i++) {
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+            Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+            }.getType();
+            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
+            if(isDisclaimer == 0 && disclaimerPlayed == 0){
+                addDeclaimer();
+            }
+            for (int i = 0; i < listSize; i++) {
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistID());
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        }
     }
 
     private void addDeclaimer() {
@@ -826,8 +1023,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 disclaimerPlayed = 1;
                 isRemoved = true;
                 isPlayingDisclaimer = false;
+                removeArray();
                 mainPlayModelList.remove(0);
-                position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+//                position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             }
         }
         isPrepare = false;
@@ -912,6 +1110,88 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
+    }
+
+    private void removeArray() {
+        shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        gson = new Gson();
+        json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+        if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
+
+            Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
+            }.getType();
+            ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
+
+            arrayList.remove(0);
+
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String json = gson.toJson(arrayList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+
+        } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
+            Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
+            }.getType();
+            ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
+            arrayList.remove(0);
+
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String json = gson.toJson(arrayList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+            Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
+            }.getType();
+            ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
+            arrayList.remove(0);
+
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String json = gson.toJson(arrayList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+            Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+            }.getType();
+            ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
+            arrayList.remove(0);
+
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String json = gson.toJson(arrayList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
+            Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+            }.getType();
+            ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
+            arrayList.remove(0);
+
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String json = gson.toJson(arrayList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        }
+        MakeArray2();
     }
 
     private void callAsyncTask() {
@@ -1007,26 +1287,14 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
         if(audioFile.equalsIgnoreCase("") || audioFile.isEmpty()){
             isDisclaimer = 1;
-            binding.ivPlay.setClickable(false);
-            binding.ivPlay.setEnabled(false);
-            binding.ivPause.setClickable(false);
-            binding.ivPause.setEnabled(false);
             binding.simpleSeekbar.setClickable(false);
             binding.flProgress.setClickable(false);
             binding.flProgress.setEnabled(false);
-            binding.ivPlay.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
-            binding.ivPause.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
         }else{
             isDisclaimer = 0;
-            binding.ivPlay.setClickable(true);
-            binding.ivPlay.setEnabled(true);
-            binding.ivPause.setClickable(true);
-            binding.ivPause.setEnabled(true);
             binding.simpleSeekbar.setClickable(true);
             binding.flProgress.setClickable(true);
             binding.flProgress.setEnabled(true);
-            binding.ivPlay.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-            binding.ivPause.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
         }
         SharedPreferences Status = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");

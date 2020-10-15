@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -139,7 +140,23 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(listModelList.get(position));
+            ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+            MainAudioModel.ResponseData.Detail  mainPlayModel = new MainAudioModel.ResponseData.Detail();
+            mainPlayModel.setID("0");
+            mainPlayModel.setName("Disclaimer");
+            mainPlayModel.setAudioFile("");
+            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+            mainPlayModel.setAudiomastercat("");
+            mainPlayModel.setAudioSubCategory("");
+            mainPlayModel.setImageFile("");
+            mainPlayModel.setLike("");
+            mainPlayModel.setDownload("");
+            mainPlayModel.setAudioDuration("0:48");
+            listModelList2.add(mainPlayModel);
+
+            listModelList2.add(listModelList.get(position));
+
+            String json = gson.toJson(listModelList2);
         editor.putString(CONSTANTS.PREF_KEY_modelList, json);
         editor.putInt(CONSTANTS.PREF_KEY_position, 0);
         editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);

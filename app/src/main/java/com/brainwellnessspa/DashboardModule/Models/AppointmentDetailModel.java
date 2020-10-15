@@ -337,7 +337,8 @@ public class AppointmentDetailModel implements Parcelable {
         @Expose
         private String download;
 
-        protected Audio(Parcel in) {
+        public Audio() { }
+            protected Audio(Parcel in) {
             iD = in.readString();
             name = in.readString();
             audioFile = in.readString();

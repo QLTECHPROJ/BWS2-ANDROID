@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -361,11 +362,40 @@ public class ViewAllAudioFragment extends Fragment {
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
             String json = "";
+            ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+            ViewAllAudioListModel.ResponseData.Detail  mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
+            mainPlayModel.setID("0");
+            mainPlayModel.setName("Disclaimer");
+            mainPlayModel.setAudioFile("");
+            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+            mainPlayModel.setAudiomastercat("");
+            mainPlayModel.setAudioSubCategory("");
+            mainPlayModel.setImageFile("");
+            mainPlayModel.setLike("");
+            mainPlayModel.setDownload("");
+            mainPlayModel.setAudioDuration("0:48");
+            listModelList2.add(mainPlayModel);
             if (Name.equalsIgnoreCase(getString(R.string.top_categories))) {
-                json = gson.toJson(listModelList);
+                listModelList2.addAll(listModelList);
+                json = gson.toJson(listModelList2);
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "TopCategories");
             } else {
-                json = gson.toJson(listModelList.get(position));
+
+
+                mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
+                mainPlayModel.setID(listModelList.get(position).getID());
+                mainPlayModel.setName(listModelList.get(position).getName());
+                mainPlayModel.setAudioFile(listModelList.get(position).getAudioFile());
+                mainPlayModel.setAudioDirection(listModelList.get(position).getAudioDirection());
+                mainPlayModel.setAudiomastercat(listModelList.get(position).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(listModelList.get(position).getAudioSubCategory());
+                mainPlayModel.setImageFile(listModelList.get(position).getImageFile());
+                mainPlayModel.setLike(listModelList.get(position).getLike());
+                mainPlayModel.setDownload(listModelList.get(position).getDownload());
+                mainPlayModel.setAudioDuration(listModelList.get(position).getAudioDuration());
+                listModelList2.add(mainPlayModel);
+
+                json = gson.toJson(listModelList2);
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
             }
             editor.putString(CONSTANTS.PREF_KEY_modelList, json);
