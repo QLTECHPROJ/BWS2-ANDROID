@@ -1484,6 +1484,15 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall sort after the disclaimer", ctx);
+                    }else{
+                        if (event.getAction() ==
+                                MotionEvent.ACTION_DOWN) {
+                            startDragListener.requestDrag(holder);
+                        }
+                        if (event.getAction() ==
+                                MotionEvent.ACTION_UP) {
+                            startDragListener.requestDrag(holder);
+                        }
                     }
                 } else {
                     if (event.getAction() ==
@@ -1610,6 +1619,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall remove after the disclaimer", ctx);
+                        } else {
+                            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID) && mData.size() == 1) {
+                                BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
+                            } else {
+                                callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId(), mData, position);
+                            }
                         }
                     } else {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID) && mData.size() == 1) {
