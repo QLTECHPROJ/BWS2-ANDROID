@@ -177,7 +177,18 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             currentDuration = getStartTime();
 
 //            Log.e("myProgress old!!!", String.valueOf(myProgress));
-            if (myProgress == currentDuration && myProgress != 0 && !isPause) {
+            if(myProgress == currentDuration && myProgress!=0 && !isPause && url.equalsIgnoreCase("")){
+//                    Log.e("myProgress",String.valueOf(myProgress));
+                myCount++;
+                Log.e("myCount",String.valueOf(myCount));
+
+                if(myCount == 20){
+                    Log.e("myCount complete",String.valueOf(myCount));
+                    callComplete();
+                    myCount = 0;
+                }
+            }
+            else if (myProgress == currentDuration && myProgress != 0 && !isPause) {
 //                Log.e("myProgress", String.valueOf(myProgress));
                 myCount++;
                 Log.e("myCount", String.valueOf(myCount));
@@ -1548,7 +1559,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-            for (int i = 0; i < listSize; i++) {
+            for (int i = 0; i < arrayList.size(); i++) {
                 /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
                     addDeclaimer();
                 }*/
@@ -1577,7 +1588,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-            for (int i = 0; i < listSize; i++) {
+            for (int i = 0; i < arrayList.size(); i++) {
                 /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
                     addDeclaimer();
                 }*/
@@ -1605,7 +1616,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
             ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
-            for (int i = 0; i < listSize; i++) {
+            for (int i = 0; i < arrayList.size(); i++) {
                 /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
                     addDeclaimer();
                 }*/
@@ -1633,7 +1644,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
-            for (int i = 0; i < listSize; i++) {
+            for (int i = 0; i < arrayList.size(); i++) {
                 /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
                     addDeclaimer();
                 }*/
@@ -1661,7 +1672,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
-            for (int i = 0; i < listSize; i++) {
+            for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
@@ -1686,7 +1697,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
-            for (int i = 0; i < listSize; i++) {
+            for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
@@ -1714,7 +1725,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if(isDisclaimer == 0 && disclaimerPlayed == 0){
                 addDeclaimer();
             }
-            for (int i = 0; i < listSize; i++) {
+            for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
