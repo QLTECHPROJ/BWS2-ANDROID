@@ -50,6 +50,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isRemoved;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.newClick;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
@@ -298,43 +299,7 @@ public class ViewAllAudioFragment extends Fragment {
                 if (IsLock.equalsIgnoreCase("1")) {
                     if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        try {
-                            player = 1;
-                            if (isPrepare || isMediaStart || isPause) {
-                                stopMedia();
-                            }
-                            isPause = false;
-                            isMediaStart = false;
-                            isPrepare = false;
-                            disclaimer = false;
-                            isRemoved = false;
-//                            RefreshData();
-                            Fragment fragment = new TransparentPlayerFragment();
-                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();
-                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = shared.edit();
-                            Gson gson = new Gson();
-                            String json = "";
-                            if (Name.equalsIgnoreCase(getString(R.string.top_categories))) {
-                                json = gson.toJson(listModelList);
-                                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "TopCategories");
-                            } else {
-                                json = gson.toJson(listModelList.get(position));
-                                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
-                            }
-                            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                            editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                            editor.commit();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        callTransFrag(position,listModelList);
                     } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -345,43 +310,7 @@ public class ViewAllAudioFragment extends Fragment {
                 } else if (IsLock.equalsIgnoreCase("2")) {
                     if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        try {
-                            player = 1;
-                            if (isPrepare || isMediaStart || isPause) {
-                                stopMedia();
-                            }
-                            isPause = false;
-                            isMediaStart = false;
-                            isPrepare = false;
-                            disclaimer = false;
-                            isRemoved = false;
-//                            RefreshData();
-                            Fragment fragment = new TransparentPlayerFragment();
-                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();
-                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = shared.edit();
-                            Gson gson = new Gson();
-                            String json = "";
-                            if (Name.equalsIgnoreCase(getString(R.string.top_categories))) {
-                                json = gson.toJson(listModelList);
-                                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "TopCategories");
-                            } else {
-                                json = gson.toJson(listModelList.get(position));
-                                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
-                            }
-                            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                            editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                            editor.commit();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        callTransFrag(position, listModelList);
                     } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -389,47 +318,12 @@ public class ViewAllAudioFragment extends Fragment {
                     }
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    try {
-                        player = 1;
-                        if (isPrepare || isMediaStart || isPause) {
-                            stopMedia();
-                        }
-                        isPause = false;
-                        isMediaStart = false;
-                        isPrepare = false;
-                        disclaimer = false;
-                        isRemoved = false;
-//                            RefreshData();
-                        Fragment fragment = new TransparentPlayerFragment();
-                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                        fragmentManager1.beginTransaction()
-                                .add(R.id.flContainer, fragment)
-                                .commit();
-                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        Gson gson = new Gson();
-                        String json = "";
-                        if (Name.equalsIgnoreCase(getString(R.string.top_categories))) {
-                            json = gson.toJson(listModelList);
-                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "TopCategories");
-                        } else {
-                            json = gson.toJson(listModelList.get(position));
-                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
-                        }
-                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                        editor.commit();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    callTransFrag(position, listModelList);
                 }
             });
 
         }
+
 
         @Override
         public int getItemCount() {
@@ -443,6 +337,46 @@ public class ViewAllAudioFragment extends Fragment {
                 super(binding.getRoot());
                 this.binding = binding;
             }
+        }
+    }
+    private void callTransFrag(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList) {
+        try {
+            player = 1;
+            if (isPrepare || isMediaStart || isPause) {
+                stopMedia();
+            }
+            isPause = false;
+            isMediaStart = false;
+            isPrepare = false;
+            disclaimer = false;
+            isRemoved = false;
+            newClick = true;
+//                            RefreshData();
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String json = "";
+            if (Name.equalsIgnoreCase(getString(R.string.top_categories))) {
+                json = gson.toJson(listModelList);
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "TopCategories");
+            } else {
+                json = gson.toJson(listModelList.get(position));
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
+            }
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+            editor.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -529,36 +463,8 @@ public class ViewAllAudioFragment extends Fragment {
                         }
                     } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        try {
-                            player = 1;
-                            if (isPrepare || isMediaStart || isPause) {
-                                stopMedia();
-                            }
-                            isPause = false;
-                            isMediaStart = false;
-                            isPrepare = false;
-                            disclaimer = false;
-                            isRemoved = false;
-                            Fragment fragment = new TransparentPlayerFragment();
-                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();
-                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = shared.edit();
-                            Gson gson = new Gson();
-                            String json = gson.toJson(listModelList.get(position));
-                            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                            editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
-                            editor.commit();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+
+                        callTransFrag(position,listModelList);
                     }
                 }
             });

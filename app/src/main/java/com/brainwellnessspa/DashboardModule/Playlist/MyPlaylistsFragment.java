@@ -92,6 +92,7 @@ import static com.brainwellnessspa.DashboardModule.Playlist.ViewAllPlaylistFragm
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isRemoved;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.newClick;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity.ComeFrom_Playlist;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
@@ -525,20 +526,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
-                if (comefrom_search == 1) {
-                    Fragment fragment = new TransparentPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();
-                } else {
-                    Fragment fragment = new TransparentPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();
-                }
-
+                callAddTransFrag();
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.setMargins(10, 8, 10, 260);
                 binding.llSpace.setLayoutParams(params);
@@ -709,6 +697,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             downloadPlaylistDetailsList = GetPlaylistDetail2();
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
+    }
+
+    private void callAddTransFrag() {
+        Fragment fragment = new TransparentPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flContainer, fragment)
+                .commit();
     }
 
     private void getMediaByPer(String playlistID, int totalAudio) {
@@ -919,6 +915,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         isMediaStart = false;
         isPrepare = false;
         isRemoved = false;
+        newClick = true;
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
@@ -932,19 +929,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
         editor.commit();
         try {
-            if (comefrom_search == 1) {
-                Fragment fragment = new TransparentPlayerFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
-            } else {
-                Fragment fragment = new TransparentPlayerFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
-            }
+            callAddTransFrag();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1013,11 +998,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist");
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                     editor.commit();
-                    Fragment fragment = new TransparentPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();
+                    callAddTransFrag();
                 }
 
                 @Override
@@ -1709,11 +1690,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist");
                         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
                         editor.commit();
-                        Fragment fragment = new TransparentPlayerFragment();
-                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                        fragmentManager1.beginTransaction()
-                                .add(R.id.flContainer, fragment)
-                                .commit();
+                        callAddTransFrag();
                     }
                 }
             }

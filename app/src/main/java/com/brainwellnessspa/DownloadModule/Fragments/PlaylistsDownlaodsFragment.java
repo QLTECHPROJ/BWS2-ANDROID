@@ -45,35 +45,6 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         playlistList = new ArrayList<>();
         binding.tvFound.setText("Your downloaded playlists will appear here");
         GetAllMedia(getActivity());
-/*
-        try {
-            if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
-                SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editorr = sharedm.edit();
-                editorr.remove(CONSTANTS.PREF_KEY_modelList);
-                editorr.remove(CONSTANTS.PREF_KEY_position);
-                editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
-                editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
-                editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
-                editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
-                editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
-                editorr.clear();
-                editorr.commit();
-            }
-            SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            if (!AudioFlag.equalsIgnoreCase("0")) {
-                comefromDownload = "1";
-                Fragment fragment = new TransparentPlayerFragment();
-                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-*/
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);

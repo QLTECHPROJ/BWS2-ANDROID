@@ -174,7 +174,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
             Log.e("myProgress old!!!", String.valueOf(myProgress));
             if (myProgress == currentDuration && myProgress != 0 && !isPause) {
-                Log.e("myProgress", String.valueOf(myProgress));
+//                Log.e("myProgress", String.valueOf(myProgress));
                 myCount++;
                 Log.e("myCount", String.valueOf(myCount));
 
@@ -1199,7 +1199,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
             startTime = getStartTime();
         }
-        addToRecentPlay();
+        if(!url.equalsIgnoreCase("")) {
+            addToRecentPlay();
+        }
 
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
@@ -1599,12 +1601,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     private void callAllDisable(boolean b) {
         if (b) {
-            binding.llPlay.setClickable(true);
-            binding.llPlay.setEnabled(true);
-            binding.llPlay.setAlpha(1f);
-            binding.llPause.setClickable(true);
-            binding.llPause.setEnabled(true);
-            binding.llPause.setAlpha(1f);
             binding.llnext.setClickable(true);
             binding.llnext.setEnabled(true);
             binding.llnext.setAlpha(1f);
@@ -1641,12 +1637,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.simpleSeekbar.setEnabled(true);
 //            binding.simpleSeekbar.set
         } else {
-            binding.llPlay.setClickable(false);
-            binding.llPlay.setEnabled(false);
-            binding.llPlay.setAlpha(0.7f);
-            binding.llPause.setClickable(false);
-            binding.llPause.setEnabled(false);
-            binding.llPause.setAlpha(0.7f);
             binding.llnext.setClickable(false);
             binding.llnext.setEnabled(false);
             binding.llnext.setAlpha(0.7f);

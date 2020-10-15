@@ -52,6 +52,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isRemoved;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.newClick;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
@@ -355,6 +356,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                 isPrepare = false;
                 disclaimer = false;
                 isRemoved = false;
+                newClick = true;
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();

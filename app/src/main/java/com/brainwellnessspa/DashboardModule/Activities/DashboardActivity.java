@@ -39,18 +39,6 @@ public class DashboardActivity extends AppCompatActivity {
                 binding.navView.setSelectedItemId(R.id.navigation_audio);
             }
         }
-     /*   String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        try {
-            if (!AudioFlag.equalsIgnoreCase("0")) {
-                Fragment fragment = new TransparentPlayerFragment();
-                FragmentManager fragmentManager1 = getSupportFragmentManager();
-                fragmentManager1.beginTransaction()
-                        .add(R.id.flContainer, fragment)
-                        .commit();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
 //
 //        ConnectivityManager connMgr = (ConnectivityManager)
 //                getSystemService(Context.CONNECTIVITY_SERVICE);

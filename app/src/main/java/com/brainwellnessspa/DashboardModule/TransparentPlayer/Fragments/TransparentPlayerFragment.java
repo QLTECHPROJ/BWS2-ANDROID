@@ -93,9 +93,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     private long mLastClickTime = 0, totalDuration, currentDuration = 0;
     private Handler handler;
     long myProgress=0;
+    SharedPreferences shared;
     public static int isDisclaimer = 0;
-    public static boolean disclaimer = false;
-    public static boolean isRemoved = false;
+    public static boolean disclaimer = false,isPlayingDisclaimer = false;
+    public static boolean isRemoved = false,newClick = false;
 
     //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -156,7 +157,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
                 Log.e("myProgress old!!!",String.valueOf(myProgress));
                 if(myProgress == currentDuration && myProgress!=0 && !isPause){
-                    Log.e("myProgress",String.valueOf(myProgress));
+//                    Log.e("myProgress",String.valueOf(myProgress));
                     myCount++;
                     Log.e("myCount",String.valueOf(myCount));
 
@@ -219,7 +220,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         handler = new Handler();
-        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+          shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
@@ -265,7 +266,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //            listSize = arrayList.size();
 //            for (int i = 0; i < listSize; i++) {
 
-                if(!isRemoved) {
+                if(!isRemoved || newClick/* && !isPlayingDisclaimer && newClick*/) {
                     addDeclaimer();
                 }
                 mainPlayModel = new MainPlayModel();
@@ -296,7 +297,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 ViewAllAudioListModel.ResponseData.Detail arrayList = gson.fromJson(json, type);
 //            listSize = arrayList.size();
 //                for (int i = 0; i < listSize; i++) {
-                if(!isRemoved) {
+                if(!isRemoved || newClick/* && !isPlayingDisclaimer && newClick*/) {
                     addDeclaimer();
                 }
 
@@ -327,7 +328,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 AppointmentDetailModel.Audio arrayList = gson.fromJson(json, type);
 //            listSize = arrayList.size();
 //                for (int i = 0; i < listSize; i++) {
-                if(!isRemoved) {
+                if(!isRemoved || newClick/* && !isPlayingDisclaimer && newClick*/) {
                     addDeclaimer();
                 }
                 mainPlayModel = new MainPlayModel();
@@ -357,7 +358,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 DownloadAudioDetails arrayList = gson.fromJson(json, type);
 //                listSize = arrayList.size();
 //                for (int i = 0; i < listSize; i++) {
-                if(!isRemoved) {
+                if(!isRemoved || newClick/* && !isPlayingDisclaimer && newClick*/) {
                     addDeclaimer();
                 }
                 mainPlayModel = new MainPlayModel();
@@ -387,7 +388,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }.getType();
                 ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
                 listSize = arrayList.size();
-                if(!isRemoved) {
+                if(!isRemoved || newClick/* && !isPlayingDisclaimer && newClick*/) {
                     addDeclaimer();
                 }
                 for (int i = 0; i < listSize; i++) {
@@ -418,7 +419,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }.getType();
                 ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
                 listSize = arrayList.size();
-                if(!isRemoved) {
+                if(!isRemoved || newClick/* && !isPlayingDisclaimer && newClick*/) {
                     addDeclaimer();
                 }
                 for (int i = 0; i < listSize; i++) {
@@ -652,24 +653,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
             if(audioFile.equalsIgnoreCase("") || audioFile.isEmpty()){
                 isDisclaimer = 1;
-                binding.ivPlay.setClickable(false);
-                binding.ivPlay.setEnabled(false);
-                binding.ivPause.setClickable(false);
-                binding.ivPause.setEnabled(false);
-                binding.ivPlay.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
-                binding.ivPause.setColorFilter(getResources().getColor(R.color.light_gray), PorterDuff.Mode.SRC_IN);
                 binding.simpleSeekbar.setClickable(false);
                 binding.simpleSeekbar.setEnabled(false);
             }else{
                 isDisclaimer = 0;
-                binding.ivPlay.setClickable(true);
-                binding.ivPlay.setEnabled(true);
-                binding.ivPause.setClickable(true);
-                binding.ivPause.setEnabled(true);
                 binding.simpleSeekbar.setClickable(true);
                 binding.simpleSeekbar.setEnabled(true);
-                binding.ivPlay.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-                binding.ivPause.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
             }
         }
         if (isMediaStart) {
@@ -679,7 +668,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
         startTime = getStartTime();
 
-        addToRecentPlay();
+        if(!audioFile.equalsIgnoreCase("")) {
+            addToRecentPlay();
+        }
         binding.llPlayearMain.setOnClickListener(view -> {
             if (player == 0) {
                 player = 1;
@@ -720,6 +711,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //            mediaPlayer.setDataSource(String.valueOf(uri));
                 mediaPlayer.start();
                 isPrepare = true;
+                isPlayingDisclaimer = true;
                 isMediaStart = true;
         }else {
             if (null == mediaPlayer) {
@@ -833,7 +825,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 isDisclaimer = 0;
                 disclaimerPlayed = 1;
                 isRemoved = true;
+                isPlayingDisclaimer = false;
                 mainPlayModelList.remove(0);
+                position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             }
         }
         isPrepare = false;
@@ -1007,12 +1001,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             listSize = mainPlayModelList.size();
         }
-        if(listSize == 2){
-            if(mainPlayModelList.get(0).getAudioFile().equalsIgnoreCase("")&&!disclaimer){
-                disclaimer = true;
-                position = 0;
-            }
-        }
+
         if (listSize == 1) {
             position = 0;
         }

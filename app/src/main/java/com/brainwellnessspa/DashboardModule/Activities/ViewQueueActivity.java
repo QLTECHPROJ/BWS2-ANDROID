@@ -1020,6 +1020,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     Collections.swap(listModelList, i, i - 1);
                 }
             }
+            notifyItemMoved(fromPosition, toPosition);
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -1037,7 +1038,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);
             editor.commit();
             addToQueueModelList2 = listModelList;
-            notifyItemMoved(fromPosition, toPosition);
 
 
         }
