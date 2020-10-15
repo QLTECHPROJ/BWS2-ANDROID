@@ -100,7 +100,7 @@ public class ResourceActivity extends AppCompatActivity {
         dialogBox.getWindow().getDecorView().setBottom(100);
         dialogBox.getWindow().getDecorView().setRight(100);
         dialogBox.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        wlp.y = 170;
+        wlp.y = 190;
         wlp.x = 33;
         wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         window.setAttributes(wlp);

@@ -40,15 +40,13 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="1">
+                        android:orientation="horizontal">
 
                         <LinearLayout
                             android:id="@+id/rlCreatePlaylist"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_8sdp"
-                            android:layout_weight="0.45"
                             android:orientation="vertical"
                             android:gravity="center_horizontal"
                             android:visibility="visible">
@@ -97,14 +95,6 @@
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_15sdp" />
                         </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/_9sdp"
-                            android:layout_marginRight="@dimen/_16sdp"
-                            android:layout_weight="0.60"
-                            android:gravity="center_horizontal" />
 
                     </LinearLayout>
 

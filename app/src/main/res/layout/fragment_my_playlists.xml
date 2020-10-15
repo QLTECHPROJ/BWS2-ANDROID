@@ -6,13 +6,12 @@
         android:id="@+id/flContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:clickable="true">
 
         <RelativeLayout
             android:id="@+id/rlMainLayouts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clickable="false"
             android:background="@color/white"
             android:enabled="false">
 
@@ -21,15 +20,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white"
-                    android:layout_marginBottom="@dimen/_18sdp"
-                    android:clickable="false"
-                    android:enabled="false">
+                    android:layout_marginBottom="@dimen/_18sdp">
 
                     <RelativeLayout
                         android:id="@+id/llMainLayout"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_210sdp"
-                        android:clickable="false"
                         android:background="@color/white"
                         android:enabled="false">
 
@@ -37,16 +33,12 @@
                             android:id="@+id/ivBanner"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_centerInParent="true"
-                            android:clickable="false"
-                            android:enabled="false" />
+                            android:layout_centerInParent="true" />
 
                         <RelativeLayout
                             android:id="@+id/rlLayout"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_56sdp"
-                            android:clickable="false"
-                            android:enabled="false"
                             android:background="@drawable/top_transparent_gradient">
 
                             <LinearLayout
@@ -143,36 +135,29 @@
                             android:layout_alignParentBottom="true"
                             android:background="@drawable/transparent_gradient"
                             android:orientation="vertical"
-                            android:clickable="false"
-                            android:enabled="false"
                             android:paddingBottom="@dimen/_16sdp">
 
                             <TextView
                                 android:id="@+id/tvPlaylist"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="@dimen/_16sdp"
+                                android:paddingHorizontal="@dimen/_16sdp"
                                 android:fontFamily="@font/montserrat_semi_bold"
                                 android:gravity="start"
-                                android:text="Playlist"
-                                android:clickable="false"
-                                android:enabled="false"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_15sdp"
-                                android:visibility="gone" />
+                                android:visibility="visible" />
 
                             <TextView
                                 android:id="@+id/tvLibraryName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="@dimen/_16sdp"
-                                android:layout_marginTop="@dimen/_6sdp"
+                                android:paddingHorizontal="@dimen/_16sdp"
+                                android:paddingTop="@dimen/_6sdp"
                                 android:ellipsize="end"
                                 android:fontFamily="@font/montserrat_bold"
                                 android:gravity="start"
                                 android:maxLines="1"
-                                android:clickable="false"
-                                android:enabled="false"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_22sdp" />
 
@@ -180,12 +165,10 @@
                                 android:id="@+id/tvLibraryDetail"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="@dimen/_16sdp"
-                                android:layout_marginTop="@dimen/_6sdp"
+                                android:paddingHorizontal="@dimen/_16sdp"
+                                android:paddingTop="@dimen/_6sdp"
                                 android:fontFamily="@font/montserrat_medium"
                                 android:gravity="start"
-                                android:clickable="false"
-                                android:enabled="false"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_15sdp" />
 
@@ -306,45 +289,51 @@
                             </RelativeLayout>
                         </LinearLayout>
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tvTag"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_16sdp"
-                                android:layout_marginTop="@dimen/_20sdp"
-                                android:layout_marginRight="@dimen/_16sdp"
-                                android:fontFamily="@font/montserrat_bold"
-                                android:gravity="start"
-                                android:text="@string/Audios_in_Playlist"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/_16sdp"
-                                android:visibility="gone" />
+                            android:layout_height="match_parent">
 
                             <LinearLayout
-                                android:id="@+id/llSpace"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
 
-                                <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/rvPlayLists"
+                                <TextView
+                                    android:id="@+id/tvTag"
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:overScrollMode="never"
-                                    android:paddingBottom="@dimen/_30sdp" />
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/_16sdp"
+                                    android:layout_marginTop="@dimen/_20sdp"
+                                    android:layout_marginRight="@dimen/_16sdp"
+                                    android:fontFamily="@font/montserrat_bold"
+                                    android:gravity="start"
+                                    android:text="@string/Audios_in_Playlist"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_16sdp"
+                                    android:visibility="gone" />
+
+                                <LinearLayout
+                                    android:id="@+id/llSpace"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <androidx.recyclerview.widget.RecyclerView
+                                        android:id="@+id/rvPlayLists"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:overScrollMode="never"
+                                        android:paddingBottom="@dimen/_30sdp" />
+                                </LinearLayout>
+
                             </LinearLayout>
 
                             <LinearLayout
                                 android:id="@+id/llError"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_marginHorizontal="@dimen/_22sdp"
                                 android:layout_marginTop="@dimen/_20sdp"
-                                android:gravity="center"
+                                android:gravity="center_horizontal"
                                 android:orientation="vertical"
                                 android:visibility="gone">
 
@@ -353,7 +342,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/montserrat_regular"
-                                    android:gravity="center"
+                                    android:gravity="center_horizontal"
                                     android:textColor="@color/dark_blue_gray"
                                     android:textSize="@dimen/_15sdp" />
 
@@ -369,7 +358,8 @@
                                     android:visibility="gone" />
 
                             </LinearLayout>
-                        </LinearLayout>
+
+                        </RelativeLayout>
 
                     </LinearLayout>
                 </RelativeLayout>

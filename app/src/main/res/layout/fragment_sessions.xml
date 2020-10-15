@@ -3,11 +3,11 @@
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/flSession"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:clickable="true">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -27,19 +27,20 @@
                         android:id="@+id/ivRestaurantImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:clickable="false"
                         android:scaleType="fitXY" />
 
                     <RelativeLayout
                         android:id="@+id/rlLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_56sdp"
-                        android:layout_marginTop="@dimen/_33sdp">
+                        android:layout_height="@dimen/_90sdp"
+                        android:paddingTop="@dimen/_33sdp">
 
                         <LinearLayout
                             android:id="@+id/llBack"
                             android:layout_width="42dp"
                             android:layout_height="match_parent"
-                            android:layout_centerVertical="true"
+                            android:layout_alignParentBottom="true"
                             android:gravity="center">
 
                             <ImageView
@@ -53,7 +54,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
+                            android:layout_alignParentBottom="true"
                             android:fontFamily="@font/montserrat_bold"
                             android:gravity="center"
                             android:textColor="@color/black"

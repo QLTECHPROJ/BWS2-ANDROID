@@ -428,10 +428,6 @@ public class PlaylistFragment extends Fragment {
                     holder.binding.rvMainAudio.setAdapter(adapter4);
                 }
             }
-
-            if (!listModelList.get(position).getDetails().equals("")) {
-
-            }
         }
 
         @Override

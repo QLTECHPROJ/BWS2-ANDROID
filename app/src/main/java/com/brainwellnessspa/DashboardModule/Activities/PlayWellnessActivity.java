@@ -1167,52 +1167,56 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             startTime = getStartTime();
 
         } else if (audioPlay) {
-            listSize = mainPlayModelList.size();
-            if (listSize == 2) {
-                if (mainPlayModelList.get(0).getAudioFile().equalsIgnoreCase("") && !disclaimer) {
-                    disclaimer = true;
-                    position = 0;
+            try {
+                listSize = mainPlayModelList.size();
+                if (listSize == 2) {
+                    if (mainPlayModelList.get(0).getAudioFile().equalsIgnoreCase("") && !disclaimer) {
+                        disclaimer = true;
+                        position = 0;
+                    }
                 }
-            }
-            id = mainPlayModelList.get(position).getID();
-            name = mainPlayModelList.get(position).getName();
-            url = mainPlayModelList.get(position).getAudioFile();
-            if (url.equalsIgnoreCase("") || url.isEmpty()) {
-                isDisclaimer = 1;
-                callAllDisable(false);
+                id = mainPlayModelList.get(position).getID();
+                name = mainPlayModelList.get(position).getName();
+                url = mainPlayModelList.get(position).getAudioFile();
+                if (url.equalsIgnoreCase("") || url.isEmpty()) {
+                    isDisclaimer = 1;
+                    callAllDisable(false);
 
-            } else {
-                isDisclaimer = 0;
-                callAllDisable(true);
-            }
-            if (mainPlayModelList.get(position).getPlaylistID() == null) {
-                mainPlayModelList.get(position).setPlaylistID("");
-            }
-            GetMedia(url, ctx, mainPlayModelList.get(position).getDownload(), mainPlayModelList.get(position).getPlaylistID());
-            binding.tvName.setText(mainPlayModelList.get(position).getName());
-            if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
-                binding.llDirection.setVisibility(View.GONE);
-            } else {
-                binding.llDirection.setVisibility(View.VISIBLE);
-                binding.tvDireDesc.setText(mainPlayModelList.get(position).getAudioDirection());
-            }
-            binding.tvTitle.setText(mainPlayModelList.get(position).getAudiomastercat());
-            binding.tvDesc.setText(mainPlayModelList.get(position).getAudioSubCategory());
-            if(url.equalsIgnoreCase("")){
-                Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-            }else {
-                Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-            }
+                } else {
+                    isDisclaimer = 0;
+                    callAllDisable(true);
+                }
+                if (mainPlayModelList.get(position).getPlaylistID() == null) {
+                    mainPlayModelList.get(position).setPlaylistID("");
+                }
+                GetMedia(url, ctx, mainPlayModelList.get(position).getDownload(), mainPlayModelList.get(position).getPlaylistID());
+                binding.tvName.setText(mainPlayModelList.get(position).getName());
+                if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
+                    binding.llDirection.setVisibility(View.GONE);
+                } else {
+                    binding.llDirection.setVisibility(View.VISIBLE);
+                    binding.tvDireDesc.setText(mainPlayModelList.get(position).getAudioDirection());
+                }
+                binding.tvTitle.setText(mainPlayModelList.get(position).getAudiomastercat());
+                binding.tvDesc.setText(mainPlayModelList.get(position).getAudioSubCategory());
+                if(url.equalsIgnoreCase("")){
+                    Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                }else {
+                    /*TODO */                Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                }
 
-            if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
-                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-            } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
-                binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
+                    binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
+                    binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                }
+                binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
+                startTime = getStartTime();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
-            startTime = getStartTime();
         }
         if(!url.equalsIgnoreCase("")) {
             addToRecentPlay();
