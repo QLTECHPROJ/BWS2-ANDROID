@@ -273,11 +273,11 @@ public class AudioFragment extends Fragment {
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
             if (!AudioFlag.equalsIgnoreCase("0")) {
-               /* Fragment fragment = new TransparentPlayerFragment();
+                Fragment fragment = new TransparentPlayerFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                 fragmentManager1.beginTransaction()
                         .add(R.id.flContainer, fragment)
-                        .commit();*/
+                        .commit();
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(13, 6, 13, 260);
