@@ -433,7 +433,7 @@ public class AccountFragment extends Fragment {
                                     dialog.dismiss();
                                 });
                                 dialog.show();
-                                dialog.setCancelable(false);Premium Team Plan one
+                                dialog.setCancelable(false);
                             }*/
                         });
 

@@ -132,99 +132,100 @@ public class AddPlaylistActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<AddToPlaylist>() {
                 @Override
                 public void onResponse(Call<AddToPlaylist> call, Response<AddToPlaylist> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        AddToPlaylist listModels = response.body();
-                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                        int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                        Gson gsonx = new Gson();
-                        String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
-                        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-                        }.getType();
-                        ArrayList<MainPlayModel> mainPlayModelListold = new ArrayList<>();
-                        mainPlayModelListold = gsonx.fromJson(json, type);
-                        String id = mainPlayModelListold.get(pos).getID();
-                        ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
-                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs = new ArrayList<>();
-                        if (audioPlay) {
-                            if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
-                                for (int i = 0; i < listModels.getResponseData().size(); i++) {
-                                    MainPlayModel mainPlayModel = new MainPlayModel();
-                                    mainPlayModel.setID(listModels.getResponseData().get(i).getID());
-                                    mainPlayModel.setName(listModels.getResponseData().get(i).getName());
-                                    mainPlayModel.setAudioFile(listModels.getResponseData().get(i).getAudioFile());
-                                    mainPlayModel.setPlaylistID(listModels.getResponseData().get(i).getPlaylistID());
-                                    mainPlayModel.setAudioDirection(listModels.getResponseData().get(i).getAudioDirection());
-                                    mainPlayModel.setAudiomastercat(listModels.getResponseData().get(i).getAudiomastercat());
-                                    mainPlayModel.setAudioSubCategory(listModels.getResponseData().get(i).getAudioSubCategory());
-                                    mainPlayModel.setImageFile(listModels.getResponseData().get(i).getImageFile());
-                                    mainPlayModel.setLike(listModels.getResponseData().get(i).getLike());
-                                    mainPlayModel.setDownload(listModels.getResponseData().get(i).getDownload());
-                                    mainPlayModel.setAudioDuration(listModels.getResponseData().get(i).getAudioDuration());
-                                    mainPlayModelList.add(mainPlayModel);
-                                }
-                                for (int i = 0; i < listModels.getResponseData().size(); i++) {
-                                    SubPlayListModel.ResponseData.PlaylistSong mainPlayModel = new SubPlayListModel.ResponseData.PlaylistSong();
-                                    mainPlayModel.setID(listModels.getResponseData().get(i).getID());
-                                    mainPlayModel.setName(listModels.getResponseData().get(i).getName());
-                                    mainPlayModel.setAudioFile(listModels.getResponseData().get(i).getAudioFile());
-                                    mainPlayModel.setPlaylistID(listModels.getResponseData().get(i).getPlaylistID());
-                                    mainPlayModel.setAudioDirection(listModels.getResponseData().get(i).getAudioDirection());
-                                    mainPlayModel.setAudiomastercat(listModels.getResponseData().get(i).getAudiomastercat());
-                                    mainPlayModel.setAudioSubCategory(listModels.getResponseData().get(i).getAudioSubCategory());
-                                    mainPlayModel.setImageFile(listModels.getResponseData().get(i).getImageFile());
-                                    mainPlayModel.setLike(listModels.getResponseData().get(i).getLike());
-                                    mainPlayModel.setDownload(listModels.getResponseData().get(i).getDownload());
-                                    mainPlayModel.setAudioDuration(listModels.getResponseData().get(i).getAudioDuration());
-                                    playlistSongs.add(mainPlayModel);
-                                }
-
-                                for (int i = 0; i < mainPlayModelList.size(); i++) {
-                                    if (mainPlayModelList.get(i).getID().equalsIgnoreCase(id)) {
-                                        pos = i;
-                                        break;
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            AddToPlaylist listModels = response.body();
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                            int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                            Gson gsonx = new Gson();
+                            String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
+                            Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                            }.getType();
+                            ArrayList<MainPlayModel> mainPlayModelListold = new ArrayList<>();
+                            mainPlayModelListold = gsonx.fromJson(json, type);
+                            String id = mainPlayModelListold.get(pos).getID();
+                            ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
+                            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs = new ArrayList<>();
+                            if (audioPlay) {
+                                if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                                    for (int i = 0; i < listModels.getResponseData().size(); i++) {
+                                        MainPlayModel mainPlayModel = new MainPlayModel();
+                                        mainPlayModel.setID(listModels.getResponseData().get(i).getID());
+                                        mainPlayModel.setName(listModels.getResponseData().get(i).getName());
+                                        mainPlayModel.setAudioFile(listModels.getResponseData().get(i).getAudioFile());
+                                        mainPlayModel.setPlaylistID(listModels.getResponseData().get(i).getPlaylistID());
+                                        mainPlayModel.setAudioDirection(listModels.getResponseData().get(i).getAudioDirection());
+                                        mainPlayModel.setAudiomastercat(listModels.getResponseData().get(i).getAudiomastercat());
+                                        mainPlayModel.setAudioSubCategory(listModels.getResponseData().get(i).getAudioSubCategory());
+                                        mainPlayModel.setImageFile(listModels.getResponseData().get(i).getImageFile());
+                                        mainPlayModel.setLike(listModels.getResponseData().get(i).getLike());
+                                        mainPlayModel.setDownload(listModels.getResponseData().get(i).getDownload());
+                                        mainPlayModel.setAudioDuration(listModels.getResponseData().get(i).getAudioDuration());
+                                        mainPlayModelList.add(mainPlayModel);
                                     }
+                                    for (int i = 0; i < listModels.getResponseData().size(); i++) {
+                                        SubPlayListModel.ResponseData.PlaylistSong mainPlayModel = new SubPlayListModel.ResponseData.PlaylistSong();
+                                        mainPlayModel.setID(listModels.getResponseData().get(i).getID());
+                                        mainPlayModel.setName(listModels.getResponseData().get(i).getName());
+                                        mainPlayModel.setAudioFile(listModels.getResponseData().get(i).getAudioFile());
+                                        mainPlayModel.setPlaylistID(listModels.getResponseData().get(i).getPlaylistID());
+                                        mainPlayModel.setAudioDirection(listModels.getResponseData().get(i).getAudioDirection());
+                                        mainPlayModel.setAudiomastercat(listModels.getResponseData().get(i).getAudiomastercat());
+                                        mainPlayModel.setAudioSubCategory(listModels.getResponseData().get(i).getAudioSubCategory());
+                                        mainPlayModel.setImageFile(listModels.getResponseData().get(i).getImageFile());
+                                        mainPlayModel.setLike(listModels.getResponseData().get(i).getLike());
+                                        mainPlayModel.setDownload(listModels.getResponseData().get(i).getDownload());
+                                        mainPlayModel.setAudioDuration(listModels.getResponseData().get(i).getAudioDuration());
+                                        playlistSongs.add(mainPlayModel);
+                                    }
+
+                                    for (int i = 0; i < mainPlayModelList.size(); i++) {
+                                        if (mainPlayModelList.get(i).getID().equalsIgnoreCase(id)) {
+                                            pos = i;
+                                            break;
+                                        }
+                                    }
+                                    SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedd.edit();
+                                    Gson gson = new Gson();
+                                    String jsonx = gson.toJson(mainPlayModelList);
+                                    String json1 = gson.toJson(playlistSongs);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
+                                    editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                                    editor.putInt(CONSTANTS.PREF_KEY_position, pos);
+                                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistID);
+                                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist");
+                                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
+                                    editor.commit();
                                 }
-                                SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedd.edit();
-                                Gson gson = new Gson();
-                                String jsonx = gson.toJson(mainPlayModelList);
-                                String json1 = gson.toJson(playlistSongs);
-                                editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
-                                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                                editor.putInt(CONSTANTS.PREF_KEY_position, pos);
-                                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistID);
-                                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "myPlaylist");
-                                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
-                                editor.commit();
                             }
-                        }
-                        if (comeAddPlaylist == 1) {
-                            final Dialog dialog = new Dialog(ctx);
-                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            dialog.setContentView(R.layout.go_to_playlist);
-                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-                            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                            final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-                            final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+                            if (comeAddPlaylist == 1) {
+                                final Dialog dialog = new Dialog(ctx);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.go_to_playlist);
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+                                final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
 
-                            dialog.setOnKeyListener((v, keyCode, event) -> {
-                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                dialog.setOnKeyListener((v, keyCode, event) -> {
+                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                        dialog.dismiss();
+                                        return true;
+                                    }
+                                    return false;
+                                });
+
+                                rlCreate.setOnClickListener(view2 -> {
+                                    addToPlayList = true;
+                                    MyPlaylistId = PlaylistID;
                                     dialog.dismiss();
-                                    return true;
-                                }
-                                return false;
-                            });
-
-                            rlCreate.setOnClickListener(view2 -> {
-                                addToPlayList = true;
-                                MyPlaylistId = PlaylistID;
-                                dialog.dismiss();
-                                finish();
+                                    finish();
                                                                 /*Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                                                                 Bundle bundle = new Bundle();
                                                                 bundle.putString("New", "0");
@@ -236,20 +237,20 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                                                 fragmentManager1.beginTransaction()
                                                                         .replace(R.id.flContainer, myPlaylistsFragment)
                                                                         .commit();*/
-                            });
+                                });
 
-                            tvCancel.setOnClickListener(v -> {
-                                dialog.dismiss();
+                                tvCancel.setOnClickListener(v -> {
+                                    dialog.dismiss();
+                                    finish();
+                                });
+                                dialog.show();
+                                dialog.setCancelable(false);
+                            } else {
+                                BWSApplication.showToast(listModels.getResponseMessage(), ctx);
+                                if (d.equalsIgnoreCase("0")) {
+                                    dialog.dismiss();
+                                }
                                 finish();
-                            });
-                            dialog.show();
-                            dialog.setCancelable(false);
-                        } else {
-                            BWSApplication.showToast(listModels.getResponseMessage(), ctx);
-                            if (d.equalsIgnoreCase("0")) {
-                                dialog.dismiss();
-                            }
-                            finish();
                                                             /*final Dialog dialog = new Dialog(ctx);
                                                             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                                             dialog.setContentView(R.layout.go_to_playlist);
@@ -289,7 +290,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                                             });
                                                             dialog.show();
                                                             dialog.setCancelable(false);*/
+                            }
                         }
+                    }catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

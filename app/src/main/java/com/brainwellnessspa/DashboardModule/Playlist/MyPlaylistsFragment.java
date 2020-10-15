@@ -124,6 +124,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     Runnable UpdateSongTime2;
     int SongListSize = 0, count;
     private Handler handler1, handler2;
+
 //    private Runnable UpdateSongTime1 = new Runnable() {
 //        @Override
 //        public void run() {
@@ -199,20 +200,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             PlaylistImage = getArguments().getString("PlaylistImage");
             MyDownloads = getArguments().getString("MyDownloads");
         }
-        binding.rlMainLayouts.setClickable(false);
-        binding.rlMainLayouts.setEnabled(false);
-        binding.llMainLayout.setClickable(false);
-        binding.llMainLayout.setEnabled(false);
-        binding.rlLayout.setClickable(false);
-        binding.rlLayout.setEnabled(false);
-        binding.ivBanner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.ivBanner.setClickable(false);
-                binding.ivBanner.setEnabled(false);
-            }
-        });
+
         binding.llBack.setOnClickListener(view1 -> callBack());
+
         if (BWSApplication.isNetworkConnected(getActivity()) && !MyDownloads.equalsIgnoreCase("1")) {
             binding.llMore.setVisibility(View.VISIBLE);
             binding.llMore.setClickable(true);
@@ -1940,7 +1930,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         i.putExtra("comeFrom", "myPlayList");
                         startActivity(i);
                     }
-                }else{
+                } else {
                     Intent i = new Intent(ctx, AddQueueActivity.class);
                     i.putExtra("play", "playlist");
                     i.putExtra("ID", mData.get(position).getID());

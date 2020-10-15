@@ -112,6 +112,7 @@ public class PlaylistFragment extends Fragment {
     private void callMyPlaylistsFragment(String s, String id, String name, String playlistImage, String MyDownloads) {
         try {
             comefrom_search = 0;
+//            bi
             Bundle bundle = new Bundle();
             Fragment myPlaylistsFragment = new MyPlaylistsFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();

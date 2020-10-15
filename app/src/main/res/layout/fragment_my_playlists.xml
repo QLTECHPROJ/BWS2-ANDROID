@@ -11,29 +11,39 @@
         <RelativeLayout
             android:id="@+id/rlMainLayouts"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:enabled="false">
 
                 <RelativeLayout
                     android:id="@+id/rlMainLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/_18sdp">
+                    android:layout_marginBottom="@dimen/_18sdp"
+                    android:clickable="false"
+                    android:enabled="false">
 
                     <RelativeLayout
                         android:id="@+id/llMainLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_210sdp">
+                        android:layout_height="@dimen/_210sdp"
+                        android:clickable="false"
+                        android:enabled="false">
 
                         <ImageView
                             android:id="@+id/ivBanner"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_centerInParent="true" />
+                            android:layout_centerInParent="true"
+                            android:clickable="false"
+                            android:enabled="false" />
 
                         <RelativeLayout
                             android:id="@+id/rlLayout"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_56sdp"
+                            android:clickable="false"
+                            android:enabled="false"
                             android:background="@drawable/top_transparent_gradient">
 
                             <LinearLayout
