@@ -238,6 +238,15 @@ public class OtpActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (smsReceiver != null) {
+            unregisterReceiver(smsReceiver);
+        }
+    }
+
+
+    @Override
     public void onResume() {
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("otp"));
         super.onResume();

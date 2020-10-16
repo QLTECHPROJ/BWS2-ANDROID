@@ -92,7 +92,7 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
         binding.edtOTP2.setOnKeyListener(new PinOnKeyListener(1));
         binding.edtOTP3.setOnKeyListener(new PinOnKeyListener(2));
         binding.edtOTP4.setOnKeyListener(new PinOnKeyListener(3));
-
+        startSMSListener();
         binding.txtError.setText("");
         binding.txtError.setVisibility(View.GONE);
 
@@ -250,6 +250,13 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
     @Override
     public void onOTPReceivedError(String error) {
 //        showToast(error);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (smsReceiver != null) {
+            unregisterReceiver(smsReceiver);
+        }
     }
 
     @Override
