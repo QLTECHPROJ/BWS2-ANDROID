@@ -192,8 +192,11 @@ public class OtpActivity extends AppCompatActivity implements
                 // API successfully started
             });
 
-            task.addOnFailureListener(e -> {
-                /* Fail to start API */
+            task.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    /* Fail to start API */
+                }
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -212,9 +215,9 @@ public class OtpActivity extends AppCompatActivity implements
         } else if (otp.startsWith("?<#?> Your OTP is")) {
             splited = otp.split(" ");
         } else {
-            splited = otp.split("is ");
+            splited = otp.split(" ");
         }
-        String message = splited[7];
+        String message = splited[4];
         binding.edtOTP1.setText(String.valueOf(message.charAt(0)));
         binding.edtOTP2.setText(String.valueOf(message.charAt(1)));
         binding.edtOTP3.setText(String.valueOf(message.charAt(2)));

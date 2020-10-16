@@ -229,7 +229,7 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
         } else {
             splited = otp.split("is ");
         }
-        String message = splited[7];
+        String message = splited[4];
         binding.edtOTP1.setText(String.valueOf(message.charAt(0)));
         binding.edtOTP2.setText(String.valueOf(message.charAt(1)));
         binding.edtOTP3.setText(String.valueOf(message.charAt(2)));
