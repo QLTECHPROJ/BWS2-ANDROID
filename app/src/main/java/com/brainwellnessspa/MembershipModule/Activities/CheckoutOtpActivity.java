@@ -251,6 +251,7 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
     public void onOTPReceivedError(String error) {
 //        showToast(error);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

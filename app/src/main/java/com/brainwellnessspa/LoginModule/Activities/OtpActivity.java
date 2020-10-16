@@ -180,13 +180,10 @@ public class OtpActivity extends AppCompatActivity implements
         try {
             smsReceiver = new SmsReceiver();
             smsReceiver.setOTPListener(this);
-
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION);
             this.registerReceiver(smsReceiver, intentFilter);
-
             SmsRetrieverClient client = SmsRetriever.getClient(this);
-
             Task<Void> task = client.startSmsRetriever();
             task.addOnSuccessListener(aVoid -> {
                 // API successfully started
