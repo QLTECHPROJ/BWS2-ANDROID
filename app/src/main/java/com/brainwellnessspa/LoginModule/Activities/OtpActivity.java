@@ -98,7 +98,7 @@ public class OtpActivity extends AppCompatActivity implements
         binding.edtOTP2.setOnKeyListener(new PinOnKeyListener(1));
         binding.edtOTP3.setOnKeyListener(new PinOnKeyListener(2));
         binding.edtOTP4.setOnKeyListener(new PinOnKeyListener(3));
-
+        startSMSListener();
         binding.txtError.setText("");
         binding.txtError.setVisibility(View.GONE);
 
@@ -206,6 +206,10 @@ public class OtpActivity extends AppCompatActivity implements
         if (otp.startsWith("[#] Your OTP is")) {
             splited = otp.split(" ");
         } else if (otp.startsWith("(#) Your OTP is")) {
+            splited = otp.split(" ");
+        } else if (otp.startsWith("<#> Your OTP is")) {
+            splited = otp.split(" ");
+        } else if (otp.startsWith("?<#?> Your OTP is")) {
             splited = otp.split(" ");
         } else {
             splited = otp.split("is ");
