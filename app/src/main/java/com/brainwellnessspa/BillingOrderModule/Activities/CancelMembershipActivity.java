@@ -7,12 +7,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -42,6 +45,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     Context ctx;
     String UserID, CancelId = "";
     Activity activity;
+    public static final String API_KEY = "AIzaSyCzqUwQUD58tA8wrINDc1OnL0RgcU52jzQ";
+    public static final String VIDEO_ID = "y1rfRW6WX08";
     private static final int RECOVERY_DIALOG_REQUEST = 1;
 
     @Override
@@ -58,12 +63,12 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
 //            isPause = false;
         });
 
+        binding.youtubeView.initialize(API_KEY, this);
+
         if (isMediaStart) {
             pauseMedia();
         } else {
         }
-
-        binding.youtubeView.initialize("AIzaSyD43ZM6bESb_pdSPzgcuCzKy8yD_45mlT8", this);
 
         binding.cbOne.setOnClickListener(view -> {
             binding.cbOne.setChecked(true);
@@ -119,9 +124,8 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                 dialog.setContentView(R.layout.cancel_membership);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
                 final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+                final Button Btn = dialog.findViewById(R.id.Btn);
 
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -136,32 +140,45 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                     return false;
                 });
 
-                tvconfirm.setOnClickListener(v -> {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, binding.edtCancelBox.getText().toString());
-                        listCall.enqueue(new Callback<CancelPlanModel>() {
-                            @Override
-                            public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
-                                if (response.isSuccessful()) {
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                    CancelPlanModel model = response.body();
-                                    BWSApplication.showToast(model.getResponseMessage(), ctx);
-                                    dialog.dismiss();
-                                    resumeMedia();
-                                    isPause = false;
-                                    finish();
-                                }
-                            }
+                Btn.setOnTouchListener((view1, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN: {
+                            Button views = (Button) view1;
+                            views.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
+                            view1.invalidate();
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP:
+                            if (BWSApplication.isNetworkConnected(ctx)) {
+                                Call<CancelPlanModel> listCall = APIClient.getClient().getCancelPlan(UserID, CancelId, binding.edtCancelBox.getText().toString());
+                                listCall.enqueue(new Callback<CancelPlanModel>() {
+                                    @Override
+                                    public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
+                                        if (response.isSuccessful()) {
+                                            CancelPlanModel model = response.body();
+                                            BWSApplication.showToast(model.getResponseMessage(), ctx);
+                                            dialog.dismiss();
+                                            resumeMedia();
+                                            isPause = false;
+                                            finish();
+                                        }
+                                    }
 
-                            @Override
-                            public void onFailure(Call<CancelPlanModel> call, Throwable t) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                    @Override
+                                    public void onFailure(Call<CancelPlanModel> call, Throwable t) {
+                                    }
+                                });
+                            } else {
+                                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                             }
-                        });
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                        case MotionEvent.ACTION_CANCEL: {
+                            Button views = (Button) view1;
+                            views.getBackground().clearColorFilter();
+                            views.invalidate();
+                            break;
+                        }
                     }
+                    return true;
                 });
 
                 tvGoBack.setOnClickListener(v -> {
@@ -179,15 +196,6 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (isMediaStart) {
-            pauseMedia();
-        } else {
-        }
-    }
-
-    @Override
     public void onBackPressed() {
         finish();
 //        resumeMedia();
@@ -198,10 +206,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer
             youTubePlayer, boolean wasRestored) {
         if (!wasRestored) {
-            youTubePlayer.cueVideo("y1rfRW6WX08");
-            youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-      /*      PlayerUIController uiController = youTubePlayerView.getPlayerUIController();
-            player.showVideoTitle(false);*/
+            youTubePlayer.loadVideo(VIDEO_ID);
             youTubePlayer.setShowFullscreenButton(true);
         }
     }
@@ -220,7 +225,7 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RECOVERY_DIALOG_REQUEST) {
-            getYouTubePlayerProvider().initialize("AIzaSyD43ZM6bESb_pdSPzgcuCzKy8yD_45mlT8", this);
+            getYouTubePlayerProvider().initialize(API_KEY, this);
         }
     }
 

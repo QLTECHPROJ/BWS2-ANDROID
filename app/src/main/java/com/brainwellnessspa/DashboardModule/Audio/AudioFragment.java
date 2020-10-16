@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BillingOrderModule.Activities.CancelMembershipActivity;
+import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.brainwellnessspa.BWSApplication;
@@ -296,6 +297,7 @@ public class AudioFragment extends Fragment {
     public void onResume() {
         super.onResume();
         prepareData();
+        SplashScreenActivity.getLatasteUpdate(getActivity());
     }
 
     public class MainAudioListAdapter extends RecyclerView.Adapter<MainAudioListAdapter.MyViewHolder> {

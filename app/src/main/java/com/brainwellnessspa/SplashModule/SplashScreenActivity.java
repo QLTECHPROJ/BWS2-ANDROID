@@ -72,7 +72,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     public static void getLatasteUpdate(Context context) {
-        String appURI = "";
+        String appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa";
         if (BWSApplication.isNetworkConnected(context)) {
             Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(BuildConfig.VERSION_NAME, CONSTANTS.FLAG_ONE);
             listCall.enqueue(new Callback<VersionModel>() {
@@ -85,17 +85,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                             builder.setTitle("New Version");
                             builder.setCancelable(false);
                             builder.setMessage("There is a newer version available for download! Please update the app by visiting the Play Store")
-                                    .setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI)));
-                                            dialog.cancel();
-                                        }
+                                    .setPositiveButton("Update", (dialog, id) -> {
+                                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI)));
+                                        dialog.cancel();
                                     })
-                                    .setNegativeButton("Later", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.dismiss();
-                                        }
-                                    });
+                                    .setNegativeButton("Later", (dialog, id) -> dialog.dismiss());
                             builder.create().show();
                         } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("1")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);

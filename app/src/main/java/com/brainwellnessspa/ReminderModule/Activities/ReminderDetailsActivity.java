@@ -424,7 +424,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             if (direction == ItemTouchHelper.LEFT) {
                 final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.cancel_membership);
+                dialog.setContentView(R.layout.reminder_layout);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 

@@ -150,14 +150,14 @@ public class MainPlayListModel {
             protected Detail(Parcel in) {
                 playlistID = in.readString();
                 totalAudio = in.readString();
+                totalhour = in.readString();
+                totalminute = in.readString();
                 playlistName = in.readString();
                 playlistDesc = in.readString();
                 masterCategory = in.readString();
                 subCategory = in.readString();
                 playlistImage = in.readString();
                 playlistId = in.readString();
-                totalhour = in.readString();
-                totalminute = in.readString();
                 audiolist = in.createTypedArrayList(Audiolist.CREATOR);
             }
 
@@ -274,14 +274,14 @@ public class MainPlayListModel {
             public void writeToParcel(Parcel parcel, int i) {
                 parcel.writeString(playlistID);
                 parcel.writeString(totalAudio);
+                parcel.writeString(totalhour);
+                parcel.writeString(totalminute);
                 parcel.writeString(playlistName);
                 parcel.writeString(playlistDesc);
                 parcel.writeString(masterCategory);
                 parcel.writeString(subCategory);
                 parcel.writeString(playlistImage);
                 parcel.writeString(playlistId);
-                parcel.writeString(totalhour);
-                parcel.writeString(totalminute);
             }
 
             public static class Audiolist implements Parcelable {

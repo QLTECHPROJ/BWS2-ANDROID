@@ -600,100 +600,104 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void getPrepareShowData() {
-        if (queuePlay) {
-            listSize = addToQueueModelList.size();
-            if (listSize == 1) {
-                position = 0;
-            }
-            if (position == listSize) {
-                position = position - 1;
-            }
-            if (listSize != 0) {
-                id = addToQueueModelList.get(position).getID();
-                name = addToQueueModelList.get(position).getName();
-                audioFile = addToQueueModelList.get(position).getAudioFile();
-                GetMedia(audioFile, ctx);
-                Glide.with(ctx).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                binding.tvTitle.setText(addToQueueModelList.get(position).getName());
-                binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
-                handler.postDelayed(UpdateSongTime, 100);
-            }
-        } else if (audioPlay) {
-            listSize = mainPlayModelList.size();
-            if (listSize == 1) {
-                position = 0;
-            }
-            if (listSize != 0) {
-                id = mainPlayModelList.get(position).getID();
-                name = mainPlayModelList.get(position).getName();
-                audioFile = mainPlayModelList.get(position).getAudioFile();
-                if (audioFile.equalsIgnoreCase("")) {
-                    Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                } else {
-                    Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                }
-                binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-                binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
-                GetMedia(audioFile, ctx);
-                handler.postDelayed(UpdateSongTime, 100);
-                if (audioFile.equalsIgnoreCase("") || audioFile.isEmpty()) {
-                    isDisclaimer = 1;
-                    binding.simpleSeekbar.setClickable(false);
-                    binding.simpleSeekbar.setEnabled(false);
-                } else {
-                    isDisclaimer = 0;
-                    binding.simpleSeekbar.setClickable(true);
-                    binding.simpleSeekbar.setEnabled(true);
-                }
-            }
-
-        }
-        if (isMediaStart) {
-            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
-            });
-        }
-        startTime = getStartTime();
-
-        if (!audioFile.equalsIgnoreCase("")) {
-            addToRecentPlay();
-        }
-        binding.llPlayearMain.setOnClickListener(view -> {
-            if (player == 0) {
-                player = 1;
-            }
-            if (!isPause && binding.progressBar.getVisibility() == View.GONE) {
-                isPause = false;
-                isprogressbar = false;
-            } else if (isPause && binding.progressBar.getVisibility() == View.GONE) {
-                isPause = true;
-                isprogressbar = false;
-            } else if (isCompleteStop && binding.progressBar.getVisibility() == View.GONE) {
-                isCompleteStop = true;
-                isprogressbar = false;
-            } else if (binding.progressBar.getVisibility() == View.VISIBLE && (binding.ivPause.getVisibility() == View.GONE && binding.ivPlay.getVisibility() == View.GONE)) {
-                isprogressbar = true;
-            }
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-            SharedPreferences.Editor editor = shared.edit();
-            Gson gson = new Gson();
-            String json = gson.toJson(mainPlayModelList);
-            editor.putString(CONSTANTS.PREF_KEY_audioList, json);
-            String json1 = gson.toJson(addToQueueModelList);
+        try {
             if (queuePlay) {
-                editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
+                listSize = addToQueueModelList.size();
+                if (listSize == 1) {
+                    position = 0;
+                }
+                if (position == listSize) {
+                    position = position - 1;
+                }
+                if (listSize != 0) {
+                    id = addToQueueModelList.get(position).getID();
+                    name = addToQueueModelList.get(position).getName();
+                    audioFile = addToQueueModelList.get(position).getAudioFile();
+                    GetMedia(audioFile, ctx);
+                    Glide.with(ctx).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                    binding.tvTitle.setText(addToQueueModelList.get(position).getName());
+                    binding.tvSubTitle.setText(addToQueueModelList.get(position).getAudioDirection());
+                    handler.postDelayed(UpdateSongTime, 100);
+                }
+            } else if (audioPlay) {
+                listSize = mainPlayModelList.size();
+                if (listSize == 1) {
+                    position = 0;
+                }
+                if (listSize != 0) {
+                    id = mainPlayModelList.get(position).getID();
+                    name = mainPlayModelList.get(position).getName();
+                    audioFile = mainPlayModelList.get(position).getAudioFile();
+                    if (audioFile.equalsIgnoreCase("")) {
+                        Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                    } else {
+                        Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                    }
+                    binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+                    binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
+                    GetMedia(audioFile, ctx);
+                    handler.postDelayed(UpdateSongTime, 100);
+                    if (audioFile.equalsIgnoreCase("") || audioFile.isEmpty()) {
+                        isDisclaimer = 1;
+                        binding.simpleSeekbar.setClickable(false);
+                        binding.simpleSeekbar.setEnabled(false);
+                    } else {
+                        isDisclaimer = 0;
+                        binding.simpleSeekbar.setClickable(true);
+                        binding.simpleSeekbar.setEnabled(true);
+                    }
+                }
+
             }
-            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-            editor.commit();
-            Intent i = new Intent(ctx, PlayWellnessActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            ctx.startActivity(i);
+            if (isMediaStart) {
+                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                    callComplete();
+                });
+            }
+            startTime = getStartTime();
+
+            if (!audioFile.equalsIgnoreCase("")) {
+                addToRecentPlay();
+            }
+            binding.llPlayearMain.setOnClickListener(view -> {
+                if (player == 0) {
+                    player = 1;
+                }
+                if (!isPause && binding.progressBar.getVisibility() == View.GONE) {
+                    isPause = false;
+                    isprogressbar = false;
+                } else if (isPause && binding.progressBar.getVisibility() == View.GONE) {
+                    isPause = true;
+                    isprogressbar = false;
+                } else if (isCompleteStop && binding.progressBar.getVisibility() == View.GONE) {
+                    isCompleteStop = true;
+                    isprogressbar = false;
+                } else if (binding.progressBar.getVisibility() == View.VISIBLE && (binding.ivPause.getVisibility() == View.GONE && binding.ivPlay.getVisibility() == View.GONE)) {
+                    isprogressbar = true;
+                }
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(mainPlayModelList);
+                editor.putString(CONSTANTS.PREF_KEY_audioList, json);
+                String json1 = gson.toJson(addToQueueModelList);
+                if (queuePlay) {
+                    editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
+                }
+                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                editor.commit();
+                Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                ctx.startActivity(i);
 
 //            simpleNotification();
-        });
+            });
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {

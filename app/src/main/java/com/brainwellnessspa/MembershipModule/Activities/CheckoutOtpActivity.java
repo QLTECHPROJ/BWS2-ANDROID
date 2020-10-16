@@ -1,8 +1,10 @@
 package com.brainwellnessspa.MembershipModule.Activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -20,8 +22,14 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.brainwellnessspa.Utility.SmsReceiver;
+import com.facebook.appevents.AppEventsLogger;
+import com.google.android.gms.auth.api.phone.SmsRetriever;
+import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.brainwellnessspa.BWSApplication;
@@ -40,7 +48,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckoutOtpActivity extends AppCompatActivity {
+public class CheckoutOtpActivity extends AppCompatActivity implements
+        SmsReceiver.OTPReceiveListener {
     String Name, Code, MobileNo;
     private EditText[] editTexts;
     boolean tvSendOTPbool = true;
@@ -53,6 +62,9 @@ public class CheckoutOtpActivity extends AppCompatActivity {
     CountDownTimer countDownTimer;
     private long mLastClickTime = 0;
     public static int comeRegister = 0;
+    private SmsReceiver smsReceiver;
+    private BroadcastReceiver receiver;
+//    AppEventsLogger logger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +81,7 @@ public class CheckoutOtpActivity extends AppCompatActivity {
         }
         activity = CheckoutOtpActivity.this;
         ctx = CheckoutOtpActivity.this;
+//        logger = AppEventsLogger.newLogger(this);
         binding.tvSendCodeText.setText("We sent an SMS with a 4-digit code to " + Code + MobileNo);
         editTexts = new EditText[]{binding.edtOTP1, binding.edtOTP2, binding.edtOTP3, binding.edtOTP4};
         binding.edtOTP1.addTextChangedListener(new PinTextWatcher(0));
@@ -180,6 +193,75 @@ public class CheckoutOtpActivity extends AppCompatActivity {
         i.putExtra("Code", Code);
         startActivity(i);
         finish();
+    }
+
+    private void startSMSListener() {
+        try {
+            smsReceiver = new SmsReceiver();
+            smsReceiver.setOTPListener(this);
+
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION);
+            this.registerReceiver(smsReceiver, intentFilter);
+
+            SmsRetrieverClient client = SmsRetriever.getClient(this);
+
+            Task<Void> task = client.startSmsRetriever();
+            task.addOnSuccessListener(aVoid -> {
+                // API successfully started
+            });
+
+            task.addOnFailureListener(e -> {
+                /* Fail to start API */
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onOTPReceived(String otp) {
+        String[] splited = new String[0];
+        if (otp.startsWith("[#] Your OTP is")) {
+            splited = otp.split(" ");
+        } else if (otp.startsWith("(#) Your OTP is")) {
+            splited = otp.split(" ");
+        } else {
+            splited = otp.split("is ");
+        }
+        String message = splited[7];
+        binding.edtOTP1.setText(String.valueOf(message.charAt(0)));
+        binding.edtOTP2.setText(String.valueOf(message.charAt(1)));
+        binding.edtOTP3.setText(String.valueOf(message.charAt(2)));
+        binding.edtOTP4.setText(String.valueOf(message.charAt(3)));
+
+        if (smsReceiver != null) {
+            unregisterReceiver(smsReceiver);
+            smsReceiver = null;
+        }
+    }
+
+    @Override
+    public void onOTPTimeOut() {
+//        showToast("OTP Time out");
+
+    }
+
+    @Override
+    public void onOTPReceivedError(String error) {
+//        showToast(error);
+    }
+
+    @Override
+    public void onResume() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("otp"));
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     void prepareData() {

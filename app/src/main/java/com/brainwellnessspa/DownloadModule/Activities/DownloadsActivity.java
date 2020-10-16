@@ -44,6 +44,10 @@ public class DownloadsActivity extends AppCompatActivity {
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
+        binding.llBack.setOnClickListener(view -> {
+            comefromDownload = "0";
+            finish();
+        });
         try {
             if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -72,10 +76,7 @@ public class DownloadsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        binding.llBack.setOnClickListener(view -> {
-            comefromDownload = "0";
-            finish();
-        });
+
         prepareData();
     }
 

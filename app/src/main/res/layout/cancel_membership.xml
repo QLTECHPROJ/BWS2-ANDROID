@@ -58,24 +58,20 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <RelativeLayout
-                    android:id="@+id/tvconfirm"
+
+                <Button
+                    android:id="@+id/Btn"
                     android:layout_width="120dp"
                     android:layout_height="@dimen/_35sdp"
+                    android:background="@drawable/extra_blue_corner"
                     android:layout_gravity="center"
-                    android:background="@drawable/extra_blue_corner">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:text="Confirm"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/_14sdp" />
-
-                </RelativeLayout>
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="Confirm"
+                    android:gravity="center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp" />
 
                 <TextView
                     android:id="@+id/tvGoBack"

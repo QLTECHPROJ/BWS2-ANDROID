@@ -665,7 +665,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             downloadPlaylistDetails.setIsReminder(listModel.getResponseData().getIsReminder());
                             downloadPlaylistDetails.setPlaylistMastercat(listModel.getResponseData().getPlaylistMastercat());
                             downloadPlaylistDetails.setPlaylistSubcat(listModel.getResponseData().getPlaylistSubcat());
-                            downloadPlaylistDetails.setPlaylistImage(listModel.getResponseData().getPlaylistImage());
+                            downloadPlaylistDetails.setPlaylistImage(listModel.getResponseData().getSquarePlaylistImage());
                             downloadPlaylistDetails.setTotalAudio(listModel.getResponseData().getTotalAudio());
                             downloadPlaylistDetails.setTotalDuration(listModel.getResponseData().getTotalDuration());
                             downloadPlaylistDetails.setTotalhour(listModel.getResponseData().getTotalhour());
@@ -1427,6 +1427,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     handler2.postDelayed(this, 300);
                 }
             };
+
+            if (Created.equalsIgnoreCase("1")) {
+                binding.tvSearch.setVisibility(View.VISIBLE);
+                binding.searchView.setVisibility(View.GONE);
+            } else if (Created.equalsIgnoreCase("0")) {
+                binding.tvSearch.setVisibility(View.GONE);
+                binding.searchView.setVisibility(View.VISIBLE);
+            }
             if (fileNameList.size() != 0) {
              /*   for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {

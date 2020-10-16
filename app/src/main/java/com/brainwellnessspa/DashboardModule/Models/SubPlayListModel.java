@@ -82,6 +82,9 @@ public class SubPlayListModel {
         @SerializedName("PlaylistImage")
         @Expose
         private String playlistImage;
+        @SerializedName("PlaylistImageSquare")
+        @Expose
+        private String squarePlaylistImage;
         @SerializedName("PlaylistImageDetail")
         @Expose
         private String playlistImageDetail;
@@ -117,9 +120,13 @@ public class SubPlayListModel {
             playlistID = in.readString();
             playlistName = in.readString();
             playlistDesc = in.readString();
+            reminderDay = in.readString();
+            reminderTime = in.readString();
+            IsReminder = in.readString();
             playlistMastercat = in.readString();
             playlistSubcat = in.readString();
             playlistImage = in.readString();
+            squarePlaylistImage = in.readString();
             playlistImageDetail = in.readString();
             totalAudio = in.readString();
             totalDuration = in.readString();
@@ -128,9 +135,6 @@ public class SubPlayListModel {
             created = in.readString();
             download = in.readString();
             like = in.readString();
-            IsReminder = in.readString();
-            reminderTime = in.readString();
-            reminderDay = in.readString();
         }
 
         public static final Creator<ResponseData> CREATOR = new Creator<ResponseData>() {
@@ -257,6 +261,14 @@ public class SubPlayListModel {
             this.totalminute = totalminute;
         }
 
+        public String getSquarePlaylistImage() {
+            return squarePlaylistImage;
+        }
+
+        public void setSquarePlaylistImage(String squarePlaylistImage) {
+            this.squarePlaylistImage = squarePlaylistImage;
+        }
+
         public String getReminderDay() {
             return reminderDay;
         }
@@ -299,19 +311,21 @@ public class SubPlayListModel {
             parcel.writeString(playlistID);
             parcel.writeString(playlistName);
             parcel.writeString(playlistDesc);
+            parcel.writeString(reminderDay);
+            parcel.writeString(reminderTime);
+            parcel.writeString(IsReminder);
             parcel.writeString(playlistMastercat);
             parcel.writeString(playlistSubcat);
             parcel.writeString(playlistImage);
+            parcel.writeString(squarePlaylistImage);
             parcel.writeString(playlistImageDetail);
             parcel.writeString(totalAudio);
             parcel.writeString(totalDuration);
             parcel.writeString(totalhour);
             parcel.writeString(totalminute);
             parcel.writeString(created);
+            parcel.writeString(download);
             parcel.writeString(like);
-            parcel.writeString(IsReminder);
-            parcel.writeString(reminderTime);
-            parcel.writeString(reminderDay);
         }
 
         public static class PlaylistSong implements Parcelable {
