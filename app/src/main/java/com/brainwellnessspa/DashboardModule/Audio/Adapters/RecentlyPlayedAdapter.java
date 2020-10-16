@@ -34,12 +34,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isRemoved;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.newClick;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.disclaimer;
+
 
 public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAdapter.MyViewHolder> {
     Context ctx;
@@ -150,9 +148,6 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             isPause = false;
             isMediaStart = false;
             isPrepare = false;
-            disclaimer = false;
-            isRemoved = false;
-            newClick = true;
             Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
             fragmentManager1.beginTransaction()

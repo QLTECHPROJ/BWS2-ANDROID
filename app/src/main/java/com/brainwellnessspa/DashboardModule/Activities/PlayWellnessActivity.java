@@ -60,10 +60,7 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity.comeFromAddToQueue;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
-import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.disclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isRemoved;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
@@ -72,6 +69,7 @@ import static com.brainwellnessspa.Utility.MusicService.ToForward;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
 import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
+import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
@@ -177,35 +175,39 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             currentDuration = getStartTime();
 
 //            Log.e("myProgress old!!!", String.valueOf(myProgress));
-            if(myProgress == currentDuration && myProgress!=0 && !isPause && url.equalsIgnoreCase("")){
+            if (myProgress == currentDuration && myProgress != 0 && !isPause && url.equalsIgnoreCase("")) {
 //                    Log.e("myProgress",String.valueOf(myProgress));
                 myCount++;
-                Log.e("myCount",String.valueOf(myCount));
+                Log.e("myCount", String.valueOf(myCount));
 
-                if(myCount == 20){
-                    Log.e("myCount complete",String.valueOf(myCount));
+                if (myCount == 10) {
+                    Log.e("myCount complete", String.valueOf(myCount));
                     callComplete();
                     myCount = 0;
                 }
-            }
-            else if (myProgress == currentDuration && myProgress != 0 && !isPause) {
+            } else if (myProgress == currentDuration && myProgress != 0 && !isPause) {
 //                Log.e("myProgress", String.valueOf(myProgress));
                 myCount++;
                 Log.e("myCount", String.valueOf(myCount));
 
-                if (myCount == 50) {
+                if (myCount == 100) {
                     Log.e("myCount complete", String.valueOf(myCount));
                     callComplete();
                     myCount = 0;
                 }
             }
             progress = getProgressPercentage(currentDuration, totalDuration);
-            if (currentDuration == 0 && isprogressbar) {
+             if (currentDuration == 0 && isCompleteStop) {
                 binding.progressBar.setVisibility(View.VISIBLE);
                 binding.llProgressBar.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.GONE);
-            } else if (currentDuration > 1 && !isPause) {
+            }else if (currentDuration == 0 && isprogressbar) {
+                binding.progressBar.setVisibility(View.VISIBLE);
+                binding.llProgressBar.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.llPlay.setVisibility(View.GONE);
+            }else if (currentDuration > 1 && !isPause) {
                 binding.progressBar.setVisibility(View.GONE);
                 binding.llProgressBar.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);
@@ -343,6 +345,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llViewQueue.setEnabled(false);
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
+        handler.postDelayed(UpdateSongTime, 100);
         getPrepareShowData(position);
 
         if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
@@ -478,8 +481,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         addToQueueModelList.remove(position);
                         listSize = addToQueueModelList.size();
                         if (listSize == 0) {
+                            isCompleteStop = true;
                             stopMedia();
                         } else if (listSize == 1) {
+                            isCompleteStop = true;
                             stopMedia();
                         } else {
                             Random random = new Random();
@@ -699,7 +704,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callDownload() {
-        if(!url.equalsIgnoreCase("")) {
+        if (!url.equalsIgnoreCase("")) {
             disableDownload();
             byte[] EncodeBytes = new byte[1024];
             List<String> url1 = new ArrayList<>();
@@ -1018,7 +1023,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if(!AudioFile.equalsIgnoreCase("")) {
+                if (!AudioFile.equalsIgnoreCase("")) {
                     if (downloadAudioDetailsList.size() != 0) {
                         if (downloadAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
@@ -1058,6 +1063,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
                             TimeUnit.MILLISECONDS.toSeconds(timeeee) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeeee))));
 //                    resumeMedia();
+                } else if (isCompleteStop) {
+                    binding.llProgressBar.setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
                 } else if (isMediaStart && !isPause) {
                     binding.llProgressBar.setVisibility(View.GONE);
                     binding.progressBar.setVisibility(View.GONE);
@@ -1169,11 +1179,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         } else if (audioPlay) {
             try {
                 listSize = mainPlayModelList.size();
-                if (listSize == 2) {
-                    if (mainPlayModelList.get(0).getAudioFile().equalsIgnoreCase("") && !disclaimer) {
-                        disclaimer = true;
-                        position = 0;
-                    }
+                if (listSize == 1) {
+                    position = 0;
                 }
                 id = mainPlayModelList.get(position).getID();
                 name = mainPlayModelList.get(position).getName();
@@ -1199,14 +1206,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 }
                 binding.tvTitle.setText(mainPlayModelList.get(position).getAudiomastercat());
                 binding.tvDesc.setText(mainPlayModelList.get(position).getAudioSubCategory());
-                if(url.equalsIgnoreCase("")){
+                if (url.equalsIgnoreCase("")) {
                     Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                             .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                }else {
-                    /*TODO */                Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                } else {
+                    /*TODO */
+                    Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                             .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                 }
-
                 if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
                     binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                 } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
@@ -1218,7 +1225,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 e.printStackTrace();
             }
         }
-        if(!url.equalsIgnoreCase("")) {
+        if (!url.equalsIgnoreCase("")) {
             addToRecentPlay();
         }
 
@@ -1352,90 +1359,103 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     private void callComplete() {
         handler.removeCallbacks(UpdateSongTime);
-        if (audioPlay) {
-            if (url.equalsIgnoreCase("") || url.isEmpty()) {
-                isDisclaimer = 0;
-//                disclaimerPlayed = 1;
-                isRemoved = true;
-                removeArray();
-                mainPlayModelList.remove(0);
-            }
-        }
         isPrepare = false;
         isMediaStart = false;
         isPause = false;
-        if (IsRepeat.equalsIgnoreCase("1")) {
-            if (position < (listSize - 1)) {
-                position = position + 1;
-            } else {
-                position = 0;
-            }
+        if (audioPlay && (url.equalsIgnoreCase("") || url.isEmpty())) {
+            isDisclaimer = 0;
+            removeArray();
             getPrepareShowData(position);
-        } else if (IsRepeat.equalsIgnoreCase("0")) {
-            getPrepareShowData(position);
-        } else if (IsShuffle.equalsIgnoreCase("1")) {
-            // shuffle is on - play a random song
-            if (queuePlay) {
-                addToQueueModelList.remove(position);
-                listSize = addToQueueModelList.size();
-                if (listSize == 0) {
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    stopMedia();
-                } else if (listSize == 1) {
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    stopMedia();
-                } else {
-                    Random random = new Random();
-                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                    getPrepareShowData(position);
-                }
-            } else {
-                if (listSize == 1) {
-                    binding.llPlay.setVisibility(View.VISIBLE);
-                    binding.llPause.setVisibility(View.GONE);
-                    binding.llProgressBar.setVisibility(View.GONE);
-                    binding.progressBar.setVisibility(View.GONE);
-                    stopMedia();
-                } else {
-                    Random random = new Random();
-                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                    getPrepareShowData(position);
-                }
-            }
         } else {
-            if (queuePlay) {
-                addToQueueModelList.remove(position);
-                listSize = addToQueueModelList.size();
-                if (position < listSize - 1) {
-                    getPrepareShowData(position);
-                } else {
-                    if (listSize == 0) {
-                        savePrefQueue(0, false, true, addToQueueModelList, ctx);
-                        binding.llPlay.setVisibility(View.VISIBLE);
-                        binding.llPause.setVisibility(View.GONE);
-                        stopMedia();
-                    } else {
-                        position = 0;
-                        getPrepareShowData(position);
-                    }
-                }
-            } else {
+            if (IsRepeat.equalsIgnoreCase("1")) {
                 if (position < (listSize - 1)) {
                     position = position + 1;
-                    getPrepareShowData(position);
+                } else {
+                    position = 0;
+                }
+                getPrepareShowData(position);
+            } else if (IsRepeat.equalsIgnoreCase("0")) {
+                getPrepareShowData(position);
+            } else if (IsShuffle.equalsIgnoreCase("1")) {
+                // shuffle is on - play a random song
+                if (queuePlay) {
+                    addToQueueModelList.remove(position);
+                    listSize = addToQueueModelList.size();
+                    if (listSize == 0) {
+                        binding.llPlay.setVisibility(View.VISIBLE);
+                        binding.llPause.setVisibility(View.GONE);
+                        binding.pbProgressBar.setVisibility(View.GONE);
+                        binding.llProgressBar.setVisibility(View.GONE);
+                        isCompleteStop = true;
+                        stopMedia();
+                    } else if (listSize == 1) {
+                        binding.llPlay.setVisibility(View.VISIBLE);
+                        binding.llPause.setVisibility(View.GONE);
+                        binding.pbProgressBar.setVisibility(View.GONE);
+                        binding.llProgressBar.setVisibility(View.GONE);
+                        isCompleteStop = true;
+                        stopMedia();
+                    } else {
+                        Random random = new Random();
+                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                        getPrepareShowData(position);
+                    }
                 } else {
                     if (listSize == 1) {
                         binding.llPlay.setVisibility(View.VISIBLE);
                         binding.llPause.setVisibility(View.GONE);
+                        binding.llProgressBar.setVisibility(View.GONE);
+                        binding.progressBar.setVisibility(View.GONE);
+                        isCompleteStop = true;
                         stopMedia();
                     } else {
-                        binding.llPlay.setVisibility(View.VISIBLE);
-                        binding.llPause.setVisibility(View.GONE);
-                        stopMedia();
+                        Random random = new Random();
+                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                        getPrepareShowData(position);
+                    }
+                }
+            } else {
+                if (queuePlay) {
+                    addToQueueModelList.remove(position);
+                    listSize = addToQueueModelList.size();
+                    if (position < listSize - 1) {
+                        getPrepareShowData(position);
+                    } else {
+                        if (listSize == 0) {
+                            savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                            binding.llPlay.setVisibility(View.VISIBLE);
+                            binding.llPause.setVisibility(View.GONE);
+                            binding.pbProgressBar.setVisibility(View.GONE);
+                            binding.llProgressBar.setVisibility(View.GONE);
+                            isCompleteStop = true;
+                            stopMedia();
+                        } else {
+                            position = 0;
+                            getPrepareShowData(position);
+                        }
+                    }
+                } else {
+                    if (position < (listSize - 1)) {
+                        position = position + 1;
+                        getPrepareShowData(position);
+                    } else {
+                        if (listSize == 1) {
+                            binding.llPlay.setVisibility(View.VISIBLE);
+                            binding.llPause.setVisibility(View.GONE);
+                            binding.pbProgressBar.setVisibility(View.GONE);
+                            binding.llProgressBar.setVisibility(View.GONE);
+                            isCompleteStop = true;
+                            stopMedia();
+                        } else {
+                            binding.llPlay.setVisibility(View.VISIBLE);
+                            binding.llPause.setVisibility(View.GONE);
+                            binding.pbProgressBar.setVisibility(View.GONE);
+                            binding.llProgressBar.setVisibility(View.GONE);
+                            isCompleteStop = true;
+                            stopMedia();
 //                        position = 0;
 //                        getPrepareShowData(position);
+                        }
                     }
                 }
             }
@@ -1472,10 +1492,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void removeArray() {
-       SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-       Gson gson = new Gson();
-       String json1 = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+        Gson gson = new Gson();
+        String json1 = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+        mainPlayModelList = new ArrayList<>();
+        MainPlayModel mainPlayModel;
         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
 
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
@@ -1483,7 +1505,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json1, type);
 
             arrayList.remove(0);
+            for (int i = 0; i < arrayList.size(); i++) {
 
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
@@ -1498,7 +1535,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }.getType();
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json1, type);
             arrayList.remove(0);
+            for (int i = 0; i < arrayList.size(); i++) {
 
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
@@ -1512,7 +1564,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }.getType();
             ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json1, type);
             arrayList.remove(0);
+            for (int i = 0; i < arrayList.size(); i++) {
 
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
@@ -1526,7 +1593,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json1, type);
             arrayList.remove(0);
+            for (int i = 0; i < arrayList.size(); i++) {
 
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
@@ -1540,7 +1622,21 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json1, type);
             arrayList.remove(0);
-
+            for (int i = 0; i < arrayList.size(); i++) {
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistId());
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
@@ -1549,11 +1645,55 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-        }else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+        } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
+            Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+            }.getType();
+            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json1, type);
+
+            arrayList.remove(0);
+            for (int i = 0; i < arrayList.size(); i++) {
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID("");
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
+            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedz.edit();
+            Gson gsonz = new Gson();
+            String json = gson.toJson(arrayList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            String jsonz = gsonz.toJson(mainPlayModelList);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
+            editor.commit();
+        } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json1, type);
             arrayList.remove(0);
+            for (int i = 0; i < arrayList.size(); i++) {
+                mainPlayModel = new MainPlayModel();
+                mainPlayModel.setID(arrayList.get(i).getID());
+                mainPlayModel.setName(arrayList.get(i).getName());
+                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
+                mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistID());
+                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
+                mainPlayModel.setLike(arrayList.get(i).getLike());
+                mainPlayModel.setDownload(arrayList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
+                mainPlayModelList.add(mainPlayModel);
+            }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
             Gson gsonz = new Gson();
@@ -1563,23 +1703,21 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
         }
-        MakeArray2();
+        shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+
     }
 
     private void MakeArray2() {
         Gson gson = new Gson();
-       SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-
-       MainPlayModel mainPlayModel;
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        mainPlayModelList = new ArrayList<>();
+        MainPlayModel mainPlayModel;
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
             for (int i = 0; i < arrayList.size(); i++) {
-                /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
-                    addDeclaimer();
-                }*/
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
@@ -1606,9 +1744,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }.getType();
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
             for (int i = 0; i < arrayList.size(); i++) {
-                /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
-                    addDeclaimer();
-                }*/
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
@@ -1634,9 +1769,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }.getType();
             ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
             for (int i = 0; i < arrayList.size(); i++) {
-                /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
-                    addDeclaimer();
-                }*/
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
@@ -1662,9 +1794,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
             for (int i = 0; i < arrayList.size(); i++) {
-                /*if(!isRemoved || newClick*//* && !isPlayingDisclaimer && newClick*//*) {
-                    addDeclaimer();
-                }*/
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
@@ -1790,8 +1919,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         finish();
 //        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
+
     private void addDeclaimer() {
-       MainPlayModel mainPlayModel = new MainPlayModel();
+        MainPlayModel mainPlayModel = new MainPlayModel();
         mainPlayModel.setID("0");
         mainPlayModel.setName("Disclaimer");
         mainPlayModel.setAudioFile("");
@@ -1805,6 +1935,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         mainPlayModel.setAudioDuration("0:48");
         mainPlayModelList.add(mainPlayModel);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -1887,12 +2018,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
             } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
                 binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-            }
-            if (listSize == 2) {
-                if (mainPlayModelList.get(0).getAudioFile().equalsIgnoreCase("") && !disclaimer) {
-                    disclaimer = true;
-                    position = 0;
-                }
             }
             url = mainPlayModelList.get(position).getAudioFile();
             if (url.equalsIgnoreCase("") || url.isEmpty()) {

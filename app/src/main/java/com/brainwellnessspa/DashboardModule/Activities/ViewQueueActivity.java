@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,11 +67,13 @@ import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
 import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
+import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPlaying;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.isStop;
+import static com.brainwellnessspa.Utility.MusicService.isprogressbar;
 import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
 import static com.brainwellnessspa.Utility.MusicService.oTime;
 import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
@@ -162,7 +165,24 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 }
             }
             int progress = getProgressPercentage(currentDuration, totalDuration);
-            long diff = totalDuration - currentDuration;
+              if (currentDuration == 0 && isprogressbar) {
+                binding.progressBar.setVisibility(View.VISIBLE);
+                binding.llProgressBar.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.llPlay.setVisibility(View.GONE);
+            } else if (currentDuration > 1 && !isPause) {
+                binding.progressBar.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+                isprogressbar = false;
+            } else if (currentDuration >= 1 && isPause) {
+                binding.progressBar.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.llPlay.setVisibility(View.VISIBLE);
+                isprogressbar = false;
+            }
 
             if (currentDuration == totalDuration && currentDuration != 0&& !isStop) {
                 callComplete();
@@ -461,6 +481,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     binding.progressBar.setVisibility(View.GONE);
                     binding.simpleSeekbar.setProgress(oTime);
 //                    resumeMedia();
+                } else if (isCompleteStop) {
+                    binding.llProgressBar.setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
                 } else if ((isMediaStart || isPlaying()) && !isPause) {
                     binding.llPause.setVisibility(View.VISIBLE);
                     binding.llPlay.setVisibility(View.GONE);

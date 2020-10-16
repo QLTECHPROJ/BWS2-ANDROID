@@ -172,7 +172,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                   count= DatabaseClient.getInstance(ctx)
                           .getaudioDatabase()
                           .taskDao()
-                          .getCountDownloadProgress("Compete",playlistID);
+                          .getCountDownloadProgress("Complete",playlistID);
 
                   return null;
               }

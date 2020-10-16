@@ -50,14 +50,12 @@ import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isRemoved;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.newClick;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.disclaimer;
+
 
 public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDownloadsAdapter.MyViewHolder> {
     FragmentActivity ctx;
@@ -222,7 +220,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 count = DatabaseClient.getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getCountDownloadProgress("Compete", playlistID);
+                        .getCountDownloadProgress("Complete", playlistID);
 
                 return null;
             }
@@ -411,9 +409,8 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 isPause = false;
                 isMediaStart = false;
                 isPrepare = false;
-                disclaimer = false;
-                isRemoved = false;
-                newClick = true;
+
+
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();
@@ -431,7 +428,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 mainPlayModel.setAudioDuration("0:48");
                 listModelList2.add(mainPlayModel);
                 listModelList2.addAll(playlistWiseAudioDetails);
-                String json = gson.toJson(playlistWiseAudioDetails);
+                String json = gson.toJson(listModelList2);
                 editor.putString(CONSTANTS.PREF_KEY_modelList, json);
                 editor.putInt(CONSTANTS.PREF_KEY_position, 0);
                 editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);

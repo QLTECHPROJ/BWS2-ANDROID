@@ -94,8 +94,6 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.ViewAllPlaylistFragment.GetPlaylistLibraryID;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isRemoved;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.newClick;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity.ComeFrom_Playlist;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
@@ -658,7 +656,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
                                 }
                             });
-                            playlistSongsList = listModel.getResponseData().getPlaylistSongs();
+                            playlistSongsList = new ArrayList<>();
+                            playlistSongsList.addAll(listModel.getResponseData().getPlaylistSongs());
                             downloadPlaylistDetails = new DownloadPlaylistDetails();
                             downloadPlaylistDetails.setPlaylistID(listModel.getResponseData().getPlaylistID());
                             downloadPlaylistDetails.setPlaylistName(listModel.getResponseData().getPlaylistName());
@@ -712,7 +711,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 count = DatabaseClient.getInstance(getActivity())
                         .getaudioDatabase()
                         .taskDao()
-                        .getCountDownloadProgress("Compete", playlistID);
+                        .getCountDownloadProgress("Complete", playlistID);
 
                 return null;
             }
@@ -910,8 +909,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         isPause = false;
         isMediaStart = false;
         isPrepare = false;
-        isRemoved = false;
-        newClick = true;
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
@@ -1012,7 +1009,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             List<String> name = new ArrayList<>();
             List<String> downloadPlaylistId = new ArrayList<>();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2 = new ArrayList<>();
-            playlistSongs2 = playlistSongs;
+            playlistSongs2.addAll(playlistSongs);
             if (downloadAudioDetailsList.size() != 0) {
                 for (int y = 0; y < downloadAudioDetailsList.size(); y++) {
                     if (playlistSongs2.size() == 0) {
@@ -1086,7 +1083,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
             getMediaByPer(PlaylistID, SongListSize);
             savePlaylist();
-            saveAllMedia(playlistSongsList, encodedBytes);
+            saveAllMedia(playlistSongs,playlistSongs2, encodedBytes);
         } else {
             disableDownload(llDownload, ivDownloads);
             List<String> url = new ArrayList<>();
@@ -1157,7 +1154,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         st.execute();
     }
 
-    private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes) {
+    private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs2, byte[] encodedBytes) {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -1171,6 +1168,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     downloadAudioDetails.setAudioSubCategory(playlistSongs.get(i).getAudioSubCategory());
                     downloadAudioDetails.setImageFile(playlistSongs.get(i).getImageFile());
                     downloadAudioDetails.setLike(playlistSongs.get(i).getLike());
+                    downloadAudioDetails.setPlaylistId(PlaylistID);
                     downloadAudioDetails.setDownload("1");
                     downloadAudioDetails.setAudioDuration(playlistSongs.get(i).getAudioDuration());
                     downloadAudioDetails.setIsSingle("0");
@@ -1187,7 +1185,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                     }
 
-                    downloadAudioDetails.setPlaylistId(playlistSongs.get(i).getPlaylistID());
                     DatabaseClient.getInstance(getActivity())
                             .getaudioDatabase()
                             .taskDao()
@@ -1202,7 +1199,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
 
+                getMediaByPer(PlaylistID,SongListSize);
                 enableDisableDownload(false, "orange");
+                downloadAudioDetailsList = GetAllMedia();
                 super.onPostExecute(aVoid);
             }
         }
@@ -1239,6 +1238,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                downloadAudioDetailsList = GetAllMedia();
                 disableDownload(llDownload, ivDownloads);
                 super.onPostExecute(aVoid);
             }
@@ -1948,7 +1948,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         binding.llError.setVisibility(View.VISIBLE);
                         binding.rvPlayLists.setVisibility(View.GONE);
                         binding.tvFound.setText("Couldn't find '" + SearchFlag + "'. Try searching again");
-                        Log.e("searchsearchsearchsearchsearch", SearchFlag);
+                        Log.e("search", SearchFlag);
                     } else {
                         binding.llError.setVisibility(View.GONE);
                         binding.rvPlayLists.setVisibility(View.VISIBLE);

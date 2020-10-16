@@ -104,7 +104,7 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
             editor1.putString(CONSTANTS.PREF_KEY_removedDownloadName, nameJson1);
             editor1.putString(CONSTANTS.PREF_KEY_removedDownloadPlaylistId, playlistIdJson1);
             editor1.commit();*/
-            updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), 100, "Compete");
+            updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), 100, "Complete");
             fileNameList.remove(0);
             audioFile.remove(0);
             playlistDownloadId.remove(0);
