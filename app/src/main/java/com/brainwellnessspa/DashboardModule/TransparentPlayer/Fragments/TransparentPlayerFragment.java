@@ -185,7 +185,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         binding.ivPause.setVisibility(View.GONE);
                         binding.ivPlay.setVisibility(View.GONE);
                     }
-                    if (currentDuration == 0 && isCompleteStop) {
+                    else if (currentDuration == 0 && isCompleteStop) {
                         binding.progressBar.setVisibility(View.VISIBLE);
 //                        binding.llProgress.setVisibility(View.VISIBLE);
                         binding.ivPause.setVisibility(View.GONE);
@@ -541,7 +541,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
     }
 
-    public void GetMedia(String url, Context ctx) {
+    public void  GetMedia(String url, Context ctx) {
 
         downloadAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
@@ -1217,33 +1217,41 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         if (queuePlay) {
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             listSize = addToQueueModelList.size();
+            id = addToQueueModelList.get(position).getID();
+            name = addToQueueModelList.get(position).getName();
+            audioFile = addToQueueModelList.get(position).getAudioFile();
         } else if (audioPlay) {
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             listSize = mainPlayModelList.size();
+            id = mainPlayModelList.get(position).getID();
+            name = mainPlayModelList.get(position).getName();
+            audioFile = mainPlayModelList.get(position).getAudioFile();
         }
 
         if (listSize == 1) {
             position = 0;
         }
-        if (audioFile.equalsIgnoreCase("")) {
-            Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-        } else {
-            Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-        }
-        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-        binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
-        if (audioFile.equalsIgnoreCase("") || audioFile.isEmpty()) {
-            isDisclaimer = 1;
-            binding.simpleSeekbar.setClickable(false);
-            binding.flProgress.setClickable(false);
-            binding.flProgress.setEnabled(false);
-        } else {
-            isDisclaimer = 0;
-            binding.simpleSeekbar.setClickable(true);
-            binding.flProgress.setClickable(true);
-            binding.flProgress.setEnabled(true);
+        if(listSize!=0) {
+            if (audioFile.equalsIgnoreCase("")) {
+                Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+            } else {
+                Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+            }
+            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+            binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
+            if (audioFile.equalsIgnoreCase("") || audioFile.isEmpty()) {
+                isDisclaimer = 1;
+                binding.simpleSeekbar.setClickable(false);
+                binding.flProgress.setClickable(false);
+                binding.flProgress.setEnabled(false);
+            } else {
+                isDisclaimer = 0;
+                binding.simpleSeekbar.setClickable(true);
+                binding.flProgress.setClickable(true);
+                binding.flProgress.setEnabled(true);
+            }
         }
         SharedPreferences Status = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");

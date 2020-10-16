@@ -41,6 +41,8 @@ import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityPlayWellnessBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.downloader.PRDownloader;
+import com.downloader.Status;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -61,6 +63,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity.c
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
@@ -1036,11 +1039,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                         }
-                    } else if (download.equalsIgnoreCase("1")) {
-                        binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                        binding.llDownload.setClickable(false);
-                        binding.llDownload.setEnabled(false);
-                        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                     } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
                         binding.llDownload.setClickable(true);
                         binding.llDownload.setEnabled(true);
@@ -2049,6 +2047,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llProgressBar.setVisibility(View.GONE);
             binding.progressBar.setVisibility(View.GONE);
         }*/
+        if (Status.RUNNING == PRDownloader.getStatus(downloadIdOne)) {
+            PRDownloader.pause(downloadIdOne);
+        }
+
+        if (Status.PAUSED == PRDownloader.getStatus(downloadIdOne)) {
+            PRDownloader.resume(downloadIdOne);
+        }
         super.onResume();
     }
 

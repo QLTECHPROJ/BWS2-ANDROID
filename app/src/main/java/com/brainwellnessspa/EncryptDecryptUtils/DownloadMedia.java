@@ -9,7 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.downloader.Error;
 import com.downloader.OnDownloadListener;
+import com.downloader.OnPauseListener;
+import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
+import com.downloader.Status;
 import com.google.gson.Gson;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -20,8 +23,8 @@ import java.util.List;
 import static com.brainwellnessspa.EncryptDecryptUtils.FileUtils.saveFile;
 
 
-public class DownloadMedia extends AppCompatActivity implements OnDownloadListener {
-    public static int downloadError = 2;
+public class DownloadMedia extends AppCompatActivity implements OnDownloadListener, OnStartOrResumeListener, OnPauseListener {
+    public static int downloadError = 2,downloadIdOne;
     public static String filename = "";
     public static int downloadProgress = 0;
     public static boolean isDownloading = false;
@@ -45,22 +48,48 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
         return encodedBytes;
     }*/
 
+
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID/*, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs*/) {
         BWSApplication.showToast("Downloading file...", context);
+
         isDownloading = true;
         fileNameList = FILE_NAME;
         audioFile = DOWNLOAD_AUDIO_URL;
         playlistDownloadId = PLAYLIST_ID;
         filename = FILE_NAME.get(0);
-        PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(context), FILE_NAME.get(0)).build().setOnProgressListener(progress -> {
+       downloadIdOne = PRDownloader.download(DOWNLOAD_AUDIO_URL.get(0), FileUtils.getDirPath(context), FILE_NAME.get(0)).build().setOnProgressListener(progress -> {
             long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
             downloadProgress = (int) progressPercent;
             updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), downloadProgress,"Start");
 //        progressBarOne.setProgress((int) progressPercent);
 //        textViewProgressOne.setText(BWSApplication.getProgressDisplayLine(progress.currentBytes, progress.totalBytes));
 //        progressBarOne.setIndeterminate(false);
-        }).start(this);
+        }).setOnPauseListener(this).setOnStartOrResumeListener(this).start(this);
+       callPauseResume();
+
         return encodedBytes;
+    }
+
+    private void callPauseResume() {
+        if (Status.RUNNING == PRDownloader.getStatus(downloadIdOne)) {
+            PRDownloader.pause(downloadIdOne);
+        }
+
+        if (Status.PAUSED == PRDownloader.getStatus(downloadIdOne)) {
+            PRDownloader.resume(downloadIdOne);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        if (Status.RUNNING == PRDownloader.getStatus(downloadIdOne)) {
+            PRDownloader.pause(downloadIdOne);
+        }
+
+        if (Status.PAUSED == PRDownloader.getStatus(downloadIdOne)) {
+            PRDownloader.resume(downloadIdOne);
+        }
+        super.onResume();
     }
 
     public byte[] decrypt(String FILE_NAME) {
@@ -177,6 +206,17 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
 
         SaveMedia st = new SaveMedia();
         st.execute();
+    }
+
+    @Override
+    public void onStartOrResume() {
+
+    }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
     }
 /*
     @Override

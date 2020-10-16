@@ -1177,6 +1177,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             if (playlistSongs.get(i).getAudioFile().equalsIgnoreCase(downloadAudioDetailsList.get(y).getAudioFile())) {
                                 downloadAudioDetails.setIsDownload("Complete");
                                 downloadAudioDetails.setDownloadProgress(100);
+                                break;
                             } else {
                                 downloadAudioDetails.setIsDownload("pending");
                                 downloadAudioDetails.setDownloadProgress(0);

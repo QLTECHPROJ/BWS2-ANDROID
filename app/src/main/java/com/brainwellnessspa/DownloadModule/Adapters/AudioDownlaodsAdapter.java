@@ -114,7 +114,9 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                             if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(f).getName())) {
                                 if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(f).getName())) {
                                     if (downloadProgress <= 100) {
-                                        notifyItemChanged(f);
+                                        if(BWSApplication.isNetworkConnected(ctx)) {
+                                            notifyItemChanged(f);
+                                        }
                                          /*   holder.binding.pbProgress.setProgress(downloadProgress);
                                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                                             holder.binding.ivDownloads.setVisibility(View.GONE);*/
