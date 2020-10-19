@@ -188,7 +188,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     callComplete();
                     myCount = 0;
                 }
-            } else if (myProgress == currentDuration && myProgress != 0 && !isPause && diff < 5000) {
+            } else if (myProgress == currentDuration && myProgress != 0 && !isPause && diff < 2000) {
 //                Log.e("myProgress", String.valueOf(myProgress));
                 myCount++;
                 Log.e("myCount", String.valueOf(myCount));
@@ -227,8 +227,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             startTime = getStartTime();
             if (currentDuration == totalDuration && currentDuration != 0 && !isStop) {
                 binding.tvStartTime.setText(endtimetext);
-                callComplete();
-            } else if (isPause) {
+             } else if (isPause) {
                 binding.simpleSeekbar.setProgress(oTime);
                 int timeeee = progressToTimer(oTime, (int) (totalDuration));
                 binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
@@ -1229,33 +1228,34 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (listSize == 1) {
                 position = 0;
             }
-            id = addToQueueModelList.get(position).getID();
-            name = addToQueueModelList.get(position).getName();
-            url = addToQueueModelList.get(position).getAudioFile();
-            GetMedia();
-            binding.tvName.setText(addToQueueModelList.get(position).getName());
-            binding.tvDireName.setText(R.string.Directions);
-            binding.tvDireName.setText(R.string.Directions);
-            if (addToQueueModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
-                binding.llDirection.setVisibility(View.GONE);
-            } else {
-                binding.llDirection.setVisibility(View.VISIBLE);
-                binding.tvDireDesc.setText(addToQueueModelList.get(position).getAudioDirection());
+            if(listSize!=0) {
+                id = addToQueueModelList.get(position).getID();
+                name = addToQueueModelList.get(position).getName();
+                url = addToQueueModelList.get(position).getAudioFile();
+                GetMedia();
+                binding.tvName.setText(addToQueueModelList.get(position).getName());
+                binding.tvDireName.setText(R.string.Directions);
+                binding.tvDireName.setText(R.string.Directions);
+                if (addToQueueModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
+                    binding.llDirection.setVisibility(View.GONE);
+                } else {
+                    binding.llDirection.setVisibility(View.VISIBLE);
+                    binding.tvDireDesc.setText(addToQueueModelList.get(position).getAudioDirection());
+                }
+                binding.tvTitle.setText(addToQueueModelList.get(position).getAudiomastercat());
+                binding.tvDesc.setText(addToQueueModelList.get(position).getAudioSubCategory());
+                if (addToQueueModelList.get(position).getPlaylistID() == null) {
+                    addToQueueModelList.get(position).setPlaylistID("");
+                }
+                Glide.with(getApplicationContext()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("1")) {
+                    binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                } else if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
+                    binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                }
+                binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
             }
-            binding.tvTitle.setText(addToQueueModelList.get(position).getAudiomastercat());
-            binding.tvDesc.setText(addToQueueModelList.get(position).getAudioSubCategory());
-            if (addToQueueModelList.get(position).getPlaylistID() == null) {
-                addToQueueModelList.get(position).setPlaylistID("");
-            }
-            Glide.with(getApplicationContext()).load(addToQueueModelList.get(position).getImageFile()).thumbnail(0.05f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-            if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("1")) {
-                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-            } else if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
-                binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-            }
-            binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
-
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -1271,44 +1271,46 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 if (listSize == 1) {
                     position = 0;
                 }
-                id = mainPlayModelList.get(position).getID();
-                name = mainPlayModelList.get(position).getName();
-                url = mainPlayModelList.get(position).getAudioFile();
-                if (url.equalsIgnoreCase("") || url.isEmpty()) {
-                    isDisclaimer = 1;
-                    callAllDisable(false);
+                if(listSize!=0) {
+                    id = mainPlayModelList.get(position).getID();
+                    name = mainPlayModelList.get(position).getName();
+                    url = mainPlayModelList.get(position).getAudioFile();
+                    if (url.equalsIgnoreCase("") || url.isEmpty()) {
+                        isDisclaimer = 1;
+                        callAllDisable(false);
 
-                } else {
-                    isDisclaimer = 0;
-                    callAllDisable(true);
+                    } else {
+                        isDisclaimer = 0;
+                        callAllDisable(true);
+                    }
+                    if (mainPlayModelList.get(position).getPlaylistID() == null) {
+                        mainPlayModelList.get(position).setPlaylistID("");
+                    }
+                    GetMedia();
+                    binding.tvName.setText(mainPlayModelList.get(position).getName());
+                    if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
+                        binding.llDirection.setVisibility(View.GONE);
+                    } else {
+                        binding.llDirection.setVisibility(View.VISIBLE);
+                        binding.tvDireDesc.setText(mainPlayModelList.get(position).getAudioDirection());
+                    }
+                    binding.tvTitle.setText(mainPlayModelList.get(position).getAudiomastercat());
+                    binding.tvDesc.setText(mainPlayModelList.get(position).getAudioSubCategory());
+                    if (url.equalsIgnoreCase("")) {
+                        Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                    } else {
+                        /*TODO */
+                        Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                    }
+                    if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
+                        binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                    } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
+                        binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                    }
+                    binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
                 }
-                if (mainPlayModelList.get(position).getPlaylistID() == null) {
-                    mainPlayModelList.get(position).setPlaylistID("");
-                }
-                GetMedia();
-                binding.tvName.setText(mainPlayModelList.get(position).getName());
-                if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
-                    binding.llDirection.setVisibility(View.GONE);
-                } else {
-                    binding.llDirection.setVisibility(View.VISIBLE);
-                    binding.tvDireDesc.setText(mainPlayModelList.get(position).getAudioDirection());
-                }
-                binding.tvTitle.setText(mainPlayModelList.get(position).getAudiomastercat());
-                binding.tvDesc.setText(mainPlayModelList.get(position).getAudioSubCategory());
-                if (url.equalsIgnoreCase("")) {
-                    Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                } else {
-                    /*TODO */
-                    Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                }
-                if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
-                    binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
-                    binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-                }
-                binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
                 startTime = getStartTime();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -2116,12 +2118,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         } else if (audioPlay) {
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             listSize = mainPlayModelList.size();
-            if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
-                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-            } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
-                binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+            if(listSize!=0) {
+                if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
+                    binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
+                    binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                }
+                url = mainPlayModelList.get(position).getAudioFile();
             }
-            url = mainPlayModelList.get(position).getAudioFile();
             if (url.equalsIgnoreCase("") || url.isEmpty()) {
                 isDisclaimer = 1;
                 callAllDisable(false);

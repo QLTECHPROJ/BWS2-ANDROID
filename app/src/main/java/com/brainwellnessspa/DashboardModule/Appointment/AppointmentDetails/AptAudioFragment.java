@@ -162,7 +162,9 @@ public class AptAudioFragment extends Fragment {
                                 if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(f).getName())) {
                                     if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(f).getName())) {
                                         if (downloadProgress <= 100) {
-                                            notifyItemChanged(f);
+                                            if(BWSApplication.isNetworkConnected(ctx)) {
+                                                notifyItemChanged(f);
+                                            }
                                          /*   holder.binding.pbProgress.setProgress(downloadProgress);
                                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                                             holder.binding.ivDownloads.setVisibility(View.GONE);*/
@@ -172,14 +174,18 @@ public class AptAudioFragment extends Fragment {
                                             getDownloadData();
                                         }
                                     } else {
-                                        notifyItemChanged(f);
+                                        if(BWSApplication.isNetworkConnected(ctx)) {
+                                            notifyItemChanged(f);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                     if (downloadProgress == 0) {
-                        notifyDataSetChanged();
+                        if(BWSApplication.isNetworkConnected(ctx)) {
+                            notifyDataSetChanged();
+                        }
                         getDownloadData();
                     }
                     handler1.postDelayed(this, 300);
@@ -204,7 +210,7 @@ public class AptAudioFragment extends Fragment {
                     }
                 }*/
                 for (int i = 0; i < fileNameList.size(); i++) {
-                    if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                    if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName())) {
                         if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
                             if (downloadProgress <= 100) {
                                 if (downloadProgress == 100) {
@@ -351,8 +357,22 @@ public class AptAudioFragment extends Fragment {
                 url1.add(audioFile);
                 name1.add(Name);
                 downloadPlaylistId.add("");
+                if (url1.size() != 0) {
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    String urlJson = gson.toJson(url1);
+                    String nameJson = gson.toJson(name1);
+                    String playlistIdJson = gson.toJson(downloadPlaylistId);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                    editor.commit();
+                }
                 DownloadMedia downloadMedia = new DownloadMedia(getActivity().getApplicationContext());
                 downloadMedia.encrypt1(url1, name1,downloadPlaylistId);
+                holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                holder.binding.ivDownload.setVisibility(View.GONE);
                 fileNameList = url1;
                 handler1.postDelayed(UpdateSongTime1, 500);
                 String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);

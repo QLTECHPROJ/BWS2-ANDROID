@@ -166,7 +166,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         callComplete();
                         myCount = 0;
                     }
-                } else if (myProgress == currentDuration && myProgress != 0 && !isPause && diff < 5000) {
+                } else if (myProgress == currentDuration && myProgress != 0 && !isPause  && diff < 2000) {
 //                    Log.e("myProgress",String.valueOf(myProgress));
                     myCount++;
                     Log.e("myCount", String.valueOf(myCount));
@@ -180,16 +180,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
                 if (player == 1) {
-                    if (currentDuration == 0 && !isPause) {
-                        binding.progressBar.setVisibility(View.VISIBLE);
-//                        binding.llProgress.setVisibility(View.VISIBLE);
-                        binding.ivPause.setVisibility(View.GONE);
-                        binding.ivPlay.setVisibility(View.GONE);
-                    } else if (currentDuration == 0 && isCompleteStop) {
+                    if (currentDuration == 0 && isCompleteStop) {
                         binding.progressBar.setVisibility(View.GONE);
 //                        binding.llProgress.setVisibility(View.VISIBLE);
                         binding.ivPause.setVisibility(View.GONE);
                         binding.ivPlay.setVisibility(View.VISIBLE);
+                    } else if (currentDuration == 0 && !isPause) {
+                        binding.progressBar.setVisibility(View.VISIBLE);
+//                        binding.llProgress.setVisibility(View.VISIBLE);
+                        binding.ivPause.setVisibility(View.GONE);
+                        binding.ivPlay.setVisibility(View.GONE);
                     } else if (currentDuration > 1 && !isPause) {
                         binding.progressBar.setVisibility(View.GONE);
                         binding.ivPause.setVisibility(View.VISIBLE);

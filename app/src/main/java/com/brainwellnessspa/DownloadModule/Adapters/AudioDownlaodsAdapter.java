@@ -260,11 +260,6 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
                     isCompleteStop = false;
 
-                    Fragment fragment = new TransparentPlayerFragment();
-                    FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = shared.edit();
                     Gson gson = new Gson();
@@ -292,6 +287,11 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
                     editor.commit();
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flContainer, fragment)
+                            .commit();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
