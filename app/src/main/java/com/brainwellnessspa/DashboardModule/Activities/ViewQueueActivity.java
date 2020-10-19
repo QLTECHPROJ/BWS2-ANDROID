@@ -97,7 +97,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     List<DownloadAudioDetails> downloadAudioDetailsList;
     ItemTouchHelper touchHelper;
     int mypos = 0,myCount;
-    long totalDuration,currentDuration,myProgress;
+    long totalDuration,currentDuration,myProgress=0,diff = 0;
     private long mLastClickTime = 0;
     private Handler handler;
     boolean addSong = false;
@@ -151,9 +151,9 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             }
             myProgress = currentDuration;
             currentDuration = getStartTime();
-
+            diff = totalDuration - myProgress;
             Log.e("myProgress old!!!",String.valueOf(myProgress));
-            if(myProgress == currentDuration && myProgress!=0 && !isPause){
+            if (myProgress == currentDuration && myProgress != 0 && !isPause  && diff < 5000) {
                 Log.e("myProgress",String.valueOf(myProgress));
                 myCount++;
                 Log.e("myCount",String.valueOf(myCount));
@@ -268,17 +268,29 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             if (binding.llPause.getVisibility() == View.VISIBLE) {
                 isPause = false;
             }
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = shared.edit();
-            Gson gson2 = new Gson();
-            String json22 = gson2.toJson(addToQueueModelList);
-            editor.putString(CONSTANTS.PREF_KEY_queueList, json22);
-            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-            editor.commit();
-            Intent i = new Intent(ctx, PlayWellnessActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(i);
-            finish();
+            if (ComeFromQueue.equalsIgnoreCase("1")) {
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson2 = new Gson();
+                String json22 = gson2.toJson(addToQueueModelList);
+                editor.putString(CONSTANTS.PREF_KEY_queueList, json22);
+                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                editor.commit();
+                finish();
+            }else{
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                Gson gson2 = new Gson();
+                String json22 = gson2.toJson(addToQueueModelList);
+                editor.putString(CONSTANTS.PREF_KEY_queueList, json22);
+                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                editor.commit();
+                Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(i);
+                finish();
+            }
+
         });
 
         binding.llPause.setOnClickListener(view -> {
@@ -699,16 +711,26 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     position = 0;
                     getPrepareShowData(position);
                 } else {
+                    int oldPosition = position;
                     Random random = new Random();
                     position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                    if (oldPosition == position) {
+                        Random random1 = new Random();
+                        position = random1.nextInt((listSize - 1) - 0 + 1) + 0;
+                    }
                     getPrepareShowData(position);
                 }
             } else {
                 if (listSize == 1) {
 
                 } else {
+                    int oldPosition = position;
                     Random random = new Random();
                     position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                    if (oldPosition == position) {
+                        Random random1 = new Random();
+                        position = random1.nextInt((listSize - 1) - 0 + 1) + 0;
+                    }
                     getPrepareShowData(position);
                 }
             }

@@ -99,6 +99,7 @@ public class CONSTANTS {
     public static final String PREF_KEY_position = "position";
     public static final String PREF_KEY_audioPlay = "audioPlay";
     public static final String PREF_KEY_AudioFlag = "AudioFlag";
+    public static final String PREF_KEY_Cat_Name = "Cat_Name";
     public static final String PREF_KEY_myPlaylist = "myPlaylist";
     public static final String PREF_KEY_PlaylistId = "PlaylistId";
     public static final String PREF_KEY_DownloadPlaylist = "PlaylistId";

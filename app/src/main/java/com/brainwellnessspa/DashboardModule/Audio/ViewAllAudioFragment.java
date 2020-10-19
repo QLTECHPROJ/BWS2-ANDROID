@@ -20,11 +20,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
@@ -38,6 +33,10 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.AudiolistCustomLayoutBinding;
 import com.brainwellnessspa.databinding.FragmentViewAllAudioBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -50,11 +49,13 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
-
 
 
 public class ViewAllAudioFragment extends Fragment {
@@ -63,6 +64,7 @@ public class ViewAllAudioFragment extends Fragment {
     FragmentViewAllAudioBinding binding;
     String ID, Name, UserID, AudioFlag, Category;
     List<DownloadAudioDetails> audioList;
+    Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +72,7 @@ public class ViewAllAudioFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_all_audio, container, false);
         View view = binding.getRoot();
 
+        context = getActivity();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -278,7 +281,7 @@ public class ViewAllAudioFragment extends Fragment {
             holder.binding.rlMainLayout.setOnClickListener(view -> {
                 SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                if(queuePlay){
+                if (queuePlay) {
                     int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
                     ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
                     Gson gson = new Gson();
@@ -296,9 +299,10 @@ public class ViewAllAudioFragment extends Fragment {
                     editor.commit();
                 }
                 if (IsLock.equalsIgnoreCase("1")) {
+
                     if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        callTransFrag(position,listModelList);
+                        callTransFrag(position, listModelList);
                     } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -340,45 +344,65 @@ public class ViewAllAudioFragment extends Fragment {
     }
     private void callTransFrag(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList) {
         try {
-            player = 1;
-            if (isPrepare || isMediaStart || isPause) {
-                stopMedia();
-            }
-            isPause = false;
-            isMediaStart = false;
-            isPrepare = false;
-
-
-//                            RefreshData();
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
             String json = "";
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
-            ViewAllAudioListModel.ResponseData.Detail  mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
-            mainPlayModel.setID("0");
-            mainPlayModel.setName("Disclaimer");
-            mainPlayModel.setAudioFile("");
-            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-            mainPlayModel.setAudiomastercat("");
-            mainPlayModel.setAudioSubCategory("");
-            mainPlayModel.setImageFile("");
-            mainPlayModel.setLike("");
-            mainPlayModel.setDownload("");
-            mainPlayModel.setAudioDuration("0:48");
-            listModelList2.add(mainPlayModel);
+            ViewAllAudioListModel.ResponseData.Detail mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
             if (Name.equalsIgnoreCase(getString(R.string.top_categories))) {
-                listModelList2.addAll(listModelList);
-                json = gson.toJson(listModelList2);
-                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "TopCategories");
+                SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                boolean audioPlay = shared1.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                String catName = shared1.getString(CONSTANTS.PREF_KEY_Cat_Name, "");
+                if (audioPlay && AudioFlag.equalsIgnoreCase("TopCategories") && catName.equalsIgnoreCase(Category)) {
+                    if (isDisclaimer == 1) {
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer",context);
+                    } else {
+                        listModelList2 = new ArrayList<>();
+                        listModelList2.addAll(listModelList);
+                        json = gson.toJson(listModelList2);
+                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "TopCategories");
+                        editor.putString(CONSTANTS.PREF_KEY_Cat_Name, Category);
+                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                        editor.commit();
+                        openMyFragment();
+                    }
+                } else {
+                    listModelList2 = new ArrayList<>();
+                    isDisclaimer = 0;
+                    disclaimerPlayed = 0;
+                    mainPlayModel.setID("0");
+                    mainPlayModel.setName("Disclaimer");
+                    mainPlayModel.setAudioFile("");
+                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                    mainPlayModel.setAudiomastercat("");
+                    mainPlayModel.setAudioSubCategory("");
+                    mainPlayModel.setImageFile("");
+                    mainPlayModel.setLike("");
+                    mainPlayModel.setDownload("");
+                    mainPlayModel.setAudioDuration("0:48");
+                    listModelList2.add(mainPlayModel);
+                    listModelList2.addAll(listModelList);
+                    json = gson.toJson(listModelList2);
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "TopCategories");
+                    editor.putString(CONSTANTS.PREF_KEY_Cat_Name, Category);
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                    editor.commit();
+                    openMyFragment();
+                }
             } else {
-
-
+                listModelList2 = new ArrayList<>();
                 mainPlayModel = new ViewAllAudioListModel.ResponseData.Detail();
                 mainPlayModel.setID(listModelList.get(position).getID());
                 mainPlayModel.setName(listModelList.get(position).getName());
@@ -391,23 +415,40 @@ public class ViewAllAudioFragment extends Fragment {
                 mainPlayModel.setDownload(listModelList.get(position).getDownload());
                 mainPlayModel.setAudioDuration(listModelList.get(position).getAudioDuration());
                 listModelList2.add(mainPlayModel);
-
                 json = gson.toJson(listModelList2);
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
+                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                editor.commit();
+                openMyFragment();
             }
-            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-            editor.putInt(CONSTANTS.PREF_KEY_position, 0);
-            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-            editor.commit();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public class TopAudiolistAdapter extends RecyclerView.Adapter<TopAudiolistAdapter.MyViewHolder> {
+    private void openMyFragment() {
+        player = 1;
+        if (isPrepare || isMediaStart || isPause) {
+            stopMedia();
+        }
+        isPause = false;
+        isMediaStart = false;
+        isPrepare = false;
+        isCompleteStop = false;
+        Fragment fragment = new TransparentPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flContainer, fragment)
+                .commit();
+    }
+
+   /* public class TopAudiolistAdapter extends RecyclerView.Adapter<TopAudiolistAdapter.MyViewHolder> {
         String IsLock;
         private ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList;
 
@@ -511,5 +552,5 @@ public class ViewAllAudioFragment extends Fragment {
                 this.binding = binding;
             }
         }
-    }
+    }*/
 }

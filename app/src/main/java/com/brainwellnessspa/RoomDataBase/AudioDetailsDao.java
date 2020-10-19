@@ -54,6 +54,9 @@ public interface AudioDetailsDao {
     @Query("SELECT COUNT(Name) FROM audio_table WHERE PlaylistId =:PlaylistId and IsDownload =:IsDownload")
     int getCountDownloadProgress(String IsDownload,String PlaylistId);
 
+    @Query("SELECT DownloadProgress FROM audio_table WHERE PlaylistId =:PlaylistId and AudioFile =:AudioFile")
+    int getDownloadProgress(String AudioFile,String PlaylistId);
+
 //    @Query("SELECT COUNT(DISTINCT ProductID) FROM item_table")
 //    int getunique();
 

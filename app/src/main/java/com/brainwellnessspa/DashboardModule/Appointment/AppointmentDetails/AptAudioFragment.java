@@ -53,6 +53,7 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
+import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 
@@ -273,7 +274,7 @@ public class AptAudioFragment extends Fragment {
                     isPause = false;
                     isMediaStart = false;
                     isPrepare = false;
-
+                    isCompleteStop = false;
 
                     Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();

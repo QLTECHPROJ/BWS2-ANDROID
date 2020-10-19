@@ -12,6 +12,7 @@ import com.downloader.OnDownloadListener;
 import com.downloader.OnPauseListener;
 import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
+import com.downloader.PRDownloaderConfig;
 import com.downloader.Status;
 import com.google.gson.Gson;
 import com.brainwellnessspa.BWSApplication;
@@ -52,6 +53,10 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
     public byte[] encrypt1(List<String> DOWNLOAD_AUDIO_URL, List<String> FILE_NAME, List<String> PLAYLIST_ID/*, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs*/) {
         BWSApplication.showToast("Downloading file...", context);
 
+// Setting timeout globally for the download network requests:
+  /*      PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
+                .build();
+        PRDownloader.initialize(context, config);*/
         isDownloading = true;
         fileNameList = FILE_NAME;
         audioFile = DOWNLOAD_AUDIO_URL;
@@ -65,12 +70,11 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
 //        textViewProgressOne.setText(BWSApplication.getProgressDisplayLine(progress.currentBytes, progress.totalBytes));
 //        progressBarOne.setIndeterminate(false);
         }).setOnPauseListener(this).setOnStartOrResumeListener(this).start(this);
-       callPauseResume();
-
-        return encodedBytes;
+       return encodedBytes;
     }
 
     private void callPauseResume() {
+
         if (Status.RUNNING == PRDownloader.getStatus(downloadIdOne)) {
             PRDownloader.pause(downloadIdOne);
         }
@@ -113,26 +117,6 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
             byte[] fileData = FileUtils.readFile(FileUtils.getFilePath(context, fileNameList.get(0)));
             encodedBytes = EncryptDecryptUtils.encode(EncryptDecryptUtils.getInstance(context).getSecretKey(), fileData);
             saveFile(encodedBytes, FileUtils.getFilePath(context, fileNameList.get(0)));
-//                    saveAllMedia(playlistSongsList, encodedBytes, FileUtils.getFilePath(context, fileNameList.get(i)));
-            /*SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_removedDownloadPlaylist, MODE_PRIVATE);
-            Gson gson1 = new Gson();
-            String json = sharedx.getString(CONSTANTS.PREF_KEY_removedDownloadName, String.valueOf(gson1));
-            String json2 = sharedx.getString(CONSTANTS.PREF_KEY_removedDownloadPlaylistId, String.valueOf(gson1));
-            if (!json.equalsIgnoreCase(String.valueOf(gson1))) {
-                Type type = new TypeToken<List<String>>() {
-                }.getType();
-                removedFileNameList = gson1.fromJson(json, type);
-                removedPlaylistDownloadId = gson1.fromJson(json2, type);
-                removedFileNameList.add(fileNameList.get(0));
-                removedPlaylistDownloadId.add(playlistDownloadId.get(0));
-            }
-            SharedPreferences shared1 = context.getSharedPreferences(CONSTANTS.PREF_KEY_removedDownloadPlaylist, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor1 = shared1.edit();
-            String nameJson1 = gson1.toJson(removedFileNameList);
-            String playlistIdJson1 = gson1.toJson(removedPlaylistDownloadId);
-            editor1.putString(CONSTANTS.PREF_KEY_removedDownloadName, nameJson1);
-            editor1.putString(CONSTANTS.PREF_KEY_removedDownloadPlaylistId, playlistIdJson1);
-            editor1.commit();*/
             updateMediaByDownloadProgress(fileNameList.get(0), playlistDownloadId.get(0), 100, "Complete");
             fileNameList.remove(0);
             audioFile.remove(0);
@@ -179,6 +163,7 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
     @Override
     public void onError(Error error) {
         downloadError = 1;
+        encrypt1(audioFile, fileNameList, playlistDownloadId);
     }
 
     private void updateMediaByDownloadProgress(String filename, String PlaylistId, int progress, String Status) {
@@ -210,22 +195,13 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
 
     @Override
     public void onStartOrResume() {
-
+        callPauseResume();
     }
 
     @Override
     public void onPause() {
-
+        callPauseResume();
         super.onPause();
     }
-/*
-    @Override
-    public String getName() {
-        return null;
-    }
 
-    @Override
-    public int getProgress() {
-        return 0;
-    }*/
 }

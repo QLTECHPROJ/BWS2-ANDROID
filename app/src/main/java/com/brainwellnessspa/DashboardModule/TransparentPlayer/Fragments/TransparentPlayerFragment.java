@@ -89,7 +89,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     List<DownloadAudioDetails> downloadAudioDetailsList;
     Activity activity;
     Context ctx;
-    long myProgress = 0;
+    long myProgress = 0,diff = 0;
     SharedPreferences shared;
     String json;
     Gson gson;
@@ -153,6 +153,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
                 myProgress = currentDuration;
                 currentDuration = getStartTime();
+                diff = totalDuration - myProgress;
 
 //                Log.e("myProgress old!!!",String.valueOf(myProgress));
                 if (myProgress == currentDuration && myProgress != 0 && !isPause && audioFile.equalsIgnoreCase("")) {
@@ -165,12 +166,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         callComplete();
                         myCount = 0;
                     }
-                } else if (myProgress == currentDuration && myProgress != 0 && !isPause) {
+                } else if (myProgress == currentDuration && myProgress != 0 && !isPause  && diff < 5000) {
 //                    Log.e("myProgress",String.valueOf(myProgress));
                     myCount++;
                     Log.e("myCount", String.valueOf(myCount));
 
-                    if (myCount == 100) {
+                    if (myCount == 200) {
                         Log.e("myCount complete", String.valueOf(myCount));
                         callComplete();
                         myCount = 0;
@@ -204,8 +205,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
                 }
-                long diff = totalDuration - currentDuration;
-                if (currentDuration == totalDuration && currentDuration != 0 && !isStop) {
+                 if (currentDuration == totalDuration && currentDuration != 0 && !isStop) {
                     callComplete();
                 }
                 //Log.d("Progress", ""+progress);
@@ -292,7 +292,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
             oTime = binding.simpleSeekbar.getProgress();
         });
-
+        if (isMediaStart) {
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                callComplete();
+            });
+        }
         binding.ivPlay.setOnClickListener(view12 -> {
             if (!isMediaStart) {
                 callMedia();
@@ -559,6 +563,19 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                if(audioPlay){
+                    if(listSize!=0) {
+                        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+                        binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
+                        if (audioFile.equalsIgnoreCase("")) {
+                            Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                        } else {
+                            Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                        }
+                    }
+                }
                 if (player == 1) {
                     binding.progressBar.setVisibility(View.GONE);
 //                    binding.llProgress.setVisibility(View.GONE);
@@ -629,6 +646,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     id = mainPlayModelList.get(position).getID();
                     name = mainPlayModelList.get(position).getName();
                     audioFile = mainPlayModelList.get(position).getAudioFile();
+                    binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+                    binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
                     if (audioFile.equalsIgnoreCase("")) {
                         Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
@@ -636,8 +655,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                     }
-                    binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-                    binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
                     GetMedia(audioFile, ctx);
                     handler.postDelayed(UpdateSongTime, 100);
                     if (audioFile.equalsIgnoreCase("") || audioFile.isEmpty()) {
@@ -652,11 +669,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
 
             }
-            if (isMediaStart) {
-                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                    callComplete();
-                });
-            }
+
             startTime = getStartTime();
 
             if (!audioFile.equalsIgnoreCase("")) {
@@ -822,7 +835,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         if (audioPlay && (audioFile.equalsIgnoreCase("") || audioFile.isEmpty())) {
             isDisclaimer = 0;
             removeArray();
-            getPrepareShowData();
         } else {
             if (IsRepeat.equalsIgnoreCase("1")) {
                 if (position < (listSize - 1)) {
@@ -845,8 +857,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         position = 0;
                         getPrepareShowData();
                     } else {
+                        int oldPosition = position;
                         Random random = new Random();
                         position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                        if (oldPosition == position) {
+                            Random random1 = new Random();
+                            position = random1.nextInt((listSize - 1) - 0 + 1) + 0;
+                        }
                         getPrepareShowData();
                     }
                 } else {
@@ -1126,38 +1143,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
         }
-
+        getPrepareShowData();
         shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
     }
-
-    private void callAsyncTask() {
-/*        class SaveTask extends AsyncTask<Void, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                play(Uri.parse(audioFile));
-                playMedia();
-                binding.progressBar.setVisibility(View.VISIBLE);
-                binding.llProgress.setVisibility(View.VISIBLE);
-                binding.ivPlay.setVisibility(View.GONE);
-                binding.ivPause.setVisibility(View.GONE);
-
-                return null;
-            }
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                binding.ivPlay.setVisibility(View.GONE);
-                binding.progressBar.setVisibility(View.GONE);
-                binding.llProgress.setVisibility(View.GONE);
-                binding.ivPause.setVisibility(View.VISIBLE);
-            }
-        }
-
-        SaveTask st = new SaveTask();
-        st.execute();*/
-    }
-
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
     /*    handler.removeCallbacks(UpdateSongTime);
@@ -1210,6 +1198,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
         }.getType();
+        mainPlayModelList = new ArrayList<>();
         mainPlayModelList = gson.fromJson(json, type);
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -1223,35 +1212,38 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         } else if (audioPlay) {
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             listSize = mainPlayModelList.size();
-            id = mainPlayModelList.get(position).getID();
-            name = mainPlayModelList.get(position).getName();
-            audioFile = mainPlayModelList.get(position).getAudioFile();
+            if (listSize == 1) {
+                position = 0;
+            }
+            if(listSize!=0) {
+                id = mainPlayModelList.get(position).getID();
+                name = mainPlayModelList.get(position).getName();
+                audioFile = mainPlayModelList.get(position).getAudioFile();
+       /*         if (audioFile.equalsIgnoreCase("")) {
+                    Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                } else {
+                    Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                }
+                binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+                binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
+                if (audioFile.equalsIgnoreCase("") || audioFile.isEmpty()) {
+                    isDisclaimer = 1;
+                    binding.simpleSeekbar.setClickable(false);
+                    binding.flProgress.setClickable(false);
+                    binding.flProgress.setEnabled(false);
+                } else {
+                    isDisclaimer = 0;
+                    binding.simpleSeekbar.setClickable(true);
+                    binding.flProgress.setClickable(true);
+                    binding.flProgress.setEnabled(true);
+                }*/
+            }
         }
 
         if (listSize == 1) {
             position = 0;
-        }
-        if(listSize!=0) {
-            if (audioFile.equalsIgnoreCase("")) {
-                Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-            } else {
-                Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-            }
-            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-            binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
-            if (audioFile.equalsIgnoreCase("") || audioFile.isEmpty()) {
-                isDisclaimer = 1;
-                binding.simpleSeekbar.setClickable(false);
-                binding.flProgress.setClickable(false);
-                binding.flProgress.setEnabled(false);
-            } else {
-                isDisclaimer = 0;
-                binding.simpleSeekbar.setClickable(true);
-                binding.flProgress.setClickable(true);
-                binding.flProgress.setEnabled(true);
-            }
         }
         SharedPreferences Status = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");

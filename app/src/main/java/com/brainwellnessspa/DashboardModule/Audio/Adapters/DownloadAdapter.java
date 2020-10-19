@@ -34,6 +34,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
@@ -126,6 +127,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         isPause = false;
         isMediaStart = false;
         isPrepare = false;
+        isCompleteStop = false;
 
 
         Fragment fragment = new TransparentPlayerFragment();

@@ -30,7 +30,7 @@ public class DownloadsActivity extends AppCompatActivity {
     ActivityDownloadsBinding binding;
     ArrayList<DownloadlistModel.Audio> audioList;
     ArrayList<DownloadlistModel.Playlist> playlistList;
-    String UserID;
+    String UserID,AudioFlag;
     public static boolean ComeFrom_Playlist = false;
     Context ctx;
 
@@ -42,12 +42,22 @@ public class DownloadsActivity extends AppCompatActivity {
         SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+          AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
         binding.llBack.setOnClickListener(view -> {
             comefromDownload = "0";
             finish();
         });
+        prepareData();
+    }
+
+    @Override
+    public void onBackPressed() {
+        comefromDownload = "0";
+        finish();
+    }
+
+    public void prepareData() {
         try {
             if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -75,18 +85,6 @@ public class DownloadsActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-        prepareData();
-    }
-
-    @Override
-    public void onBackPressed() {
-        comefromDownload = "0";
-        finish();
-    }
-
-    public void prepareData() {
 /*        if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<DownloadlistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID);
@@ -189,6 +187,12 @@ public class DownloadsActivity extends AppCompatActivity {
             return totalTabs;
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        prepareData();
+        super.onResume();
     }
 }
 
