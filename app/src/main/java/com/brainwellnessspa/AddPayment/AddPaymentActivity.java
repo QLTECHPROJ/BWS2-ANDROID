@@ -58,6 +58,8 @@ public class AddPaymentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_payment);
+        context = AddPaymentActivity.this;
+        activity = AddPaymentActivity.this;
 
         if (getIntent() != null) {
             ComePayment = getIntent().getStringExtra("ComePayment");
@@ -75,8 +77,6 @@ public class AddPaymentActivity extends AppCompatActivity {
             }
         });
 
-        context = AddPaymentActivity.this;
-        activity = AddPaymentActivity.this;
         year = Calendar.getInstance().get(Calendar.YEAR);
         month = Calendar.getInstance().get(Calendar.MONTH);
         month = month + 1;

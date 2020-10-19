@@ -118,7 +118,8 @@ public class ViewAllAudioFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        prepareData();
+        refreshData();
+        prepareData();
     }
 
     public List<DownloadAudioDetails> GetAllMedia(Context ctx) {
