@@ -84,6 +84,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenReminder;
+import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.PlaylistIDMS;
 import static com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity.MyPlaylistId;
 import static com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity.addToPlayList;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.addToSearch;
@@ -109,7 +110,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static String RefreshNew = "";
     public static int disclaimerPlayed = 0;
     FragmentMyPlaylistsBinding binding;
-    String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag;
+    String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "";
     int RefreshIcon;
     PlayListsAdpater adpater;
     PlayListsAdpater2 adpater2;
@@ -127,6 +128,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     ItemTouchHelper touchHelper;
     Runnable UpdateSongTime2;
     int SongListSize = 0, count;
+    public boolean RefreshPlaylist = false;
     private Handler handler1, handler2;
 //    private Runnable UpdateSongTime1 = new Runnable() {
 //        @Override
@@ -204,7 +206,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             MyDownloads = getArguments().getString("MyDownloads");
         }
 
-        binding.llBack.setOnClickListener(view1 -> callBack());
+        binding.llBack.setOnClickListener(view1 -> {
+            callBack();
+        });
         if (BWSApplication.isNetworkConnected(getActivity()) && !MyDownloads.equalsIgnoreCase("1")) {
             binding.llMore.setVisibility(View.VISIBLE);
             binding.llMore.setClickable(true);
@@ -420,6 +424,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.searchView.clearFocus();
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 callBack();
+
+                if (!PlaylistIDs.equalsIgnoreCase("")){
+                    Fragment fragment = new PlaylistFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.flContainer, fragment)
+                            .commit();
+                }
                 return true;
             }
             return false;
@@ -432,10 +444,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             PlaylistID = MyPlaylistId;
             prepareData(UserID, MyPlaylistId);
             addToPlayList = false;
-        } /*else if (addToSearch) {
+        } else if (addToSearch) {
+            PlaylistIDs = PlaylistIDMS;
             prepareData(UserID, MyPlaylistIds);
             addToSearch = false;
-        }*/ else {
+        } else {
             prepareData(UserID, PlaylistID);
         }
         if (comeRename == 1) {
@@ -445,38 +458,52 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void callBack() {
         binding.searchView.clearFocus();
-        if (comefrom_search == 2) {
-            Bundle bundle = new Bundle();
-            Fragment playlistFragment = new ViewAllPlaylistFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .replace(R.id.flContainer, playlistFragment)
-                    .commit();
-            bundle.putString("GetLibraryID", GetPlaylistLibraryID);
-            bundle.putString("MyDownloads", MyDownloads);
-            playlistFragment.setArguments(bundle);
+        if (MyPlaylistIds.equalsIgnoreCase("")) {
+            if (comefrom_search == 2) {
+                Bundle bundle = new Bundle();
+                Fragment playlistFragment = new ViewAllPlaylistFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .replace(R.id.flContainer, playlistFragment)
+                        .commit();
+                bundle.putString("GetLibraryID", GetPlaylistLibraryID);
+                bundle.putString("MyDownloads", MyDownloads);
+                playlistFragment.setArguments(bundle);
 //            comefrom_search = 0;
-        } else if (comefrom_search == 1) {
-            Fragment fragment = new SearchFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .replace(R.id.flContainer, fragment)
-                    .commit();
-            comefrom_search = 0;
-        } else if (comefrom_search == 0) {
+            } else if (comefrom_search == 1) {
+                Fragment fragment = new SearchFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .replace(R.id.flContainer, fragment)
+                        .commit();
+                comefrom_search = 0;
+            } else if (comefrom_search == 0) {
+                Fragment fragment = new PlaylistFragment();
+                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                fragmentManager1.beginTransaction()
+                        .replace(R.id.flContainer, fragment)
+                        .commit();
+                comefrom_search = 0;
+            } else if (comefrom_search == 3) {
+                Intent i = new Intent(getActivity(), DownloadsActivity.class);
+                ComeFrom_Playlist = true;
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(i);
+                getActivity().finish();
+//            comefrom_search = 0;
+            }
+
+        } else {
+            RefreshPlaylist = true;
+            prepareData(UserID, PlaylistIDs);
+        }
+
+        if (RefreshPlaylist){
             Fragment fragment = new PlaylistFragment();
             FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .replace(R.id.flContainer, fragment)
                     .commit();
-            comefrom_search = 0;
-        } else if (comefrom_search == 3) {
-            Intent i = new Intent(getActivity(), DownloadsActivity.class);
-            ComeFrom_Playlist = true;
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(i);
-            getActivity().finish();
-//            comefrom_search = 0;
         }
     }
 

@@ -130,7 +130,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                 binding.tlName.setError("");
             } else if (binding.etNumber.getText().toString().length() <= 15 || binding.etNumber.getText().toString().length() > 16) {
                 binding.tlName.setError("");
-                binding.tlNumber.setError("Card number is required.");
+                binding.tlNumber.setError("Please enter a valid card number");
                 binding.txtError.setText("");
             } else if (binding.etName.getText().toString().equalsIgnoreCase("")) {
                 binding.tlName.setError("Card name is required");

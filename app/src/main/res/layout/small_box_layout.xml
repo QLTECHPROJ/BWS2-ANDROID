@@ -16,7 +16,8 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:paddingTop="@dimen/_4sdp"
-                android:paddingRight="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_8sdp"
+                android:paddingRight="@dimen/_8sdp"
                 android:weightSum="1">
 
                 <androidx.cardview.widget.CardView

@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
+import com.brainwellnessspa.databinding.MainPlaylistLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -269,8 +270,8 @@ public class PlaylistFragment extends Fragment {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            MainAudioLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.main_audio_layout, parent, false);
+            MainPlaylistLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.main_playlist_layout, parent, false);
             return new MyViewHolder(v);
         }
 
@@ -434,9 +435,9 @@ public class PlaylistFragment extends Fragment {
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
-            MainAudioLayoutBinding binding;
+            MainPlaylistLayoutBinding binding;
 
-            public MyViewHolder(MainAudioLayoutBinding binding) {
+            public MyViewHolder(MainPlaylistLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
             }

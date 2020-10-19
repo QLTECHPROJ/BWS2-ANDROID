@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +24,7 @@ import android.widget.ImageView;
 
 import com.brainwellnessspa.DashboardModule.Models.AddToPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
+import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -49,6 +52,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 
 public class AddAudioActivity extends AppCompatActivity {
@@ -60,6 +64,7 @@ public class AddAudioActivity extends AppCompatActivity {
     Activity activity;
     public static boolean addToSearch = false;
     public static String MyPlaylistIds = "";
+    public static String PlaylistIDMS = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -302,7 +307,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                                 if (isDisclaimer == 1) {
                                     BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                                }else{
+                                } else {
                                     callAddSearchAudio(AudioID, "0", "");
                                 }
                             } else {
@@ -328,7 +333,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                                 if (isDisclaimer == 1) {
                                     BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                                }else{
+                                } else {
                                     callAddSearchAudio(AudioID, "0", "");
                                 }
                             } else {
@@ -351,7 +356,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                            }else{
+                            } else {
                                 callAddSearchAudio(AudioID, "0", "");
                             }
                         } else {
@@ -383,7 +388,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                            }else{
+                            } else {
                                 callAddSearchAudio("", "1", modelList.get(position).getID());
                             }
                         } else {
@@ -392,34 +397,37 @@ public class AddAudioActivity extends AppCompatActivity {
                     }
                 });
 
-               /* holder.binding.llMainLayout.setOnClickListener(view -> {
+                holder.binding.llMainLayout.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
                         Intent i = new Intent(ctx, MembershipChangeActivity.class);
                         i.putExtra("ComeFrom", "Plan");
                         startActivity(i);
-                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
                         BWSApplication.showToast("Please re-activate your membership plan", ctx);
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
-                        comefrom_search = 1;
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("New", "0");
-                        bundle.putString("PlaylistID", modelList.get(position).getID());
-                        bundle.putString("PlaylistName", modelList.get(position).getName());
-                        bundle.putString("MyDownloads", "0");
-                        myPlaylistsFragment.setArguments(bundle);
-                        FragmentManager fragmentManager1 = getSupportFragmentManager();
-                        fragmentManager1.beginTransaction()
-                                .replace(R.id.flContainer, myPlaylistsFragment)
-                                .commit();
+                        addToSearch = true;
+                        MyPlaylistIds = modelList.get(position).getID();
+                        PlaylistIDMS = PlaylistID;
+                        finish();
+                    /*Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("New", "0");
+                    bundle.putString("PlaylistID", PlaylistModel.get(position).getID());
+                    bundle.putString("PlaylistName", PlaylistModel.get(position).getName());
+                    bundle.putString("MyDownloads", "0");
+                    myPlaylistsFragment.setArguments(bundle);
+                    FragmentManager fragmentManager1 = getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.flContainer, myPlaylistsFragment)
+                            .commit();*/
                     }
-                });*/
+                });
             }
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
@@ -530,12 +538,12 @@ public class AddAudioActivity extends AppCompatActivity {
                                 if (s.equalsIgnoreCase("1")) {
                                     finish();
                                 }
-                            }else if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                            } else if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
                                 BWSApplication.showToast(listModels.getResponseMessage(), ctx);
                             }
 
                         }
-                    }catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -610,7 +618,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                            }else{
+                            } else {
                                 callAddSearchAudio(AudioID, "0", "");
                             }
                         } else {
@@ -636,7 +644,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                            }else{
+                            } else {
                                 callAddSearchAudio(AudioID, "0", "");
                             }
                         } else {
@@ -657,7 +665,7 @@ public class AddAudioActivity extends AppCompatActivity {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                        }else{
+                        } else {
                             callAddSearchAudio(AudioID, "0", "");
                         }
                     } else {
@@ -740,24 +748,25 @@ public class AddAudioActivity extends AppCompatActivity {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
-           /* holder.binding.llMainLayout.setOnClickListener(view -> {
+            holder.binding.llMainLayout.setOnClickListener(view -> {
                 if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                     Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                        i.putExtra("ComeFrom","Plan");
-                        startActivity(i);
+                    i.putExtra("ComeFrom", "Plan");
+                    startActivity(i);
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
-                   BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
                     addToSearch = true;
                     MyPlaylistIds = PlaylistModel.get(position).getID();
+                    PlaylistIDMS = PlaylistID;
                     finish();
-                    *//*Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                    /*Fragment myPlaylistsFragment = new MyPlaylistsFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("New", "0");
                     bundle.putString("PlaylistID", PlaylistModel.get(position).getID());
@@ -767,9 +776,9 @@ public class AddAudioActivity extends AppCompatActivity {
                     FragmentManager fragmentManager1 = getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
                             .replace(R.id.flContainer, myPlaylistsFragment)
-                            .commit();*//*
+                            .commit();*/
                 }
-            });*/
+            });
 
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
@@ -792,7 +801,7 @@ public class AddAudioActivity extends AppCompatActivity {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                        }else{
+                        } else {
                             callAddSearchAudio("", "1", PlaylistModel.get(position).getID());
                         }
                     } else {

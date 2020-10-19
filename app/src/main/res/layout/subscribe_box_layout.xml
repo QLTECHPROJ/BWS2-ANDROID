@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="130dp"
+            android:layout_width="136dp"
             android:layout_height="160dp"
-            android:paddingTop="@dimen/_4sdp"
-            android:paddingRight="@dimen/_13sdp"
             android:orientation="vertical"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingLeft="@dimen/_11sdp"
+            android:paddingRight="@dimen/_11sdp"
             android:weightSum="1">
 
             <LinearLayout
@@ -23,9 +25,9 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="@dimen/_2sdp"
                     app:cardCornerRadius="@dimen/_10sdp"
-                    app:cardElevation="@dimen/_0sdp"
-                    android:layout_margin="@dimen/_2sdp">
+                    app:cardElevation="@dimen/_0sdp">
 
                     <ImageView
                         android:id="@+id/ivRestaurantImage"
@@ -51,18 +53,12 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:layout_weight="0.7"
                     android:ellipsize="end"
                     android:fontFamily="@font/montserrat_semi_bold"
                     android:maxLines="1"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_14sdp" />
-
-
+                    android:textSize="@dimen/_12sdp" />
             </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
-
 </layout>
