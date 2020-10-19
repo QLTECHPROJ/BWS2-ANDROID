@@ -89,7 +89,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     List<DownloadAudioDetails> downloadAudioDetailsList;
     Activity activity;
     Context ctx;
-    long myProgress = 0,diff = 0;
+    long myProgress = 0, diff = 0;
     SharedPreferences shared;
     String json;
     Gson gson;
@@ -166,7 +166,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         callComplete();
                         myCount = 0;
                     }
-                } else if (myProgress == currentDuration && myProgress != 0 && !isPause  && diff < 5000) {
+                } else if (myProgress == currentDuration && myProgress != 0 && !isPause && diff < 5000) {
 //                    Log.e("myProgress",String.valueOf(myProgress));
                     myCount++;
                     Log.e("myCount", String.valueOf(myCount));
@@ -185,8 +185,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                        binding.llProgress.setVisibility(View.VISIBLE);
                         binding.ivPause.setVisibility(View.GONE);
                         binding.ivPlay.setVisibility(View.GONE);
-                    }
-                    else if (currentDuration == 0 && isCompleteStop) {
+                    } else if (currentDuration == 0 && isCompleteStop) {
                         binding.progressBar.setVisibility(View.GONE);
 //                        binding.llProgress.setVisibility(View.VISIBLE);
                         binding.ivPause.setVisibility(View.GONE);
@@ -205,7 +204,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
                 }
-                 if (currentDuration == totalDuration && currentDuration != 0 && !isStop) {
+                if (currentDuration == totalDuration && currentDuration != 0 && !isStop) {
                     callComplete();
                 }
                 //Log.d("Progress", ""+progress);
@@ -545,7 +544,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
     }
 
-    public void  GetMedia(String url, Context ctx) {
+    public void GetMedia(String url, Context ctx) {
 
         downloadAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
@@ -563,8 +562,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if(audioPlay){
-                    if(listSize!=0) {
+                if (audioPlay) {
+                    if (listSize != 0) {
                         binding.tvTitle.setText(mainPlayModelList.get(position).getName());
                         binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
                         if (audioFile.equalsIgnoreCase("")) {
@@ -708,7 +707,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
 //            simpleNotification();
             });
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1146,6 +1145,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         getPrepareShowData();
         shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
     }
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
     /*    handler.removeCallbacks(UpdateSongTime);
@@ -1203,22 +1203,23 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if (queuePlay) {
-            position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-            listSize = addToQueueModelList.size();
-            id = addToQueueModelList.get(position).getID();
-            name = addToQueueModelList.get(position).getName();
-            audioFile = addToQueueModelList.get(position).getAudioFile();
-        } else if (audioPlay) {
-            position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-            listSize = mainPlayModelList.size();
-            if (listSize == 1) {
-                position = 0;
-            }
-            if(listSize!=0) {
-                id = mainPlayModelList.get(position).getID();
-                name = mainPlayModelList.get(position).getName();
-                audioFile = mainPlayModelList.get(position).getAudioFile();
+        try {
+            if (queuePlay) {
+                position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                listSize = addToQueueModelList.size();
+                id = addToQueueModelList.get(position).getID();
+                name = addToQueueModelList.get(position).getName();
+                audioFile = addToQueueModelList.get(position).getAudioFile();
+            } else if (audioPlay) {
+                position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                listSize = mainPlayModelList.size();
+                if (listSize == 1) {
+                    position = 0;
+                }
+                if (listSize != 0) {
+                    id = mainPlayModelList.get(position).getID();
+                    name = mainPlayModelList.get(position).getName();
+                    audioFile = mainPlayModelList.get(position).getAudioFile();
        /*         if (audioFile.equalsIgnoreCase("")) {
                     Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                             .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
@@ -1239,9 +1240,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     binding.flProgress.setClickable(true);
                     binding.flProgress.setEnabled(true);
                 }*/
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         if (listSize == 1) {
             position = 0;
         }
