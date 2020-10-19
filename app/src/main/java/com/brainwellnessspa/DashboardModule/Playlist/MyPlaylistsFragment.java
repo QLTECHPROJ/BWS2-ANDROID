@@ -86,6 +86,8 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenReminder;
 import static com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity.MyPlaylistId;
 import static com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity.addToPlayList;
+import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.addToSearch;
+import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeRename;
@@ -430,12 +432,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             PlaylistID = MyPlaylistId;
             prepareData(UserID, MyPlaylistId);
             addToPlayList = false;
-        } else {
-            prepareData(UserID, PlaylistID);
-        }/* else if (addToSearch) {
+        } /*else if (addToSearch) {
             prepareData(UserID, MyPlaylistIds);
             addToSearch = false;
-        }*/
+        }*/ else {
+            prepareData(UserID, PlaylistID);
+        }
         if (comeRename == 1) {
             prepareData(UserID, PlaylistID);
         }
@@ -1083,7 +1085,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
             getMediaByPer(PlaylistID, SongListSize);
             savePlaylist();
-            saveAllMedia(playlistSongs,playlistSongs2, encodedBytes);
+            saveAllMedia(playlistSongs, playlistSongs2, encodedBytes);
         } else {
             disableDownload(llDownload, ivDownloads);
             List<String> url = new ArrayList<>();
@@ -1200,7 +1202,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
 
-                getMediaByPer(PlaylistID,SongListSize);
+                getMediaByPer(PlaylistID, SongListSize);
                 enableDisableDownload(false, "orange");
                 downloadAudioDetailsList = GetAllMedia();
                 super.onPostExecute(aVoid);
@@ -1542,7 +1544,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     isDisclaimer = 0;
                     disclaimerPlayed = 0;
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                    listModelList2 =  addDisclaimer();
+                    listModelList2 = addDisclaimer();
                     listModelList2.addAll(listModelList);
                     callTransparentFrag(0, ctx, listModelList2, "myPlaylist");
                 }
@@ -1562,7 +1564,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     isDisclaimer = 0;
                     disclaimerPlayed = 0;
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                    listModelList2 =  addDisclaimer();
+                    listModelList2 = addDisclaimer();
                     listModelList2.addAll(listModelList);
                     callTransparentFrag(position, ctx, listModelList2, "myPlaylist");
                 }
@@ -1768,7 +1770,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> addDisclaimer() {
         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-        SubPlayListModel.ResponseData.PlaylistSong  mainPlayModel = new SubPlayListModel.ResponseData.PlaylistSong();
+        SubPlayListModel.ResponseData.PlaylistSong mainPlayModel = new SubPlayListModel.ResponseData.PlaylistSong();
         mainPlayModel.setID("0");
         mainPlayModel.setName("Disclaimer");
         mainPlayModel.setAudioFile("");
@@ -1837,7 +1839,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     isDisclaimer = 0;
                     disclaimerPlayed = 0;
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                    listModelList2 =  addDisclaimer();
+                    listModelList2 = addDisclaimer();
                     listModelList2.addAll(listModelList);
                     callTransparentFrag(0, ctx, listModelList2, "");
                 }
@@ -1857,7 +1859,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     isDisclaimer = 0;
                     disclaimerPlayed = 0;
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                    listModelList2 =  addDisclaimer();
+                    listModelList2 = addDisclaimer();
                     listModelList2.addAll(listModelList);
                     callTransparentFrag(position, ctx, listModelList2, "");
                 }

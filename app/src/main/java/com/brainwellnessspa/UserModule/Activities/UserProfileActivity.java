@@ -108,54 +108,50 @@ public class UserProfileActivity extends AppCompatActivity {
         } else if (binding.etUser.getText().toString().equalsIgnoreCase("") &&
                 !binding.etEmail.getText().toString().equalsIgnoreCase("")) {
             binding.flUser.setError("Name is required");
-        } else if (binding.etUser.getText().toString().equalsIgnoreCase("")) {
-            binding.flUser.setError("Name is required");
-        } else if (binding.etEmail.getText().toString().equalsIgnoreCase("")) {
-            binding.tlEmail.setError("Email address is required");
         } else if (!binding.etEmail.getText().toString().equalsIgnoreCase("")
                 && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
             binding.tlEmail.setError("Please enter a valid email address");
         } else {
-            binding.flUser.setError("");
-            binding.tlCalendar.setError("");
-            binding.flUser.clearFocus();
-            binding.tlEmail.clearFocus();
-            if (BWSApplication.isNetworkConnected(ctx)) {
-                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                String dob = "";
-                if (!binding.etCalendar.getText().toString().isEmpty()) {
-                    dob = binding.etCalendar.getText().toString();
-                    SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
-                    Date newDate = new Date();
-                    try {
-                        newDate = spf.parse(dob);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
-                    dob = spf.format(newDate);
+        binding.flUser.setError("");
+        binding.tlCalendar.setError("");
+        binding.flUser.clearFocus();
+        binding.tlEmail.clearFocus();
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+            String dob = "";
+            if (!binding.etCalendar.getText().toString().isEmpty()) {
+                dob = binding.etCalendar.getText().toString();
+                SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
+                Date newDate = new Date();
+                try {
+                    newDate = spf.parse(dob);
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-                Call<ProfileUpdateModel> listCall = APIClient.getClient().getProfileUpdate(UserID, binding.etUser.getText().toString(), dob,
-                        binding.etMobileNumber.getText().toString(), binding.etEmail.getText().toString(), "");
-                listCall.enqueue(new Callback<ProfileUpdateModel>() {
-                    @Override
-                    public void onResponse(Call<ProfileUpdateModel> call, Response<ProfileUpdateModel> response) {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            ProfileUpdateModel viewModel = response.body();
-                            finish();
-                            BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
-                        } else {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ProfileUpdateModel> call, Throwable t) {
+                spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
+                dob = spf.format(newDate);
+            }
+            Call<ProfileUpdateModel> listCall = APIClient.getClient().getProfileUpdate(UserID, binding.etUser.getText().toString(), dob,
+                    binding.etMobileNumber.getText().toString(), binding.etEmail.getText().toString(), "");
+            listCall.enqueue(new Callback<ProfileUpdateModel>() {
+                @Override
+                public void onResponse(Call<ProfileUpdateModel> call, Response<ProfileUpdateModel> response) {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        ProfileUpdateModel viewModel = response.body();
+                        finish();
+                        BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
+                    } else {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
-                });
-            }
+                }
+
+                @Override
+                public void onFailure(Call<ProfileUpdateModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                }
+            });
+        }
         }
     }
 
@@ -241,12 +237,16 @@ public class UserProfileActivity extends AppCompatActivity {
                         UserCalendar = viewModel.getResponseData().getDOB();
                         UserMobileNumber = viewModel.getResponseData().getPhoneNumber();
                         UserEmail = viewModel.getResponseData().getEmail();
-
-                        String Name = viewModel.getResponseData().getName();
-                        String Letter = Name.substring(0, 1);
+                        String Name;
                         profilePicPath = viewModel.getResponseData().getImage();
                         if (profilePicPath.equalsIgnoreCase("")) {
                             binding.civProfile.setVisibility(View.GONE);
+                            if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
+                                Name = "Guest";
+                            } else {
+                                Name = viewModel.getResponseData().getName();
+                            }
+                            String Letter = Name.substring(0, 1);
                             binding.rlLetter.setVisibility(View.VISIBLE);
                             binding.tvLetter.setText(Letter);
                         } else {

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 
 import com.brainwellnessspa.FaqModule.Adapters.AudioFaqAdapter;
 import com.brainwellnessspa.FaqModule.Models.FaqListModel;
@@ -47,8 +48,16 @@ public class AudioFaqActivity extends AppCompatActivity {
         RecyclerView.LayoutManager serachList = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvFaqList.setLayoutManager(serachList);
         binding.rvFaqList.setItemAnimator(new DefaultItemAnimator());
-        adapter = new AudioFaqAdapter(faqListModel, ctx, binding.rvFaqList, binding.tvFound);
-        binding.rvFaqList.setAdapter(adapter);
+
+        if (faqListModel.size() == 0){
+            binding.tvFound.setVisibility(View.VISIBLE);
+            binding.rvFaqList.setVisibility(View.GONE);
+        }else {
+            binding.tvFound.setVisibility(View.GONE);
+            binding.rvFaqList.setVisibility(View.VISIBLE);
+            adapter = new AudioFaqAdapter(faqListModel, ctx, binding.rvFaqList, binding.tvFound);
+            binding.rvFaqList.setAdapter(adapter);
+        }
     }
 
     @Override

@@ -27,7 +27,7 @@ import retrofit2.Response;
 
 public class BillingAddressFragment extends Fragment {
     FragmentBillingAddressBinding binding;
-    String UserID, UserName, UserEmail, UserMobileNumber, UserCountry, UserAddressLine1, UserCity, UserState, UserPostCode;
+    String UserID, UserName, UserEmail, UserMobileNumber, UserCountry, UserAddressLine1, UserAddressLine2, UserCity, UserState, UserPostCode;
 
 
     @Override
@@ -43,6 +43,7 @@ public class BillingAddressFragment extends Fragment {
         binding.etMobileNumber.addTextChangedListener(billingTextWatcher);
         binding.etCountry.addTextChangedListener(billingTextWatcher);
         binding.etAddressLine1.addTextChangedListener(billingTextWatcher);
+        binding.etAddressLine2.addTextChangedListener(billingTextWatcher);
         binding.etCity.addTextChangedListener(billingTextWatcher);
         binding.etState.addTextChangedListener(billingTextWatcher);
         binding.etPostCode.addTextChangedListener(billingTextWatcher);
@@ -128,6 +129,7 @@ public class BillingAddressFragment extends Fragment {
                     UserMobileNumber = listModel.getResponseData().getPhoneNumber();
                     UserCountry = listModel.getResponseData().getCountry();
                     UserAddressLine1 = listModel.getResponseData().getAddress1();
+                    UserAddressLine2 = listModel.getResponseData().getAddress2();
                     UserCity = listModel.getResponseData().getSuburb();
                     UserState = listModel.getResponseData().getState();
                     UserPostCode = listModel.getResponseData().getPostcode();
@@ -163,6 +165,7 @@ public class BillingAddressFragment extends Fragment {
             String MobileNumber = binding.etMobileNumber.getText().toString().trim();
             String Country = binding.etCountry.getText().toString().trim();
             String AddressLine1 = binding.etAddressLine1.getText().toString().trim();
+            String AddressLine2 = binding.etAddressLine2.getText().toString().trim();
             String City = binding.etCity.getText().toString().trim();
             String State = binding.etState.getText().toString().trim();
             String PostCode = binding.etPostCode.getText().toString().trim();
@@ -210,7 +213,12 @@ public class BillingAddressFragment extends Fragment {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            }
 
+            if (!AddressLine2.equalsIgnoreCase(UserAddressLine2)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
             }
         }
 
