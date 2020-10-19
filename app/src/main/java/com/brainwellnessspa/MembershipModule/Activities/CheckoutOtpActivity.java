@@ -226,8 +226,12 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
             splited = otp.split(" ");
         } else if (otp.startsWith("(#) Your OTP is")) {
             splited = otp.split(" ");
+        } else if (otp.startsWith("<#> Your OTP is")) {
+            splited = otp.split(" ");
+        } else if (otp.startsWith("?<#?> Your OTP is")) {
+            splited = otp.split(" ");
         } else {
-            splited = otp.split("is ");
+            splited = otp.split(" ");
         }
         String message = splited[4];
         binding.edtOTP1.setText(String.valueOf(message.charAt(0)));
