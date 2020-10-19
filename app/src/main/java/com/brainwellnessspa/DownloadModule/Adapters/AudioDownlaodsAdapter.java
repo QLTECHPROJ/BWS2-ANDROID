@@ -299,36 +299,40 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         });
 
         holder.binding.llRemoveAudio.setOnClickListener(view -> {
-            final Dialog dialog = new Dialog(ctx);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.logout_layout);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            try {
+                final Dialog dialog = new Dialog(ctx);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.logout_layout);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-            final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-            final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
-            final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-            final Button Btn = dialog.findViewById(R.id.Btn);
-            tvTitle.setText("Remove audio");
-            tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getName() +" from downloads?");
-            Btn.setText("Confirm");
-            dialog.setOnKeyListener((v, keyCode, event) -> {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+                final Button Btn = dialog.findViewById(R.id.Btn);
+                tvTitle.setText("Remove audio");
+                tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getName() +" from downloads?");
+                Btn.setText("Confirm");
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                    }
+                    return false;
+                });
+
+                Btn.setOnClickListener(v -> {
+                    String AudioFile = listModelList.get(position).getAudioFile();
+                    String AudioName = listModelList.get(position).getName();
+                    deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
                     dialog.dismiss();
-                }
-                return false;
-            });
+                });
 
-            Btn.setOnClickListener(v -> {
-                String AudioFile = listModelList.get(position).getAudioFile();
-                String AudioName = listModelList.get(position).getName();
-                deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
-                dialog.dismiss();
-            });
-
-            tvGoBack.setOnClickListener(v -> dialog.dismiss());
-            dialog.show();
-            dialog.setCancelable(false);
+                tvGoBack.setOnClickListener(v -> dialog.dismiss());
+                dialog.show();
+                dialog.setCancelable(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 

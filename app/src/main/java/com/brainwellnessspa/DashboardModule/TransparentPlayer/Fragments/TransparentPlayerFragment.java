@@ -545,74 +545,75 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     public void GetMedia(String url, Context ctx) {
+        try {
+            downloadAudioDetailsList = new ArrayList<>();
+            class GetMedia extends AsyncTask<Void, Void, Void> {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    downloadAudioDetailsList = DatabaseClient
+                            .getInstance(ctx)
+                            .getaudioDatabase()
+                            .taskDao()
+                            .getLastIdByuId(url);
+                    return null;
+                }
 
-        downloadAudioDetailsList = new ArrayList<>();
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                downloadAudioDetailsList = DatabaseClient
-                        .getInstance(ctx)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getLastIdByuId(url);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if (audioPlay) {
-                    if (listSize != 0) {
-                        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-                        binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
-                        if (audioFile.equalsIgnoreCase("")) {
-                            Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                        } else {
-                            Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    if (audioPlay) {
+                        if (listSize != 0) {
+                            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+                            binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
+                            if (audioFile.equalsIgnoreCase("")) {
+                                Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                            } else {
+                                Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                            }
                         }
                     }
-                }
-                if (player == 1) {
-                    binding.progressBar.setVisibility(View.GONE);
+                    if (player == 1) {
+                        binding.progressBar.setVisibility(View.GONE);
 //                    binding.llProgress.setVisibility(View.GONE);
-                    if (isPause) {
-                        binding.progressBar.setVisibility(View.GONE);
+                        if (isPause) {
+                            binding.progressBar.setVisibility(View.GONE);
 //                        binding.llProgress.setVisibility(View.GONE);
-                        binding.ivPause.setVisibility(View.GONE);
-                        binding.ivPlay.setVisibility(View.VISIBLE);
-                        binding.simpleSeekbar.setProgress(oTime);
-                    } else if (isCompleteStop) {
-                        binding.progressBar.setVisibility(View.GONE);
-                        binding.ivPlay.setVisibility(View.VISIBLE);
-                        binding.ivPause.setVisibility(View.GONE);
-                    } else if (isMediaStart && !isPause) {
-                        binding.progressBar.setVisibility(View.GONE);
+                            binding.ivPause.setVisibility(View.GONE);
+                            binding.ivPlay.setVisibility(View.VISIBLE);
+                            binding.simpleSeekbar.setProgress(oTime);
+                        } else if (isCompleteStop) {
+                            binding.progressBar.setVisibility(View.GONE);
+                            binding.ivPlay.setVisibility(View.VISIBLE);
+                            binding.ivPause.setVisibility(View.GONE);
+                        } else if (isMediaStart && !isPause) {
+                            binding.progressBar.setVisibility(View.GONE);
 //                        binding.llProgress.setVisibility(View.GONE);
-                        binding.ivPause.setVisibility(View.VISIBLE);
-                        binding.ivPlay.setVisibility(View.GONE);
-                    } else {
-                        binding.progressBar.setVisibility(View.VISIBLE);
+                            binding.ivPause.setVisibility(View.VISIBLE);
+                            binding.ivPlay.setVisibility(View.GONE);
+                        } else {
+                            binding.progressBar.setVisibility(View.VISIBLE);
 //                        binding.llProgress.setVisibility(View.VISIBLE);
-                        binding.ivPause.setVisibility(View.GONE);
-                        binding.ivPlay.setVisibility(View.GONE);
-                        callMedia();
-                    }
-                } else {
-                    binding.progressBar.setVisibility(View.GONE);
+                            binding.ivPause.setVisibility(View.GONE);
+                            binding.ivPlay.setVisibility(View.GONE);
+                            callMedia();
+                        }
+                    } else {
+                        binding.progressBar.setVisibility(View.GONE);
 //                    binding.llProgress.setVisibility(View.GONE);
-                    binding.ivPause.setVisibility(View.GONE);
-                    binding.ivPlay.setVisibility(View.VISIBLE);
+                        binding.ivPause.setVisibility(View.GONE);
+                        binding.ivPlay.setVisibility(View.VISIBLE);
+                    }
+                    super.onPostExecute(aVoid);
+
                 }
-                super.onPostExecute(aVoid);
-
             }
-        }
 
-        GetMedia st = new GetMedia();
-        st.execute();
+            GetMedia st = new GetMedia();
+            st.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void getPrepareShowData() {
