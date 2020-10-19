@@ -201,10 +201,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             progress = getProgressPercentage(currentDuration, totalDuration);
              if (currentDuration == 0 && isCompleteStop) {
-                binding.progressBar.setVisibility(View.VISIBLE);
-                binding.llProgressBar.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.GONE);
-                binding.llPlay.setVisibility(View.GONE);
+                binding.llPlay.setVisibility(View.VISIBLE);
             }else if (currentDuration == 0 && isprogressbar) {
                 binding.progressBar.setVisibility(View.VISIBLE);
                 binding.llProgressBar.setVisibility(View.VISIBLE);

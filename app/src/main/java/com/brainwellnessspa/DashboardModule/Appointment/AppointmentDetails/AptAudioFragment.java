@@ -185,6 +185,13 @@ public class AptAudioFragment extends Fragment {
                     handler1.postDelayed(this, 300);
                 }
             };
+            holder.binding.tvTitle.setText(audiolist.getName());
+            if (audiolist.getAudioDirection().equalsIgnoreCase("")) {
+                holder.binding.tvTime.setVisibility(View.GONE);
+            } else {
+                holder.binding.tvTime.setVisibility(View.VISIBLE);
+                holder.binding.tvTime.setText(audiolist.getAudioDirection());
+            }
             if (fileNameList.size() != 0) {
              /*   for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
@@ -202,34 +209,27 @@ public class AptAudioFragment extends Fragment {
                             if (downloadProgress <= 100) {
                                 if (downloadProgress == 100) {
                                     holder.binding.pbProgress.setVisibility(View.GONE);
+                                    holder.binding.ivDownload.setVisibility(View.VISIBLE);
                                 } else {
                                     holder.binding.pbProgress.setProgress(downloadProgress);
                                     holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                                    holder.binding.ivDownload.setVisibility(View.GONE);
                                 }
                             } else {
                                 holder.binding.pbProgress.setVisibility(View.GONE);
+                                holder.binding.ivDownload.setVisibility(View.VISIBLE);
 //                                handler2.removeCallbacks(UpdateSongTime2);
                             }
                         } else {
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                            handler1.postDelayed(UpdateSongTime1, 300);
+                            holder.binding.ivDownload.setVisibility(View.GONE);
+                            handler1.postDelayed(UpdateSongTime1, 200);
                         }
                     }
                 }
-            }
-
-            holder.binding.tvTitle.setText(audiolist.getName());
-            if (audiolist.getAudioDirection().equalsIgnoreCase("")) {
-                holder.binding.tvTime.setVisibility(View.GONE);
             } else {
-                holder.binding.tvTime.setVisibility(View.VISIBLE);
-                holder.binding.tvTime.setText(audiolist.getAudioDirection());
-            }
-            if(!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audiolist.getName())){
-                handler1.postDelayed(UpdateSongTime1, 500);
-            }else{
                 holder.binding.pbProgress.setVisibility(View.GONE);
-                handler1.removeCallbacks(UpdateSongTime1);
+                holder.binding.ivDownload.setVisibility(View.VISIBLE);
             }
             GetMedia(audiolist.getAudioFile(), getActivity(), audiolist.getDownload(), holder.binding.llDownload, holder.binding.ivDownload);
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
