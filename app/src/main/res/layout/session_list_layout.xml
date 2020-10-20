@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginBottom="@dimen/_16sdp"
             android:orientation="vertical">
 
             <TextView
@@ -35,11 +36,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_16sdp"
-                android:layout_marginBottom="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:text=""
+                android:visibility="gone"
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:textColor="@color/black"
