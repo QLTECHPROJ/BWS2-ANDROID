@@ -59,7 +59,7 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
-    public static String comefromDownload = "";
+    public static String comefromDownload = "0";
     FragmentActivity ctx;
     String UserID;
     FrameLayout progressBarHolder;
