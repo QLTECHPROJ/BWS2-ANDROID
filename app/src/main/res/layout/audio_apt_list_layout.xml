@@ -81,8 +81,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="0.12"
-            android:gravity="center"
-            android:padding="@dimen/_5sdp">
+            android:padding="@dimen/_6sdp"
+            android:gravity="center">
 
             <ProgressBar
                 android:id="@+id/pbProgress"
@@ -90,12 +90,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:background="@drawable/circular_shapes"
+                android:background="@drawable/circular_shapem"
                 android:indeterminate="false"
                 android:indeterminateTint="@color/dark_yellow"
                 android:max="100"
-                android:progress="50"
-                android:progressDrawable="@drawable/circular_progress_bars"
+                android:progressDrawable="@drawable/circular_progress_barm"
                 android:visibility="gone" />
 
             <LinearLayout
