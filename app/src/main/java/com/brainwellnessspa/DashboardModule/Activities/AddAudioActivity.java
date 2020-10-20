@@ -371,38 +371,6 @@ public class AddAudioActivity extends AppCompatActivity {
                         }
                     }
                 });
-            } else if (modelList.get(position).getIscategory().equalsIgnoreCase("0")) {
-                holder.binding.tvPart.setText(R.string.Playlist);
-                holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
-                holder.binding.llRemoveAudio.setOnClickListener(view -> {
-                    if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                        i.putExtra("ComeFrom", "Plan");
-                        startActivity(i);
-                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                        holder.binding.ivLock.setVisibility(View.VISIBLE);
-                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                        holder.binding.ivLock.setVisibility(View.GONE);
-                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-                            if (isDisclaimer == 1) {
-                                BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                            } else {
-                                callAddSearchAudio("", "1", modelList.get(position).getID());
-                            }
-                        } else {
-                            callAddSearchAudio("", "1", modelList.get(position).getID());
-                        }
-                    }
-                });
                 holder.binding.llMainLayoutForPlayer.setOnClickListener(view -> {
                     try {
                         player = 1;
@@ -447,6 +415,38 @@ public class AddAudioActivity extends AppCompatActivity {
                                 .commit();
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                });
+            } else if (modelList.get(position).getIscategory().equalsIgnoreCase("0")) {
+                holder.binding.tvPart.setText(R.string.Playlist);
+                holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
+                holder.binding.llRemoveAudio.setOnClickListener(view -> {
+                    if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        Intent i = new Intent(ctx, MembershipChangeActivity.class);
+                        i.putExtra("ComeFrom", "Plan");
+                        startActivity(i);
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("2")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                        holder.binding.ivLock.setVisibility(View.VISIBLE);
+                        BWSApplication.showToast("Please re-activate your membership plan", ctx);
+                    } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
+                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                        holder.binding.ivLock.setVisibility(View.GONE);
+                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                            if (isDisclaimer == 1) {
+                                BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                            } else {
+                                callAddSearchAudio("", "1", modelList.get(position).getID());
+                            }
+                        } else {
+                            callAddSearchAudio("", "1", modelList.get(position).getID());
+                        }
                     }
                 });
                 holder.binding.llMainLayout.setOnClickListener(view -> {
