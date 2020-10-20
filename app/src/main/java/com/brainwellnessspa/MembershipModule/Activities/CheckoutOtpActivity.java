@@ -281,7 +281,8 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
         if (BWSApplication.isNetworkConnected(ctx)) {
             tvSendOTPbool = false;
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
+            String countryCode = Code.replace("+","");
+            Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
             listCall.enqueue(new Callback<SignUpModel>() {
                 @Override
                 public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {

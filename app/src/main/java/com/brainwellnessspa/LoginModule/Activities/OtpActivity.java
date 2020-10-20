@@ -264,7 +264,8 @@ public class OtpActivity extends AppCompatActivity implements
             binding.txtError.setText("");
             binding.txtError.setVisibility(View.GONE);
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(MobileNo, Code, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
+            String countryCode = Code.replace("+","");
+            Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(MobileNo, countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
             listCall.enqueue(new Callback<LoginModel>() {
                 @Override
                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
