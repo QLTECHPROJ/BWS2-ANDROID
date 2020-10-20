@@ -81,7 +81,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="0.12"
-            android:padding="@dimen/_6sdp"
             android:gravity="center">
 
             <ProgressBar
