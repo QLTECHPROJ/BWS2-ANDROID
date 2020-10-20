@@ -2166,7 +2166,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
         }*/
-        getMediaByPer();
+        GetMedia2(); 
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

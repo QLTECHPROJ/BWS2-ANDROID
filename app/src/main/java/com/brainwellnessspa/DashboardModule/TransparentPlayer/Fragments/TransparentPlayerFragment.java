@@ -59,6 +59,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
@@ -548,9 +549,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
-//            if (isDisclaimer == 0 && disclaimerPlayed == 0) {
-//                addDeclaimer();
-//            }
+            if (isDisclaimer == 0 && disclaimerPlayed == 0) {
+
+            }
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
