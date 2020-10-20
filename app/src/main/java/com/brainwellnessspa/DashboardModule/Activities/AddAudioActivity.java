@@ -656,7 +656,52 @@ public class AddAudioActivity extends AppCompatActivity {
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
+            holder.binding.llMainLayoutForPlayer.setOnClickListener(view -> {
+                try {
+                    player = 1;
+                    if (isPrepare || isMediaStart || isPause) {
+                        MusicService.stopMedia();
+                    }
+                    isPause = false;
+                    isMediaStart = false;
+                    isPrepare = false;
+                    isCompleteStop = false;
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = shared.edit();
+                    Gson gson = new Gson();
+                    ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
+                    SuggestedModel.ResponseData  mainPlayModel = new SuggestedModel.ResponseData();
+                    mainPlayModel.setID("0");
+                    mainPlayModel.setName("Disclaimer");
+                    mainPlayModel.setAudioFile("");
+                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                    mainPlayModel.setAudiomastercat("");
+                    mainPlayModel.setAudioSubCategory("");
+                    mainPlayModel.setImageFile("");
+                    mainPlayModel.setLike("");
+                    mainPlayModel.setDownload("");
+                    mainPlayModel.setAudioDuration("0:48");
+                    listModelList2.add(mainPlayModel);
 
+                    listModelList2.add(listModel.get(position));
+                    String json = gson.toJson(listModelList2);
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
+                    editor.commit();
+                    Fragment fragment = new TransparentPlayerFragment();
+                    FragmentManager fragmentManager1 = getSupportFragmentManager();
+                    fragmentManager1.beginTransaction()
+                            .add(R.id.flContainer, fragment)
+                            .commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (listModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     if (listModel.get(position).getIsPlay().equalsIgnoreCase("1")) {

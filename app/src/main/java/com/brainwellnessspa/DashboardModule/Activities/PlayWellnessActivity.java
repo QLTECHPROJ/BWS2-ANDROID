@@ -140,13 +140,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     stopMedia();
                 }
             } else if (audioPlay) {
-                if (!BWSApplication.isNetworkConnected(ctx)) {
-                    if (downloadAudioDetailsList.size() != 0) {
-                        endtimetext = downloadAudioDetailsList.get(0).getAudioDuration();
-                        if (mediaPlayer != null) {
-                            totalDuration = mediaPlayer.getDuration();
+                if (listSize != 0) {
+                    if (!BWSApplication.isNetworkConnected(ctx)) {
+                        if (downloadAudioDetailsList.size() != 0) {
+                            endtimetext = downloadAudioDetailsList.get(0).getAudioDuration();
+                            if (mediaPlayer != null) {
+                                totalDuration = mediaPlayer.getDuration();
+                            } else {
+                                t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                            }
                         } else {
-                            t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                            endtimetext = mainPlayModelList.get(position).getAudioDuration();
+                            if (mediaPlayer != null) {
+                                totalDuration = mediaPlayer.getDuration();
+                            } else {
+                                t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                            }
                         }
                     } else {
                         endtimetext = mainPlayModelList.get(position).getAudioDuration();
@@ -155,13 +164,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         } else {
                             t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
                         }
-                    }
-                } else {
-                    endtimetext = mainPlayModelList.get(position).getAudioDuration();
-                    if (mediaPlayer != null) {
-                        totalDuration = mediaPlayer.getDuration();
-                    } else {
-                        t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
                     }
                 }
             }
