@@ -50,7 +50,7 @@ import static com.brainwellnessspa.MembershipModule.Adapters.MembershipPlanAdapt
 
 public class CheckoutPaymentActivity extends AppCompatActivity {
     ActivityCheckoutPaymentBinding binding;
-    String MobileNo;
+    String MobileNo, Code;
     Context context;
     Activity activity;
     Dialog d;
@@ -68,6 +68,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         activity = CheckoutPaymentActivity.this;
         if (getIntent() != null) {
             MobileNo = getIntent().getStringExtra("MobileNo");
+            Code = getIntent().getStringExtra("Code");
         }
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {
@@ -176,7 +177,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                         if (!strToken.equalsIgnoreCase("")) {
                             if (BWSApplication.isNetworkConnected(context)) {
                                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo);
+                                Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo, Code);
                                 listCall.enqueue(new Callback<AddCardModel>() {
                                     @Override
                                     public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {

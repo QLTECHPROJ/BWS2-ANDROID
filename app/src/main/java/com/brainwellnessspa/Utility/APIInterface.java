@@ -106,7 +106,8 @@ public interface APIInterface {
             @Field("PlanId") String planId,
             @Field("PlanFlag") String planFlag,
             @Field("TokenId") String CardId,
-            @Field("MobileNo") String UserId);
+            @Field("MobileNo") String MobileNo,
+            @Field("CountryCode") String CountryCode);
 
     /* TODO CheckoutGetCodeActivity */
     @POST("signupcheckout")

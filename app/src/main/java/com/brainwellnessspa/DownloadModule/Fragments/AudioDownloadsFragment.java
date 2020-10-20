@@ -53,6 +53,12 @@ public class AudioDownloadsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        audioList = GetAllMedia(getActivity());
+    }
+
     public List<DownloadAudioDetails> GetAllMedia(Context ctx) {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
@@ -84,7 +90,6 @@ public class AudioDownloadsFragment extends Fragment {
         st.execute();
         return audioList;
     }
-
 
     private void getDataList(List<DownloadAudioDetails> historyList, String UserID, FrameLayout progressBarHolder, ProgressBar ImgV, LinearLayout llError, RecyclerView rvDownloadsList) {
         if (historyList.size() == 0) {

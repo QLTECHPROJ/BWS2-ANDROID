@@ -159,6 +159,7 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
                             if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                 Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
                                 i.putExtra("MobileNo", MobileNo);
+                                i.putExtra("Code",Code);
                                 startActivity(i);
                                 finish();
                             } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {

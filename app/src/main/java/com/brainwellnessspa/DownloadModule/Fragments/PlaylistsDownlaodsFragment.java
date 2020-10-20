@@ -52,6 +52,12 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        GetAllMedia(getActivity());
+    }
+
     private void GetAllMedia(FragmentActivity activity) {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
