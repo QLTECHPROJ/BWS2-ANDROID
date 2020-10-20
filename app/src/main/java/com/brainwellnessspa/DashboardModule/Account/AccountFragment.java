@@ -189,6 +189,10 @@ public class AccountFragment extends Fragment {
                             break;
                         }
                         case MotionEvent.ACTION_UP:
+                            if(isMediaStart){
+                                stopMedia();
+                                releasePlayer();
+                            }
                             clearData(dialog);
                         case MotionEvent.ACTION_CANCEL: {
                             Button views = (Button) view1;
@@ -223,7 +227,6 @@ public class AccountFragment extends Fragment {
 
     void clearData(Dialog dialog) {
         DeleteCall();
-        MusicService.stopMedia();
         SharedPreferences sharedPreferences2 = getActivity().getSharedPreferences(CONSTANTS.Token, Context.MODE_PRIVATE);
         String fcm_id = sharedPreferences2.getString(CONSTANTS.Token, "");
         if (TextUtils.isEmpty(fcm_id)) {
@@ -275,10 +278,6 @@ public class AccountFragment extends Fragment {
     void DeleteCall() {
         DeletallLocalCart();
         DeletallLocalCart1();
-        if(isMediaStart){
-            stopMedia();
-            releasePlayer();
-        }
         SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREF_KEY_UserID);
