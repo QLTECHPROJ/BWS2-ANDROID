@@ -187,7 +187,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 myCount++;
                 Log.e("myCount", String.valueOf(myCount));
 
-                if (myCount == 10) {
+                if (myCount == 5) {
                     Log.e("myCount complete", String.valueOf(myCount));
                     callComplete();
                     myCount = 0;

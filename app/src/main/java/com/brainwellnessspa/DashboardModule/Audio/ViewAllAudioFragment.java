@@ -388,8 +388,13 @@ public class ViewAllAudioFragment extends Fragment {
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
                     mainPlayModel.setAudioDuration("0:48");
-                    listModelList2.add(mainPlayModel);
-                    listModelList2.addAll(listModelList);
+                    if(position!=0){
+                        listModelList2.addAll(listModelList);
+                        listModelList2.add(position,mainPlayModel);
+                    }else{
+                        listModelList2.add(mainPlayModel);
+                        listModelList2.addAll(listModelList);
+                    }
                     json = gson.toJson(listModelList2);
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "TopCategories");
                     editor.putString(CONSTANTS.PREF_KEY_Cat_Name, Category);

@@ -151,7 +151,7 @@ public class DownloadMedia implements OnDownloadListener, OnStartOrResumeListene
     @Override
     public void onError(Error error) {
         downloadError = 1;
-        encrypt1(audioFile, fileNameList, playlistDownloadId);
+//        encrypt1(audioFile, fileNameList, playlistDownloadId);
     }
 
     private void updateMediaByDownloadProgress(String filename, String PlaylistId, int progress, String Status) {
