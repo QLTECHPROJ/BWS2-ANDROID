@@ -73,7 +73,7 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
        return encodedBytes;
     }
 
-    private void callPauseResume() {
+/*    private void callPauseResume() {
 
         if (Status.RUNNING == PRDownloader.getStatus(downloadIdOne)) {
             PRDownloader.pause(downloadIdOne);
@@ -82,17 +82,17 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
         if (Status.PAUSED == PRDownloader.getStatus(downloadIdOne)) {
             PRDownloader.resume(downloadIdOne);
         }
-    }
+    }*/
 
     @Override
     protected void onResume() {
-        if (Status.RUNNING == PRDownloader.getStatus(downloadIdOne)) {
+  /*      if (Status.RUNNING == PRDownloader.getStatus(downloadIdOne)) {
             PRDownloader.pause(downloadIdOne);
         }
 
         if (Status.PAUSED == PRDownloader.getStatus(downloadIdOne)) {
             PRDownloader.resume(downloadIdOne);
-        }
+        }*/
         super.onResume();
     }
 
@@ -195,12 +195,12 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
 
     @Override
     public void onStartOrResume() {
-        callPauseResume();
+//        callPauseResume();
     }
 
     @Override
     public void onPause() {
-        callPauseResume();
+//        callPauseResume();
         super.onPause();
     }
 
