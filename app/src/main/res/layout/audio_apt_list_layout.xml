@@ -78,7 +78,7 @@
         <RelativeLayout
             android:id="@+id/llDownload"
             android:layout_width="@dimen/_0sdp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="0.12"
             android:gravity="center">
@@ -98,7 +98,7 @@
                     android:indeterminateTint="@color/dark_yellow"
                     android:max="100"
                     android:progressDrawable="@drawable/circular_progress_barsm"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout
