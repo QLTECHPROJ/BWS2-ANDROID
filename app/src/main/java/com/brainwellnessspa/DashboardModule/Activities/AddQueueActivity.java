@@ -832,6 +832,12 @@ public class AddQueueActivity extends AppCompatActivity {
                         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
+                        } if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
+                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llRemovePlaylist.setVisibility(View.GONE);
+                        } if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
+                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llRemovePlaylist.setVisibility(View.GONE);
                         }  else if (play.equalsIgnoreCase("TopCategories")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
