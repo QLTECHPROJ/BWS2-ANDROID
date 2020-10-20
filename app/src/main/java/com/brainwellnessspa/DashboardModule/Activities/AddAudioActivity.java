@@ -57,6 +57,7 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -65,7 +66,7 @@ import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 public class AddAudioActivity extends AppCompatActivity {
     ActivityAddAudioBinding binding;
     Context ctx;
-    String UserID, PlaylistID;
+    String UserID, PlaylistID, AudioFlag;
     SerachListAdpater adpater;
     EditText searchEditText;
     Activity activity;
@@ -135,10 +136,21 @@ public class AddAudioActivity extends AppCompatActivity {
         binding.rvPlayList.setItemAnimator(new DefaultItemAnimator());
         binding.rvPlayList.setLayoutManager(manager);
         prepareSuggestedData();
+
+        SharedPreferences shareddes = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        AudioFlag = shareddes.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            comefromDownload = "1";
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
+        }
     }
 
     private void callback() {
-//        if (binding.searchView )
+        comefromDownload = "0";
         finish();
     }
 
