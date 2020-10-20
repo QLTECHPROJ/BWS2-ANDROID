@@ -15,6 +15,9 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
+import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
+import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
+import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class DashboardActivity extends AppCompatActivity {
     public static int player = 0;
@@ -110,6 +113,9 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        MusicService.releasePlayer();
+       /* if(isMediaStart){
+            stopMedia();
+            releasePlayer();
+        }*/
     }
 }

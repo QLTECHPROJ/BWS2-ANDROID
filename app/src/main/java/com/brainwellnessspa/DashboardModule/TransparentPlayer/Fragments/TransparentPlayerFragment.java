@@ -630,36 +630,40 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                             }
                         }
                     }
-                    if (player == 1) {
-                        binding.progressBar.setVisibility(View.GONE);
+                    try {
+                        if (player == 1) {
+                            binding.progressBar.setVisibility(View.GONE);
 //                    binding.llProgress.setVisibility(View.GONE);
-                        if (isPause) {
-                            binding.progressBar.setVisibility(View.GONE);
+                            if (isPause) {
+                                binding.progressBar.setVisibility(View.GONE);
 //                        binding.llProgress.setVisibility(View.GONE);
-                            binding.ivPause.setVisibility(View.GONE);
-                            binding.ivPlay.setVisibility(View.VISIBLE);
-                            binding.simpleSeekbar.setProgress(oTime);
-                        } else if (isCompleteStop) {
-                            binding.progressBar.setVisibility(View.GONE);
-                            binding.ivPlay.setVisibility(View.VISIBLE);
-                            binding.ivPause.setVisibility(View.GONE);
-                        } else if (isMediaStart && !isPause) {
-                            binding.progressBar.setVisibility(View.GONE);
+                                binding.ivPause.setVisibility(View.GONE);
+                                binding.ivPlay.setVisibility(View.VISIBLE);
+                                binding.simpleSeekbar.setProgress(oTime);
+                            } else if (isCompleteStop) {
+                                binding.progressBar.setVisibility(View.GONE);
+                                binding.ivPlay.setVisibility(View.VISIBLE);
+                                binding.ivPause.setVisibility(View.GONE);
+                            } else if (isMediaStart && !isPause) {
+                                binding.progressBar.setVisibility(View.GONE);
 //                        binding.llProgress.setVisibility(View.GONE);
-                            binding.ivPause.setVisibility(View.VISIBLE);
-                            binding.ivPlay.setVisibility(View.GONE);
-                        } else {
-                            binding.progressBar.setVisibility(View.VISIBLE);
+                                binding.ivPause.setVisibility(View.VISIBLE);
+                                binding.ivPlay.setVisibility(View.GONE);
+                            } else {
+                                binding.progressBar.setVisibility(View.VISIBLE);
 //                        binding.llProgress.setVisibility(View.VISIBLE);
-                            binding.ivPause.setVisibility(View.GONE);
-                            binding.ivPlay.setVisibility(View.GONE);
-                            callMedia();
-                        }
-                    } else {
-                        binding.progressBar.setVisibility(View.GONE);
+                                binding.ivPause.setVisibility(View.GONE);
+                                binding.ivPlay.setVisibility(View.GONE);
+                                callMedia();
+                            }
+                        } else {
+                            binding.progressBar.setVisibility(View.GONE);
 //                    binding.llProgress.setVisibility(View.GONE);
-                        binding.ivPause.setVisibility(View.GONE);
-                        binding.ivPlay.setVisibility(View.VISIBLE);
+                            binding.ivPause.setVisibility(View.GONE);
+                            binding.ivPlay.setVisibility(View.VISIBLE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                     super.onPostExecute(aVoid);
 
