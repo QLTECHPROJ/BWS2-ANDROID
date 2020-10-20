@@ -11,6 +11,13 @@
         android:weightSum="1">
 
         <LinearLayout
+            android:id="@+id/llMainLayoutForPlayer"
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="0.8"
+            android:weightSum="0.8">
+        <LinearLayout
             android:layout_width="@dimen/_0sdp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -116,6 +123,7 @@
             android:progressDrawable="@drawable/circular_progress_bars"
             android:visibility="gone" />
 
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/llRemoveAudio"
             android:layout_width="@dimen/_0sdp"

@@ -50,7 +50,7 @@ public class SearchBothModel {
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
     }
-    public class ResponseData {
+    public static class ResponseData {
         @SerializedName("ID")
         @Expose
         private String iD;
@@ -70,6 +70,27 @@ public class SearchBothModel {
         @Expose
         private String iscategory;
 
+        @SerializedName("AudioFile")
+        @Expose
+        private String audioFile;
+        @SerializedName("AudioDuration")
+        @Expose
+        private String audioDuration;
+        @SerializedName("AudioDirection")
+        @Expose
+        private String audioDirection;
+        @SerializedName("Audiomastercat")
+        @Expose
+        private String audiomastercat;
+        @SerializedName("AudioSubCategory")
+        @Expose
+        private String audioSubCategory;
+        @SerializedName("Like")
+        @Expose
+        private String like;
+        @SerializedName("Download")
+        @Expose
+        private String download;
         public String getID() {
             return iD;
         }
@@ -116,6 +137,62 @@ public class SearchBothModel {
 
         public void setIscategory(String iscategory) {
             this.iscategory = iscategory;
+        }
+
+        public String getAudioFile() {
+            return audioFile;
+        }
+
+        public void setAudioFile(String audioFile) {
+            this.audioFile = audioFile;
+        }
+
+        public String getAudioDuration() {
+            return audioDuration;
+        }
+
+        public void setAudioDuration(String audioDuration) {
+            this.audioDuration = audioDuration;
+        }
+
+        public String getAudioDirection() {
+            return audioDirection;
+        }
+
+        public void setAudioDirection(String audioDirection) {
+            this.audioDirection = audioDirection;
+        }
+
+        public String getAudiomastercat() {
+            return audiomastercat;
+        }
+
+        public void setAudiomastercat(String audiomastercat) {
+            this.audiomastercat = audiomastercat;
+        }
+
+        public String getAudioSubCategory() {
+            return audioSubCategory;
+        }
+
+        public void setAudioSubCategory(String audioSubCategory) {
+            this.audioSubCategory = audioSubCategory;
+        }
+
+        public String getLike() {
+            return like;
+        }
+
+        public void setLike(String like) {
+            this.like = like;
+        }
+
+        public String getDownload() {
+            return download;
+        }
+
+        public void setDownload(String download) {
+            this.download = download;
         }
     }
 }

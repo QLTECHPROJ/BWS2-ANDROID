@@ -25,7 +25,9 @@ import android.widget.ImageView;
 import com.brainwellnessspa.DashboardModule.Models.AddToPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.Utility.MusicService;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.brainwellnessspa.BWSApplication;
@@ -52,8 +54,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
+import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
+import static com.brainwellnessspa.Utility.MusicService.isPause;
+import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 
 public class AddAudioActivity extends AppCompatActivity {
     ActivityAddAudioBinding binding;
@@ -396,7 +403,52 @@ public class AddAudioActivity extends AppCompatActivity {
                         }
                     }
                 });
+                holder.binding.llMainLayoutForPlayer.setOnClickListener(view -> {
+                    try {
+                        player = 1;
+                        if (isPrepare || isMediaStart || isPause) {
+                            MusicService.stopMedia();
+                        }
+                        isPause = false;
+                        isMediaStart = false;
+                        isPrepare = false;
+                        isCompleteStop = false;
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shared.edit();
+                        Gson gson = new Gson();
+                        ArrayList<SearchBothModel.ResponseData> listModelList2 = new ArrayList<>();
+                        SearchBothModel.ResponseData  mainPlayModel = new SearchBothModel.ResponseData();
+                        mainPlayModel.setID("0");
+                        mainPlayModel.setName("Disclaimer");
+                        mainPlayModel.setAudioFile("");
+                        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                        mainPlayModel.setAudiomastercat("");
+                        mainPlayModel.setAudioSubCategory("");
+                        mainPlayModel.setImageFile("");
+                        mainPlayModel.setLike("");
+                        mainPlayModel.setDownload("");
+                        mainPlayModel.setAudioDuration("0:48");
+                        listModelList2.add(mainPlayModel);
 
+                        listModelList2.add(modelList.get(position));
+                        String json = gson.toJson(listModelList2);
+                        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchModelAudio");
+                        editor.commit();
+                        Fragment fragment = new TransparentPlayerFragment();
+                        FragmentManager fragmentManager1 = getSupportFragmentManager();
+                        fragmentManager1.beginTransaction()
+                                .add(R.id.flContainer, fragment)
+                                .commit();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
                 holder.binding.llMainLayout.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);

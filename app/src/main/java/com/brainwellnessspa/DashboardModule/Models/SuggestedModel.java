@@ -122,6 +122,9 @@ public class SuggestedModel implements Parcelable {
         @Expose
         private String download;
 
+        public ResponseData() {
+
+        }
         public ResponseData(Parcel in) {
             iD = in.readString();
             name = in.readString();

@@ -24,7 +24,7 @@ import java.util.List;
 import static com.brainwellnessspa.EncryptDecryptUtils.FileUtils.saveFile;
 
 
-public class DownloadMedia extends AppCompatActivity implements OnDownloadListener, OnStartOrResumeListener, OnPauseListener {
+public class DownloadMedia implements OnDownloadListener, OnStartOrResumeListener, OnPauseListener {
     public static int downloadError = 2,downloadIdOne;
     public static String filename = "";
     public static int downloadProgress = 0;
@@ -83,18 +83,6 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
             PRDownloader.resume(downloadIdOne);
         }
     }*/
-
-    @Override
-    protected void onResume() {
-  /*      if (Status.RUNNING == PRDownloader.getStatus(downloadIdOne)) {
-            PRDownloader.pause(downloadIdOne);
-        }
-
-        if (Status.PAUSED == PRDownloader.getStatus(downloadIdOne)) {
-            PRDownloader.resume(downloadIdOne);
-        }*/
-        super.onResume();
-    }
 
     public byte[] decrypt(String FILE_NAME) {
         byte[] decryptedBytes = null;
@@ -200,8 +188,6 @@ public class DownloadMedia extends AppCompatActivity implements OnDownloadListen
 
     @Override
     public void onPause() {
-//        callPauseResume();
-        super.onPause();
-    }
 
+    }
 }
