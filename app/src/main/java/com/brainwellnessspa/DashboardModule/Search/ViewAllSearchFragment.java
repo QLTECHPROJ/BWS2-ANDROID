@@ -193,6 +193,18 @@ public class ViewAllSearchFragment extends Fragment {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
             holder.binding.llMainLayoutForPlayer.setOnClickListener(view -> {
+                if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
+                    i.putExtra("ComeFrom", "Plan");
+                    startActivity(i);
+                }else if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("2")) {
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                    BWSApplication.showToast("Please re-activate your membership plan", getActivity());
+                } else if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("0")
+                        || AudiolistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                 try {
                     player = 1;
                     if (isPrepare || isMediaStart || isPause) {
@@ -206,7 +218,7 @@ public class ViewAllSearchFragment extends Fragment {
                     SharedPreferences.Editor editor = shared.edit();
                     Gson gson = new Gson();
                     ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
-                    SuggestedModel.ResponseData  mainPlayModel = new SuggestedModel.ResponseData();
+                    SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
                     mainPlayModel.setID("0");
                     mainPlayModel.setName("Disclaimer");
                     mainPlayModel.setAudioFile("");
@@ -236,6 +248,7 @@ public class ViewAllSearchFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
             });
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
