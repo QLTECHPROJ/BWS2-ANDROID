@@ -164,7 +164,8 @@ public class LoginActivity extends AppCompatActivity {
             binding.txtError.setVisibility(View.GONE);
             if (BWSApplication.isNetworkConnected(ctx)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(binding.edtNumber.getText().toString(), binding.tvCountryCode.getText().toString(), CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
+                String countryCode = binding.tvCountryCode.getText().toString().replace("+","");
+                Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(binding.edtNumber.getText().toString(),countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
                 listCall.enqueue(new Callback<LoginModel>() {
                     @Override
                     public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
