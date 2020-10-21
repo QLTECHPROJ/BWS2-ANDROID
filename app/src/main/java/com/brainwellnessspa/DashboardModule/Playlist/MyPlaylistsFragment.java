@@ -474,6 +474,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 bundle.putString("MyDownloads", MyDownloads);
                 playlistFragment.setArguments(bundle);
 //            comefrom_search = 0;
+                Log.e("aaaaaaaaaaaa","aaaaaaaaaaaaaa");
             } else if (comefrom_search == 1) {
                 Fragment fragment = new SearchFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -481,6 +482,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         .replace(R.id.flContainer, fragment)
                         .commit();
                 comefrom_search = 0;
+                Log.e("aaaaaaaaaaaa","bbbbbbbbbbbbbbbb");
             } else if (comefrom_search == 0) {
                 Fragment fragment = new PlaylistFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -488,26 +490,20 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         .replace(R.id.flContainer, fragment)
                         .commit();
                 comefrom_search = 0;
+                Log.e("aaaaaaaaaaaa","ccccccccccccc");
             } else if (comefrom_search == 3) {
                 Intent i = new Intent(getActivity(), DownloadsActivity.class);
                 ComeFrom_Playlist = true;
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
                 getActivity().finish();
+
+                Log.e("aaaaaaaaaaaa","dddddddddddddd");
 //            comefrom_search = 0;
             }
-
         } else {
-            RefreshPlaylist = true;
             prepareData(UserID, PlaylistIDs);
-        }
-
-        if (RefreshPlaylist) {
-            Fragment fragment = new PlaylistFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .replace(R.id.flContainer, fragment)
-                    .commit();
+            MyPlaylistIds = "";
         }
     }
 

@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -174,7 +175,7 @@ public class ReminderActivity extends AppCompatActivity {
                             minuteSting = "0" + minute;
                         else
                             minuteSting = "" + minute;
-
+//                        binding.tvTime.setText(hourOfDay + ":" + minute);
                         binding.tvTime.setText(hourString + ":" + minuteSting + " " + am_pm);
                         ShowPlaylistName();
                     }, mHour, mMinute, false);

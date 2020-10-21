@@ -52,6 +52,10 @@ import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
+import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
+import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.addToSearch;
+import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
+import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.PlaylistIDMS;
 
 public class ViewSuggestedActivity extends AppCompatActivity {
     ActivityViewSuggestedBinding binding;
@@ -505,7 +509,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
-           /* holder.binding.llMainLayout.setOnClickListener(view -> {
+            holder.binding.llMainLayout.setOnClickListener(view -> {
                 if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -516,8 +520,14 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
-                } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
-                    comefrom_search = 1;
+                } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0")
+                        || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
+                    comefromDownload = "0";
+                    addToSearch = true;
+                    MyPlaylistIds = PlaylistModel.get(position).getID();
+                    PlaylistIDMS = PlaylistID;
+                    finish();
+                    /*comefrom_search = 1;
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
                     Fragment myPlaylistsFragment = new MyPlaylistsFragment();
@@ -530,9 +540,9 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     FragmentManager fragmentManager1 = getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
                             .replace(R.id.flContainer, myPlaylistsFragment)
-                            .commit();
+                            .commit();*/
                 }
-            });*/
+            });
 
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("1")) {

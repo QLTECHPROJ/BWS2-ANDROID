@@ -490,6 +490,7 @@ public class AddAudioActivity extends AppCompatActivity {
                     } else if (modelList.get(position).getIsLock().equalsIgnoreCase("0") || modelList.get(position).getIsLock().equalsIgnoreCase("")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
+                        comefromDownload = "0";
                         addToSearch = true;
                         MyPlaylistIds = modelList.get(position).getID();
                         PlaylistIDMS = PlaylistID;
@@ -945,6 +946,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
+                    comefromDownload = "0";
                     addToSearch = true;
                     MyPlaylistIds = PlaylistModel.get(position).getID();
                     PlaylistIDMS = PlaylistID;
