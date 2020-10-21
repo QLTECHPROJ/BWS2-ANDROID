@@ -354,7 +354,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
-
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());

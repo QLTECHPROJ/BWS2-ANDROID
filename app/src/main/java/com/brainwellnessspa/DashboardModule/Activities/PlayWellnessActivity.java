@@ -355,12 +355,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         handler.postDelayed(UpdateSongTime, 100);
-        if (isMediaStart && url.equalsIgnoreCase("")) {
-            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
-                Log.e("calll complete real","real");
-            });
-        }
         getPrepareShowData(position);
         /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
             handler1.postDelayed(UpdateSongTime1, 500);
@@ -477,6 +471,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             isMediaStart = false;
             isPrepare = false;
             isPause = false;
+            binding.pbProgress.setVisibility(View.GONE);
+            binding.ivDownloads.setVisibility(View.VISIBLE);
             if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
                 // repeat is on play same song again
                 if (position < listSize - 1) {
@@ -548,6 +544,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             isMediaStart = false;
             isPrepare = false;
             isPause = false;
+            binding.pbProgress.setVisibility(View.GONE);
+            binding.ivDownloads.setVisibility(View.VISIBLE);
             if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
                 // repeat is on play same song again
                 if (position > 0) {
@@ -1331,6 +1329,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        if (isMediaStart && url.equalsIgnoreCase("")) {
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                callComplete();
+                Log.e("calll complete real","real");
+            });
         }
         getMediaByPer();
 
