@@ -1008,7 +1008,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         mainPlayModelList = new ArrayList<>();
         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
-
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
@@ -1017,7 +1016,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
-
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());

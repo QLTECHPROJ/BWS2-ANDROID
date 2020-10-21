@@ -104,6 +104,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         PrepareData();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PrepareData();
+    }
+
     public void PrepareData() {
         try {
             if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")

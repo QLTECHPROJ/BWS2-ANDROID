@@ -1616,7 +1616,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         mainPlayModelList = new ArrayList<>();
         MainPlayModel mainPlayModel;
         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
-
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json1, type);
@@ -1625,7 +1624,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
-
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
@@ -1657,7 +1655,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
-
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
