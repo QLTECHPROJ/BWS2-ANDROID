@@ -207,37 +207,45 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         binding.llDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog dialog = new Dialog(ctx);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.logout_layout);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                    BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", ctx);
+                } else {
+                    final Dialog dialog = new Dialog(ctx);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.logout_layout);
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
+                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
-                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-                final Button Btn = dialog.findViewById(R.id.Btn);
-                tvTitle.setText("Remove playlist");
-                tvHeader.setText("Are you sure you want to remove the " + PlaylistName + " from downloads??");
-                Btn.setText("Confirm");
-                dialog.setOnKeyListener((v, keyCode, event) -> {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                    final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+                    final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+                    final Button Btn = dialog.findViewById(R.id.Btn);
+                    tvTitle.setText("Remove playlist");
+                    tvHeader.setText("Are you sure you want to remove the " + PlaylistName + " from downloads??");
+                    Btn.setText("Confirm");
+                    dialog.setOnKeyListener((v, keyCode, event) -> {
+                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                            dialog.dismiss();
+                        }
+                        return false;
+                    });
+
+                    Btn.setOnClickListener(v -> {
+                        playlistWiseAudiosDetails = GetPlaylistMedia(PlaylistID);
+                        finish();
+                        comeDeletePlaylist = 1;
                         dialog.dismiss();
-                    }
-                    return false;
-                });
+                    });
 
-                Btn.setOnClickListener(v -> {
-                    playlistWiseAudiosDetails = GetPlaylistMedia(PlaylistID);
-                    finish();
-                    comeDeletePlaylist = 1;
-                    dialog.dismiss();
-                });
+                    tvGoBack.setOnClickListener(v -> dialog.dismiss());
+                    dialog.show();
+                    dialog.setCancelable(false);
 
-                tvGoBack.setOnClickListener(v -> dialog.dismiss());
-                dialog.show();
-                dialog.setCancelable(false);
-
+                }
             }
         });
 
