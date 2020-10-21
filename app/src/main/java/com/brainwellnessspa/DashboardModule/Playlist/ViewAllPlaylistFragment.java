@@ -202,6 +202,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
                 editorr.remove(CONSTANTS.PREF_KEY_modelList);
+                editorr.remove(CONSTANTS.PREF_KEY_audioList);
                 editorr.remove(CONSTANTS.PREF_KEY_position);
                 editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
                 editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
