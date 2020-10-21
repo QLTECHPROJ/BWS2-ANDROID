@@ -483,7 +483,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         addDisclaimer.setAudioDuration("0:48");
     }
 
-    private void callTransparentFrag(int i, Context ctx, List<DownloadAudioDetails> listModelList, String s, String playlistID) {
+    private void callTransparentFrag(int position, Context ctx, List<DownloadAudioDetails> listModelList, String s, String playlistID) {
         player = 1;
         if (isPrepare || isMediaStart || isPause) {
             stopMedia();
@@ -491,30 +491,14 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         isPause = false;
         isMediaStart = false;
         isPrepare = false;
-
         isCompleteStop = false;
 
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         Gson gson = new Gson();
-        ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-        DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
-        mainPlayModel.setID("0");
-        mainPlayModel.setName("Disclaimer");
-        mainPlayModel.setAudioFile("");
-        mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-        mainPlayModel.setAudiomastercat("");
-        mainPlayModel.setAudioSubCategory("");
-        mainPlayModel.setImageFile("");
-        mainPlayModel.setLike("");
-        mainPlayModel.setDownload("");
-        mainPlayModel.setAudioDuration("0:48");
-        listModelList2.add(mainPlayModel);
-        listModelList2.addAll(playlistWiseAudioDetails);
-
-        String json = gson.toJson(listModelList2);
+        String json = gson.toJson(listModelList);
         editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-        editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+        editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
