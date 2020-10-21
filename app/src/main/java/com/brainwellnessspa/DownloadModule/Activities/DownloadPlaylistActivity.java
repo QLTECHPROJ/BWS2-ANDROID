@@ -37,6 +37,7 @@ import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
@@ -77,6 +78,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     List<DownloadAudioDetails> playlistWiseAudiosDetails;
     List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
     DownloadAudioDetails addDisclaimer = new DownloadAudioDetails();
+    List<DownloadAudioDetails> oneAudioDetailsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -330,7 +332,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                deleteDownloadFile(ctx.getApplicationContext(), playlistID);
+                deleteDownloadFile(getApplicationContext(), playlistID);
                 for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
                     GetSingleMedia(playlistWiseAudioDetails.get(i).getAudioFile(), ctx.getApplicationContext(), playlistID);
                 }
@@ -340,6 +342,77 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         GetMedia st = new GetMedia();
         st.execute();
         return playlistWiseAudioDetails;
+    }
+
+    private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
+        class DeleteMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient.getInstance(applicationContext)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deleteByPlaylistId(PlaylistId);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+//                notifyItemRemoved(position);
+                deletePlaylist(PlaylistID);
+                super.onPostExecute(aVoid);
+            }
+        }
+        DeleteMedia st = new DeleteMedia();
+        st.execute();
+    }
+
+    public void GetSingleMedia(String AudioFile, Context ctx, String playlistID) {
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                oneAudioDetailsList = DatabaseClient
+                        .getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getLastIdByuId(AudioFile);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (oneAudioDetailsList.size() != 0) {
+                    if (oneAudioDetailsList.size() == 1) {
+                        FileUtils.deleteDownloadedFile(ctx, oneAudioDetailsList.get(0).getName());
+                    }
+                }
+
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetMedia sts = new GetMedia();
+        sts.execute();
+    }
+
+    private void deletePlaylist(String playlistId) {
+        class DeleteMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient.getInstance(ctx)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deletePlaylist(playlistId);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                playlistList = new ArrayList<>();
+                GetAllMedia(ctx);
+                super.onPostExecute(aVoid);
+            }
+        }
+        DeleteMedia st = new DeleteMedia();
+        st.execute();
     }
 
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolders> implements Filterable {
