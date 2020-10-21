@@ -170,7 +170,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             } else if (IsLock.equalsIgnoreCase("0")
                     || IsLock.equalsIgnoreCase("")) {
                 comefromDownload = "1";
-                playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());
+//                playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
                 Intent i = new Intent(ctx, DownloadPlaylistActivity.class);

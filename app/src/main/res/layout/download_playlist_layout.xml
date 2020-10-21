@@ -6,6 +6,7 @@
         android:id="@+id/llMainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_11sdp"
         android:orientation="horizontal"
         android:weightSum="1">
 

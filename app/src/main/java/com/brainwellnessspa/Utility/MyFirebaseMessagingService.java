@@ -147,7 +147,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 fragmentManager1.beginTransaction()
                         .replace(R.id.flContainer, myPlaylistsFragment)
                         .commit();*/
-                resultIntent = new Intent(this, DashboardActivity.class);
+                resultIntent = new Intent(this, ReminderDetailsActivity.class);
                 ComeNotification = 1;
                 resultIntent.putExtra("id", id);
                 resultIntent.putExtra(CONSTANTS.title, title);

@@ -25,6 +25,8 @@ import com.brainwellnessspa.databinding.FragmentDownloadsBinding;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity.comeDeletePlaylist;
+
 public class PlaylistsDownlaodsFragment extends Fragment {
     FragmentDownloadsBinding binding;
     List<DownloadPlaylistDetails> playlistList;
@@ -55,6 +57,10 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (comeDeletePlaylist == 1) {
+            GetAllMedia(getActivity());
+            comeDeletePlaylist = 0;
+        }
         GetAllMedia(getActivity());
     }
 
