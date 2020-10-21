@@ -181,12 +181,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         myCount = 0;
                     }
                 }
-                if (isMediaStart) {
-                    mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                        callComplete();
-                        Log.e("calll complete real","real");
-                    });
-                }
+
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
                 if (player == 1) {
                     if (currentDuration == 0 && isCompleteStop) {
@@ -298,7 +293,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
             oTime = binding.simpleSeekbar.getProgress();
         });
-        if (isMediaStart) {
+        if (isMediaStart && !isprogressbar) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
             });
@@ -306,6 +301,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         binding.ivPlay.setOnClickListener(view12 -> {
             if (!isMediaStart) {
                 callMedia();
+            }else if(isCompleteStop){
+                callMedia();
+                isCompleteStop = false;
             } else {
                 resumeMedia();
                 binding.progressBar.setVisibility(View.GONE);
@@ -752,7 +750,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     isPause = true;
                     isprogressbar = false;
                 } else if (isCompleteStop && binding.progressBar.getVisibility() == View.GONE) {
-                    isCompleteStop = true;
                     isprogressbar = false;
                 } else if (binding.progressBar.getVisibility() == View.VISIBLE && (binding.ivPause.getVisibility() == View.GONE && binding.ivPlay.getVisibility() == View.GONE)) {
                     isprogressbar = true;
@@ -1241,6 +1238,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
+            if(arrayList.get(position).getAudioFile().equalsIgnoreCase(""))
             arrayList.remove(position);
             for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();

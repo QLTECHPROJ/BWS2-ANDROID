@@ -511,9 +511,7 @@ public class PlaylistFragment extends Fragment {
                 isPause = false;
                 isMediaStart = false;
                 isPrepare = false;
-
                 isCompleteStop = false;
-
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();

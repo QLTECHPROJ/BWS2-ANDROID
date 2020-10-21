@@ -628,7 +628,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             getDownloadData();
                             SongListSize = listModel.getResponseData().getPlaylistSongs().size();
                             playlistWiseAudioDetails = GetMedia();
-                            getMediaByPer(PlaylistId, playlistWiseAudioDetails.size());
+                            getMediaByPer(PlaylistId, SongListSize);
                             if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
                                 searchEditText.setHint(R.string.playlist_or_audio_search);
                                 binding.tvSearch.setHint(R.string.playlist_or_audio_search);
@@ -1152,7 +1152,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.ivDownloads.setVisibility(View.GONE);
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
-            getMediaByPer(PlaylistID, playlistWiseAudioDetails.size());
+            getMediaByPer(PlaylistID, SongListSize);
             savePlaylist();
             saveAllMedia(playlistSongs, playlistSongs2, encodedBytes);
         } else {
@@ -1232,7 +1232,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             protected void onPostExecute(Void aVoid) {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
-                getMediaByPer(PlaylistID, playlistWiseAudioDetails.size());
+                getMediaByPer(PlaylistID,SongListSize);
                 super.onPostExecute(aVoid);
             }
         }
@@ -1286,7 +1286,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
 
-                getMediaByPer(PlaylistID, playlistWiseAudioDetails.size());
+                getMediaByPer(PlaylistID,SongListSize);
                 enableDisableDownload(false, "orange");
                 downloadAudioDetailsList = GetAllMedia();
                 playlistWiseAudioDetails = GetMedia();
