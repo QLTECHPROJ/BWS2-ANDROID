@@ -193,6 +193,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 ctx.finish();*/
             }
         });
+
         holder.binding.llRemoveAudio.setOnClickListener(view -> {
             final Dialog dialog = new Dialog(ctx);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -204,7 +205,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
             final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
             final Button Btn = dialog.findViewById(R.id.Btn);
-            tvTitle.setText("Remove audio");
+            tvTitle.setText("Remove playlist");
             tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getPlaylistName() + " from downloads??");
             Btn.setText("Confirm");
             dialog.setOnKeyListener((v, keyCode, event) -> {
