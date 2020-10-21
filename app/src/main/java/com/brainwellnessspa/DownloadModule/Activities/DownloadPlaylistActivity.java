@@ -57,7 +57,7 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class DownloadPlaylistActivity extends AppCompatActivity {
     ActivityDownloadPlaylistBinding binding;
     PlayListsAdpater adpater;
-    String UserID, SearchFlag, AudioFlag, PlaylistID, PlaylistName, PlaylistImage;
+    String UserID, SearchFlag, AudioFlag, PlaylistID, PlaylistName, PlaylistImage, TotalAudio, Totalhour, Totalminute;
     EditText searchEditText;
     Context ctx;
     List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
@@ -76,6 +76,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             PlaylistID = getIntent().getStringExtra("PlaylistID");
             PlaylistName = getIntent().getStringExtra("PlaylistName");
             PlaylistImage = getIntent().getStringExtra("PlaylistImage");
+            TotalAudio = getIntent().getStringExtra("TotalAudio");
+            Totalhour = getIntent().getStringExtra("Totalhour");
+            Totalminute = getIntent().getStringExtra("Totalminute");
         }
 
         binding.llBack.setOnClickListener(new View.OnClickListener() {
@@ -126,20 +129,20 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             binding.searchView.setQuery("", false);
 
         });
-       /* if (listModel.getTotalAudio().equalsIgnoreCase("") ||
-                listModel.getTotalAudio().equalsIgnoreCase("0") &&
-                        listModel.getTotalhour().equalsIgnoreCase("")
-                        && listModel.getTotalminute().equalsIgnoreCase("")) {
+        if (TotalAudio.equalsIgnoreCase("") ||
+                TotalAudio.equalsIgnoreCase("0") &&
+                        Totalhour.equalsIgnoreCase("")
+                        && Totalminute.equalsIgnoreCase("")) {
             binding.tvLibraryDetail.setText("0 Audio | 0h 0m");
         } else {
-            if (listModel.getTotalminute().equalsIgnoreCase("")) {
-                binding.tvLibraryDetail.setText(listModel.getTotalAudio() + " Audio | "
-                        + listModel.getTotalhour() + "h 0m");
+            if (Totalminute.equalsIgnoreCase("")) {
+                binding.tvLibraryDetail.setText(TotalAudio + " Audio | "
+                        + Totalhour + "h 0m");
             } else {
-                binding.tvLibraryDetail.setText(listModel.getTotalAudio() + " Audio | "
-                        + listModel.getTotalhour() + "h " + listModel.getTotalminute() + "m");
+                binding.tvLibraryDetail.setText(TotalAudio + " Audio | "
+                        + Totalhour + "h " + Totalminute + "m");
             }
-        }*/
+        }
         RecyclerView.LayoutManager playList = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvPlayLists.setLayoutManager(playList);
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());

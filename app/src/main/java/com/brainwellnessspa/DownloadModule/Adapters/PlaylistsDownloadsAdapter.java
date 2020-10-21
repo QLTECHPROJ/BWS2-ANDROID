@@ -178,6 +178,9 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
                 i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
                 i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                i.putExtra("TotalAudio", listModelList.get(position).getTotalAudio());
+                i.putExtra("Totalhour", listModelList.get(position).getTotalhour());
+                i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
                 i.putExtra("MyDownloads", "1");
                 ctx.startActivity(i);
         /*        Intent i = new Intent(ctx, DownloadedPlaylist.class);
