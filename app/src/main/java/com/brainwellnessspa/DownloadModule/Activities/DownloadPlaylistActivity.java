@@ -450,11 +450,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistID)) {
+                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
-                        callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
+                        callTransparentFrag(0, ctx, listModelList, "", PlaylistName);
                     }
                 } else {
                     isDisclaimer = 0;
@@ -462,7 +462,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
                     listModelList2.add(addDisclaimer);
                     listModelList2.addAll(listModelList);
-                    callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
+                    callTransparentFrag(0, ctx, listModelList2, "", PlaylistName);
                 }
             });
             holder.binding.llMainLayout.setOnClickListener(view -> {
@@ -470,11 +470,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistID)) {
+                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
-                        callTransparentFrag(position, ctx, listModelList, "", PlaylistID);
+                        callTransparentFrag(position, ctx, listModelList, "", PlaylistName);
                     }
                 } else {
                     isDisclaimer = 0;
@@ -487,7 +487,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         listModelList2.add(addDisclaimer);
                         listModelList2.addAll(listModelList);
                     }
-                    callTransparentFrag(position, ctx, listModelList2, "", PlaylistID);
+                    callTransparentFrag(position, ctx, listModelList2, "", PlaylistName);
                 }
             });
 
@@ -640,7 +640,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, playlistID);
         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
         editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
         editor.commit();
