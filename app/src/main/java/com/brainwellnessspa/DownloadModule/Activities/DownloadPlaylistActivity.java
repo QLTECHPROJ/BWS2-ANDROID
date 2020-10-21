@@ -406,14 +406,13 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                playlistList = new ArrayList<>();
-                GetAllMedia(ctx);
                 super.onPostExecute(aVoid);
             }
         }
         DeleteMedia st = new DeleteMedia();
         st.execute();
     }
+
 
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolders> implements Filterable {
         Context ctx;
@@ -593,7 +592,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     } else {
                         binding.llError.setVisibility(View.GONE);
                         binding.rvPlayLists.setVisibility(View.VISIBLE);
-                        listFilterData = (ArrayList<SubPlayListModel.ResponseData.PlaylistSong>) filterResults.values;
+                        listFilterData = (List<DownloadAudioDetails>) filterResults.values;
                         notifyDataSetChanged();
                     }
                 }
