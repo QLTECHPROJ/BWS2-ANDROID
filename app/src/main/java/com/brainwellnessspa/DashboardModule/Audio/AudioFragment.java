@@ -1,7 +1,6 @@
 package com.brainwellnessspa.DashboardModule.Audio;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,11 +19,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.BillingOrderModule.Activities.CancelMembershipActivity;
-import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
-import com.brainwellnessspa.SplashModule.SplashScreenActivity;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.DownloadAdapter;
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.RecentlyPlayedAdapter;
@@ -32,14 +26,18 @@ import com.brainwellnessspa.DashboardModule.Audio.Adapters.RecommendedAdapter;
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.TopCategoriesAdapter;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentAudioBinding;
 import com.brainwellnessspa.databinding.MainAudioLayoutBinding;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.text.ParseException;
@@ -57,6 +55,9 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Audio.ViewAllAudioFragment.viewallAudio;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
+import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
+import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class AudioFragment extends Fragment {
     public static boolean exit = false;
@@ -258,66 +259,43 @@ public class AudioFragment extends Fragment {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
         try {
-            if(!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
-                    || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))){
+            if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
+                    || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
                 String audioFile = "";
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 Gson gson = new Gson();
-               String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
-                if(AudioFlag.equalsIgnoreCase("MainAudioList")){
-                    Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
-                    }.getType();
-                    ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-                    if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
-                        arrayList.remove(0);
-                    }
-                    if(arrayList.size()==1){
-                       audioFile= arrayList.get(0).getName();
-                    }
-                    if(audioFile.equalsIgnoreCase("Hope")|| audioFile.equalsIgnoreCase("Mindfulness")){
+                String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                }.getType();
+                ArrayList<MainPlayModel> arrayList = gson.fromJson(json, type);
 
-                    }else{
-                        SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editorr = sharedm.edit();
-                        editorr.remove(CONSTANTS.PREF_KEY_modelList);
-                        editorr.remove(CONSTANTS.PREF_KEY_position);
-                        editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
-                        editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
-                        editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
-                        editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
-                        editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
-                        editorr.clear();
-                        editorr.commit();
-                    }
+                if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
+                    arrayList.remove(0);
+                }
+                audioFile = arrayList.get(0).getName();
 
-                }else if(AudioFlag.equalsIgnoreCase("ViewAllAudioList")){
-                    Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
-                    }.getType();
-                    ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-                    if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
-                        arrayList.remove(0);
-                    }
-                    if(arrayList.size()==1){
-                        audioFile= arrayList.get(0).getName();
-                    }
-                    if(audioFile.equalsIgnoreCase("Hope")|| audioFile.equalsIgnoreCase("Mindfulness")){
+                if (audioFile.equalsIgnoreCase("Hope") || audioFile.equalsIgnoreCase("Mindfulness")) {
 
-                    }else{
-                        SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editorr = sharedm.edit();
-                        editorr.remove(CONSTANTS.PREF_KEY_modelList);
-                        editorr.remove(CONSTANTS.PREF_KEY_position);
-                        editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
-                        editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
-                        editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
-                        editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
-                        editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
-                        editorr.clear();
-                        editorr.commit();
+                } else {
+                    SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editorr = sharedm.edit();
+                    editorr.remove(CONSTANTS.PREF_KEY_modelList);
+                    editorr.remove(CONSTANTS.PREF_KEY_audioList);
+                    editorr.remove(CONSTANTS.PREF_KEY_position);
+                    editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
+                    editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
+                    editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
+                    editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
+                    editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
+                    editorr.clear();
+                    editorr.commit();
+                    if(isMediaStart){
+                        stopMedia();
+                        releasePlayer();
                     }
                 }
-            }
-            else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+
+            } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
                 editorr.remove(CONSTANTS.PREF_KEY_modelList);
@@ -329,6 +307,10 @@ public class AudioFragment extends Fragment {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
+                if(isMediaStart){
+                    stopMedia();
+                    releasePlayer();
+                }
             }
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

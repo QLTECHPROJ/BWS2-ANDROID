@@ -50,6 +50,7 @@ import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.Search.SearchFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
@@ -102,6 +103,7 @@ import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
+import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class MyPlaylistsFragment extends Fragment implements StartDragListener {
@@ -535,7 +537,42 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         searchClear(searchEditText);
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         try {
-            if (IsLock.equalsIgnoreCase("1") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+            if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
+                    || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
+                String audioFile = "";
+                Gson gson = new Gson();
+                String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                }.getType();
+                ArrayList<MainPlayModel> arrayList = gson.fromJson(json, type);
+
+                if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
+                    arrayList.remove(0);
+                }
+                audioFile = arrayList.get(0).getName();
+
+                if (audioFile.equalsIgnoreCase("Hope") || audioFile.equalsIgnoreCase("Mindfulness")) {
+
+                } else {
+                    SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editorr = sharedm.edit();
+                    editorr.remove(CONSTANTS.PREF_KEY_modelList);
+                    editorr.remove(CONSTANTS.PREF_KEY_audioList);
+                    editorr.remove(CONSTANTS.PREF_KEY_position);
+                    editorr.remove(CONSTANTS.PREF_KEY_queuePlay);
+                    editorr.remove(CONSTANTS.PREF_KEY_audioPlay);
+                    editorr.remove(CONSTANTS.PREF_KEY_AudioFlag);
+                    editorr.remove(CONSTANTS.PREF_KEY_PlaylistId);
+                    editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
+                    editorr.clear();
+                    editorr.commit();
+                    if(isMediaStart){
+                        stopMedia();
+                        releasePlayer();
+                    }
+                }
+
+            } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
                 editorr.remove(CONSTANTS.PREF_KEY_modelList);
@@ -547,6 +584,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
+                if(isMediaStart){
+                    stopMedia();
+                    releasePlayer();
+                }
             }
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
 
