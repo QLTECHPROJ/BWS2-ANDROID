@@ -1019,7 +1019,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                         int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                         String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(mData.get(0).getPlaylistID())) {
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                             if (pos == position && position < mData.size() - 1) {
 //                                            pos = pos + 1;
                                 if (isDisclaimer == 1) {

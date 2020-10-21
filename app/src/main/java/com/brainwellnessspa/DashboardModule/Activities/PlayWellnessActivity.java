@@ -206,6 +206,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")) {
                 callComplete();
             }
+            if (isMediaStart && url.equalsIgnoreCase("")) {
+                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                    callComplete();
+                    Log.e("calll complete real","real");
+                });
+            }
             progress = getProgressPercentage(currentDuration, totalDuration);
              if (currentDuration == 0 && isCompleteStop) {
                 binding.progressBar.setVisibility(View.GONE);

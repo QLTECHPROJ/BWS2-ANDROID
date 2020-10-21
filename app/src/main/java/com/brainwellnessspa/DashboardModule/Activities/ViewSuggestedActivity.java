@@ -141,17 +141,19 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                         int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                        Gson gsonx = new Gson();
-                        String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
-                        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-                        }.getType();
-                        ArrayList<MainPlayModel> mainPlayModelListold = new ArrayList<>();
-                        mainPlayModelListold = gsonx.fromJson(json, type);
-                        String id = mainPlayModelListold.get(pos).getID();
-                        ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
-                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs = new ArrayList<>();
+                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                         if (audioPlay) {
-                            if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                            if (AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                                Gson gsonx = new Gson();
+                                String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
+                                Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                                }.getType();
+                                ArrayList<MainPlayModel> mainPlayModelListold = new ArrayList<>();
+                                mainPlayModelListold = gsonx.fromJson(json, type);
+                                String id = mainPlayModelListold.get(pos).getID();
+                                ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
+                                ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs = new ArrayList<>();
+
                                 for (int i = 0; i < listModels.getResponseData().size(); i++) {
                                     MainPlayModel mainPlayModel = new MainPlayModel();
                                     mainPlayModel.setID(listModels.getResponseData().get(i).getID());
