@@ -158,7 +158,11 @@ public class ReminderActivity extends AppCompatActivity {
             timePickerDialog = new TimePickerDialog(ReminderActivity.this, R.style.TimePickerTheme,
                     (view1, hourOfDay, minute) -> {
                         if (hourOfDay < 10) {
-                            hourString = "0" + hourOfDay;
+                            if(hourOfDay == 0){
+                                hourString = "12";
+                            }else{
+                                hourString = "0" + hourOfDay;
+                            }
                             am_pm = "AM";
                         } else if (hourOfDay > 12) {
                             am_pm = "PM";
