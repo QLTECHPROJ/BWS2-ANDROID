@@ -169,7 +169,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         Log.e("calll complete errr","eee");
                         myCount = 0;
                     }
-                } else if (myProgress == currentDuration && myProgress != 0 && !isPause  && diff < 2000) {
+                } else if (myProgress == currentDuration && myProgress != 0 && !isPause  && diff < 500) {
 //                    Log.e("myProgress",String.valueOf(myProgress));
                     myCount++;
                     Log.e("myCount", String.valueOf(myCount));
@@ -322,7 +322,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         return view;
     }
 
-    private void MakeArray() { shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+    private void MakeArray() {
+        shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         mainPlayModelList = new ArrayList<>();
         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
@@ -970,13 +971,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         }
                     }
                 } else {
-                    if (listSize == 1) {
-                        binding.ivPlay.setVisibility(View.VISIBLE);
-                        binding.ivPause.setVisibility(View.GONE);
-                        binding.pbProgressBar.setVisibility(View.GONE);
-                        isCompleteStop = true;
-                        stopMedia();
-                    } else if (position < (listSize - 1)) {
+                    if (position < (listSize - 1)) {
                         position = position + 1;
                         getPrepareShowData();
                     } else {

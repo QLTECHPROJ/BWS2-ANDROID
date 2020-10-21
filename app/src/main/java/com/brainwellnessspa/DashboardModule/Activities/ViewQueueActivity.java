@@ -153,7 +153,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             currentDuration = getStartTime();
             diff = totalDuration - myProgress;
             Log.e("myProgress old!!!",String.valueOf(myProgress));
-            if (myProgress == currentDuration && myProgress != 0 && !isPause  && diff < 2000) {
+            if (myProgress == currentDuration && myProgress != 0 && !isPause  && diff < 500) {
                 Log.e("myProgress",String.valueOf(myProgress));
                 myCount++;
                 Log.e("myCount",String.valueOf(myCount));

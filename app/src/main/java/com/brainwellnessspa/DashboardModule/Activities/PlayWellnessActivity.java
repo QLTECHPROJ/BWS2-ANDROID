@@ -192,7 +192,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     callComplete();
                     myCount = 0;
                 }
-            } else if (myProgress == currentDuration && myProgress != 0 && !isPause && diff < 2000) {
+            } else if (myProgress == currentDuration && myProgress != 0 && !isPause && diff < 500) {
 //                Log.e("myProgress", String.valueOf(myProgress));
                 myCount++;
                 Log.e("myCount", String.valueOf(myCount));
