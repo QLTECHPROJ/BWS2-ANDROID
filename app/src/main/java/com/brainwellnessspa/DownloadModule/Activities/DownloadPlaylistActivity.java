@@ -74,6 +74,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
     DownloadAudioDetails addDisclaimer = new DownloadAudioDetails();
     List<DownloadAudioDetails> oneAudioDetailsList;
+    public static int comeDeletePlaylist = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,6 +230,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 Btn.setOnClickListener(v -> {
                     playlistWiseAudiosDetails = GetPlaylistMedia(PlaylistID);
                     finish();
+                    comeDeletePlaylist = 1;
                     dialog.dismiss();
                 });
 
@@ -303,7 +305,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                adpater = new PlayListsAdpater(playlistWiseAudioDetails,ctx);
+                adpater = new PlayListsAdpater(playlistWiseAudioDetails, ctx);
                 binding.rvPlayLists.setAdapter(adpater);
                 super.onPostExecute(aVoid);
             }
@@ -380,7 +382,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         FileUtils.deleteDownloadedFile(ctx, oneAudioDetailsList.get(0).getName());
                     }
                 }
-
                 super.onPostExecute(aVoid);
             }
         }
@@ -407,7 +408,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         DeleteMedia st = new DeleteMedia();
         st.execute();
     }
-
 
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolders> implements Filterable {
         Context ctx;
@@ -586,7 +586,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         binding.rvPlayLists.setVisibility(View.GONE);
                         binding.tvFound.setText("Couldn't find '" + SearchFlag + "'. Try searching again");
                         Log.e("search", SearchFlag);
+                        binding.tvTag.setVisibility(View.GONE);
                     } else {
+                        binding.tvTag.setVisibility(View.VISIBLE);
                         binding.llError.setVisibility(View.GONE);
                         binding.rvPlayLists.setVisibility(View.VISIBLE);
                         listFilterData = (List<DownloadAudioDetails>) filterResults.values;

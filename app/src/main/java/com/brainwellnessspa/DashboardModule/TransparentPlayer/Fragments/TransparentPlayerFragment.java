@@ -626,12 +626,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         if (listSize != 0) {
                             binding.tvTitle.setText(mainPlayModelList.get(position).getName());
                             binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
-                            if (audioFile.equalsIgnoreCase("")) {
-                                Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                            } else {
-                                Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                            try {
+                                if (audioFile.equalsIgnoreCase("")) {
+                                    Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                                } else {
+                                    Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
                         }
                     }

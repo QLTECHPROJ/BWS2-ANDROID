@@ -32,6 +32,8 @@ import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity.comeDeletePlaylist;
+
 
 public class DownloadsActivity extends AppCompatActivity {
     ActivityDownloadsBinding binding;
@@ -236,8 +238,12 @@ public class DownloadsActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        prepareData1();
         super.onResume();
+        prepareData1();
+        if (comeDeletePlaylist == 1) {
+            prepareData1();
+            comeDeletePlaylist = 0;
+        }
     }
 }
 
