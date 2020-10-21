@@ -203,7 +203,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     myCount = 0;
                 }
             }
-            if (currentDuration == totalDuration && currentDuration != 0 && !isStop) {
+            if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")) {
                 callComplete();
             }
             progress = getProgressPercentage(currentDuration, totalDuration);
@@ -355,12 +355,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         handler.postDelayed(UpdateSongTime, 100);
-     /*   if (isMediaStart && !isprogressbar) {
+        if (isMediaStart && url.equalsIgnoreCase("")) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
                 Log.e("calll complete real","real");
             });
-        }*/
+        }
         getPrepareShowData(position);
         /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
             handler1.postDelayed(UpdateSongTime1, 500);

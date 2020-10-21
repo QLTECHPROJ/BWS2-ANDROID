@@ -174,9 +174,6 @@ public class ReminderActivity extends AppCompatActivity {
                         }  else if (hourOfDay == 12) {
                             am_pm = "PM";
                             hourString = "" + hourOfDay;
-                            if (hourOfDay < 10) {
-                                hourString = "0" + hourString;
-                            }
                         } else {
                             hourString = "" + hourOfDay;
                             am_pm = "AM";
