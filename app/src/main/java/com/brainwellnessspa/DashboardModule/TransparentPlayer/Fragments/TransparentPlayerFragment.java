@@ -166,6 +166,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     if (myCount == 5) {
                         Log.e("myCount complete", String.valueOf(myCount));
                         callComplete();
+                        Log.e("calll complete errr","eee");
                         myCount = 0;
                     }
                 } else if (myProgress == currentDuration && myProgress != 0 && !isPause  && diff < 2000) {
@@ -176,10 +177,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     if (myCount == 200) {
                         Log.e("myCount complete", String.valueOf(myCount));
                         callComplete();
+                        Log.e("calll complete errr","eee");
                         myCount = 0;
                     }
                 }
-
+                if (isMediaStart) {
+                    mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                        callComplete();
+                        Log.e("calll complete real","real");
+                    });
+                }
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
                 if (player == 1) {
                     if (currentDuration == 0 && isCompleteStop) {
@@ -206,9 +213,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     binding.ivPause.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
                 }
-                if (currentDuration == totalDuration && currentDuration != 0 && !isStop) {
-                    callComplete();
-                }
+
                 //Log.d("Progress", ""+progress);
                 if (isPause) {
                     binding.simpleSeekbar.setProgress(oTime);
@@ -736,6 +741,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 addToRecentPlay();
             }
             binding.llPlayearMain.setOnClickListener(view -> {
+                handler.removeCallbacks(UpdateSongTime);
                 if (player == 0) {
                     player = 1;
                 }
@@ -1304,6 +1310,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onResume() {
+        handler.postDelayed(UpdateSongTime,100);
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         Gson gson = new Gson();
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));

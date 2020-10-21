@@ -8,6 +8,7 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.downloader.Error;
+import com.downloader.OnCancelListener;
 import com.downloader.OnDownloadListener;
 import com.downloader.OnPauseListener;
 import com.downloader.OnStartOrResumeListener;
@@ -24,7 +25,7 @@ import java.util.List;
 import static com.brainwellnessspa.EncryptDecryptUtils.FileUtils.saveFile;
 
 
-public class DownloadMedia implements OnDownloadListener, OnStartOrResumeListener, OnPauseListener {
+public class DownloadMedia implements OnDownloadListener{
     public static int downloadError = 2,downloadIdOne;
     public static String filename = "";
     public static int downloadProgress = 0;
@@ -69,7 +70,22 @@ public class DownloadMedia implements OnDownloadListener, OnStartOrResumeListene
 //        progressBarOne.setProgress((int) progressPercent);
 //        textViewProgressOne.setText(BWSApplication.getProgressDisplayLine(progress.currentBytes, progress.totalBytes));
 //        progressBarOne.setIndeterminate(false);
-        }).setOnPauseListener(this).setOnStartOrResumeListener(this).start(this);
+        }).setOnPauseListener(new OnPauseListener() {
+           @Override
+           public void onPause() {
+
+           }
+       }).setOnCancelListener(new OnCancelListener() {
+           @Override
+           public void onCancel() {
+
+           }
+       }).setOnStartOrResumeListener(new OnStartOrResumeListener() {
+           @Override
+           public void onStartOrResume() {
+
+           }
+       }).start(this);
        return encodedBytes;
     }
 
@@ -179,15 +195,5 @@ public class DownloadMedia implements OnDownloadListener, OnStartOrResumeListene
 
         SaveMedia st = new SaveMedia();
         st.execute();
-    }
-
-    @Override
-    public void onStartOrResume() {
-//        callPauseResume();
-    }
-
-    @Override
-    public void onPause() {
-
     }
 }

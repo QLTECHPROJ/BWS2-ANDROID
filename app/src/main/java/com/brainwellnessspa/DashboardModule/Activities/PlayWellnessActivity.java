@@ -203,6 +203,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     myCount = 0;
                 }
             }
+            if (isMediaStart) {
+                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                    callComplete();
+                });
+            }
             progress = getProgressPercentage(currentDuration, totalDuration);
              if (currentDuration == 0 && isCompleteStop) {
                 binding.progressBar.setVisibility(View.GONE);
@@ -360,11 +365,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             handler1.removeCallbacks(UpdateSongTime1);
         }*/
         callRepeatShuffle();
-        if (isMediaStart) {
-            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
-            });
-        }
+
         binding.llBack.setOnClickListener(view -> {
             callBack();
         });
