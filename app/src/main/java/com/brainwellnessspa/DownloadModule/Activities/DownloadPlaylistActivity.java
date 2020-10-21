@@ -460,6 +460,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     isDisclaimer = 0;
                     disclaimerPlayed = 0;
                     List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
+                    listModelList2.add(addDisclaimer);
                     listModelList2.addAll(listModelList);
                     callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
                 }

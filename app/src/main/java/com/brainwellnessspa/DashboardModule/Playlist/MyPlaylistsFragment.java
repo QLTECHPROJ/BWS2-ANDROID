@@ -1928,6 +1928,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     isDisclaimer = 0;
                     disclaimerPlayed = 0;
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
+                    listModelList2.add(addDisclaimer);
                     listModelList2.addAll(listModelList);
                     callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
                 }
