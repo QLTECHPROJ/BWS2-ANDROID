@@ -295,11 +295,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
             oTime = binding.simpleSeekbar.getProgress();
         });
-        if (isMediaStart && audioFile.equalsIgnoreCase("")) {
-            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
-            });
-        }
+
         binding.ivPlay.setOnClickListener(view12 -> {
             if (!isMediaStart) {
                 callMedia();
@@ -738,7 +734,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     }
                 }
             }
-
+            if (audioFile.equalsIgnoreCase("")) {
+                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                    callComplete();
+                });
+            }
             startTime = getStartTime();
 
             if (!audioFile.equalsIgnoreCase("")) {
