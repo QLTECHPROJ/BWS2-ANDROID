@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
 import com.brainwellnessspa.databinding.AudioDownloadsLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -155,14 +156,14 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         }
 
         holder.binding.llMainLayout.setOnClickListener(view -> {
-
             if (IsLock.equalsIgnoreCase("1")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
                 Intent i = new Intent(ctx, MembershipChangeActivity.class);
                 i.putExtra("ComeFrom", "Plan");
                 ctx.startActivity(i);
-            }if (IsLock.equalsIgnoreCase("2")) {
+            }
+            if (IsLock.equalsIgnoreCase("2")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
                 BWSApplication.showToast("Please re-activate your membership plan", ctx);
@@ -172,6 +173,13 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 playlistWiseAudioDetails = GetMedia(listModelList.get(position).getPlaylistID());
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
+                Intent i = new Intent(ctx, DownloadPlaylistActivity.class);
+                i.putExtra("New", "0");
+                i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
+                i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                i.putExtra("MyDownloads", "1");
+                ctx.startActivity(i);
         /*        Intent i = new Intent(ctx, DownloadedPlaylist.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
@@ -194,7 +202,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
             final Button Btn = dialog.findViewById(R.id.Btn);
             tvTitle.setText("Remove audio");
-            tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getPlaylistName() +" from downloads??");
+            tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getPlaylistName() + " from downloads??");
             Btn.setText("Confirm");
             dialog.setOnKeyListener((v, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -385,7 +393,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             protected void onPostExecute(Void aVoid) {
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                if(queuePlay){
+                if (queuePlay) {
                     int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
                     ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
                     Gson gson = new Gson();

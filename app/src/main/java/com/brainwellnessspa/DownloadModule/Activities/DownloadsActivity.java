@@ -37,7 +37,7 @@ public class DownloadsActivity extends AppCompatActivity {
     ActivityDownloadsBinding binding;
     ArrayList<DownloadlistModel.Audio> audioList;
     ArrayList<DownloadlistModel.Playlist> playlistList;
-    String UserID,AudioFlag;
+    String UserID, AudioFlag;
     public static boolean ComeFrom_Playlist = false;
     Context ctx;
 
@@ -49,7 +49,7 @@ public class DownloadsActivity extends AppCompatActivity {
         SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-          AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
         binding.llBack.setOnClickListener(view -> {
             comefromDownload = "0";
@@ -112,7 +112,9 @@ public class DownloadsActivity extends AppCompatActivity {
 
             }
         });
-    }  public void prepareData1() {
+    }
+
+    public void prepareData1() {
         callMembershipMediaPlayer();
     }
 
@@ -148,7 +150,7 @@ public class DownloadsActivity extends AppCompatActivity {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if(isMediaStart){
+                    if (isMediaStart) {
                         stopMedia();
                         releasePlayer();
                     }
@@ -167,7 +169,7 @@ public class DownloadsActivity extends AppCompatActivity {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if(isMediaStart){
+                if (isMediaStart) {
                     stopMedia();
                     releasePlayer();
                 }
