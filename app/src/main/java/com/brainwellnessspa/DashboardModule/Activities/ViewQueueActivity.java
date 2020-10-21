@@ -85,7 +85,7 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,/* AudioManager.OnAudioFocusChangeListener,*/ StartDragListener {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
-    String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name;
+    String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name,StrigRemoveName;
     Context ctx;
     Activity activity;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -456,6 +456,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             if (queuePlay) {
                 if (addToQueueModelList.get(position).getName().equalsIgnoreCase(binding.tvName.getText().toString())) {
                     mypos = position;
+                    StrigRemoveName = addToQueueModelList.get(position).getName();
                     addToQueueModelList2.remove(position);
                 }
             }
@@ -1011,8 +1012,14 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
                     setInIt(listModel.getName(), listModel.getAudiomastercat(),
                             listModel.getImageFile(), listModel.getAudioDuration());
-                    if (queuePlay)
-                        addToQueueModelList.remove(mypos);
+                    if (queuePlay) {
+                        for(int i = 0;i<addToQueueModelList.size();i++){
+                            if(addToQueueModelList.get(i).getName().equalsIgnoreCase(StrigRemoveName)){
+                                addToQueueModelList.remove(i);
+                                break;
+                            }
+                        }
+                    }
                     savePrefQueue(position1, true, false, addToQueueModelList, ctx);
                     position = position1;
                     getPrepareShowData(position);
@@ -1025,23 +1032,30 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
         public void callRemoveList1(int position) {
             listModelList.remove(position);
-            notifyDataSetChanged();
+            notifyItemRemoved(position);
         }
 
         public void callRemoveList(int position1,String s) {
             for (int i = 0; i < addToQueueModelList.size(); i++) {
-                if (addToQueueModelList.get(i).getName().equalsIgnoreCase(binding.tvName.getText().toString()))
+                if (addToQueueModelList.get(i).getName().equalsIgnoreCase(binding.tvName.getText().toString())) {
                     addToQueueModelList.remove(i);
+                    break;
+                }
             }
-            setInIt(listModelList.get(position).getName(), listModelList.get(position).getAudiomastercat(),
-                    listModelList.get(position).getImageFile(), listModelList.get(position).getAudioDuration());
-            String Name = listModelList.get(position1).getName();
+            if(s.equalsIgnoreCase("1")) {
+                setInIt(listModelList.get(position).getName(), listModelList.get(position).getAudiomastercat(),
+                        listModelList.get(position).getImageFile(), listModelList.get(position).getAudioDuration());
+            }
+            if(position1 == listModelList.size()){
+                position1 = position1-1;
+            }
             listModelList.remove(position1);
        /*     for (int i = 0; i < addToQueueModelList.size(); i++) {
                 if (addToQueueModelList.get(i).getName().equalsIgnoreCase(Name))
                     addToQueueModelList.remove(i);
             }*/
-            notifyDataSetChanged();
+
+            notifyItemRemoved(position1);
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -1078,7 +1092,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             if (queuePlay && !addSong) {
                 ArrayList<AddToQueueModel> listModelList1 = new ArrayList<>();
                 listModelList1.clear();
-                listModelList1 = listModelList;
+                listModelList1 = new ArrayList<>();
+                listModelList1.addAll(listModelList);
                 listModelList1.add(addToQueueModelList.get(mypos));
                 addSong = true;
                 json = gson.toJson(listModelList1);

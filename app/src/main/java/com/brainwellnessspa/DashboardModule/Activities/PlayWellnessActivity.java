@@ -203,11 +203,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     myCount = 0;
                 }
             }
-            if (isMediaStart) {
-                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                    callComplete();
-                });
-            }
+
             progress = getProgressPercentage(currentDuration, totalDuration);
              if (currentDuration == 0 && isCompleteStop) {
                 binding.progressBar.setVisibility(View.GONE);
@@ -357,6 +353,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         handler.postDelayed(UpdateSongTime, 100);
+        if (isMediaStart && !isprogressbar) {
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                callComplete();
+                Log.e("calll complete real","real");
+            });
+        }
         getPrepareShowData(position);
         /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
             handler1.postDelayed(UpdateSongTime1, 500);
@@ -427,6 +429,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         binding.llPlay.setOnClickListener(v -> {
             if (!isMediaStart) {
                 callMedia();
+            }else if(isCompleteStop){
+                callMedia();
+                isCompleteStop = false;
             } else {
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);
@@ -1335,7 +1340,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
-
         handler.postDelayed(UpdateSongTime, 100);
         BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
     }

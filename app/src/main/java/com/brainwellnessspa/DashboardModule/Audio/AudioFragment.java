@@ -61,7 +61,7 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class AudioFragment extends Fragment {
     public static boolean exit = false;
-    public static String IsLock = "";
+    public static String IsLock = "0";
     FragmentAudioBinding binding;
     String UserID, AudioFlag, expDate;
     List<String> fileNameList;
