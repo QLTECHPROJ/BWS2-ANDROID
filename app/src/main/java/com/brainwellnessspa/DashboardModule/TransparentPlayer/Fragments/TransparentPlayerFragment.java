@@ -181,7 +181,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         myCount = 0;
                     }
                 }
-
+                if (currentDuration == totalDuration && currentDuration != 0 && !isStop) {
+                    callComplete();
+                }
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
                 if (player == 1) {
                     if (currentDuration == 0 && isCompleteStop) {
@@ -293,11 +295,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
             oTime = binding.simpleSeekbar.getProgress();
         });
-        if (isMediaStart && !isprogressbar) {
-            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
-            });
-        }
+//        if (isMediaStart && !isprogressbar) {
+//            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+//                callComplete();
+//            });
+//        }
         binding.ivPlay.setOnClickListener(view12 -> {
             if (!isMediaStart) {
                 callMedia();
