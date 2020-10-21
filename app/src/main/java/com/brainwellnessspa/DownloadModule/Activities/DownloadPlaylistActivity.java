@@ -220,7 +220,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
                 final Button Btn = dialog.findViewById(R.id.Btn);
                 tvTitle.setText("Remove playlist");
-                tvHeader.setText("Are you sure you want to remove the " + listModelList.get(po).getPlaylistName() + " from downloads??");
+                tvHeader.setText("Are you sure you want to remove the " + PlaylistName + " from downloads??");
                 Btn.setText("Confirm");
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -230,7 +230,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 });
 
                 Btn.setOnClickListener(v -> {
-                    playlistWiseAudiosDetails = GetPlaylistMedia(listModelList.get(position).getPlaylistID());
+                    playlistWiseAudiosDetails = GetPlaylistMedia(PlaylistID);
                     finish();
                     dialog.dismiss();
                 });
