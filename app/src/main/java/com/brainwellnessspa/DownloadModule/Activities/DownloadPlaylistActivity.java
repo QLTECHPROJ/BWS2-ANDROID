@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -32,9 +31,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity;
-import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
-import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
@@ -46,7 +42,6 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityDownloadPlaylistBinding;
 import com.brainwellnessspa.databinding.DownloadPlaylistLayoutBinding;
-import com.brainwellnessspa.databinding.MyPlaylistLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -308,7 +303,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                adpater = new PlayListsAdpater(playlistWiseAudioDetails);
+                adpater = new PlayListsAdpater(playlistWiseAudioDetails,ctx);
                 binding.rvPlayLists.setAdapter(adpater);
                 super.onPostExecute(aVoid);
             }
@@ -420,9 +415,10 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         private List<DownloadAudioDetails> listModelList;
         private List<DownloadAudioDetails> listFilterData;
 
-        public PlayListsAdpater(List<DownloadAudioDetails> listModelList) {
+        public PlayListsAdpater(List<DownloadAudioDetails> listModelList, Context ctx) {
             this.listModelList = listModelList;
             this.listFilterData = listModelList;
+            this.ctx = ctx;
         }
 
         @NonNull
