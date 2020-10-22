@@ -1406,6 +1406,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 Log.e("Playinggggg", "Startinggg");
                 mediaPlayer.start();
                 isMediaStart = true;
+                isprogressbar = false;
                 binding.llProgressBar.setVisibility(View.GONE);
                 binding.progressBar.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.GONE);
@@ -1417,6 +1418,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     private void callMedia() {
         FileDescriptor fileDescriptor = null;
         if (downloadAudioDetailsList.size() != 0) {
+            isprogressbar = true;
             binding.llProgressBar.setVisibility(View.VISIBLE);
             binding.progressBar.setVisibility(View.VISIBLE);
             binding.llPlay.setVisibility(View.GONE);
@@ -1427,12 +1429,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         } else {
             if (BWSApplication.isNetworkConnected(ctx)) {
+                isprogressbar = true;
                 binding.llProgressBar.setVisibility(View.VISIBLE);
                 binding.progressBar.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.GONE);
                 setMediaPlayer("0", fileDescriptor);
             } else {
+                isprogressbar = false;
                 binding.progressBar.setVisibility(View.GONE);
                 binding.llProgressBar.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.VISIBLE);
@@ -1469,6 +1473,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     if (BWSApplication.isNetworkConnected(ctx)) {
                         setMediaPlayer("0", fileDescriptor);
                     } else {
+                        isprogressbar = false;
                         binding.progressBar.setVisibility(View.GONE);
                         binding.llProgressBar.setVisibility(View.GONE);
                         binding.llPlay.setVisibility(View.VISIBLE);
