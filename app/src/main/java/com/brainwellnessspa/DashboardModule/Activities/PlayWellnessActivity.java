@@ -1355,6 +1355,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         if (!url.equalsIgnoreCase("")) {
             addToRecentPlay();
+        }else {
         }
 
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

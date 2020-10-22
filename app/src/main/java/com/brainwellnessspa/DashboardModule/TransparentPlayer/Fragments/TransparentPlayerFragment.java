@@ -625,24 +625,25 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
                 @Override
                 protected void onPostExecute(Void aVoid) {
-                    if (audioPlay) {
-                        if (listSize != 0) {
-                            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-                            binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
-                            try {
-                                if (audioFile.equalsIgnoreCase("")) {
-                                    Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
-                                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                                } else {
-                                    Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                    try {
+                        if (audioPlay) {
+                            if (listSize != 0) {
+                                binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+                                binding.tvSubTitle.setText(mainPlayModelList.get(position).getAudioDirection());
+                                try {
+                                    if (audioFile.equalsIgnoreCase("")) {
+                                        Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                                                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                                    } else {
+                                        Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                                                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
                         }
-                    }
-                    try {
+
                         if (player == 1) {
                             binding.progressBar.setVisibility(View.GONE);
 //                    binding.llProgress.setVisibility(View.GONE);
@@ -898,7 +899,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
             }
         }
-    }    private void getDownloadMedia(DownloadMedia downloadMedia) {
+    }
+
+    private void getDownloadMedia(DownloadMedia downloadMedia) {
         class getDownloadMedia extends AsyncTask<Void, Void, Void> {
             FileDescriptor fileDescriptor = null;
 
