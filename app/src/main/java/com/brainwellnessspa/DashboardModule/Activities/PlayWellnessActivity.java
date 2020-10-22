@@ -99,6 +99,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     List<DownloadAudioDetails> downloadAudioDetailsList;
+    List<DownloadAudioDetails> downloadAudioDetailsList1;
     long myProgress = 0,diff = 0;
     private long mLastClickTime = 0, totalDuration, currentDuration = 0;
     private Handler handler;
@@ -291,6 +292,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         activity = PlayWellnessActivity.this;
         addToQueueModelList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
+        downloadAudioDetailsList1 = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -838,7 +840,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             @Override
             protected void onPostExecute(Void aVoid) {
 
-                if (downloadAudioDetailsList.size() != 0) {
+                if (downloadAudioDetailsList1.size() != 0) {
                     if (downloadPercentage <= 100) {
                         if (downloadPercentage == 100) {
                             binding.pbProgress.setVisibility(View.GONE);
@@ -1095,33 +1097,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getaudioByPlaylist(url, "");
+                        .getLastIdByuId(url);
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if (!url.equalsIgnoreCase("")) {
-                    if (downloadAudioDetailsList.size() != 0) {
-                        if (downloadAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                            binding.llDownload.setClickable(false);
-                            binding.llDownload.setEnabled(false);
-                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                        } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
-                            binding.llDownload.setClickable(true);
-                            binding.llDownload.setEnabled(true);
-                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                        }
-                    } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
-                        binding.llDownload.setClickable(true);
-                        binding.llDownload.setEnabled(true);
-                        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-                        binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                    }
-                }
-
                 if (isPause) {
                     binding.llProgressBar.setVisibility(View.GONE);
                     binding.progressBar.setVisibility(View.GONE);
@@ -1158,14 +1139,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
     public void GetMedia2() {
 
-        downloadAudioDetailsList = new ArrayList<>();
+        downloadAudioDetailsList1 = new ArrayList<>();
 
         class GetMedia extends AsyncTask<Void, Void, Void> {
 
             @Override
             protected Void doInBackground(Void... voids) {
 
-                downloadAudioDetailsList = DatabaseClient
+                downloadAudioDetailsList1 = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
@@ -1176,8 +1157,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             @Override
             protected void onPostExecute(Void aVoid) {
                 if (!url.equalsIgnoreCase("")) {
-                    if (downloadAudioDetailsList.size() != 0) {
-                        if (downloadAudioDetailsList.get(0).getDownload().equalsIgnoreCase("1")) {
+                    if (downloadAudioDetailsList1.size() != 0) {
+                        if (downloadAudioDetailsList1.get(0).getDownload().equalsIgnoreCase("1")) {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                             binding.llDownload.setClickable(false);
                             binding.llDownload.setEnabled(false);
@@ -1263,6 +1244,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 name = addToQueueModelList.get(position).getName();
                 url = addToQueueModelList.get(position).getAudioFile();
                 GetMedia();
+                GetMedia2();
                 binding.tvName.setText(addToQueueModelList.get(position).getName());
                 binding.tvDireName.setText(R.string.Directions);
                 binding.tvDireName.setText(R.string.Directions);
@@ -1317,6 +1299,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         mainPlayModelList.get(position).setPlaylistID("");
                     }
                     GetMedia();
+                    GetMedia2();
                     binding.tvName.setText(mainPlayModelList.get(position).getName());
                     if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
                         binding.llDirection.setVisibility(View.GONE);
@@ -2230,7 +2213,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
         }*/
-        GetMedia2(); 
+        GetMedia2();
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

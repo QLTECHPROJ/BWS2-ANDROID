@@ -484,7 +484,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                         .getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
-                        .getaudioByPlaylist(url, PlaylistId);
+                        .getLastIdByuId(url);
                 return null;
             }
 

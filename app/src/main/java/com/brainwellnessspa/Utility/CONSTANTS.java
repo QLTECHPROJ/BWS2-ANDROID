@@ -86,6 +86,9 @@ public class CONSTANTS {
     public static final String PREF_KEY_LOGIN = "Login";
     public static final String PREF_KEY_AUDIO = "AUDIO";
     public static final String PREF_KEY_UserID = "UserID";
+    public static final String PREF_KEY_LOGOUT = "Logout";
+    public static final String PREF_KEY_LOGOUT_UserID = "UserID";
+    public static final String PREF_KEY_LOGOUT_MobileNO = "MobileNO";
     public static final String PREF_KEY_ExpDate = "ExpDate";
     public static final String PREF_KEY_IsRepeat = "IsRepeat";
     public static final String PREF_KEY_Status = "Status";

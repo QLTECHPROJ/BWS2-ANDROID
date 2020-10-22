@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -25,6 +26,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
+import com.brainwellnessspa.RoomDataBase.DatabaseClient;
+import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.SmsReceiver;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.auth.api.phone.SmsRetriever;
@@ -43,6 +47,9 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.logout;
 import com.brainwellnessspa.databinding.ActivityOtpBinding;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,6 +65,7 @@ public class OtpActivity extends AppCompatActivity implements
     CountDownTimer countDownTimer;
     private long mLastClickTime = 0;
     public static int comeLogin = 0;
+    List<DownloadAudioDetails> downloadAudioDetails=new ArrayList<>();
     private BroadcastReceiver receiver;
 //    AppEventsLogger logger;
 
@@ -137,9 +145,22 @@ public class OtpActivity extends AppCompatActivity implements
                                         otpModel.getResponseData().getError().equalsIgnoreCase("")) {
                                     SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = shared.edit();
-                                    editor.putString(CONSTANTS.PREF_KEY_UserID, otpModel.getResponseData().getUserID());
-                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo, otpModel.getResponseData().getPhoneNumber());
+                                    String UserID =  otpModel.getResponseData().getUserID();
+                                    String MobileNO=  otpModel.getResponseData().getPhoneNumber();
+                                    editor.putString(CONSTANTS.PREF_KEY_UserID,UserID);
+                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo,MobileNO );
                                     editor.commit();
+                                    SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
+                                    String Logout_UserID = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, ""));
+                                    String Logout_MobileNo = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO, ""));
+
+                                    if(!UserID.equalsIgnoreCase(Logout_UserID)
+                                    && !MobileNO.equalsIgnoreCase(Logout_MobileNo)){
+                                        GetAllMedia();
+                                    }
+
+                                    Log.e("New UserId MobileNo",UserID+"....." +MobileNO);
+                                    Log.e("Old UserId MobileNo",Logout_UserID+"....." + Logout_MobileNo);
                                     logout = false;
                                     BWSApplication.showToast(otpModel.getResponseMessage(), OtpActivity.this);
                                     Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
@@ -176,6 +197,79 @@ public class OtpActivity extends AppCompatActivity implements
         i.putExtra(CONSTANTS.MobileNo, MobileNo);
         startActivity(i);
         finish();
+    }
+    public void GetAllMedia() {
+
+        class GetTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                downloadAudioDetails = DatabaseClient
+                        .getInstance(OtpActivity.this)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllData1();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                if(downloadAudioDetails.size()!=0){
+                    for(int i = 0;i<downloadAudioDetails.size();i++){
+                        FileUtils.deleteDownloadedFile(getApplicationContext(), downloadAudioDetails.get(i).getName());
+                    }
+                }
+                DeletallLocalCart();
+                DeletallLocalCart1();
+            }
+        }
+
+        GetTask st = new GetTask();
+        st.execute();
+    }
+    public void DeletallLocalCart() {
+        class DeletallCart extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient
+                        .getInstance(OtpActivity.this)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deleteAll();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                DeletallLocalCart1();
+                super.onPostExecute(aVoid);
+            }
+        }
+        DeletallCart st = new DeletallCart();
+        st.execute();
+    }
+
+    public void DeletallLocalCart1() {
+        class DeletallCart extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient
+                        .getInstance(OtpActivity.this)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deleteAllPlalist();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }
+        DeletallCart st = new DeletallCart();
+        st.execute();
     }
 
     private void startSMSListener() {

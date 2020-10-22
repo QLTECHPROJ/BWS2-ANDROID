@@ -69,7 +69,7 @@ public class AccountFragment extends Fragment {
     public static int ComeScreenAccount = 0;
     public static boolean logout = false;
     FragmentAccountBinding binding;
-    String UserID;
+    String UserID,MobileNo;
     private long mLastClickTime = 0;
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
@@ -79,6 +79,7 @@ public class AccountFragment extends Fragment {
         View view = binding.getRoot();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        MobileNo = (shared1.getString(CONSTANTS.PREF_KEY_MobileNo, ""));
         ComeScreenAccount = 1;
         comefromDownload = "0";
         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 10,
@@ -285,8 +286,6 @@ public class AccountFragment extends Fragment {
     }
 
     void DeleteCall() {
-        DeletallLocalCart();
-        DeletallLocalCart1();
         PRDownloader.cancel(downloadIdOne);
         filename = "";
         logout = true;
@@ -294,14 +293,27 @@ public class AccountFragment extends Fragment {
             stopMedia();
             releasePlayer();
         }
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editorcv = shared.edit();
+        editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_UserID, UserID);
+        editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO,MobileNo);
+        editorcv.commit();
+
+        Log.e("Old UserId MobileNo",UserID+"....." + MobileNo);
         SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREF_KEY_UserID);
         edit.remove(CONSTANTS.PREF_KEY_MobileNo);
-        edit.remove(CONSTANTS.PREF_KEY_IsRepeat);
-        edit.remove(CONSTANTS.PREF_KEY_IsShuffle);
+        edit.remove(CONSTANTS.PREF_KEY_ExpDate);
+        edit.remove(CONSTANTS.PREF_KEY_IsLock);
         edit.clear();
         edit.commit();
+        SharedPreferences preferencesx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editx = preferencesx.edit();
+        editx.remove(CONSTANTS.PREF_KEY_IsRepeat);
+        editx.remove(CONSTANTS.PREF_KEY_IsShuffle);
+        editx.clear();
+        editx.commit();
         SharedPreferences preferences11 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit1 = preferences11.edit();
         edit1.remove(CONSTANTS.PREF_KEY_DownloadName);
@@ -329,48 +341,6 @@ public class AccountFragment extends Fragment {
         editorr.commit();
     }
 
-    public void DeletallLocalCart() {
-        class DeletallCart extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient
-                        .getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .deleteAll();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                DeletallLocalCart1();
-                super.onPostExecute(aVoid);
-            }
-        }
-        DeletallCart st = new DeletallCart();
-        st.execute();
-    }
-
-    public void DeletallLocalCart1() {
-        class DeletallCart extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient
-                        .getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .deleteAllPlalist();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-        }
-        DeletallCart st = new DeletallCart();
-        st.execute();
-    }
 
     void profileViewData(Context ctx) {
         if (BWSApplication.isNetworkConnected(ctx)) {
