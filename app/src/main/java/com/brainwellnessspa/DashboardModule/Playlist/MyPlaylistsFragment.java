@@ -249,9 +249,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         searchEditText.setTextColor(getResources().getColor(R.color.gray));
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
         ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
-        if (!binding.searchView.isFocused()) {
-            binding.searchView.clearFocus();
-        }
+        binding.searchView.clearFocus();
         searchClear(searchEditText);
         closeButton.setOnClickListener(v -> {
             binding.searchView.clearFocus();
