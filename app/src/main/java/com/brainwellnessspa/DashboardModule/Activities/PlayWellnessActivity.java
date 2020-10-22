@@ -1242,9 +1242,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if(listSize!=0) {
                 id = addToQueueModelList.get(position).getID();
                 name = addToQueueModelList.get(position).getName();
-                url = addToQueueModelList.get(position).getAudioFile();
-                GetMedia();
-                GetMedia2();
+                url = addToQueueModelList.get(position).getAudioFile(); 
                 binding.tvName.setText(addToQueueModelList.get(position).getName());
                 binding.tvDireName.setText(R.string.Directions);
                 binding.tvDireName.setText(R.string.Directions);
@@ -1267,6 +1265,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
                 }
                 binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
+                GetMedia();
+                GetMedia2();
             }
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -1298,8 +1298,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     if (mainPlayModelList.get(position).getPlaylistID() == null) {
                         mainPlayModelList.get(position).setPlaylistID("");
                     }
-                    GetMedia();
-                    GetMedia2();
                     binding.tvName.setText(mainPlayModelList.get(position).getName());
                     if (mainPlayModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
                         binding.llDirection.setVisibility(View.GONE);
@@ -1323,6 +1321,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
                     }
                     binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
+                    GetMedia();
+                    GetMedia2();
                 }
                 startTime = getStartTime();
             } catch (Exception e) {
