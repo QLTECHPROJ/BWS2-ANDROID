@@ -15,21 +15,37 @@
         android:id="@+id/navigation_playlist"
         android:name="com.brainwellnessspa.DashboardModule.Playlist.PlaylistFragment"
         android:label="@string/title_playlist"
-        tools:layout="@layout/fragment_playlist" />
+        tools:layout="@layout/fragment_playlist" >
+        <action
+            android:id="@+id/action_navigation_playlist_to_navigation_audio"
+            app:destination="@id/navigation_audio" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_search"
         android:name="com.brainwellnessspa.DashboardModule.Search.SearchFragment"
         android:label="@string/title_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_navigation_search_to_navigation_playlist"
+            app:destination="@id/navigation_playlist" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_appointment"
         android:name="com.brainwellnessspa.DashboardModule.Appointment.AppointmentFragment"
         android:label="@string/title_appointment"
-        tools:layout="@layout/fragment_appointment" />
+        tools:layout="@layout/fragment_appointment" >
+        <action
+            android:id="@+id/action_navigation_appointment_to_navigation_search"
+            app:destination="@id/navigation_search" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_account"
         android:name="com.brainwellnessspa.DashboardModule.Account.AccountFragment"
         android:label="@string/title_account"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_navigation_account_to_navigation_appointment"
+            app:destination="@id/navigation_appointment" />
+    </fragment>
 </navigation>

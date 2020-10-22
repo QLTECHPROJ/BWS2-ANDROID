@@ -117,6 +117,16 @@ public class SessionsFragment extends Fragment {
                     .replace(R.id.flContainer, appointmentFragment)
                     .commit();
         }
+        Bundle bundle = new Bundle();
+        Fragment appointmentFragment = new AppointmentFragment();
+        bundle.putString("appointmentMainName", appointmentMainName);
+        bundle.putString("appointmentName", appointmentName);
+        bundle.putString("appointmentImage", appointmentImage);
+        appointmentFragment.setArguments(bundle);
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .replace(R.id.flContainer, appointmentFragment)
+                .commit();
     }
 
     private void prepareSessionList() {
