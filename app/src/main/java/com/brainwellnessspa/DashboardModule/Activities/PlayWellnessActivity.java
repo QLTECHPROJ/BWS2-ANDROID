@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -1248,7 +1249,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             } else if (IsShuffle.equalsIgnoreCase("1")) {
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
             }
-            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                        binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
@@ -1355,9 +1356,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         if (!url.equalsIgnoreCase("")) {
             addToRecentPlay();
-        }else {
         }
-
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
@@ -1367,82 +1366,97 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {
-        if (null == mediaPlayer) {
-            mediaPlayer = new MediaPlayer();
-            Log.e("Playinggggg", "Playinggggg");
-        }
-        try {
-            if (mediaPlayer == null)
-                mediaPlayer = new MediaPlayer();
-            if (mediaPlayer.isPlaying()) {
-                Log.e("Playinggggg", "stoppppp");
-                mediaPlayer.stop();
-                isMediaStart = false;
-                isPrepare = false;
-                isPause = false;
-            }
-            mediaPlayer = new MediaPlayer();
-            if (download.equalsIgnoreCase("1")) {
-                mediaPlayer.setDataSource(fileDescriptor);
-            } else {
-                mediaPlayer.setDataSource(url);
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mediaPlayer.setAudioAttributes(
-                        new AudioAttributes
-                                .Builder()
-                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                                .build());
-            }
-            mediaPlayer.prepareAsync();
-            isPause = false;
+        if (download.equalsIgnoreCase("2")) {
+            mediaPlayer = MediaPlayer.create(ctx, R.raw.brain_wellness_spa_declaimer);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//            Uri uri = Uri.parse("android.resource://com.brainwellnessspa/" + R.raw.brain_wellness_spa_declaimer);
+//            mediaPlayer.setDataSource(String.valueOf(uri));
+            mediaPlayer.start();
             isPrepare = true;
-        } catch (IllegalStateException | IOException e) {
-            FileDescriptor fileDescriptor1 = null;
-            setMediaPlayer("0", fileDescriptor1);
-            e.printStackTrace();
-        }
-        if (!mediaPlayer.isPlaying()) {
-            mediaPlayer.setOnPreparedListener(mp -> {
-                Log.e("Playinggggg", "Startinggg");
-                mediaPlayer.start();
-                isMediaStart = true;
-                isprogressbar = false;
-                binding.llProgressBar.setVisibility(View.GONE);
-                binding.progressBar.setVisibility(View.GONE);
-                binding.llPlay.setVisibility(View.GONE);
-                binding.llPause.setVisibility(View.VISIBLE);
-            });
+            isMediaStart = true;
+        } else {
+            if (null == mediaPlayer) {
+                mediaPlayer = new MediaPlayer();
+                Log.e("Playinggggg", "Playinggggg");
+            }
+            try {
+                if (mediaPlayer == null)
+                    mediaPlayer = new MediaPlayer();
+                if (mediaPlayer.isPlaying()) {
+                    Log.e("Playinggggg", "stoppppp");
+                    mediaPlayer.stop();
+                    isMediaStart = false;
+                    isPrepare = false;
+                    isPause = false;
+                }
+                mediaPlayer = new MediaPlayer();
+                if (download.equalsIgnoreCase("1")) {
+                    mediaPlayer.setDataSource(fileDescriptor);
+                } else {
+                    mediaPlayer.setDataSource(url);
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mediaPlayer.setAudioAttributes(
+                            new AudioAttributes
+                                    .Builder()
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                    .build());
+                }
+                mediaPlayer.prepareAsync();
+                isPause = false;
+                isPrepare = true;
+            } catch (IllegalStateException | IOException e) {
+                FileDescriptor fileDescriptor1 = null;
+                setMediaPlayer("0", fileDescriptor1);
+                e.printStackTrace();
+            }
+            if (!mediaPlayer.isPlaying()) {
+                mediaPlayer.setOnPreparedListener(mp -> {
+                    Log.e("Playinggggg", "Startinggg");
+                    mediaPlayer.start();
+                    isMediaStart = true;
+                    isprogressbar = false;
+                    binding.llProgressBar.setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.llPlay.setVisibility(View.GONE);
+                    binding.llPause.setVisibility(View.VISIBLE);
+                });
+            }
         }
     }
 
     private void callMedia() {
         FileDescriptor fileDescriptor = null;
-        if (downloadAudioDetailsList.size() != 0) {
-            isprogressbar = true;
-            binding.llProgressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.llPlay.setVisibility(View.GONE);
-            binding.llPause.setVisibility(View.GONE);
-            isPause = false;
-            DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-            getDownloadMedia(downloadMedia);
+        if(url.equalsIgnoreCase("")){
+            setMediaPlayer("2", fileDescriptor);
 
-        } else {
-            if (BWSApplication.isNetworkConnected(ctx)) {
+        }else {
+            if (downloadAudioDetailsList.size() != 0) {
                 isprogressbar = true;
                 binding.llProgressBar.setVisibility(View.VISIBLE);
                 binding.progressBar.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.GONE);
-                setMediaPlayer("0", fileDescriptor);
+                isPause = false;
+                DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                getDownloadMedia(downloadMedia);
+
             } else {
-                isprogressbar = false;
-                binding.progressBar.setVisibility(View.GONE);
-                binding.llProgressBar.setVisibility(View.GONE);
-                binding.llPlay.setVisibility(View.VISIBLE);
-                binding.llPause.setVisibility(View.GONE);
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    isprogressbar = true;
+                    binding.llProgressBar.setVisibility(View.VISIBLE);
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    binding.llPlay.setVisibility(View.GONE);
+                    binding.llPause.setVisibility(View.GONE);
+                    setMediaPlayer("0", fileDescriptor);
+                } else {
+                    isprogressbar = false;
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.llProgressBar.setVisibility(View.GONE);
+                    binding.llPlay.setVisibility(View.VISIBLE);
+                    binding.llPause.setVisibility(View.GONE);
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
             }
         }
     }

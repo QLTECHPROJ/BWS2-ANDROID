@@ -40,6 +40,7 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.logout;
 import com.brainwellnessspa.databinding.ActivityOtpBinding;
 
 import retrofit2.Call;
@@ -139,6 +140,7 @@ public class OtpActivity extends AppCompatActivity implements
                                     editor.putString(CONSTANTS.PREF_KEY_UserID, otpModel.getResponseData().getUserID());
                                     editor.putString(CONSTANTS.PREF_KEY_MobileNo, otpModel.getResponseData().getPhoneNumber());
                                     editor.commit();
+                                    logout = false;
                                     BWSApplication.showToast(otpModel.getResponseMessage(), OtpActivity.this);
                                     Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
                                     startActivity(i);
@@ -273,6 +275,7 @@ public class OtpActivity extends AppCompatActivity implements
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         LoginModel loginModel = response.body();
                         if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                            logout = false;
                             countDownTimer = new CountDownTimer(30000, 1000) {
                                 public void onTick(long millisUntilFinished) {
                                     binding.llResendSms.setEnabled(false);

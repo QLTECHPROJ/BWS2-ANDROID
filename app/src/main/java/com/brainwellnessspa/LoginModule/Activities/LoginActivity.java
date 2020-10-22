@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,6 +37,9 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.LoginModule.Activities.OtpActivity.comeLogin;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
+import static com.brainwellnessspa.Utility.MusicService.isStop;
+import static com.brainwellnessspa.Utility.MusicService.isrelese;
+import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
@@ -44,12 +48,26 @@ public class LoginActivity extends AppCompatActivity {
     String Name = "", Code = "", MobileNo = "";
     Context ctx;
     Activity activity;
+    Handler handler;
     private long mLastClickTime = 0;
+    private Runnable UpdateSongTime = new Runnable() {
+        @Override
+        public void run() {
+            if(mediaPlayer!=null || isMediaStart){
+                stopMedia();
+                releasePlayer();
+                if(isrelese){
+                    handler.removeCallbacks(UpdateSongTime);
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        handler = new Handler();
 
         ctx = LoginActivity.this;
         activity = LoginActivity.this;
@@ -62,6 +80,10 @@ public class LoginActivity extends AppCompatActivity {
         if (isMediaStart) {
             stopMedia();
             releasePlayer();
+        }
+
+        if(mediaPlayer!=null){
+            handler.postDelayed(UpdateSongTime,100);
         }
         binding.edtNumber.addTextChangedListener(loginTextWatcher);
         if (Code.equalsIgnoreCase("") || Name.equalsIgnoreCase("")) {
@@ -190,6 +212,7 @@ public class LoginActivity extends AppCompatActivity {
                                 i.putExtra("MobileNo", binding.edtNumber.getText().toString());
                                 i.putExtra("Name", binding.tvCountry.getText().toString());
                                 i.putExtra("Code", binding.tvCountryCode.getText().toString());
+                                handler.removeCallbacks(UpdateSongTime);
                                 startActivity(i);
                                 finish();
                                 BWSApplication.showToast(loginModel.getResponseMessage(), ctx);

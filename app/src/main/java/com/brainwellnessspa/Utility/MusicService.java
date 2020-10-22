@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 public class MusicService extends Service {
     public static MediaPlayer mediaPlayer;
-    public static boolean isPrepare = false, songComplete = false, isMediaStart = false, isStop = false,isCompleteStop = false,isPreparing=false;
+    public static boolean isPrepare = false, songComplete = false, isMediaStart = false,isrelese=false, isStop = false,isCompleteStop = false,isPreparing=false;
     public static boolean isPause = false,isprogressbar = false;
     public static boolean isResume = false;
     public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
@@ -321,6 +321,7 @@ public class MusicService extends Service {
     public static void releasePlayer() {
         if (null != mediaPlayer) {
             mediaPlayer.release();
+            isrelese = true;
         }
     }
 

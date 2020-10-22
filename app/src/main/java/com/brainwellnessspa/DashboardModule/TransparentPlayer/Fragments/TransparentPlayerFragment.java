@@ -853,8 +853,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.GONE);
             DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
-            getDownloadMedia(downloadMedia);
-            /*try {
+            try {
                 byte[] decrypt = null;
                 decrypt = downloadMedia.decrypt(name);
                 if (decrypt != null) {
@@ -882,7 +881,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            }*/
+            }
         } else {
             if (audioFile.equalsIgnoreCase("") || audioFile.isEmpty()) {
                 setMediaPlayer("2", fileDescriptor);
@@ -1395,9 +1394,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }.getType();
         mainPlayModelList = new ArrayList<>();
         if (!json.equalsIgnoreCase(String.valueOf(gson))) {
-            Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
-            }.getType();
-            mainPlayModelList = gson.fromJson(json, type1);
+            mainPlayModelList = gson.fromJson(json, type);
         }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
