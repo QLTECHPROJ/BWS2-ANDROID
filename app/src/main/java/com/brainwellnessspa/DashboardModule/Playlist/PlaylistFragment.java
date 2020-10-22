@@ -140,14 +140,6 @@ public class PlaylistFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                return true;
-            }
-            return false;
-        });
         prepareData();
     }
 
