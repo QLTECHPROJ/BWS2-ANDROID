@@ -197,7 +197,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 myCount++;
                 Log.e("myCount", String.valueOf(myCount));
 
-                if (myCount == 200) {
+                if (myCount == 20) {
                     Log.e("myCount complete", String.valueOf(myCount));
                     callComplete();
                     myCount = 0;
@@ -1336,12 +1336,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 e.printStackTrace();
             }
         }
-        if (isMediaStart && url.equalsIgnoreCase("")) {
+/*        if (isMediaStart && url.equalsIgnoreCase("")) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
                 Log.e("calll complete real","real");
             });
-        }
+        }*/
         getMediaByPer();
 
         if (!url.equalsIgnoreCase("")) {
@@ -1563,7 +1563,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     }
                 } else {
                     if (position < (listSize - 1)) {
+                        int oldPosition = position;
                         position = position + 1;
+                        if (oldPosition == position) {
+                            position++;
+                        }
                         getPrepareShowData(position);
                     } else {
                         if (listSize == 1) {

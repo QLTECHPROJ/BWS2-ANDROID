@@ -174,7 +174,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     myCount++;
                     Log.e("myCount", String.valueOf(myCount));
 
-                    if (myCount == 200) {
+                    if (myCount == 20) {
                         Log.e("myCount complete", String.valueOf(myCount));
                         callComplete();
                         Log.e("calll complete errr","eee");
@@ -739,11 +739,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     }
                 }
             }
-            if (audioFile.equalsIgnoreCase("")) {
-                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                    callComplete();
-                });
-            }
             startTime = getStartTime();
 
             if (!audioFile.equalsIgnoreCase("")) {
@@ -972,7 +967,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     }
                 } else {
                     if (position < (listSize - 1)) {
+                        int oldPosition = position;
                         position = position + 1;
+                        if (oldPosition == position) {
+                            position++;
+                        }
                         getPrepareShowData();
                     } else {
                         if (listSize == 1) {

@@ -158,7 +158,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 myCount++;
                 Log.e("myCount",String.valueOf(myCount));
 
-                if(myCount == 50){
+                if(myCount == 20){
                     Log.e("myCount complete",String.valueOf(myCount));
                     callComplete();
                     myCount = 0;
@@ -754,7 +754,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 }
             } else {
                 if (position < (listSize - 1)) {
+                    int oldPosition = position;
                     position = position + 1;
+                    if (oldPosition == position) {
+                        position++;
+                    }
                     getPrepareShowData(position);
                 } else {
                     if (listSize == 1) {
