@@ -426,9 +426,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     @Override
     public void onResume() {
         addDisclaimer();
-        if(view == null){
-            return;
-        }
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
@@ -459,8 +456,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callBack() {
-//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-//        searchEditText.clearFocus();
         binding.searchView.clearFocus();
         if (MyPlaylistIds.equalsIgnoreCase("")) {
             if (comefrom_search == 2) {
