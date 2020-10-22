@@ -119,7 +119,6 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_semi_bold"
                             android:gravity="right"
-                            android:text="$29.99"
                             android:textColor="@color/white"
                             android:textSize="@dimen/_17sdp" />
 
@@ -159,7 +158,6 @@
                         android:layout_weight="0.5"
                         android:fontFamily="@font/montserrat_semi_bold"
                         android:gravity="right"
-                        android:text="1 months"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_12sdp" />
 
@@ -188,7 +186,6 @@
                         android:layout_weight="0.5"
                         android:fontFamily="@font/montserrat_semi_bold"
                         android:gravity="right"
-                        android:text="August 14,2020"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_12sdp" />
 
@@ -223,7 +220,6 @@
                         android:layout_weight="0.5"
                         android:fontFamily="@font/montserrat_semi_bold"
                         android:gravity="right"
-                        android:text="$29.99"
                         android:textColor="@color/dark_blue_gray"
                         android:textSize="@dimen/_17sdp" />
 
