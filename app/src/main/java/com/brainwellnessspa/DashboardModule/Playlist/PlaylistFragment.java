@@ -79,12 +79,13 @@ import static com.brainwellnessspa.Utility.MyFirebaseMessagingService.Notificati
 public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
     String UserID, Check = "", AudioFlag;
+    View view;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     List<DownloadAudioDetails> playlistWiseAudioDetails = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false);
-        View view = binding.getRoot();
+        view = binding.getRoot();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -139,6 +140,14 @@ public class PlaylistFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                return true;
+            }
+            return false;
+        });
         prepareData();
     }
 

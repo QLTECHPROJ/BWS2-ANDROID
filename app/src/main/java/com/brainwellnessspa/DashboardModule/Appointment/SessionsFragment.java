@@ -88,10 +88,13 @@ public class SessionsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(view == null){
+            return;
+        }
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                 callBack();
                 return true;
             }

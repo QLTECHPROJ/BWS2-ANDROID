@@ -112,7 +112,6 @@ public class AddAudioActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String search) {
                 if (searchEditText.getText().toString().equalsIgnoreCase("")) {
-
                 } else {
                     prepareSearchData(search, searchEditText);
                 }

@@ -1,0 +1,195 @@
+Index: app/src/main/res/anim/slide_to_bottom.xml
+===================================================================
+--- app/src/main/res/anim/slide_to_bottom.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
++++ app/src/main/res/anim/slide_to_bottom.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
+@@ -1,5 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<translate xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:duration="@android:integer/config_longAnimTime"
+-    android:fromYDelta="0%p"
+-    android:toYDelta="0%p" />
+\ No newline at end of file
+Index: app/src/main/res/drawable/ic_playlist_image.xml
+===================================================================
+--- app/src/main/res/drawable/ic_playlist_image.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
++++ app/src/main/res/drawable/ic_playlist_image.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
+@@ -1,30 +0,0 @@
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="164dp"
+-    android:height="164dp"
+-    android:viewportWidth="164"
+-    android:viewportHeight="164">
+-  <path
+-      android:pathData="M10,0H82a0,0 0,0 1,0 0V82a0,0 0,0 1,0 0H0a0,0 0,0 1,0 0V10A10,10 0,0 1,10 0Z"
+-      android:fillColor="#a6b0cf"/>
+-  <path
+-      android:pathData="M82,0L154,0A10,10 0,0 1,164 10L164,82a0,0 0,0 1,0 0L82,82a0,0 0,0 1,0 0L82,0A0,0 0,0 1,82 0Z"
+-      android:fillColor="#fff"/>
+-  <path
+-      android:pathData="M0,82L82,82a0,0 0,0 1,0 0L82,164a0,0 0,0 1,0 0L10,164A10,10 0,0 1,0 154L0,82A0,0 0,0 1,0 82Z"
+-      android:fillColor="#fff"/>
+-  <path
+-      android:pathData="M82,82L164,82a0,0 0,0 1,0 0L164,154A10,10 0,0 1,154 164L82,164a0,0 0,0 1,0 0L82,82A0,0 0,0 1,82 82Z"
+-      android:fillColor="#a6b0cf"/>
+-  <path
+-      android:pathData="M41.418,28.354L41.418,41.824a6.372,6.372 0,0 0,-2.177 -0.406,6.532 6.532,0 1,0 6.459,7.257h0.073L45.773,32.708h5.806L51.579,28.354Z"
+-      android:fillColor="#2a3042"/>
+-  <path
+-      android:pathData="M123.418,28.354L123.418,41.824a6.372,6.372 0,0 0,-2.177 -0.406,6.532 6.532,0 1,0 6.459,7.257h0.073L127.773,32.708h5.806L133.579,28.354Z"
+-      android:fillColor="#2a3042"/>
+-  <path
+-      android:pathData="M123.418,110.354L123.418,123.824a6.372,6.372 0,0 0,-2.177 -0.406,6.532 6.532,0 1,0 6.459,7.257h0.073L127.773,114.708h5.806L133.579,110.354Z"
+-      android:fillColor="#2a3042"/>
+-  <path
+-      android:pathData="M41.418,110.354L41.418,123.824a6.372,6.372 0,0 0,-2.177 -0.406,6.532 6.532,0 1,0 6.459,7.257h0.073L45.773,114.708h5.806L51.579,110.354Z"
+-      android:fillColor="#2a3042"/>
+-</vector>
+Index: app/src/main/res/anim/slide_from_bottom.xml
+===================================================================
+--- app/src/main/res/anim/slide_from_bottom.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
++++ app/src/main/res/anim/slide_from_bottom.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
+@@ -1,5 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<translate xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:duration="@android:integer/config_longAnimTime"
+-    android:fromYDelta="100%p"
+-    android:toYDelta="0%p" />
+\ No newline at end of file
+Index: app/src/main/res/anim/none.xml
+===================================================================
+--- app/src/main/res/anim/none.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
++++ app/src/main/res/anim/none.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
+@@ -1,5 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<translate xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:duration="1000"
+-    android:fromYDelta="0%p"
+-    android:toYDelta="0%p" />
+\ No newline at end of file
+Index: app/src/main/res/drawable/ic_youtube_logo.xml
+===================================================================
+--- app/src/main/res/drawable/ic_youtube_logo.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
++++ app/src/main/res/drawable/ic_youtube_logo.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
+@@ -1,12 +0,0 @@
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="49dp"
+-    android:height="31dp"
+-    android:viewportWidth="49"
+-    android:viewportHeight="31">
+-  <path
+-      android:pathData="M7,0L42,0A7,7 0,0 1,49 7L49,24A7,7 0,0 1,42 31L7,31A7,7 0,0 1,0 24L0,7A7,7 0,0 1,7 0z"
+-      android:fillColor="#ff0000"/>
+-  <path
+-      android:pathData="M30,16l-11,7L19,9Z"
+-      android:fillColor="#fff"/>
+-</vector>
+Index: app/src/main/res/anim/enter.xml
+===================================================================
+--- app/src/main/res/anim/enter.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
++++ app/src/main/res/anim/enter.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
+@@ -1,11 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<set xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:interpolator="@android:anim/accelerate_decelerate_interpolator">
+-
+-    <translate
+-        android:duration="@android:integer/config_longAnimTime"
+-        android:fromYDelta="100%p"
+-        android:toYDelta="0" />
+-
+-</set>
+-
+Index: app/src/main/res/anim/exit.xml
+===================================================================
+--- app/src/main/res/anim/exit.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
++++ app/src/main/res/anim/exit.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
+@@ -1,12 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<set xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:interpolator="@android:anim/accelerate_decelerate_interpolator">
+-
+-    <translate
+-        android:duration="@android:integer/config_longAnimTime"
+-        android:fromYDelta="0"
+-        android:toYDelta="0" />
+-
+-</set>
+-
+-
+Index: app/src/main/res/layout/activity_cancel_membership.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<layout>\r\n\r\n    <RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n        xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        android:background=\"@color/white\">\r\n\r\n        <RelativeLayout\r\n            android:id=\"@+id/rlLayout\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"@dimen/_56sdp\">\r\n\r\n            <LinearLayout\r\n                android:id=\"@+id/llBack\"\r\n                android:layout_width=\"42dp\"\r\n                android:layout_height=\"match_parent\"\r\n                android:layout_centerVertical=\"true\"\r\n                android:gravity=\"center\">\r\n\r\n                <ImageView\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:src=\"@drawable/ic_left_arrow_icon\" />\r\n\r\n            </LinearLayout>\r\n\r\n            <TextView\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_centerVertical=\"true\"\r\n                android:fontFamily=\"@font/montserrat_bold\"\r\n                android:gravity=\"center\"\r\n                android:text=\"@string/Cancel_Subscription\"\r\n                android:textColor=\"@color/black\"\r\n                android:textSize=\"@dimen/_15sdp\" />\r\n\r\n        </RelativeLayout>\r\n\r\n        <LinearLayout\r\n            android:id=\"@+id/llPlay\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_below=\"@id/rlLayout\"\r\n            android:layout_marginHorizontal=\"@dimen/_16sdp\" >\r\n\r\n            <com.google.android.youtube.player.YouTubePlayerView\r\n                android:id=\"@+id/youtubeView\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"/>\r\n        </LinearLayout>\r\n\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\"\r\n            android:layout_below=\"@id/llPlay\"\r\n            android:orientation=\"vertical\">\r\n\r\n            <LinearLayout\r\n                android:id=\"@+id/llCancelVideo\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"match_parent\"\r\n                android:layout_marginHorizontal=\"@dimen/_16sdp\"\r\n                android:layout_marginTop=\"@dimen/_6sdp\"\r\n                android:orientation=\"vertical\">\r\n\r\n                <RelativeLayout\r\n                    android:id=\"@+id/rlPlay\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:background=\"@drawable/rouned_corner_shadow\">\r\n\r\n\r\n                    <ImageView\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"match_parent\"\r\n                        android:scaleType=\"fitXY\"\r\n                        android:src=\"@drawable/cancel_mp_image\"\r\n                        android:visibility=\"gone\" />\r\n\r\n                    <ImageView\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:layout_centerInParent=\"true\"\r\n                        android:scaleType=\"fitXY\"\r\n                        android:src=\"@drawable/ic_youtube_logo\"\r\n                        android:visibility=\"gone\" />\r\n\r\n                </RelativeLayout>\r\n\r\n                <VideoView\r\n                    android:id=\"@+id/videoView\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"@dimen/_220sdp\"\r\n                    android:visibility=\"gone\"\r\n                    app:layout_constraintBottom_toBottomOf=\"parent\"\r\n                    app:layout_constraintLeft_toLeftOf=\"parent\"\r\n                    app:layout_constraintRight_toRightOf=\"parent\"\r\n                    app:layout_constraintTop_toTopOf=\"parent\" />\r\n\r\n                <TextView\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_marginTop=\"@dimen/_28sdp\"\r\n                    android:fontFamily=\"@font/montserrat_bold\"\r\n                    android:gravity=\"start\"\r\n                    android:text=\"@string/Select_reason\"\r\n                    android:textColor=\"@color/black\"\r\n                    android:textSize=\"@dimen/_20sdp\" />\r\n\r\n                <LinearLayout\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:orientation=\"vertical\"\r\n                    android:visibility=\"visible\">\r\n\r\n                    <CheckBox\r\n                        android:id=\"@+id/cbOne\"\r\n                        style=\"@android:style/Widget.CompoundButton.RadioButton\"\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:layout_marginHorizontal=\"@dimen/_4sdp\"\r\n                        android:layout_marginTop=\"@dimen/_20sdp\"\r\n                        android:button=\"@drawable/radio_btn_background\"\r\n                        android:checked=\"true\"\r\n                        android:fontFamily=\"@font/montserrat_regular\"\r\n                        android:gravity=\"center_vertical|start\"\r\n                        android:paddingLeft=\"@dimen/_12sdp\"\r\n                        android:text=\"@string/Feeling_better\"\r\n                        android:textColor=\"@color/black\"\r\n                        android:textSize=\"@dimen/_15sdp\" />\r\n\r\n                    <CheckBox\r\n                        android:id=\"@+id/cbTwo\"\r\n                        style=\"@android:style/Widget.CompoundButton.RadioButton\"\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:layout_marginHorizontal=\"@dimen/_4sdp\"\r\n                        android:layout_marginTop=\"@dimen/_18sdp\"\r\n                        android:button=\"@drawable/radio_btn_background\"\r\n                        android:fontFamily=\"@font/montserrat_regular\"\r\n                        android:gravity=\"center_vertical|start\"\r\n                        android:paddingLeft=\"@dimen/_12sdp\"\r\n                        android:text=\"@string/Condition_worse\"\r\n                        android:textColor=\"@color/black\"\r\n                        android:textSize=\"@dimen/_15sdp\" />\r\n\r\n                    <CheckBox\r\n                        android:id=\"@+id/cbThree\"\r\n                        style=\"@android:style/Widget.CompoundButton.RadioButton\"\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:layout_marginHorizontal=\"@dimen/_4sdp\"\r\n                        android:layout_marginTop=\"@dimen/_18sdp\"\r\n                        android:button=\"@drawable/radio_btn_background\"\r\n                        android:fontFamily=\"@font/montserrat_regular\"\r\n                        android:gravity=\"center_vertical|start\"\r\n                        android:paddingLeft=\"@dimen/_12sdp\"\r\n                        android:text=\"@string/Pricing\"\r\n                        android:textColor=\"@color/black\"\r\n                        android:textSize=\"@dimen/_15sdp\" />\r\n\r\n                    <CheckBox\r\n                        android:id=\"@+id/cbFour\"\r\n                        style=\"@android:style/Widget.CompoundButton.RadioButton\"\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:layout_marginHorizontal=\"@dimen/_4sdp\"\r\n                        android:layout_marginTop=\"@dimen/_18sdp\"\r\n                        android:button=\"@drawable/radio_btn_background\"\r\n                        android:fontFamily=\"@font/montserrat_regular\"\r\n                        android:gravity=\"center_vertical|start\"\r\n                        android:paddingLeft=\"@dimen/_12sdp\"\r\n                        android:text=\"@string/Other_reason\"\r\n                        android:textColor=\"@color/black\"\r\n                        android:textSize=\"@dimen/_15sdp\" />\r\n\r\n\r\n                    <EditText\r\n                        android:id=\"@+id/edtCancelBox\"\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"@dimen/_140sdp\"\r\n                        android:layout_marginLeft=\"@dimen/_10sdp\"\r\n                        android:layout_marginTop=\"@dimen/_22sdp\"\r\n                        android:layout_marginRight=\"@dimen/_10sdp\"\r\n                        android:layout_marginBottom=\"@dimen/_16sdp\"\r\n                        android:background=\"@drawable/edittext_background\"\r\n                        android:cursorVisible=\"true\"\r\n                        android:fontFamily=\"@font/montserrat_regular\"\r\n                        android:gravity=\"top\"\r\n                        android:hint=\"Add your comments here\"\r\n                        android:inputType=\"textMultiLine|textVisiblePassword\"\r\n                        android:overScrollMode=\"always\"\r\n                        android:paddingLeft=\"@dimen/_8sdp\"\r\n                        android:paddingTop=\"@dimen/_8sdp\"\r\n                        android:paddingRight=\"@dimen/_8sdp\"\r\n                        android:scrollbarStyle=\"insideInset\"\r\n                        android:scrollbars=\"vertical\"\r\n                        android:singleLine=\"false\"\r\n                        android:textColor=\"@color/gray\"\r\n                        android:textCursorDrawable=\"@null\"\r\n                        android:textSize=\"@dimen/_14sdp\"\r\n                        android:visibility=\"gone\" />\r\n\r\n                </LinearLayout>\r\n            </LinearLayout>\r\n\r\n        </LinearLayout>\r\n\r\n        <Button\r\n            android:id=\"@+id/btnCancelSubscrible\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_alignParentBottom=\"true\"\r\n            android:layout_marginHorizontal=\"@dimen/_40sdp\"\r\n            android:layout_marginBottom=\"@dimen/_25sdp\"\r\n            android:background=\"@drawable/extra_round_cornor\"\r\n            android:fontFamily=\"@font/montserrat_bold\"\r\n            android:paddingVertical=\"@dimen/_4sdp\"\r\n            android:text=\"@string/Cancel_Subscription\"\r\n            android:textColor=\"@color/white\" />\r\n\r\n    </RelativeLayout>\r\n</layout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_cancel_membership.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
++++ app/src/main/res/layout/activity_cancel_membership.xml	(date 1603369694014)
+@@ -66,40 +66,6 @@
+                 android:layout_marginTop="@dimen/_6sdp"
+                 android:orientation="vertical">
+ 
+-                <RelativeLayout
+-                    android:id="@+id/rlPlay"
+-                    android:layout_width="match_parent"
+-                    android:layout_height="wrap_content"
+-                    android:background="@drawable/rouned_corner_shadow">
+-
+-
+-                    <ImageView
+-                        android:layout_width="match_parent"
+-                        android:layout_height="match_parent"
+-                        android:scaleType="fitXY"
+-                        android:src="@drawable/cancel_mp_image"
+-                        android:visibility="gone" />
+-
+-                    <ImageView
+-                        android:layout_width="wrap_content"
+-                        android:layout_height="wrap_content"
+-                        android:layout_centerInParent="true"
+-                        android:scaleType="fitXY"
+-                        android:src="@drawable/ic_youtube_logo"
+-                        android:visibility="gone" />
+-
+-                </RelativeLayout>
+-
+-                <VideoView
+-                    android:id="@+id/videoView"
+-                    android:layout_width="match_parent"
+-                    android:layout_height="@dimen/_220sdp"
+-                    android:visibility="gone"
+-                    app:layout_constraintBottom_toBottomOf="parent"
+-                    app:layout_constraintLeft_toLeftOf="parent"
+-                    app:layout_constraintRight_toRightOf="parent"
+-                    app:layout_constraintTop_toTopOf="parent" />
+-
+                 <TextView
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+Index: app/src/main/res/values/styles.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources xmlns:tools=\"http://schemas.android.com/tools\">\r\n    <!-- Base application theme. -->\r\n    <style name=\"AppTheme\" parent=\"Theme.AppCompat.Light.DarkActionBar\">\r\n        <item name=\"colorPrimary\">@color/colorPrimary</item>\r\n        <item name=\"colorPrimaryDark\">@color/dark_blue_gray</item>\r\n        <item name=\"colorAccent\">@color/dark_blue_gray</item>\r\n        <item name=\"android:windowContentTransitions\" tools:targetApi=\"lollipop\">true</item>\r\n        <item name=\"windowActionBar\">false</item>\r\n        <item name=\"android:statusBarColor\" tools:targetApi=\"lollipop\">@color/dark_blue_gray</item>\r\n        <item name=\"windowNoTitle\">true</item>\r\n        <item name=\"colorControlNormal\">@color/light_gray</item>\r\n        <item name=\"colorControlActivated\">@color/dark_blue_gray</item>\r\n    </style>\r\n\r\n    <style name=\"WallSearchView\" parent=\"Widget.AppCompat.SearchView\">\r\n        <item name=\"colorControlActivated\">@color/black</item>\r\n        <item name=\"android:textSize\">@dimen/_16sdp</item>\r\n        <item name=\"android:fontFamily\">@font/montserrat_semi_bold</item>\r\n        <item name=\"android:cursorVisible\">true</item>\r\n        <item name=\"android:textCursorDrawable\">@null</item>\r\n    </style>\r\n\r\n    <style name=\"EditTextTheme\" parent=\"Theme.AppCompat.Light.DarkActionBar\">\r\n        <item name=\"colorControlNormal\">@color/gray</item>\r\n        <item name=\"android:textCursorDrawable\">@drawable/et_underline_selector</item>\r\n    </style>\r\n\r\n    <style name=\"BottomNavigationView\">\r\n        <item name=\"itemTextAppearanceActive\">@style/TextAppearance.BottomNavigationView.Active</item>\r\n        <item name=\"itemTextAppearanceInactive\">@style/TextAppearance.BottomNavigationView.Inactive</item>\r\n    </style>\r\n\r\n    <style name=\"TextAppearance\"/>\r\n    <style name=\"TextAppearance.BottomNavigationView\"/>\r\n\r\n    <!-- inactive tab icon style -->\r\n    <style name=\"TextAppearance.BottomNavigationView.Inactive\">\r\n        <item name=\"android:textSize\">9dp</item>\r\n        <item name=\"android:fontFamily\">@font/montserrat_semi_bold</item>\r\n    </style>\r\n\r\n    <!-- active tab icon style -->\r\n    <style name=\"TextAppearance.BottomNavigationView.Active\">\r\n        <item name=\"android:textSize\">9dp</item>\r\n        <item name=\"android:fontFamily\">@font/montserrat_semi_bold</item>\r\n    </style>\r\n\r\n    <style name=\"AppTheme.NoTitle\" parent=\"Theme.AppCompat.Light.NoActionBar\">\r\n        <item name=\"android:windowNoTitle\">true</item>\r\n        <item name=\"windowActionBar\">false</item>\r\n        <item name=\"windowNoTitle\">true</item>\r\n        <item name=\"android:windowContentTransitions\" tools:ignore=\"NewApi\">true</item>\r\n        <item name=\"android:statusBarColor\" tools:targetApi=\"lollipop\">@color/dark_blue_gray\r\n        </item>\r\n        <item name=\"popupMenuStyle\">@style/myPopupMenuStyle</item>\r\n        <item name=\"android:popupMenuStyle\">@style/myPopupMenuStyle</item>\r\n    </style>\r\n\r\n    <style name=\"myPopupMenuStyle\" parent=\"@style/Widget.AppCompat.Light.PopupMenu\">\r\n        <item name=\"android:windowContentOverlay\">@null</item>\r\n        <item name=\"android:backgroundDimEnabled\">true</item>\r\n        <item name=\"android:background\">@android:color/transparent</item>\r\n    </style>\r\n    <style name=\"ErrorText\" parent=\"Theme.AppCompat.Light.DarkActionBar\">\r\n        <item name=\"android:textSize\">@dimen/sp_12</item>\r\n        <item name=\"android:colorAccent\" tools:targetApi=\"lollipop\">@color/dark_blue_gray</item>\r\n        <item name=\"android:textColor\">@color/red</item>\r\n        <item name=\"android:fontFamily\">@font/montserrat_regular</item>\r\n        <item name=\"android:textColorHint\">@color/red</item>\r\n        <item name=\"colorControlNormal\">@color/red</item>\r\n        <item name=\"colorControlActivated\">@color/red</item>\r\n    </style>\r\n    <style name=\"TabLayoutTextStyle\">\r\n        <item name=\"android:textSize\">@dimen/_13sdp</item>\r\n        <item name=\"android:fontFamily\">@font/montserrat_medium</item>\r\n    </style>\r\n\r\n    <style name=\"TimePickerTheme\" parent=\"Theme.AppCompat.Light.Dialog\">\r\n        <item name=\"colorAccent\">@color/blue</item>\r\n        <item name=\"android:layout_width\">match_parent</item>\r\n        <item name=\"android:layout_height\">wrap_content</item>\r\n\r\n    </style>\r\n\r\n    <style name=\"AppCompatAlertDialogStyle\" parent=\"android:Theme.Dialog\">\r\n        <item name=\"android:windowIsFloating\">true</item>\r\n        <item name=\"android:layout_margin\">@dimen/_18sdp</item>\r\n        <item name=\"elevation\">@dimen/_50sdp</item>\r\n    </style>\r\n\r\n    <style name=\"SlideAnimation\" parent=\"android:style/Animation.Activity\">\r\n        <item name=\"android:activityOpenEnterAnimation\">@anim/slide_from_bottom</item>\r\n        <item name=\"android:activityOpenExitAnimation\">@anim/none</item>\r\n        <item name=\"android:activityCloseEnterAnimation\">@anim/none</item>\r\n        <item name=\"android:activityCloseExitAnimation\">@anim/slide_to_bottom</item>\r\n    </style>\r\n\r\n    <style name=\"Theme.SlideAnimWindow\" parent=\"AppTheme\">\r\n        <item name=\"android:windowAnimationStyle\">@style/SlideAnimation</item>\r\n    </style>\r\n\r\n    <style name=\"DialogTheme\" parent=\"Theme.AppCompat.Light.Dialog\">\r\n        <item name=\"colorAccent\">@color/blue</item>\r\n    </style>\r\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/styles.xml	(revision 675a62d92483fcbc3de5a2801825522a1c0a36e0)
++++ app/src/main/res/values/styles.xml	(date 1603369694108)
+@@ -88,17 +88,6 @@
+         <item name="elevation">@dimen/_50sdp</item>
+     </style>
+ 
+-    <style name="SlideAnimation" parent="android:style/Animation.Activity">
+-        <item name="android:activityOpenEnterAnimation">@anim/slide_from_bottom</item>
+-        <item name="android:activityOpenExitAnimation">@anim/none</item>
+-        <item name="android:activityCloseEnterAnimation">@anim/none</item>
+-        <item name="android:activityCloseExitAnimation">@anim/slide_to_bottom</item>
+-    </style>
+-
+-    <style name="Theme.SlideAnimWindow" parent="AppTheme">
+-        <item name="android:windowAnimationStyle">@style/SlideAnimation</item>
+-    </style>
+-
+     <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+         <item name="colorAccent">@color/blue</item>
+     </style>

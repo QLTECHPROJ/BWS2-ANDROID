@@ -159,8 +159,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
         binding.llDownload.setOnClickListener(view -> callDownload());
     }
 
@@ -244,12 +242,9 @@ public class MyPlaylistActivity extends AppCompatActivity {
     }
 */
     public List<DownloadAudioDetails> GetAllMedia() {
-
         class GetTask extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadAudioDetailsList = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -261,10 +256,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-
             }
         }
-
         GetTask st = new GetTask();
         st.execute();
         return downloadAudioDetailsList;
@@ -344,10 +337,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
     private void savePlaylist() {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 DatabaseClient.getInstance(ctx)
                         .getaudioDatabase()
                         .taskDao()
@@ -369,7 +360,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
     private void saveAllMedia(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongs, byte[] encodedBytes) {
         class SaveMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
                 DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
@@ -393,7 +383,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             .taskDao()
                             .insertMedia(downloadAudioDetails);
                 }
-
                 return null;
             }
 

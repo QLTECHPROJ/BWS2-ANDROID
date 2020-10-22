@@ -19,6 +19,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -212,6 +214,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.llBack.setOnClickListener(view1 -> {
             callBack();
         });
+
         if (BWSApplication.isNetworkConnected(getActivity()) && !MyDownloads.equalsIgnoreCase("1")) {
             binding.llMore.setVisibility(View.VISIBLE);
             binding.llMore.setClickable(true);
@@ -246,9 +249,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         searchEditText.setTextColor(getResources().getColor(R.color.gray));
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
         ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
-        binding.searchView.clearFocus();
+        if (!binding.searchView.isFocused()) {
+            binding.searchView.clearFocus();
+        }
         searchClear(searchEditText);
-
         closeButton.setOnClickListener(v -> {
             binding.searchView.clearFocus();
             searchEditText.setText("");
@@ -425,17 +429,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
-            binding.searchView.clearFocus();
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                 callBack();
-
-                if (!PlaylistIDs.equalsIgnoreCase("")) {
-                    Fragment fragment = new PlaylistFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .replace(R.id.flContainer, fragment)
-                            .commit();
-                }
                 return true;
             }
             return false;
@@ -474,7 +469,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 bundle.putString("MyDownloads", MyDownloads);
                 playlistFragment.setArguments(bundle);
 //            comefrom_search = 0;
-                Log.e("aaaaaaaaaaaa","aaaaaaaaaaaaaa");
+                Log.e("aaaaaaaaaaaa", "aaaaaaaaaaaaaa");
             } else if (comefrom_search == 1) {
                 Fragment fragment = new SearchFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -482,7 +477,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         .replace(R.id.flContainer, fragment)
                         .commit();
                 comefrom_search = 0;
-                Log.e("aaaaaaaaaaaa","bbbbbbbbbbbbbbbb");
+                Log.e("aaaaaaaaaaaa", "bbbbbbbbbbbbbbbb");
             } else if (comefrom_search == 0) {
                 Fragment fragment = new PlaylistFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -490,7 +485,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         .replace(R.id.flContainer, fragment)
                         .commit();
                 comefrom_search = 0;
-                Log.e("aaaaaaaaaaaa","ccccccccccccc");
+                Log.e("aaaaaaaaaaaa", "ccccccccccccc");
             } else if (comefrom_search == 3) {
                 Intent i = new Intent(getActivity(), DownloadsActivity.class);
                 ComeFrom_Playlist = true;
@@ -498,7 +493,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 startActivity(i);
                 getActivity().finish();
 
-                Log.e("aaaaaaaaaaaa","dddddddddddddd");
+                Log.e("aaaaaaaaaaaa", "dddddddddddddd");
 //            comefrom_search = 0;
             }
         } else {
@@ -564,7 +559,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if(isMediaStart){
+                    if (isMediaStart) {
                         stopMedia();
                         releasePlayer();
                     }
@@ -583,7 +578,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if(isMediaStart){
+                if (isMediaStart) {
                     stopMedia();
                     releasePlayer();
                 }
@@ -1234,7 +1229,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             protected void onPostExecute(Void aVoid) {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
-                getMediaByPer(PlaylistID,SongListSize);
+                getMediaByPer(PlaylistID, SongListSize);
                 super.onPostExecute(aVoid);
             }
         }
@@ -1288,7 +1283,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
 
-                getMediaByPer(PlaylistID,SongListSize);
+                getMediaByPer(PlaylistID, SongListSize);
                 enableDisableDownload(false, "orange");
                 downloadAudioDetailsList = GetAllMedia();
                 playlistWiseAudioDetails = GetMedia();
