@@ -78,7 +78,7 @@ public class DownloadMedia implements OnDownloadListener{
        }).setOnCancelListener(new OnCancelListener() {
            @Override
            public void onCancel() {
-
+               downloadIdOne = 0;
            }
        }).setOnStartOrResumeListener(new OnStartOrResumeListener() {
            @Override

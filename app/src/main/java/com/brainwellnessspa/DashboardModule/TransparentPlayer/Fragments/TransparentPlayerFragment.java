@@ -850,7 +850,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.GONE);
             DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
-            try {
+            getDownloadMedia(downloadMedia);
+            /*try {
                 byte[] decrypt = null;
                 decrypt = downloadMedia.decrypt(name);
                 if (decrypt != null) {
@@ -878,7 +879,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
         } else {
             if (audioFile.equalsIgnoreCase("") || audioFile.isEmpty()) {
                 setMediaPlayer("2", fileDescriptor);
@@ -895,7 +896,47 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
             }
         }
+    }    private void getDownloadMedia(DownloadMedia downloadMedia) {
+        class getDownloadMedia extends AsyncTask<Void, Void, Void> {
+            FileDescriptor fileDescriptor = null;
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    byte[] decrypt = null;
+                    decrypt = downloadMedia.decrypt(name);
+                    if (decrypt != null) {
+                        fileDescriptor = FileUtils.getTempFileDescriptor(getActivity(), decrypt);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (fileDescriptor != null) {
+                    setMediaPlayer("1", fileDescriptor);
+                } else {
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        setMediaPlayer("0", fileDescriptor);
+                    } else {
+                        binding.progressBar.setVisibility(View.GONE);
+                        binding.ivPlay.setVisibility(View.VISIBLE);
+                        binding.ivPause.setVisibility(View.GONE);
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    }
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        getDownloadMedia st = new getDownloadMedia();
+        st.execute();
     }
+
 
     private void callComplete() {
         handler.removeCallbacks(UpdateSongTime);
