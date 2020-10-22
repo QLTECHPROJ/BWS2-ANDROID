@@ -1391,7 +1391,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
         }.getType();
         mainPlayModelList = new ArrayList<>();
-        mainPlayModelList = gson.fromJson(json, type);
+        if (!json.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
+            }.getType();
+            mainPlayModelList = gson.fromJson(json, type1);
+        }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
