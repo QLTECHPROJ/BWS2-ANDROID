@@ -625,11 +625,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         if (url.equalsIgnoreCase("")){
             binding.llShuffle.setClickable(false);
             binding.llShuffle.setEnabled(false);
-            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.llRepeat.setEnabled(false);
             binding.llRepeat.setClickable(false);
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }else {
             if (IsShuffle.equalsIgnoreCase("")) {
                 if (listSize == 1) {
@@ -2305,34 +2305,34 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         } else {
             binding.llnext.setClickable(false);
             binding.llnext.setEnabled(false);
-            binding.llnext.setAlpha(0.7f);
+            binding.llnext.setAlpha(0.6f);
             binding.llprev.setClickable(false);
             binding.llprev.setEnabled(false);
-            binding.llprev.setAlpha(0.7f);
+            binding.llprev.setAlpha(0.6f);
             binding.llForwardSec.setClickable(false);
             binding.llForwardSec.setEnabled(false);
-            binding.llForwardSec.setAlpha(0.7f);
+            binding.llForwardSec.setAlpha(0.6f);
             binding.llBackWordSec.setClickable(false);
             binding.llBackWordSec.setEnabled(false);
-            binding.llBackWordSec.setAlpha(0.7f);
+            binding.llBackWordSec.setAlpha(0.6f);
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);
-            binding.llMore.setAlpha(0.7f);
+            binding.llMore.setAlpha(0.6f);
             binding.llViewQueue.setClickable(false);
             binding.llViewQueue.setEnabled(false);
-            binding.llViewQueue.setAlpha(0.7f);
+            binding.llViewQueue.setAlpha(0.6f);
             binding.llDownload.setClickable(false);
             binding.llDownload.setEnabled(false);
-            binding.llDownload.setAlpha(0.7f);
+            binding.llDownload.setAlpha(0.6f);
             binding.llRepeat.setClickable(false);
             binding.llRepeat.setEnabled(false);
-            binding.llRepeat.setAlpha(0.7f);
+            binding.llRepeat.setAlpha(0.6f);
             binding.llShuffle.setClickable(false);
             binding.llShuffle.setEnabled(false);
-            binding.llShuffle.setAlpha(0.7f);
+            binding.llShuffle.setAlpha(0.6f);
             binding.llLike.setClickable(false);
             binding.llLike.setEnabled(false);
-            binding.llLike.setAlpha(0.7f);
+            binding.llLike.setAlpha(0.6f);
             binding.rlSeekbar.setClickable(false);
             binding.rlSeekbar.setEnabled(false);
             binding.simpleSeekbar.setClickable(false);
