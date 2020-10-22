@@ -51,6 +51,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
@@ -86,6 +87,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         ctx = DownloadPlaylistActivity.this;
         addDisclaimer();
+        ComeScreenAccount = 0;
         if (getIntent() != null) {
             PlaylistID = getIntent().getStringExtra("PlaylistID");
             PlaylistName = getIntent().getStringExtra("PlaylistName");

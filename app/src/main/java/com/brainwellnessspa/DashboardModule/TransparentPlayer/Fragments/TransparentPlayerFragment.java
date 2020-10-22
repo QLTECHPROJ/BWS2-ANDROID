@@ -58,6 +58,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
@@ -166,10 +167,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     if (myCount == 5) {
                         Log.e("myCount complete", String.valueOf(myCount));
                         callComplete();
-                        Log.e("calll complete errr","eee");
+                        Log.e("calll complete errr", "eee");
                         myCount = 0;
                     }
-                } else if (myProgress == currentDuration && myProgress != 0 && !isPause  && diff < 500) {
+                } else if (myProgress == currentDuration && myProgress != 0 && !isPause && diff < 500) {
 //                    Log.e("myProgress",String.valueOf(myProgress));
                     myCount++;
                     Log.e("myCount", String.valueOf(myCount));
@@ -177,7 +178,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     if (myCount == 20) {
                         Log.e("myCount complete", String.valueOf(myCount));
                         callComplete();
-                        Log.e("calll complete errr","eee");
+                        Log.e("calll complete errr", "eee");
                         myCount = 0;
                     }
                 }
@@ -268,6 +269,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.llLayout.setLayoutParams(paramm);
 
         }
+
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -304,7 +306,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         binding.ivPlay.setOnClickListener(view12 -> {
             if (!isMediaStart) {
                 callMedia();
-            }else if(isCompleteStop){
+            } else if (isCompleteStop) {
                 callMedia();
                 isCompleteStop = false;
             } else {
@@ -409,7 +411,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
             getPrepareShowData();
-        }  else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
+        } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
             Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
             }.getType();
             ArrayList<SearchBothModel.ResponseData> arrayList = gson.fromJson(json, type);
@@ -635,7 +637,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                                     Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                                             .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                                 }
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
@@ -1051,7 +1053,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
 
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1082,7 +1084,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1109,11 +1111,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-        }else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
+        } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
             Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
             }.getType();
             ArrayList<SearchBothModel.ResponseData> arrayList = gson.fromJson(json, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1139,11 +1141,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-        }else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
+        } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
             Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
             }.getType();
             ArrayList<SuggestedModel.ResponseData> arrayList = gson.fromJson(json, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1174,7 +1176,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
             ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1205,7 +1207,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1236,7 +1238,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
-            if(arrayList.get(position).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1267,7 +1269,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
 
-            if(arrayList.get(position).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1297,7 +1299,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
-            if(arrayList.get(position).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1368,7 +1370,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onResume() {
-        handler.postDelayed(UpdateSongTime,100);
+        super.onResume();
+
+        if (ComeScreenAccount == 1) {
+            binding.llLayout.setVisibility(View.GONE);
+        } else if (ComeScreenAccount == 0) {
+            binding.llLayout.setVisibility(View.VISIBLE);
+        }
+
+        handler.postDelayed(UpdateSongTime, 100);
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         Gson gson = new Gson();
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
@@ -1443,7 +1453,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.GONE);
         }*/
-        super.onResume();
     }
 
    /* @Override

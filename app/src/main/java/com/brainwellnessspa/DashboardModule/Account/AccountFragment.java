@@ -65,6 +65,7 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class AccountFragment extends Fragment {
     public static String IsLock = "";
     public static int ComeScreenReminder = 0;
+    public static int ComeScreenAccount = 0;
     FragmentAccountBinding binding;
     String UserID;
     private long mLastClickTime = 0;
@@ -76,7 +77,7 @@ public class AccountFragment extends Fragment {
         View view = binding.getRoot();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
+        ComeScreenAccount = 1;
         comefromDownload = "0";
         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 10,
                 1, 1, 0.2f, 10);

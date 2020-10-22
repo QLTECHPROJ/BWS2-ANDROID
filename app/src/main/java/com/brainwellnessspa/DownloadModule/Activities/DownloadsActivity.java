@@ -33,7 +33,7 @@ import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity.comeDeletePlaylist;
-
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 
 public class DownloadsActivity extends AppCompatActivity {
     ActivityDownloadsBinding binding;
@@ -48,6 +48,7 @@ public class DownloadsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_downloads);
         ctx = DownloadsActivity.this;
+        ComeScreenAccount = 0;
         SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -55,6 +56,7 @@ public class DownloadsActivity extends AppCompatActivity {
 
         binding.llBack.setOnClickListener(view -> {
             comefromDownload = "0";
+            ComeScreenAccount = 1;
             finish();
         });
         prepareData();
@@ -63,6 +65,7 @@ public class DownloadsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         comefromDownload = "0";
+        ComeScreenAccount = 1;
         finish();
     }
 
