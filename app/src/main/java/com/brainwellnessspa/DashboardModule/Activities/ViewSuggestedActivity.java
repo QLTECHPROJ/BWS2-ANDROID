@@ -88,7 +88,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         if (getIntent() != null) {
             AudiolistsModel = getIntent().getParcelableArrayListExtra("AudiolistModel");
         }
-
         if (getIntent() != null) {
             PlaylistModel = getIntent().getParcelableArrayListExtra("PlaylistModel");
         }
@@ -113,7 +112,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     .add(R.id.flContainer, fragment)
                     .commit();
         }
-
         binding.tvTitle.setText(Name);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvMainAudio.setLayoutManager(layoutManager);
@@ -185,8 +183,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                                     playlistSongs.add(mainPlayModel);
                                 }
 
-                                for(int i = 0;i<mainPlayModelList.size();i++){
-                                    if(mainPlayModelList.get(i).getID().equalsIgnoreCase(id)){
+                                for (int i = 0; i < mainPlayModelList.size(); i++) {
+                                    if (mainPlayModelList.get(i).getID().equalsIgnoreCase(id)) {
                                         pos = i;
                                         break;
                                     }
@@ -285,7 +283,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = shared.edit();
                             Gson gson = new Gson();
                             ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
-                            SuggestedModel.ResponseData  mainPlayModel = new SuggestedModel.ResponseData();
+                            SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
                             mainPlayModel.setID("0");
                             mainPlayModel.setName("Disclaimer");
                             mainPlayModel.setAudioFile("");
@@ -338,7 +336,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = shared.edit();
                         Gson gson = new Gson();
                         ArrayList<SuggestedModel.ResponseData> listModelList2 = new ArrayList<>();
-                        SuggestedModel.ResponseData  mainPlayModel = new SuggestedModel.ResponseData();
+                        SuggestedModel.ResponseData mainPlayModel = new SuggestedModel.ResponseData();
                         mainPlayModel.setID("0");
                         mainPlayModel.setName("Disclaimer");
                         mainPlayModel.setAudioFile("");
@@ -431,7 +429,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                        }else {
+                        } else {
                             callAddAudioToPlaylist(AudiolistsModel.get(position).getID(), "", "0");
                         }
                     } else {
@@ -516,8 +514,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                     Intent i = new Intent(ctx, MembershipChangeActivity.class);
-                        i.putExtra("ComeFrom","Plan");
-                        startActivity(i);
+                    i.putExtra("ComeFrom", "Plan");
+                    startActivity(i);
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("2")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);

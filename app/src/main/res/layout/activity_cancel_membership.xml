@@ -66,40 +66,6 @@
                 android:layout_marginTop="@dimen/_6sdp"
                 android:orientation="vertical">
 
-                <RelativeLayout
-                    android:id="@+id/rlPlay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rouned_corner_shadow">
-
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/cancel_mp_image"
-                        android:visibility="gone" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_youtube_logo"
-                        android:visibility="gone" />
-
-                </RelativeLayout>
-
-                <VideoView
-                    android:id="@+id/videoView"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_220sdp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

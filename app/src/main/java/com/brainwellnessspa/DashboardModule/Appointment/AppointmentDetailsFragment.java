@@ -85,10 +85,13 @@ public class AppointmentDetailsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         RefreshData();
+        if(view == null){
+            return;
+        }
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                 callBack();
                 return true;
             }
