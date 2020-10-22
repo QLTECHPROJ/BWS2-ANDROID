@@ -95,6 +95,7 @@
                     android:layout_width="@dimen/_29sdp"
                     android:layout_height="@dimen/_29sdp"
                     android:padding="@dimen/_6sdp"
+                    android:layout_marginLeft="@dimen/_2sdp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_payment_cash_icon" />
 
@@ -102,7 +103,7 @@
                     android:id="@+id/tvDoller"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_4sdp"
+                    android:layout_marginLeft="@dimen/_2sdp"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="center"
                     android:textColor="@color/black"
