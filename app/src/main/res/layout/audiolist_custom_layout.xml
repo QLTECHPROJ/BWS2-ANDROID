@@ -37,7 +37,7 @@
                     android:id="@+id/ivLock"
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
-                    android:layout_marginLeft="@dimen/_8sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     android:layout_marginTop="@dimen/_10sdp"
