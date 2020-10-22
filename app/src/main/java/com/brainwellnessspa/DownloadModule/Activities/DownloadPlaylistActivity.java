@@ -44,6 +44,7 @@ import com.brainwellnessspa.databinding.ActivityDownloadPlaylistBinding;
 import com.brainwellnessspa.databinding.DownloadPlaylistLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -56,6 +57,8 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -245,6 +248,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     });
 
                     Btn.setOnClickListener(v -> {
+                        getDownloadData();
                         playlistWiseAudiosDetails = GetPlaylistMedia(PlaylistID);
                         finish();
                         comeDeletePlaylist = 1;
@@ -302,6 +306,52 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         binding.tvTag.setVisibility(View.VISIBLE);
         binding.tvTag.setText("Audios in Playlist");
         binding.tvPlaylist.setText("Playlist");
+    }
+
+    private void getDownloadData() {
+        List<String> fileNameList,fileNameList1, audioFile, playlistDownloadId;
+        try {
+            SharedPreferences sharedy = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            Gson gson = new Gson();
+            String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+            String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+            String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+            if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                fileNameList = gson.fromJson(jsony, type);
+                fileNameList1 = gson.fromJson(jsony, type);
+                audioFile = gson.fromJson(json1, type);
+                playlistDownloadId = gson.fromJson(jsonq, type);
+
+                if (playlistDownloadId.size() != 0) {
+                    playlistDownloadId.contains(PlaylistID);
+                    for (int i = 1; i < fileNameList1.size(); i++) {
+                        if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
+                            fileNameList.remove(i);
+                            audioFile.remove(i);
+                            playlistDownloadId.remove(i);
+                        }
+                    }
+                }
+                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                String nameJson = gson.toJson(fileNameList);
+                String urlJson = gson.toJson(audioFile);
+                String playlistIdJson = gson.toJson(playlistDownloadId);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                editor.commit();
+                if(fileNameList.get(0).equalsIgnoreCase(filename) &&playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)){
+                    PRDownloader.cancel(downloadIdOne);
+                    filename ="";
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
