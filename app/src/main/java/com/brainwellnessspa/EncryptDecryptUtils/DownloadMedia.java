@@ -79,6 +79,23 @@ public class DownloadMedia implements OnDownloadListener{
            @Override
            public void onCancel() {
                downloadIdOne = 0;
+               fileNameList.remove(0);
+               audioFile.remove(0);
+               playlistDownloadId.remove(0);
+               filename = "";
+               SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+               SharedPreferences.Editor editor = shared.edit();
+               Gson gson = new Gson();
+               String urlJson = gson.toJson(audioFile);
+               String nameJson = gson.toJson(fileNameList);
+               String playlistIdJson = gson.toJson(playlistDownloadId);
+               editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+               editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+               editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+               editor.commit();
+               if(fileNameList.size()!=0){
+                   encrypt1(audioFile, fileNameList, playlistDownloadId);
+               }
            }
        }).setOnStartOrResumeListener(new OnStartOrResumeListener() {
            @Override

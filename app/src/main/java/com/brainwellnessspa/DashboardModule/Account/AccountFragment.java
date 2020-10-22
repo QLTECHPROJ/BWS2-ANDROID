@@ -57,6 +57,7 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
@@ -286,6 +287,7 @@ public class AccountFragment extends Fragment {
         DeletallLocalCart();
         DeletallLocalCart1();
         PRDownloader.cancel(downloadIdOne);
+        filename = "";
         SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREF_KEY_UserID);

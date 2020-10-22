@@ -144,6 +144,8 @@ public class PlaylistFragment extends Fragment {
 
     private void prepareData() {
         try {
+            SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
                     || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
                 String audioFile = "";

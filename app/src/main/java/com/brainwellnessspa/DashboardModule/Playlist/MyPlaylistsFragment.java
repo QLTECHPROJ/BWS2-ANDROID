@@ -533,6 +533,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         searchClear(searchEditText);
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         try {
+            SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
                     || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
                 String audioFile = "";
@@ -735,7 +737,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             downloadPlaylistDetails.setIsReminder(listModel.getResponseData().getIsReminder());
                             downloadPlaylistDetails.setPlaylistMastercat(listModel.getResponseData().getPlaylistMastercat());
                             downloadPlaylistDetails.setPlaylistSubcat(listModel.getResponseData().getPlaylistSubcat());
-                            downloadPlaylistDetails.setPlaylistImage(listModel.getResponseData().getSquarePlaylistImage());
+                            downloadPlaylistDetails.setPlaylistImage(listModel.getResponseData().getPlaylistImage());
                             downloadPlaylistDetails.setTotalAudio(listModel.getResponseData().getTotalAudio());
                             downloadPlaylistDetails.setTotalDuration(listModel.getResponseData().getTotalDuration());
                             downloadPlaylistDetails.setTotalhour(listModel.getResponseData().getTotalhour());
@@ -872,9 +874,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.tvLibraryName.setText(listModel.getPlaylistName());
         }
         binding.tvPlaylist.setText("Playlist");
-        if (!listModel.getPlaylistImage().equalsIgnoreCase("")) {
+        if (!listModel.getPlaylistImageDetail().equalsIgnoreCase("")) {
             try {
-                Glide.with(getActivity()).load(listModel.getPlaylistImage()).thumbnail(0.05f)
+                Glide.with(getActivity()).load(listModel.getPlaylistImageDetail()).thumbnail(0.05f)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1397,7 +1399,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         listModel.setPlaylistDesc(downloadPlaylistDetailsList.get(0).getPlaylistDesc());
                         listModel.setPlaylistMastercat(downloadPlaylistDetailsList.get(0).getPlaylistMastercat());
                         listModel.setPlaylistSubcat(downloadPlaylistDetailsList.get(0).getPlaylistSubcat());
-                        listModel.setPlaylistImage(downloadPlaylistDetailsList.get(0).getPlaylistImage());
+                        listModel.setPlaylistImageDetail(downloadPlaylistDetailsList.get(0).getPlaylistImage());
                         listModel.setTotalAudio(downloadPlaylistDetailsList.get(0).getTotalAudio());
                         listModel.setTotalDuration(downloadPlaylistDetailsList.get(0).getTotalDuration());
                         listModel.setTotalhour(downloadPlaylistDetailsList.get(0).getTotalhour());

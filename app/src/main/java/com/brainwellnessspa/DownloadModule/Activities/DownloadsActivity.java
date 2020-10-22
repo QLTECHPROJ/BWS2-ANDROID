@@ -125,6 +125,8 @@ public class DownloadsActivity extends AppCompatActivity {
 
     private void callMembershipMediaPlayer() {
         try {
+            SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
                     || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
                 String audioFile = "";
@@ -179,8 +181,8 @@ public class DownloadsActivity extends AppCompatActivity {
                     releasePlayer();
                 }
             }
-            SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            AudioFlag = shared2.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 comefromDownload = "1";
                 Fragment fragment = new TransparentPlayerFragment();

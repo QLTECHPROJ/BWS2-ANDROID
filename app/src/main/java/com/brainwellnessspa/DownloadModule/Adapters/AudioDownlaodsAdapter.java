@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.brainwellnessspa.BWSApplication;
@@ -49,6 +50,7 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
@@ -323,8 +325,20 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 Btn.setOnClickListener(v -> {
                     String AudioFile = listModelList.get(position).getAudioFile();
                     String AudioName = listModelList.get(position).getName();
+                    if (fileNameList.size() != 0) {
+                        for (int i = 0; i < fileNameList.size(); i++) {
+                            if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                                if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
+                                    if (downloadProgress <= 100) {
+                                        PRDownloader.cancel(downloadIdOne);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
                     dialog.dismiss();
+
                 });
 
                 tvGoBack.setOnClickListener(v -> dialog.dismiss());

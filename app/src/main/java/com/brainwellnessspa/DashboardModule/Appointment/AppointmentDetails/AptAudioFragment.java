@@ -304,18 +304,7 @@ public class AptAudioFragment extends Fragment {
                     mainPlayModel.setDownload("");
                     mainPlayModel.setAudioDuration("0:48");
                     listModelList2.add(mainPlayModel);
-                    mainPlayModel = new AppointmentDetailModel.Audio();
-                    mainPlayModel.setID(listModelList.get(position).getID());
-                    mainPlayModel.setName(listModelList.get(position).getName());
-                    mainPlayModel.setAudioFile(listModelList.get(position).getAudioFile());
-                     mainPlayModel.setAudioDirection(listModelList.get(position).getAudioDirection());
-                    mainPlayModel.setAudiomastercat(listModelList.get(position).getAudiomastercat());
-                    mainPlayModel.setAudioSubCategory(listModelList.get(position).getAudioSubCategory());
-                    mainPlayModel.setImageFile(listModelList.get(position).getImageFile());
-                    mainPlayModel.setLike(listModelList.get(position).getLike());
-                    mainPlayModel.setDownload(listModelList.get(position).getDownload());
-                    mainPlayModel.setAudioDuration(listModelList.get(position).getAudioDuration());
-                    listModelList2.add(mainPlayModel);
+                    listModelList2.add(listModelList.get(position));
 
                     String json = gson.toJson(listModelList2);
                     editor.putString(CONSTANTS.PREF_KEY_modelList, json);
