@@ -158,7 +158,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 myCount++;
                 Log.e("myCount",String.valueOf(myCount));
 
-                if(myCount == 20){
+                if(myCount == 10){
                     Log.e("myCount complete",String.valueOf(myCount));
                     callComplete();
                     myCount = 0;
@@ -258,6 +258,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             mLastClickTime = SystemClock.elapsedRealtime();
             callBack();
         });
+
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.14f, 0);
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -581,9 +582,10 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         addToRecentPlay();
         binding.simpleSeekbar.setClickable(true);
         handler.postDelayed(UpdateSongTime, 500);
-        if (isMediaStart) {
+        if(currentDuration == totalDuration && currentDuration != 0 && !isStop && !audioFile.equalsIgnoreCase("")){
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
+                Log.e("calll complete trans","trans");
             });
         }
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

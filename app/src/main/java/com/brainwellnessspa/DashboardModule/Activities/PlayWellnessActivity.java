@@ -199,7 +199,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 myCount++;
                 Log.e("myCount", String.valueOf(myCount));
 
-                if (myCount == 20) {
+                if (myCount == 10) {
                     Log.e("myCount complete", String.valueOf(myCount));
                     callComplete();
                     myCount = 0;
@@ -363,6 +363,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llViewQueue.setEnabled(false);
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
+
+        if(currentDuration == totalDuration && currentDuration != 0 && !isStop && !audioFile.equalsIgnoreCase("")){
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                callComplete();
+                Log.e("calll complete trans","trans");
+            });
+        }
+
         handler.postDelayed(UpdateSongTime, 100);
         getPrepareShowData(position);
         /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
