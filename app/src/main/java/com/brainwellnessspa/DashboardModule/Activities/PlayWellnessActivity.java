@@ -205,7 +205,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     myCount = 0;
                 }
             }
-            if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")) {
+            if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("") && !isprogressbar) {
                 callComplete();
             }
             if (isMediaStart && url.equalsIgnoreCase("")) {

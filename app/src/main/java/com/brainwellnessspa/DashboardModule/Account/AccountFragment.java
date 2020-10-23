@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.bumptech.glide.Glide;
 import com.downloader.PRDownloader;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,14 +51,20 @@ import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.databinding.FragmentAccountBinding;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
@@ -286,9 +293,6 @@ public class AccountFragment extends Fragment {
     }
 
     void DeleteCall() {
-        PRDownloader.cancel(downloadIdOne);
-        filename = "";
-        logout = true;
         if(isMediaStart){
             stopMedia();
             releasePlayer();
@@ -299,7 +303,33 @@ public class AccountFragment extends Fragment {
         editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO,MobileNo);
         editorcv.commit();
 
+        SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+        String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+           List<String> fileNameList = gson.fromJson(json, type);
+           List<String> audioFile = gson.fromJson(json1, type);
+           List<String> playlistDownloadId = gson.fromJson(json2, type);
+
+            SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Logout_DownloadPlaylist, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared1.edit();
+            String nameJson = gson.toJson(fileNameList);
+            String urlJson = gson.toJson(audioFile);
+            String playlistIdJson = gson.toJson(playlistDownloadId);
+            editor.putString(CONSTANTS.PREF_KEY_Logout_DownloadName, nameJson);
+            editor.putString(CONSTANTS.PREF_KEY_Logout_DownloadUrl, urlJson);
+            editor.putString(CONSTANTS.PREF_KEY_Logout_DownloadPlaylistId, playlistIdJson);
+            editor.commit();
+            isDownloading = false;
+        }
         Log.e("Old UserId MobileNo",UserID+"....." + MobileNo);
+        PRDownloader.cancel(downloadIdOne);
+        filename = "";
+        logout = true;
         SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREF_KEY_UserID);

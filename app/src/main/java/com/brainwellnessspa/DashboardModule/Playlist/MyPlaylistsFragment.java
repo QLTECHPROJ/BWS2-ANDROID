@@ -454,7 +454,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callBack() {
-        binding.searchView.clearFocus();
+        final InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (inputMethodManager.isActive()) {
+            if (activity.getCurrentFocus() != null) {
+                inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+            }
+        }
         if (MyPlaylistIds.equalsIgnoreCase("")) {
             if (comefrom_search == 2) {
                 Bundle bundle = new Bundle();

@@ -45,8 +45,13 @@ import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.logout;
-import com.brainwellnessspa.databinding.ActivityOtpBinding;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 
+import com.brainwellnessspa.databinding.ActivityOtpBinding;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -157,6 +162,30 @@ public class OtpActivity extends AppCompatActivity implements
                                     if(!UserID.equalsIgnoreCase(Logout_UserID)
                                     && !MobileNO.equalsIgnoreCase(Logout_MobileNo)){
                                         GetAllMedia();
+                                    }else{
+                                        SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_Logout_DownloadPlaylist, MODE_PRIVATE);
+                                        Gson gson = new Gson();
+                                        String json = sharedx.getString(CONSTANTS.PREF_KEY_Logout_DownloadName, String.valueOf(gson));
+                                        String json1 = sharedx.getString(CONSTANTS.PREF_KEY_Logout_DownloadUrl, String.valueOf(gson));
+                                        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_Logout_DownloadPlaylistId, String.valueOf(gson));
+                                        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
+                                            Type type = new TypeToken<List<String>>() {
+                                            }.getType();
+                                            List<String> fileNameList = gson.fromJson(json, type);
+                                            List<String> audioFile = gson.fromJson(json1, type);
+                                            List<String> playlistDownloadId = gson.fromJson(json2, type);
+
+                                            SharedPreferences sharedxc = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editorxc = sharedxc.edit();
+                                            String nameJson = gson.toJson(fileNameList);
+                                            String urlJson = gson.toJson(audioFile);
+                                            String playlistIdJson = gson.toJson(playlistDownloadId);
+                                            editorxc.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                                            editorxc.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                                            editorxc.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                                            editorxc.commit();
+                                            isDownloading = false;
+                                        }
                                     }
 
                                     Log.e("New UserId MobileNo",UserID+"....." +MobileNO);
@@ -221,6 +250,13 @@ public class OtpActivity extends AppCompatActivity implements
                         FileUtils.deleteDownloadedFile(getApplicationContext(), downloadAudioDetails.get(i).getName());
                     }
                 }
+                SharedPreferences preferences11 = getSharedPreferences(CONSTANTS.PREF_KEY_Logout_DownloadPlaylist, Context.MODE_PRIVATE);
+                SharedPreferences.Editor edit1 = preferences11.edit();
+                edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadName);
+                edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadUrl);
+                edit1.remove(CONSTANTS.PREF_KEY_Logout_DownloadPlaylistId);
+                edit1.clear();
+                edit1.commit();
                 DeletallLocalCart();
                 DeletallLocalCart1();
             }
