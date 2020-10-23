@@ -1006,6 +1006,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
                     if (response.isSuccessful()) {
+                        handler2.removeCallbacks(UpdateSongTime2);
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         SucessModel listModel = response.body();
                         mData.remove(position);
@@ -1498,34 +1499,38 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             UpdateSongTime2 = new Runnable() {
                 @Override
                 public void run() {
-                    for (int f = 0; f < listModelList.size(); f++) {
-                        if (fileNameList.size() != 0) {
-                            for (int i = 0; i < fileNameList.size(); i++) {
-                                if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName())) {
-                                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(mData.get(position).getName())) {
-                                        if (downloadProgress <= 100) {
-                                            notifyItemChanged(position);
+                    try {
+                        for (int f = 0; f < listModelList.size(); f++) {
+                            if (fileNameList.size() != 0) {
+                                for (int i = 0; i < fileNameList.size(); i++) {
+                                    if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName())) {
+                                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(mData.get(position).getName())) {
+                                            if (downloadProgress <= 100) {
+                                                notifyItemChanged(position);
                                          /*   holder.binding.pbProgress.setProgress(downloadProgress);
                                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                                             holder.binding.ivDownloads.setVisibility(View.GONE);*/
-                                        } else {
-                                            holder.binding.pbProgress.setVisibility(View.GONE);
-                                            holder.binding.ivDownloads.setVisibility(View.VISIBLE);
+                                            } else {
+                                                holder.binding.pbProgress.setVisibility(View.GONE);
+                                                holder.binding.ivDownloads.setVisibility(View.VISIBLE);
 //                                            handler2.removeCallbacks(UpdateSongTime2);
-                                            getDownloadData();
+                                                getDownloadData();
+                                            }
+                                        } else {
+                                            notifyItemChanged(position);
                                         }
-                                    } else {
-                                        notifyItemChanged(position);
                                     }
                                 }
                             }
                         }
+                        if (downloadProgress == 0) {
+                            notifyDataSetChanged();
+                            getDownloadData();
+                        }
+                        handler2.postDelayed(this, 300);
+                    }catch (Exception e){
+
                     }
-                    if (downloadProgress == 0) {
-                        notifyDataSetChanged();
-                        getDownloadData();
-                    }
-                    handler2.postDelayed(this, 300);
                 }
             };
 

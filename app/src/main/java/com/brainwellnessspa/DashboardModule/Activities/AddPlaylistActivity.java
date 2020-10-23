@@ -22,8 +22,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +31,6 @@ import com.brainwellnessspa.DashboardModule.Models.AddToPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.CreatePlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.PlaylistingModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
-import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
@@ -132,7 +129,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         }
     }
 
-    private void callAddPlaylistFromPlaylist(String PlaylistID, Dialog dialog, String d) {
+    private void callAddPlaylistFromPlaylist(String PlaylistID, String name, Dialog dialog, String d) {
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<AddToPlaylist> listCall = APIClient.getClient().getAddSearchAudioFromPlaylist(UserID, AudioId, PlaylistID, FromPlaylistID);
@@ -280,12 +277,13 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     rlCreate.setOnClickListener(view2 -> {
                                         comefrom_search = 0;
                                         addToPlayList = true;
-                                        MyPlaylistId = FromPlaylistID;
+                                        MyPlaylistId = PlaylistID;
                                         dialog.dismiss();
                                         Intent intent = new Intent(ctx,DashboardActivity.class);
                                         intent.putExtra("Goplaylist","1");
-                                        /*intent.putExtra("PlaylistID", FromPlaylistID);
-                                        intent.putExtra("PlaylistName", PlaylistName);*/
+                                        intent.putExtra("PlaylistID", PlaylistID);
+                                        intent.putExtra("PlaylistName", name);
+                                        intent.putExtra("PlaylistImage","");
                                         startActivity(intent);
                                         finish();
                                         /*Fragment myPlaylistsFragment = new MyPlaylistsFragment();
@@ -421,10 +419,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             if (isDisclaimer == 1) {
                                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
                                             } else {
-                                                callAddPlaylistFromPlaylist(PlaylistID, dialog, "0");
+                                                callAddPlaylistFromPlaylist(PlaylistID,listsModel.getResponseData().getName(), dialog, "0");
                                             }
                                         } else {
-                                            callAddPlaylistFromPlaylist(PlaylistID, dialog, "0");
+                                            callAddPlaylistFromPlaylist(PlaylistID,listsModel.getResponseData().getName(), dialog, "0");
 
                                         }
                                     }
@@ -458,11 +456,11 @@ public class AddPlaylistActivity extends AppCompatActivity {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
                         } else {
                             final Dialog dialogx = new Dialog(ctx);
-                            callAddPlaylistFromPlaylist(PlaylistID, dialogx, "1");
+                            callAddPlaylistFromPlaylist(PlaylistID,listModel.get(position).getName(), dialogx, "1");
                         }
                     } else {
                         final Dialog dialogx = new Dialog(ctx);
-                        callAddPlaylistFromPlaylist(PlaylistID, dialogx, "1");
+                        callAddPlaylistFromPlaylist(PlaylistID,listModel.get(position).getName(), dialogx, "1");
                     }
                 }
             });

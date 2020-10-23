@@ -112,8 +112,9 @@ public class PlaylistFragment extends Fragment {
                     .replace(R.id.flContainer, myPlaylistsFragment)
                     .commit();
             ComeNotification = 0;
+        }else {
+            prepareData();
         }
-        prepareData();
         return view;
     }
 

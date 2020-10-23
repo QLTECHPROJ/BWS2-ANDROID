@@ -205,7 +205,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     myCount = 0;
                 }
             }
-            if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("") && !isprogressbar) {
+            if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")) {
                 callComplete();
             }
             if (isMediaStart && url.equalsIgnoreCase("")) {
@@ -225,7 +225,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llProgressBar.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.GONE);
-            }else if (currentDuration > 1 && !isPause) {
+            }else if (currentDuration >= 1 && !isPause) {
                 binding.progressBar.setVisibility(View.GONE);
                 binding.llProgressBar.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);

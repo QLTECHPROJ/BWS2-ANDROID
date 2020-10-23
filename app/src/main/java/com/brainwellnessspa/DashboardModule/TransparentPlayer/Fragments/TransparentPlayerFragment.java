@@ -204,7 +204,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                        binding.llProgress.setVisibility(View.VISIBLE);
                         binding.ivPause.setVisibility(View.GONE);
                         binding.ivPlay.setVisibility(View.GONE);
-                    } else if (currentDuration > 1 && !isPause) {
+                    } else if (currentDuration >= 1 && !isPause) {
                         binding.progressBar.setVisibility(View.GONE);
                         binding.ivPause.setVisibility(View.VISIBLE);
                         binding.ivPlay.setVisibility(View.GONE);
@@ -694,6 +694,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void getPrepareShowData() {
+        handler12.postDelayed(UpdateSongTime12,100);
         try {
             if (queuePlay) {
                 listSize = addToQueueModelList.size();

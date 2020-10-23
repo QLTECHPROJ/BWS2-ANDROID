@@ -27,7 +27,7 @@ public class DashboardActivity extends AppCompatActivity {
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
     public static int ComeNotification = 0;
-    String Goplaylist= "", PlaylistID = "",PlaylistName = "";
+    String Goplaylist= "", PlaylistID = "",PlaylistName = "",PlaylistImage="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +39,11 @@ public class DashboardActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
-        if (getIntent().getExtras() != null){
+        if (getIntent().hasExtra("Goplaylist")){
             Goplaylist = getIntent().getStringExtra("Goplaylist");
-           /* PlaylistID = getIntent().getStringExtra("PlaylistID");
-            PlaylistName = getIntent().getStringExtra("PlaylistName");*/
+            PlaylistID = getIntent().getStringExtra("PlaylistID");
+            PlaylistName = getIntent().getStringExtra("PlaylistName");
+            PlaylistImage = getIntent().getStringExtra("PlaylistImage");
         }
         if(ComeNotification == 1){
             binding.navView.setSelectedItemId(R.id.navigation_playlist);
@@ -57,8 +58,9 @@ public class DashboardActivity extends AppCompatActivity {
             Fragment myPlaylistsFragment = new MyPlaylistsFragment();
             Bundle bundle = new Bundle();
             bundle.putString("New", "0");
-            /*bundle.putString("PlaylistID", PlaylistID);
-            bundle.putString("PlaylistName", PlaylistName);*/
+            bundle.putString("PlaylistID", PlaylistID);
+            bundle.putString("PlaylistName", PlaylistName);
+            bundle.putString("PlaylistImage", PlaylistImage);
             bundle.putString("MyDownloads", "0");
             myPlaylistsFragment.setArguments(bundle);
             FragmentManager fragmentManager1 = getSupportFragmentManager();
