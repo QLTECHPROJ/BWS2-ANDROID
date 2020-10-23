@@ -86,7 +86,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         this.llError = llError;
         this.tvFound = tvFound;
         this.rvDownloadsList = rvDownloadsList;
-        handler1 = new Handler();
+//        handler1 = new Handler();
         playlistWiseAudioDetails = new ArrayList<>();
         oneAudioDetailsList = new ArrayList<>();
 //        getDownloadData();
@@ -104,7 +104,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(listModelList.get(position).getPlaylistName());
-        UpdateSongTime1 = new Runnable() {
+        /*UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {
                 for (int i = 0; i < listModelList.size(); i++) {
@@ -112,7 +112,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 }
 
             }
-        };
+        };*/
      /*   if(fileNameList.size()!=0){
             if(playlistDownloadId.contains(listModelList.get(position).getPlaylistID())){
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
@@ -178,6 +178,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
                 i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
                 i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                i.putExtra("PlaylistImageDetails", listModelList.get(position).getPlaylistImageDetails());
                 i.putExtra("TotalAudio", listModelList.get(position).getTotalAudio());
                 i.putExtra("Totalhour", listModelList.get(position).getTotalhour());
                 i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
@@ -245,10 +246,11 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                     int downloadProgress1 = (int) progressPercent;
                     pbProgress.setVisibility(View.VISIBLE);
                     pbProgress.setProgress(downloadProgress1);
-                    handler1.postDelayed(UpdateSongTime1, 500);
+                    getMediaByPer(playlistID,totalAudio,pbProgress);
+//                    handler1.postDelayed(UpdateSongTime1, 3000);
                 } else {
                     pbProgress.setVisibility(View.GONE);
-                    handler1.removeCallbacks(UpdateSongTime1);
+//                    handler1.removeCallbacks(UpdateSongTime1);
                 }
                 super.onPostExecute(aVoid);
             }

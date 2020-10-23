@@ -27,6 +27,7 @@ import com.brainwellnessspa.MembershipModule.Activities.MembershipActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
+import com.brainwellnessspa.Utility.AppSignatureHashHelper;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.WebView.TncActivity;
 import com.brainwellnessspa.databinding.ActivityLoginBinding;
@@ -195,6 +196,10 @@ public class LoginActivity extends AppCompatActivity {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 String countryCode = binding.tvCountryCode.getText().toString().replace("+", "");
+                if(SplashScreenActivity.key.equalsIgnoreCase("")){
+                    AppSignatureHashHelper appSignatureHashHelper = new AppSignatureHashHelper(this);
+                    SplashScreenActivity.key = appSignatureHashHelper.getAppSignatures().get(0);
+                }
                 Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(binding.edtNumber.getText().toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
                 listCall.enqueue(new Callback<LoginModel>() {
                     @Override

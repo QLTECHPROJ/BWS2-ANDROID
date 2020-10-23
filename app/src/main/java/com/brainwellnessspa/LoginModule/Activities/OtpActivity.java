@@ -163,38 +163,14 @@ public class OtpActivity extends AppCompatActivity implements
                                     && !MobileNO.equalsIgnoreCase(Logout_MobileNo)){
                                         GetAllMedia();
                                     }else{
-                                        SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_Logout_DownloadPlaylist, MODE_PRIVATE);
-                                        Gson gson = new Gson();
-                                        String json = sharedx.getString(CONSTANTS.PREF_KEY_Logout_DownloadName, String.valueOf(gson));
-                                        String json1 = sharedx.getString(CONSTANTS.PREF_KEY_Logout_DownloadUrl, String.valueOf(gson));
-                                        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_Logout_DownloadPlaylistId, String.valueOf(gson));
-                                        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
-                                            Type type = new TypeToken<List<String>>() {
-                                            }.getType();
-                                            List<String> fileNameList = gson.fromJson(json, type);
-                                            List<String> audioFile = gson.fromJson(json1, type);
-                                            List<String> playlistDownloadId = gson.fromJson(json2, type);
-
-                                            SharedPreferences sharedxc = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                                            SharedPreferences.Editor editorxc = sharedxc.edit();
-                                            String nameJson = gson.toJson(fileNameList);
-                                            String urlJson = gson.toJson(audioFile);
-                                            String playlistIdJson = gson.toJson(playlistDownloadId);
-                                            editorxc.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                                            editorxc.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                                            editorxc.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                                            editorxc.commit();
-                                        }
-                                        isDownloading = false;
+                                        GetAllMedia2();
                                     }
+
 
                                     Log.e("New UserId MobileNo",UserID+"....." +MobileNO);
                                     Log.e("Old UserId MobileNo",Logout_UserID+"....." + Logout_MobileNo);
                                     logout = false;
                                     BWSApplication.showToast(otpModel.getResponseMessage(), OtpActivity.this);
-                                    Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
-                                    startActivity(i);
-                                    finish();
                                 } else if (otpModel.getResponseData().getError().equalsIgnoreCase("1")) {
                                     binding.txtError.setText(otpModel.getResponseMessage());
                                     binding.txtError.setVisibility(View.VISIBLE);
@@ -258,7 +234,58 @@ public class OtpActivity extends AppCompatActivity implements
                 edit1.clear();
                 edit1.commit();
                 DeletallLocalCart();
-                DeletallLocalCart1();
+            }
+        }
+
+        GetTask st = new GetTask();
+        st.execute();
+    }
+    public void GetAllMedia2() {
+
+        class GetTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                downloadAudioDetails = DatabaseClient
+                        .getInstance(OtpActivity.this)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .geAllData1();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                List<String> fileNameList = new ArrayList<>();
+                List<String> audioFile = new ArrayList<>();
+                List<String> playlistDownloadId = new ArrayList<>();
+
+                if(downloadAudioDetails.size()!=0){
+                    for(int i = 0;i<downloadAudioDetails.size();i++){
+                        if(downloadAudioDetails.get(i).getDownloadProgress()<100){
+                            fileNameList.add(downloadAudioDetails.get(i).getName());
+                            audioFile.add(downloadAudioDetails.get(i).getAudioFile());
+                            playlistDownloadId.add(downloadAudioDetails.get(i).getPlaylistId());
+                        }
+                    }
+                }
+                Gson gson = new Gson();
+                SharedPreferences sharedxc = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editorxc = sharedxc.edit();
+                String nameJson = gson.toJson(fileNameList);
+                String urlJson = gson.toJson(audioFile);
+                String playlistIdJson = gson.toJson(playlistDownloadId);
+                editorxc.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                editorxc.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                editorxc.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                editorxc.commit();
+                isDownloading = false;
+                Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
+                startActivity(i);
+                finish();
             }
         }
 
@@ -301,6 +328,10 @@ public class OtpActivity extends AppCompatActivity implements
 
             @Override
             protected void onPostExecute(Void aVoid) {
+
+                Intent i = new Intent(OtpActivity.this, DashboardActivity.class);
+                startActivity(i);
+                finish();
                 super.onPostExecute(aVoid);
             }
         }

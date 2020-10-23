@@ -32,6 +32,9 @@ public class DownloadPlaylistDetails implements Serializable {
     @ColumnInfo(name = "PlaylistImage")
     private String playlistImage;
 
+    @ColumnInfo(name = "PlaylistImageDetails")
+    private String PlaylistImageDetails;
+
     @ColumnInfo(name = "TotalAudio")
     private String totalAudio;
 
@@ -115,6 +118,14 @@ public class DownloadPlaylistDetails implements Serializable {
 
     public void setPlaylistImage(String playlistImage) {
         this.playlistImage = playlistImage;
+    }
+
+    public String getPlaylistImageDetails() {
+        return PlaylistImageDetails;
+    }
+
+    public void setPlaylistImageDetails(String playlistImageDetails) {
+        PlaylistImageDetails = playlistImageDetails;
     }
 
     public String getTotalAudio() {

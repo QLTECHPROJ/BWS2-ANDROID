@@ -32,7 +32,7 @@ import retrofit2.Response;
 
 public class SplashScreenActivity extends AppCompatActivity {
     ActivitySplashScreenBinding binding;
-    public static String key;
+    public static String key = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

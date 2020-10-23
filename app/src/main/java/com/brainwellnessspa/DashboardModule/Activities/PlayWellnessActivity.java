@@ -208,7 +208,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")) {
                 callComplete();
             }
-            if (isMediaStart && url.equalsIgnoreCase("")) {
+            if (currentDuration == totalDuration && currentDuration != 0 && !isStop && isMediaStart && url.equalsIgnoreCase("")) {
                 mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                     callComplete();
                     Log.e("calll complete real","real");
