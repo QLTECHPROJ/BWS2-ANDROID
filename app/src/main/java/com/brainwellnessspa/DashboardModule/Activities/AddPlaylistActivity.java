@@ -76,7 +76,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
             AudioId = getIntent().getStringExtra("AudioId");
             FromPlaylistID = getIntent().getStringExtra("PlaylistID");
         }
-        if (getIntent().getExtras() != null){
+        if (getIntent().getExtras() != null) {
             PlaylistName = getIntent().getStringExtra("PlaylistName");
         }
 
@@ -234,17 +234,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         MyPlaylistId = PlaylistID;
                                         dialog.dismiss();
                                         finish();
-                                                                /*Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                                                                Bundle bundle = new Bundle();
-                                                                bundle.putString("New", "0");
-                                                                bundle.putString("PlaylistID", listsModel.getResponseData().getId());
-                                                                bundle.putString("PlaylistName", listsModel.getResponseData().getName());
-                                                                bundle.putString("MyDownloads", "0");
-                                                                myPlaylistsFragment.setArguments(bundle);
-                                                                FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                                                fragmentManager1.beginTransaction()
-                                                                        .replace(R.id.flContainer, myPlaylistsFragment)
-                                                                        .commit();*/
                                     });
 
                                     tvCancel.setOnClickListener(v -> {
@@ -279,24 +268,13 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                         addToPlayList = true;
                                         MyPlaylistId = PlaylistID;
                                         dialog.dismiss();
-                                        Intent intent = new Intent(ctx,DashboardActivity.class);
-                                        intent.putExtra("Goplaylist","1");
+                                        Intent intent = new Intent(ctx, DashboardActivity.class);
+                                        intent.putExtra("Goplaylist", "1");
                                         intent.putExtra("PlaylistID", PlaylistID);
                                         intent.putExtra("PlaylistName", name);
-                                        intent.putExtra("PlaylistImage","");
+                                        intent.putExtra("PlaylistImage", "");
                                         startActivity(intent);
                                         finish();
-                                        /*Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("New", "0");
-                                        bundle.putString("PlaylistID", FromPlaylistID);
-                                        bundle.putString("PlaylistName", PlaylistName);
-                                        bundle.putString("MyDownloads", "0");
-                                        myPlaylistsFragment.setArguments(bundle);
-                                        FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                        fragmentManager1.beginTransaction()
-                                                .replace(R.id.flContainer, myPlaylistsFragment)
-                                                .commit();*/
                                     });
 
                                     tvCancel.setOnClickListener(v -> {
@@ -419,10 +397,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             if (isDisclaimer == 1) {
                                                 BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
                                             } else {
-                                                callAddPlaylistFromPlaylist(PlaylistID,listsModel.getResponseData().getName(), dialog, "0");
+                                                callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
                                             }
                                         } else {
-                                            callAddPlaylistFromPlaylist(PlaylistID,listsModel.getResponseData().getName(), dialog, "0");
+                                            callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
 
                                         }
                                     }
@@ -456,11 +434,11 @@ public class AddPlaylistActivity extends AppCompatActivity {
                             BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
                         } else {
                             final Dialog dialogx = new Dialog(ctx);
-                            callAddPlaylistFromPlaylist(PlaylistID,listModel.get(position).getName(), dialogx, "1");
+                            callAddPlaylistFromPlaylist(PlaylistID, listModel.get(position).getName(), dialogx, "1");
                         }
                     } else {
                         final Dialog dialogx = new Dialog(ctx);
-                        callAddPlaylistFromPlaylist(PlaylistID,listModel.get(position).getName(), dialogx, "1");
+                        callAddPlaylistFromPlaylist(PlaylistID, listModel.get(position).getName(), dialogx, "1");
                     }
                 }
             });

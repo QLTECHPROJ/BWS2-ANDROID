@@ -53,7 +53,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
         }
 
-        if (Goplaylist.equalsIgnoreCase("1")){
+        if (Goplaylist.equalsIgnoreCase("1")) {
             binding.navView.setSelectedItemId(R.id.navigation_playlist);
             Fragment myPlaylistsFragment = new MyPlaylistsFragment();
             Bundle bundle = new Bundle();

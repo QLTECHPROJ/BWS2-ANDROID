@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.Utility.MusicService;
@@ -182,7 +183,7 @@ public class SearchFragment extends Fragment {
             if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
                     || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
                 String audioFile = "";
-                 Gson gson = new Gson();
+                Gson gson = new Gson();
                 String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
                 Type type = new TypeToken<ArrayList<MainPlayModel>>() {
                 }.getType();
@@ -208,7 +209,7 @@ public class SearchFragment extends Fragment {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if(isMediaStart){
+                    if (isMediaStart) {
                         stopMedia();
                         releasePlayer();
                     }
@@ -227,7 +228,7 @@ public class SearchFragment extends Fragment {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if(isMediaStart){
+                if (isMediaStart) {
                     stopMedia();
                     releasePlayer();
                 }
@@ -721,6 +722,13 @@ public class SearchFragment extends Fragment {
                     fragmentManager1.beginTransaction()
                             .replace(R.id.flContainer, myPlaylistsFragment)
                             .commit();
+                    /*Intent intent = new Intent(getActivity(), DashboardActivity.class);
+                    intent.putExtra("Goplaylist","1");
+                    intent.putExtra("PlaylistID", modelList.get(position).getID());
+                    intent.putExtra("PlaylistName", modelList.get(position).getName());
+                    intent.putExtra("PlaylistImage","");
+                    startActivity(intent);
+                    getActivity().finish();*/
                 }
             });
         }
