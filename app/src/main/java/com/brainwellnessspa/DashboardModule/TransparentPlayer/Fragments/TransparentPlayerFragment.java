@@ -182,7 +182,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         myCount = 0;
                     }
                 }
-                if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !audioFile.equalsIgnoreCase("") && !isprogressbar) {
+                if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !audioFile.equalsIgnoreCase("")) {
                     callComplete();
                     Log.e("calll complete trans","trans");
 
