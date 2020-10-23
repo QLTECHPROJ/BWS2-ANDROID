@@ -184,8 +184,8 @@ public class OtpActivity extends AppCompatActivity implements
                                             editorxc.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                                             editorxc.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                                             editorxc.commit();
-                                            isDownloading = false;
                                         }
+                                        isDownloading = false;
                                     }
 
                                     Log.e("New UserId MobileNo",UserID+"....." +MobileNO);

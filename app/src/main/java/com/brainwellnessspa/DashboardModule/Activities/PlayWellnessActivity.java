@@ -364,7 +364,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
 
-        if(currentDuration == totalDuration && currentDuration != 0 && !isStop && !audioFile.equalsIgnoreCase("")){
+        if(currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")){
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
                 Log.e("calll complete trans","trans");
