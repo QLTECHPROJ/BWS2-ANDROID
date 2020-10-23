@@ -437,6 +437,7 @@ public class ViewAllSearchFragment extends Fragment {
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", "");
                     i.putExtra("PlaylistID", PlaylistModel.get(position).getID());
+                    i.putExtra("PlaylistName", PlaylistModel.get(position).getName());
                     startActivity(i);
                 }
             });

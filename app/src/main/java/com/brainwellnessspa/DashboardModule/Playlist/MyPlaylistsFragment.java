@@ -212,6 +212,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
 
         binding.llBack.setOnClickListener(view1 -> {
+            binding.searchView.clearFocus();
             callBack();
         });
 
@@ -423,18 +424,21 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     @Override
     public void onResume() {
+        super.onResume();
         addDisclaimer();
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                binding.searchView.clearFocus();
                 callBack();
                 return true;
             }
             return false;
         });
-        super.onResume();
+
         if (deleteFrg == 1) {
+            binding.searchView.clearFocus();
             callBack();
             deleteFrg = 0;
         } else if (addToPlayList) {
@@ -454,12 +458,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callBack() {
-        final InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if (inputMethodManager.isActive()) {
-            if (activity.getCurrentFocus() != null) {
-                inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-            }
-        }
         if (MyPlaylistIds.equalsIgnoreCase("")) {
             if (comefrom_search == 2) {
                 Bundle bundle = new Bundle();

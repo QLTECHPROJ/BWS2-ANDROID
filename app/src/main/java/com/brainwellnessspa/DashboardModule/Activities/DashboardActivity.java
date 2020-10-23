@@ -5,12 +5,15 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 
@@ -24,6 +27,7 @@ public class DashboardActivity extends AppCompatActivity {
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
     public static int ComeNotification = 0;
+    String Goplaylist= "", PlaylistID = "",PlaylistName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +39,32 @@ public class DashboardActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+        if (getIntent().getExtras() != null){
+            Goplaylist = getIntent().getStringExtra("Goplaylist");
+           /* PlaylistID = getIntent().getStringExtra("PlaylistID");
+            PlaylistName = getIntent().getStringExtra("PlaylistName");*/
+        }
         if(ComeNotification == 1){
             binding.navView.setSelectedItemId(R.id.navigation_playlist);
         }else{
             if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
                 binding.navView.setSelectedItemId(R.id.navigation_audio);
             }
+        }
+
+        if (Goplaylist.equalsIgnoreCase("1")){
+            binding.navView.setSelectedItemId(R.id.navigation_playlist);
+            Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("New", "0");
+            /*bundle.putString("PlaylistID", PlaylistID);
+            bundle.putString("PlaylistName", PlaylistName);*/
+            bundle.putString("MyDownloads", "0");
+            myPlaylistsFragment.setArguments(bundle);
+            FragmentManager fragmentManager1 = getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .replace(R.id.flContainer, myPlaylistsFragment)
+                    .commit();
         }
 //
 //        ConnectivityManager connMgr = (ConnectivityManager)

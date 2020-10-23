@@ -3,6 +3,7 @@ package com.brainwellnessspa.DashboardModule.Activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +33,7 @@ import com.brainwellnessspa.DashboardModule.Models.AddToPlaylist;
 import com.brainwellnessspa.DashboardModule.Models.CreatePlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.PlaylistingModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
+import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
@@ -58,7 +62,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
     public static boolean addToPlayList = false;
     public static String MyPlaylistId = "";
     ActivityAddPlaylistBinding binding;
-    String UserID, AudioId, FromPlaylistID;
+    String UserID, AudioId, FromPlaylistID, PlaylistName;
     Context ctx;
     Activity activity;
 
@@ -74,6 +78,9 @@ public class AddPlaylistActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra("AudioId");
             FromPlaylistID = getIntent().getStringExtra("PlaylistID");
+        }
+        if (getIntent().getExtras() != null){
+            PlaylistName = getIntent().getStringExtra("PlaylistName");
         }
 
         binding.llBack.setOnClickListener(view -> {
@@ -253,46 +260,53 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     if (d.equalsIgnoreCase("0")) {
                                         dialog.dismiss();
                                     }
-                                    finish();
-                                                            /*final Dialog dialog = new Dialog(ctx);
-                                                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                                            dialog.setContentView(R.layout.go_to_playlist);
-                                                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-                                                            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                                            final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-                                                            final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
+//                                    finish();
+                                    final Dialog dialog = new Dialog(ctx);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.setContentView(R.layout.go_to_playlist);
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+                                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                    final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+                                    final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
 
-                                                            dialog.setOnKeyListener((v, keyCode, event) -> {
-                                                                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                                                    dialog.dismiss();
-                                                                    return true;
-                                                                }
-                                                                return false;
-                                                            });
+                                    dialog.setOnKeyListener((v, keyCode, event) -> {
+                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                            dialog.dismiss();
+                                            return true;
+                                        }
+                                        return false;
+                                    });
 
-                                                            rlCreate.setOnClickListener(view2 -> {
-                                                                addToPlayList = true;
-                                                                MyPlaylistId = listsModel.getResponseData().getId();
-                                                                dialog.dismiss();
-                                                                Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                                                                Bundle bundle = new Bundle();
-                                                                bundle.putString("New", "0");
-                                                                bundle.putString("PlaylistID", listsModel.getResponseData().getId());
-                                                                bundle.putString("PlaylistName", listsModel.getResponseData().getName());
-                                                                bundle.putString("MyDownloads", "0");
-                                                                myPlaylistsFragment.setArguments(bundle);
-                                                                FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                                                fragmentManager1.beginTransaction()
-                                                                        .replace(R.id.flContainer, myPlaylistsFragment)
-                                                                        .commit();
-                                                            });
+                                    rlCreate.setOnClickListener(view2 -> {
+                                        comefrom_search = 0;
+                                        addToPlayList = true;
+                                        MyPlaylistId = FromPlaylistID;
+                                        dialog.dismiss();
+                                        Intent intent = new Intent(ctx,DashboardActivity.class);
+                                        intent.putExtra("Goplaylist","1");
+                                        /*intent.putExtra("PlaylistID", FromPlaylistID);
+                                        intent.putExtra("PlaylistName", PlaylistName);*/
+                                        startActivity(intent);
+                                        finish();
+                                        /*Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("New", "0");
+                                        bundle.putString("PlaylistID", FromPlaylistID);
+                                        bundle.putString("PlaylistName", PlaylistName);
+                                        bundle.putString("MyDownloads", "0");
+                                        myPlaylistsFragment.setArguments(bundle);
+                                        FragmentManager fragmentManager1 = getSupportFragmentManager();
+                                        fragmentManager1.beginTransaction()
+                                                .replace(R.id.flContainer, myPlaylistsFragment)
+                                                .commit();*/
+                                    });
 
-                                                            tvCancel.setOnClickListener(v -> {
-                                                                dialog.dismiss();
-                                                                finish();
-                                                            });
-                                                            dialog.show();
-                                                            dialog.setCancelable(false);*/
+                                    tvCancel.setOnClickListener(v -> {
+                                        dialog.dismiss();
+                                        finish();
+                                    });
+                                    dialog.show();
+                                    dialog.setCancelable(false);
                                 }
                             } else if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
                                 BWSApplication.showToast(listModels.getResponseMessage(), ctx);
