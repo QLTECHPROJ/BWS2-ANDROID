@@ -103,7 +103,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     long myProgress = 0,diff = 0;
     private long mLastClickTime = 0, totalDuration, currentDuration = 0;
     private Handler handler;
-//    private Handler handler1;
+    //    private Handler handler1;
     //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
@@ -208,14 +208,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")) {
                 callComplete();
             }
-            if (/*currentDuration == totalDuration && currentDuration != 0 && !isStop && */isMediaStart && url.equalsIgnoreCase("")) {
+            if (isMediaStart && url.equalsIgnoreCase("")) {
                 mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                     callComplete();
                     Log.e("calll complete real","real");
                 });
             }
             progress = getProgressPercentage(currentDuration, totalDuration);
-             if (currentDuration == 0 && isCompleteStop) {
+            if (currentDuration == 0 && isCompleteStop) {
                 binding.progressBar.setVisibility(View.GONE);
                 binding.llProgressBar.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.GONE);
@@ -242,7 +242,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             startTime = getStartTime();
             if (currentDuration == totalDuration && currentDuration != 0 && !isStop) {
                 binding.tvStartTime.setText(endtimetext);
-             } else if (isPause) {
+            } else if (isPause) {
                 binding.simpleSeekbar.setProgress(oTime);
                 int timeeee = progressToTimer(oTime, (int) (totalDuration));
                 binding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeeee),
@@ -786,8 +786,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.pbProgress.setVisibility(View.GONE);
                 handler1.removeCallbacks(UpdateSongTime1);
             }*/
-          binding.pbProgress.setVisibility(View.VISIBLE);
-          binding.ivDownloads.setVisibility(View.GONE);
+            binding.pbProgress.setVisibility(View.VISIBLE);
+            binding.ivDownloads.setVisibility(View.GONE);
             SaveMedia(EncodeBytes, FileUtils.getFilePath(getApplicationContext(), name));
    /*     if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
@@ -1231,7 +1231,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             } else if (IsShuffle.equalsIgnoreCase("1")) {
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
             }
-                        binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }
         BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
@@ -1243,7 +1243,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if(listSize!=0) {
                 id = addToQueueModelList.get(position).getID();
                 name = addToQueueModelList.get(position).getName();
-                url = addToQueueModelList.get(position).getAudioFile(); 
+                url = addToQueueModelList.get(position).getAudioFile();
                 binding.tvName.setText(addToQueueModelList.get(position).getName());
                 binding.tvDireName.setText(R.string.Directions);
                 binding.tvDireName.setText(R.string.Directions);
@@ -1336,6 +1336,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 Log.e("calll complete real","real");
             });
         }*/
+        if (isMediaStart && !url.equalsIgnoreCase("")) {
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                callComplete();
+                Log.e("calll complete trans","trans");
+            });
+        }
         getMediaByPer();
 
         if (!url.equalsIgnoreCase("")) {
@@ -1347,13 +1353,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         editor.commit();
         handler.postDelayed(UpdateSongTime, 100);
         BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
-
-        if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart&& !url.equalsIgnoreCase("")){
-            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
-                Log.e("calll complete real","real");
-            });
-        }
     }
 
     private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {

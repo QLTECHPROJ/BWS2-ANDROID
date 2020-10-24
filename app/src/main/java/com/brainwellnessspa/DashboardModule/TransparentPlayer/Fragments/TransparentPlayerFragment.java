@@ -175,7 +175,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     myCount++;
                     Log.e("myCount", String.valueOf(myCount));
 
-                    if (myCount == 10) {
+                    if (myCount == 20) {
                         Log.e("myCount complete", String.valueOf(myCount));
                         callComplete();
                         Log.e("calll complete errr", "eee");
@@ -187,7 +187,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     Log.e("calll complete trans","trans");
 
                 }
-                if (/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart && audioFile.equalsIgnoreCase("")) {
+                if (audioFile.equalsIgnoreCase("")) {
                     mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                         callComplete();
                     });
@@ -271,6 +271,14 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.llLayout.setLayoutParams(paramm);
 
         }
+
+        if(isMediaStart && !audioFile.equalsIgnoreCase("")){
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                callComplete();
+                Log.e("calll complete real","real");
+            });
+        }
+
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -783,13 +791,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 ctx.startActivity(i);
 
 //            simpleNotification();
-            }); 
-            if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart && !audioFile.equalsIgnoreCase("")){
-                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                    callComplete();
-                    Log.e("calll complete trans","trans");
-                });
-            }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
