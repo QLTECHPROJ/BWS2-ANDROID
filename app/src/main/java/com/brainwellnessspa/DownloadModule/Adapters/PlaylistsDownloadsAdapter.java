@@ -86,7 +86,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         this.llError = llError;
         this.tvFound = tvFound;
         this.rvDownloadsList = rvDownloadsList;
-//        handler1 = new Handler();
+        handler1 = new Handler();
         playlistWiseAudioDetails = new ArrayList<>();
         oneAudioDetailsList = new ArrayList<>();
 //        getDownloadData();
@@ -104,16 +104,16 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(listModelList.get(position).getPlaylistName());
-        /*UpdateSongTime1 = new Runnable() {
+        UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {
                 for (int i = 0; i < listModelList.size(); i++) {
-                    getMediaByPer(listModelList.get(i).getPlaylistID(), listModelList.get(i).getTotalAudio(), holder.binding.pbProgress);
+                    getMediaByPer(listModelList.get(position).getPlaylistID(), listModelList.get(position).getTotalAudio(), holder.binding.pbProgress);
                 }
 
             }
-        };*/
-     /*   if(fileNameList.size()!=0){
+        };
+        /*if(fileNameList.size()!=0){
             if(playlistDownloadId.contains(listModelList.get(position).getPlaylistID())){
                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
                 handler1.postDelayed(UpdateSongTime1,500);
@@ -247,10 +247,10 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                     pbProgress.setVisibility(View.VISIBLE);
                     pbProgress.setProgress(downloadProgress1);
                     getMediaByPer(playlistID,totalAudio,pbProgress);
-//                    handler1.postDelayed(UpdateSongTime1, 3000);
+                    handler1.postDelayed(UpdateSongTime1, 3000);
                 } else {
                     pbProgress.setVisibility(View.GONE);
-//                    handler1.removeCallbacks(UpdateSongTime1);
+                    handler1.removeCallbacks(UpdateSongTime1);
                 }
                 super.onPostExecute(aVoid);
             }

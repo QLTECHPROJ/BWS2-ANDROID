@@ -187,7 +187,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     Log.e("calll complete trans","trans");
 
                 }
-                if (currentDuration == totalDuration && currentDuration != 0 && !isStop &&audioFile.equalsIgnoreCase("")) {
+                if (/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart && audioFile.equalsIgnoreCase("")) {
                     mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                         callComplete();
                     });
@@ -272,11 +272,18 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
         }
 
-        if(currentDuration == totalDuration && currentDuration != 0 && !isStop && !audioFile.equalsIgnoreCase("")){
+        /*if(*//*currentDuration == totalDuration && currentDuration != 0 && !isStop*//* isMediaStart && !audioFile.equalsIgnoreCase("")){
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
                 Log.e("calll complete trans","trans");
             });
+        }*/
+        if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart && !audioFile.equalsIgnoreCase("")) {
+            mediaPlayer.setOnSeekCompleteListener(mediaPlayer1 -> {
+                callComplete();
+                Log.e("calll complete trans","trans");
+             }
+            );
         }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);

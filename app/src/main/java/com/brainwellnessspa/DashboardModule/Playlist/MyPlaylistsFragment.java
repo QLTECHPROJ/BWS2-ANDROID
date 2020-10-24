@@ -131,8 +131,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     Dialog dialog;
     List<String> fileNameList, playlistDownloadId, remainAudio;
     ItemTouchHelper touchHelper;
-    Runnable UpdateSongTime2;
     int SongListSize = 0, count;
+    SubPlayListModel.ResponseData GlobalListModel;
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
     private Handler handler1, handler2;
     boolean isclose = false;
@@ -185,7 +185,43 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //            handler1.postDelayed(this, 500);
 //        }
 //    };
+   Runnable  UpdateSongTime2 = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                for (int f = 0; f < GlobalListModel.getPlaylistSongs().size(); f++) {
+                    if (fileNameList.size() != 0) {
+                        for (int i = 0; i < fileNameList.size(); i++) {
+                            if (fileNameList.get(i).equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(f).getName())) {
+                                if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(f).getName())) {
+                                    if (downloadProgress <= 100) {
+                                        adpater.notifyItemChanged(f);
+                                         /*   holder.binding.pbProgress.setProgress(downloadProgress);
+                                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                                            holder.binding.ivDownloads.setVisibility(View.GONE);*/
+                                    } else {
+//                                                            holder.binding.pbProgress.setVisibility(View.GONE);
+//                                                            holder.binding.ivDownloads.setVisibility(View.VISIBLE);
+//                                            handler2.removeCallbacks(UpdateSongTime2);
+                                        getDownloadData();
+                                    }
+                                } else {
+                                    adpater.notifyItemChanged(f);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (downloadProgress == 0) {
+                    adpater.notifyDataSetChanged();
+                    getDownloadData();
+                }
+                handler2.postDelayed(this, 3000);
+            }catch (Exception e){
 
+            }
+        }
+    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
@@ -430,12 +466,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         super.onResume();
         addDisclaimer();
 
-        /*if (binding.searchView != null) {
-            binding.searchView.clearFocus();
-            binding.searchView.onActionViewCollapsed();
-            isclose = true;
-            Toast.makeText(activity, "closeeeeeee", Toast.LENGTH_SHORT).show();
-        }*/
+//        if (binding.searchView != null) {
+//            binding.searchView.clearFocus();
+//            binding.searchView.onActionViewCollapsed();
+//            isclose = true;
+//            Toast.makeText(activity, "closeeeeeee", Toast.LENGTH_SHORT).show();
+//        }
 
 //        if (isclose) {
         view.setFocusableInTouchMode(true);
@@ -444,6 +480,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
 //                binding.searchView.setQuery("", false);
 //                binding.rlMainLayouts.requestFocus();
+                binding.searchView.setFocusable(false);
                 callBack();
                 return true;
             }
@@ -872,6 +909,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void setData(SubPlayListModel.ResponseData listModel) {
+        GlobalListModel = listModel;
         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
                 5, 3, 1f, 0);
         binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -1226,7 +1264,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
             String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
             SaveMedia(new byte[1024], dirPath, playlistSongs, position, llDownload, ivDownloads);
-            handler2.postDelayed(UpdateSongTime2, 200);
+            handler2.postDelayed(UpdateSongTime2, 3000);
         }
     }
 
@@ -1510,43 +1548,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             final ArrayList<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
-            UpdateSongTime2 = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        for (int f = 0; f < listModelList.size(); f++) {
-                            if (fileNameList.size() != 0) {
-                                for (int i = 0; i < fileNameList.size(); i++) {
-                                    if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName())) {
-                                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(mData.get(position).getName())) {
-                                            if (downloadProgress <= 100) {
-                                                notifyItemChanged(position);
-                                         /*   holder.binding.pbProgress.setProgress(downloadProgress);
-                                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                                            holder.binding.ivDownloads.setVisibility(View.GONE);*/
-                                            } else {
-                                                holder.binding.pbProgress.setVisibility(View.GONE);
-                                                holder.binding.ivDownloads.setVisibility(View.VISIBLE);
-//                                            handler2.removeCallbacks(UpdateSongTime2);
-                                                getDownloadData();
-                                            }
-                                        } else {
-                                            notifyItemChanged(position);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (downloadProgress == 0) {
-                            notifyDataSetChanged();
-                            getDownloadData();
-                        }
-                        handler2.postDelayed(this, 3000);
-                    } catch (Exception e) {
 
-                    }
-                }
-            };
 
             if (Created.equalsIgnoreCase("1")) {
                 binding.tvSearch.setVisibility(View.VISIBLE);
@@ -1586,7 +1588,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         } else {
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                             holder.binding.ivDownloads.setVisibility(View.GONE);
-                            handler2.postDelayed(UpdateSongTime2, 200);
+                            handler2.postDelayed(UpdateSongTime2, 3000);
                         }
                     }
                 }

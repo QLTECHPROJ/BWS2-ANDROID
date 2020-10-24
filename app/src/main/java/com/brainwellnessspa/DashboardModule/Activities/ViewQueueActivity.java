@@ -582,7 +582,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         addToRecentPlay();
         binding.simpleSeekbar.setClickable(true);
         handler.postDelayed(UpdateSongTime, 500);
-        if(currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")){
+        if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart && !url.equalsIgnoreCase("")){
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
                 Log.e("calll complete trans","trans");
