@@ -117,7 +117,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     if (fileNameList.size() != 0) {
                         for (int i = 0; i < fileNameList.size(); i++) {
                             if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(f).getName())) {
-                                if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(f).getName())) {
+                                if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
                                     if (downloadProgress <= 100) {
                                         if(BWSApplication.isNetworkConnected(ctx)) {
                                             notifyItemChanged(position);
@@ -142,10 +142,8 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     getDownloadData();
                 }
                 handler1.postDelayed(this, 3000);
-            }catch (Exception e){
-                }
+            }catch (Exception e){ }
             }
-
         };
     /*    if (fileNameList.size() != 0) {
             if (fileNameList.contains(listModelList.get(position).getName())) {

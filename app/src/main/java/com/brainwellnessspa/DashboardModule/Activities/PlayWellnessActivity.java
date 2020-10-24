@@ -441,8 +441,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (!isMediaStart) {
                 callMedia();
             }else if(isCompleteStop){
-                callMedia();
                 isCompleteStop = false;
+                callMedia();
             } else {
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);

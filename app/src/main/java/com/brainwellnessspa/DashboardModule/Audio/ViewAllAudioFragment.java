@@ -121,7 +121,12 @@ public class ViewAllAudioFragment extends Fragment {
     public void onResume() {
         super.onResume();
         refreshData();
-        prepareData();
+        if (Name.equalsIgnoreCase("My Downloads")) {
+            audioList = new ArrayList<>();
+            GetAllMedia(getActivity());
+        } else {
+            prepareData();
+        }
     }
 
     public List<DownloadAudioDetails> GetAllMedia(Context ctx) {

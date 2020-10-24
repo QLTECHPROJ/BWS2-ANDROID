@@ -19,8 +19,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -29,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -100,8 +97,6 @@ import static com.brainwellnessspa.DashboardModule.Playlist.ViewAllPlaylistFragm
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity.ComeFrom_Playlist;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -123,7 +118,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     EditText searchEditText;
     ArrayList<String> changedAudio;
     Activity activity;
-    List<DownloadAudioDetails> downloadAudioDetailsList;
+    List<DownloadAudioDetails> downloadAudioDetailsList, downloadedSingleAudio;
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList;
     List<DownloadAudioDetails> oneAudioDetailsList, playlistWiseAudioDetails;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
@@ -131,12 +126,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     Dialog dialog;
     List<String> fileNameList, playlistDownloadId, remainAudio;
     ItemTouchHelper touchHelper;
-    Runnable  UpdateSongTime2 ;
+    Runnable UpdateSongTime2;
     int SongListSize = 0, count;
     SubPlayListModel.ResponseData GlobalListModel;
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
-    private Handler handler1, handler2;
     boolean isclose = false;
+    private Handler handler1, handler2;
 //    private Runnable UpdateSongTime1 = new Runnable() {
 //        @Override
 //        public void run() {
@@ -196,6 +191,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         activity = getActivity();
+        downloadedSingleAudio = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
         oneAudioDetailsList = new ArrayList<>();
         fileNameList = new ArrayList<>();
@@ -640,8 +636,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 e.printStackTrace();
                             }
                             getDownloadData();
+                            downloadAudioDetailsList = GetAllMedia();
                             SongListSize = listModel.getResponseData().getPlaylistSongs().size();
                             playlistWiseAudioDetails = GetMedia();
+                            downloadedSingleAudio = getMyMedia();
                             getMediaByPer(PlaylistId, SongListSize);
                             if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
                                 searchEditText.setHint(R.string.playlist_or_audio_search);
@@ -760,7 +758,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             downloadPlaylistDetails.setLike(listModel.getResponseData().getLike());
 
                             setData(listModel.getResponseData());
-                            downloadAudioDetailsList = GetAllMedia();
                             downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData().getDownload());
 
                         }
@@ -778,6 +775,33 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             downloadPlaylistDetailsList = GetPlaylistDetail2();
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
+    }
+
+    private List<DownloadAudioDetails> getMyMedia() {
+        downloadedSingleAudio = new ArrayList<>();
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                downloadedSingleAudio = DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getAllAudioByPlaylist("");
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                super.onPostExecute(aVoid);
+            }
+        }
+
+        GetMedia st = new GetMedia();
+        st.execute();
+        return downloadedSingleAudio;
     }
 
     private void callAddTransFrag() {
@@ -876,6 +900,15 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void setData(SubPlayListModel.ResponseData listModel) {
         GlobalListModel = listModel;
+        if (downloadAudioDetailsList.size() != 0) {
+            for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
+                for (int f = 0; i < listModel.getPlaylistSongs().size(); i++) {
+                    if (downloadAudioDetailsList.get(i).getAudioFile().equalsIgnoreCase(listModel.getPlaylistSongs().get(f).getAudioFile())) {
+
+                    }
+                }
+            }
+        }
         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
                 5, 3, 1f, 0);
         binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -1230,7 +1263,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
             String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
             SaveMedia(new byte[1024], dirPath, playlistSongs, position, llDownload, ivDownloads);
-            handler2.postDelayed(UpdateSongTime2, 200);
+            handler2.postDelayed(UpdateSongTime2, 2000);
         }
     }
 
@@ -1518,7 +1551,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             UpdateSongTime2 = new Runnable() {
                 @Override
                 public void run() {
-                    try {
+                  /*  try {
                         for (int f = 0; f < GlobalListModel.getPlaylistSongs().size(); f++) {
                             if (fileNameList.size() != 0) {
                                 for (int i = 0; i < fileNameList.size(); i++) {
@@ -1526,9 +1559,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                         if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(f).getName())) {
                                             if (downloadProgress <= 100) {
                                                notifyItemChanged(position);
-                                         /*   holder.binding.pbProgress.setProgress(downloadProgress);
+                                         *//*   holder.binding.pbProgress.setProgress(downloadProgress);
                                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                                            holder.binding.ivDownloads.setVisibility(View.GONE);*/
+                                            holder.binding.ivDownloads.setVisibility(View.GONE);*//*
                                             } else {
 //                                                            holder.binding.pbProgress.setVisibility(View.GONE);
 //                                                            holder.binding.ivDownloads.setVisibility(View.VISIBLE);
@@ -1549,7 +1582,20 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         handler2.postDelayed(this, 3000);
                     }catch (Exception e){
 
+                    }*/
+                    downloadedSingleAudio = getMyMedia();
+                    for (int f = 0; f < mData.size(); f++) {
+                        for (int i = 0; i < downloadedSingleAudio.size(); i++) {
+                            if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(mData.get(f).getName())) {
+                                if (!downloadedSingleAudio.get(i).getIsDownload().equalsIgnoreCase("Complete")) {
+                                    //disableName.add(mData.get(position).getName());
+                                    notifyItemChanged(f);
+                                } else {
+                                }
+                            }
+                        }
                     }
+                    downloadedSingleAudio = getMyMedia();
                 }
             };
             if (Created.equalsIgnoreCase("1")) {
@@ -1559,17 +1605,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 binding.tvSearch.setVisibility(View.GONE);
                 binding.searchView.setVisibility(View.VISIBLE);
             }
-            if (fileNameList.size() != 0) {
-             /*   for (int i = 0; i < fileNameList.size(); i++) {
-                    if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
-                        holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                        holder.binding.ivDownloads.setVisibility(View.GONE);
-                        isDownloading++;
-                        break;
-                    }else{
-                        holder.binding.pbProgress.setVisibility(View.GONE);
-                    }
-                }*/
+         /*   if (playlistWiseAudioDetails.size() != 0) {
+                    if(playlistWiseAudioDetails.contains(mData.get(position)))
+
+            } */
+
+        /*    if (fileNameList.size() != 0) {
                 for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
                         if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(mData.get(position).getName())) {
@@ -1588,7 +1629,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                                handler2.removeCallbacks(UpdateSongTime2);
                             }
                         } else {
-                            holder.binding.pbProgress.setProgress(0);
+//                            holder.binding.pbProgress.setProgress(0);
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                             holder.binding.ivDownloads.setVisibility(View.GONE);
                             handler2.postDelayed(UpdateSongTime2, 3000);
@@ -1598,7 +1639,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             } else {
                 holder.binding.pbProgress.setVisibility(View.GONE);
                 holder.binding.ivDownloads.setVisibility(View.VISIBLE);
-            }
+            }*/
             holder.binding.tvTitle.setText(mData.get(position).getName());
             holder.binding.tvTime.setText(mData.get(position).getAudioDuration());
             holder.binding.llSort.setOnTouchListener((v, event) -> {
@@ -1633,14 +1674,27 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             });
             String id = mData.get(position).getID();
 //            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);
-            for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                if (downloadAudioDetailsList.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile())
-                        && downloadAudioDetailsList.get(i).getPlaylistId().equalsIgnoreCase("")) {
+            for (int i = 0; i < downloadedSingleAudio.size(); i++) {
+                if (downloadedSingleAudio.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile())) {
                     //disableName.add(mData.get(position).getName());
                     disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
                     break;
                 } else {
                     enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
+                }
+            }
+            for (int i = 0; i < downloadedSingleAudio.size(); i++) {
+                if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(mData.get(position).getName())) {
+                    if (!downloadedSingleAudio.get(i).getIsDownload().equalsIgnoreCase("Complete")) {
+                        //disableName.add(mData.get(position).getName());
+                        holder.binding.pbProgress.setProgress(downloadedSingleAudio.get(i).getDownloadProgress());
+                        holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                        holder.binding.ivDownloads.setVisibility(View.GONE);
+                        handler2.postDelayed(UpdateSongTime2, 2000);
+                    } else {
+                        holder.binding.pbProgress.setVisibility(View.GONE);
+                        holder.binding.ivDownloads.setVisibility(View.VISIBLE);
+                    }
                 }
             }
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,

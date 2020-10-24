@@ -340,6 +340,45 @@ public class SubPlayListModel {
             @SerializedName("Name")
             @Expose
             private String name;
+
+            protected PlaylistSong(Parcel in) {
+                iD = in.readString();
+                imageFile = in.readString();
+                patientID = in.readString();
+                audioDuration = in.readString();
+                playlistID = in.readString();
+                audioFile = in.readString();
+                playlistAudioId = in.readString();
+                name = in.readString();
+                isDownload = in.readByte() != 0;
+                download = in.readString();
+                like = in.readString();
+                audiomastercat = in.readString();
+                audioSubCategory = in.readString();
+                audioDirection = in.readString();
+            }
+
+            public static final Creator<PlaylistSong> CREATOR = new Creator<PlaylistSong>() {
+                @Override
+                public PlaylistSong createFromParcel(Parcel in) {
+                    return new PlaylistSong(in);
+                }
+
+                @Override
+                public PlaylistSong[] newArray(int size) {
+                    return new PlaylistSong[size];
+                }
+            };
+
+            public boolean isDownload() {
+                return isDownload;
+            }
+
+            public void setDownload(boolean download) {
+                isDownload = download;
+            }
+
+            boolean isDownload;
             @SerializedName("Download")
             @Expose
             private String download;
@@ -359,33 +398,6 @@ public class SubPlayListModel {
             public PlaylistSong() {
             }
 
-            protected PlaylistSong(Parcel in) {
-                iD = in.readString();
-                imageFile = in.readString();
-                patientID = in.readString();
-                audioDuration = in.readString();
-                playlistID = in.readString();
-                audioFile = in.readString();
-                name = in.readString();
-                download = in.readString();
-                like = in.readString();
-                audiomastercat = in.readString();
-                audioSubCategory = in.readString();
-                audioDirection = in.readString();
-                playlistAudioId = in.readString();
-            }
-
-            public static final Creator<PlaylistSong> CREATOR = new Creator<PlaylistSong>() {
-                @Override
-                public PlaylistSong createFromParcel(Parcel in) {
-                    return new PlaylistSong(in);
-                }
-
-                @Override
-                public PlaylistSong[] newArray(int size) {
-                    return new PlaylistSong[size];
-                }
-            };
 
             public String getImageFile() {
                 return imageFile;
@@ -498,20 +510,23 @@ public class SubPlayListModel {
 
             @Override
             public void writeToParcel(Parcel parcel, int i) {
+
                 parcel.writeString(iD);
                 parcel.writeString(imageFile);
                 parcel.writeString(patientID);
                 parcel.writeString(audioDuration);
                 parcel.writeString(playlistID);
                 parcel.writeString(audioFile);
+                parcel.writeString(playlistAudioId);
                 parcel.writeString(name);
+                parcel.writeByte((byte) (isDownload ? 1 : 0));
                 parcel.writeString(download);
                 parcel.writeString(like);
                 parcel.writeString(audiomastercat);
                 parcel.writeString(audioSubCategory);
                 parcel.writeString(audioDirection);
-                parcel.writeString(playlistAudioId);
             }
+
         }
     }
 }

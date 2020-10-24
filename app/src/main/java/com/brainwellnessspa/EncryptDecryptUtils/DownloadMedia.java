@@ -73,11 +73,6 @@ public class DownloadMedia implements OnDownloadListener{
 //        progressBarOne.setProgress((int) progressPercent);
 //        textViewProgressOne.setText(BWSApplication.getProgressDisplayLine(progress.currentBytes, progress.totalBytes));
 //        progressBarOne.setIndeterminate(false);
-        }).setOnPauseListener(new OnPauseListener() {
-           @Override
-           public void onPause() {
-
-           }
        }).setOnCancelListener(new OnCancelListener() {
            @Override
            public void onCancel() {
@@ -132,11 +127,6 @@ public class DownloadMedia implements OnDownloadListener{
                    }
 
                }
-           }
-       }).setOnStartOrResumeListener(new OnStartOrResumeListener() {
-           @Override
-           public void onStartOrResume() {
-
            }
        }).start(this);
        return encodedBytes;
