@@ -208,18 +208,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")) {
                 callComplete();
             }
-            /*if (*//*currentDuration == totalDuration && currentDuration != 0 && !isStop && *//*isMediaStart && url.equalsIgnoreCase("")) {
+            if (/*currentDuration == totalDuration && currentDuration != 0 && !isStop && */isMediaStart && url.equalsIgnoreCase("")) {
                 mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                     callComplete();
                     Log.e("calll complete real","real");
                 });
-            }*/
-            if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart && !url.equalsIgnoreCase("")) {
-                mediaPlayer.setOnSeekCompleteListener(mediaPlayer1 -> {
-                            callComplete();
-                            Log.e("calll complete playw","playw");
-                        }
-                );
             }
             progress = getProgressPercentage(currentDuration, totalDuration);
              if (currentDuration == 0 && isCompleteStop) {
@@ -371,10 +364,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
 
-        if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")*/isMediaStart){
+        if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart&& !url.equalsIgnoreCase("")){
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
-                Log.e("calll complete trans","trans");
+                Log.e("calll complete real","real");
             });
         }
 
