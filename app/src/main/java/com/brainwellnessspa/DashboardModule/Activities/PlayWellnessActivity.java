@@ -482,7 +482,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         });
 
         binding.llnext.setOnClickListener(view -> {
-            stopMedia();
+            if (isPrepare || isMediaStart || isPause) {
+                stopMedia();
+            }
             isMediaStart = false;
             isPrepare = false;
             isPause = false;
@@ -555,7 +557,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         });
 
         binding.llprev.setOnClickListener(view -> {
-            stopMedia();
+            if (isPrepare || isMediaStart || isPause) {
+                stopMedia();
+            }
             isMediaStart = false;
             isPrepare = false;
             isPause = false;

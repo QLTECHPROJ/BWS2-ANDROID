@@ -141,7 +141,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     notifyDataSetChanged();
                     getDownloadData();
                 }
-                handler1.postDelayed(this, 300);
+                handler1.postDelayed(this, 3000);
             }catch (Exception e){
                 }
             }
