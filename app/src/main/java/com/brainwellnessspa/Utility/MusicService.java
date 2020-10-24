@@ -89,7 +89,6 @@ public class MusicService extends Service {
 //            stopPlaying();
 //        }
     }
-
     public static void playAudio2(FileDescriptor AudioFile) {
 //        if (!isPLAYING) {
 //            isPLAYING = true;

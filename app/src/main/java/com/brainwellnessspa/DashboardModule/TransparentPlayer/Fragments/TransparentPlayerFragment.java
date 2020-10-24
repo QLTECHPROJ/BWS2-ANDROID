@@ -80,7 +80,7 @@ import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.savePrefQueue;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
-public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener/*, AudioManager.OnAudioFocusChangeListener*/ {
+public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener*/ {
     public static int isDisclaimer = 0;
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
@@ -187,11 +187,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     Log.e("calll complete trans","trans");
 
                 }
-          /*      if (*//*currentDuration == totalDuration && currentDuration != 0 && !isStop*//* isMediaStart && audioFile.equalsIgnoreCase("")) {
+                if (/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart && audioFile.equalsIgnoreCase("")) {
                     mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                         callComplete();
                     });
-                }*/
+                }
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
                 if (player == 1) {
                     if (currentDuration == 0 && isCompleteStop) {
@@ -270,6 +270,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             paramm.setMargins(0, 0, 0, 130);
             binding.llLayout.setLayoutParams(paramm);
 
+        }
+
+        if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart && !audioFile.equalsIgnoreCase("")){
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                callComplete();
+                Log.e("calll complete trans","trans");
+            });
         }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -787,12 +794,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         } catch (Exception e) {
             e.printStackTrace();
         }
-     /*   if(*//*currentDuration == totalDuration && currentDuration != 0 && !isStop*//* isMediaStart && !audioFile.equalsIgnoreCase("")){
-            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
-                Log.e("calll complete trans","trans");
-            });
-        }*/
     }
 
     private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {
@@ -846,7 +847,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     Log.e("Playinggggg", "Startinggg");
                     mediaPlayer.start();
                     isMediaStart = true;
-                    mediaPlayer.setOnCompletionListener(this);
                 });
             }
         }
@@ -1468,11 +1468,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.GONE);
         }*/
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mediaPlayer) {
-        callComplete();
     }
 
    /* @Override

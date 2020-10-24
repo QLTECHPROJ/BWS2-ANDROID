@@ -1591,7 +1591,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             holder.binding.pbProgress.setProgress(0);
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                             holder.binding.ivDownloads.setVisibility(View.GONE);
-                            handler2.postDelayed(UpdateSongTime2, 200);
+                            handler2.postDelayed(UpdateSongTime2, 3000);
                         }
                     }
                 }
