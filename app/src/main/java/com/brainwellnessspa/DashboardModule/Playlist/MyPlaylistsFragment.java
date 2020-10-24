@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -134,6 +135,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     int SongListSize = 0, count;
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
     private Handler handler1, handler2;
+    boolean isclose = false;
 //    private Runnable UpdateSongTime1 = new Runnable() {
 //        @Override
 //        public void run() {
@@ -426,19 +428,29 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public void onResume() {
         super.onResume();
         addDisclaimer();
+
+        /*if (binding.searchView != null) {
+            binding.searchView.clearFocus();
+            binding.searchView.onActionViewCollapsed();
+            isclose = true;
+            Toast.makeText(activity, "closeeeeeee", Toast.LENGTH_SHORT).show();
+        }*/
+
+//        if (isclose) {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                binding.searchView.clearFocus();
+//                binding.searchView.setQuery("", false);
+//                binding.rlMainLayouts.requestFocus();
                 callBack();
                 return true;
             }
             return false;
         });
+//        }
 
         if (deleteFrg == 1) {
-            binding.searchView.clearFocus();
             callBack();
             deleteFrg = 0;
         } else if (addToPlayList) {
@@ -1528,7 +1540,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             getDownloadData();
                         }
                         handler2.postDelayed(this, 300);
-                    }catch (Exception e){
+                    } catch (Exception e) {
 
                     }
                 }
