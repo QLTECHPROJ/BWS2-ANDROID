@@ -187,7 +187,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     Log.e("calll complete trans","trans");
 
                 }
-                if (audioFile.equalsIgnoreCase("")) {
+                if (currentDuration == totalDuration && currentDuration != 0 && !isStop && audioFile.equalsIgnoreCase("")) {
                     mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                         callComplete();
                     });

@@ -208,7 +208,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")) {
                 callComplete();
             }
-            if (isMediaStart && url.equalsIgnoreCase("")) {
+            if (currentDuration == totalDuration && currentDuration != 0 && !isStop &&isMediaStart && url.equalsIgnoreCase("")) {
                 mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                     callComplete();
                     Log.e("calll complete real","real");
@@ -487,7 +487,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             isMediaStart = false;
             isPrepare = false;
-            isPause = false;isCompleteStop = false;
+            isPause = false;
+            isCompleteStop = false;
             binding.pbProgress.setVisibility(View.GONE);
             binding.ivDownloads.setVisibility(View.VISIBLE);
             if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
