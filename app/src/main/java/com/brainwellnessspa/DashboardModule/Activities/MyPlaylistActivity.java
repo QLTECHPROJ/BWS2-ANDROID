@@ -426,6 +426,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             downloadPlaylistDetails.setPlaylistMastercat(model.getResponseData().getPlaylistMastercat());
                             downloadPlaylistDetails.setPlaylistSubcat(model.getResponseData().getPlaylistSubcat());
                             downloadPlaylistDetails.setPlaylistImage(model.getResponseData().getPlaylistImage());
+                            downloadPlaylistDetails.setPlaylistImageDetails(model.getResponseData().getPlaylistImageDetail());
                             downloadPlaylistDetails.setTotalAudio(model.getResponseData().getTotalAudio());
                             downloadPlaylistDetails.setTotalDuration(model.getResponseData().getTotalDuration());
                             downloadPlaylistDetails.setTotalhour(model.getResponseData().getTotalhour());

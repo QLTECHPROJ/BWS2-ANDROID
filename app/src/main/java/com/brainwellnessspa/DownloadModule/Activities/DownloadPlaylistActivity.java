@@ -70,7 +70,7 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class DownloadPlaylistActivity extends AppCompatActivity {
     ActivityDownloadPlaylistBinding binding;
     PlayListsAdpater adpater;
-    String UserID, SearchFlag, AudioFlag, PlaylistID, PlaylistName, PlaylistImage, TotalAudio, Totalhour, Totalminute;
+    String UserID, SearchFlag, AudioFlag, PlaylistID, PlaylistName, PlaylistImage, TotalAudio, Totalhour, Totalminute,PlaylistImageDetails;
     EditText searchEditText;
     Context ctx;
     private List<DownloadPlaylistDetails> listModelList;
@@ -95,6 +95,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             PlaylistID = getIntent().getStringExtra("PlaylistID");
             PlaylistName = getIntent().getStringExtra("PlaylistName");
             PlaylistImage = getIntent().getStringExtra("PlaylistImage");
+            PlaylistImageDetails = getIntent().getStringExtra("PlaylistImageDetails");
             TotalAudio = getIntent().getStringExtra("TotalAudio");
             Totalhour = getIntent().getStringExtra("Totalhour");
             Totalminute = getIntent().getStringExtra("Totalminute");
@@ -194,9 +195,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
-        if (!PlaylistImage.equalsIgnoreCase("")) {
+        if (!PlaylistImageDetails.equalsIgnoreCase("")) {
             try {
-                Glide.with(ctx).load(PlaylistImage).thumbnail(0.05f)
+                Glide.with(ctx).load(PlaylistImageDetails).thumbnail(0.05f)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -303,33 +303,8 @@ public class AccountFragment extends Fragment {
         editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO,MobileNo);
         editorcv.commit();
 
-        SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-        String json1 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-        String json2 = sharedx.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
-            Type type = new TypeToken<List<String>>() {
-            }.getType();
-           List<String> fileNameList = gson.fromJson(json, type);
-           List<String> audioFile = gson.fromJson(json1, type);
-           List<String> playlistDownloadId = gson.fromJson(json2, type);
-
-            SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_Logout_DownloadPlaylist, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = shared1.edit();
-            String nameJson = gson.toJson(fileNameList);
-            String urlJson = gson.toJson(audioFile);
-            String playlistIdJson = gson.toJson(playlistDownloadId);
-            editor.putString(CONSTANTS.PREF_KEY_Logout_DownloadName, nameJson);
-            editor.putString(CONSTANTS.PREF_KEY_Logout_DownloadUrl, urlJson);
-            editor.putString(CONSTANTS.PREF_KEY_Logout_DownloadPlaylistId, playlistIdJson);
-            editor.commit();
-            isDownloading = false;
-        }
         Log.e("Old UserId MobileNo",UserID+"....." + MobileNo);
-        PRDownloader.cancel(downloadIdOne);
-        filename = "";
-        logout = true;
+
         SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
         edit.remove(CONSTANTS.PREF_KEY_UserID);
@@ -344,6 +319,9 @@ public class AccountFragment extends Fragment {
         editx.remove(CONSTANTS.PREF_KEY_IsShuffle);
         editx.clear();
         editx.commit();
+        PRDownloader.cancel(downloadIdOne);
+        filename = "";
+        logout = true;
         SharedPreferences preferences11 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit1 = preferences11.edit();
         edit1.remove(CONSTANTS.PREF_KEY_DownloadName);

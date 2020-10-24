@@ -237,6 +237,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             handler2.removeCallbacks(UpdateSongTime2);
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
             i.putExtra("PlaylistID", PlaylistID);
+            i.putExtra("PlaylistIDImage", PlaylistID);
             startActivity(i);
 
         });
@@ -746,6 +747,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             downloadPlaylistDetails.setPlaylistMastercat(listModel.getResponseData().getPlaylistMastercat());
                             downloadPlaylistDetails.setPlaylistSubcat(listModel.getResponseData().getPlaylistSubcat());
                             downloadPlaylistDetails.setPlaylistImage(listModel.getResponseData().getPlaylistImage());
+                            downloadPlaylistDetails.setPlaylistImageDetails(listModel.getResponseData().getPlaylistImageDetail());
                             downloadPlaylistDetails.setTotalAudio(listModel.getResponseData().getTotalAudio());
                             downloadPlaylistDetails.setTotalDuration(listModel.getResponseData().getTotalDuration());
                             downloadPlaylistDetails.setTotalhour(listModel.getResponseData().getTotalhour());
@@ -1539,7 +1541,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             notifyDataSetChanged();
                             getDownloadData();
                         }
-                        handler2.postDelayed(this, 300);
+                        handler2.postDelayed(this, 3000);
                     } catch (Exception e) {
 
                     }
