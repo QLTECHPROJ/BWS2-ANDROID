@@ -1585,12 +1585,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }*/
                     downloadedSingleAudio = getMyMedia();
                     for (int f = 0; f < mData.size(); f++) {
-                        for (int i = 0; i < downloadedSingleAudio.size(); i++) {
-                            if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(mData.get(f).getName())) {
-                                if (!downloadedSingleAudio.get(i).getIsDownload().equalsIgnoreCase("Complete")) {
-                                    //disableName.add(mData.get(position).getName());
-                                    notifyItemChanged(f);
-                                } else {
+                        if(downloadedSingleAudio.size()!=0) {
+                            for (int i = 0; i < downloadedSingleAudio.size(); i++) {
+                                if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(mData.get(position).getName())) {
+                                    if (!downloadedSingleAudio.get(i).getIsDownload().equalsIgnoreCase("Complete")) {
+                                        //disableName.add(mData.get(position).getName());
+                                        notifyItemChanged(position);
+                                    } else {
+                                    }
                                 }
                             }
                         }
@@ -1605,10 +1607,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 binding.tvSearch.setVisibility(View.GONE);
                 binding.searchView.setVisibility(View.VISIBLE);
             }
-         /*   if (playlistWiseAudioDetails.size() != 0) {
-                    if(playlistWiseAudioDetails.contains(mData.get(position)))
-
-            } */
 
         /*    if (fileNameList.size() != 0) {
                 for (int i = 0; i < fileNameList.size(); i++) {
@@ -1674,26 +1672,29 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             });
             String id = mData.get(position).getID();
 //            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);
-            for (int i = 0; i < downloadedSingleAudio.size(); i++) {
-                if (downloadedSingleAudio.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile())) {
-                    //disableName.add(mData.get(position).getName());
-                    disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
-                    break;
-                } else {
-                    enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
-                }
-            }
-            for (int i = 0; i < downloadedSingleAudio.size(); i++) {
-                if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(mData.get(position).getName())) {
-                    if (!downloadedSingleAudio.get(i).getIsDownload().equalsIgnoreCase("Complete")) {
+
+            if(downloadedSingleAudio.size()!=0) {
+                for (int i = 0; i < downloadedSingleAudio.size(); i++) {
+                    if (downloadedSingleAudio.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile())) {
                         //disableName.add(mData.get(position).getName());
-                        holder.binding.pbProgress.setProgress(downloadedSingleAudio.get(i).getDownloadProgress());
-                        holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                        holder.binding.ivDownloads.setVisibility(View.GONE);
-                        handler2.postDelayed(UpdateSongTime2, 2000);
+                        disableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
+                        break;
                     } else {
-                        holder.binding.pbProgress.setVisibility(View.GONE);
-                        holder.binding.ivDownloads.setVisibility(View.VISIBLE);
+                        enableDownload(holder.binding.llDownload, holder.binding.ivDownloads);
+                    }
+                }
+                for (int i = 0; i < downloadedSingleAudio.size(); i++) {
+                    if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(mData.get(position).getName())) {
+                        if (!downloadedSingleAudio.get(i).getIsDownload().equalsIgnoreCase("Complete")) {
+                            //disableName.add(mData.get(position).getName());
+                            holder.binding.pbProgress.setProgress(downloadedSingleAudio.get(i).getDownloadProgress());
+                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                            holder.binding.ivDownloads.setVisibility(View.GONE);
+                            handler2.postDelayed(UpdateSongTime2, 2000);
+                        } else {
+                            holder.binding.pbProgress.setVisibility(View.GONE);
+                            holder.binding.ivDownloads.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             }
