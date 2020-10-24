@@ -582,17 +582,19 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         addToRecentPlay();
         binding.simpleSeekbar.setClickable(true);
         handler.postDelayed(UpdateSongTime, 500);
+
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+        editor.commit();
+        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
+
         if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop */isMediaStart && !url.equalsIgnoreCase("")){
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
                 Log.e("calll complete trans","trans");
             });
         }
-        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shared.edit();
-        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-        editor.commit();
-        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
     }
 
     private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {

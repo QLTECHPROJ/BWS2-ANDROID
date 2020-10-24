@@ -364,13 +364,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
 
-        if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart&& !url.equalsIgnoreCase("")){
-            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
-                Log.e("calll complete real","real");
-            });
-        }
-
         handler.postDelayed(UpdateSongTime, 100);
         getPrepareShowData(position);
         /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
@@ -1354,6 +1347,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         editor.commit();
         handler.postDelayed(UpdateSongTime, 100);
         BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
+
+        if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart&& !url.equalsIgnoreCase("")){
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                callComplete();
+                Log.e("calll complete real","real");
+            });
+        }
     }
 
     private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {
