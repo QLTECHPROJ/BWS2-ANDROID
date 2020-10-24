@@ -108,9 +108,11 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
         UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {
+                try{
                 for (int f = 0; f < listModelList.size(); f++) {
                     if (fileNameList.size() != 0) {
                         for (int i = 0; i < fileNameList.size(); i++) {
@@ -118,7 +120,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                                 if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(f).getName())) {
                                     if (downloadProgress <= 100) {
                                         if(BWSApplication.isNetworkConnected(ctx)) {
-                                            notifyItemChanged(f);
+                                            notifyItemChanged(position);
                                         }
                                          /*   holder.binding.pbProgress.setProgress(downloadProgress);
                                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
@@ -129,7 +131,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                                         getDownloadData();
                                     }
                                 } else {
-                                    notifyItemChanged(f);
+                                    notifyItemChanged(position);
                                 }
                             }
                         }
@@ -140,7 +142,10 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     getDownloadData();
                 }
                 handler1.postDelayed(this, 300);
+            }catch (Exception e){
+                }
             }
+
         };
     /*    if (fileNameList.size() != 0) {
             if (fileNameList.contains(listModelList.get(position).getName())) {
@@ -179,7 +184,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                         }
                     } else {
                         holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                        handler1.postDelayed(UpdateSongTime1, 300);
+                        handler1.postDelayed(UpdateSongTime1, 3000);
                     }
                 }
             }
@@ -362,7 +367,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 fileNameList = gson.fromJson(jsony, type);
                 playlistDownloadId = gson.fromJson(jsonq, type);
                 if (fileNameList.size() != 0) {
-                    handler1.postDelayed(UpdateSongTime1, 500);
+                    handler1.postDelayed(UpdateSongTime1, 3000);
                 } else {
                     fileNameList = new ArrayList<>();
                     playlistDownloadId = new ArrayList<>();
