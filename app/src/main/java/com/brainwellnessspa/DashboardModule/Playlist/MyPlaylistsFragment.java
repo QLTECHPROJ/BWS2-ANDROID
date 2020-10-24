@@ -1591,7 +1591,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     if (!downloadedSingleAudio.get(i).getIsDownload().equalsIgnoreCase("Complete")) {
                                         //disableName.add(mData.get(position).getName());
                                         notifyItemChanged(position);
-                                    } else {
                                     }
                                 }
                             }
