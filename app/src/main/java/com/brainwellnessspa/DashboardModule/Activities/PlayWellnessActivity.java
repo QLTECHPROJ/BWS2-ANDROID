@@ -487,7 +487,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             isMediaStart = false;
             isPrepare = false;
-            isPause = false;
+            isPause = false;isCompleteStop = false;
             binding.pbProgress.setVisibility(View.GONE);
             binding.ivDownloads.setVisibility(View.VISIBLE);
             if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
@@ -563,6 +563,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             isMediaStart = false;
             isPrepare = false;
             isPause = false;
+            isCompleteStop = false;
             binding.pbProgress.setVisibility(View.GONE);
             binding.ivDownloads.setVisibility(View.VISIBLE);
             if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
