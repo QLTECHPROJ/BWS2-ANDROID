@@ -900,7 +900,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void setData(SubPlayListModel.ResponseData listModel) {
         GlobalListModel = listModel;
-        if (downloadAudioDetailsList.size() != 0) {
+        /*if (downloadAudioDetailsList.size() != 0) {
             for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                 for (int f = 0; i < listModel.getPlaylistSongs().size(); i++) {
                     if (downloadAudioDetailsList.get(i).getAudioFile().equalsIgnoreCase(listModel.getPlaylistSongs().get(f).getAudioFile())) {
@@ -908,7 +908,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
                 }
             }
-        }
+        }*/
         MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
                 5, 3, 1f, 0);
         binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
