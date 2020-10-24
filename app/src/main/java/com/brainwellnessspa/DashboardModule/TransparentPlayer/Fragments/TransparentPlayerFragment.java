@@ -271,13 +271,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.llLayout.setLayoutParams(paramm);
 
         }
-
-        if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart && !audioFile.equalsIgnoreCase("")){
-            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
-                Log.e("calll complete trans","trans");
-            });
-        }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -790,7 +783,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 ctx.startActivity(i);
 
 //            simpleNotification();
-            });
+            }); 
+            if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart && !audioFile.equalsIgnoreCase("")){
+                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                    callComplete();
+                    Log.e("calll complete trans","trans");
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
