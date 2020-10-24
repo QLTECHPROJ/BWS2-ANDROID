@@ -373,7 +373,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             handler1.removeCallbacks(UpdateSongTime1);
         }*/
         callRepeatShuffle();
-
+        if(isMediaStart /*&& !audioFile.equalsIgnoreCase("")*/){
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                callComplete();
+                Log.e("calll complete real","real");
+            });
+        }
         binding.llBack.setOnClickListener(view -> {
             callBack();
         });
@@ -1336,12 +1341,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 Log.e("calll complete real","real");
             });
         }*/
-        if (isMediaStart && !url.equalsIgnoreCase("")) {
+     /*   if (isMediaStart && !url.equalsIgnoreCase("")) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
                 Log.e("calll complete trans","trans");
             });
-        }
+        }*/
         getMediaByPer();
 
         if (!url.equalsIgnoreCase("")) {
