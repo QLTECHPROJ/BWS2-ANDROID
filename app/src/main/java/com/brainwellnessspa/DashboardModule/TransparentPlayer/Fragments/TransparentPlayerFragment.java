@@ -1052,7 +1052,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
-    }
+     }
 
     private void removeArray() {
         shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
