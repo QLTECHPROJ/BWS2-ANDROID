@@ -1,0 +1,29 @@
+Index: app/release/output-metadata.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/release/output-metadata.json	(revision f690781ec51486ea3359dfa781a10396e9cfc387)
++++ app/release/output-metadata.json	(revision f690781ec51486ea3359dfa781a10396e9cfc387)
+@@ -1,20 +0,0 @@
+-{
+-  "version": 1,
+-  "artifactType": {
+-    "type": "APK",
+-    "kind": "Directory"
+-  },
+-  "applicationId": "com.brainwellnessspa",
+-  "variantName": "release",
+-  "elements": [
+-    {
+-      "type": "SINGLE",
+-      "filters": [],
+-      "properties": [],
+-      "versionCode": 2,
+-      "versionName": "1.0",
+-      "enabled": true,
+-      "outputFile": "app-release.apk"
+-    }
+-  ]
+-}
+\ No newline at end of file

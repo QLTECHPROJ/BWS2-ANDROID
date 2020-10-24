@@ -905,6 +905,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 for (int f = 0; i < listModel.getPlaylistSongs().size(); i++) {
                     if (downloadAudioDetailsList.get(i).getAudioFile().equalsIgnoreCase(listModel.getPlaylistSongs().get(f).getAudioFile())) {
 
+
                     }
                 }
             }

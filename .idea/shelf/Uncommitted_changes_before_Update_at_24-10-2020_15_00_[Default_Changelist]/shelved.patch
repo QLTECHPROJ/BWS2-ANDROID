@@ -1,0 +1,26 @@
+Index: app/release/output-metadata.json
+===================================================================
+--- app/release/output-metadata.json	(revision f9581f8128f6aa6067c21b789372c24fdb0fe6db)
++++ app/release/output-metadata.json	(revision f9581f8128f6aa6067c21b789372c24fdb0fe6db)
+@@ -1,20 +0,0 @@
+-{
+-  "version": 1,
+-  "artifactType": {
+-    "type": "APK",
+-    "kind": "Directory"
+-  },
+-  "applicationId": "com.brainwellnessspa",
+-  "variantName": "release",
+-  "elements": [
+-    {
+-      "type": "SINGLE",
+-      "filters": [],
+-      "properties": [],
+-      "versionCode": 2,
+-      "versionName": "1.0",
+-      "enabled": true,
+-      "outputFile": "app-release.apk"
+-    }
+-  ]
+-}
+\ No newline at end of file
