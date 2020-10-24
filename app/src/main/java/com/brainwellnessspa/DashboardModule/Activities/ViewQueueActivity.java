@@ -82,7 +82,7 @@ import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.savePrefQueue;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
-public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,/* AudioManager.OnAudioFocusChangeListener,*/ StartDragListener {
+public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,/* AudioManager.OnAudioFocusChangeListener,*/ StartDragListener, MediaPlayer.OnCompletionListener {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
     String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name,StrigRemoveName;
@@ -582,12 +582,12 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         addToRecentPlay();
         binding.simpleSeekbar.setClickable(true);
         handler.postDelayed(UpdateSongTime, 500);
-        if(/*currentDuration == totalDuration && currentDuration != 0 && !isStop*/ isMediaStart && !url.equalsIgnoreCase("")){
+   /*     if(*//*currentDuration == totalDuration && currentDuration != 0 && !isStop*//* isMediaStart && !url.equalsIgnoreCase("")){
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
                 Log.e("calll complete trans","trans");
             });
-        }
+        }*/
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
@@ -633,6 +633,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             mediaPlayer.setOnPreparedListener(mp -> {
                 Log.e("Playinggggg", "Startinggg");
                 mediaPlayer.start();
+                mediaPlayer.setOnCompletionListener(this);
                 isMediaStart = true;
                 binding.llProgressBar.setVisibility(View.GONE);
                 binding.progressBar.setVisibility(View.GONE);
@@ -935,6 +936,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     @Override
     public void requestDrag(RecyclerView.ViewHolder viewHolder) {
         touchHelper.startDrag(viewHolder);
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        callComplete();
     }
 
  /*   @Override
