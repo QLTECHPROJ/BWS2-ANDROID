@@ -60,7 +60,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:overScrollMode="never"
-                        android:paddingBottom="@dimen/_40sdp" />
+                        android:paddingBottom="@dimen/_64sdp" />
                 </LinearLayout>
 
             </LinearLayout>

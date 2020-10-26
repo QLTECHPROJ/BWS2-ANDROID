@@ -812,9 +812,14 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     private void setInIt(String name, String audiomastercat, String imageFile, String audioDuration) {
         binding.tvTitle.setText(name);
         binding.tvName.setText(name);
+        if(name.equalsIgnoreCase("Disclaimer")){
+            Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+        }else {
+            Glide.with(ctx).load(imageFile).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+        }
         binding.tvCategory.setText(audiomastercat);
-        Glide.with(ctx).load(imageFile).thumbnail(0.05f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
         binding.tvTime.setText(audioDuration);
     }
 

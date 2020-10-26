@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,9 +31,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.ComeNotification;
+
 public class SplashScreenActivity extends AppCompatActivity {
     ActivitySplashScreenBinding binding;
-    public static String key = "";
+    public static String key = "", flag, id, title, message;
+    public static String Notification_PlaylistId= "";
+    public static String Notification_PlaylistName= "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +52,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
-        editor.putString(CONSTANTS.PREF_KEY_SplashKey,appSignatureHashHelper.getAppSignatures().get(0));
+        editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.getAppSignatures().get(0));
         editor.commit();
 
         getLatasteUpdate(SplashScreenActivity.this);
@@ -74,6 +79,25 @@ public class SplashScreenActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }, 2 * 1000);
+        }
+        Intent resultIntent = null;
+        if (getIntent().hasExtra("flag")) {
+            flag = getIntent().getStringExtra("flag");
+            id = getIntent().getStringExtra("id");
+            title = getIntent().getStringExtra("title");
+            message = getIntent().getStringExtra("message");
+
+            if (flag != null && flag.equalsIgnoreCase("Playlist")) {
+                resultIntent = new Intent(this, DashboardActivity.class);
+                ComeNotification = 1;
+                resultIntent.putExtra("id", id);
+                resultIntent.putExtra("title", title);
+                Notification_PlaylistId = id;
+                Notification_PlaylistName = title;
+                resultIntent.putExtra("body", message);
+                startActivity(resultIntent);
+                finish();
+            }
         }
     }
 
@@ -120,4 +144,5 @@ public class SplashScreenActivity extends AppCompatActivity {
             BWSApplication.showToast(context.getString(R.string.no_server_found), context);
         }
     }
+
 }

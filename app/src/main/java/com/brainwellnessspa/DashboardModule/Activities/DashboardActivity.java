@@ -104,20 +104,6 @@ public class DashboardActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (invoiceToDashboard == 1) {
             finishAffinity();
-            /*if (doubleBackToExitPressedOnce) {
-                super.onBackPressed();
-                return;
-            }
-
-            this.doubleBackToExitPressedOnce = true;
-            BWSApplication.showToast("Press again to exit.", DashboardActivity.this);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce = false;
-                }
-            }, 2000);*/
         }
 
         if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
@@ -139,9 +125,5 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-       /* if(isMediaStart){
-            stopMedia();
-            releasePlayer();
-        }*/
     }
 }

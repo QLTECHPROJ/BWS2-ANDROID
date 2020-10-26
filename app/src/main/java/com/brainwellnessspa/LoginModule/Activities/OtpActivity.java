@@ -202,13 +202,11 @@ public class OtpActivity extends AppCompatActivity implements
         startActivity(i);
         finish();
     }
+
     public void GetAllMedia() {
-
         class GetTask extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadAudioDetails = DatabaseClient
                         .getInstance(OtpActivity.this)
                         .getaudioDatabase()
@@ -239,13 +237,11 @@ public class OtpActivity extends AppCompatActivity implements
         GetTask st = new GetTask();
         st.execute();
     }
+
     public void GetAllMedia2() {
-
         class GetTask extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadAudioDetails = DatabaseClient
                         .getInstance(OtpActivity.this)
                         .getaudioDatabase()
@@ -257,7 +253,6 @@ public class OtpActivity extends AppCompatActivity implements
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-
                 List<String> fileNameList = new ArrayList<>();
                 List<String> audioFile = new ArrayList<>();
                 List<String> playlistDownloadId = new ArrayList<>();
@@ -291,6 +286,7 @@ public class OtpActivity extends AppCompatActivity implements
         GetTask st = new GetTask();
         st.execute();
     }
+
     public void DeletallLocalCart() {
         class DeletallCart extends AsyncTask<Void, Void, Void> {
             @Override
