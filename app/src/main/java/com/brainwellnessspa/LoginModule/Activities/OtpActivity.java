@@ -166,7 +166,6 @@ public class OtpActivity extends AppCompatActivity implements
                                         GetAllMedia2();
                                     }
 
-
                                     Log.e("New UserId MobileNo",UserID+"....." +MobileNO);
                                     Log.e("Old UserId MobileNo",Logout_UserID+"....." + Logout_MobileNo);
                                     logout = false;
@@ -444,7 +443,6 @@ public class OtpActivity extends AppCompatActivity implements
                                     binding.llResendSms.setEnabled(false);
                                     binding.tvResendOTP.setText(Html.fromHtml(millisUntilFinished / 1000 + "<font color=\"#999999\">" + " Resent SMS" + "</font>"));
                                 }
-
                                 public void onFinish() {
                                     binding.llResendSms.setEnabled(true);
                                     binding.tvResendOTP.setText(getString(R.string.resent_sms));

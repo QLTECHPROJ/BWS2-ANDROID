@@ -53,6 +53,7 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -90,6 +91,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         handler1 = new Handler();
         downloadAudioDetailsList = new ArrayList<>();
         downloadedSingleAudio = new ArrayList<>();
+        downloadedSingleAudio = getMyMedia();
         SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
@@ -99,6 +101,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 //            fileNameList = gson.fromJson(json, type);
         }
         getDownloadData();
+
     }
 
     @NonNull
@@ -121,9 +124,11 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                         if(downloadedSingleAudio.size()!=0) {
                             for (int i = 0; i < downloadedSingleAudio.size(); i++) {
                                 if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(listModelList.get(position).getName())) {
-                                    if (!downloadedSingleAudio.get(i).getIsDownload().equalsIgnoreCase("Complete")) {
-                                        //disableName.add(mData.get(position).getName());
-                                        notifyItemChanged(position);
+                                    if(isDownloading) {
+                                        if (downloadedSingleAudio.get(i).getDownloadProgress() <= 100) {
+                                            //disableName.add(mData.get(position).getName());
+                                            notifyItemChanged(position);
+                                        }
                                     }
                                 }
                             }
@@ -172,7 +177,6 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         }else {
             holder.binding.pbProgress.setVisibility(View.INVISIBLE);
         }*/
-        if (downloadedSingleAudio.size() != 0) {
              /*   for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
                         holder.binding.pbProgress.setVisibility(View.VISIBLE);
@@ -206,10 +210,14 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             if(downloadedSingleAudio.size()!=0) {
                 for (int i = 0; i < downloadedSingleAudio.size(); i++) {
                     if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(listModelList.get(position).getName())) {
-                        if (!downloadedSingleAudio.get(i).getIsDownload().equalsIgnoreCase("Complete")) {
+                        if (downloadedSingleAudio.get(i).getDownloadProgress()<=100) {
                             //disableName.add(mData.get(position).getName());
-                            holder.binding.pbProgress.setProgress(downloadedSingleAudio.get(i).getDownloadProgress());
-                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                            if(downloadedSingleAudio.get(i).getDownloadProgress()==100){
+                                holder.binding.pbProgress.setVisibility(View.GONE);
+                            }else {
+                                holder.binding.pbProgress.setProgress(downloadedSingleAudio.get(i).getDownloadProgress());
+                                holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                            }
                             handler1.postDelayed(UpdateSongTime1, 2000);
                         } else {
                             holder.binding.pbProgress.setVisibility(View.GONE);
@@ -217,7 +225,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     }
                 }
             }
-        } else {
+         else {
             holder.binding.pbProgress.setVisibility(View.GONE);
         }
         holder.binding.tvTitle.setText(listModelList.get(position).getName());

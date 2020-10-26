@@ -1586,12 +1586,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }*/
                     downloadedSingleAudio = getMyMedia();
                     for (int f = 0; f < mData.size(); f++) {
-                        if(downloadedSingleAudio.size()!=0) {
+                        if (downloadedSingleAudio.size() != 0) {
                             for (int i = 0; i < downloadedSingleAudio.size(); i++) {
                                 if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(mData.get(position).getName())) {
-                                    if (!downloadedSingleAudio.get(i).getIsDownload().equalsIgnoreCase("Complete")) {
-                                        //disableName.add(mData.get(position).getName());
-                                        notifyItemChanged(position);
+                                    if(DownloadMedia.isDownloading) {
+                                        if (downloadedSingleAudio.get(i).getDownloadProgress() <= 100) {
+                                            //disableName.add(mData.get(position).getName());
+                                            notifyItemChanged(position);
+                                        }
                                     }
                                 }
                             }
@@ -1673,7 +1675,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             String id = mData.get(position).getID();
 //            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);
 
-            if(downloadedSingleAudio.size()!=0) {
+            if (downloadedSingleAudio.size() != 0) {
                 for (int i = 0; i < downloadedSingleAudio.size(); i++) {
                     if (downloadedSingleAudio.get(i).getAudioFile().equalsIgnoreCase(mData.get(position).getAudioFile())) {
                         //disableName.add(mData.get(position).getName());
@@ -1685,19 +1687,24 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
                 for (int i = 0; i < downloadedSingleAudio.size(); i++) {
                     if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(mData.get(position).getName())) {
-                        if (!downloadedSingleAudio.get(i).getIsDownload().equalsIgnoreCase("Complete")) {
-                            //disableName.add(mData.get(position).getName());
+                        if (downloadedSingleAudio.get(i).getDownloadProgress()<=100) {
+
+                            if (downloadedSingleAudio.get(i).getDownloadProgress() == 100) {
+                            holder.binding.pbProgress.setVisibility(View.GONE);
+                            holder.binding.ivDownloads.setVisibility(View.VISIBLE);
+                        } else {  //disableName.add(mData.get(position).getName());
                             holder.binding.pbProgress.setProgress(downloadedSingleAudio.get(i).getDownloadProgress());
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                             holder.binding.ivDownloads.setVisibility(View.GONE);
-                            handler2.postDelayed(UpdateSongTime2, 2000);
-                        } else {
-                            holder.binding.pbProgress.setVisibility(View.GONE);
-                            holder.binding.ivDownloads.setVisibility(View.VISIBLE);
                         }
+                        handler2.postDelayed(UpdateSongTime2, 2000);
+                    } else {
+                        holder.binding.pbProgress.setVisibility(View.GONE);
+                        holder.binding.ivDownloads.setVisibility(View.VISIBLE);
                     }
                 }
             }
+        }
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
