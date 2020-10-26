@@ -66,9 +66,6 @@ import static com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity.c
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.ToBackward;
 import static com.brainwellnessspa.Utility.MusicService.ToForward;

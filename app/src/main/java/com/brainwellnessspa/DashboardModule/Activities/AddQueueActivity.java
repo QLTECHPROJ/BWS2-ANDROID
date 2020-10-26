@@ -362,10 +362,12 @@ public class AddQueueActivity extends AppCompatActivity {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
+            editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
             IsRepeat = "1";
             if (listSize == 1) {
                 editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
                 IsRepeat = "";
+                IsShuffle = "";
 //                BWSApplication.showToast("Repeat mode has been turned off", ctx);
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);

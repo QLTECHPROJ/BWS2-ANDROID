@@ -97,6 +97,7 @@ import static com.brainwellnessspa.DashboardModule.Playlist.ViewAllPlaylistFragm
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity.ComeFrom_Playlist;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -1522,7 +1523,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         Context ctx;
         String UserID, Created, name;
         StartDragListener startDragListener;
-        int isDownloading = 0;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
 
@@ -1589,11 +1589,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         if (downloadedSingleAudio.size() != 0) {
                             for (int i = 0; i < downloadedSingleAudio.size(); i++) {
                                 if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(mData.get(position).getName())) {
-                                    if(DownloadMedia.isDownloading) {
-                                        if (downloadedSingleAudio.get(i).getDownloadProgress() <= 100) {
+                                    if (downloadedSingleAudio.get(i).getDownloadProgress() <= 100) {
                                             //disableName.add(mData.get(position).getName());
                                             notifyItemChanged(position);
-                                        }
                                     }
                                 }
                             }
@@ -1692,10 +1690,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             if (downloadedSingleAudio.get(i).getDownloadProgress() == 100) {
                             holder.binding.pbProgress.setVisibility(View.GONE);
                             holder.binding.ivDownloads.setVisibility(View.VISIBLE);
+                            handler2.removeCallbacks(UpdateSongTime2);
                         } else {  //disableName.add(mData.get(position).getName());
                             holder.binding.pbProgress.setProgress(downloadedSingleAudio.get(i).getDownloadProgress());
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                             holder.binding.ivDownloads.setVisibility(View.GONE);
+                                handler2.postDelayed(UpdateSongTime2, 2000);
                         }
                         handler2.postDelayed(UpdateSongTime2, 2000);
                     } else {

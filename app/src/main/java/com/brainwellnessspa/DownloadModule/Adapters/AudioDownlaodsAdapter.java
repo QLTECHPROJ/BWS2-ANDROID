@@ -72,7 +72,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     TextView tvFound;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     Runnable UpdateSongTime1;
-    List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>();
+    List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(),audiofilelist = new ArrayList<>();
     private List<DownloadAudioDetails> listModelList;
     private Handler handler1;
     List<DownloadAudioDetails> downloadedSingleAudio;
@@ -123,12 +123,10 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                         if(downloadedSingleAudio.size()!=0) {
                             for (int i = 0; i < downloadedSingleAudio.size(); i++) {
                                 if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(listModelList.get(position).getName())) {
-                                    if(isDownloading) {
                                         if (downloadedSingleAudio.get(i).getDownloadProgress() <= 100) {
                                             //disableName.add(mData.get(position).getName());
                                             notifyItemChanged(position);
                                         }
-                                    }
                                 }
                             }
                         }
@@ -213,11 +211,12 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                             //disableName.add(mData.get(position).getName());
                             if(downloadedSingleAudio.get(i).getDownloadProgress()==100){
                                 holder.binding.pbProgress.setVisibility(View.GONE);
+                                handler1.removeCallbacks(UpdateSongTime1);
                             }else {
                                 holder.binding.pbProgress.setProgress(downloadedSingleAudio.get(i).getDownloadProgress());
                                 holder.binding.pbProgress.setVisibility(View.VISIBLE);
+                                handler1.postDelayed(UpdateSongTime1, 2000);
                             }
-                            handler1.postDelayed(UpdateSongTime1, 2000);
                         } else {
                             holder.binding.pbProgress.setVisibility(View.GONE);
                         }
@@ -343,6 +342,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
         holder.binding.llRemoveAudio.setOnClickListener(view -> {
             try {
+                getDownloadData();
                 final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.logout_layout);
@@ -373,6 +373,20 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                                     if (downloadProgress <= 100) {
                                         PRDownloader.cancel(downloadIdOne);
                                     }
+                                }else{
+                                    fileNameList.remove(i);
+                                    playlistDownloadId.remove(i);
+                                    audiofilelist.remove(i);
+                                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = shared.edit();
+                                    Gson gson = new Gson();
+                                    String urlJson = gson.toJson(audiofilelist);
+                                    String nameJson = gson.toJson(fileNameList);
+                                    String playlistIdJson = gson.toJson(playlistDownloadId);
+                                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                                    editor.commit();
                                 }
                             }
                         }
@@ -422,20 +436,24 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
             Gson gson = new Gson();
             String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+            String jsonx = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
             String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
             if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
                 Type type = new TypeToken<List<String>>() {
                 }.getType();
                 fileNameList = gson.fromJson(jsony, type);
                 playlistDownloadId = gson.fromJson(jsonq, type);
+                audiofilelist = gson.fromJson(jsonx, type);
                 if (fileNameList.size() != 0) {
                     handler1.postDelayed(UpdateSongTime1, 3000);
                 } else {
+                    audiofilelist = new ArrayList<>();
                     fileNameList = new ArrayList<>();
                     playlistDownloadId = new ArrayList<>();
                 }
             } else {
                 fileNameList = new ArrayList<>();
+                audiofilelist = new ArrayList<>();
                 playlistDownloadId = new ArrayList<>();
             }
         } catch (Exception e) {
