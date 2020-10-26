@@ -52,7 +52,6 @@ import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
-import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.addToSearch;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.MyPlaylistIds;
 import static com.brainwellnessspa.DashboardModule.Activities.AddAudioActivity.PlaylistIDMS;
@@ -558,6 +557,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
+                    comefromDownload = "0";
                     SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

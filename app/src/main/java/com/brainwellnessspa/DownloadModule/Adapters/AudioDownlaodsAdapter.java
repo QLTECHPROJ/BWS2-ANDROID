@@ -92,14 +92,14 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         downloadAudioDetailsList = new ArrayList<>();
         downloadedSingleAudio = new ArrayList<>();
         downloadedSingleAudio = getMyMedia();
-        SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+        /*SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
         if (!json.equalsIgnoreCase(String.valueOf(gson))) {
             Type type = new TypeToken<List<String>>() {
             }.getType();
 //            fileNameList = gson.fromJson(json, type);
-        }
+        }*/
         getDownloadData();
 
     }
@@ -114,7 +114,6 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
         UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {

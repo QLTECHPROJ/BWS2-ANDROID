@@ -78,12 +78,12 @@ public class FaqActivity extends AppCompatActivity {
                 modelList.clear();
                 modelList = new ArrayList<>();
                 for (int i = 0; i < faqListModel.getResponseData().size(); i++) {
-                    if (faqListModel.getResponseData().get(i).getCategory().contains("Help")) {
+                    if (faqListModel.getResponseData().get(i).getCategory().contains("General")) {
                         modelList.add(faqListModel.getResponseData().get(i));
                     }
                 }
                 Intent i = new Intent(FaqActivity.this, AudioFaqActivity.class);
-                i.putExtra("Flag", "Help");
+                i.putExtra("Flag", "General");
                 i.putExtra("faqListModel", modelList);
                 startActivity(i);
             } catch (Exception e) {
