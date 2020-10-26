@@ -77,7 +77,7 @@ public class AddQueueActivity extends AppCompatActivity {
     Boolean queuePlay, audioPlay;
     List<DownloadAudioDetails> oneAudioDetailsList;
     SharedPreferences shared;
-//    Handler handler1;
+    //    Handler handler1;
 //    List<String> fileNameList;
     private long mLastClickTime = 0;
 /*
@@ -264,7 +264,7 @@ public class AddQueueActivity extends AppCompatActivity {
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistId)&& mainPlayModelList.size() == 1) {
+            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistId) && mainPlayModelList.size() == 1) {
                 BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
             } else {
                 callRemoveFromPlayList();
@@ -702,7 +702,7 @@ public class AddQueueActivity extends AppCompatActivity {
 //        fileNameList = url1;
         callDisableDownload();
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-        downloadMedia.encrypt1(url1, name1,downloadPlaylistId);
+        downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
         /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
             handler1.postDelayed(UpdateSongTime1, 500);
         } else {
@@ -834,13 +834,22 @@ public class AddQueueActivity extends AppCompatActivity {
                         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
+                        } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
+                        } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
-                        }  else if (play.equalsIgnoreCase("TopCategories")) {
+                        } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
+                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llRemovePlaylist.setVisibility(View.GONE);
+                        } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
+                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llRemovePlaylist.setVisibility(View.GONE);
+                        } else if (play.equalsIgnoreCase("TopCategories")) {
+                            binding.llOptions.setVisibility(View.VISIBLE);
+                            binding.llRemovePlaylist.setVisibility(View.GONE);
+                        } else if (play.equalsIgnoreCase("ViewAllAudioList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
                         } else if (play.equalsIgnoreCase("play")) {
