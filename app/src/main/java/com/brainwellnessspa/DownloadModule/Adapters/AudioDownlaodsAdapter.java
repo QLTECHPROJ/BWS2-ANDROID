@@ -163,7 +163,6 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     }
 
                     handler1.postDelayed(this, 3000);
-
                 } catch (Exception e) {
                 }
             }};
