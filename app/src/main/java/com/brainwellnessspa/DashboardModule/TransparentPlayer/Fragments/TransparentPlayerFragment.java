@@ -1390,7 +1390,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.llLayout.setVisibility(View.VISIBLE);
         }
 
-        handler12.postDelayed(UpdateSongTime12, 100);
+        handler12.postDelayed(UpdateSongTime12, 500);
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         Gson gson = new Gson();
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
@@ -1469,7 +1469,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }*/
     }
 
-   /* @Override
+    @Override
+    public void onPause() {
+        handler12.removeCallbacks(UpdateSongTime12);
+        Log.e("Stop runnble","stop");
+        super.onPause();
+    }
+/* @Override
     public void onAudioFocusChange(int i) {
         switch (i) {
             case AudioManager.AUDIOFOCUS_GAIN:

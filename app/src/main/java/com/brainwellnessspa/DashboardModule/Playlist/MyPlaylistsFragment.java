@@ -1874,6 +1874,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 changedAudio.add(listModelList.get(i).getID());
             }
 
+            callDragApi();
+
+            notifyItemMoved(fromPosition, toPosition);
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -1884,6 +1887,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     if (pID.equalsIgnoreCase(PlaylistID)) {
                         if (fromPosition == pos) {
                             pos = toPosition;
+                            String one="1";
+                            Log.e("one",one);
                         }/* else if (toPosition == pos) {
                             if (action == 0) {
                                 pos = pos + 1;
@@ -1892,14 +1897,24 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             }
                         }*/ else if (fromPosition < pos && toPosition > pos) {
                             pos = pos - 1;
+                            String one="2";
+                            Log.e("one",one);
                         } else if ((fromPosition > pos && toPosition > pos) || (fromPosition < pos && toPosition < pos)) {
                             pos = pos;
+                            String one="3";
+                            Log.e("one",one);
                         } else if (fromPosition > pos && toPosition < pos) {
                             pos = pos + 1;
+                            String one="4";
+                            Log.e("one",one);
                         } else if (fromPosition > pos && toPosition == pos) {
                             pos = pos + 1;
+                            String one="5";
+                            Log.e("one",one);
                         } else if (fromPosition < pos && toPosition == pos) {
                             pos = pos - 1;
+                            String one="6";
+                            Log.e("one",one);
                         }
                         SharedPreferences shareddd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shareddd.edit();
@@ -1917,9 +1932,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
                 }
             }
-            callDragApi();
-
-            notifyItemMoved(fromPosition, toPosition);
 
          /* SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
