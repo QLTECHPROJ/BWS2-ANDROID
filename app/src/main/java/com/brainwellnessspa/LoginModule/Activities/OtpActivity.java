@@ -428,7 +428,9 @@ public class OtpActivity extends AppCompatActivity implements
             binding.txtError.setVisibility(View.GONE);
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             String countryCode = Code.replace("+","");
-            Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(MobileNo, countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
+            SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
+            String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
+            Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(MobileNo, countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, key);
             listCall.enqueue(new Callback<LoginModel>() {
                 @Override
                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {

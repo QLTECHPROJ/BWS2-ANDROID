@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -196,11 +197,10 @@ public class LoginActivity extends AppCompatActivity {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 String countryCode = binding.tvCountryCode.getText().toString().replace("+", "");
-                if(SplashScreenActivity.key.equalsIgnoreCase("")){
-                    AppSignatureHashHelper appSignatureHashHelper = new AppSignatureHashHelper(this);
-                    SplashScreenActivity.key = appSignatureHashHelper.getAppSignatures().get(0);
-                }
-                Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(binding.edtNumber.getText().toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
+                SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
+                String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
+
+                Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(binding.edtNumber.getText().toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, key);
                 listCall.enqueue(new Callback<LoginModel>() {
                     @Override
                     public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {

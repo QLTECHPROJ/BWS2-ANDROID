@@ -282,7 +282,9 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
             tvSendOTPbool = false;
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             String countryCode = Code.replace("+","");
-            Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, SplashScreenActivity.key);
+            SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
+            String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
+            Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE,  key);
             listCall.enqueue(new Callback<SignUpModel>() {
                 @Override
                 public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {

@@ -84,6 +84,8 @@ public class CONSTANTS {
     public static final String MULTIPART_FORMAT = "multipart/form-data";
 
     public static final String PREF_KEY_LOGIN = "Login";
+    public static final String PREF_KEY_Splash = "Splash";
+    public static final String PREF_KEY_SplashKey = "SplashKey";
     public static final String PREF_KEY_AUDIO = "AUDIO";
     public static final String PREF_KEY_UserID = "UserID";
     public static final String PREF_KEY_LOGOUT = "Logout";

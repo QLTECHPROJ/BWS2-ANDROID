@@ -998,7 +998,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "1");
+            editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
             IsRepeat = "1";
+            IsShuffle = "";
             if (listSize == 1) {
                 editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
                 IsRepeat = "";
@@ -1018,6 +1020,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
             editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
             IsRepeat = "";
+            IsShuffle = "";
             if (listSize == 1) {
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else

@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.Editable;
@@ -120,7 +121,9 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 String countryCode = binding.tvCountryCode.getText().toString().replace("+","");
-                Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(binding.edtNumber.getText().toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, SplashScreenActivity.key);
+                SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
+                String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
+                Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(binding.edtNumber.getText().toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO,  key);
                 listCall.enqueue(new Callback<SignUpModel>() {
                     @Override
                     public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {

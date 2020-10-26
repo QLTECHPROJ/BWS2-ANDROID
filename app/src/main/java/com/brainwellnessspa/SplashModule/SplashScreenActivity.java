@@ -44,6 +44,12 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         AppSignatureHashHelper appSignatureHashHelper = new AppSignatureHashHelper(this);
         key = appSignatureHashHelper.getAppSignatures().get(0);
+
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString(CONSTANTS.PREF_KEY_SplashKey,appSignatureHashHelper.getAppSignatures().get(0));
+        editor.commit();
+
         getLatasteUpdate(SplashScreenActivity.this);
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
