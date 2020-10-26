@@ -25,11 +25,9 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.ReminderModule.Activities.ReminderDetailsActivity;
 
 import java.util.Random;
 
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.ComeNotification;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final String NOTIFICATION_CHANNEL_ID = "10001";
@@ -44,8 +42,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAGs = "MyFirebaseIDService";
     public static String fcm_Tocken;
     Context context;
-    public static String Notification_PlaylistId= "";
-    public static String Notification_PlaylistName= "";
     MyFirebaseMessagingService activity;
 
     @Override
@@ -148,12 +144,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .replace(R.id.flContainer, myPlaylistsFragment)
                         .commit();*/
                 resultIntent = new Intent(this, DashboardActivity.class);
-                ComeNotification = 1;
-                resultIntent.putExtra("id", id);
-                resultIntent.putExtra(CONSTANTS.title, title);
-                Notification_PlaylistId = id;
-                Notification_PlaylistName = title;
-                resultIntent.putExtra("body", message);
+                resultIntent.putExtra("Goplaylist", "1");
+                resultIntent.putExtra("PlaylistID", id);
+                resultIntent.putExtra("PlaylistName", title);
+                resultIntent.putExtra("PlaylistImage", "");
+
                 taskStackBuilder.addParentStack(DashboardActivity.class);
                 taskStackBuilder.addNextIntentWithParentStack(resultIntent);
                 resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

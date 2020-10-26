@@ -63,6 +63,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
 import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
@@ -812,14 +813,22 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     private void setInIt(String name, String audiomastercat, String imageFile, String audioDuration) {
         binding.tvTitle.setText(name);
         binding.tvName.setText(name);
-        if(name.equalsIgnoreCase("Disclaimer")){
+        binding.tvCategory.setText(audiomastercat);
+        if (url.equalsIgnoreCase("")) {
             Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-        }else {
+        } else {
             Glide.with(ctx).load(imageFile).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
         }
-        binding.tvCategory.setText(audiomastercat);
+        if (url.equalsIgnoreCase("") || url.isEmpty()) {
+            isDisclaimer = 1;
+            callAllDisable(false);
+
+        } else {
+            isDisclaimer = 0;
+            callAllDisable(true);
+        }
         binding.tvTime.setText(audioDuration);
     }
 
@@ -875,6 +884,28 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             finish();
         }
     }
+    private void callAllDisable(boolean b) {
+        if (b) {
+            binding.llnext.setClickable(true);
+            binding.llnext.setEnabled(true);
+            binding.llnext.setAlpha(1f);
+            binding.llprev.setClickable(true);
+            binding.llprev.setEnabled(true);
+            binding.llprev.setAlpha(1f);
+            binding.simpleSeekbar.setClickable(true);
+            binding.simpleSeekbar.setEnabled(true);
+//            binding.simpleSeekbar.set
+        } else {
+            binding.llnext.setClickable(false);
+            binding.llnext.setEnabled(false);
+            binding.llnext.setAlpha(0.6f);
+            binding.llprev.setClickable(false);
+            binding.llprev.setEnabled(false);
+            binding.llprev.setAlpha(0.6f);
+            binding.simpleSeekbar.setClickable(false);
+            binding.simpleSeekbar.setEnabled(false);
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -891,6 +922,14 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             binding.llProgressBar.setVisibility(View.GONE);
             binding.progressBar.setVisibility(View.GONE);
         }*/
+        if (url.equalsIgnoreCase("") || url.isEmpty()) {
+            isDisclaimer = 1;
+            callAllDisable(false);
+
+        } else {
+            isDisclaimer = 0;
+            callAllDisable(true);
+        }
         super.onResume();
     }
 

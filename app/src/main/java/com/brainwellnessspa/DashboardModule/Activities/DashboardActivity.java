@@ -26,7 +26,6 @@ public class DashboardActivity extends AppCompatActivity {
     public static int player = 0;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
-    public static int ComeNotification = 0;
     String Goplaylist= "", PlaylistID = "",PlaylistName = "",PlaylistImage="";
 
     @Override
@@ -45,14 +44,6 @@ public class DashboardActivity extends AppCompatActivity {
             PlaylistName = getIntent().getStringExtra("PlaylistName");
             PlaylistImage = getIntent().getStringExtra("PlaylistImage");
         }
-        if(ComeNotification == 1){
-            binding.navView.setSelectedItemId(R.id.navigation_playlist);
-        }else{
-            if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
-                binding.navView.setSelectedItemId(R.id.navigation_audio);
-            }
-        }
-
         if (Goplaylist.equalsIgnoreCase("1")) {
             binding.navView.setSelectedItemId(R.id.navigation_playlist);
             Fragment myPlaylistsFragment = new MyPlaylistsFragment();

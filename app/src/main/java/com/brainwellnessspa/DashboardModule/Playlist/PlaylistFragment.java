@@ -62,7 +62,6 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.ComeNotification;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
@@ -72,9 +71,6 @@ import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
-
-import static com.brainwellnessspa.Utility.MyFirebaseMessagingService.Notification_PlaylistId;
-import static com.brainwellnessspa.Utility.MyFirebaseMessagingService.Notification_PlaylistName;
 
 public class PlaylistFragment extends Fragment {
     FragmentPlaylistBinding binding;
@@ -98,23 +94,8 @@ public class PlaylistFragment extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
         binding.rvMainPlayList.setItemAnimator(new DefaultItemAnimator());
-        if (ComeNotification == 1) {
-            Bundle bundle = new Bundle();
-            Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-            bundle.putString("New", "0");
-            bundle.putString("PlaylistID", Notification_PlaylistId);
-            bundle.putString("PlaylistName", Notification_PlaylistName);
-            bundle.putString("PlaylistImage", "");
-            bundle.putString("MyDownloads", "0");
-            myPlaylistsFragment.setArguments(bundle);
-            fragmentManager1.beginTransaction()
-                    .replace(R.id.flContainer, myPlaylistsFragment)
-                    .commit();
-            ComeNotification = 0;
-        }else {
-            prepareData();
-        }
+
+        prepareData();
         return view;
     }
 

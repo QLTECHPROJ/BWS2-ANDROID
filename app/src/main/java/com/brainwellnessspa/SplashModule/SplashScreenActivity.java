@@ -31,13 +31,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.ComeNotification;
 
 public class SplashScreenActivity extends AppCompatActivity {
     ActivitySplashScreenBinding binding;
-    public static String key = "", flag, id, title, message;
-    public static String Notification_PlaylistId= "";
-    public static String Notification_PlaylistName= "";
+    public static String key = "";
+    String flag, id, title, message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +87,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             if (flag != null && flag.equalsIgnoreCase("Playlist")) {
                 resultIntent = new Intent(this, DashboardActivity.class);
-                ComeNotification = 1;
-                resultIntent.putExtra("id", id);
-                resultIntent.putExtra("title", title);
-                Notification_PlaylistId = id;
-                Notification_PlaylistName = title;
-                resultIntent.putExtra("body", message);
+                resultIntent.putExtra("Goplaylist", "1");
+                resultIntent.putExtra("PlaylistID", id);
+                resultIntent.putExtra("PlaylistName", title);
+                resultIntent.putExtra("PlaylistImage", "");
                 startActivity(resultIntent);
                 finish();
             }

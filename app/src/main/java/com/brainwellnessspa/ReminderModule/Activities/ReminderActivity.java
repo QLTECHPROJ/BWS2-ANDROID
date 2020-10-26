@@ -101,13 +101,7 @@ public class ReminderActivity extends AppCompatActivity {
 
         if (Time.equalsIgnoreCase("") || Time.equalsIgnoreCase("0")) {
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
-            /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                Clock clock = Clock.systemDefaultZone();
-                String timezone = (String.valueOf(clock.getZone()));
-                simpleDateFormat1.setTimeZone(TimeZone.getTimeZone(timezone));
-            } else {*/
             simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-//            }
             DateFormat df = DateFormat.getTimeInstance();
             String gmtTime = df.format(new Date());
             Date currdate = new Date();
@@ -118,10 +112,6 @@ public class ReminderActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             currantTime = simpleDateFormat1.format(currdate);
-//            Calendar rightNow = Calendar.getInstance();
-//            int currentHourIn12Format = rightNow.get(Calendar.HOUR);
-//            int currentminIn12Format = rightNow.get(Calendar.MINUTE);
-//            int ampm = rightNow.get(Calendar.AM_PM);
             binding.tvTime.setText(currantTime);
         } else {
             binding.tvTime.setText(Time);
@@ -129,23 +119,6 @@ public class ReminderActivity extends AppCompatActivity {
         }
 
         binding.llSelectTime.setOnClickListener(view -> {
-            final Calendar c = Calendar.getInstance();
-//            TimeZone tz = c.getTimeZone();
-//            c.setTimeZone(TimeZone.getTimeZone("GMT"));
-//            Log.e("GMTTTTTT", tz.getDisplayName());
-            SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
-            simpleDateFormat1.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-//            }
-            DateFormat df = DateFormat.getTimeInstance();
-            String gmtTime = df.format(new Date());
-            Date currdate = new Date();
-            try {
-                currdate = simpleDateFormat1.parse(gmtTime);
-                Log.e("currant currdate !!!!", String.valueOf(currdate));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            currantTime = simpleDateFormat1.format(currdate);
             String[] time = currantTime.split(":");
             String min[] = time[1].split(" ");
             mHour = Integer.parseInt(time[0]);
