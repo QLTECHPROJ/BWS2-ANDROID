@@ -107,6 +107,7 @@ public class AudioFragment extends Fragment {
                 }
             }
         }
+
         prepareData();
         return view;
     }

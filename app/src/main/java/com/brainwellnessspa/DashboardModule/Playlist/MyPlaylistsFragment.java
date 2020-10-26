@@ -530,7 +530,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.searchView.setQuery("", false);
             ComeFindAudio = 0;
         }
-
     }
 
     private void prepareData(String UserId, String PlaylistId) {

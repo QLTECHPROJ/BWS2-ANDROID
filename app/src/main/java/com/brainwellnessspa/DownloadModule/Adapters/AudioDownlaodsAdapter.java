@@ -72,7 +72,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     TextView tvFound;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     Runnable UpdateSongTime1;
-    List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(),audiofilelist = new ArrayList<>();
+    List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), audiofilelist = new ArrayList<>();
     private List<DownloadAudioDetails> listModelList;
     private Handler handler1;
     List<DownloadAudioDetails> downloadedSingleAudio;
@@ -117,7 +117,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {
-                try{
+                try {
                    /* downloadedSingleAudio = getMyMedia();
                     for (int f = 0; f < listModelList.size(); f++) {
                         if(downloadedSingleAudio.size()!=0) {
@@ -133,41 +133,41 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     }
                     downloadedSingleAudio = getMyMedia();*/
 
-                        for (int f = 0; f < listModelList.size(); f++) {
-                            if (fileNameList.size() != 0) {
-                                for (int i = 0; i < fileNameList.size(); i++) {
-                                    if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(f).getName())) {
-                                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
-                                            if (downloadProgress <= 100) {
-                                                if(BWSApplication.isNetworkConnected(ctx)) {
-                                                    notifyItemChanged(position);
-                                                }
+                    for (int f = 0; f < listModelList.size(); f++) {
+                        if (fileNameList.size() != 0) {
+                            for (int i = 0; i < fileNameList.size(); i++) {
+                                if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(f).getName())) {
+                                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
+                                        if (downloadProgress <= 100) {
+                                            if (BWSApplication.isNetworkConnected(ctx)) {
+                                                notifyItemChanged(position);
+                                            }
                                          /*   holder.binding.pbProgress.setProgress(downloadProgress);
                                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                                             holder.binding.ivDownloads.setVisibility(View.GONE);*/
-                                            } else {
-                                                holder.binding.pbProgress.setVisibility(View.GONE);
-                                                //                                            handler2.removeCallbacks(UpdateSongTime2);
-                                                getDownloadData();
-                                            }
                                         } else {
-                                            notifyItemChanged(position);
+                                            holder.binding.pbProgress.setVisibility(View.GONE);
+                                            //                                            handler2.removeCallbacks(UpdateSongTime2);
+                                            getDownloadData();
                                         }
+                                    } else {
+                                        notifyItemChanged(position);
                                     }
                                 }
                             }
                         }
-                        if (downloadProgress == 0) {
-                            notifyDataSetChanged();
-                            getDownloadData();
-                        }
-                        handler1.postDelayed(this, 3000);
+                    }
+                    if (downloadProgress == 0) {
+                        notifyDataSetChanged();
+                        getDownloadData();
+                    }
 
-            }catch (Exception e){ }
-            }
-        };
+                    handler1.postDelayed(this, 3000);
+
+                } catch (Exception e) {
+                }
+            }};
         if (fileNameList.size() != 0) {
-
             for (int i = 0; i < fileNameList.size(); i++) {
                 if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
                     if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
@@ -182,6 +182,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                             holder.binding.pbProgress.setVisibility(View.GONE);
 //                                handler2.removeCallbacks(UpdateSongTime2);
                         }
+                        handler1.postDelayed(UpdateSongTime1, 3000);
                     } else {
                         holder.binding.pbProgress.setVisibility(View.VISIBLE);
                         handler1.postDelayed(UpdateSongTime1, 3000);
@@ -226,7 +227,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         if (IsLock.equalsIgnoreCase("1")) {
             holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
             holder.binding.ivLock.setVisibility(View.VISIBLE);
-        }else if (IsLock.equalsIgnoreCase("2")) {
+        } else if (IsLock.equalsIgnoreCase("2")) {
             holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
             holder.binding.ivLock.setVisibility(View.VISIBLE);
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
@@ -261,7 +262,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 try {
                     SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    if(queuePlay){
+                    if (queuePlay) {
                         int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
                         ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
                         Gson gson = new Gson();
@@ -341,7 +342,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
                 final Button Btn = dialog.findViewById(R.id.Btn);
                 tvTitle.setText("Remove audio");
-                tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getName() +" from downloads?");
+                tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getName() + " from downloads?");
                 Btn.setText("Confirm");
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -360,7 +361,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                                     if (downloadProgress <= 100) {
                                         PRDownloader.cancel(downloadIdOne);
                                     }
-                                }else{
+                                } else {
                                     fileNameList.remove(i);
                                     playlistDownloadId.remove(i);
                                     audiofilelist.remove(i);
@@ -391,13 +392,12 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             }
         });
     }
+
     private List<DownloadAudioDetails> getMyMedia() {
         downloadedSingleAudio = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadedSingleAudio = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -408,11 +408,9 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
                 super.onPostExecute(aVoid);
             }
         }
-
         GetMedia st = new GetMedia();
         st.execute();
         return downloadedSingleAudio;
