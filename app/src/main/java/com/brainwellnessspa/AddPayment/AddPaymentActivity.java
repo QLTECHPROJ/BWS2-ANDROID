@@ -160,7 +160,6 @@ public class AddPaymentActivity extends AppCompatActivity {
                         BWSApplication.showToast("Please enter valid card details", context);
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
-
                     @Override
                     public void onSuccess(Token token) {
                         strToken = token.getId();
@@ -316,7 +315,6 @@ public class AddPaymentActivity extends AppCompatActivity {
         public void setPaddingPx(int paddingPx) {
             this.paddingPx = paddingPx;
         }
-
 
         public void setPaddingEm(@NonNull TextView textView, float em) {
             float emSize = textView.getPaint().measureText("x");
