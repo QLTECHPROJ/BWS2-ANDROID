@@ -735,10 +735,10 @@ public class SearchFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            if (5 > modelList.size()) {
+            if (6 > modelList.size()) {
                 return modelList.size();
             } else {
-                return 5;
+                return 6;
             }
         }
 

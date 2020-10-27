@@ -74,6 +74,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {
             Intent i = new Intent(ctx, AddAudioActivity.class);
+            i.putExtra("PlaylistID", PlaylistID);
             startActivity(i);
             finish();
         });
@@ -96,6 +97,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent i = new Intent(ctx, AddAudioActivity.class);
+        i.putExtra("PlaylistID", PlaylistID);
         startActivity(i);
         finish();
     }
