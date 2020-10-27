@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -1551,57 +1552,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             final ArrayList<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
 
-            UpdateSongTime2 = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        for (int f = 0; f < GlobalListModel.getPlaylistSongs().size(); f++) {
-                            if (fileNameList.size() != 0) {
-                                for (int i = 0; i < fileNameList.size(); i++) {
-                                    if (fileNameList.get(i).equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(f).getName())) {
-                                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(f).getName())) {
-                                            if (downloadProgress <= 100) {
-                                                notifyItemChanged(position);
-                                         /*   holder.binding.pbProgress.setProgress(downloadProgress);
-                                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                                            holder.binding.ivDownloads.setVisibility(View.GONE);*/
-                                            } else {
-//                                                            holder.binding.pbProgress.setVisibility(View.GONE);
-//                                                            holder.binding.ivDownloads.setVisibility(View.VISIBLE);
-//                                            handler2.removeCallbacks(UpdateSongTime2);
-                                                getDownloadData();
-                                            }
-                                        } else {
-                                            notifyItemChanged(position);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (downloadProgress == 0) {
-                            notifyDataSetChanged();
-                            getDownloadData();
-                        }
-                        handler2.postDelayed(this, 3000);
-                    }catch (Exception e){
-
-                    }
-          /*          downloadedSingleAudio = getMyMedia();
-                    for (int f = 0; f < mData.size(); f++) {
-                        if (downloadedSingleAudio.size() != 0) {
-                            for (int i = 0; i < downloadedSingleAudio.size(); i++) {
-                                if (downloadedSingleAudio.get(i).getName().equalsIgnoreCase(mData.get(position).getName())) {
-                                    if (downloadedSingleAudio.get(i).getDownloadProgress() <= 100) {
-                                            //disableName.add(mData.get(position).getName());
-                                            notifyItemChanged(position);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    downloadedSingleAudio = getMyMedia();*/
-                }
-            };
             if (Created.equalsIgnoreCase("1")) {
                 binding.tvSearch.setVisibility(View.VISIBLE);
                 binding.searchView.setVisibility(View.GONE);
@@ -1702,6 +1652,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 holder.binding.ivDownloads.setVisibility(View.VISIBLE);
 //                                handler2.removeCallbacks(UpdateSongTime2);
                             }
+                            handler2.postDelayed(UpdateSongTime2, 3000);
                         } else {
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                             holder.binding.ivDownloads.setVisibility(View.GONE);
@@ -1754,6 +1705,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
             }
         }*/
+
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -1761,7 +1713,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-
             binding.ivPlaylistStatus.setOnClickListener(view -> {
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -1783,6 +1734,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID);
                 }
             });
+
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -1843,8 +1795,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                     }
                 });
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1887,8 +1837,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     if (pID.equalsIgnoreCase(PlaylistID)) {
                         if (fromPosition == pos) {
                             pos = toPosition;
-                            String one="1";
-                            Log.e("one",one);
+                            String one = "1";
+                            Log.e("one", one);
                         }/* else if (toPosition == pos) {
                             if (action == 0) {
                                 pos = pos + 1;
@@ -1897,24 +1847,24 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             }
                         }*/ else if (fromPosition < pos && toPosition > pos) {
                             pos = pos - 1;
-                            String one="2";
-                            Log.e("one",one);
+                            String one = "2";
+                            Log.e("one", one);
                         } else if ((fromPosition > pos && toPosition > pos) || (fromPosition < pos && toPosition < pos)) {
                             pos = pos;
-                            String one="3";
-                            Log.e("one",one);
+                            String one = "3";
+                            Log.e("one", one);
                         } else if (fromPosition > pos && toPosition < pos) {
                             pos = pos + 1;
-                            String one="4";
-                            Log.e("one",one);
+                            String one = "4";
+                            Log.e("one", one);
                         } else if (fromPosition > pos && toPosition == pos) {
                             pos = pos + 1;
-                            String one="5";
-                            Log.e("one",one);
+                            String one = "5";
+                            Log.e("one", one);
                         } else if (fromPosition < pos && toPosition == pos) {
                             pos = pos - 1;
-                            String one="6";
-                            Log.e("one",one);
+                            String one = "6";
+                            Log.e("one", one);
                         }
                         SharedPreferences shareddd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = shareddd.edit();
