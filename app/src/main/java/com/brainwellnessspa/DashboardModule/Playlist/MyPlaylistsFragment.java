@@ -995,7 +995,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.llListing.setVisibility(View.VISIBLE);
             try {
                 if (MyDownloads.equalsIgnoreCase("1")) {
-                    adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
+                    adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID,"0");
                     binding.rvPlayLists.setAdapter(adpater2);
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                     binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
@@ -1751,15 +1751,17 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             });
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
+                int pos =  holder.getAdapterPosition();
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                Log.e("postion of paly",String.valueOf(position));
                 if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
-                        callTransparentFrag(position, ctx, listModelList, "myPlaylist", PlaylistID);
+                        callTransparentFrag(pos, ctx, listModelList, "myPlaylist", PlaylistID);
                     }
                 } else {
                     isDisclaimer = 0;
@@ -1767,12 +1769,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                     if (position != 0) {
                         listModelList2.addAll(listModelList);
-                        listModelList2.add(position, addDisclaimer);
+                        listModelList2.add(pos, addDisclaimer);
                     } else {
                         listModelList2.add(addDisclaimer);
                         listModelList2.addAll(listModelList);
                     }
-                    callTransparentFrag(position, ctx, listModelList2, "myPlaylist", PlaylistID);
+                    callTransparentFrag(pos, ctx, listModelList2, "myPlaylist", PlaylistID);
                 }
             });
 
@@ -1839,6 +1841,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             callDragApi();
 
             notifyItemMoved(fromPosition, toPosition);
+
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

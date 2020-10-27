@@ -596,23 +596,25 @@ public class PlaylistFragment extends Fragment {
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-//                    if (MyDownloads.equalsIgnoreCase("1")) {
-////                        getMedia(listModelList.get(position).getPlaylistID());
-//                        Intent i = new Intent(ctx, DownloadPlaylistActivity.class);
-//                        i.putExtra("New", "0");
-//                        i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
-//                        i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
-//                        i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
-//                        i.putExtra("PlaylistImageDetails", listModelList.get(position).getPlaylistImageDetails());
-//                        i.putExtra("TotalAudio", listModelList.get(position).getTotalAudio());
-//                        i.putExtra("Totalhour", listModelList.get(position).getTotalhour());
-//                        i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
-//                        i.putExtra("MyDownloads", "1");
-//                        ctx.startActivity(i);
-//                    } else {
+                    if (MyDownloads.equalsIgnoreCase("1")) {
                         callMyPlaylistsFragment("0", listModelList.get(position).getPlaylistID(), listModelList.get(position).getPlaylistName(),
                                 listModelList.get(position).getPlaylistImage(), MyDownloads);
-//                    }
+//                        getMedia(listModelList.get(position).getPlaylistID());
+                       /* Intent i = new Intent(ctx, DownloadPlaylistActivity.class);
+                        i.putExtra("New", "0");
+                        i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                        i.putExtra("PlaylistName", listModelList.get(position).getPlaylistName());
+                        i.putExtra("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                        i.putExtra("PlaylistImageDetails", listModelList.get(position).getPlaylistImageDetails());
+                        i.putExtra("TotalAudio", listModelList.get(position).getTotalAudio());
+                        i.putExtra("Totalhour", listModelList.get(position).getTotalhour());
+                        i.putExtra("Totalminute", listModelList.get(position).getTotalminute());
+                        i.putExtra("MyDownloads", "1");
+                        ctx.startActivity(i);*/
+                    } else {
+                        callMyPlaylistsFragment("0", listModelList.get(position).getPlaylistID(), listModelList.get(position).getPlaylistName(),
+                                listModelList.get(position).getPlaylistImage(), MyDownloads);
+                    }
 
                 }
             });
