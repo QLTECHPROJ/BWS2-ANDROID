@@ -388,7 +388,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         binding.llShuffle.setOnClickListener(view -> callShuffle());
 
-        binding.llDownload.setOnClickListener(view -> callDownload());
+        binding.llDownload.setOnClickListener(view -> {
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                callDownload();
+            }else{
+                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            }
+        });
 
         binding.llMore.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);

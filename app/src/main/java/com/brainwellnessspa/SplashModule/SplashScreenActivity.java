@@ -76,20 +76,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }, 2 * 1000);
-        } else {
-            new Handler().postDelayed(() -> {
-                Intent i = new Intent(SplashScreenActivity.this, DashboardActivity.class);
-                startActivity(i);
-                finish();
-            }, 2 * 1000);
-        }
-        Intent resultIntent = null;
-        if (getIntent().hasExtra("flag")) {
+        } else if (getIntent().hasExtra("flag")) {
+            Intent resultIntent = null;
             flag = getIntent().getStringExtra("flag");
             id = getIntent().getStringExtra("id");
             title = getIntent().getStringExtra("title");
             message = getIntent().getStringExtra("message");
-
             if (flag != null && flag.equalsIgnoreCase("Playlist")) {
                 resultIntent = new Intent(this, DashboardActivity.class);
                 resultIntent.putExtra("Goplaylist", "1");
@@ -99,6 +91,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                 startActivity(resultIntent);
                 finish();
             }
+        }else {
+            new Handler().postDelayed(() -> {
+                Intent i = new Intent(SplashScreenActivity.this, DashboardActivity.class);
+                startActivity(i);
+                finish();
+            }, 2 * 1000);
         }
     }
 

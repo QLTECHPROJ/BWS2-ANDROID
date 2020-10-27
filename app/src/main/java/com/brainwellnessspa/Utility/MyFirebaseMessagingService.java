@@ -143,6 +143,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 fragmentManager1.beginTransaction()
                         .replace(R.id.flContainer, myPlaylistsFragment)
                         .commit();*/
+
                 resultIntent = new Intent(this, DashboardActivity.class);
                 resultIntent.putExtra("Goplaylist", "1");
                 resultIntent.putExtra("PlaylistID", id);
