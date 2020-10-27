@@ -123,7 +123,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     ArrayList<String> changedAudio;
     Activity activity;
     List<DownloadAudioDetails> downloadAudioDetailsList, downloadedSingleAudio;
-    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList,playListSongListForDownload;
+    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList, playListSongListForDownload;
     List<DownloadAudioDetails> oneAudioDetailsList, playlistWiseAudioDetails;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
     DownloadPlaylistDetails downloadPlaylistDetails;
@@ -647,14 +647,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             playlistWiseAudioDetails = GetMedia();
                             downloadedSingleAudio = getMyMedia();
                             getMediaByPer(PlaylistId, SongListSize);
-                            if (listModel.getResponseData().getCreated().equalsIgnoreCase("1")) {
-                                searchEditText.setHint(R.string.playlist_or_audio_search);
-                                binding.tvSearch.setHint(R.string.playlist_or_audio_search);
-//                                binding.tvSearch.setTextSize(14);
-                            } else {
-                                searchEditText.setHint("Search for audios");
-                                binding.tvSearch.setHint("Search for audios");
-                            }
                             binding.rlSearch.setVisibility(View.VISIBLE);
                             binding.llMore.setVisibility(View.VISIBLE);
                             binding.llReminder.setVisibility(View.VISIBLE);
@@ -995,7 +987,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.llListing.setVisibility(View.VISIBLE);
             try {
                 if (MyDownloads.equalsIgnoreCase("1")) {
-                    adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID,"0");
+                    adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, "0");
                     binding.rvPlayLists.setAdapter(adpater2);
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                     binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
@@ -1003,7 +995,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     binding.llReminder.setClickable(false);
                     binding.llReminder.setEnabled(false);
                     binding.ivReminder.setColorFilter(activity.getResources().getColor(R.color.gray), PorterDuff.Mode.SRC_IN);
-                    binding.rlSearch.setVisibility(View.GONE);
+                    binding.rlSearch.setVisibility(View.VISIBLE);
                 } else {
                     if (listModel.getCreated().equalsIgnoreCase("1")) {
                         adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated(), this);
@@ -1577,24 +1569,24 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 public void run() {
                     try {
 //                        for (int f = 0; f < GlobalListModel.getPlaylistSongs().size(); f++) {
-                            if (fileNameList.size() != 0) {
-                                for (int i = 0; i < fileNameList.size(); i++) {
-                                    if (fileNameList.get(i).equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(position).getName())) {
-                                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(position).getName())) {
-                                            if (downloadProgress <= 100) {
-                                                if (BWSApplication.isNetworkConnected(ctx)) {
-                                                    notifyItemChanged(position);
-                                                }
-                                            } else {
-                                                holder.binding.pbProgress.setVisibility(View.GONE);
-                                                holder.binding.ivDownloads.setVisibility(View.VISIBLE);
-                                                getDownloadData();
+                        if (fileNameList.size() != 0) {
+                            for (int i = 0; i < fileNameList.size(); i++) {
+                                if (fileNameList.get(i).equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(position).getName())) {
+                                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(position).getName())) {
+                                        if (downloadProgress <= 100) {
+                                            if (BWSApplication.isNetworkConnected(ctx)) {
+                                                notifyItemChanged(position);
                                             }
                                         } else {
-                                            notifyItemChanged(position);
+                                            holder.binding.pbProgress.setVisibility(View.GONE);
+                                            holder.binding.ivDownloads.setVisibility(View.VISIBLE);
+                                            getDownloadData();
                                         }
+                                    } else {
+                                        notifyItemChanged(position);
                                     }
                                 }
+                            }
 //                            }
                         }
                         if (downloadProgress == 0) {
@@ -1607,44 +1599,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
                 }
             };
-            if (Created.equalsIgnoreCase("1")) {
-                binding.tvSearch.setVisibility(View.VISIBLE);
-                binding.searchView.setVisibility(View.GONE);
-            } else if (Created.equalsIgnoreCase("0")) {
-                binding.tvSearch.setVisibility(View.GONE);
-                binding.searchView.setVisibility(View.VISIBLE);
-            }
-
-        /*    if (fileNameList.size() != 0) {
-                for (int i = 0; i < fileNameList.size(); i++) {
-                    if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
-                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(mData.get(position).getName())) {
-                            if (downloadProgress <= 100) {
-                                if (downloadProgress == 100) {
-                                    holder.binding.pbProgress.setVisibility(View.GONE);
-                                    holder.binding.ivDownloads.setVisibility(View.VISIBLE);
-                                } else {
-                                    holder.binding.pbProgress.setProgress(downloadProgress);
-                                    holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                                    holder.binding.ivDownloads.setVisibility(View.GONE);
-                                }
-                            } else {
-                                holder.binding.pbProgress.setVisibility(View.GONE);
-                                holder.binding.ivDownloads.setVisibility(View.VISIBLE);
-//                                handler2.removeCallbacks(UpdateSongTime2);
-                            }
-                        } else {
-//                            holder.binding.pbProgress.setProgress(0);
-                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                            holder.binding.ivDownloads.setVisibility(View.GONE);
-                            handler2.postDelayed(UpdateSongTime2, 3000);
-                        }
-                    }
-                }
-            } else {
-                holder.binding.pbProgress.setVisibility(View.GONE);
-                holder.binding.ivDownloads.setVisibility(View.VISIBLE);
-            }*/
+            searchEditText.setHint(R.string.playlist_or_audio_search);
+            binding.tvSearch.setHint(R.string.playlist_or_audio_search);
+            binding.tvSearch.setVisibility(View.VISIBLE);
+            binding.searchView.setVisibility(View.GONE);
             holder.binding.tvTitle.setText(mData.get(position).getName());
             holder.binding.tvTime.setText(mData.get(position).getAudioDuration());
             holder.binding.llSort.setOnTouchListener((v, event) -> {
@@ -1656,31 +1614,25 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall sort after the disclaimer", ctx);
                     } else {
-                        if (event.getAction() ==
-                                MotionEvent.ACTION_DOWN) {
+                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
                             startDragListener.requestDrag(holder);
                         }
-                        if (event.getAction() ==
-                                MotionEvent.ACTION_UP) {
+                        if (event.getAction() == MotionEvent.ACTION_UP) {
                             startDragListener.requestDrag(holder);
                         }
                     }
                 } else {
-                    if (event.getAction() ==
-                            MotionEvent.ACTION_DOWN) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
                         startDragListener.requestDrag(holder);
                     }
-                    if (event.getAction() ==
-                            MotionEvent.ACTION_UP) {
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
                         startDragListener.requestDrag(holder);
                     }
                 }
                 return false;
             });
             String id = mData.get(position).getID();
-            /*if(playListSongListForDownload.contains(mData.get(position))){
-                Log.e("Yes",mData.get(position).getName());
-            }*/
+
             if (fileNameList.size() != 0) {
                 for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
@@ -1751,12 +1703,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             });
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
-                int pos =  holder.getAdapterPosition();
+                int pos = holder.getAdapterPosition();
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                Log.e("postion of paly",String.valueOf(position));
+                Log.e("postion of paly", String.valueOf(position));
                 if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
@@ -2010,11 +1962,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder2 holder, int position) {
+            searchEditText.setHint("Search for audios");
+            binding.tvSearch.setHint("Search for audios");
+
             final ArrayList<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
             holder.binding.tvTitleA.setText(mData.get(position).getName());
-            holder.binding.tvTitleB.setText(mData.get(position).getName());
             holder.binding.tvTimeA.setText(mData.get(position).getAudioDuration());
-            holder.binding.tvTimeB.setText(mData.get(position).getAudioDuration());
+            binding.tvSearch.setVisibility(View.GONE);
+            binding.searchView.setVisibility(View.VISIBLE);
             String id = mData.get(position).getID();
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
@@ -2070,31 +2025,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
             });
 
-            if (Created.equalsIgnoreCase("1")) {
-                holder.binding.llMore.setVisibility(View.GONE);
-                holder.binding.llCenterLayoutA.setVisibility(View.GONE);
-                holder.binding.llCenterLayoutB.setVisibility(View.VISIBLE);
-                holder.binding.llDownload.setVisibility(View.VISIBLE);
-                holder.binding.llRemove.setVisibility(View.VISIBLE);
-                holder.binding.llSort.setVisibility(View.VISIBLE);
-                binding.tvSearch.setVisibility(View.VISIBLE);
-                binding.searchView.setVisibility(View.GONE);
-            } else if (Created.equalsIgnoreCase("0")) {
-                holder.binding.llMore.setVisibility(View.VISIBLE);
-                holder.binding.llCenterLayoutA.setVisibility(View.VISIBLE);
-                holder.binding.llCenterLayoutB.setVisibility(View.GONE);
-                holder.binding.llDownload.setVisibility(View.GONE);
-                holder.binding.llRemove.setVisibility(View.GONE);
-                holder.binding.llSort.setVisibility(View.GONE);
-                binding.tvSearch.setVisibility(View.GONE);
-                binding.searchView.setVisibility(View.VISIBLE);
-            }
-
             if (BWSApplication.isNetworkConnected(ctx)) {
                 holder.binding.llMore.setClickable(true);
                 holder.binding.llMore.setEnabled(true);
                 holder.binding.ivMore.setColorFilter(ContextCompat.getColor(getActivity(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-
             } else {
                 holder.binding.llMore.setClickable(false);
                 holder.binding.llMore.setEnabled(false);
