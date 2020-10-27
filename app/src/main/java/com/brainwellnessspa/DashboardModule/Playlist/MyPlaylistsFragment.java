@@ -1583,7 +1583,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                             getDownloadData();
                                         }
                                     } else {
-                                        notifyItemChanged(position);
+//                                        notifyItemChanged(position);
                                     }
                                 }
                             }
@@ -1887,6 +1887,15 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
         }
 
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
 
         @Override
         public Filter getFilter() {
