@@ -1572,10 +1572,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         if (fileNameList.size() != 0) {
                             for (int i = 0; i < fileNameList.size(); i++) {
                                 if (fileNameList.get(i).equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(position).getName())) {
-                                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(holder.getAdapterPosition()).getName())) {
+                                    if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(position).getName())) {
                                         if (downloadProgress <= 100) {
                                             if (BWSApplication.isNetworkConnected(ctx)) {
-                                                notifyItemChanged(holder.getAdapterPosition());
+                                                notifyItemChanged(position);
                                             }
                                         } else {
                                             holder.binding.pbProgress.setVisibility(View.GONE);
@@ -1583,7 +1583,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                             getDownloadData();
                                         }
                                     } else {
-                                        notifyItemChanged(holder.getAdapterPosition());
+                                        notifyItemChanged(position);
                                     }
                                 }
                             }
@@ -1646,15 +1646,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     holder.binding.pbProgress.setVisibility(View.VISIBLE);
                                     holder.binding.ivDownloads.setVisibility(View.GONE);
                                 }
-                                handler2.postDelayed(UpdateSongTime2, 3000);
-                                break;
                             } else {
                                 holder.binding.pbProgress.setVisibility(View.GONE);
                                 holder.binding.ivDownloads.setVisibility(View.VISIBLE);
 //                                handler2.removeCallbacks(UpdateSongTime2);
-                                handler2.postDelayed(UpdateSongTime2, 3000);
-                            break;
                             }
+                            handler2.postDelayed(UpdateSongTime2, 3000);
                         } else {
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
                             holder.binding.ivDownloads.setVisibility(View.GONE);
