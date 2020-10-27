@@ -114,10 +114,10 @@ public class AudioFragment extends Fragment {
 
     public void GetAllMedia(FragmentActivity ctx, List<MainAudioModel.ResponseData> listModel) {
         ArrayList<MainAudioModel.ResponseData.Detail> details = new ArrayList<>();
+        downloadAudioDetailsList = new ArrayList<>();
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
-                downloadAudioDetailsList = new ArrayList<>();
                 downloadAudioDetailsList = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
