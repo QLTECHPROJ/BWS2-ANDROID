@@ -982,7 +982,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     enableDisableDownload(false, "orange");
                     binding.llReminder.setClickable(false);
                     binding.llReminder.setEnabled(false);
-                    binding.ivReminder.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                    binding.ivReminder.setColorFilter(activity.getResources().getColor(R.color.gray), PorterDuff.Mode.SRC_IN);
                     binding.rlSearch.setVisibility(View.GONE);
                 } else {
                     if (listModel.getCreated().equalsIgnoreCase("1")) {
