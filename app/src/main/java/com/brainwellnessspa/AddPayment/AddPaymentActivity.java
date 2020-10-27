@@ -88,7 +88,6 @@ public class AddPaymentActivity extends AppCompatActivity {
         binding.etName.addTextChangedListener(addCardTextWatcher);
         binding.textMonth.addTextChangedListener(addCardTextWatcher);
         binding.etCvv.addTextChangedListener(addCardTextWatcher);
-
         binding.etNumber.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (binding.etNumber.getText().toString().length() == 16) {
