@@ -1562,8 +1562,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     if (fileNameList.get(i).equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(f).getName())) {
                                         if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(GlobalListModel.getPlaylistSongs().get(f).getName())) {
                                             if (downloadProgress <= 100) {
-                                                notifyItemChanged(position);
+                                                if (BWSApplication.isNetworkConnected(ctx)) {
+                                                    notifyItemChanged(position);
+                                                }
                                             } else {
+                                                holder.binding.pbProgress.setVisibility(View.GONE);
+                                                holder.binding.ivDownloads.setVisibility(View.VISIBLE);
                                                 getDownloadData();
                                             }
                                         } else {
@@ -1578,7 +1582,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             getDownloadData();
                         }
                         handler2.postDelayed(this, 3000);
-                    }catch (Exception e){
+                    } catch (Exception e) {
 
                     }
                 }
