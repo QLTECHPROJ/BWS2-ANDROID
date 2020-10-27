@@ -37,7 +37,7 @@ import static com.brainwellnessspa.BWSApplication.getKey;
 public class SplashScreenActivity extends AppCompatActivity {
     ActivitySplashScreenBinding binding;
     public static String key = "";
-    String flag, id, title, message;
+    String flag, id, title, message, IsLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = shared.edit();
         editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.getAppSignatures().get(0));
         editor.commit();
-        if(key.equalsIgnoreCase("")){
+        if (key.equalsIgnoreCase("")) {
             key = getKey(SplashScreenActivity.this);
         }
 
@@ -82,16 +82,27 @@ public class SplashScreenActivity extends AppCompatActivity {
             id = getIntent().getStringExtra("id");
             title = getIntent().getStringExtra("title");
             message = getIntent().getStringExtra("message");
+            IsLock = getIntent().getStringExtra("IsLock");
             if (flag != null && flag.equalsIgnoreCase("Playlist")) {
-                resultIntent = new Intent(this, DashboardActivity.class);
-                resultIntent.putExtra("Goplaylist", "1");
-                resultIntent.putExtra("PlaylistID", id);
-                resultIntent.putExtra("PlaylistName", title);
-                resultIntent.putExtra("PlaylistImage", "");
-                startActivity(resultIntent);
-                finish();
+                if (IsLock.equalsIgnoreCase("1")) {
+                    resultIntent = new Intent(this, DashboardActivity.class);
+                    startActivity(resultIntent);
+                    finish();
+                } else if (IsLock.equalsIgnoreCase("2")) {
+                    resultIntent = new Intent(this, DashboardActivity.class);
+                    startActivity(resultIntent);
+                    finish();
+                } else {
+                    resultIntent = new Intent(this, DashboardActivity.class);
+                    resultIntent.putExtra("Goplaylist", "1");
+                    resultIntent.putExtra("PlaylistID", id);
+                    resultIntent.putExtra("PlaylistName", title);
+                    resultIntent.putExtra("PlaylistImage", "");
+                    startActivity(resultIntent);
+                    finish();
+                }
             }
-        }else {
+        } else {
             new Handler().postDelayed(() -> {
                 Intent i = new Intent(SplashScreenActivity.this, DashboardActivity.class);
                 startActivity(i);

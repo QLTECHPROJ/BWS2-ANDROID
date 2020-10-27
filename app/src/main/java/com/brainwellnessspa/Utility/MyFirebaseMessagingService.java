@@ -34,7 +34,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     NotificationManager notificationManager;
     NotificationChannel notificationChannel;
     private NotificationCompat.Builder notificationBuilder;
-    String title = "", image = "", message = "", flag = "", id = "";
+    String title = "", image = "", message = "", flag = "", id = "", IsLock = "";
     TaskStackBuilder taskStackBuilder;
     PendingIntent resultPendingIntent = null;
     Intent resultIntent = null;
@@ -65,10 +65,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             message = remoteMessage.getNotification().getBody();
             String flag = remoteMessage.getNotification().getBody();
             String id = remoteMessage.getData().get("id");
+            String IsLock = remoteMessage.getData().get("IsLock");
 
 
             Log.e("bundle.....", "" + flag);
-            sendNotification(title, message, flag, id, String.valueOf(m));
+            sendNotification(title, message, flag, id, String.valueOf(m), IsLock);
 //                NotificationUtils notificationUtils = new NotificationUtils(this);
 //                notificationUtils.playNotificationSound();
 //            NotificationUtils.setNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), this);
@@ -82,7 +83,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 message = remoteMessage.getData().get("body");
                 flag = remoteMessage.getData().get("flag");
                 id = remoteMessage.getData().get("id");
-                sendNotification(title, message, flag, id, String.valueOf(m));
+                IsLock = remoteMessage.getData().get("IsLock");
+                sendNotification(title, message, flag, id, String.valueOf(m), IsLock);
             } catch (Exception e) {
                 Log.e(TAG, "Exception: " + e.getMessage());
             }
@@ -117,7 +119,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.e(TAGs, "sendRegistrationToServer: " + token.toString());
     }
 
-    private void sendNotification(String title, String message, String flag, String id, String m) {
+    private void sendNotification(String title, String message, String flag, String id, String m, String IsLock) {
         context = MyFirebaseMessagingService.this;
         activity = MyFirebaseMessagingService.this;
         taskStackBuilder = TaskStackBuilder.create(this);
@@ -130,29 +132,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         try {
             if (flag != null && flag.equalsIgnoreCase("Playlist")) {
-                /*Bundle bundle = new Bundle();
-                Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-                bundle.putString("New", "0");
-                bundle.putString("PlaylistID", PlaylistId);
-                bundle.putString("PlaylistName", PlaylistName);
-                bundle.putString("PlaylistImage", PlaylistImage);
-                bundle.putString("MyDownloads", "1");
-                myPlaylistsFragment.setArguments(bundle);
-                comefrom_search = 3;
-                fragmentManager1.beginTransaction()
-                        .replace(R.id.flContainer, myPlaylistsFragment)
-                        .commit();*/
-
-                resultIntent = new Intent(this, DashboardActivity.class);
-                resultIntent.putExtra("Goplaylist", "1");
-                resultIntent.putExtra("PlaylistID", id);
-                resultIntent.putExtra("PlaylistName", title);
-                resultIntent.putExtra("PlaylistImage", "");
-
-                taskStackBuilder.addParentStack(DashboardActivity.class);
-                taskStackBuilder.addNextIntentWithParentStack(resultIntent);
-                resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                if (IsLock.equalsIgnoreCase("1")) {
+                    resultIntent = new Intent(this, DashboardActivity.class);
+                    taskStackBuilder.addParentStack(DashboardActivity.class);
+                    taskStackBuilder.addNextIntentWithParentStack(resultIntent);
+                    resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                } else if (IsLock.equalsIgnoreCase("2")) {
+                    resultIntent = new Intent(this, DashboardActivity.class);
+                    taskStackBuilder.addParentStack(DashboardActivity.class);
+                    taskStackBuilder.addNextIntentWithParentStack(resultIntent);
+                    resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                } else {
+                    resultIntent = new Intent(this, DashboardActivity.class);
+                    resultIntent.putExtra("Goplaylist", "1");
+                    resultIntent.putExtra("PlaylistID", id);
+                    resultIntent.putExtra("PlaylistName", title);
+                    resultIntent.putExtra("PlaylistImage", "");
+                    taskStackBuilder.addParentStack(DashboardActivity.class);
+                    taskStackBuilder.addNextIntentWithParentStack(resultIntent);
+                    resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                }
             } else {
                 resultIntent = new Intent(this, DashboardActivity.class);
                 taskStackBuilder.addParentStack(DashboardActivity.class);
