@@ -37,6 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.BWSApplication.getKey;
 import static com.brainwellnessspa.LoginModule.Activities.OtpActivity.comeLogin;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isStop;
@@ -200,6 +201,9 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
                 String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
 
+                if(key.equalsIgnoreCase("")){
+                   key = getKey(ctx);
+                }
                 Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(binding.edtNumber.getText().toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, key);
                 listCall.enqueue(new Callback<LoginModel>() {
                     @Override

@@ -44,6 +44,8 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
+
+import static com.brainwellnessspa.BWSApplication.getKey;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.logout;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 
@@ -425,6 +427,9 @@ public class OtpActivity extends AppCompatActivity implements
             String countryCode = Code.replace("+","");
             SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
             String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
+            if(key.equalsIgnoreCase("")){
+                key = getKey(OtpActivity.this);
+            }
             Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(MobileNo, countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, key);
             listCall.enqueue(new Callback<LoginModel>() {
                 @Override

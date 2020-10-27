@@ -1571,7 +1571,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                                 getDownloadData();
                                             }
                                         } else {
-                                            notifyItemChanged(position);
+                                            notifyItemChanged(f);
                                         }
                                     }
                                 }
@@ -1658,6 +1658,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 return false;
             });
             String id = mData.get(position).getID();
+            if(downloadedSingleAudio.contains(mData.get(position))){
+                Log.e("Yes",mData.get(position).getName());
+            }
             if (fileNameList.size() != 0) {
                 for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {

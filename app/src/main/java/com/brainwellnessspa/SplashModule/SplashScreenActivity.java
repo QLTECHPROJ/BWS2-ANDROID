@@ -31,6 +31,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.BWSApplication.getKey;
+
 
 public class SplashScreenActivity extends AppCompatActivity {
     ActivitySplashScreenBinding binding;
@@ -52,6 +54,9 @@ public class SplashScreenActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = shared.edit();
         editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.getAppSignatures().get(0));
         editor.commit();
+        if(key.equalsIgnoreCase("")){
+            key = getKey(SplashScreenActivity.this);
+        }
 
         getLatasteUpdate(SplashScreenActivity.this);
 

@@ -3,6 +3,7 @@ package com.brainwellnessspa;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Utility.AppSignatureHashHelper;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.CryptLib;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.R;
@@ -63,6 +66,16 @@ public class BWSApplication extends Application {
         return new MeasureRatio(widthImg, height, displayMetrics.density, proportion);
     }
 
+    public static String getKey(Context context){
+        AppSignatureHashHelper appSignatureHashHelper = new AppSignatureHashHelper(context);
+       String key = appSignatureHashHelper.getAppSignatures().get(0);
+
+        SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString(CONSTANTS.PREF_KEY_SplashKey, appSignatureHashHelper.getAppSignatures().get(0));
+        editor.commit();
+        return key;
+    }
     public static void showToast(String message, Context context) {
         Toast toast = new Toast(context);
         View view = LayoutInflater.from(context).inflate(R.layout.toast_layout, null);

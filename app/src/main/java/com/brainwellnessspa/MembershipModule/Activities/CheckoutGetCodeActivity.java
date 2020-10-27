@@ -30,6 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.BWSApplication.getKey;
 import static com.brainwellnessspa.MembershipModule.Activities.CheckoutOtpActivity.comeRegister;
 
 public class CheckoutGetCodeActivity extends AppCompatActivity {
@@ -123,6 +124,9 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                 String countryCode = binding.tvCountryCode.getText().toString().replace("+","");
                 SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
                 String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
+                if(key.equalsIgnoreCase("")){
+                    key = getKey(ctx);
+                }
                 Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(binding.edtNumber.getText().toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO,  key);
                 listCall.enqueue(new Callback<SignUpModel>() {
                     @Override
