@@ -110,7 +110,6 @@ public class AddPaymentActivity extends AppCompatActivity {
 
         SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
         userId = (shared.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
         CreditCardFormatTextWatcher tv = new CreditCardFormatTextWatcher(binding.etNumber);
         binding.etNumber.addTextChangedListener(tv);
         binding.etName.addTextChangedListener(addCardTextWatcher);
