@@ -139,6 +139,7 @@ public class MainPlayListModel {
             @SerializedName("PlaylistImage")
             @Expose
             private String playlistImage;
+            private String playlistImageDetails;
             @SerializedName("PlaylistId")
             @Expose
             private String playlistId;
@@ -157,6 +158,7 @@ public class MainPlayListModel {
                 masterCategory = in.readString();
                 subCategory = in.readString();
                 playlistImage = in.readString();
+                playlistImageDetails = in.readString();
                 playlistId = in.readString();
                 audiolist = in.createTypedArrayList(Audiolist.CREATOR);
             }
@@ -249,6 +251,14 @@ public class MainPlayListModel {
                 this.playlistImage = playlistImage;
             }
 
+            public String getPlaylistImageDetails() {
+                return playlistImageDetails;
+            }
+
+            public void setPlaylistImageDetails(String playlistImageDetails) {
+                this.playlistImageDetails = playlistImageDetails;
+            }
+
             public String getPlaylistId() {
                 return playlistId;
             }
@@ -281,6 +291,7 @@ public class MainPlayListModel {
                 parcel.writeString(masterCategory);
                 parcel.writeString(subCategory);
                 parcel.writeString(playlistImage);
+                parcel.writeString(playlistImageDetails);
                 parcel.writeString(playlistId);
             }
 

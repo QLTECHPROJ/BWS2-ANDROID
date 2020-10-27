@@ -127,6 +127,10 @@ public class ViewAllPlayListModel {
             @SerializedName("PlaylistImage")
             @Expose
             private String playlistImage;
+            private String totalAudio;
+            private String totalhour;
+            private String totalminute;
+            private String playlistImageDetails;
 
             public String getPlaylistID() {
                 return playlistID;
@@ -176,6 +180,37 @@ public class ViewAllPlayListModel {
                 this.playlistImage = playlistImage;
             }
 
+            public String getTotalAudio() {
+                return totalAudio;
+            }
+
+            public void setTotalAudio(String totalAudio) {
+                this.totalAudio = totalAudio;
+            }
+
+            public String getTotalhour() {
+                return totalhour;
+            }
+
+            public void setTotalhour(String totalhour) {
+                this.totalhour = totalhour;
+            }
+
+            public String getTotalminute() {
+                return totalminute;
+            }
+
+            public void setTotalminute(String totalminute) {
+                this.totalminute = totalminute;
+            }
+
+            public String getPlaylistImageDetails() {
+                return playlistImageDetails;
+            }
+
+            public void setPlaylistImageDetails(String playlistImageDetails) {
+                this.playlistImageDetails = playlistImageDetails;
+            }
         }
     }
 }
