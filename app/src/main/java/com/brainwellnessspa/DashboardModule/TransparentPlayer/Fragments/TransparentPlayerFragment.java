@@ -312,10 +312,23 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
         binding.ivPlay.setOnClickListener(view12 -> {
             if (!isMediaStart) {
+                isCompleteStop = false;
+                isprogressbar = true;
+                handler12.postDelayed(UpdateSongTime12,500);
+                binding.progressBar.setVisibility(View.VISIBLE);
+//                binding.llProgress.setVisibility(View.GONE);
+                binding.ivPlay.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.GONE);
                 callMedia();
             } else if (isCompleteStop) {
-                callMedia();
                 isCompleteStop = false;
+                isprogressbar = true;
+                handler12.postDelayed(UpdateSongTime12,500);
+                binding.progressBar.setVisibility(View.VISIBLE);
+//                binding.llProgress.setVisibility(View.GONE);
+                binding.ivPlay.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.GONE);
+                callMedia();
             } else {
                 resumeMedia();
                 binding.progressBar.setVisibility(View.GONE);

@@ -305,13 +305,33 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         });
 
         binding.llPlay.setOnClickListener(view -> {
-            binding.llPlay.setVisibility(View.GONE);
-            binding.llPause.setVisibility(View.VISIBLE);
-            binding.llProgressBar.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            resumeMedia();
-            isPause = false;
-            handler.postDelayed(UpdateSongTime, 500);
+            if (!isMediaStart) {
+                isCompleteStop = false;
+                isprogressbar = true;
+                handler.postDelayed(UpdateSongTime,500);
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.VISIBLE);
+                callMedia();
+            }else if(isCompleteStop){
+                isCompleteStop = false;
+                isprogressbar = true;
+                handler.postDelayed(UpdateSongTime,500);
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.GONE);
+                binding.llProgressBar.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.VISIBLE);
+                callMedia();
+            }else {
+                binding.llPlay.setVisibility(View.GONE);
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llProgressBar.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+                resumeMedia();
+                isPause = false;
+                handler.postDelayed(UpdateSongTime, 500);
+            }
         });
 
         binding.llnext.setOnClickListener(view -> {
