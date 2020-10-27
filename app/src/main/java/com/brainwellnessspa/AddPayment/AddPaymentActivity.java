@@ -60,7 +60,6 @@ public class AddPaymentActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_payment);
         context = AddPaymentActivity.this;
         activity = AddPaymentActivity.this;
-
         if (getIntent() != null) {
             ComePayment = getIntent().getStringExtra("ComePayment");
         }
