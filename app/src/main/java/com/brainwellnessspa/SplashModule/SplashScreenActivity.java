@@ -46,7 +46,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash_screen);
-
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         AppSignatureHashHelper appSignatureHashHelper = new AppSignatureHashHelper(this);
         key = appSignatureHashHelper.getAppSignatures().get(0);
 
@@ -60,8 +61,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         getLatasteUpdate(SplashScreenActivity.this);
 
-        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+
 
         MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(binding.ivBackground);
