@@ -1218,10 +1218,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.ivDownloads.setVisibility(View.GONE);
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
-            if(playlistWiseAudioDetails.size()!=0) {
-                if(!MyDownloads.equalsIgnoreCase("1"))
-                getMediaByPer(PlaylistID, playlistWiseAudioDetails.size());
-            }
             savePlaylist();
             saveAllMedia(playlistSongs, playlistSongs2, encodedBytes);
         } else {
@@ -1302,9 +1298,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
                 playlistWiseAudioDetails = GetMedia();
-                if(playlistWiseAudioDetails.size()!=0) {if(!MyDownloads.equalsIgnoreCase("1"))
-                    getMediaByPer(PlaylistID, playlistWiseAudioDetails.size());
-                }
                 super.onPostExecute(aVoid);
             }
         }
