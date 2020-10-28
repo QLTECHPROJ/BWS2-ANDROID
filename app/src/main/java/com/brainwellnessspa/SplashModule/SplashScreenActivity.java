@@ -61,8 +61,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         getLatasteUpdate(SplashScreenActivity.this);
 
-
-
         MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(binding.ivBackground);
         binding.ivBackground.setMediaController(null);
@@ -120,7 +118,6 @@ public class SplashScreenActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<VersionModel>() {
                 @Override
                 public void onResponse(Call<VersionModel> call, Response<VersionModel> response) {
-                    if (response.isSuccessful()) {
                         VersionModel versionModel = response.body();
 //                    if (versionModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                          if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
@@ -147,7 +144,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                         } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("")) {
                              callDashboard();
                         }
-                    }
                     /*} else {
                     }*/
                 }
@@ -157,9 +153,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                 }
             });
         } else {
-            BWSApplication.showToast(context.getString(R.string.no_server_found), context);
             callDashboard();
+            BWSApplication.showToast(context.getString(R.string.no_server_found), context);
         }
     }
-
 }

@@ -994,6 +994,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     enableDisableDownload(false, "orange");
                     binding.llReminder.setClickable(false);
                     binding.llReminder.setEnabled(false);
+                    binding.llReminder.setVisibility(View.INVISIBLE);
+                    binding.llDownloads.setVisibility(View.INVISIBLE);
+                    binding.llMore.setVisibility(View.INVISIBLE);
                     binding.ivReminder.setColorFilter(activity.getResources().getColor(R.color.gray), PorterDuff.Mode.SRC_IN);
                     binding.rlSearch.setVisibility(View.VISIBLE);
                 } else {
