@@ -140,8 +140,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                                     .setCancelable(false)
                                     .setPositiveButton("UPDATE", (dialog, id) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI))));
                             builder.create().show();
-                            AlertDialog alertDialog = null;
-                            alertDialog.setCanceledOnTouchOutside(false);
                         } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("")) {
                         }
                     }
