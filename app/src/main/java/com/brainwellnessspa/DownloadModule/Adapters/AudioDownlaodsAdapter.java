@@ -136,11 +136,11 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 //                        for (int f = 0; f < GlobalListModel.getPlaylistSongs().size(); f++) {
                     if (fileNameList.size() != 0) {
                         for (int i = 0; i < fileNameList.size(); i++) {
-                            if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
-                                if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
+                            if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(holder.getAdapterPosition()).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                                if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(holder.getAdapterPosition()).getName())) {
                                     if (downloadProgress <= 100) {
                                         if (BWSApplication.isNetworkConnected(ctx)) {
-                                            notifyItemChanged(position);
+                                            notifyItemChanged(holder.getAdapterPosition());
                                         }
                                     } else {
                                         holder.binding.pbProgress.setVisibility(View.GONE);

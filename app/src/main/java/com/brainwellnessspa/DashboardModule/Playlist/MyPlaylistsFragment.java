@@ -641,6 +641,22 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            downloadPlaylistDetails = new DownloadPlaylistDetails();
+                            downloadPlaylistDetails.setPlaylistID(listModel.getResponseData().getPlaylistID());
+                            downloadPlaylistDetails.setPlaylistName(listModel.getResponseData().getPlaylistName());
+                            downloadPlaylistDetails.setPlaylistDesc(listModel.getResponseData().getPlaylistDesc());
+                            downloadPlaylistDetails.setIsReminder(listModel.getResponseData().getIsReminder());
+                            downloadPlaylistDetails.setPlaylistMastercat(listModel.getResponseData().getPlaylistMastercat());
+                            downloadPlaylistDetails.setPlaylistSubcat(listModel.getResponseData().getPlaylistSubcat());
+                            downloadPlaylistDetails.setPlaylistImage(listModel.getResponseData().getPlaylistImage());
+                            downloadPlaylistDetails.setPlaylistImageDetails(listModel.getResponseData().getPlaylistImageDetail());
+                            downloadPlaylistDetails.setTotalAudio(listModel.getResponseData().getTotalAudio());
+                            downloadPlaylistDetails.setTotalDuration(listModel.getResponseData().getTotalDuration());
+                            downloadPlaylistDetails.setTotalhour(listModel.getResponseData().getTotalhour());
+                            downloadPlaylistDetails.setTotalminute(listModel.getResponseData().getTotalminute());
+                            downloadPlaylistDetails.setCreated(listModel.getResponseData().getCreated());
+                            downloadPlaylistDetails.setDownload(listModel.getResponseData().getDownload());
+                            downloadPlaylistDetails.setLike(listModel.getResponseData().getLike());
                             getDownloadData();
                             downloadAudioDetailsList = GetAllMedia();
                             SongListSize = listModel.getResponseData().getPlaylistSongs().size();
@@ -737,22 +753,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             });
                             playlistSongsList = new ArrayList<>();
                             playlistSongsList.addAll(listModel.getResponseData().getPlaylistSongs());
-                            downloadPlaylistDetails = new DownloadPlaylistDetails();
-                            downloadPlaylistDetails.setPlaylistID(listModel.getResponseData().getPlaylistID());
-                            downloadPlaylistDetails.setPlaylistName(listModel.getResponseData().getPlaylistName());
-                            downloadPlaylistDetails.setPlaylistDesc(listModel.getResponseData().getPlaylistDesc());
-                            downloadPlaylistDetails.setIsReminder(listModel.getResponseData().getIsReminder());
-                            downloadPlaylistDetails.setPlaylistMastercat(listModel.getResponseData().getPlaylistMastercat());
-                            downloadPlaylistDetails.setPlaylistSubcat(listModel.getResponseData().getPlaylistSubcat());
-                            downloadPlaylistDetails.setPlaylistImage(listModel.getResponseData().getPlaylistImage());
-                            downloadPlaylistDetails.setPlaylistImageDetails(listModel.getResponseData().getPlaylistImageDetail());
-                            downloadPlaylistDetails.setTotalAudio(listModel.getResponseData().getTotalAudio());
-                            downloadPlaylistDetails.setTotalDuration(listModel.getResponseData().getTotalDuration());
-                            downloadPlaylistDetails.setTotalhour(listModel.getResponseData().getTotalhour());
-                            downloadPlaylistDetails.setTotalminute(listModel.getResponseData().getTotalminute());
-                            downloadPlaylistDetails.setCreated(listModel.getResponseData().getCreated());
-                            downloadPlaylistDetails.setDownload(listModel.getResponseData().getDownload());
-                            downloadPlaylistDetails.setLike(listModel.getResponseData().getLike());
 
                             setData(listModel.getResponseData());
                             downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData().getDownload());
@@ -855,6 +855,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             binding.pbProgress.setVisibility(View.VISIBLE);
                             binding.ivDownloads.setVisibility(View.GONE);
                             binding.pbProgress.setProgress(downloadProgress1);
+                            if(!MyDownloads.equalsIgnoreCase("1"))
                             getMediaByPer(playlistID, totalAudio);
 //                             handler1.postDelayed(UpdateSongTime1, 500);
                         }
@@ -1218,6 +1219,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //            String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
 //            SaveMedia(EncodeBytes, dirPath, playlistSongs, i, llDownload);
             if(playlistWiseAudioDetails.size()!=0) {
+                if(!MyDownloads.equalsIgnoreCase("1"))
                 getMediaByPer(PlaylistID, playlistWiseAudioDetails.size());
             }
             savePlaylist();
@@ -1300,7 +1302,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //                llDownload.setClickable(false);
 //                llDownload.setEnabled(false);
                 playlistWiseAudioDetails = GetMedia();
-                if(playlistWiseAudioDetails.size()!=0) {
+                if(playlistWiseAudioDetails.size()!=0) {if(!MyDownloads.equalsIgnoreCase("1"))
                     getMediaByPer(PlaylistID, playlistWiseAudioDetails.size());
                 }
                 super.onPostExecute(aVoid);
@@ -1461,6 +1463,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             protected void onPostExecute(Void aVoid) {
 
                 if(playlistWiseAudioDetails.size()!=0) {
+                    if(!MyDownloads.equalsIgnoreCase("1"))
                     getMediaByPer(PlaylistID, playlistWiseAudioDetails.size());
                 }
                 if (MyDownloads.equalsIgnoreCase("1")) {
