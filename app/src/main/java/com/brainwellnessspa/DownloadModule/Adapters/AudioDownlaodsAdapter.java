@@ -147,7 +147,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                                         getDownloadData();
                                     }
                                 } else {
-                                        notifyItemChanged(i);
+//                                        notifyItemChanged(i);
                                 }
                             }
                         }
@@ -174,7 +174,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                             }
                         } else {
                             holder.binding.pbProgress.setVisibility(View.GONE);
-//                                handler2.removeCallbacks(UpdateSongTime2);
+//                                handler1.removeCallbacks(UpdateSongTime1);
                         }
                         handler1.postDelayed(UpdateSongTime1, 3000);
                     } else {
