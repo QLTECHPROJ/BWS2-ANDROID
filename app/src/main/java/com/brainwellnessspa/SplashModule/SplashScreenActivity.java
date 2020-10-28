@@ -158,6 +158,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             });
         } else {
             BWSApplication.showToast(context.getString(R.string.no_server_found), context);
+            callDashboard();
         }
     }
 
