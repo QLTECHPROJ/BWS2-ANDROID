@@ -123,22 +123,22 @@ public class SplashScreenActivity extends AppCompatActivity {
 //                    if (versionModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                         if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setTitle("New Version");
+                            builder.setTitle("Update Brain Wellness Spa");
                             builder.setCancelable(false);
-                            builder.setMessage("There is a newer version available for download! Please update the app by visiting the Play Store")
-                                    .setPositiveButton("Update", (dialog, id) -> {
+                            builder.setMessage("Brain Wellness Spa recommends that you update to the latest version")
+                                    .setPositiveButton("UPDATE", (dialog, id) -> {
                                         context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI)));
                                         dialog.cancel();
                                     })
-                                    .setNegativeButton("Later", (dialog, id) -> dialog.dismiss());
+                                    .setNegativeButton("NOT NOW", (dialog, id) -> dialog.dismiss());
                             builder.create().show();
                         } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("1")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setTitle("New Version");
+                            builder.setTitle("Brain Wellness Spa needs an update");
                             builder.setCancelable(false);
-                            builder.setMessage("There is a newer version available for download! Please update the app by visiting the Play Store")
+                            builder.setMessage("To keep using Brain Wellness Spa, download the latest version")
                                     .setCancelable(false)
-                                    .setPositiveButton("Update", (dialog, id) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI))));
+                                    .setPositiveButton("UPDATE", (dialog, id) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI))));
                             builder.create().show();
                             AlertDialog alertDialog = null;
                             alertDialog.setCanceledOnTouchOutside(false);
