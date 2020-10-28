@@ -543,7 +543,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
-                        callTransparentFrag(position, ctx, listModelList, "", PlaylistName);
+                        callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName);
                     }
                 } else {
                     isDisclaimer = 0;
@@ -551,12 +551,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
                     if (position != 0) {
                         listModelList2.addAll(listModelList);
-                        listModelList2.add(position, addDisclaimer);
+                        listModelList2.add(holder.getAdapterPosition(), addDisclaimer);
                     } else {
                         listModelList2.add(addDisclaimer);
                         listModelList2.addAll(listModelList);
                     }
-                    callTransparentFrag(position, ctx, listModelList2, "", PlaylistName);
+                    callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList2, "", PlaylistName);
                 }
             });
 

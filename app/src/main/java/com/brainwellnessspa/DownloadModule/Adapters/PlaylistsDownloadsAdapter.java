@@ -108,7 +108,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             @Override
             public void run() {
                 for (int i = 0; i < listModelList.size(); i++) {
-                    getMediaByPer(listModelList.get(position).getPlaylistID(), listModelList.get(position).getTotalAudio(), holder.binding.pbProgress);
+                    getMediaByPer(listModelList.get(holder.getAdapterPosition()).getPlaylistID(), listModelList.get(holder.getAdapterPosition()).getTotalAudio(), holder.binding.pbProgress);
                 }
 
             }
@@ -246,7 +246,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                     int downloadProgress1 = (int) progressPercent;
                     pbProgress.setVisibility(View.VISIBLE);
                     pbProgress.setProgress(downloadProgress1);
-                    getMediaByPer(playlistID,totalAudio,pbProgress);
+//                    getMediaByPer(playlistID,totalAudio,pbProgress);
                     handler1.postDelayed(UpdateSongTime1, 3000);
                 } else {
                     pbProgress.setVisibility(View.GONE);
