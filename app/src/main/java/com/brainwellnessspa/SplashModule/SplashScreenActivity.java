@@ -36,7 +36,7 @@ import static com.brainwellnessspa.BWSApplication.getKey;
 
 public class SplashScreenActivity extends AppCompatActivity {
     ActivitySplashScreenBinding binding;
-    public static String key = "";
+    public static String key = "",UserID;
     String flag, id, title, message, IsLock;
 
     @Override
@@ -61,7 +61,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         getLatasteUpdate(SplashScreenActivity.this);
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-        String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
         MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(binding.ivBackground);
@@ -69,7 +69,9 @@ public class SplashScreenActivity extends AppCompatActivity {
         binding.ivBackground.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.splash_video));
         binding.ivBackground.requestFocus();
         binding.ivBackground.start();
+    }
 
+    private void callDashboard() {
         if (UserID.equalsIgnoreCase("")) {
             new Handler().postDelayed(() -> {
                 Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
@@ -111,7 +113,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
     }
 
-    public static void getLatasteUpdate(Context context) {
+    public void getLatasteUpdate(Context context) {
         String appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa";
         if (BWSApplication.isNetworkConnected(context)) {
             Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(String.valueOf(BuildConfig.VERSION_CODE), CONSTANTS.FLAG_ONE);
@@ -121,7 +123,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         VersionModel versionModel = response.body();
 //                    if (versionModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                        if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
+                         if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                             builder.setTitle("Update Brain Wellness Spa");
                             builder.setCancelable(false);
@@ -130,7 +132,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                                         context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI)));
                                         dialog.cancel();
                                     })
-                                    .setNegativeButton("NOT NOW", (dialog, id) -> dialog.dismiss());
+                                    .setNegativeButton("NOT NOW", (dialog, id) -> {
+                                    callDashboard();
+                                    dialog.dismiss();});
                             builder.create().show();
                         } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("1")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -141,6 +145,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                                     .setPositiveButton("UPDATE", (dialog, id) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI))));
                             builder.create().show();
                         } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("")) {
+                             callDashboard();
                         }
                     }
                     /*} else {

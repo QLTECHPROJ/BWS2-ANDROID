@@ -177,7 +177,8 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                         if (!strToken.equalsIgnoreCase("")) {
                             if (BWSApplication.isNetworkConnected(context)) {
                                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo, Code);
+                                String countryCode = Code.replace("+","");
+                                Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo, countryCode);
                                 listCall.enqueue(new Callback<AddCardModel>() {
                                     @Override
                                     public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {

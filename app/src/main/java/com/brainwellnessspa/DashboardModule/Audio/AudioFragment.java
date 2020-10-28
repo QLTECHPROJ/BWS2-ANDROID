@@ -346,7 +346,7 @@ public class AudioFragment extends Fragment {
     public void onResume() {
         super.onResume();
         prepareData();
-        SplashScreenActivity.getLatasteUpdate(getActivity());
+        BWSApplication.getLatasteUpdate(getActivity());
     }
 
     public class MainAudioListAdapter extends RecyclerView.Adapter<MainAudioListAdapter.MyViewHolder> {

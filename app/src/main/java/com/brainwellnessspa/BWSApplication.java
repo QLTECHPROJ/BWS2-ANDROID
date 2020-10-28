@@ -1,11 +1,14 @@
 package com.brainwellnessspa;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -17,7 +20,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.SplashModule.Models.VersionModel;
+import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.AppSignatureHashHelper;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.CryptLib;
@@ -35,6 +43,10 @@ import java.util.Random;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static java.sql.DriverManager.println;
 
@@ -65,7 +77,56 @@ public class BWSApplication extends Application {
 //        //Log.e("displayMetrics.density...........", "" + context.getClass().getSimpleName()+","+displayMetrics.density);
         return new MeasureRatio(widthImg, height, displayMetrics.density, proportion);
     }
+    public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE 'playlist_table' ADD COLUMN 'PlaylistImageDetails' TEXT");
+        }
+    };
+    public static void getLatasteUpdate(Context context) {
+        String appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa";
+        if (BWSApplication.isNetworkConnected(context)) {
+            Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(String.valueOf(BuildConfig.VERSION_CODE), CONSTANTS.FLAG_ONE);
+            listCall.enqueue(new Callback<VersionModel>() {
+                @Override
+                public void onResponse(Call<VersionModel> call, Response<VersionModel> response) {
+                    if (response.isSuccessful()) {
+                        VersionModel versionModel = response.body();
+//                    if (versionModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                         if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("Update Brain Wellness Spa");
+                            builder.setCancelable(false);
+                            builder.setMessage("Brain Wellness Spa recommends that you update to the latest version")
+                                    .setPositiveButton("UPDATE", (dialog, id) -> {
+                                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI)));
+                                        dialog.cancel();
+                                    })
+                                    .setNegativeButton("NOT NOW", (dialog, id) -> dialog.dismiss());
+                            builder.create().show();
+                        } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("1")) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("Update Required");
+                            builder.setCancelable(false);
+                            builder.setMessage("To keep using Brain Wellness Spa, download the latest version")
+                                    .setCancelable(false)
+                                    .setPositiveButton("UPDATE", (dialog, id) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI))));
+                            builder.create().show();
+                        } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("")) {
+                        }
+                    }
+                    /*} else {
+                    }*/
+                }
 
+                @Override
+                public void onFailure(Call<VersionModel> call, Throwable t) {
+                }
+            });
+        } else {
+            BWSApplication.showToast(context.getString(R.string.no_server_found), context);
+        }
+    }
     public static String getKey(Context context){
         AppSignatureHashHelper appSignatureHashHelper = new AppSignatureHashHelper(context);
        String key = appSignatureHashHelper.getAppSignatures().get(0);

@@ -3,6 +3,9 @@ package com.brainwellnessspa.RoomDataBase;
 import android.content.Context;
 
 import androidx.room.Room;
+import androidx.room.RoomDatabase;
+
+import static com.brainwellnessspa.BWSApplication.MIGRATION_1_2;
 
 public class DatabaseClient {
     private Context Ctx;
@@ -16,7 +19,13 @@ public class DatabaseClient {
 
         //creating the app database with Room database builder
         //MyToDos is the name of the database
-        cart = Room.databaseBuilder(Ctx, AudioDatabase.class, "Audio_database").build();
+        cart = Room.databaseBuilder(Ctx,
+                AudioDatabase.class,
+                "Audio_database")
+                .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
+                .addMigrations(MIGRATION_1_2)
+                .build();
     }
 
     public static synchronized DatabaseClient getInstance(Context Ctx) {
