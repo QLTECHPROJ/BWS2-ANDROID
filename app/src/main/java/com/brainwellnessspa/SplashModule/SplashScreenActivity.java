@@ -115,11 +115,14 @@ public class SplashScreenActivity extends AppCompatActivity {
         String appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa";
         if (BWSApplication.isNetworkConnected(context)) {
             Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(BuildConfig.VERSION_NAME, CONSTANTS.FLAG_ONE);
+            Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(String.valueOf(BuildConfig.VERSION_CODE), CONSTANTS.FLAG_ONE);
             listCall.enqueue(new Callback<VersionModel>() {
                 @Override
                 public void onResponse(Call<VersionModel> call, Response<VersionModel> response) {
                     if (response.isSuccessful()) {
                         VersionModel versionModel = response.body();
+                        VersionModel versionModel = response.body();
+//                    if (versionModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                         if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                             builder.setTitle("New Version");
@@ -144,6 +147,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                         } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("")) {
                         }
                     }
+                    /*} else {
+                    }*/
                 }
 
                 @Override

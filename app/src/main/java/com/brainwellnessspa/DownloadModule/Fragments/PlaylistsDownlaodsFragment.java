@@ -1,5 +1,6 @@
 package com.brainwellnessspa.DownloadModule.Fragments;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -14,23 +15,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.brainwellnessspa.DownloadModule.Adapters.PlaylistsDownloadsAdapter;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.FragmentDownloadsBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity.comeDeletePlaylist;
 
 public class PlaylistsDownlaodsFragment extends Fragment {
     FragmentDownloadsBinding binding;
     List<DownloadPlaylistDetails> playlistList;
     String UserID;
+    String UserID, AudioFlag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,12 +47,15 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         }
 //        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
 //        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
 //        binding.tvFound.setText("Audio you are searching for is not available in the list");
         playlistList = new ArrayList<>();
         binding.tvFound.setText("Your downloaded playlists will appear here");
         GetAllMedia(getActivity());
 
+        RefreshData();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
@@ -62,6 +70,19 @@ public class PlaylistsDownlaodsFragment extends Fragment {
             comeDeletePlaylist = 0;
         }
         GetAllMedia(getActivity());
+        RefreshData();
+    }
+
+    public void RefreshData() {
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(13, 9, 13, 84);
+            binding.llSpace.setLayoutParams(params);
+        } else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(13, 9, 13, 28);
+            binding.llSpace.setLayoutParams(params);
+        }
     }
 
     private void GetAllMedia(FragmentActivity activity) {

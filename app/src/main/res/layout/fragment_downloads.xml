@@ -20,6 +20,18 @@
                 android:overScrollMode="never"
                 android:paddingTop="@dimen/_8sdp"
                 android:paddingBottom="@dimen/_64sdp" />
+            <LinearLayout
+                android:id="@+id/llSpace"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvDownloadsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
