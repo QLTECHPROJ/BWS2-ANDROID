@@ -11,15 +11,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvDownloadsList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_12sdp"
-                android:layout_marginRight="@dimen/_12sdp"
-                android:overScrollMode="never"
-                android:paddingTop="@dimen/_8sdp"
-                android:paddingBottom="@dimen/_64sdp" />
             <LinearLayout
                 android:id="@+id/llSpace"
                 android:layout_width="match_parent"

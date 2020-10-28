@@ -34,7 +34,6 @@ import static com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistAct
 public class PlaylistsDownlaodsFragment extends Fragment {
     FragmentDownloadsBinding binding;
     List<DownloadPlaylistDetails> playlistList;
-    String UserID;
     String UserID, AudioFlag;
 
     @Override
