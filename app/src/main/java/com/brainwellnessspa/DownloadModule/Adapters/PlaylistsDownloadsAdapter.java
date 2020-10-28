@@ -107,9 +107,11 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < listModelList.size(); i++) {
-                    getMediaByPer(listModelList.get(holder.getAdapterPosition()).getPlaylistID(), listModelList.get(holder.getAdapterPosition()).getTotalAudio(), holder.binding.pbProgress);
-                }
+                try {
+                    for (int i = 0; i < listModelList.size(); i++) {
+                        getMediaByPer(listModelList.get(holder.getAdapterPosition()).getPlaylistID(), listModelList.get(holder.getAdapterPosition()).getTotalAudio(), holder.binding.pbProgress);
+                    }
+                }catch (Exception e){}
 
             }
         };
@@ -217,7 +219,9 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             });
 
             Btn.setOnClickListener(v -> {
-                playlistWiseAudioDetails = GetPlaylistMedia(listModelList.get(position).getPlaylistID());
+                try {
+                    playlistWiseAudioDetails = GetPlaylistMedia(listModelList.get(position).getPlaylistID());
+                }catch(Exception e){}
                 dialog.dismiss();
             });
 
@@ -486,9 +490,11 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             @Override
             protected void onPostExecute(Void aVoid) {
                 deleteDownloadFile(ctx.getApplicationContext(), playlistID);
-                for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
-                    GetSingleMedia(playlistWiseAudioDetails.get(i).getAudioFile(), ctx.getApplicationContext(), playlistID);
-                }
+                try {
+                    for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
+                        GetSingleMedia(playlistWiseAudioDetails.get(i).getAudioFile(), ctx.getApplicationContext(), playlistID);
+                    }
+                }catch (Exception e){}
                 super.onPostExecute(aVoid);
             }
         }
