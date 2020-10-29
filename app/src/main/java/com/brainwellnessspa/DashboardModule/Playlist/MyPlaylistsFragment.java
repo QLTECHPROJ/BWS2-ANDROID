@@ -132,6 +132,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     ItemTouchHelper touchHelper;
     Runnable UpdateSongTime2;
     int SongListSize = 0, count;
+    List<DownloadAudioDetails> playlistWiseAudiosDetails;
     SubPlayListModel.ResponseData GlobalListModel;
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
     SubPlayListModel.ResponseData.PlaylistSong songListDownload = new SubPlayListModel.ResponseData.PlaylistSong();
@@ -434,7 +435,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
 //        if (binding.searchView != null) {
 //            binding.searchView.clearFocus();
-//            binding.searchView.onActionViewCollapsed();
+////            binding.searchView.onActionViewCollapsed();
 //            isclose = true;
 //            Toast.makeText(activity, "closeeeeeee", Toast.LENGTH_SHORT).show();
 //        }
@@ -446,7 +447,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
 //                binding.searchView.setQuery("", false);
 //                binding.rlMainLayouts.requestFocus();
-                binding.searchView.setFocusable(false);
+                binding.searchView.clearFocus();
+//                binding.searchView.setFocusable(false);
                 callBack();
                 return true;
             }
@@ -964,7 +966,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
         RefreshIcon = listModel.getPlaylistSongs().size();
         RefreshIconData = listModel.getPlaylistSongs().size();
-
+        binding.llReminder.setVisibility(View.INVISIBLE);
+        binding.llDownloads.setVisibility(View.INVISIBLE);
         if (listModel.getPlaylistSongs().size() == 0) {
             binding.llAddAudio.setVisibility(View.VISIBLE);
             binding.llDownloads.setVisibility(View.VISIBLE);
@@ -979,27 +982,27 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             });
         } else {
             binding.llAddAudio.setVisibility(View.GONE);
-            binding.llDownloads.setVisibility(View.VISIBLE);
-            binding.llReminder.setVisibility(View.VISIBLE);
             binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
             binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
             binding.llListing.setVisibility(View.VISIBLE);
             try {
                 if (MyDownloads.equalsIgnoreCase("1")) {
+                    binding.llDelete.setVisibility(View.VISIBLE);
+                    binding.llReminder.setVisibility(View.INVISIBLE);
+                    binding.llDownloads.setVisibility(View.INVISIBLE);
+                    binding.llMore.setVisibility(View.GONE);
+                    binding.rlSearch.setVisibility(View.VISIBLE);
                     adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, "0");
                     binding.rvPlayLists.setAdapter(adpater2);
                     binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                     binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                     enableDisableDownload(false, "orange");
-                    binding.llReminder.setClickable(false);
-                    binding.llReminder.setEnabled(false);
-                    binding.llReminder.setVisibility(View.INVISIBLE);
-                    binding.llDownloads.setVisibility(View.INVISIBLE);
-                    binding.llMore.setVisibility(View.INVISIBLE);
                     binding.ivReminder.setColorFilter(activity.getResources().getColor(R.color.gray), PorterDuff.Mode.SRC_IN);
-                    binding.rlSearch.setVisibility(View.VISIBLE);
+
                 } else {
+                    binding.llDownloads.setVisibility(View.VISIBLE);
+                    binding.llReminder.setVisibility(View.VISIBLE);
                     if (listModel.getCreated().equalsIgnoreCase("1")) {
                         adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated(), this);
 //                        SongListSize = listModel.getPlaylistSongs().size();
@@ -2037,6 +2040,55 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
             });
 
+            binding.llDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                        BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", ctx);
+                    } else {
+                        final Dialog dialog = new Dialog(ctx);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setContentView(R.layout.logout_layout);
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
+                        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+                        final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                        final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+                        final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+                        final Button Btn = dialog.findViewById(R.id.Btn);
+                        tvTitle.setText("Remove playlist");
+                        tvHeader.setText("Are you sure you want to remove the " + PlaylistName + " from downloads??");
+                        Btn.setText("Confirm");
+                        dialog.setOnKeyListener((vi, keyCode, event) -> {
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                dialog.dismiss();
+                            }
+                            return false;
+                        });
+
+                        Btn.setOnClickListener(views -> {
+                            getDownloadData();
+                            playlistWiseAudiosDetails = GetPlaylistMedia(PlaylistID);
+                            dialog.dismiss();
+                            Fragment fragment = new PlaylistFragment();
+                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                            fragmentManager1.beginTransaction()
+                                    .replace(R.id.flContainer, fragment)
+                                    .commit();
+                        });
+
+                        tvGoBack.setOnClickListener(viewd -> dialog.dismiss());
+                        dialog.show();
+                        dialog.setCancelable(false);
+
+                    }
+                }
+            });
+
             if (BWSApplication.isNetworkConnected(ctx)) {
                 holder.binding.llMore.setClickable(true);
                 holder.binding.llMore.setEnabled(true);
@@ -2129,5 +2181,104 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 this.binding = binding;
             }
         }
+    }
+
+    public List<DownloadAudioDetails> GetPlaylistMedia(String playlistID) {
+        playlistWiseAudioDetails = new ArrayList<>();
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                playlistWiseAudioDetails = DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getAllAudioByPlaylist(playlistID);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                deleteDownloadFile(getActivity(), playlistID);
+                for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
+                    GetSingleMedia(playlistWiseAudioDetails.get(i).getAudioFile(), getActivity(), playlistID);
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetMedia st = new GetMedia();
+        st.execute();
+        return playlistWiseAudioDetails;
+    }
+
+    private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
+        class DeleteMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient.getInstance(applicationContext)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deleteByPlaylistId(PlaylistId);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+//                notifyItemRemoved(position);
+                deletePlaylist(PlaylistID);
+                super.onPostExecute(aVoid);
+            }
+        }
+        DeleteMedia st = new DeleteMedia();
+        st.execute();
+    }
+
+    public void GetSingleMedia(String AudioFile, Context ctx, String playlistID) {
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                oneAudioDetailsList = DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getLastIdByuId(AudioFile);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                try {
+                    if (oneAudioDetailsList.size() != 0) {
+                        if (oneAudioDetailsList.size() == 1) {
+                            FileUtils.deleteDownloadedFile(ctx, oneAudioDetailsList.get(0).getName());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetMedia sts = new GetMedia();
+        sts.execute();
+    }
+
+    private void deletePlaylist(String playlistId) {
+        class DeleteMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient.getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deletePlaylist(playlistId);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }
+        DeleteMedia st = new DeleteMedia();
+        st.execute();
     }
 }
