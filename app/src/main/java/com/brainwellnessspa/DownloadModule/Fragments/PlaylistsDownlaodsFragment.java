@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.brainwellnessspa.DownloadModule.Adapters.PlaylistsDownloadsAdapter;
 import com.brainwellnessspa.R;
@@ -74,11 +75,11 @@ public class PlaylistsDownlaodsFragment extends Fragment {
 
     public void RefreshData() {
         if (!AudioFlag.equalsIgnoreCase("0")) {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(13, 9, 13, 84);
             binding.llSpace.setLayoutParams(params);
         } else {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(13, 9, 13, 28);
             binding.llSpace.setLayoutParams(params);
         }

@@ -162,7 +162,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                 int Years = binding1.YearPicker.getValue();
                 Card card = new Card(strCardNo, months, Years, binding.etCvv.getText().toString());
 
-                new Stripe().createToken(card, getString(R.string.stipe_test_key), new TokenCallback() {
+                new Stripe().createToken(card, getString(R.string.stipe_live_key), new TokenCallback() {
                     @Override
                     public void onError(Exception error) {
                         Log.e("error.........", "" + error.toString());
@@ -177,7 +177,8 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                         if (!strToken.equalsIgnoreCase("")) {
                             if (BWSApplication.isNetworkConnected(context)) {
                                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo, Code);
+                                String countryCode = Code.replace("+","");
+                                Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo, countryCode);
                                 listCall.enqueue(new Callback<AddCardModel>() {
                                     @Override
                                     public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {

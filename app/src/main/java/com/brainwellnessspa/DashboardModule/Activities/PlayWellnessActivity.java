@@ -1545,7 +1545,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             } else if (IsShuffle.equalsIgnoreCase("1")) {
                 // shuffle is on - play a random song
                 if (queuePlay) {
-                    addToQueueModelList.remove(position);
+                    try {
+                        addToQueueModelList.remove(position);
+                    }catch (Exception e){}
                     listSize = addToQueueModelList.size();
                     if (listSize == 0) {
                         binding.llPlay.setVisibility(View.VISIBLE);
@@ -1592,7 +1594,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 }
             } else {
                 if (queuePlay) {
-                    addToQueueModelList.remove(position);
+                    try {
+                        addToQueueModelList.remove(position);
+                    }catch (Exception e){}
                     listSize = addToQueueModelList.size();
                     if (position < listSize - 1) {
                         getPrepareShowData(position);
