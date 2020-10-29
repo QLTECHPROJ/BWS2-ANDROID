@@ -70,6 +70,7 @@ import com.brainwellnessspa.databinding.MyPlaylistLayoutBinding;
 import com.brainwellnessspa.databinding.MyPlaylistLayoutSortingBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.downloader.PRDownloader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -98,6 +99,7 @@ import static com.brainwellnessspa.DashboardModule.Playlist.ViewAllPlaylistFragm
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity.ComeFrom_Playlist;
+import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
@@ -2071,7 +2073,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         });
 
                         Btn.setOnClickListener(views -> {
-                            getDownloadData();
+                            getDeleteDownloadData();
                             playlistWiseAudiosDetails = GetPlaylistMedia(PlaylistID);
                             dialog.dismiss();
                             Fragment fragment = new PlaylistFragment();
@@ -2260,6 +2262,51 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
         GetMedia sts = new GetMedia();
         sts.execute();
+    }
+
+    public void getDeleteDownloadData() {
+        List<String> fileNameList,fileNameList1, audioFile, playlistDownloadId;
+        try {
+            SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            Gson gson = new Gson();
+            String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+            String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+            String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+            if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                fileNameList = gson.fromJson(jsony, type);
+                fileNameList1 = gson.fromJson(jsony, type);
+                audioFile = gson.fromJson(json1, type);
+                playlistDownloadId = gson.fromJson(jsonq, type);
+
+                if (playlistDownloadId.size() != 0) {
+                    playlistDownloadId.contains(PlaylistID);
+                    for (int i = 1; i < fileNameList1.size(); i++) {
+                        if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
+                            fileNameList.remove(i);
+                            audioFile.remove(i);
+                            playlistDownloadId.remove(i);
+                        }
+                    }
+                }
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                String nameJson = gson.toJson(fileNameList);
+                String urlJson = gson.toJson(audioFile);
+                String playlistIdJson = gson.toJson(playlistDownloadId);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                editor.commit();
+                if(fileNameList.get(0).equalsIgnoreCase(filename) &&playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)){
+                    PRDownloader.cancel(downloadIdOne);
+                    filename ="";
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void deletePlaylist(String playlistId) {
