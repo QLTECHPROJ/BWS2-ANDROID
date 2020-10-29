@@ -988,7 +988,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             } else if (IsShuffle.equalsIgnoreCase("1")) {
                 // shuffle is on - play a random song
                 if (queuePlay) {
-                    addToQueueModelList.remove(position);
+                    try {
+                        addToQueueModelList.remove(position);
+                    }catch (Exception e){}
                     listSize = addToQueueModelList.size();
                     if (listSize == 0) {
                         isCompleteStop = true;
@@ -1022,7 +1024,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
             } else {
                 if (queuePlay) {
-                    addToQueueModelList.remove(position);
+                    try {
+                        addToQueueModelList.remove(position);
+                    }catch (Exception e){}
                     listSize = addToQueueModelList.size();
                     if (position < listSize - 1) {
                         getPrepareShowData();
