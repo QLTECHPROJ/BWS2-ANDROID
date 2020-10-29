@@ -198,36 +198,45 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         });
 
         holder.binding.llRemoveAudio.setOnClickListener(view -> {
-            final Dialog dialog = new Dialog(ctx);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.logout_layout);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+           String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+            if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(listModelList.get(position).getPlaylistName())) {
+                BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", ctx);
+            } else {
+                final Dialog dialog = new Dialog(ctx);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.logout_layout);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-            final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-            final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
-            final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-            final Button Btn = dialog.findViewById(R.id.Btn);
-            tvTitle.setText("Remove playlist");
-            tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getPlaylistName() + " from downloads??");
-            Btn.setText("Confirm");
-            dialog.setOnKeyListener((v, keyCode, event) -> {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+                final Button Btn = dialog.findViewById(R.id.Btn);
+                tvTitle.setText("Remove playlist");
+                tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getPlaylistName() + " from downloads??");
+                Btn.setText("Confirm");
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                    }
+                    return false;
+                });
+
+                Btn.setOnClickListener(v -> {
+                    try {
+                        playlistWiseAudioDetails = GetPlaylistMedia(listModelList.get(position).getPlaylistID());
+                    } catch (Exception e) {
+                    }
                     dialog.dismiss();
-                }
-                return false;
-            });
+                });
 
-            Btn.setOnClickListener(v -> {
-                try {
-                    playlistWiseAudioDetails = GetPlaylistMedia(listModelList.get(position).getPlaylistID());
-                }catch(Exception e){}
-                dialog.dismiss();
-            });
-
-            tvGoBack.setOnClickListener(v -> dialog.dismiss());
-            dialog.show();
-            dialog.setCancelable(false);
+                tvGoBack.setOnClickListener(v -> dialog.dismiss());
+                dialog.show();
+                dialog.setCancelable(false);
+            }
         });
     }
 

@@ -25,7 +25,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.downloader.PRDownloader;
@@ -53,7 +53,6 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -301,68 +300,94 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         });
 
         holder.binding.llRemoveAudio.setOnClickListener(view -> {
-            try {
-                getDownloadData();
-                final Dialog dialog = new Dialog(ctx);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.logout_layout);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            try{
+                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    String AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                        String name = "";
+                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                        Gson gson = new Gson();
+                        String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                        }.getType();
+                        ArrayList<MainPlayModel> arrayList = gson.fromJson(json, type);
 
-                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
-                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-                final Button Btn = dialog.findViewById(R.id.Btn);
-                tvTitle.setText("Remove audio");
-                tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getName() + " from downloads?");
-                Btn.setText("Confirm");
-                dialog.setOnKeyListener((v, keyCode, event) -> {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss();
-                    }
-                    return false;
-                });
-
-                Btn.setOnClickListener(v -> {
-                    String AudioFile = listModelList.get(position).getAudioFile();
-                    String AudioName = listModelList.get(position).getName();
-                    if (fileNameList.size() != 0) {
-                        for (int i = 0; i < fileNameList.size(); i++) {
-                            if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
-                                if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
-                                    if (downloadProgress <= 100) {
-                                        PRDownloader.cancel(downloadIdOne);
-                                    }
-                                } else {
-                                    fileNameList.remove(i);
-                                    playlistDownloadId.remove(i);
-                                    audiofilelist.remove(i);
-                                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = shared.edit();
-                                    Gson gson = new Gson();
-                                    String urlJson = gson.toJson(audiofilelist);
-                                    String nameJson = gson.toJson(fileNameList);
-                                    String playlistIdJson = gson.toJson(playlistDownloadId);
-                                    editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                                    editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                                    editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                                    editor.commit();
-                                }
-                            }
+                        if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
+                            arrayList.remove(0);
                         }
+                        name = arrayList.get(0).getName();
+
+                        if (name.equalsIgnoreCase(listModelList.get(position).getName())) {
+                            BWSApplication.showToast("Currently this audio is in player,so you can't delete this audio as of now", ctx);
+                        } else {
+                            deleteAudio(holder.getAdapterPosition());
+                        }
+                    } else {
+                        deleteAudio(holder.getAdapterPosition());
+
                     }
-                    deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
-                    dialog.dismiss();
-
-                });
-
-                tvGoBack.setOnClickListener(v -> dialog.dismiss());
-                dialog.show();
-                dialog.setCancelable(false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    private void deleteAudio(int position) {
+        getDownloadData();
+        final Dialog dialog = new Dialog(ctx);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.logout_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+        final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+        final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+        final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+        final Button Btn = dialog.findViewById(R.id.Btn);
+        tvTitle.setText("Remove audio");
+        tvHeader.setText("Are you sure you want to remove the " + listModelList.get(position).getName() + " from downloads?");
+        Btn.setText("Confirm");
+        dialog.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                dialog.dismiss();
+            }
+            return false;
+        });
+
+        Btn.setOnClickListener(v -> {
+            String AudioFile = listModelList.get(position).getAudioFile();
+            String AudioName = listModelList.get(position).getName();
+            if (fileNameList.size() != 0) {
+                for (int i = 0; i < fileNameList.size(); i++) {
+                    if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
+                        if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
+                            if (downloadProgress <= 100) {
+                                PRDownloader.cancel(downloadIdOne);
+                            }
+                        } else {
+                            fileNameList.remove(i);
+                            playlistDownloadId.remove(i);
+                            audiofilelist.remove(i);
+                            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            Gson gson = new Gson();
+                            String urlJson = gson.toJson(audiofilelist);
+                            String nameJson = gson.toJson(fileNameList);
+                            String playlistIdJson = gson.toJson(playlistDownloadId);
+                            editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                            editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                            editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                            editor.commit();
+                        }
+                    }
+                }
+            }
+            deleteDownloadFile(ctx.getApplicationContext(), AudioFile, AudioName, position);
+            dialog.dismiss();
+        });
+        tvGoBack.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+        dialog.setCancelable(false);
     }
 
     private List<DownloadAudioDetails> getMyMedia() {
