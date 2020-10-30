@@ -1,16 +1,25 @@
 package com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +27,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
+import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.media.MediaSessionManager;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
@@ -39,6 +50,8 @@ import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.Utility.MusicService;
+import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.brainwellnessspa.databinding.FragmentTransparentPlayerBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -98,6 +111,19 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     Gson gson;
     private long totalDuration, currentDuration = 0;
     private Handler handler12;
+    public static final String ACTION_PLAY = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_PLAY";
+    public static final String ACTION_PAUSE = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_PAUSE";
+    public static final String ACTION_PREVIOUS = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_PREVIOUS";
+    public static final String ACTION_NEXT = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_NEXT";
+    public static final String ACTION_STOP = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_STOP";
+
+    //MediaSession
+    private MediaSessionManager mediaSessionManager;
+    private MediaSessionCompat mediaSession;
+    private MediaControllerCompat.TransportControls transportControls;
+    PlaybackStatus playbackStatus;
+    //AudioPlayer notification ID
+    private static final int NOTIFICATION_ID = 101;
     private Runnable UpdateSongTime12 = new Runnable() {
         @Override
         public void run() {
@@ -184,7 +210,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
                 if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !audioFile.equalsIgnoreCase("")) {
                     callComplete();
-                    Log.e("calll complete trans","trans");
+                    Log.e("calll complete trans", "trans");
 
                 }
                 if (currentDuration == totalDuration && currentDuration != 0 && !isStop && audioFile.equalsIgnoreCase("")) {
@@ -271,12 +297,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.llLayout.setLayoutParams(paramm);
 
         }
-        if(isMediaStart){
+        if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
-                Log.e("calll complete real","real");
+                Log.e("calll complete real", "real");
             });
         }
+        simple_Notification(playbackStatus);
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -314,7 +341,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             if (!isMediaStart) {
                 isCompleteStop = false;
                 isprogressbar = true;
-                handler12.postDelayed(UpdateSongTime12,500);
+                handler12.postDelayed(UpdateSongTime12, 500);
                 binding.progressBar.setVisibility(View.VISIBLE);
 //                binding.llProgress.setVisibility(View.GONE);
                 binding.ivPlay.setVisibility(View.GONE);
@@ -323,7 +350,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             } else if (isCompleteStop) {
                 isCompleteStop = false;
                 isprogressbar = true;
-                handler12.postDelayed(UpdateSongTime12,500);
+                handler12.postDelayed(UpdateSongTime12, 500);
                 binding.progressBar.setVisibility(View.VISIBLE);
 //                binding.llProgress.setVisibility(View.GONE);
                 binding.ivPlay.setVisibility(View.GONE);
@@ -712,7 +739,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void getPrepareShowData() {
-        handler12.postDelayed(UpdateSongTime12,100);
+        handler12.postDelayed(UpdateSongTime12, 100);
         try {
             if (queuePlay) {
                 listSize = addToQueueModelList.size();
@@ -967,7 +994,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         st.execute();
     }
 
-
     private void callComplete() {
         handler12.removeCallbacks(UpdateSongTime12);
         isPrepare = false;
@@ -990,7 +1016,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 if (queuePlay) {
                     try {
                         addToQueueModelList.remove(position);
-                    }catch (Exception e){}
+                    } catch (Exception e) {
+                    }
                     listSize = addToQueueModelList.size();
                     if (listSize == 0) {
                         isCompleteStop = true;
@@ -1026,7 +1053,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 if (queuePlay) {
                     try {
                         addToQueueModelList.remove(position);
-                    }catch (Exception e){}
+                    } catch (Exception e) {
+                    }
                     listSize = addToQueueModelList.size();
                     if (position < listSize - 1) {
                         getPrepareShowData();
@@ -1072,7 +1100,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
-     }
+    }
 
     private void removeArray() {
         shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -1492,9 +1520,223 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     @Override
     public void onPause() {
         handler12.removeCallbacks(UpdateSongTime12);
-        Log.e("Stop runnble","stop");
+        Log.e("Stop runnble", "stop");
         super.onPause();
     }
+
+    private void simple_Notification(PlaybackStatus playbackStatus) {
+/*//declare an id for your notification
+//id is used in many things especially when setting action buttons and their intents
+        int notificationId = 0;
+//init notification and declare specifications
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity())
+                .setSmallIcon(R.drawable.square_app_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.square_app_icon))
+                .setContentTitle("Android Development Course")
+                .setContentText("Become an Android Developer.")
+                .setAutoCancel(true)
+                .setDefaults(NotificationCompat.DEFAULT_ALL);
+//set a tone when notification appears
+        Uri path = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        builder.setSound(path);
+
+//call notification manager so it can build and deliver the notification to the OS
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+
+//Android 8 introduced a new requirement of setting the channelId property by using a NotificationChannel.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "YOUR_CHANNEL_ID";
+            NotificationChannel channel = new NotificationChannel(channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+            builder.setChannelId(channelId);
+        }
+
+        notificationManager.notify(notificationId, builder.build());*/
+
+        int notificationAction = android.R.drawable.ic_media_pause;//needs to be initialized
+        PendingIntent play_pauseAction = null;
+
+        //Build a new notification according to the current state of the MediaPlayer
+        if (playbackStatus == PlaybackStatus.PLAYING) {
+            notificationAction = android.R.drawable.ic_media_pause;
+            //create the pause action
+            play_pauseAction = playbackAction(1);
+        } else if (playbackStatus == PlaybackStatus.PAUSED) {
+            notificationAction = android.R.drawable.ic_media_play;
+            //create the play action
+            play_pauseAction = playbackAction(0);
+        }
+
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
+                R.drawable.square_app_icon); //replace with your own image
+
+        // Create a new Notification
+        NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getActivity())
+                .setShowWhen(false)
+                // Set the Notification style
+//                .setStyle(new NotificationCompat().MediaStyle()
+                // Attach our MediaSession token
+//                .setMediaSession(mediaSession.getSessionToken())
+                // Show our playback controls in the compact notification view.
+//                .setShowActionsInCompactView(0, 1, 2))
+                .setColor(getResources().getColor(R.color.colorPrimary))
+                // Set the large and small icons
+                .setLargeIcon(largeIcon)
+                .setSmallIcon(android.R.drawable.stat_sys_headset)
+                // Set Notification content information
+                .setContentText("Qltech")
+                .setContentTitle("Fresh Audios")
+                .setContentInfo("Brain Wellness Spa")
+                // Add playback actions
+                .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
+                .addAction(notificationAction, "pause", play_pauseAction)
+                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));
+
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+
+//Android 8 introduced a new requirement of setting the channelId property by using a NotificationChannel.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "YOUR_CHANNEL_ID";
+            NotificationChannel channel = new NotificationChannel(channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+            notificationBuilder.setChannelId(channelId);
+        }
+
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+/*    private void skipToNext() {
+
+        if (audioIndex == audioList.size() - 1) {
+            //if last in playlist
+            audioIndex = 0;
+            activeAudio = audioList.get(audioIndex);
+        } else {
+            //get next in playlist
+            activeAudio = audioList.get(++audioIndex);
+        }
+
+        //Update stored index
+        new StorageUtil(getApplicationContext()).storeAudioIndex(audioIndex);
+
+        stopMedia();
+        //reset mediaPlayer
+        mediaPlayer.reset();
+        initMediaPlayer();
+    }*/
+
+   /* private void skipToPrevious() {
+
+        if (audioIndex == 0) {
+            //if first in playlist
+            //set index to the last of audioList
+            audioIndex = audioList.size() - 1;
+            activeAudio = audioList.get(audioIndex);
+        } else {
+            //get previous in playlist
+            activeAudio = audioList.get(--audioIndex);
+        }
+
+        //Update stored index
+        new StorageUtil(getApplicationContext()).storeAudioIndex(audioIndex);
+
+        stopMedia();
+        //reset mediaPlayer
+        mediaPlayer.reset();
+        initMediaPlayer();
+    }*/
+
+    private PendingIntent playbackAction(int actionNumber) {
+        Intent playbackAction = new Intent(getActivity(), MusicService.class);
+        switch (actionNumber) {
+            case 0:
+                // Play
+                playbackAction.setAction(ACTION_PLAY);
+                return PendingIntent.getService(getActivity(), actionNumber, playbackAction, 0);
+            case 1:
+                // Pause
+                playbackAction.setAction(ACTION_PAUSE);
+                return PendingIntent.getService(getActivity(), actionNumber, playbackAction, 0);
+            case 2:
+                // Next track
+                playbackAction.setAction(ACTION_NEXT);
+                return PendingIntent.getService(getActivity(), actionNumber, playbackAction, 0);
+            case 3:
+                // Previous track
+                playbackAction.setAction(ACTION_PREVIOUS);
+                return PendingIntent.getService(getActivity(), actionNumber, playbackAction, 0);
+            default:
+                break;
+        }
+        return null;
+    }
+
+    private void removeNotification() {
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(NOTIFICATION_ID);
+    }
+
+    private void handleIncomingActions(Intent playbackAction) {
+        if (playbackAction == null || playbackAction.getAction() == null) return;
+
+        String actionString = playbackAction.getAction();
+        if (actionString.equalsIgnoreCase(ACTION_PLAY)) {
+            transportControls.play();
+        } else if (actionString.equalsIgnoreCase(ACTION_PAUSE)) {
+            transportControls.pause();
+        } else if (actionString.equalsIgnoreCase(ACTION_NEXT)) {
+            transportControls.skipToNext();
+        } else if (actionString.equalsIgnoreCase(ACTION_PREVIOUS)) {
+            transportControls.skipToPrevious();
+        } else if (actionString.equalsIgnoreCase(ACTION_STOP)) {
+            transportControls.stop();
+        }
+    }
+
+   /* TODO Need this code Can't delete
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        try {
+            //Load data from SharedPreferences
+            StorageUtil storage = new StorageUtil(getApplicationContext());
+            audioList = storage.loadAudio();
+            audioIndex = storage.loadAudioIndex();
+
+            if (audioIndex != -1 && audioIndex < audioList.size()) {
+                //index is in a valid range
+                activeAudio = audioList.get(audioIndex);
+            } else {
+                stopSelf();
+            }
+        } catch (NullPointerException e) {
+            stopSelf();
+        }
+
+        //Request audio focus
+        if (requestAudioFocus() == false) {
+            //Could not gain focus
+            stopSelf();
+        }
+
+        if (mediaSessionManager == null) {
+            try {
+                initMediaSession();
+                initMediaPlayer();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                stopSelf();
+            }
+            buildNotification(PlaybackStatus.PLAYING);
+        }
+
+        //Handle Intent action from MediaSession.TransportControls
+        handleIncomingActions(intent);
+        return super.onStartCommand(intent, flags, startId);
+    }*/
 /* @Override
     public void onAudioFocusChange(int i) {
         switch (i) {
