@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -112,6 +113,13 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             fragmentManager1.beginTransaction()
                     .add(R.id.flContainer, fragment)
                     .commit();
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.setMargins(10, 8, 10, 210);
+            binding.llSpace.setLayoutParams(params);
+        } else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.setMargins(10, 8, 10, 20);
+            binding.llSpace.setLayoutParams(params);
         }
         binding.tvTitle.setText(Name);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);

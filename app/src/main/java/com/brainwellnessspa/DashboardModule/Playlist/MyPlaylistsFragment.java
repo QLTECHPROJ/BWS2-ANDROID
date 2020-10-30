@@ -607,7 +607,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
             }
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 callAddTransFrag();

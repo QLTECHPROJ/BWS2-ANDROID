@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
@@ -86,8 +87,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_download_playlist);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         ctx = DownloadPlaylistActivity.this;
         addDisclaimer();
         ComeScreenAccount = 0;
@@ -117,9 +116,18 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     }
 
     public void PrepareData() {
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.setMargins(10, 8, 10, 210);
+            binding.llSpace.setLayoutParams(params);
+        } else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.setMargins(10, 8, 10, 20);
+            binding.llSpace.setLayoutParams(params);
+        }
         try {
-            SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
                     || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
                 String audioFile = "";

@@ -36,7 +36,7 @@ import static com.brainwellnessspa.BWSApplication.getKey;
 
 public class SplashScreenActivity extends AppCompatActivity {
     ActivitySplashScreenBinding binding;
-    public static String key = "",UserID;
+    public static String key = "", UserID;
     String flag, id, title, message, IsLock;
 
     @Override
@@ -114,38 +114,36 @@ public class SplashScreenActivity extends AppCompatActivity {
     public void getLatasteUpdate(Context context) {
         String appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa";
         if (BWSApplication.isNetworkConnected(context)) {
-            Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(String.valueOf(BuildConfig.VERSION_CODE), CONSTANTS.FLAG_ONE);
+            Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(String.valueOf(BuildConfig.VERSION_NAME), CONSTANTS.FLAG_ONE);
             listCall.enqueue(new Callback<VersionModel>() {
                 @Override
                 public void onResponse(Call<VersionModel> call, Response<VersionModel> response) {
-                        VersionModel versionModel = response.body();
-//                    if (versionModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                         if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setTitle("Update Brain Wellness Spa");
-                            builder.setCancelable(false);
-                            builder.setMessage("Brain Wellness Spa recommends that you update to the latest version")
-                                    .setPositiveButton("UPDATE", (dialog, id) -> {
-                                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI)));
-                                        dialog.cancel();
-                                    })
-                                    .setNegativeButton("NOT NOW", (dialog, id) -> {
+                    VersionModel versionModel = response.body();
+                    if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Update Brain Wellness Spa");
+                        builder.setCancelable(false);
+                        builder.setMessage("Brain Wellness Spa recommends that you update to the latest version")
+                                .setPositiveButton("UPDATE", (dialog, id) -> {
+                                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI)));
+                                    dialog.cancel();
+                                })
+                                .setNegativeButton("NOT NOW", (dialog, id) -> {
                                     callDashboard();
-                                    dialog.dismiss();});
-                            builder.create().show();
-                        } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("1")) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setTitle("Update Required");
-                            builder.setCancelable(false);
-                            builder.setMessage("To keep using Brain Wellness Spa, download the latest version")
-                                    .setCancelable(false)
-                                    .setPositiveButton("UPDATE", (dialog, id) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI))));
-                            builder.create().show();
-                        } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("")) {
-                             callDashboard();
-                        }
-                    /*} else {
-                    }*/
+                                    dialog.dismiss();
+                                });
+                        builder.create().show();
+                    } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("1")) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Update Required");
+                        builder.setCancelable(false);
+                        builder.setMessage("To keep using Brain Wellness Spa, download the latest version")
+                                .setCancelable(false)
+                                .setPositiveButton("UPDATE", (dialog, id) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appURI))));
+                        builder.create().show();
+                    } else if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("")) {
+                        callDashboard();
+                    }
                 }
 
                 @Override

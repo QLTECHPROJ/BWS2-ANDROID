@@ -255,8 +255,7 @@
                                 android:id="@+id/rvPlayLists"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:overScrollMode="never"
-                                android:paddingBottom="@dimen/_30sdp" />
+                                android:overScrollMode="never" />
                         </LinearLayout>
 
                     </LinearLayout>

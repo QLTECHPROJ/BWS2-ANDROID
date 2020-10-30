@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -130,17 +131,6 @@ public class AddAudioActivity extends AppCompatActivity {
         binding.rvPlayList.setItemAnimator(new DefaultItemAnimator());
         binding.rvPlayList.setLayoutManager(manager);
         prepareSuggestedData();
-
-        SharedPreferences shareddes = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-        AudioFlag = shareddes.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            comefromDownload = "1";
-            Fragment fragment = new TransparentPlayerFragment();
-            FragmentManager fragmentManager1 = getSupportFragmentManager();
-            fragmentManager1.beginTransaction()
-                    .add(R.id.flContainer, fragment)
-                    .commit();
-        }
     }
 
     private void callback() {
@@ -188,6 +178,23 @@ public class AddAudioActivity extends AppCompatActivity {
     }
 
     private void prepareSuggestedData() {
+        SharedPreferences shareddes = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        AudioFlag = shareddes.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            comefromDownload = "1";
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.setMargins(10, 8, 10, 210);
+            binding.llSpace.setLayoutParams(params);
+        }else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.setMargins(10, 8, 10, 20);
+            binding.llSpace.setLayoutParams(params);
+        }
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<SuggestedModel> listCall = APIClient.getClient().getSuggestedLists(UserID);
