@@ -3,17 +3,18 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1">
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <LinearLayout
+       <!-- <LinearLayout
             android:id="@+id/llMainLayout"
             android:layout_width="@dimen/_0sdp"
+            android:visibility="gone"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_weight="0.61">
+            android:layout_weight="0.87">
 
             <LinearLayout
                 android:layout_width="@dimen/_0sdp"
@@ -25,7 +26,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="wrap_content
                     app:cardCornerRadius="@dimen/_10sdp">
 
                     <ImageView
@@ -68,15 +69,15 @@
                     android:textColor="@color/extra_light_gray"
                     android:textSize="@dimen/_13sdp" />
             </LinearLayout>
-        </LinearLayout>
+        </LinearLayout>-->
 
         <LinearLayout
-            android:id="@+id/llThirdLayout"
-            android:layout_width="@dimen/_0sdp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.39">
+            android:layout_gravity="center"
+            android:gravity="center">
 
-            <RelativeLayout
+           <!-- <RelativeLayout
                 android:id="@+id/llDownload"
                 android:layout_width="@dimen/_0sdp"
                 android:layout_height="match_parent"
@@ -84,7 +85,7 @@
                 android:layout_weight="0.13"
                 android:gravity="center"
                 android:padding="@dimen/_6sdp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ProgressBar
                     android:id="@+id/pbProgress"
@@ -123,7 +124,7 @@
                 android:layout_weight="0.13"
                 android:gravity="center"
                 android:padding="@dimen/_8sdp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/ivRemove"
@@ -132,14 +133,13 @@
                     android:padding="@dimen/_10sdp"
                     android:src="@drawable/remove_icon" />
 
-            </LinearLayout>
+            </LinearLayout>-->
 
             <LinearLayout
                 android:id="@+id/llSort"
-                android:layout_width="@dimen/_0sdp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="0.13"
                 android:gravity="center"
                 android:padding="@dimen/_8sdp"
                 android:visibility="visible">
