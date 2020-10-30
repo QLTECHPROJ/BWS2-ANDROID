@@ -43,27 +43,11 @@ public class MusicService extends Service {
             Log.e("Playinggggg", "Playinggggg");
         }
     }
-
     public static void play(Uri AudioFile) {
         initMediaPlayer();
         stopMedia();
         playAudio(AudioFile);
     }
-
-    public static void play2(FileDescriptor AudioFile) {
-        initMediaPlayer();
-        stopMedia();
-        playAudio2(AudioFile);
-    }
-
-    public static boolean play1(Uri AudioFile) {
-        isPrepare = false;
-        initMediaPlayer();
-        stopMedia();
-        isPrepare = playAudio1(AudioFile);
-        return isPrepare;
-    }
-
     public static void playAudio(Uri AudioFile) {
 //        if (!isPLAYING) {
 //            isPLAYING = true;
@@ -89,54 +73,6 @@ public class MusicService extends Service {
 //            stopPlaying();
 //        }
     }
-    public static void playAudio2(FileDescriptor AudioFile) {
-//        if (!isPLAYING) {
-//            isPLAYING = true;
-        mediaPlayer = new MediaPlayer();
-
-        try {
-
-            mediaPlayer.setDataSource(AudioFile);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mediaPlayer.setAudioAttributes(
-                        new AudioAttributes
-                                .Builder()
-                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                                .build());
-            }
-            mediaPlayer.prepareAsync();
-            isPrepare = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("Failedddddddd", "prepare() failed");
-        }
-//        }else {
-//            isPLAYING = false;
-//            stopPlaying();
-//        }
-    }
-
-    public static boolean playAudio1(Uri AudioFile) {
-        mediaPlayer = new MediaPlayer();
-        isPrepare = false;
-
-        try {
-            mediaPlayer.setDataSource(String.valueOf(AudioFile));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mediaPlayer.setAudioAttributes(
-                        new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                                .build());
-            }
-            mediaPlayer.prepareAsync();
-            isPrepare = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("Failedddddddd", "prepare() failed");
-            isPrepare = false;
-        }
-        return isPrepare;
-    }
-
     public static void PhoneCall() {
 /*
         PhoneStateListener phoneStateListener = new PhoneStateListener() {
@@ -312,6 +248,7 @@ public class MusicService extends Service {
                 Log.e("Playinggggg", "resumeeeeeee");
 //            mediaPlayer.seekTo(resumePosition);
                 isResume = true;
+                isPause = false;
                 mediaPlayer.start();
             }
         }

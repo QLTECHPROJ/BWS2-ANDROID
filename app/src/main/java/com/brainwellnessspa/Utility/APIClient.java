@@ -2,6 +2,9 @@ package com.brainwellnessspa.Utility;
 
 import android.provider.Settings;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -37,11 +40,13 @@ public class APIClient {
                     .build();
             return chain.proceed(request);
         });
-
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
         OkHttpClient client = httpClient.addInterceptor(interceptor).build();
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .client(client)
                 .build();

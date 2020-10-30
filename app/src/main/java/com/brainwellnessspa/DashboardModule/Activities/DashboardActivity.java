@@ -1,7 +1,12 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
+import android.content.Context;
+import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -15,19 +20,24 @@ import androidx.navigation.ui.NavigationUI;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
+import static com.brainwellnessspa.Utility.MusicService.isPause;
+import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
+import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener {
     public static int player = 0;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
     String Goplaylist= "", PlaylistID = "",PlaylistName = "",PlaylistImage="";
-
+    TelephonyManager mTelephonyMgr;
+    AudioManager mAudioManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +48,12 @@ public class DashboardActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+        mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
+
         if (getIntent().hasExtra("Goplaylist")){
             Goplaylist = getIntent().getStringExtra("Goplaylist");
             PlaylistID = getIntent().getStringExtra("PlaylistID");
@@ -85,7 +101,20 @@ public class DashboardActivity extends AppCompatActivity {
 //            // Use data as required to perform syncs, downloads, and updates.
 //        }
     }
-
+    private PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            // Test for incoming call, dialing call, active or on hold
+            if (state==TelephonyManager.CALL_STATE_RINGING || state==TelephonyManager.CALL_STATE_OFFHOOK)
+            {
+                if(isMediaStart){
+                    pauseMedia();
+                }  // Put here the code to stop your music
+            }else if(state == TelephonyManager.CALL_STATE_IDLE){
+            }
+            super.onCallStateChanged(state, incomingNumber);
+        }
+    };
     @Override
     protected void onResume() {
         super.onResume();
@@ -116,5 +145,27 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+    }
+
+    @Override
+    public void onAudioFocusChange(int i) {
+        switch (i) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                // Resume your media player here
+                if(isPause)
+                resumeMedia();
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                if (isMediaStart) {
+                    pauseMedia();
+//                    binding.ivPlay.setVisibility(View.VISIBLE);
+//                    binding.ivPause.setVisibility(View.GONE);
+                }
+//                MusicService.pauseMedia();// Pause your media player here
+                break;
+        }
     }
 }
