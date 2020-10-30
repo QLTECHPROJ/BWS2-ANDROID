@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -306,7 +306,10 @@
                                 app:searchIcon="@null" />
                         </RelativeLayout>
                     </LinearLayout>
-
+                    <androidx.core.widget.NestedScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:overScrollMode="never">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
@@ -330,19 +333,44 @@
                                 android:textSize="@dimen/_16sdp"
                                 android:visibility="gone" />
 
+
+
                             <LinearLayout
                                 android:id="@+id/llSpace"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal"
+                                android:weightSum="1">
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/rvPlayLists"
-                                    android:layout_width="match_parent"
+                                    android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:overScrollMode="never"
-                                    android:paddingBottom="@dimen/_26sdp" />
-                            </LinearLayout>
+                                    android:nestedScrollingEnabled="false"
+                                    android:layout_weight="0.80"
+                                    tools:listitem="@layout/my_playlist_layout_sorting1"
+                                    android:paddingBottom="@dimen/_26sdp"/>
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/rvPlayLists1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:overScrollMode="never"
+                                    android:nestedScrollingEnabled="false"
+                                    android:layout_weight="0.20"
+                                    tools:listitem="@layout/my_playlist_layout_sorting2"
+                                    android:paddingBottom="@dimen/_26sdp"/>
 
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/rvPlayLists2"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:overScrollMode="never"
+                                    android:nestedScrollingEnabled="false"
+                                    android:layout_weight="1"
+                                    tools:listitem="@layout/my_playlist_layout_sorting2"
+                                    android:paddingBottom="@dimen/_26sdp"/>
+
+                            </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout
@@ -379,6 +407,7 @@
 
                     </RelativeLayout>
 
+        </androidx.core.widget.NestedScrollView>
                 </LinearLayout>
             </RelativeLayout>
 
