@@ -303,7 +303,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 Log.e("calll complete real", "real");
             });
         }
-        simple_Notification(playbackStatus);
+
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -792,7 +792,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
             }
             startTime = getStartTime();
-
+            simple_Notification(playbackStatus, mainPlayModelList);
             if (!audioFile.equalsIgnoreCase("")) {
                 addToRecentPlay();
             }
@@ -1524,7 +1524,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         super.onPause();
     }
 
-    private void simple_Notification(PlaybackStatus playbackStatus) {
+    private void simple_Notification(PlaybackStatus playbackStatus, ArrayList<MainPlayModel> mainPlayModelList) {
 /*//declare an id for your notification
 //id is used in many things especially when setting action buttons and their intents
         int notificationId = 0;
@@ -1569,9 +1569,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             play_pauseAction = playbackAction(0);
         }
 
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
-                R.drawable.square_app_icon); //replace with your own image
-
         // Create a new Notification
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getActivity())
                 .setShowWhen(false)
@@ -1583,16 +1580,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                .setShowActionsInCompactView(0, 1, 2))
                 .setColor(getResources().getColor(R.color.colorPrimary))
                 // Set the large and small icons
-                .setLargeIcon(largeIcon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.square_app_icon))
                 .setSmallIcon(android.R.drawable.stat_sys_headset)
                 // Set Notification content information
-                .setContentText("Qltech")
-                .setContentTitle("Fresh Audios")
+                .setContentText(mainPlayModelList.get(position).getAudioDirection())
+                .setContentTitle(mainPlayModelList.get(position).getName())
                 .setContentInfo("Brain Wellness Spa")
                 // Add playback actions
-                .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
+                .addAction(R.drawable.ic_backword_icon, "previous", playbackAction(3))
                 .addAction(notificationAction, "pause", play_pauseAction)
-                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));
+                .addAction(R.drawable.ic_forward_icon, "next", playbackAction(2));
 
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -1610,7 +1607,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
 /*    private void skipToNext() {
-
         if (audioIndex == audioList.size() - 1) {
             //if last in playlist
             audioIndex = 0;
