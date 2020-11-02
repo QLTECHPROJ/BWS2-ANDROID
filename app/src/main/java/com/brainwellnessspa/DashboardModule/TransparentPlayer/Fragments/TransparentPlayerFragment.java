@@ -1594,6 +1594,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 .setContentText(mainPlayModelList.get(position).getAudioDirection())
                 .setContentTitle(mainPlayModelList.get(position).getName())
                 .setContentInfo("Brain Wellness Spa")
+                .setSound(null)
                 // Add playback actions
                 .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
                 .addAction(notificationAction, "pause", play_pauseAction)
@@ -1606,7 +1607,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             String channelId = "YOUR_CHANNEL_ID";
             NotificationChannel channel = new NotificationChannel(channelId,
                     "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager.IMPORTANCE_LOW);
+            channel.setSound(null,null);
             notificationManager.createNotificationChannel(channel);
             notificationBuilder.setChannelId(channelId);
         }

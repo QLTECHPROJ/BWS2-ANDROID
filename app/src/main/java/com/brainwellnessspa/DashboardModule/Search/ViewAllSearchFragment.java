@@ -43,6 +43,7 @@ import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeAddPlaylist;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
@@ -434,6 +435,7 @@ public class ViewAllSearchFragment extends Fragment {
                 } else if (PlaylistModel.get(position).getIsLock().equalsIgnoreCase("0") || PlaylistModel.get(position).getIsLock().equalsIgnoreCase("")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
+                    comeAddPlaylist = 0;
                     Intent i = new Intent(ctx, AddPlaylistActivity.class);
                     i.putExtra("AudioId", "");
                     i.putExtra("PlaylistID", PlaylistModel.get(position).getID());

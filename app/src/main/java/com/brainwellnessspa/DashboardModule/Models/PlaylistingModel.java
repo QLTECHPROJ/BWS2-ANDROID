@@ -61,6 +61,9 @@ public class PlaylistingModel {
         @SerializedName("Image")
         @Expose
         private String image;
+        @SerializedName("Iscreate")
+        @Expose
+        private String Iscreate;
 
         public String getID() {
             return ID;
@@ -84,6 +87,14 @@ public class PlaylistingModel {
 
         public void setImage(String image) {
             this.image = image;
+        }
+
+        public String getIscreate() {
+            return Iscreate;
+        }
+
+        public void setIscreate(String iscreate) {
+            Iscreate = iscreate;
         }
     }
 }

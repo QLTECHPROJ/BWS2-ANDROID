@@ -331,7 +331,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
             binding.btnAddPlatLists.setOnClickListener(view -> {
-
                 final Dialog dialog = new Dialog(ctx);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.create_palylist);
@@ -386,23 +385,28 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                 public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
                                     if (response.isSuccessful()) {
                                         CreatePlaylistModel listsModel = response.body();
-                                        dialog.dismiss();
-                                        prepareData(ctx);
-                                        String PlaylistID = listsModel.getResponseData().getId();
-                                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-                                            if (isDisclaimer == 1) {
-                                                BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                                        if (listsModel.getResponseData().getIscreated().equalsIgnoreCase("1")) {
+                                            dialog.dismiss();
+                                            prepareData(ctx);
+                                            String PlaylistID = listsModel.getResponseData().getId();
+                                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                                            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                                                if (isDisclaimer == 1) {
+                                                    BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                                                } else {
+                                                    callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
+                                                }
                                             } else {
                                                 callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
+
                                             }
                                         } else {
-                                            callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
-
+                                            BWSApplication.showToast(listsModel.getResponseMessage(), ctx);
                                         }
+
                                     }
                                 }
 
@@ -413,6 +417,8 @@ public class AddPlaylistActivity extends AppCompatActivity {
                         } else {
                             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                         }
+
+
                     }
                 });
                 tvCancel.setOnClickListener(v -> dialog.dismiss());
