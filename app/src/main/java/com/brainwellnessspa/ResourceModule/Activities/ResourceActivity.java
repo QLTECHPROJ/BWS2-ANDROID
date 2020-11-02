@@ -69,7 +69,6 @@ public class ResourceActivity extends AppCompatActivity {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Websites"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Documentaries"));
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -104,7 +103,6 @@ public class ResourceActivity extends AppCompatActivity {
         wlp.x = 33;
         wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         window.setAttributes(wlp);
-
         dialogBox.setOnKeyListener((dialog, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 finish();
@@ -118,7 +116,6 @@ public class ResourceActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
         rvFilterList.setLayoutManager(mLayoutManager);
         rvFilterList.setItemAnimator(new DefaultItemAnimator());
-
         binding.ivFilter.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;

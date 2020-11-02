@@ -75,7 +75,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
-            }, 2 * 1000);
+            }, 2 * 800);
         } else if (getIntent().hasExtra("flag")) {
             Intent resultIntent = null;
             flag = getIntent().getStringExtra("flag");
@@ -107,7 +107,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Intent i = new Intent(SplashScreenActivity.this, DashboardActivity.class);
                 startActivity(i);
                 finish();
-            }, 2 * 1000);
+            }, 2 * 800);
         }
     }
 

@@ -80,12 +80,13 @@
 
         <ImageView
             android:id="@+id/ivFilter"
-            android:layout_width="@dimen/_62sdp"
-            android:layout_height="@dimen/_62sdp"
+            android:layout_width="@dimen/_86sdp"
+            android:layout_height="@dimen/_86sdp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="@dimen/_16sdp"
-            android:layout_marginBottom="@dimen/_16sdp"
+            android:padding="@dimen/_11sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
             android:src="@drawable/ic_filter_icon" />
 
         <LinearLayout
