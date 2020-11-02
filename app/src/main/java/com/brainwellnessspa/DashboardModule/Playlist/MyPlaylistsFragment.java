@@ -1027,6 +1027,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     binding.llDownloads.setVisibility(View.VISIBLE);
                     binding.llReminder.setVisibility(View.VISIBLE);
                     if (listModel.getCreated().equalsIgnoreCase("1")) {
+                        binding.rvPlayLists2.setVisibility(View.GONE);
                         adpater1 = new PlayListsAdpater1(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated(), this);
                         binding.rvPlayLists.setAdapter(adpater1);
                         adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated(), this);
@@ -1035,13 +1036,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         touchHelper = new ItemTouchHelper(callback);
                         touchHelper.attachToRecyclerView(binding.rvPlayLists1);
                         binding.rvPlayLists1.setAdapter(adpater);
-                        binding.rvPlayLists2.setVisibility(View.GONE);
                     } else {
                         adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
                         binding.rvPlayLists2.setAdapter(adpater2);
                         binding.rvPlayLists.setVisibility(View.GONE);
-                        binding.rvPlayLists2.setVisibility(View.VISIBLE);
                         binding.rvPlayLists1.setVisibility(View.GONE);
+                        binding.rvPlayLists2.setVisibility(View.VISIBLE);
                     }
                 }
             } catch (Exception e) {
@@ -1836,7 +1836,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 changedAudio.add(listModelList.get(i).getID());
             }
             callDragApi();
-//            notifyItemMoved(fromPosition, toPosition);
+            notifyItemMoved(fromPosition, toPosition);
             adpater1.notifyItemMoved(fromPosition,toPosition);
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);

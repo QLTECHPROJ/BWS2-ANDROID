@@ -211,6 +211,28 @@ public class AudioFragment extends Fragment {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 }
             });
+            /*if (BWSApplication.isNetworkConnected(getActivity())) {
+                Call<MainAudioModel> listCall1 = APIClient.getClient().getUnLockAudioList(UserID);
+                listCall1.enqueue(new Callback<MainAudioModel>() {
+                    @Override
+                    public void onResponse(Call<MainAudioModel> call, Response<MainAudioModel> response) {
+                        if (response.isSuccessful()) {
+                            MainAudioModel listModel = response.body();
+                            try {
+                                IsLock = listModel.getResponseData().get(0).getIsLock();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                         } else {
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MainAudioModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                    }
+                });
+            }*/
         } else {
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
             expDate = (shared1.getString(CONSTANTS.PREF_KEY_ExpDate, ""));

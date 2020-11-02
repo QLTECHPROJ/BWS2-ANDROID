@@ -1595,9 +1595,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 .setContentTitle(mainPlayModelList.get(position).getName())
                 .setContentInfo("Brain Wellness Spa")
                 // Add playback actions
-                .addAction(R.drawable.ic_backword_icon, "previous", playbackAction(3))
+                .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
                 .addAction(notificationAction, "pause", play_pauseAction)
-                .addAction(R.drawable.ic_forward_icon, "next", playbackAction(2));
+                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));
 
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 

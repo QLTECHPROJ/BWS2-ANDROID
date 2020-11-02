@@ -32,6 +32,8 @@ import static com.brainwellnessspa.Utility.MusicService.oTime;
 
 public class FileUtils {
     static File tempFile = null;
+    static byte[] contents;
+    static FileInputStream fis;
     public static void saveFile(byte[] encodedBytes, String path) {
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
@@ -63,39 +65,28 @@ public class FileUtils {
     }
 
     public static byte[] readFile(String filePath) {
-        byte[] contents;
-        File file = new File(filePath);
-        int size = (int) file.length();
-        contents = new byte[size];
-        try {
-            BufferedInputStream buf = new BufferedInputStream(
-                    new FileInputStream(file));
-            try {
-                buf.read(contents);
-                buf.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return contents;
+        return contents = getMediaContents(filePath);
     }
 
-    @NonNull
-    public static File createTempFile(Context context, byte[] decrypted) throws IOException {
+    private static byte[] getMediaContents(String filePath) {
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
+                File file = new File(filePath);
+                int size = (int) file.length();
+                contents = new byte[size];
                 try {
-                    tempFile = File.createTempFile(TEMP_FILE_NAME, CONSTANTS.FILE_EXT, context.getCacheDir());
-                    tempFile.deleteOnExit();
-                    FileOutputStream fos = new FileOutputStream(tempFile);
-                    fos.write(decrypted);
-                    fos.close();
+                    BufferedInputStream buf = new BufferedInputStream(
+                            new FileInputStream(file));
+                    try {
+                        buf.read(contents);
+                        buf.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
                 return null;
             }
 
@@ -106,13 +97,49 @@ public class FileUtils {
         }
         GetMedia st = new GetMedia();
         st.execute();
-        return tempFile;
+        return contents;
+    }
+
+    @NonNull
+    public static void createTempFile(Context context, byte[] decrypted) throws IOException {
+
     }
 
     public static FileDescriptor getTempFileDescriptor(Context context, byte[] decrypted) throws IOException {
-        File tempFile = FileUtils.createTempFile(context, decrypted);
-        FileInputStream fis = new FileInputStream(tempFile);
+//        FileUtils.createTempFile(context, decrypted);
+        rightfile(context,decrypted);
         return fis.getFD();
+    }
+
+    private static void rightfile(Context context, byte[] decrypted) {
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                try {
+            tempFile = File.createTempFile(TEMP_FILE_NAME, CONSTANTS.FILE_EXT, context.getCacheDir());
+            tempFile.deleteOnExit();
+            FileOutputStream fos = new FileOutputStream(tempFile);
+            fos.write(decrypted);
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                try {
+                    fis = new FileInputStream(tempFile);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetMedia st = new GetMedia();
+        st.execute();
     }
 
     public static final String getDirPath(Context context) {

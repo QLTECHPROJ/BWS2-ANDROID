@@ -186,6 +186,11 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<MainAudioModel> getMainAudioLists(@Field("UserID") String userID);
 
+    /* TODO AudioFragment */
+    @POST("unlockaudiolist")
+    @FormUrlEncoded
+    Call<MainAudioModel> getUnLockAudioList(@Field("UserID") String userID);
+
 
     /* TODO PlaylistFragment */
     @POST("getlibrary")
