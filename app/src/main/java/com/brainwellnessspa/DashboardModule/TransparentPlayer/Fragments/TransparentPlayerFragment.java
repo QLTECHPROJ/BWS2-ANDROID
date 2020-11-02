@@ -98,6 +98,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     public static int isDisclaimer = 0;
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
+    public static String addToRecentPlayId = "";
     int position = 0, startTime, listSize, myCount;
     MainPlayModel mainPlayModel;
     Boolean queuePlay, audioPlay;
@@ -795,8 +796,14 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             startTime = getStartTime();
             simple_Notification(playbackStatus, mainPlayModelList);
             if (!audioFile.equalsIgnoreCase("")) {
-                addToRecentPlay();
+                if(!id.equalsIgnoreCase(addToRecentPlayId)) {
+                    addToRecentPlay();
+                    Log.e("Api call recent",id);
+                }
             }
+            addToRecentPlayId = id;
+            Log.e("addToRecentPlayID",addToRecentPlayId);
+            Log.e("new addToRecentPlayID",id);
             binding.llPlayearMain.setOnClickListener(view -> {
                 handler12.removeCallbacks(UpdateSongTime12);
                 if (player == 0) {

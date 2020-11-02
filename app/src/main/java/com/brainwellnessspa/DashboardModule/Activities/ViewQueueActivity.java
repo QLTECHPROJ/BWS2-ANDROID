@@ -63,6 +63,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
@@ -595,7 +596,13 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             editor.commit();
             startTime = getStartTime();
         }
-        addToRecentPlay();
+        if (!url.equalsIgnoreCase("")) {
+            if(!id.equalsIgnoreCase(addToRecentPlayId)) {
+                addToRecentPlay();
+                Log.e("Api call recent",id);
+            }
+        }
+        addToRecentPlayId = id;
         binding.simpleSeekbar.setClickable(true);
         handler.postDelayed(UpdateSongTime, 500);
 

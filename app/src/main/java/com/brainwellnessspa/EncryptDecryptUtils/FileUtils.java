@@ -1,11 +1,17 @@
 package com.brainwellnessspa.EncryptDecryptUtils;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -15,25 +21,45 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.Utility.CONSTANTS.TEMP_FILE_NAME;
+import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
+import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
+import static com.brainwellnessspa.Utility.MusicService.isPause;
+import static com.brainwellnessspa.Utility.MusicService.oTime;
 
 public class FileUtils {
+    static File tempFile = null;
     public static void saveFile(byte[] encodedBytes, String path) {
-        try {
-            File file = new File(path);
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-            bos.write(encodedBytes);
-            bos.flush();
-            bos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    File file = new File(path);
+                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                    bos.write(encodedBytes);
+                    bos.flush();
+                    bos.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
 
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+            }
+        }
+        GetMedia st = new GetMedia();
+        st.execute();
     }
 
     public static byte[] readFile(String filePath) {
@@ -58,11 +84,28 @@ public class FileUtils {
 
     @NonNull
     public static File createTempFile(Context context, byte[] decrypted) throws IOException {
-        File tempFile = File.createTempFile(TEMP_FILE_NAME, CONSTANTS.FILE_EXT, context.getCacheDir());
-        tempFile.deleteOnExit();
-        FileOutputStream fos = new FileOutputStream(tempFile);
-        fos.write(decrypted);
-        fos.close();
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    tempFile = File.createTempFile(TEMP_FILE_NAME, CONSTANTS.FILE_EXT, context.getCacheDir());
+                    tempFile.deleteOnExit();
+                    FileOutputStream fos = new FileOutputStream(tempFile);
+                    fos.write(decrypted);
+                    fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetMedia st = new GetMedia();
+        st.execute();
         return tempFile;
     }
 

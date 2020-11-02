@@ -65,6 +65,7 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity.comeFromAddToQueue;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.ToBackward;
@@ -1373,10 +1374,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             });
         }*/
         getMediaByPer();
-
         if (!url.equalsIgnoreCase("")) {
-            addToRecentPlay();
+            if(!id.equalsIgnoreCase(addToRecentPlayId)) {
+                addToRecentPlay();
+                Log.e("Api call recent",id);
+            }
         }
+        addToRecentPlayId = id;
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
