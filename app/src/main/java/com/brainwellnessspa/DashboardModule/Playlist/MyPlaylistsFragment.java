@@ -572,11 +572,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         try {
             SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            SharedPreferences shared2 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+            String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
+            Gson gson1 = new Gson();
+            Type type1 = new TypeToken<List<String>>() {
+            }.getType();
+            List<String> UnlockAudioList = gson1.fromJson(UnlockAudioLists, type1);
             if (!IsLock.equalsIgnoreCase("0") && (AudioFlag.equalsIgnoreCase("MainAudioList")
                     || AudioFlag.equalsIgnoreCase("ViewAllAudioList"))) {
-                String audioFile = "";
+                String audioID = "";
+                SharedPreferences sharedd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 Gson gson = new Gson();
-                String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                String json = sharedd.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
                 Type type = new TypeToken<ArrayList<MainPlayModel>>() {
                 }.getType();
                 ArrayList<MainPlayModel> arrayList = gson.fromJson(json, type);
@@ -584,9 +591,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                     arrayList.remove(0);
                 }
-                audioFile = arrayList.get(0).getName();
+                audioID = arrayList.get(0).getID();
 
-                if (audioFile.equalsIgnoreCase("Hope") || audioFile.equalsIgnoreCase("Mindfulness")) {
+                if (UnlockAudioList.contains(audioID)) {
 
                 } else {
                     SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -50,6 +51,8 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
@@ -230,7 +233,35 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 } catch (IOException e) {
                     e.printStackTrace();
                 }*/
-                try {
+                SharedPreferences shared =ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                    if (isDisclaimer == 1) {
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                    } else {
+                        callTransFrag(position,listModelList);
+                    }
+                } else {
+                    isDisclaimer = 0;
+                    disclaimerPlayed = 0;
+                    List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
+                    DownloadAudioDetails  mainPlayModel = new DownloadAudioDetails();
+                    mainPlayModel.setID("0");
+                    mainPlayModel.setName("Disclaimer");
+                    mainPlayModel.setAudioFile("");
+                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                    mainPlayModel.setAudiomastercat("");
+                    mainPlayModel.setAudioSubCategory("");
+                    mainPlayModel.setImageFile("");
+                    mainPlayModel.setLike("");
+                    mainPlayModel.setDownload("");
+                    mainPlayModel.setAudioDuration("0:48");
+                    listModelList2.addAll(listModelList);
+                    listModelList2.add(position,mainPlayModel);
+                    callTransFrag(position,listModelList2);
+                }
+               /* try {
                     SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                     boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                     if (queuePlay) {
@@ -251,6 +282,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                         editor.commit();
 
                     }
+
                     player = 1;
                     if (isPrepare || isMediaStart || isPause) {
                         stopMedia();
@@ -276,12 +308,12 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
                     mainPlayModel.setAudioDuration("0:48");
-                    listModelList2.add(mainPlayModel);
-                    listModelList2.add(listModelList.get(position));
+                    listModelList2.addAll(listModelList);
+                    listModelList2.add(position,mainPlayModel);
 
                     String json = gson.toJson(listModelList2);
                     editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                    editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
                     editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                     editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -295,7 +327,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                             .commit();
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
             }
         });
 
@@ -330,6 +362,57 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 e.printStackTrace();
             }
         });
+    }
+    private void callTransFrag(int position, List<DownloadAudioDetails> listModelList) {
+        try {
+            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+            if (queuePlay) {
+                int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
+                ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
+                Gson gson = new Gson();
+                String json1 = shared1.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
+                if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
+                    Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
+                    }.getType();
+                    addToQueueModelList = gson.fromJson(json1, type1);
+                }
+                addToQueueModelList.remove(position1);
+                SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared2.edit();
+                String json = gson.toJson(addToQueueModelList);
+                editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+                editor.commit();
+
+            }
+            player = 1;
+            if (isPrepare || isMediaStart || isPause) {
+                stopMedia();
+            }
+            isPause = false;
+            isMediaStart = false;
+            isPrepare = false;
+            isCompleteStop = false;
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(listModelList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
+            editor.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void deleteAudio(int position) {

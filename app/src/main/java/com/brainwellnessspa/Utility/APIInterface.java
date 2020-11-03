@@ -30,6 +30,7 @@ import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.SucessModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestionAudiosModel;
+import com.brainwellnessspa.DashboardModule.Models.UnlockAudioList;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllPlayListModel;
 import com.brainwellnessspa.DownloadModule.Models.DownloadlistModel;
@@ -189,7 +190,7 @@ public interface APIInterface {
     /* TODO AudioFragment */
     @POST("unlockaudiolist")
     @FormUrlEncoded
-    Call<MainAudioModel> getUnLockAudioList(@Field("UserID") String userID);
+    Call<UnlockAudioList> getUnLockAudioList(@Field("UserID") String userID);
 
 
     /* TODO PlaylistFragment */
