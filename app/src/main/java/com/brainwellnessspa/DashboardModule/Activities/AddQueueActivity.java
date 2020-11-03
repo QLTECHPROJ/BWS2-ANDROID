@@ -105,7 +105,6 @@ public class AddQueueActivity extends AppCompatActivity {
     };
 */
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -777,31 +776,35 @@ public class AddQueueActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
                     if (response.isSuccessful()) {
-                        binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        AudioLikeModel model = response.body();
-                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
-                            binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
-                            Like = "0";
-                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                        try {
                             binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                            Like = "1";
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            AudioLikeModel model = response.body();
+                            if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
+                                binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
+                                Like = "0";
+                            } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                                Like = "1";
+                            }
+                            if (queuePlay) {
+                                addToQueueModelList.get(position).setLike(Like);
+                            } else
+                                mainPlayModelList.get(position).setLike(Like);
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            Gson gson = new Gson();
+                            String json = gson.toJson(mainPlayModelList);
+                            editor.putString(CONSTANTS.PREF_KEY_audioList, json);
+                            String json1 = gson.toJson(addToQueueModelList);
+                            if (queuePlay) {
+                                editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
+                            }
+                            editor.commit();
+                            BWSApplication.showToast(model.getResponseMessage(), ctx);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        if (queuePlay) {
-                            addToQueueModelList.get(position).setLike(Like);
-                        } else
-                            mainPlayModelList.get(position).setLike(Like);
-                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared.edit();
-                        Gson gson = new Gson();
-                        String json = gson.toJson(mainPlayModelList);
-                        editor.putString(CONSTANTS.PREF_KEY_audioList, json);
-                        String json1 = gson.toJson(addToQueueModelList);
-                        if (queuePlay) {
-                            editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
-                        }
-                        editor.commit();
-                        BWSApplication.showToast(model.getResponseMessage(), ctx);
                     }
                 }
 
@@ -852,9 +855,6 @@ public class AddQueueActivity extends AppCompatActivity {
                         } else if (play.equalsIgnoreCase("ViewAllAudioList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
-                        } else if (play.equalsIgnoreCase("play")) {
-                            binding.llOptions.setVisibility(View.VISIBLE);
-                            binding.llRemovePlaylist.setVisibility(View.VISIBLE);
                         } else if (play.equalsIgnoreCase("playlist")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);

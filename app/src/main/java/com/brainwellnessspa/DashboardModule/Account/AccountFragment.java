@@ -26,6 +26,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
+import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.bumptech.glide.Glide;
 import com.downloader.PRDownloader;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -76,7 +77,7 @@ public class AccountFragment extends Fragment {
     public static int ComeScreenAccount = 0;
     public static boolean logout = false;
     FragmentAccountBinding binding;
-    String UserID,MobileNo;
+    String UserID, MobileNo;
     private long mLastClickTime = 0;
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
@@ -108,6 +109,15 @@ public class AccountFragment extends Fragment {
             }
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(getActivity(), DownloadsActivity.class);
+            startActivity(i);
+        });
+
+        binding.llFavorites.setOnClickListener(view12 -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(getActivity(), LikeActivity.class);
             startActivity(i);
         });
 
@@ -205,7 +215,7 @@ public class AccountFragment extends Fragment {
                             break;
                         }
                         case MotionEvent.ACTION_UP:
-                            if(isMediaStart){
+                            if (isMediaStart) {
                                 stopMedia();
                                 releasePlayer();
                             }
@@ -293,17 +303,17 @@ public class AccountFragment extends Fragment {
     }
 
     void DeleteCall() {
-        if(isMediaStart){
+        if (isMediaStart) {
             stopMedia();
             releasePlayer();
         }
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
         SharedPreferences.Editor editorcv = shared.edit();
         editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_UserID, UserID);
-        editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO,MobileNo);
+        editorcv.putString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO, MobileNo);
         editorcv.commit();
 
-        Log.e("Old UserId MobileNo",UserID+"....." + MobileNo);
+        Log.e("Old UserId MobileNo", UserID + "....." + MobileNo);
 
         SharedPreferences preferences = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = preferences.edit();
@@ -370,7 +380,7 @@ public class AccountFragment extends Fragment {
                         } else {
                             binding.tvName.setText(viewModel.getResponseData().getName());
                         }
-                        if(viewModel.getResponseData().getName().equalsIgnoreCase("")){
+                        if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
                             String Letter = "G";
                             String profilePicPath = viewModel.getResponseData().getImage();
                             IsLock = viewModel.getResponseData().getIsLock();
@@ -383,7 +393,7 @@ public class AccountFragment extends Fragment {
                                 binding.rlLetter.setVisibility(View.GONE);
                                 Glide.with(ctx).load(profilePicPath).thumbnail(1f).dontAnimate().into(binding.civProfile);
                             }
-                        }else {
+                        } else {
                             String Name = viewModel.getResponseData().getName();
                             String Letter = Name.substring(0, 1);
                             String profilePicPath = viewModel.getResponseData().getImage();

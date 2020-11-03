@@ -37,6 +37,7 @@ import com.brainwellnessspa.DownloadModule.Models.DownloadlistModel;
 import com.brainwellnessspa.FaqModule.Models.FaqListModel;
 import com.brainwellnessspa.InvoiceModule.Models.InvoiceDetailModel;
 import com.brainwellnessspa.InvoiceModule.Models.InvoiceListModel;
+import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.LoginModule.Models.CountryListModel;
 import com.brainwellnessspa.LoginModule.Models.LoginModel;
 import com.brainwellnessspa.LoginModule.Models.OtpModel;
@@ -428,6 +429,11 @@ public interface APIInterface {
     @POST("downloadlist")
     @FormUrlEncoded
     Call<DownloadlistModel> getDownloadlistPlaylist(@Field("UserID") String userID);
+
+    /* TODO LikeAudiosFragment & LikePlaylistsFragment */
+    @POST("likelist")
+    @FormUrlEncoded
+    Call<LikesHistoryModel> getLikeAudioPlaylistListing(@Field("UserID") String userID);
 
     /* TODO AppsFragment & AudioBooksFragment & DocumentariesFragment & PodcastsFragment & WebsiteFragment */
     @POST("resourcelist")

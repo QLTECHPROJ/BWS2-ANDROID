@@ -794,16 +794,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
             }
             startTime = getStartTime();
-            simple_Notification(playbackStatus, mainPlayModelList);
+
             if (!audioFile.equalsIgnoreCase("")) {
-                if(!id.equalsIgnoreCase(addToRecentPlayId)) {
+                if (!id.equalsIgnoreCase(addToRecentPlayId)) {
                     addToRecentPlay();
-                    Log.e("Api call recent",id);
+                    Log.e("Api call recent", id);
                 }
             }
             addToRecentPlayId = id;
-            Log.e("addToRecentPlayID",addToRecentPlayId);
-            Log.e("new addToRecentPlayID",id);
+            Log.e("addToRecentPlayID", addToRecentPlayId);
+            Log.e("new addToRecentPlayID", id);
             binding.llPlayearMain.setOnClickListener(view -> {
                 handler12.removeCallbacks(UpdateSongTime12);
                 if (player == 0) {
@@ -835,8 +835,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 Intent i = new Intent(ctx, PlayWellnessActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
-
-//            simpleNotification();
+                BWSApplication.simple_Notification(playbackStatus, mainPlayModelList, getActivity(), position);
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -1531,235 +1530,4 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         Log.e("Stop runnble", "stop");
         super.onPause();
     }
-
-    private void simple_Notification(PlaybackStatus playbackStatus, ArrayList<MainPlayModel> mainPlayModelList) {
-/*//declare an id for your notification
-//id is used in many things especially when setting action buttons and their intents
-        int notificationId = 0;
-//init notification and declare specifications
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity())
-                .setSmallIcon(R.drawable.square_app_icon)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.square_app_icon))
-                .setContentTitle("Android Development Course")
-                .setContentText("Become an Android Developer.")
-                .setAutoCancel(true)
-                .setDefaults(NotificationCompat.DEFAULT_ALL);
-//set a tone when notification appears
-        Uri path = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        builder.setSound(path);
-
-//call notification manager so it can build and deliver the notification to the OS
-        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-
-//Android 8 introduced a new requirement of setting the channelId property by using a NotificationChannel.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String channelId = "YOUR_CHANNEL_ID";
-            NotificationChannel channel = new NotificationChannel(channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-            builder.setChannelId(channelId);
-        }
-
-        notificationManager.notify(notificationId, builder.build());*/
-
-        int notificationAction = android.R.drawable.ic_media_pause;//needs to be initialized
-        PendingIntent play_pauseAction = null;
-
-        //Build a new notification according to the current state of the MediaPlayer
-        if (playbackStatus == PlaybackStatus.PLAYING) {
-            notificationAction = android.R.drawable.ic_media_pause;
-            //create the pause action
-            play_pauseAction = playbackAction(1);
-        } else if (playbackStatus == PlaybackStatus.PAUSED) {
-            notificationAction = android.R.drawable.ic_media_play;
-            //create the play action
-            play_pauseAction = playbackAction(0);
-        }
-
-        // Create a new Notification
-        NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getActivity())
-                .setShowWhen(false)
-                // Set the Notification style
-//                .setStyle(new NotificationCompat().MediaStyle()
-                // Attach our MediaSession token
-//                .setMediaSession(mediaSession.getSessionToken())
-                // Show our playback controls in the compact notification view.
-//                .setShowActionsInCompactView(0, 1, 2))
-                .setColor(getResources().getColor(R.color.colorPrimary))
-                // Set the large and small icons
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.square_app_icon))
-                .setSmallIcon(android.R.drawable.stat_sys_headset)
-                // Set Notification content information
-                .setContentText(mainPlayModelList.get(position).getAudioDirection())
-                .setContentTitle(mainPlayModelList.get(position).getName())
-                .setContentInfo("Brain Wellness Spa")
-                .setSound(null)
-                // Add playback actions
-                .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
-                .addAction(notificationAction, "pause", play_pauseAction)
-                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));
-
-        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-
-//Android 8 introduced a new requirement of setting the channelId property by using a NotificationChannel.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String channelId = "YOUR_CHANNEL_ID";
-            NotificationChannel channel = new NotificationChannel(channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_LOW);
-            channel.setSound(null,null);
-            notificationManager.createNotificationChannel(channel);
-            notificationBuilder.setChannelId(channelId);
-        }
-
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-    }
-
-/*    private void skipToNext() {
-        if (audioIndex == audioList.size() - 1) {
-            //if last in playlist
-            audioIndex = 0;
-            activeAudio = audioList.get(audioIndex);
-        } else {
-            //get next in playlist
-            activeAudio = audioList.get(++audioIndex);
-        }
-
-        //Update stored index
-        new StorageUtil(getApplicationContext()).storeAudioIndex(audioIndex);
-
-        stopMedia();
-        //reset mediaPlayer
-        mediaPlayer.reset();
-        initMediaPlayer();
-    }*/
-
-   /* private void skipToPrevious() {
-
-        if (audioIndex == 0) {
-            //if first in playlist
-            //set index to the last of audioList
-            audioIndex = audioList.size() - 1;
-            activeAudio = audioList.get(audioIndex);
-        } else {
-            //get previous in playlist
-            activeAudio = audioList.get(--audioIndex);
-        }
-
-        //Update stored index
-        new StorageUtil(getApplicationContext()).storeAudioIndex(audioIndex);
-
-        stopMedia();
-        //reset mediaPlayer
-        mediaPlayer.reset();
-        initMediaPlayer();
-    }*/
-
-    private PendingIntent playbackAction(int actionNumber) {
-        Intent playbackAction = new Intent(getActivity(), MusicService.class);
-        switch (actionNumber) {
-            case 0:
-                // Play
-                playbackAction.setAction(ACTION_PLAY);
-                return PendingIntent.getService(getActivity(), actionNumber, playbackAction, 0);
-            case 1:
-                // Pause
-                playbackAction.setAction(ACTION_PAUSE);
-                return PendingIntent.getService(getActivity(), actionNumber, playbackAction, 0);
-            case 2:
-                // Next track
-                playbackAction.setAction(ACTION_NEXT);
-                return PendingIntent.getService(getActivity(), actionNumber, playbackAction, 0);
-            case 3:
-                // Previous track
-                playbackAction.setAction(ACTION_PREVIOUS);
-                return PendingIntent.getService(getActivity(), actionNumber, playbackAction, 0);
-            default:
-                break;
-        }
-        return null;
-    }
-
-    private void removeNotification() {
-        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID);
-    }
-
-    private void handleIncomingActions(Intent playbackAction) {
-        if (playbackAction == null || playbackAction.getAction() == null) return;
-
-        String actionString = playbackAction.getAction();
-        if (actionString.equalsIgnoreCase(ACTION_PLAY)) {
-            transportControls.play();
-        } else if (actionString.equalsIgnoreCase(ACTION_PAUSE)) {
-            transportControls.pause();
-        } else if (actionString.equalsIgnoreCase(ACTION_NEXT)) {
-            transportControls.skipToNext();
-        } else if (actionString.equalsIgnoreCase(ACTION_PREVIOUS)) {
-            transportControls.skipToPrevious();
-        } else if (actionString.equalsIgnoreCase(ACTION_STOP)) {
-            transportControls.stop();
-        }
-    }
-
-   /* TODO Need this code Can't delete
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        try {
-            //Load data from SharedPreferences
-            StorageUtil storage = new StorageUtil(getApplicationContext());
-            audioList = storage.loadAudio();
-            audioIndex = storage.loadAudioIndex();
-
-            if (audioIndex != -1 && audioIndex < audioList.size()) {
-                //index is in a valid range
-                activeAudio = audioList.get(audioIndex);
-            } else {
-                stopSelf();
-            }
-        } catch (NullPointerException e) {
-            stopSelf();
-        }
-
-        //Request audio focus
-        if (requestAudioFocus() == false) {
-            //Could not gain focus
-            stopSelf();
-        }
-
-        if (mediaSessionManager == null) {
-            try {
-                initMediaSession();
-                initMediaPlayer();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-                stopSelf();
-            }
-            buildNotification(PlaybackStatus.PLAYING);
-        }
-
-        //Handle Intent action from MediaSession.TransportControls
-        handleIncomingActions(intent);
-        return super.onStartCommand(intent, flags, startId);
-    }*/
-/* @Override
-    public void onAudioFocusChange(int i) {
-        switch (i) {
-            case AudioManager.AUDIOFOCUS_GAIN:
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                // Resume your media player here
-                resumeMedia();
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS:
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                if (isMediaStart) {
-                    pauseMedia();
-//                    binding.ivPlay.setVisibility(View.VISIBLE);
-//                    binding.ivPause.setVisibility(View.GONE);
-                }
-//                MusicService.pauseMedia();// Pause your media player here
-                break;
-        }
-    }*/
 }

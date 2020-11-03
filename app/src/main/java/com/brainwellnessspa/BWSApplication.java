@@ -3,13 +3,21 @@ package com.brainwellnessspa;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,9 +28,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.NotificationCompat;
+import androidx.media.MediaSessionManager;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.SplashModule.Models.VersionModel;
 import com.brainwellnessspa.Utility.APIClient;
@@ -31,7 +42,14 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.CryptLib;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Utility.MusicService;
+import com.brainwellnessspa.Utility.PlaybackStatus;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,6 +62,8 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,6 +74,19 @@ public class BWSApplication extends Application {
     private static Context mContext;
     private static BWSApplication BWSApplication;
     private static List<DownloadAudioDetails> downloadAudioDetailsList;
+    private static final int NOTIFICATION_ID = 101;
+    public static final String ACTION_PLAY = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_PLAY";
+    public static final String ACTION_PAUSE = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_PAUSE";
+    public static final String ACTION_PREVIOUS = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_PREVIOUS";
+    public static final String ACTION_NEXT = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_NEXT";
+    public static final String ACTION_STOP = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_STOP";
+    private static Bitmap myBitmap;
+
+    //MediaSession
+    private MediaSessionManager mediaSessionManager;
+    private MediaSessionCompat mediaSession;
+    private MediaControllerCompat.TransportControls transportControls;
+
     public static Context getContext() {
         return mContext;
     }
@@ -77,12 +110,248 @@ public class BWSApplication extends Application {
 //        //Log.e("displayMetrics.density...........", "" + context.getClass().getSimpleName()+","+displayMetrics.density);
         return new MeasureRatio(widthImg, height, displayMetrics.density, proportion);
     }
+
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE 'playlist_table' ADD COLUMN 'PlaylistImageDetails' TEXT");
         }
     };
+
+    public static void simple_Notification(PlaybackStatus playbackStatus, ArrayList<MainPlayModel> mainPlayModelList, Activity activity, int position) {
+
+        int notificationAction = android.R.drawable.ic_media_pause;//needs to be initialized
+        PendingIntent play_pauseAction = null;
+
+        //Build a new notification according to the current state of the MediaPlayer
+        if (playbackStatus == PlaybackStatus.PLAYING) {
+            notificationAction = android.R.drawable.ic_media_pause;
+            //create the pause action
+            play_pauseAction = playbackAction(1, activity);
+        } else if (playbackStatus == PlaybackStatus.PAUSED) {
+            notificationAction = android.R.drawable.ic_media_play;
+            //create the play action
+            play_pauseAction = playbackAction(0, activity);
+        }
+       /* try {
+            URL url = new URL(mainPlayModelList.get(position).getImageFile());
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            myBitmap = BitmapFactory.decodeStream(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
+       /* try {
+            URL url = new URL(mainPlayModelList.get(position).getImageFile());
+            myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
+
+        // Create a new Notification
+        NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(activity)
+                .setShowWhen(false)
+                // Set the Notification style
+//                .setStyle(new NotificationCompat().MediaStyle()
+                // Attach our MediaSession token
+//                .setMediaSession(mediaSession.getSessionToken())
+                // Show our playback controls in the compact notification view.
+//                .setShowActionsInCompactView(0, 1, 2))
+                .setColor(activity.getResources().getColor(R.color.blue))
+                // Set the large and small icons
+                .setLargeIcon(BitmapFactory.decodeResource(activity.getResources(), R.drawable.square_app_icon))
+                .setSmallIcon(android.R.drawable.stat_sys_headset)
+                // Set Notification content information
+                .setContentText(mainPlayModelList.get(position).getAudioDirection())
+                .setContentTitle(mainPlayModelList.get(position).getName())
+                .setContentInfo("Brain Wellness Spa")
+                .setSound(null)
+                // Add playback actions
+                .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3, activity))
+                .addAction(notificationAction, "pause", play_pauseAction)
+                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2, activity));
+
+        NotificationManager notificationManager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
+
+//Android 8 introduced a new requirement of setting the channelId property by using a NotificationChannel.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "YOUR_CHANNEL_ID";
+            NotificationChannel channel = new NotificationChannel(channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_LOW);
+            channel.setSound(null, null);
+            notificationManager.createNotificationChannel(channel);
+            notificationBuilder.setChannelId(channelId);
+        }
+
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+
+    public static PendingIntent playbackAction(int actionNumber, Activity activity) {
+        Intent playbackAction = new Intent(activity, MusicService.class);
+        switch (actionNumber) {
+            case 0:
+                // Play
+                playbackAction.setAction(ACTION_PLAY);
+                return PendingIntent.getService(activity, actionNumber, playbackAction, 0);
+            case 1:
+                // Pause
+                playbackAction.setAction(ACTION_PAUSE);
+                return PendingIntent.getService(activity, actionNumber, playbackAction, 0);
+            case 2:
+                // Next track
+                playbackAction.setAction(ACTION_NEXT);
+                return PendingIntent.getService(activity, actionNumber, playbackAction, 0);
+            case 3:
+                // Previous track
+                playbackAction.setAction(ACTION_PREVIOUS);
+                return PendingIntent.getService(activity, actionNumber, playbackAction, 0);
+            default:
+                break;
+        }
+        return null;
+    }
+
+    private void removeNotification(Activity activity) {
+        NotificationManager notificationManager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(NOTIFICATION_ID);
+    }
+
+    private void handleIncomingActions(Intent playbackAction) {
+        if (playbackAction == null || playbackAction.getAction() == null) return;
+
+        String actionString = playbackAction.getAction();
+        if (actionString.equalsIgnoreCase(ACTION_PLAY)) {
+            transportControls.play();
+        } else if (actionString.equalsIgnoreCase(ACTION_PAUSE)) {
+            transportControls.pause();
+        } else if (actionString.equalsIgnoreCase(ACTION_NEXT)) {
+            transportControls.skipToNext();
+        } else if (actionString.equalsIgnoreCase(ACTION_PREVIOUS)) {
+            transportControls.skipToPrevious();
+        } else if (actionString.equalsIgnoreCase(ACTION_STOP)) {
+            transportControls.stop();
+        }
+    }
+/*    private void skipToNext() {
+        if (audioIndex == audioList.size() - 1) {
+            //if last in playlist
+            audioIndex = 0;
+            activeAudio = audioList.get(audioIndex);
+        } else {
+            //get next in playlist
+            activeAudio = audioList.get(++audioIndex);
+        }
+
+        //Update stored index
+        new StorageUtil(getApplicationContext()).storeAudioIndex(audioIndex);
+
+        stopMedia();
+        //reset mediaPlayer
+        mediaPlayer.reset();
+        initMediaPlayer();
+    }*/
+
+    /* private void skipToPrevious() {
+         if (audioIndex == 0) {
+             //if first in playlist
+             //set index to the last of audioList
+             audioIndex = audioList.size() - 1;
+             activeAudio = audioList.get(audioIndex);
+         } else {
+             //get previous in playlist
+             activeAudio = audioList.get(--audioIndex);
+         }
+
+         //Update stored index
+         new StorageUtil(getApplicationContext()).storeAudioIndex(audioIndex);
+
+         stopMedia();
+         //reset mediaPlayer
+         mediaPlayer.reset();
+         initMediaPlayer();
+     }*/
+
+    /* TODO Need this code Can't delete
+  @Override
+  public int onStartCommand(Intent intent, int flags, int startId) {
+      try {
+          //Load data from SharedPreferences
+          StorageUtil storage = new StorageUtil(getApplicationContext());
+          audioList = storage.loadAudio();
+          audioIndex = storage.loadAudioIndex();
+
+          if (audioIndex != -1 && audioIndex < audioList.size()) {
+              //index is in a valid range
+              activeAudio = audioList.get(audioIndex);
+          } else {
+              stopSelf();
+          }
+      } catch (NullPointerException e) {
+          stopSelf();
+      }
+
+      //Request audio focus
+      if (requestAudioFocus() == false) {
+          //Could not gain focus
+          stopSelf();
+      }
+
+      if (mediaSessionManager == null) {
+          try {
+              initMediaSession();
+              initMediaPlayer();
+          } catch (RemoteException e) {
+              e.printStackTrace();
+              stopSelf();
+          }
+          buildNotification(PlaybackStatus.PLAYING);
+      }
+
+      //Handle Intent action from MediaSession.TransportControls
+      handleIncomingActions(intent);
+      return super.onStartCommand(intent, flags, startId);
+  }*/
+/* @Override
+    public void onAudioFocusChange(int i) {
+        switch (i) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                // Resume your media player here
+                resumeMedia();
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                if (isMediaStart) {
+                    pauseMedia();
+//                    binding.ivPlay.setVisibility(View.VISIBLE);
+//                    binding.ivPause.setVisibility(View.GONE);
+                }
+//                MusicService.pauseMedia();// Pause your media player here
+                break;
+        }
+    }*/
+
+  /*  public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }*/
+
     public static void getLatasteUpdate(Context context) {
         String appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa";
         if (BWSApplication.isNetworkConnected(context)) {
@@ -93,7 +362,7 @@ public class BWSApplication extends Application {
                     if (response.isSuccessful()) {
                         VersionModel versionModel = response.body();
 //                    if (versionModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                         if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
+                        if (versionModel.getResponseData().getIsForce().equalsIgnoreCase("0")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                             builder.setTitle("Update Brain Wellness Spa");
                             builder.setCancelable(false);
@@ -127,9 +396,10 @@ public class BWSApplication extends Application {
             BWSApplication.showToast(context.getString(R.string.no_server_found), context);
         }
     }
-    public static String getKey(Context context){
+
+    public static String getKey(Context context) {
         AppSignatureHashHelper appSignatureHashHelper = new AppSignatureHashHelper(context);
-       String key = appSignatureHashHelper.getAppSignatures().get(0);
+        String key = appSignatureHashHelper.getAppSignatures().get(0);
 
         SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_Splash, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
@@ -137,6 +407,7 @@ public class BWSApplication extends Application {
         editor.commit();
         return key;
     }
+
     public static void showToast(String message, Context context) {
         Toast toast = new Toast(context);
         View view = LayoutInflater.from(context).inflate(R.layout.toast_layout, null);
@@ -146,11 +417,12 @@ public class BWSApplication extends Application {
         toast.setView(view);
         toast.show();
     }
+
     public static String getProgressDisplayLine(long currentBytes, long totalBytes) {
         return getBytesToMBString(currentBytes) + "/" + getBytesToMBString(totalBytes);
     }
 
-    private static String getBytesToMBString(long bytes){
+    private static String getBytesToMBString(long bytes) {
         return String.format(Locale.ENGLISH, "%.2fMb", bytes / (1024.00 * 1024.00));
     }
 /*    public static List<DownloadAudioDetails> GetAllMedia(Context ctx) {

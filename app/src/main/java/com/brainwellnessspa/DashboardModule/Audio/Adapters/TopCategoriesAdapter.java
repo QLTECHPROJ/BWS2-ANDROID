@@ -21,7 +21,7 @@ import com.brainwellnessspa.databinding.RoundBoxLayoutBinding;
 
 import java.util.ArrayList;
 
-public class  TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
+public class TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAdapter.MyViewHolder> {
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     Context ctx;
     FragmentActivity activity;
@@ -49,7 +49,6 @@ public class  TopCategoriesAdapter extends RecyclerView.Adapter<TopCategoriesAda
         holder.binding.tvTitle.setText(listModelList.get(position).getCategoryName());
         Glide.with(ctx).load(listModelList.get(position).getCatImage()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-
         /*MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 16,
                 1, 1, 0.52f, 10);
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());

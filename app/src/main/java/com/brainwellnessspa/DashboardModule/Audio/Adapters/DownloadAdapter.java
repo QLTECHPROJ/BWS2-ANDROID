@@ -89,7 +89,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
             try {
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                if(queuePlay){
+                if (queuePlay) {
                     int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
                     ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
                     Gson gson = new Gson();
@@ -117,20 +117,20 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    SharedPreferences shared =ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
-                            callTransFrag(position,listModelList);
+                            callTransFrag(position, listModelList);
                         }
                     } else {
                         isDisclaimer = 0;
                         disclaimerPlayed = 0;
                         ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
-                        MainAudioModel.ResponseData.Detail  mainPlayModel = new MainAudioModel.ResponseData.Detail();
+                        MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
                         mainPlayModel.setID("0");
                         mainPlayModel.setName("Disclaimer");
                         mainPlayModel.setAudioFile("");
@@ -142,8 +142,8 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                         mainPlayModel.setDownload("");
                         mainPlayModel.setAudioDuration("0:48");
                         listModelList2.addAll(listModelList);
-                        listModelList2.add(position,mainPlayModel);
-                        callTransFrag(position,listModelList2);
+                        listModelList2.add(position, mainPlayModel);
+                        callTransFrag(position, listModelList2);
                     }
                 }
             } catch (JsonSyntaxException e) {
@@ -152,7 +152,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         });
     }
 
-    private void callTransFrag(int position,ArrayList<MainAudioModel.ResponseData.Detail> listModelList) {
+    private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList) {
         try {
             SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
@@ -174,34 +174,34 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                 editor.commit();
 
             }
-        player = 1;
-        if (isPrepare || isMediaStart || isPause) {
-            stopMedia();
+            player = 1;
+            if (isPrepare || isMediaStart || isPause) {
+                stopMedia();
+            }
+            isPause = false;
+            isMediaStart = false;
+            isPrepare = false;
+            isCompleteStop = false;
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
+            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(listModelList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
+            editor.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        isPause = false;
-        isMediaStart = false;
-        isPrepare = false;
-        isCompleteStop = false;
-        Fragment fragment = new TransparentPlayerFragment();
-        FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .add(R.id.flContainer, fragment)
-                .commit();
-        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shared.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(listModelList);
-        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
-        editor.commit();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
     }
 
     @Override

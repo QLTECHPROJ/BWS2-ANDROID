@@ -35,9 +35,10 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
     public static int player = 0;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
-    String Goplaylist= "", PlaylistID = "",PlaylistName = "",PlaylistImage="";
+    String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "";
     TelephonyManager mTelephonyMgr;
     AudioManager mAudioManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +55,7 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);
 
-        if (getIntent().hasExtra("Goplaylist")){
+        if (getIntent().hasExtra("Goplaylist")) {
             Goplaylist = getIntent().getStringExtra("Goplaylist");
             PlaylistID = getIntent().getStringExtra("PlaylistID");
             PlaylistName = getIntent().getStringExtra("PlaylistName");
@@ -101,20 +102,21 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
 //            // Use data as required to perform syncs, downloads, and updates.
 //        }
     }
+
     private PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             // Test for incoming call, dialing call, active or on hold
-            if (state==TelephonyManager.CALL_STATE_RINGING || state==TelephonyManager.CALL_STATE_OFFHOOK)
-            {
-                if(isMediaStart){
+            if (state == TelephonyManager.CALL_STATE_RINGING || state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                if (isMediaStart) {
                     pauseMedia();
                 }  // Put here the code to stop your music
-            }else if(state == TelephonyManager.CALL_STATE_IDLE){
+            } else if (state == TelephonyManager.CALL_STATE_IDLE) {
             }
             super.onCallStateChanged(state, incomingNumber);
         }
     };
+
     @Override
     protected void onResume() {
         super.onResume();

@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -471,12 +472,49 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 binding.llRename.setVisibility(View.VISIBLE);
                                 binding.llDelete.setVisibility(View.VISIBLE);
                                 binding.llFind.setVisibility(View.GONE);
+                                binding.llLikes.setVisibility(View.GONE);
                             } else if (model.getResponseData().getCreated().equalsIgnoreCase("0")) {
                                 binding.llOptions.setVisibility(View.VISIBLE);
                                 binding.llRename.setVisibility(View.GONE);
                                 binding.llDelete.setVisibility(View.GONE);
                                 binding.llFind.setVisibility(View.VISIBLE);
+                                binding.llLikes.setVisibility(View.GONE);
                             }
+
+                          /*  binding.llLikes.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (BWSApplication.isNetworkConnected(ctx)) {
+                                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(AudioId, UserID);
+                                        listCall.enqueue(new Callback<AudioLikeModel>() {
+                                            @Override
+                                            public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
+                                                if (response.isSuccessful()) {
+                                                    try {
+                                                        binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                                        AudioLikeModel model = response.body();
+                                                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
+                                                            binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
+                                                            Like = "0";
+                                                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                                                            binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                                                            Like = "1";
+                                                        }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<AudioLikeModel> call, Throwable t) {
+                                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                            }
+                                        });
+                                    } else {
+                                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                                    }
+                                }
+                            });*/
 
                             binding.llFind.setOnClickListener(view -> {
                                 ComeFindAudio = 2;

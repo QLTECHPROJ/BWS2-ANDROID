@@ -241,8 +241,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            DownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.downloads_layout, parent, false);
+            DownloadsLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.downloads_layout, parent, false);
             return new MyViewHolder(v);
         }
 
@@ -304,7 +303,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                             mainPlayModel.setDownload("");
                             mainPlayModel.setAudioDuration("0:48");
                             listModelList2.add(mainPlayModel);
-
                             listModelList2.add(AudiolistsModel.get(position));
                             String json = gson.toJson(listModelList2);
                             editor.putString(CONSTANTS.PREF_KEY_modelList, json);
@@ -318,8 +316,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                             Fragment fragment = new TransparentPlayerFragment();
                             FragmentManager fragmentManager1 = getSupportFragmentManager();
                             fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();
+                                    .add(R.id.flContainer, fragment).commit();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -357,7 +354,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         mainPlayModel.setDownload("");
                         mainPlayModel.setAudioDuration("0:48");
                         listModelList2.add(mainPlayModel);
-
                         listModelList2.add(AudiolistsModel.get(position));
                         String json = gson.toJson(listModelList2);
                         editor.putString(CONSTANTS.PREF_KEY_modelList, json);
@@ -371,8 +367,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         Fragment fragment = new TransparentPlayerFragment();
                         FragmentManager fragmentManager1 = getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
-                                .add(R.id.flContainer, fragment)
-                                .commit();
+                                .add(R.id.flContainer, fragment).commit();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -536,20 +531,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     MyPlaylistIds = PlaylistModel.get(position).getID();
                     PlaylistIDMS = PlaylistID;
                     finish();
-                    /*comefrom_search = 1;
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    holder.binding.ivLock.setVisibility(View.GONE);
-                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("New", "0");
-                    bundle.putString("PlaylistID", PlaylistModel.get(position).getID());
-                    bundle.putString("PlaylistName", PlaylistModel.get(position).getName());
-                    bundle.putString("MyDownloads", "0");
-                    myPlaylistsFragment.setArguments(bundle);
-                    FragmentManager fragmentManager1 = getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .replace(R.id.flContainer, myPlaylistsFragment)
-                            .commit();*/
                 }
             });
 

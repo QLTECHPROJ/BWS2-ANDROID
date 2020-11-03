@@ -40,12 +40,12 @@ import retrofit2.Response;
 public class CountrySelectActivity extends AppCompatActivity {
     ActivityCountrySelectBinding binding;
     CountrySelectAdapter adapter;
-    //    String TrialPeriod;
+//    String TrialPeriod;
 //    private ArrayList<MembershipPlanListModel.Plan> listModelList;
 //    int position;
     Context ctx;
     Activity activity;
-    String Name, Code, MobileNo, Check,searchFilter;
+    String Name, Code, MobileNo, Check, searchFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,7 +235,7 @@ public class CountrySelectActivity extends AppCompatActivity {
                 protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                     if (listFilterData.size() == 0) {
                         binding.tvFound.setVisibility(View.VISIBLE);
-                        binding.tvFound.setText("Couldn't find "+ searchFilter +". Try searching again");
+                        binding.tvFound.setText("Couldn't find " + searchFilter + ". Try searching again");
                         binding.rvCountryList.setVisibility(View.GONE);
                     } else {
                         binding.tvFound.setVisibility(View.GONE);

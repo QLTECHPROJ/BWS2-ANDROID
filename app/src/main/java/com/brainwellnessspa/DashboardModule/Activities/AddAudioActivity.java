@@ -190,7 +190,7 @@ public class AddAudioActivity extends AppCompatActivity {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.setMargins(10, 8, 10, 210);
             binding.llSpace.setLayoutParams(params);
-        }else {
+        } else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.setMargins(10, 8, 10, 20);
             binding.llSpace.setLayoutParams(params);

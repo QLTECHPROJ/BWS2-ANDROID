@@ -111,7 +111,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
     }
 
     void prepareData() {
-       if (binding.edtNumber.getText().toString().length() == 0 || binding.edtNumber.getText().toString().length() < 8 ||
+        if (binding.edtNumber.getText().toString().length() == 0 || binding.edtNumber.getText().toString().length() < 8 ||
                 binding.edtNumber.getText().toString().length() > 10) {
             binding.edtNumber.setFocusable(true);
             binding.edtNumber.requestFocus();
@@ -121,13 +121,13 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             binding.txtError.setVisibility(View.GONE);
             if (BWSApplication.isNetworkConnected(ctx)) {
                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                String countryCode = binding.tvCountryCode.getText().toString().replace("+","");
+                String countryCode = binding.tvCountryCode.getText().toString().replace("+", "");
                 SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
                 String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
-                if(key.equalsIgnoreCase("")){
+                if (key.equalsIgnoreCase("")) {
                     key = getKey(ctx);
                 }
-                Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(binding.edtNumber.getText().toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO,  key);
+                Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(binding.edtNumber.getText().toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, key);
                 listCall.enqueue(new Callback<SignUpModel>() {
                     @Override
                     public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {

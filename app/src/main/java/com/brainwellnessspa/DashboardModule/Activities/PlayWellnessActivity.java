@@ -41,6 +41,7 @@ import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.brainwellnessspa.databinding.ActivityPlayWellnessBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -101,6 +102,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     long myProgress = 0,diff = 0;
     private long mLastClickTime = 0, totalDuration, currentDuration = 0;
     private Handler handler;
+    PlaybackStatus playbackStatus;
     //    private Handler handler1;
     //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -306,6 +308,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
         }.getType();
         mainPlayModelList = gson.fromJson(json, type);
+        BWSApplication.simple_Notification(playbackStatus, mainPlayModelList, PlayWellnessActivity.this, position);
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
             Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {

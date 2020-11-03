@@ -39,8 +39,6 @@ import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
-
-
 public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.MyViewHolder> {
     Context ctx;
     FragmentActivity activity;
@@ -95,7 +93,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
 //       TODO                 Active and cancelled = 0, InActive = 1, Suspeded = 2
             SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-            if(queuePlay){
+            if (queuePlay) {
                 int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
                 ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
                 Gson gson = new Gson();
@@ -161,7 +159,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
             ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
-            MainAudioModel.ResponseData.Detail  mainPlayModel = new MainAudioModel.ResponseData.Detail();
+            MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
             mainPlayModel.setID("0");
             mainPlayModel.setName("Disclaimer");
             mainPlayModel.setAudioFile("");

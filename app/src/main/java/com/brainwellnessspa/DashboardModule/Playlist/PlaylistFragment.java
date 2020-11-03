@@ -165,7 +165,7 @@ public class PlaylistFragment extends Fragment {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if(isMediaStart){
+                    if (isMediaStart) {
                         stopMedia();
                         releasePlayer();
                     }
@@ -184,7 +184,7 @@ public class PlaylistFragment extends Fragment {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if(isMediaStart){
+                if (isMediaStart) {
                     stopMedia();
                     releasePlayer();
                 }
@@ -510,7 +510,7 @@ public class PlaylistFragment extends Fragment {
                 SharedPreferences.Editor editor = shared.edit();
                 Gson gson = new Gson();
                 ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                DownloadAudioDetails  mainPlayModel = new DownloadAudioDetails();
+                DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
                 mainPlayModel.setID("0");
                 mainPlayModel.setName("Disclaimer");
                 mainPlayModel.setAudioFile("");
@@ -572,11 +572,17 @@ public class PlaylistFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.44f, 0);
+
+            MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
+                    1, 1, 0.38f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+
+            MeasureRatio measureRatio1 = BWSApplication.measureRatio(getActivity(), 0,
+                    1, 1, 0.38f, 0);
+            holder.binding.rlMainLayout.getLayoutParams().height = (int) (measureRatio1.getHeight() * measureRatio1.getRatio());
+            holder.binding.rlMainLayout.getLayoutParams().width = (int) (measureRatio1.getWidthImg() * measureRatio1.getRatio());
 
             holder.binding.tvPlaylistName.setText(listModelList.get(position).getPlaylistName());
             Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)

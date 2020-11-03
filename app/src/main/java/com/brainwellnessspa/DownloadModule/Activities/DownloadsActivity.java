@@ -88,7 +88,7 @@ public class DownloadsActivity extends AppCompatActivity {
 //                        audioList = listModel.getResponseData().getAudio();
 //                        playlistList = listModel.getResponseData().getPlaylist();
         binding.viewPager.setOffscreenPageLimit(2);
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audio"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audios"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Playlists"));
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 

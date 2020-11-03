@@ -246,7 +246,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     if (d.equalsIgnoreCase("0")) {
                                         dialog.dismiss();
                                     }
-//                                    finish();
                                     final Dialog dialog = new Dialog(ctx);
                                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     dialog.setContentView(R.layout.go_to_playlist);
@@ -287,7 +286,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                             } else if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
                                 BWSApplication.showToast(listModels.getResponseMessage(), ctx);
                             }
-
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
