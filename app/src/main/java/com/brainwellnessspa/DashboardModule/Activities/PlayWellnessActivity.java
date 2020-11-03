@@ -323,45 +323,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 /*        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);*/
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            if (IsLock.equalsIgnoreCase("1")) {
-                binding.llMore.setClickable(false);
-                binding.llMore.setEnabled(false);
-                binding.llMore.setAlpha(0.6f);
-            } else if (IsLock.equalsIgnoreCase("2")) {
-                binding.llMore.setClickable(false);
-                binding.llMore.setEnabled(false);
-                binding.llMore.setAlpha(0.6f);
-            } else {
-                binding.llMore.setClickable(true);
-                binding.llMore.setEnabled(true);
-                binding.llMore.setAlpha(1f);
-            }
-        } else {
-            binding.llMore.setClickable(false);
-            binding.llMore.setEnabled(false);
-            binding.llMore.setAlpha(0.6f);
-        }
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            if (IsLock.equalsIgnoreCase("1")) {
-                binding.llViewQueue.setClickable(false);
-                binding.llViewQueue.setEnabled(false);
-                binding.llViewQueue.setAlpha(0.6f);
-            } else if (IsLock.equalsIgnoreCase("2")) {
-                binding.llViewQueue.setClickable(false);
-                binding.llViewQueue.setEnabled(false);
-                binding.llViewQueue.setAlpha(0.6f);
-            } else {
-                binding.llViewQueue.setClickable(true);
-                binding.llViewQueue.setEnabled(true);
-                binding.llViewQueue.setAlpha(1f);
-            }
-        } else {
-            binding.llViewQueue.setClickable(false);
-            binding.llViewQueue.setEnabled(false);
-            binding.llViewQueue.setAlpha(0.6f);
-        }
-
+        callLLMoreViewQClicks();
         handler.postDelayed(UpdateSongTime, 100);
         getPrepareShowData(position);
         /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
@@ -2333,12 +2295,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llBackWordSec.setClickable(true);
             binding.llBackWordSec.setEnabled(true);
             binding.llBackWordSec.setAlpha(1f);
-            binding.llMore.setClickable(true);
-            binding.llMore.setEnabled(true);
-            binding.llMore.setAlpha(1f);
-            binding.llViewQueue.setClickable(true);
-            binding.llViewQueue.setEnabled(true);
-            binding.llViewQueue.setAlpha(1f);
             binding.llDownload.setClickable(true);
             binding.llDownload.setEnabled(true);
             binding.llDownload.setAlpha(1f);
@@ -2355,6 +2311,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.rlSeekbar.setEnabled(true);
             binding.simpleSeekbar.setClickable(true);
             binding.simpleSeekbar.setEnabled(true);
+            callLLMoreViewQClicks();
 //            binding.simpleSeekbar.set
         } else {
             binding.llnext.setClickable(false);

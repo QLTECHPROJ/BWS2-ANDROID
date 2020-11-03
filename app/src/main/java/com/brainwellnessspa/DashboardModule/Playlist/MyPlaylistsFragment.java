@@ -109,6 +109,7 @@ import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
+import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
@@ -117,6 +118,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static String RefreshNew = "";
     public static int disclaimerPlayed = 0;
     public boolean RefreshPlaylist = false;
+    public boolean isPlayPlaylist = false;
     FragmentMyPlaylistsBinding binding;
     String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "";
     int RefreshIcon;
@@ -802,6 +804,29 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             downloadPlaylistDetailsList = GetPlaylistDetail2();
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
+        SharedPreferences sharedw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        boolean audioPlay = sharedw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+        AudioFlag = sharedw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        String pID = sharedw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+        if(MyDownloads.equalsIgnoreCase("1")){
+            if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                isPlayPlaylist = true;
+                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+            } else {
+                isPlayPlaylist = false;
+                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+            }
+        }else {
+            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                isPlayPlaylist = true;
+                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+            } else {
+                isPlayPlaylist = false;
+                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+            }
+        }
+
+
     }
 
     private List<DownloadAudioDetails> getMyMedia() {
@@ -2146,24 +2171,31 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             binding.ivPlaylistStatus.setOnClickListener(view -> {
-                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(listModelList.get(0).getPlaylistID())) {
-
-                    if (isDisclaimer == 1) {
-                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                if(isPlayPlaylist){
+                    pauseMedia();
+                    isPlayPlaylist = false;
+                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                }else {
+                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(listModelList.get(0).getPlaylistID())) {
+                        if (isDisclaimer == 1) {
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        } else {
+                            callTransparentFrag(0, ctx, listModelList, "myPlaylist", PlaylistID);
+                        }
                     } else {
-                        callTransparentFrag(0, ctx, listModelList, "myPlaylist", PlaylistID);
+                        isDisclaimer = 0;
+                        disclaimerPlayed = 0;
+                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
+                        listModelList2.add(addDisclaimer);
+                        listModelList2.addAll(listModelList);
+                        callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID);
                     }
-                } else {
-                    isDisclaimer = 0;
-                    disclaimerPlayed = 0;
-                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                    listModelList2.add(addDisclaimer);
-                    listModelList2.addAll(listModelList);
-                    callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID);
+                    isPlayPlaylist = true;
+                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
             });
 
@@ -2453,40 +2485,48 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 //            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);
             binding.ivPlaylistStatus.setOnClickListener(view -> {
-                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if(MyDownloads.equalsIgnoreCase("1")){
-                    if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
-                        if (isDisclaimer == 1) {
-                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                        } else {
-                            callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
-                        }
-                    } else {
-                        isDisclaimer = 0;
-                        disclaimerPlayed = 0;
-                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                        listModelList2.add(addDisclaimer);
-                        listModelList2.addAll(listModelList);
-                        callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
-                    }
+                if(isPlayPlaylist){
+                    pauseMedia();
+                    isPlayPlaylist = false;
+                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                 }else {
-                    if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-                        if (isDisclaimer == 1) {
-                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    if (MyDownloads.equalsIgnoreCase("1")) {
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                            if (isDisclaimer == 1) {
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                            } else {
+                                callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
+                            }
                         } else {
-                            callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
+                            isDisclaimer = 0;
+                            disclaimerPlayed = 0;
+                            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
+                            listModelList2.add(addDisclaimer);
+                            listModelList2.addAll(listModelList);
+                            callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
                         }
                     } else {
-                        isDisclaimer = 0;
-                        disclaimerPlayed = 0;
-                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                        listModelList2.add(addDisclaimer);
-                        listModelList2.addAll(listModelList);
-                        callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                            if (isDisclaimer == 1) {
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                            } else {
+                                callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
+                            }
+                        } else {
+                            isDisclaimer = 0;
+                            disclaimerPlayed = 0;
+                            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
+                            listModelList2.add(addDisclaimer);
+                            listModelList2.addAll(listModelList);
+                            callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
+                        }
                     }
+                    isPlayPlaylist = true;
+                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
             });
             holder.binding.llMainLayout.setOnClickListener(view -> {
