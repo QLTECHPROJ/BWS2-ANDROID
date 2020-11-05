@@ -49,6 +49,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.LikeModule.Activities.PlaylistLikeActivity.RefreshLikePlaylist;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -77,6 +78,11 @@ public class LikeAudiosFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareData();
+    }
     public void prepareData() {
         if (!AudioFlag.equalsIgnoreCase("0")) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -270,6 +276,7 @@ public class LikeAudiosFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
     private void saveToPref(int pos, List<LikesHistoryModel.ResponseData.Audio> listModelList2) {
         SharedPreferences shareddd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shareddd.edit();
@@ -289,6 +296,7 @@ public class LikeAudiosFragment extends Fragment {
                 .add(R.id.flContainer, fragment)
                 .commit();
     }
+
     private void callRemoveLike(String id, int position, List<LikesHistoryModel.ResponseData.Audio> listModelList2) {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());

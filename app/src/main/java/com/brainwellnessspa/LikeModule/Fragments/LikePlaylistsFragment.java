@@ -90,6 +90,7 @@ public class LikePlaylistsFragment extends Fragment {
         if (RefreshLikePlaylist == 1) {
             prepareData();
         }
+        prepareData();
     }
 
     public void prepareData() {
