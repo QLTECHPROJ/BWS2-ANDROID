@@ -125,7 +125,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         binding.etCvv.addTextChangedListener(addCardTextWatcher);
         binding.textMonth.addTextChangedListener(addCardTextWatcher);
         binding.btnPayment.setOnClickListener(view -> {
-           if (binding.etNumber.getText().toString().equalsIgnoreCase("")) {
+            if (binding.etNumber.getText().toString().equalsIgnoreCase("")) {
                 binding.tlNumber.setError("Card number is required.");
                 binding.txtError.setText("");
                 binding.tlName.setError("");
@@ -177,7 +177,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                         if (!strToken.equalsIgnoreCase("")) {
                             if (BWSApplication.isNetworkConnected(context)) {
                                 BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                String countryCode = Code.replace("+","");
+                                String countryCode = Code.replace("+", "");
                                 Call<AddCardModel> listCall = APIClient.getClient().getMembershipPayment(planId, planFlag, strToken, MobileNo, countryCode);
                                 listCall.enqueue(new Callback<AddCardModel>() {
                                     @Override
@@ -188,20 +188,16 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                 InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                                 keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                                if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
-                                                    SharedPreferences.Editor editor = shared.edit();
-                                                    editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserId());
-                                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
-                                                    editor.commit();
-                                                    Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
-                                                    startActivity(i);
-                                                    finish();
-                                                } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                                } else {
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                                }
+                                                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = shared.edit();
+                                                editor.putString(CONSTANTS.PREF_KEY_UserID, cardModel.getResponseData().getUserId());
+                                                editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNo);
+                                                editor.commit();
+                                                Intent i = new Intent(CheckoutPaymentActivity.this, ThankYouMpActivity.class);
+                                                startActivity(i);
+                                                finish();
+                                            } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                             } else {
                                                 BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                             }
@@ -229,7 +225,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
         finish();
     }
 
-      private TextWatcher addCardTextWatcher = new TextWatcher() {
+    private TextWatcher addCardTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
@@ -270,7 +266,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
 
         binding1.set.setOnClickListener(v -> {
             if (binding1.MonthPicker.getValue() < month && binding1.YearPicker.getValue() == year) {
-                binding.txtError.setText("Please Select Valid Month And Year");
+                binding.txtError.setText("Please select valid month and year");
                 d.dismiss();
             } else {
                 binding.textMonth.setText(" " + binding1.MonthPicker.getValue() + " / " + binding1.YearPicker.getValue());

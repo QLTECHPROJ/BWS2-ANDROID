@@ -78,6 +78,119 @@ public class LikesHistoryModel {
             this.playlist = playlist;
         }
 
+        public class Audiolist {
+            @SerializedName("AudioID")
+            @Expose
+            private String audioID;
+            @SerializedName("AudioName")
+            @Expose
+            private String audioName;
+            @SerializedName("AudioFile")
+            @Expose
+            private String audioFile;
+            @SerializedName("ImageFile")
+            @Expose
+            private String imageFile;
+            @SerializedName("Audiomastercat")
+            @Expose
+            private String audiomastercat;
+            @SerializedName("AudioSubCategory")
+            @Expose
+            private String audioSubCategory;
+            @SerializedName("AudioDuration")
+            @Expose
+            private String audioDuration;
+            @SerializedName("AudioDirection")
+            @Expose
+            private String audioDirection;
+            @SerializedName("Like")
+            @Expose
+            private String like;
+            @SerializedName("Download")
+            @Expose
+            private String download;
+
+            public String getAudioID() {
+                return audioID;
+            }
+
+            public void setAudioID(String audioID) {
+                this.audioID = audioID;
+            }
+
+            public String getAudioName() {
+                return audioName;
+            }
+
+            public void setAudioName(String audioName) {
+                this.audioName = audioName;
+            }
+
+            public String getAudioFile() {
+                return audioFile;
+            }
+
+            public void setAudioFile(String audioFile) {
+                this.audioFile = audioFile;
+            }
+
+            public String getImageFile() {
+                return imageFile;
+            }
+
+            public void setImageFile(String imageFile) {
+                this.imageFile = imageFile;
+            }
+
+            public String getAudiomastercat() {
+                return audiomastercat;
+            }
+
+            public void setAudiomastercat(String audiomastercat) {
+                this.audiomastercat = audiomastercat;
+            }
+
+            public String getAudioSubCategory() {
+                return audioSubCategory;
+            }
+
+            public void setAudioSubCategory(String audioSubCategory) {
+                this.audioSubCategory = audioSubCategory;
+            }
+
+            public String getAudioDuration() {
+                return audioDuration;
+            }
+
+            public void setAudioDuration(String audioDuration) {
+                this.audioDuration = audioDuration;
+            }
+
+            public String getAudioDirection() {
+                return audioDirection;
+            }
+
+            public void setAudioDirection(String audioDirection) {
+                this.audioDirection = audioDirection;
+            }
+
+            public String getLike() {
+                return like;
+            }
+
+            public void setLike(String like) {
+                this.like = like;
+            }
+
+            public String getDownload() {
+                return download;
+            }
+
+            public void setDownload(String download) {
+                this.download = download;
+            }
+        }
+
         public class Audio {
             @SerializedName("ID")
             @Expose
@@ -225,7 +338,7 @@ public class LikesHistoryModel {
         }
 
         public class Playlist {
-            @SerializedName("PlaylistId")
+            @SerializedName("PlaylistID")
             @Expose
             private String playlistId;
             @SerializedName("PlaylistName")
@@ -234,12 +347,12 @@ public class LikesHistoryModel {
             @SerializedName("PlaylistImage")
             @Expose
             private String playlistImage;
+            @SerializedName("Audiolist")
+            @Expose
+            private List<Audiolist> audiolist = null;
             @SerializedName("TotalAudio")
             @Expose
             private String totalAudio;
-            @SerializedName("IsLock")
-            @Expose
-            private String isLock;
             @SerializedName("TotalDuration")
             @Expose
             private String totalDuration;
@@ -249,6 +362,9 @@ public class LikesHistoryModel {
             @SerializedName("Totalminute")
             @Expose
             private String totalminute;
+            @SerializedName("IsLock")
+            @Expose
+            private String isLock;
 
             public String getPlaylistId() {
                 return playlistId;
@@ -274,20 +390,20 @@ public class LikesHistoryModel {
                 this.playlistImage = playlistImage;
             }
 
+            public List<Audiolist> getAudiolist() {
+                return audiolist;
+            }
+
+            public void setAudiolist(List<Audiolist> audiolist) {
+                this.audiolist = audiolist;
+            }
+
             public String getTotalAudio() {
                 return totalAudio;
             }
 
             public void setTotalAudio(String totalAudio) {
                 this.totalAudio = totalAudio;
-            }
-
-            public String getIsLock() {
-                return isLock;
-            }
-
-            public void setIsLock(String isLock) {
-                this.isLock = isLock;
             }
 
             public String getTotalDuration() {
@@ -312,6 +428,127 @@ public class LikesHistoryModel {
 
             public void setTotalminute(String totalminute) {
                 this.totalminute = totalminute;
+            }
+
+            public String getIsLock() {
+                return isLock;
+            }
+
+            public void setIsLock(String isLock) {
+                this.isLock = isLock;
+            }
+
+            public class Audiolist {
+                @SerializedName("AudioID")
+                @Expose
+                private String audioID;
+                @SerializedName("AudioName")
+                @Expose
+                private String audioName;
+                @SerializedName("AudioFile")
+                @Expose
+                private String audioFile;
+                @SerializedName("ImageFile")
+                @Expose
+                private String imageFile;
+                @SerializedName("Audiomastercat")
+                @Expose
+                private String audiomastercat;
+                @SerializedName("AudioSubCategory")
+                @Expose
+                private String audioSubCategory;
+                @SerializedName("AudioDuration")
+                @Expose
+                private String audioDuration;
+                @SerializedName("AudioDirection")
+                @Expose
+                private String audioDirection;
+                @SerializedName("Like")
+                @Expose
+                private String like;
+                @SerializedName("Download")
+                @Expose
+                private String download;
+
+                public String getAudioID() {
+                    return audioID;
+                }
+
+                public void setAudioID(String audioID) {
+                    this.audioID = audioID;
+                }
+
+                public String getAudioName() {
+                    return audioName;
+                }
+
+                public void setAudioName(String audioName) {
+                    this.audioName = audioName;
+                }
+
+                public String getAudioFile() {
+                    return audioFile;
+                }
+
+                public void setAudioFile(String audioFile) {
+                    this.audioFile = audioFile;
+                }
+
+                public String getImageFile() {
+                    return imageFile;
+                }
+
+                public void setImageFile(String imageFile) {
+                    this.imageFile = imageFile;
+                }
+
+                public String getAudiomastercat() {
+                    return audiomastercat;
+                }
+
+                public void setAudiomastercat(String audiomastercat) {
+                    this.audiomastercat = audiomastercat;
+                }
+
+                public String getAudioSubCategory() {
+                    return audioSubCategory;
+                }
+
+                public void setAudioSubCategory(String audioSubCategory) {
+                    this.audioSubCategory = audioSubCategory;
+                }
+
+                public String getAudioDuration() {
+                    return audioDuration;
+                }
+
+                public void setAudioDuration(String audioDuration) {
+                    this.audioDuration = audioDuration;
+                }
+
+                public String getAudioDirection() {
+                    return audioDirection;
+                }
+
+                public void setAudioDirection(String audioDirection) {
+                    this.audioDirection = audioDirection;
+                }
+
+                public String getLike() {
+                    return like;
+                }
+
+                public void setLike(String like) {
+                    this.like = like;
+                }
+
+                public String getDownload() {
+                    return download;
+                }
+
+                public void setDownload(String download) {
+                    this.download = download;
+                }
             }
         }
     }

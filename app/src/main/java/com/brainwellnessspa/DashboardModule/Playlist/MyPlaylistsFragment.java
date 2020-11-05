@@ -513,7 +513,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 bundle.putString("MyDownloads", MyDownloads);
                 playlistFragment.setArguments(bundle);
 //            comefrom_search = 0;
-                Log.e("aaaaaaaaaaaa", "aaaaaaaaaaaaaa");
             } else if (comefrom_search == 1) {
                 Fragment fragment = new SearchFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -521,7 +520,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         .replace(R.id.flContainer, fragment)
                         .commit();
                 comefrom_search = 0;
-                Log.e("aaaaaaaaaaaa", "bbbbbbbbbbbbbbbb");
             } else if (comefrom_search == 0) {
                 Fragment fragment = new PlaylistFragment();
                 FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -529,16 +527,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         .replace(R.id.flContainer, fragment)
                         .commit();
                 comefrom_search = 0;
-                Log.e("aaaaaaaaaaaa", "ccccccccccccc");
             } else if (comefrom_search == 3) {
                 Intent i = new Intent(getActivity(), DownloadsActivity.class);
                 ComeFrom_Playlist = true;
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
                 getActivity().finish();
-
-                Log.e("aaaaaaaaaaaa", "dddddddddddddd");
-//            comefrom_search = 0;
+                //            comefrom_search = 0;
             }
         } else {
             prepareData(UserID, PlaylistIDs);
@@ -809,12 +804,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         boolean audioPlay = sharedw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         AudioFlag = sharedw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         String pID = sharedw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-        if(MyDownloads.equalsIgnoreCase("1")){
+        if (MyDownloads.equalsIgnoreCase("1")) {
             if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                 if (isMediaStart) {
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                }else {
+                } else {
                     isPlayPlaylist = 0;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                 }
@@ -822,12 +817,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 isPlayPlaylist = 0;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
             }
-        }else {
+        } else {
             if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                 if (isMediaStart) {
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                }else {
+                } else {
                     isPlayPlaylist = 0;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                 }
@@ -1002,17 +997,16 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.tvLibraryName.setText(listModel.getPlaylistName());
         }
         binding.tvPlaylist.setText("Playlist");
-        if (!listModel.getPlaylistImageDetail().equalsIgnoreCase("")) {
-            try {
+        try {
+            if (!listModel.getPlaylistImageDetail().equalsIgnoreCase("")) {
                 Glide.with(getActivity()).load(listModel.getPlaylistImageDetail()).thumbnail(0.05f)
                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else {
+                binding.ivBanner.setImageResource(R.drawable.audio_bg);
             }
-        } else {
-            binding.ivBanner.setImageResource(R.drawable.audio_bg);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         if (listModel.getTotalAudio().equalsIgnoreCase("") ||
                 listModel.getTotalAudio().equalsIgnoreCase("0") &&
                         listModel.getTotalhour().equalsIgnoreCase("")
@@ -1132,10 +1126,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, myPlaylist);
-        if(MyDownloads.equalsIgnoreCase("1")){
+        if (MyDownloads.equalsIgnoreCase("1")) {
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, PlaylistName);
-        }else {
+        } else {
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, playlistID);
         }
@@ -1880,7 +1874,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
             callDragApi();
             notifyItemMoved(fromPosition, toPosition);
-            adpater1.notifyItemMoved(fromPosition,toPosition);
+            adpater1.notifyItemMoved(fromPosition, toPosition);
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -2021,6 +2015,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
             };
         }
+
+
         public class MyViewHolder extends RecyclerView.ViewHolder {
             MyPlaylistLayoutSorting2Binding binding;
 
@@ -2030,7 +2026,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
         }
     }
-    public class PlayListsAdpater1 extends RecyclerView.Adapter<PlayListsAdpater1.MyViewHolder> implements Filterable/*, StartDragListener*//*, ItemMoveCallback.ItemTouchHelperContract */{
+
+    public class PlayListsAdpater1 extends RecyclerView.Adapter<PlayListsAdpater1.MyViewHolder> implements Filterable/*, StartDragListener*//*, ItemMoveCallback.ItemTouchHelperContract */ {
         Context ctx;
         String UserID, Created, name;
         StartDragListener startDragListener;
@@ -2038,7 +2035,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
 
         public PlayListsAdpater1(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
-                                String Created, StartDragListener startDragListener) {
+                                 String Created, StartDragListener startDragListener) {
             this.listModelList = listModelList;
             this.listFilterData = listModelList;
             this.ctx = ctx;
@@ -2553,7 +2550,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if(MyDownloads.equalsIgnoreCase("1")){
+                if (MyDownloads.equalsIgnoreCase("1")) {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
@@ -2573,7 +2570,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                         callTransparentFrag(position, ctx, listModelList2, "", PlaylistID);
                     }
-                }else {
+                } else {
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
@@ -2819,7 +2816,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     public void getDeleteDownloadData() {
-        List<String> fileNameList,fileNameList1, audioFile, playlistDownloadId;
+        List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
         try {
             SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
             Gson gson = new Gson();
@@ -2853,9 +2850,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                 editor.commit();
-                if(fileNameList.get(0).equalsIgnoreCase(filename) &&playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)){
+                if (fileNameList.get(0).equalsIgnoreCase(filename) && playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
                     PRDownloader.cancel(downloadIdOne);
-                    filename ="";
+                    filename = "";
                 }
             }
         } catch (Exception e) {

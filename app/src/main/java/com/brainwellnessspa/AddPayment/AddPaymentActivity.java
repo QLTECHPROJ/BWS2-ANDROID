@@ -160,6 +160,7 @@ public class AddPaymentActivity extends AppCompatActivity {
                         BWSApplication.showToast("Please enter valid card details", context);
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
+
                     @Override
                     public void onSuccess(Token token) {
                         strToken = token.getId();
@@ -177,14 +178,10 @@ public class AddPaymentActivity extends AppCompatActivity {
                                             if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
                                                 InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                                 keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                                if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                                    finish();
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                                } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                                } else {
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                                }
+                                                finish();
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                            } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                             } else {
                                                 BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                             }
@@ -249,7 +246,7 @@ public class AddPaymentActivity extends AppCompatActivity {
 
         binding1.set.setOnClickListener(v -> {
             if (binding1.MonthPicker.getValue() < month && binding1.YearPicker.getValue() == year) {
-                binding.txtError.setText("Please Select Valid Month And Year");
+                binding.txtError.setText("Please select valid month and year");
                 d.dismiss();
             } else {
                 binding.textMonth.setText(" " + binding1.MonthPicker.getValue() + " / " + binding1.YearPicker.getValue());

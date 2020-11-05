@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
+import com.brainwellnessspa.DashboardModule.Models.PlaylistLikeModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -442,8 +443,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
                             binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
                             if (!model.getResponseData().getPlaylistImage().equalsIgnoreCase("")) {
-                                Glide.with(ctx).load(model.getResponseData().getPlaylistImage())
-                                        .thumbnail(0.05f)
+                                Glide.with(ctx).load(model.getResponseData().getPlaylistImage()).thumbnail(0.05f)
                                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                             } else {
                                 binding.ivRestaurantImage.setImageResource(R.drawable.ic_playlist_bg);
@@ -472,50 +472,21 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 binding.llRename.setVisibility(View.VISIBLE);
                                 binding.llDelete.setVisibility(View.VISIBLE);
                                 binding.llFind.setVisibility(View.GONE);
-                                binding.llLikes.setVisibility(View.GONE);
+                                binding.llLikes.setVisibility(View.VISIBLE);
                             } else if (model.getResponseData().getCreated().equalsIgnoreCase("0")) {
                                 binding.llOptions.setVisibility(View.VISIBLE);
                                 binding.llRename.setVisibility(View.GONE);
                                 binding.llDelete.setVisibility(View.GONE);
                                 binding.llFind.setVisibility(View.VISIBLE);
-                                binding.llLikes.setVisibility(View.GONE);
+                                binding.llLikes.setVisibility(View.VISIBLE);
                             }
-
-                          /*  binding.llLikes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (BWSApplication.isNetworkConnected(ctx)) {
-                                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                        Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(AudioId, UserID);
-                                        listCall.enqueue(new Callback<AudioLikeModel>() {
-                                            @Override
-                                            public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
-                                                if (response.isSuccessful()) {
-                                                    try {
-                                                        binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                                        AudioLikeModel model = response.body();
-                                                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
-                                                            binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
-                                                            Like = "0";
-                                                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                                            binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
-                                                            Like = "1";
-                                                        }
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<AudioLikeModel> call, Throwable t) {
-                                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                            }
-                                        });
-                                    } else {
-                                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                                    }
-                                }
-                            });*/
-
+                            if (model.getResponseData().getLike().equalsIgnoreCase("1")) {
+                                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                            } else if (model.getResponseData().getLike().equalsIgnoreCase("0") ||
+                                    model.getResponseData().getLike().equalsIgnoreCase("")) {
+                                binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
+                            }
+                            binding.llLikes.setOnClickListener(v -> CallPlaylistLike(PlaylistID));
                             binding.llFind.setOnClickListener(view -> {
                                 ComeFindAudio = 2;
                                 finish();
@@ -550,7 +521,9 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 binding.tvSubDec.setVisibility(View.VISIBLE);
                             }
 
-                            binding.tvSubDec.setText(model.getResponseData().getPlaylistDesc());
+                            binding.tvSubDec.setText(model.getResponseData().
+
+                                    getPlaylistDesc());
                             int linecount = binding.tvSubDec.getLineCount();
                             if (linecount >= 4) {
                                 binding.tvReadMore.setVisibility(View.VISIBLE);
@@ -579,7 +552,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                     });
 
                                     tvClose.setOnClickListener(v -> dialog.dismiss());
-
                                     dialog.show();
                                     dialog.setCancelable(false);
                                 }
@@ -600,9 +572,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                         }*/
 
                             binding.llDownload.setVisibility(View.VISIBLE);
-
-/*
-                            binding.llDownload.setOnClickListener(view -> {
+/*                          binding.llDownload.setOnClickListener(view -> {
                                 if (BWSApplication.isNetworkConnected(ctx)) {
                                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     Call<DownloadPlaylistModel> listCall13 = null;
@@ -631,11 +601,11 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
                             String[] elements = model.getResponseData().getPlaylistSubcat().split(",");
                             List<String> direction = Arrays.asList(elements);
-
                             DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
                             RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
                             binding.rvDirlist.setLayoutManager(recentlyPlayed);
-                            binding.rvDirlist.setItemAnimator(new DefaultItemAnimator());
+                            binding.rvDirlist.setItemAnimator(new
+                                    DefaultItemAnimator());
                             binding.rvDirlist.setAdapter(directionAdapter);
                             String PlaylistID = model.getResponseData().getPlaylistID();
                             binding.llRename.setOnClickListener(view -> {
@@ -799,6 +769,40 @@ public class MyPlaylistActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<SubPlayListModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+    }
+
+    public void CallPlaylistLike(String PlaylistID) {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+            Call<PlaylistLikeModel> listCall = APIClient.getClient().getPlaylistLike(PlaylistID, UserID);
+            listCall.enqueue(new Callback<PlaylistLikeModel>() {
+                @Override
+                public void onResponse(Call<PlaylistLikeModel> call, Response<PlaylistLikeModel> response) {
+                    if (response.isSuccessful()) {
+                        try {
+                            binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            PlaylistLikeModel model = response.body();
+                            if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
+                                binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
+                            } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                            }
+                            BWSApplication.showToast(model.getResponseMessage(), ctx);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PlaylistLikeModel> call, Throwable t) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });

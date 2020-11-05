@@ -188,7 +188,7 @@
                         android:layout_width="@dimen/_56sdp"
                         android:layout_height="@dimen/_50sdp"
                         android:padding="@dimen/_15sdp"
-                        android:src="@drawable/ic_edit_number_icon" />
+                        android:src="@drawable/ic_like_white_icon" />
 
                     <TextView
                         android:id="@+id/tvLikes"
@@ -197,7 +197,7 @@
                         android:layout_marginLeft="@dimen/_4sdp"
                         android:fontFamily="@font/montserrat_regular"
                         android:gravity="left"
-                        android:text="@string/Rename_playlist"
+                        android:text="@string/Liked_playlist"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_15sdp" />
                 </LinearLayout>

@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
+import com.brainwellnessspa.DashboardModule.Models.PlaylistLikeModel;
 import com.brainwellnessspa.InvoiceModule.Models.InvoiceListModel;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
@@ -157,7 +158,7 @@ public class LikePlaylistsFragment extends Fragment {
                     });
 
                     Btn.setOnClickListener(v2 -> {
-//                        callRemoveLike(modelList.get(position).getPlaylistId());
+                        callRemoveLike(modelList.get(position).getPlaylistId());
                         dialog.dismiss();
                     });
                     tvGoBack.setOnClickListener(v3 -> dialog.dismiss());
@@ -185,20 +186,20 @@ public class LikePlaylistsFragment extends Fragment {
     private void callRemoveLike(String id) {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-            Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(id, UserID);
-            listCall.enqueue(new Callback<AudioLikeModel>() {
+            Call<PlaylistLikeModel> listCall = APIClient.getClient().getPlaylistLike(id, UserID);
+            listCall.enqueue(new Callback<PlaylistLikeModel>() {
                 @Override
-                public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
+                public void onResponse(Call<PlaylistLikeModel> call, Response<PlaylistLikeModel> response) {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        AudioLikeModel model = response.body();
+                        PlaylistLikeModel model = response.body();
                         BWSApplication.showToast(model.getResponseMessage(), getActivity());
                         prepareData();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<AudioLikeModel> call, Throwable t) {
+                public void onFailure(Call<PlaylistLikeModel> call, Throwable t) {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                 }
             });
@@ -206,5 +207,4 @@ public class LikePlaylistsFragment extends Fragment {
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
-
 }

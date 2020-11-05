@@ -3,6 +3,7 @@ package com.brainwellnessspa;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -119,6 +120,9 @@ public class BWSApplication extends Application {
     };
 
     public static void simple_Notification(PlaybackStatus playbackStatus, ArrayList<MainPlayModel> mainPlayModelList, Activity activity, int position) {
+      /*  Bitmap mCurrTrackCover;
+        boolean showWhen = false;
+        var notifWhen = 0L*/
 
         int notificationAction = android.R.drawable.ic_media_pause;//needs to be initialized
         PendingIntent play_pauseAction = null;
@@ -133,7 +137,7 @@ public class BWSApplication extends Application {
             //create the play action
             play_pauseAction = playbackAction(0, activity);
         }
-       /* try {
+        /*try {
             URL url = new URL(mainPlayModelList.get(position).getImageFile());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
@@ -142,9 +146,9 @@ public class BWSApplication extends Application {
             myBitmap = BitmapFactory.decodeStream(input);
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
 
-       /* try {
+          try {
             URL url = new URL(mainPlayModelList.get(position).getImageFile());
             myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
         } catch (IOException e) {
@@ -189,6 +193,30 @@ public class BWSApplication extends Application {
         }
 
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+
+        /*NotificationCompat.Builder notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL)
+                .setContentTitle(mainPlayModelList.get(position).getName())
+                .setContentText(mainPlayModelList.get(position).getAudioDirection())
+                .setSmallIcon(android.R.drawable.stat_sys_headset)
+                .setLargeIcon(mCurrTrackCover)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setWhen(notifWhen)
+                .setShowWhen(showWhen)
+                .setUsesChronometer(usesChronometer)
+                .setContentIntent(getContentIntent())
+//                .setOngoing(ongoing)
+                .setChannelId(NOTIFICATION_CHANNEL)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .setStyle(androidx.media.app.NotificationCompat.MediaStyle()
+                        .setShowActionsInCompactView(0, 1, 2)
+                        .setMediaSession(mMediaSession ?.sessionToken))
+            .setDeleteIntent(notificationDismissedPendingIntent)
+                .addAction(android.R.drawable.ic_media_previous, getString(R.string.previous), playbackAction(3, activity))
+                .addAction(playPauseIcon, getString(R.string.playpause), play_pauseAction)
+                .addAction(android.R.drawable.ic_media_next, getString(R.string.next), playbackAction(2, activity))
+
+        startForeground(NOTIFICATION_ID, notification.build())*/
     }
 
 

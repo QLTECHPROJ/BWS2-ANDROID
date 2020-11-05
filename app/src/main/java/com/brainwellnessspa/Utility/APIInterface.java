@@ -19,6 +19,7 @@ import com.brainwellnessspa.DashboardModule.Models.LogoutModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.MainPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.NextSessionViewModel;
+import com.brainwellnessspa.DashboardModule.Models.PlaylistLikeModel;
 import com.brainwellnessspa.DashboardModule.Models.PlaylistingModel;
 import com.brainwellnessspa.DashboardModule.Models.PreviousAppointmentsModel;
 import com.brainwellnessspa.DashboardModule.Models.ReminderStatusPlaylistModel;
@@ -366,6 +367,12 @@ public interface APIInterface {
     @FormUrlEncoded
     Call<AudioLikeModel> getAudioLike(@Field("AudioId") String audioId,
                                       @Field("UserID") String userID);
+
+    /* TODO MyPlaylistActivity */
+    @POST("playlistlike")
+    @FormUrlEncoded
+    Call<PlaylistLikeModel> getPlaylistLike(@Field("PlaylistId") String audioId,
+                                            @Field("UserID") String userID);
 
     /* TODO PlaylistFragment & AddPlaylistActivity*/
     @POST("createplaylist")
