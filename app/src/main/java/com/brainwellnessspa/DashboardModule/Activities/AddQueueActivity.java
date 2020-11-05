@@ -832,8 +832,6 @@ public class AddQueueActivity extends AppCompatActivity {
                 public void onResponse(Call<DirectionModel> call, Response<DirectionModel> response) {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-
-
                         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
