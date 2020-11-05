@@ -72,8 +72,7 @@
                                 android:id="@+id/ivLike"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_like_white_icon"
-                                app:tint="@color/black" />
+                                android:src="@drawable/ic_fill_like_icon" />
 
                         </LinearLayout>
                     </LinearLayout>

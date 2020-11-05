@@ -2,6 +2,7 @@ package com.brainwellnessspa.LikeModule.Fragments;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity;
 import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
@@ -153,6 +155,21 @@ public class LikeAudiosFragment extends Fragment {
             holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             Glide.with(ctx).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+
+            holder.binding.llMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(ctx, AddQueueActivity.class);
+                    if (AudioFlag.equalsIgnoreCase("TopCategories")) {
+                        i.putExtra("play", "TopCategories");
+                    } else
+                        i.putExtra("play", "play");
+                    i.putExtra("ID", modelList.get(position).getID());
+                    i.putExtra("position", position);
+                    i.putExtra("PlaylistAudioId", "");
+                    startActivity(i);
+                }
+            });
             holder.binding.llLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

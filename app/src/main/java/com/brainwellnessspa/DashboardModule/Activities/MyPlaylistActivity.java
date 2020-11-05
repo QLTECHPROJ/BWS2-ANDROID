@@ -68,7 +68,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     public static int deleteFrg = 0;
     public static int ComeFindAudio = 0;
     ActivityMyPlaylistBinding binding;
-    String UserID, PlaylistID, Download = "";
+    String UserID, PlaylistID, Download = "", Liked = "";
     Context ctx;
     Activity activity;
     public static int comeAddPlaylist = 0;
@@ -149,6 +149,10 @@ public class MyPlaylistActivity extends AppCompatActivity {
         downloadPlaylistDetailsList = new ArrayList<>();
         if (getIntent().getExtras() != null) {
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
+        }
+
+        if (getIntent().getExtras() != null) {
+            Liked = getIntent().getStringExtra("Liked");
         }
         getPrepareData();
         downloadAudioDetailsList = GetAllMedia();
@@ -448,6 +452,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             } else {
                                 binding.ivRestaurantImage.setImageResource(R.drawable.ic_playlist_bg);
                             }
+
 //                            getDownloadData();
                             SongListSize = model.getResponseData().getPlaylistSongs().size();
 //                            getMediaByPer(PlaylistID,SongListSize);
@@ -477,8 +482,13 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 binding.llOptions.setVisibility(View.VISIBLE);
                                 binding.llRename.setVisibility(View.GONE);
                                 binding.llDelete.setVisibility(View.GONE);
-                                binding.llFind.setVisibility(View.VISIBLE);
                                 binding.llLikes.setVisibility(View.VISIBLE);
+
+                                if (Liked.equalsIgnoreCase("1")) {
+                                    binding.llFind.setVisibility(View.GONE);
+                                } else if (Liked.equalsIgnoreCase("0") || Liked.equalsIgnoreCase("")) {
+                                    binding.llFind.setVisibility(View.VISIBLE);
+                                }
                             }
                             if (model.getResponseData().getLike().equalsIgnoreCase("1")) {
                                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);

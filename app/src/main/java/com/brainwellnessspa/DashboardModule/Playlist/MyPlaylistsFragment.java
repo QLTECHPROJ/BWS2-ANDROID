@@ -249,6 +249,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
             i.putExtra("PlaylistID", PlaylistID);
             i.putExtra("PlaylistIDImage", PlaylistID);
+            i.putExtra("Liked", "0");
             startActivity(i);
 
         });
