@@ -2194,6 +2194,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(listModelList.get(0).getPlaylistID())) {
                         if (isDisclaimer == 1) {
+                            if(isPause){
+                                resumeMedia();
+                            }else
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             callTransparentFrag(0, ctx, listModelList, "myPlaylist", PlaylistID);
@@ -2237,6 +2240,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
                     callTransparentFrag(pos, ctx, listModelList2, "myPlaylist", PlaylistID);
                 }
+                isPlayPlaylist = 1;
+                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
             });
 
             holder.binding.llDownload.setOnClickListener(view -> {
@@ -2513,6 +2518,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     if (MyDownloads.equalsIgnoreCase("1")) {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                             if (isDisclaimer == 1) {
+                                if(isPause){
+                                    resumeMedia();
+                                }else
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
@@ -2528,6 +2536,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     } else {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                             if (isDisclaimer == 1) {
+                                if(isPause){
+                                    resumeMedia();
+                                }else
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
                                 callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
@@ -2591,6 +2602,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         callTransparentFrag(position, ctx, listModelList2, "", PlaylistID);
                     }
                 }
+                isPlayPlaylist = 1;
+                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
             });
 
             binding.llDelete.setOnClickListener(new View.OnClickListener() {

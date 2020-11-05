@@ -38,6 +38,7 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
     String Goplaylist = "", PlaylistID = "", PlaylistName = "", PlaylistImage = "";
     TelephonyManager mTelephonyMgr;
     AudioManager mAudioManager;
+    public static boolean audioPause = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,8 +109,9 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         public void onCallStateChanged(int state, String incomingNumber) {
             // Test for incoming call, dialing call, active or on hold
             if (state == TelephonyManager.CALL_STATE_RINGING || state == TelephonyManager.CALL_STATE_OFFHOOK) {
-                if (isMediaStart) {
+                if (isMediaStart && !audioPause) {
                     pauseMedia();
+                    audioPause = true;
                 }  // Put here the code to stop your music
             } else if (state == TelephonyManager.CALL_STATE_IDLE) {
             }
@@ -156,13 +158,15 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
             case AudioManager.AUDIOFOCUS_GAIN:
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 // Resume your media player here
-//                if(isPause)
-//                resumeMedia();
+                if(audioPause)
+                resumeMedia();
+                audioPause = false;
                 break;
             case AudioManager.AUDIOFOCUS_LOSS:
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                if (isMediaStart) {
+                if (isMediaStart && !audioPause) {
                     pauseMedia();
+                    audioPause = true;
 //                    binding.ivPlay.setVisibility(View.VISIBLE);
 //                    binding.ivPause.setVisibility(View.GONE);
                 }

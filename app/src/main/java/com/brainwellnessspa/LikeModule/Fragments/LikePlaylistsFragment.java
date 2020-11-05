@@ -214,7 +214,7 @@ public class LikePlaylistsFragment extends Fragment {
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    Log.e("postion of paly", String.valueOf(position));
+                    Log.e("postion of play", String.valueOf(position));
                     if (audioPlay && AudioFlag.equalsIgnoreCase("LikePlayList") && pID.equalsIgnoreCase(listModelList.get(pos).getPlaylistId())) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
