@@ -230,7 +230,7 @@ public class LikePlaylistsFragment extends Fragment {
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
-            ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+            ArrayList<LikesHistoryModel.ResponseData.Playlist> listModelList2 = new ArrayList<>();
             MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
             mainPlayModel.setID("0");
             mainPlayModel.setName("Disclaimer");
