@@ -105,6 +105,7 @@
     <string name="NOW_PLAYING_FROM">NOW PLAYING FROM</string>
     <string name="Download_audio">Download audio</string>
     <string name="Like">Like</string>
+    <string name="Liked">Liked</string>
     <string name="Add_to_Playlist">Add to Playlist</string>
     <string name="Add_to_Queue">Add to Queue</string>
     <string name="Shuffle">Shuffle</string>

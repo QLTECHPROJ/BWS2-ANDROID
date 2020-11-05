@@ -95,15 +95,6 @@ public class LikePlaylistsFragment extends Fragment {
     }
 
     public void prepareData() {
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 9, 13, 84);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 9, 13, 28);
-            binding.llSpace.setLayoutParams(params);
-        }
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<LikesHistoryModel> listCall = APIClient.getClient().getLikeAudioPlaylistListing(UserID);

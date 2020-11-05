@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -16,6 +17,7 @@ import com.brainwellnessspa.LikeModule.Fragments.LikeAudiosFragment;
 import com.brainwellnessspa.LikeModule.Fragments.LikePlaylistsFragment;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityLikeBinding;
 import com.google.android.material.tabs.TabLayout;
 
@@ -24,6 +26,7 @@ import retrofit2.Callback;
 public class LikeActivity extends AppCompatActivity {
     ActivityLikeBinding binding;
     Activity activity;
+    String AudioFlag, UserID;
     Context ctx;
 
     @Override
@@ -32,6 +35,10 @@ public class LikeActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_like);
         activity = LikeActivity.this;
         ctx = LikeActivity.this;
+        SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         binding.llBack.setOnClickListener(view -> finish());
 
         prepareData();

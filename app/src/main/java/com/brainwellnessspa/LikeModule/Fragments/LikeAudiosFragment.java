@@ -87,15 +87,6 @@ public class LikeAudiosFragment extends Fragment {
     }
 
     public void prepareData() {
-        if (!AudioFlag.equalsIgnoreCase("0")) {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 9, 13, 84);
-            binding.llSpace.setLayoutParams(params);
-        } else {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(13, 9, 13, 28);
-            binding.llSpace.setLayoutParams(params);
-        }
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<LikesHistoryModel> listCall = APIClient.getClient().getLikeAudioPlaylistListing(UserID);
@@ -240,7 +231,6 @@ public class LikeAudiosFragment extends Fragment {
         }
 
         private void callAlert(int position) {
-
             final Dialog dialog = new Dialog(ctx);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.logout_layout);
