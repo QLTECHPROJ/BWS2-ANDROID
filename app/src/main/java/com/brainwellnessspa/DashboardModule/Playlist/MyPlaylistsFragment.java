@@ -831,8 +831,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
             }
         }
-
-
     }
 
     private List<DownloadAudioDetails> getMyMedia() {

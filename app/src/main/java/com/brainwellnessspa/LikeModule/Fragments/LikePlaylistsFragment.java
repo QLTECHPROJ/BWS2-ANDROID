@@ -2,6 +2,7 @@ package com.brainwellnessspa.LikeModule.Fragments;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import com.brainwellnessspa.DashboardModule.Models.PlaylistLikeModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.InvoiceModule.Models.InvoiceListModel;
+import com.brainwellnessspa.LikeModule.Activities.PlaylistLikeActivity;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
@@ -52,12 +54,14 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.LikeModule.Activities.PlaylistLikeActivity.RefreshLikePlaylist;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+
 public class LikePlaylistsFragment extends Fragment {
     FragmentLikesBinding binding;
     String UserID, AudioFlag;
@@ -78,6 +82,14 @@ public class LikePlaylistsFragment extends Fragment {
         binding.llError.setVisibility(View.GONE);
         binding.tvFound.setText("No result found");
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (RefreshLikePlaylist == 1) {
+            prepareData();
+        }
     }
 
     public void prepareData() {
@@ -197,7 +209,10 @@ public class LikePlaylistsFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    LikesHistoryModel.ResponseData.Playlist.Audiolist mainPlayModel = new LikesHistoryModel.ResponseData.Playlist.Audiolist();
+                    Intent i = new Intent(getActivity(), PlaylistLikeActivity.class);
+                    i.putExtra("PlaylistID", modelList.get(position).getPlaylistId());
+                    startActivity(i);
+                    /*LikesHistoryModel.ResponseData.Playlist.Audiolist mainPlayModel = new LikesHistoryModel.ResponseData.Playlist.Audiolist();
                     mainPlayModel.setAudioID("0");
                     mainPlayModel.setAudioName("Disclaimer");
                     mainPlayModel.setAudioFile("");
@@ -233,7 +248,7 @@ public class LikePlaylistsFragment extends Fragment {
                             listModelList2.addAll(listModelList.get(pos).getAudiolist());
                         }
                         callTransFrag(pos, listModelList2);
-                    }
+                    }*/
                 }
             });
 
@@ -254,7 +269,7 @@ public class LikePlaylistsFragment extends Fragment {
         }
     }
 
-    private void callTransFrag(int position,List<LikesHistoryModel.ResponseData.Playlist.Audiolist> listModelList2) {
+    private void callTransFrag(int position, List<LikesHistoryModel.ResponseData.Playlist.Audiolist> listModelList2) {
         try {
             player = 1;
             if (isPrepare || isMediaStart || isPause) {
@@ -287,6 +302,7 @@ public class LikePlaylistsFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
     private void callRemoveLike(String id) {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
