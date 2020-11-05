@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
+import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
@@ -49,6 +50,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
@@ -172,12 +174,18 @@ public class LikeAudiosFragment extends Fragment {
                     });
 
                     Btn.setOnClickListener(v4 -> {
-                        callRemoveLike(modelList.get(position).getID());
+                        callRemoveLike(modelList.get(position).getID(),position,listModelList);
                         dialog.dismiss();
                     });
                     tvGoBack.setOnClickListener(v3 -> dialog.dismiss());
                     dialog.show();
                     dialog.setCancelable(false);
+                }
+            });
+            holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callTransFrag(position);
                 }
             });
         }
@@ -218,7 +226,7 @@ public class LikeAudiosFragment extends Fragment {
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
-            ArrayList<LikesHistoryModel.ResponseData.Audio> listModelList2 = new ArrayList<>();
+            List<LikesHistoryModel.ResponseData.Audio> listModelList2 = new ArrayList<>();
             LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
             mainPlayModel.setID("0");
             mainPlayModel.setName("Disclaimer");
@@ -232,22 +240,40 @@ public class LikeAudiosFragment extends Fragment {
             mainPlayModel.setAudioDuration("0:48");
             listModelList2.add(mainPlayModel);
 
-            listModelList2.add(listModelList.get(position));
+            listModelList2.addAll(listModelList);
             String json = gson.toJson(listModelList2);
             editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-            editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
             editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
+            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
             editor.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    private void callRemoveLike(String id) {
+    private void saveToPref(int pos, List<LikesHistoryModel.ResponseData.Audio> listModelList2) {
+        SharedPreferences shareddd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shareddd.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(listModelList2);
+        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+        editor.putInt(CONSTANTS.PREF_KEY_position, pos);
+        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
+        editor.commit();
+        Fragment fragment = new TransparentPlayerFragment();
+        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+        fragmentManager1.beginTransaction()
+                .add(R.id.flContainer, fragment)
+                .commit();
+    }
+    private void callRemoveLike(String id, int position, List<LikesHistoryModel.ResponseData.Audio> listModelList2) {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
             Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(id, UserID);
@@ -258,6 +284,33 @@ public class LikeAudiosFragment extends Fragment {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         AudioLikeModel model = response.body();
                         BWSApplication.showToast(model.getResponseMessage(), getActivity());
+                        listModelList2.remove(position);
+                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")){
+                            if (pos == position && position < listModelList2.size() - 1) {
+//                                            pos = pos + 1;
+                                if (isDisclaimer == 1) {
+//                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
+                                } else {
+                                    callTransFrag(position);
+                                }
+                            } else if (pos == position && position == listModelList2.size() - 1) {
+                                pos = 0;
+                                if (isDisclaimer == 1) {
+//                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
+                                } else {
+                                    callTransFrag(position);
+                                }
+                            } else if (pos < position && pos < listModelList2.size() - 1) {
+                                saveToPref(pos, listModelList2);
+                            } else if (pos > position && pos == listModelList2.size()) {
+                                pos = pos - 1;
+                                saveToPref(pos,listModelList2);
+                            }
+                        }
                         prepareData();
                     }
                 }

@@ -230,10 +230,10 @@ public class LikePlaylistsFragment extends Fragment {
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
-            ArrayList<LikesHistoryModel.ResponseData.Playlist> listModelList2 = new ArrayList<>();
-            LikesHistoryModel.ResponseData.Playlist mainPlayModel = new LikesHistoryModel.ResponseData.Playlist();
-            mainPlayModel.setID("0");
-            mainPlayModel.setName("Disclaimer");
+            List<LikesHistoryModel.ResponseData.Playlist.Audiolist> listModelList2 = new ArrayList<>();
+            LikesHistoryModel.ResponseData.Playlist.Audiolist mainPlayModel = new LikesHistoryModel.ResponseData.Playlist.Audiolist();
+            mainPlayModel.setAudioID("0");
+            mainPlayModel.setAudioName("Disclaimer");
             mainPlayModel.setAudioFile("");
             mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
             mainPlayModel.setAudiomastercat("");
@@ -244,7 +244,7 @@ public class LikePlaylistsFragment extends Fragment {
             mainPlayModel.setAudioDuration("0:48");
             listModelList2.add(mainPlayModel);
 
-            listModelList2.add(listModelList.get(position));
+            listModelList2.addAll(listModelList.get(position).getAudiolist());
             String json = gson.toJson(listModelList2);
             editor.putString(CONSTANTS.PREF_KEY_modelList, json);
             editor.putInt(CONSTANTS.PREF_KEY_position, 0);
@@ -252,7 +252,7 @@ public class LikePlaylistsFragment extends Fragment {
             editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
+            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikePlayList");
             editor.commit();
         } catch (Exception e) {
             e.printStackTrace();

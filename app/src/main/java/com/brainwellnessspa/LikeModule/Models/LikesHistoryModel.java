@@ -54,7 +54,7 @@ public class LikesHistoryModel {
         this.responseStatus = responseStatus;
     }
 
-    public class ResponseData {
+    public static class ResponseData {
         @SerializedName("Audio")
         @Expose
         private List<Audio> audio = null;
@@ -191,7 +191,7 @@ public class LikesHistoryModel {
             }
         }
 
-        public class Audio {
+        public static class Audio {
             @SerializedName("ID")
             @Expose
             private String iD;
@@ -337,7 +337,7 @@ public class LikesHistoryModel {
             }
         }
 
-        public class Playlist {
+        public static class Playlist {
             @SerializedName("PlaylistID")
             @Expose
             private String playlistId;
@@ -438,7 +438,7 @@ public class LikesHistoryModel {
                 this.isLock = isLock;
             }
 
-            public class Audiolist {
+            public static class Audiolist {
                 @SerializedName("AudioID")
                 @Expose
                 private String audioID;
