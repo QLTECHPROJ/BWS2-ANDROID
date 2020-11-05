@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +26,6 @@ import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
-import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
-import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
@@ -37,8 +36,6 @@ import com.brainwellnessspa.databinding.FragmentLikesBinding;
 import com.brainwellnessspa.databinding.LikeListLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.downloader.PRDownloader;
-import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -50,10 +47,8 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -185,7 +180,43 @@ public class LikeAudiosFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callTransFrag(position);
+                    LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
+                    mainPlayModel.setID("0");
+                    mainPlayModel.setName("Disclaimer");
+                    mainPlayModel.setAudioFile("");
+                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                    mainPlayModel.setAudiomastercat("");
+                    mainPlayModel.setAudioSubCategory("");
+                    mainPlayModel.setImageFile("");
+                    mainPlayModel.setLike("");
+                    mainPlayModel.setDownload("");
+                    mainPlayModel.setAudioDuration("0:48");
+
+                    int pos = holder.getAdapterPosition();
+                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    Log.e("postion of paly", String.valueOf(position));
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList") && pID.equalsIgnoreCase(listModelList.get(pos).getPlaylistId())) {
+                        if (isDisclaimer == 1) {
+                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        } else {
+                            callTransFrag(pos, listModelList);
+                        }
+                    } else {
+                        isDisclaimer = 0;
+                        disclaimerPlayed = 0;
+                        List<LikesHistoryModel.ResponseData.Audio> listModelList2 = new ArrayList<>();
+                        if (position != 0) {
+                            listModelList2.addAll(listModelList);
+                            listModelList2.add(pos, mainPlayModel);
+                        } else {
+                            listModelList2.add(mainPlayModel);
+                            listModelList2.addAll(listModelList);
+                        }
+                        callTransFrag(pos, listModelList2);
+                    }
                 }
             });
         }
@@ -205,7 +236,7 @@ public class LikeAudiosFragment extends Fragment {
         }
     }
 
-    private void callTransFrag(int position) {
+    private void callTransFrag(int position, List<LikesHistoryModel.ResponseData.Audio> listModelList) {
         try {
             player = 1;
             if (isPrepare || isMediaStart || isPause) {
@@ -226,22 +257,7 @@ public class LikeAudiosFragment extends Fragment {
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
-            List<LikesHistoryModel.ResponseData.Audio> listModelList2 = new ArrayList<>();
-            LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
-            mainPlayModel.setID("0");
-            mainPlayModel.setName("Disclaimer");
-            mainPlayModel.setAudioFile("");
-            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-            mainPlayModel.setAudiomastercat("");
-            mainPlayModel.setAudioSubCategory("");
-            mainPlayModel.setImageFile("");
-            mainPlayModel.setLike("");
-            mainPlayModel.setDownload("");
-            mainPlayModel.setAudioDuration("0:48");
-            listModelList2.add(mainPlayModel);
-
-            listModelList2.addAll(listModelList);
-            String json = gson.toJson(listModelList2);
+            String json = gson.toJson(listModelList);
             editor.putString(CONSTANTS.PREF_KEY_modelList, json);
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
@@ -295,14 +311,14 @@ public class LikeAudiosFragment extends Fragment {
                                 if (isDisclaimer == 1) {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                                 } else {
-                                    callTransFrag(position);
+                                    callTransFrag(position, listModelList);
                                 }
                             } else if (pos == position && position == listModelList2.size() - 1) {
                                 pos = 0;
                                 if (isDisclaimer == 1) {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                                 } else {
-                                    callTransFrag(position);
+                                    callTransFrag(position, listModelList);
                                 }
                             } else if (pos < position && pos < listModelList2.size() - 1) {
                                 saveToPref(pos, listModelList2);

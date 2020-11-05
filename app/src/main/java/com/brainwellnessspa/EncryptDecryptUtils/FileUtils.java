@@ -31,9 +31,7 @@ import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.oTime;
 
 public class FileUtils {
-    static File tempFile = null;
     static byte[] contents;
-    static FileInputStream fis;
     public static void saveFile(byte[] encodedBytes, String path) {
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
@@ -101,45 +99,19 @@ public class FileUtils {
     }
 
     @NonNull
-    public static void createTempFile(Context context, byte[] decrypted) throws IOException {
-
+    public static File createTempFile(Context context, byte[] decrypted) throws IOException {
+        File tempFile = File.createTempFile(TEMP_FILE_NAME, CONSTANTS.FILE_EXT, context.getCacheDir());
+        tempFile.deleteOnExit();
+        FileOutputStream fos = new FileOutputStream(tempFile);
+        fos.write(decrypted);
+        fos.close();
+        return tempFile;
     }
 
     public static FileDescriptor getTempFileDescriptor(Context context, byte[] decrypted) throws IOException {
-//        FileUtils.createTempFile(context, decrypted);
-        rightfile(context,decrypted);
+        File tempFile = FileUtils.createTempFile(context, decrypted);
+        FileInputStream fis = new FileInputStream(tempFile);
         return fis.getFD();
-    }
-
-    private static void rightfile(Context context, byte[] decrypted) {
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                try {
-            tempFile = File.createTempFile(TEMP_FILE_NAME, CONSTANTS.FILE_EXT, context.getCacheDir());
-            tempFile.deleteOnExit();
-            FileOutputStream fos = new FileOutputStream(tempFile);
-            fos.write(decrypted);
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                try {
-                    fis = new FileInputStream(tempFile);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetMedia st = new GetMedia();
-        st.execute();
     }
 
     public static final String getDirPath(Context context) {
