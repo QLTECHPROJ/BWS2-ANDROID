@@ -219,7 +219,7 @@ public class LikeAudiosFragment extends Fragment {
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
             ArrayList<LikesHistoryModel.ResponseData.Audio> listModelList2 = new ArrayList<>();
-            MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
+            LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
             mainPlayModel.setID("0");
             mainPlayModel.setName("Disclaimer");
             mainPlayModel.setAudioFile("");
