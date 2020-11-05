@@ -173,34 +173,26 @@ public class LikeAudiosFragment extends Fragment {
             holder.binding.llLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Dialog dialog = new Dialog(ctx);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setContentView(R.layout.logout_layout);
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
-                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-                    final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                    final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
-                    final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-                    final Button Btn = dialog.findViewById(R.id.Btn);
-                    tvTitle.setText("Remove from Liked Audios?");
-                    tvHeader.setText(modelList.get(position).getName());
-                    Btn.setText("Remove");
-                    tvGoBack.setText("Cancel");
-                    dialog.setOnKeyListener((v1, keyCode, event) -> {
-                        if (keyCode == KeyEvent.KEYCODE_BACK) {
-                            dialog.dismiss();
+                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                        if (isDisclaimer == 1) {
+                            BWSApplication.showToast("The audio shall remove after the disclaimer", ctx);
+                        } else {
+                            if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList") && listModelList.size() == 1) {
+                                BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
+                            } else {
+                                callAlert(position);
+                            }
                         }
-                        return false;
-                    });
-
-                    Btn.setOnClickListener(v4 -> {
-                        callRemoveLike(modelList.get(position).getID(), position, listModelList);
-                        dialog.dismiss();
-                    });
-                    tvGoBack.setOnClickListener(v3 -> dialog.dismiss());
-                    dialog.show();
-                    dialog.setCancelable(false);
+                    } else {
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList") && listModelList.size() == 1) {
+                            BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
+                        } else {
+                            callAlert(position);
+                        }
+                    }
                 }
             });
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
@@ -245,6 +237,38 @@ public class LikeAudiosFragment extends Fragment {
                     }
                 }
             });
+        }
+
+        private void callAlert(int position) {
+
+            final Dialog dialog = new Dialog(ctx);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.logout_layout);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+            final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+            final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+            final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+            final Button Btn = dialog.findViewById(R.id.Btn);
+            tvTitle.setText("Remove from Liked Audios?");
+            tvHeader.setText(modelList.get(position).getName());
+            Btn.setText("Remove");
+            tvGoBack.setText("Cancel");
+            dialog.setOnKeyListener((v1, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                }
+                return false;
+            });
+
+            Btn.setOnClickListener(v4 -> {
+                callRemoveLike(modelList.get(position).getID(), position, listModelList);
+                dialog.dismiss();
+            });
+            tvGoBack.setOnClickListener(v3 -> dialog.dismiss());
+            dialog.show();
+            dialog.setCancelable(false);
         }
 
         @Override

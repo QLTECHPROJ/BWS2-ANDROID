@@ -545,35 +545,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
             getPrepareShowData();
-        }  else if (AudioFlag.equalsIgnoreCase("LikePlayList")) {
-            Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Playlist.Audiolist>>() {
-            }.getType();
-            ArrayList<LikesHistoryModel.ResponseData.Playlist.Audiolist> arrayList = gson.fromJson(json, type);
-            listSize = arrayList.size();
-            for (int i = 0; i < listSize; i++) {
-
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getAudioID());
-                mainPlayModel.setName(arrayList.get(i).getAudioName());
-                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-            }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedz.edit();
-            Gson gsonz = new Gson();
-            String jsonz = gsonz.toJson(mainPlayModelList);
-            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-            editor.commit();
-            getPrepareShowData();
-        }  else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+        } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
@@ -1358,38 +1330,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-        } else if (AudioFlag.equalsIgnoreCase("LikePlayList")) {
-            Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
-            }.getType();
-            ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
-                arrayList.remove(0);
-            }
-            for (int i = 0; i < arrayList.size(); i++) {
-
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
-                mainPlayModel.setName(arrayList.get(i).getName());
-                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-            }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedz.edit();
-            Gson gsonz = new Gson();
-            String json = gson.toJson(arrayList);
-            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-            String jsonz = gsonz.toJson(mainPlayModelList);
-            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-            editor.commit();
-        }  else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+        } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);

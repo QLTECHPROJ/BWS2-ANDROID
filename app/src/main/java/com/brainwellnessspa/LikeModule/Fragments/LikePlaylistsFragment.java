@@ -228,43 +228,6 @@ public class LikePlaylistsFragment extends Fragment {
                     Intent i = new Intent(getActivity(), PlaylistLikeActivity.class);
                     i.putExtra("PlaylistID", modelList.get(position).getPlaylistId());
                     startActivity(i);
-                    /*LikesHistoryModel.ResponseData.Playlist.Audiolist mainPlayModel = new LikesHistoryModel.ResponseData.Playlist.Audiolist();
-                    mainPlayModel.setAudioID("0");
-                    mainPlayModel.setAudioName("Disclaimer");
-                    mainPlayModel.setAudioFile("");
-                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                    mainPlayModel.setAudiomastercat("");
-                    mainPlayModel.setAudioSubCategory("");
-                    mainPlayModel.setImageFile("");
-                    mainPlayModel.setLike("");
-                    mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("0:48");
-
-                    int pos = holder.getAdapterPosition();
-                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    Log.e("postion of play", String.valueOf(position));
-                    if (audioPlay && AudioFlag.equalsIgnoreCase("LikePlayList") && pID.equalsIgnoreCase(listModelList.get(pos).getPlaylistId())) {
-                        if (isDisclaimer == 1) {
-                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
-                        } else {
-                            callTransFrag(pos, listModelList.get(pos).getAudiolist());
-                        }
-                    } else {
-                        isDisclaimer = 0;
-                        disclaimerPlayed = 0;
-                        List<LikesHistoryModel.ResponseData.Playlist.Audiolist> listModelList2 = new ArrayList<>();
-                        if (position != 0) {
-                            listModelList2.addAll(listModelList.get(pos).getAudiolist());
-                            listModelList2.add(pos, mainPlayModel);
-                        } else {
-                            listModelList2.add(mainPlayModel);
-                            listModelList2.addAll(listModelList.get(pos).getAudiolist());
-                        }
-                        callTransFrag(pos, listModelList2);
-                    }*/
                 }
             });
 
@@ -312,7 +275,7 @@ public class LikePlaylistsFragment extends Fragment {
             editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikePlayList");
+            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
             editor.commit();
         } catch (Exception e) {
             e.printStackTrace();

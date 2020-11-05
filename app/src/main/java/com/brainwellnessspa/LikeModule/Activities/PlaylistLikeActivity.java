@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +38,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.PlaylistLikeModel;
 import com.brainwellnessspa.DashboardModule.Models.ReminderStatusPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReminderModule.Activities.ReminderActivity;
@@ -48,6 +51,7 @@ import com.brainwellnessspa.databinding.ActivityPlaylistLikeBinding;
 import com.brainwellnessspa.databinding.DownloadPlaylistLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +61,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenReminder;
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
+import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
+import static com.brainwellnessspa.Utility.MusicService.isPause;
+import static com.brainwellnessspa.Utility.MusicService.isPrepare;
+import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class PlaylistLikeActivity extends AppCompatActivity {
     ActivityPlaylistLikeBinding binding;
@@ -66,6 +76,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
     Context ctx;
     PlayListsAdpater adpater;
     Activity activity;
+    SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
     EditText searchEditText;
     public static int RefreshLikePlaylist = 0;
 
@@ -264,7 +275,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-               /* if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
@@ -273,18 +284,18 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                 } else {
                     isDisclaimer = 0;
                     disclaimerPlayed = 0;
-                    List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
+                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                     listModelList2.add(addDisclaimer);
                     listModelList2.addAll(listModelList);
                     callTransparentFrag(0, ctx, listModelList2, "", PlaylistName);
-                }*/
+                }
             });
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-               /* if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
@@ -293,7 +304,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                 } else {
                     isDisclaimer = 0;
                     disclaimerPlayed = 0;
-                    List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
+                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                     if (position != 0) {
                         listModelList2.addAll(listModelList);
                         listModelList2.add(holder.getAdapterPosition(), addDisclaimer);
@@ -302,7 +313,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                         listModelList2.addAll(listModelList);
                     }
                     callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList2, "", PlaylistName);
-                }*/
+                }
             });
 
             if (BWSApplication.isNetworkConnected(ctx)) {
@@ -401,5 +412,53 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                 this.binding = binding;
             }
         }
+    }
+
+    private void addDisclaimer() {
+        addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
+        addDisclaimer.setID("0");
+        addDisclaimer.setName("Disclaimer");
+        addDisclaimer.setAudioFile("");
+        addDisclaimer.setAudioDirection("The audio shall start playing after the disclaimer");
+        addDisclaimer.setAudiomastercat("");
+        addDisclaimer.setAudioSubCategory("");
+        addDisclaimer.setImageFile("");
+        addDisclaimer.setLike("");
+        addDisclaimer.setDownload("");
+        addDisclaimer.setAudioDuration("0:48");
+    }
+
+    private void callTransparentFrag(int position, Context ctx, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, String s, String playlistID) {
+        player = 1;
+        if (isPrepare || isMediaStart || isPause) {
+            stopMedia();
+        }
+        isPause = false;
+        isMediaStart = false;
+        isPrepare = false;
+        isCompleteStop = false;
+
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(listModelList);
+        editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+        editor.putInt(CONSTANTS.PREF_KEY_position, position);
+        editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+        editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+        editor.putString(CONSTANTS.PREF_KEY_PlaylistId, playlistID);
+        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
+        editor.commit();
+        try {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
