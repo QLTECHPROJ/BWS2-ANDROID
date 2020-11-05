@@ -91,6 +91,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             PlaylistID = getIntent().getStringExtra("PlaylistID");
         }
+        addDisclaimer();
         binding.searchView.onActionViewExpanded();
         searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.gray));
@@ -275,11 +276,11 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                if (audioPlay && AudioFlag.equalsIgnoreCase("LikePlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
-                        callTransparentFrag(0, ctx, listModelList, "", PlaylistName);
+                        callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
                     }
                 } else {
                     isDisclaimer = 0;
@@ -287,7 +288,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                     listModelList2.add(addDisclaimer);
                     listModelList2.addAll(listModelList);
-                    callTransparentFrag(0, ctx, listModelList2, "", PlaylistName);
+                    callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
                 }
             });
             holder.binding.llMainLayout.setOnClickListener(view -> {
@@ -295,11 +296,11 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                if (audioPlay && AudioFlag.equalsIgnoreCase("LikePlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
-                        callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistName);
+                        callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList, "", PlaylistID);
                     }
                 } else {
                     isDisclaimer = 0;
@@ -312,7 +313,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                         listModelList2.add(addDisclaimer);
                         listModelList2.addAll(listModelList);
                     }
-                    callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList2, "", PlaylistName);
+                    callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList2, "", PlaylistID);
                 }
             });
 
@@ -448,7 +449,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
         editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         editor.putString(CONSTANTS.PREF_KEY_PlaylistId, playlistID);
         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "Downloadlist");
+        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikePlayList");
         editor.commit();
         try {
             Fragment fragment = new TransparentPlayerFragment();
