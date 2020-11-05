@@ -349,39 +349,44 @@ public class LikeAudiosFragment extends Fragment {
                 listCall.enqueue(new Callback<AudioLikeModel>() {
                     @Override
                     public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                            AudioLikeModel model = response.body();
-                            BWSApplication.showToast(model.getResponseMessage(), getActivity());
-                            listModelList2.remove(position);
-                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                            int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                            if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-                                if (pos == position && position < listModelList2.size() - 1) {
+                        try {
+                            if (response.isSuccessful()) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                                AudioLikeModel model = response.body();
+                                BWSApplication.showToast(model.getResponseMessage(), getActivity());
+                                listModelList2.remove(position);
+                                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                                int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                                if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                                    if (pos == position && position < listModelList2.size() - 1) {
 //                                            pos = pos + 1;
-                                    if (isDisclaimer == 1) {
+                                        if (isDisclaimer == 1) {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
-                                    } else {
-                                        callTransFrag(position, listModelList);
-                                    }
-                                } else if (pos == position && position == listModelList2.size() - 1) {
-                                    pos = 0;
-                                    if (isDisclaimer == 1) {
+                                        } else {
+                                            callTransFrag(position, listModelList);
+                                        }
+                                    } else if (pos == position && position == listModelList2.size() - 1) {
+                                        pos = 0;
+                                        if (isDisclaimer == 1) {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
-                                    } else {
-                                        callTransFrag(position, listModelList);
+                                        } else {
+                                            callTransFrag(position, listModelList);
+                                        }
+                                    } else if (pos < position && pos < listModelList2.size() - 1) {
+                                        saveToPref(pos, listModelList2);
+                                    } else if (pos > position && pos == listModelList2.size()) {
+                                        pos = pos - 1;
+                                        saveToPref(pos, listModelList2);
                                     }
-                                } else if (pos < position && pos < listModelList2.size() - 1) {
-                                    saveToPref(pos, listModelList2);
-                                } else if (pos > position && pos == listModelList2.size()) {
-                                    pos = pos - 1;
-                                    saveToPref(pos, listModelList2);
                                 }
+                                prepareData();
                             }
-                            prepareData();
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
+
                     }
 
                     @Override
