@@ -61,6 +61,7 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class LikeAudiosFragment extends Fragment {
     FragmentLikesBinding binding;
     String UserID, AudioFlag;
+    private List<LikesHistoryModel.ResponseData.Audio> listModelList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -214,7 +215,7 @@ public class LikeAudiosFragment extends Fragment {
                     .add(R.id.flContainer, fragment)
                     .commit();
 
-            SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
             ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
