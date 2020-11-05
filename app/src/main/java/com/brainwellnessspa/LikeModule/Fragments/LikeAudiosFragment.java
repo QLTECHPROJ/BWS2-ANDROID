@@ -83,6 +83,7 @@ public class LikeAudiosFragment extends Fragment {
         super.onResume();
         prepareData();
     }
+
     public void prepareData() {
         if (!AudioFlag.equalsIgnoreCase("0")) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -106,8 +107,10 @@ public class LikeAudiosFragment extends Fragment {
                         if (listDataModel.size() == 0) {
                             binding.tvFound.setVisibility(View.VISIBLE);
                             binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvLikesList.setVisibility(View.GONE);
                         } else {
                             binding.llError.setVisibility(View.GONE);
+                            binding.rvLikesList.setVisibility(View.VISIBLE);
                             LikeAudiosAdapter adapter = new LikeAudiosAdapter(listModel.getResponseData().getAudio(), getActivity());
                             binding.rvLikesList.setAdapter(adapter);
                         }
@@ -175,7 +178,7 @@ public class LikeAudiosFragment extends Fragment {
                     });
 
                     Btn.setOnClickListener(v4 -> {
-                        callRemoveLike(modelList.get(position).getID(),position,listModelList);
+                        callRemoveLike(modelList.get(position).getID(), position, listModelList);
                         dialog.dismiss();
                     });
                     tvGoBack.setOnClickListener(v3 -> dialog.dismiss());
@@ -298,54 +301,58 @@ public class LikeAudiosFragment extends Fragment {
     }
 
     private void callRemoveLike(String id, int position, List<LikesHistoryModel.ResponseData.Audio> listModelList2) {
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-            Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(id, UserID);
-            listCall.enqueue(new Callback<AudioLikeModel>() {
-                @Override
-                public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        AudioLikeModel model = response.body();
-                        BWSApplication.showToast(model.getResponseMessage(), getActivity());
-                        listModelList2.remove(position);
-                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                        int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                        if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")){
-                            if (pos == position && position < listModelList2.size() - 1) {
+        try {
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(id, UserID);
+                listCall.enqueue(new Callback<AudioLikeModel>() {
+                    @Override
+                    public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            AudioLikeModel model = response.body();
+                            BWSApplication.showToast(model.getResponseMessage(), getActivity());
+                            listModelList2.remove(position);
+                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                            int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                            if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                                if (pos == position && position < listModelList2.size() - 1) {
 //                                            pos = pos + 1;
-                                if (isDisclaimer == 1) {
+                                    if (isDisclaimer == 1) {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
-                                } else {
-                                    callTransFrag(position, listModelList);
-                                }
-                            } else if (pos == position && position == listModelList2.size() - 1) {
-                                pos = 0;
-                                if (isDisclaimer == 1) {
+                                    } else {
+                                        callTransFrag(position, listModelList);
+                                    }
+                                } else if (pos == position && position == listModelList2.size() - 1) {
+                                    pos = 0;
+                                    if (isDisclaimer == 1) {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
-                                } else {
-                                    callTransFrag(position, listModelList);
+                                    } else {
+                                        callTransFrag(position, listModelList);
+                                    }
+                                } else if (pos < position && pos < listModelList2.size() - 1) {
+                                    saveToPref(pos, listModelList2);
+                                } else if (pos > position && pos == listModelList2.size()) {
+                                    pos = pos - 1;
+                                    saveToPref(pos, listModelList2);
                                 }
-                            } else if (pos < position && pos < listModelList2.size() - 1) {
-                                saveToPref(pos, listModelList2);
-                            } else if (pos > position && pos == listModelList2.size()) {
-                                pos = pos - 1;
-                                saveToPref(pos,listModelList2);
                             }
+                            prepareData();
                         }
-                        prepareData();
                     }
-                }
 
-                @Override
-                public void onFailure(Call<AudioLikeModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+                    @Override
+                    public void onFailure(Call<AudioLikeModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                    }
+                });
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

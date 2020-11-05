@@ -113,11 +113,14 @@ public class LikePlaylistsFragment extends Fragment {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                         LikesHistoryModel listModel = response.body();
                         List<LikesHistoryModel.ResponseData.Playlist> listDataModel = listModel.getResponseData().getPlaylist();
+
                         if (listDataModel.size() == 0) {
                             binding.tvFound.setVisibility(View.VISIBLE);
                             binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvLikesList.setVisibility(View.GONE);
                         } else {
                             binding.llError.setVisibility(View.GONE);
+                            binding.rvLikesList.setVisibility(View.VISIBLE);
                             LikePlaylistsAdapter adapter = new LikePlaylistsAdapter(listModel.getResponseData().getPlaylist(), getActivity());
                             binding.rvLikesList.setAdapter(adapter);
                         }
@@ -305,27 +308,31 @@ public class LikePlaylistsFragment extends Fragment {
     }
 
     private void callRemoveLike(String id) {
-        if (BWSApplication.isNetworkConnected(getActivity())) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-            Call<PlaylistLikeModel> listCall = APIClient.getClient().getPlaylistLike(id, UserID);
-            listCall.enqueue(new Callback<PlaylistLikeModel>() {
-                @Override
-                public void onResponse(Call<PlaylistLikeModel> call, Response<PlaylistLikeModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        PlaylistLikeModel model = response.body();
-                        BWSApplication.showToast(model.getResponseMessage(), getActivity());
-                        prepareData();
+        try {
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                Call<PlaylistLikeModel> listCall = APIClient.getClient().getPlaylistLike(id, UserID);
+                listCall.enqueue(new Callback<PlaylistLikeModel>() {
+                    @Override
+                    public void onResponse(Call<PlaylistLikeModel> call, Response<PlaylistLikeModel> response) {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            PlaylistLikeModel model = response.body();
+                            prepareData();
+                            BWSApplication.showToast(model.getResponseMessage(), getActivity());
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<PlaylistLikeModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+                    @Override
+                    public void onFailure(Call<PlaylistLikeModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                    }
+                });
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
