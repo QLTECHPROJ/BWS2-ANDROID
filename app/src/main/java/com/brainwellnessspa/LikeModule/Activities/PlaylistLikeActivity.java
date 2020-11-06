@@ -63,11 +63,14 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenReminder;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
+import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
+import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class PlaylistLikeActivity extends AppCompatActivity {
@@ -130,6 +133,22 @@ public class PlaylistLikeActivity extends AppCompatActivity {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.setMargins(10, 8, 10, 20);
             binding.llSpace.setLayoutParams(params);
+        }
+        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+            if (isMediaStart) {
+                isPlayPlaylist = 1;
+                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+            } else {
+                isPlayPlaylist = 0;
+                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+            }
+        } else {
+            isPlayPlaylist = 0;
+            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
         }
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
@@ -293,12 +312,24 @@ public class PlaylistLikeActivity extends AppCompatActivity {
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             binding.ivPlaylistStatus.setOnClickListener(view -> {
+                if (isPlayPlaylist == 1) {
+                    pauseMedia();
+                    isPlayPlaylist = 2;
+                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                } else if (isPlayPlaylist == 2) {
+                    resumeMedia();
+                    isPlayPlaylist = 1;
+                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                } else {
                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
+                        if (isPause) {
+                            resumeMedia();
+                        } else
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
                         callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
@@ -310,6 +341,9 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                     listModelList2.add(addDisclaimer);
                     listModelList2.addAll(listModelList);
                     callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
+                }
+                    isPlayPlaylist = 1;
+                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
             });
             holder.binding.llMainLayout.setOnClickListener(view -> {
@@ -336,6 +370,8 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                     }
                     callTransparentFrag(holder.getAdapterPosition(), ctx, listModelList2, "", PlaylistID);
                 }
+                isPlayPlaylist = 1;
+                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
             });
 
             if (BWSApplication.isNetworkConnected(ctx)) {

@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
+import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.Utility.MusicService;
@@ -445,11 +446,14 @@ public class SearchFragment extends Fragment {
                             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchModelAudio");
                             editor.commit();
-                            Fragment fragment = new TransparentPlayerFragment();
-                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .add(R.id.flContainer, fragment)
-                                    .commit();
+//                            Fragment fragment = new TransparentPlayerFragment();
+//                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+//                            fragmentManager1.beginTransaction()
+//                                    .add(R.id.flContainer, fragment)
+//                                    .commit();
+                            Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            ctx.startActivity(i);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -611,11 +615,14 @@ public class SearchFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
                     editor.commit();
-                    Fragment fragment = new TransparentPlayerFragment();
-                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();
+                    Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    ctx.startActivity(i);
+//                    Fragment fragment = new TransparentPlayerFragment();
+//                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+//                    fragmentManager1.beginTransaction()
+//                            .add(R.id.flContainer, fragment)
+//                            .commit();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

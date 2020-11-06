@@ -898,7 +898,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     downloadAudioDetails.setIsDownload("pending");
                     downloadAudioDetails.setDownloadProgress(0);
                 }
-
                 DatabaseClient.getInstance(getApplicationContext())
                         .getaudioDatabase()
                         .taskDao()

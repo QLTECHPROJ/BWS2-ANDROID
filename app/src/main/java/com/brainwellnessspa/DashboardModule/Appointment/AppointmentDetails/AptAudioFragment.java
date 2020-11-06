@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -435,6 +436,46 @@ public class AptAudioFragment extends Fragment {
                     downloadAudioDetails.setIsDownload("pending");
                     downloadAudioDetails.setDownloadProgress(0);
 
+                    SharedPreferences sharedx1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    String AudioFlag = sharedx1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    boolean audioPlay = sharedx1.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    Gson gsonx = new Gson();
+                    String json11 = sharedx1.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
+                    Type type1 = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
+                    }.getType();
+                    Gson gson11 = new Gson();
+                    ArrayList<DownloadAudioDetails> arrayList = gson11.fromJson(json11, type1);
+                    ArrayList<MainPlayModel> arrayList2 = gson11.fromJson(json11, type1);
+                    int position = sharedx1.getInt(CONSTANTS.PREF_KEY_position, 0);
+                    if(audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                        arrayList.add(downloadAudioDetails);
+                        MainPlayModel mainPlayModel1 = new MainPlayModel();
+                        mainPlayModel1.setID(downloadAudioDetails.getID());
+                        mainPlayModel1.setName(downloadAudioDetails.getName());
+                        mainPlayModel1.setAudioFile(downloadAudioDetails.getAudioFile());
+                        mainPlayModel1.setAudioDirection(downloadAudioDetails.getAudioDirection());
+                        mainPlayModel1.setAudiomastercat(downloadAudioDetails.getAudiomastercat());
+                        mainPlayModel1.setAudioSubCategory(downloadAudioDetails.getAudioSubCategory());
+                        mainPlayModel1.setImageFile(downloadAudioDetails.getImageFile());
+                        mainPlayModel1.setLike(downloadAudioDetails.getLike());
+                        mainPlayModel1.setDownload(downloadAudioDetails.getDownload());
+                        mainPlayModel1.setAudioDuration(downloadAudioDetails.getAudioDuration());
+                        arrayList2.add(mainPlayModel1);
+                    }
+                    SharedPreferences sharedd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedd.edit();
+                    Gson gson = new Gson();
+                    String jsonx = gson.toJson(arrayList2);
+                    String json1q1 = gson.toJson(arrayList);
+                    editor.putString(CONSTANTS.PREF_KEY_modelList,json1q1);
+                    editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
+                    editor.commit();
                     DatabaseClient.getInstance(getActivity().getApplicationContext())
                             .getaudioDatabase()
                             .taskDao()

@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.Utility.MusicService;
 import com.bumptech.glide.Glide;
@@ -295,11 +296,14 @@ public class ViewAllSearchFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SearchAudio");
                     editor.commit();
-                    Fragment fragment = new TransparentPlayerFragment();
+                    /*Fragment fragment = new TransparentPlayerFragment();
                     FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
                     fragmentManager1.beginTransaction()
                             .add(R.id.flContainer, fragment)
-                            .commit();
+                            .commit();*/
+                    Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    ctx.startActivity(i);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

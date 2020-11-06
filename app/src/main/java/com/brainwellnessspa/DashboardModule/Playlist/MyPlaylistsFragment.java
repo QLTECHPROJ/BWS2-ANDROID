@@ -55,6 +55,7 @@ import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayMod
 import com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
+import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReminderModule.Activities.ReminderActivity;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -1355,6 +1356,59 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
             String dirPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Name);
             SaveMedia(new byte[1024], dirPath, playlistSongs, position, llDownload, ivDownloads);
+            SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            int position1 = sharedx.getInt(CONSTANTS.PREF_KEY_position, 0);
+            boolean audioPlay = sharedx.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            Gson gsonx = new Gson();
+            String json = sharedx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
+            Type type1 = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
+            }.getType();
+            Gson gson1 = new Gson();
+            ArrayList<DownloadAudioDetails> arrayList = gson1.fromJson(json, type1);
+            ArrayList<MainPlayModel> arrayList2 = gson1.fromJson(json, type1);
+
+            if(audioPlay&&AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
+                mainPlayModel.setID(playlistSongs.get(position).getID());
+                mainPlayModel.setName(playlistSongs.get(position).getName());
+                mainPlayModel.setAudioFile(playlistSongs.get(position).getAudioFile());
+                mainPlayModel.setAudioDirection(playlistSongs.get(position).getAudioDirection());
+                mainPlayModel.setAudiomastercat(playlistSongs.get(position).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(playlistSongs.get(position).getAudioSubCategory());
+                mainPlayModel.setImageFile(playlistSongs.get(position).getImageFile());
+                mainPlayModel.setLike(playlistSongs.get(position).getLike());
+                mainPlayModel.setDownload(playlistSongs.get(position).getDownload());
+                mainPlayModel.setAudioDuration(playlistSongs.get(position).getAudioDuration());
+                arrayList.add(mainPlayModel);
+                MainPlayModel mainPlayModel1 = new MainPlayModel();
+                mainPlayModel1.setID(playlistSongs.get(position).getID());
+                mainPlayModel1.setName(playlistSongs.get(position).getName());
+                mainPlayModel1.setAudioFile(playlistSongs.get(position).getAudioFile());
+                mainPlayModel1.setAudioDirection(playlistSongs.get(position).getAudioDirection());
+                mainPlayModel1.setAudiomastercat(playlistSongs.get(position).getAudiomastercat());
+                mainPlayModel1.setAudioSubCategory(playlistSongs.get(position).getAudioSubCategory());
+                mainPlayModel1.setImageFile(playlistSongs.get(position).getImageFile());
+                mainPlayModel1.setLike(playlistSongs.get(position).getLike());
+                mainPlayModel1.setDownload(playlistSongs.get(position).getDownload());
+                mainPlayModel1.setAudioDuration(playlistSongs.get(position).getAudioDuration());
+                arrayList2.add(mainPlayModel1);
+            }
+            SharedPreferences sharedd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedd.edit();
+            Gson gson = new Gson();
+            String jsonx = gson.toJson(arrayList2);
+            String json1 = gson.toJson(arrayList);
+            editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
+            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+            editor.putInt(CONSTANTS.PREF_KEY_position, position1);
+            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
+            editor.commit();
+            callAddTransFrag();
             handler2.postDelayed(UpdateSongTime2, 2000);
         }
     }

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -191,7 +192,22 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
-            String json = gson.toJson(listModelList);
+            ArrayList<DownloadAudioDetails> downloadAudioDetails = new ArrayList<>();
+            for (int i = 0; i < listModelList.size(); i++) {
+                DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
+                mainPlayModel.setID(listModelList.get(i).getID());
+                mainPlayModel.setName(listModelList.get(i).getName());
+                mainPlayModel.setAudioFile(listModelList.get(i).getAudioFile());
+                mainPlayModel.setAudioDirection(listModelList.get(i).getAudioDirection());
+                mainPlayModel.setAudiomastercat(listModelList.get(i).getAudiomastercat());
+                mainPlayModel.setAudioSubCategory(listModelList.get(i).getAudioSubCategory());
+                mainPlayModel.setImageFile(listModelList.get(i).getImageFile());
+                mainPlayModel.setLike(listModelList.get(i).getLike());
+                mainPlayModel.setDownload(listModelList.get(i).getDownload());
+                mainPlayModel.setAudioDuration(listModelList.get(i).getAudioDuration());
+                downloadAudioDetails.add(mainPlayModel);
+            }
+            String json = gson.toJson(downloadAudioDetails);
             editor.putString(CONSTANTS.PREF_KEY_modelList, json);
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);

@@ -34,7 +34,10 @@ import com.brainwellnessspa.databinding.SmallBoxLayoutBinding;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -116,7 +119,8 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             if (IsLock.equalsIgnoreCase("1")) {
                 if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    callTransFrag(position);
+
+                    callnewTrans(position);
 
                 } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
@@ -128,7 +132,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             } else if (IsLock.equalsIgnoreCase("2")) {
                 if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    callTransFrag(position);
+                    callnewTrans(position);
                 } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                         || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -136,12 +140,44 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
                 }
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
-                callTransFrag(position);
+                    callnewTrans(position);
             }
         });
     }
 
-    private void callTransFrag(int position) {
+    private void callnewTrans(int position) {
+
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        if (audioPlay && AudioFlag.equalsIgnoreCase("MainAudioList")) {
+            if (isDisclaimer == 1) {
+                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+            } else {
+                callTransFrag(position, listModelList);
+            }
+        } else {
+            isDisclaimer = 0;
+            disclaimerPlayed = 0;
+            ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
+            MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
+            mainPlayModel.setID("0");
+            mainPlayModel.setName("Disclaimer");
+            mainPlayModel.setAudioFile("");
+            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+            mainPlayModel.setAudiomastercat("");
+            mainPlayModel.setAudioSubCategory("");
+            mainPlayModel.setImageFile("");
+            mainPlayModel.setLike("");
+            mainPlayModel.setDownload("");
+            mainPlayModel.setAudioDuration("0:48");
+            listModelList2.addAll(listModelList);
+            listModelList2.add(position, mainPlayModel);
+            callTransFrag(position, listModelList2);
+        }
+    }
+
+    private void callTransFrag(int position,ArrayList<MainAudioModel.ResponseData.Detail> listModelList) {
         try {
             player = 1;
             if (isPrepare || isMediaStart || isPause) {
@@ -159,24 +195,10 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
-            ArrayList<MainAudioModel.ResponseData.Detail> listModelList2 = new ArrayList<>();
-            MainAudioModel.ResponseData.Detail mainPlayModel = new MainAudioModel.ResponseData.Detail();
-            mainPlayModel.setID("0");
-            mainPlayModel.setName("Disclaimer");
-            mainPlayModel.setAudioFile("");
-            mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-            mainPlayModel.setAudiomastercat("");
-            mainPlayModel.setAudioSubCategory("");
-            mainPlayModel.setImageFile("");
-            mainPlayModel.setLike("");
-            mainPlayModel.setDownload("");
-            mainPlayModel.setAudioDuration("0:48");
-            listModelList2.add(mainPlayModel);
 
-            listModelList2.add(listModelList.get(position));
-            String json = gson.toJson(listModelList2);
+            String json = gson.toJson(listModelList);
             editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-            editor.putInt(CONSTANTS.PREF_KEY_position, 0);
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
             editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");

@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -710,7 +711,6 @@ public class AddQueueActivity extends AppCompatActivity {
         }*/
         String dirPath = FileUtils.getFilePath(getApplicationContext(), Name);
         SaveMedia(new byte[1024], dirPath, i);
-
     }
 
     private void SaveMedia(byte[] encodeBytes, String dirPath, int i) {
@@ -751,6 +751,47 @@ public class AddQueueActivity extends AppCompatActivity {
                     downloadAudioDetails.setIsDownload("pending");
                     downloadAudioDetails.setDownloadProgress(0);
                 }
+                SharedPreferences sharedx1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                AudioFlag = sharedx1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                boolean audioPlay = sharedx1.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                int position = sharedx1.getInt(CONSTANTS.PREF_KEY_position, 0);
+                Gson gsonx = new Gson();
+                String json11 = sharedx1.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
+                Type type1 = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
+                }.getType();
+                Gson gson11 = new Gson();
+                ArrayList<DownloadAudioDetails> arrayList = gson11.fromJson(json11, type1);
+                ArrayList<MainPlayModel> arrayList2 = gson11.fromJson(json11, type1);
+
+                if(audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                    arrayList.add(downloadAudioDetails);
+                    MainPlayModel mainPlayModel1 = new MainPlayModel();
+                    mainPlayModel1.setID(downloadAudioDetails.getID());
+                    mainPlayModel1.setName(downloadAudioDetails.getName());
+                    mainPlayModel1.setAudioFile(downloadAudioDetails.getAudioFile());
+                    mainPlayModel1.setAudioDirection(downloadAudioDetails.getAudioDirection());
+                    mainPlayModel1.setAudiomastercat(downloadAudioDetails.getAudiomastercat());
+                    mainPlayModel1.setAudioSubCategory(downloadAudioDetails.getAudioSubCategory());
+                    mainPlayModel1.setImageFile(downloadAudioDetails.getImageFile());
+                    mainPlayModel1.setLike(downloadAudioDetails.getLike());
+                    mainPlayModel1.setDownload(downloadAudioDetails.getDownload());
+                    mainPlayModel1.setAudioDuration(downloadAudioDetails.getAudioDuration());
+                    arrayList2.add(mainPlayModel1);
+                }
+                SharedPreferences sharedd = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedd.edit();
+                Gson gson = new Gson();
+                String jsonx = gson.toJson(arrayList2);
+                String json1q1 = gson.toJson(arrayList);
+                editor.putString(CONSTANTS.PREF_KEY_modelList,json1q1);
+                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
+                editor.commit();
                 DatabaseClient.getInstance(activity)
                         .getaudioDatabase()
                         .taskDao()
@@ -787,6 +828,67 @@ public class AddQueueActivity extends AppCompatActivity {
                                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                                 Like = "1";
                             }
+                            SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            boolean audioPlay = sharedxx.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                            int pos = sharedxx.getInt(CONSTANTS.PREF_KEY_position, 0);
+                            AudioFlag = sharedxx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                            if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
+
+                            } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                                Gson gsonx = new Gson();
+                                String json = sharedx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
+                                Type type1 = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
+                                }.getType();
+                                Gson gson1 = new Gson();
+                                ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson1.fromJson(json, type1);
+                                if (audioPlay) {
+                                    LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
+                                    mainPlayModel.setID(mainPlayModelList.get(position).getID());
+                                    mainPlayModel.setName(mainPlayModelList.get(position).getName());
+                                    mainPlayModel.setAudioFile(mainPlayModelList.get(position).getAudioFile());
+                                    mainPlayModel.setAudioDirection(mainPlayModelList.get(position).getAudioDirection());
+                                    mainPlayModel.setAudiomastercat(mainPlayModelList.get(position).getAudiomastercat());
+                                    mainPlayModel.setAudioSubCategory(mainPlayModelList.get(position).getAudioSubCategory());
+                                    mainPlayModel.setImageFile(mainPlayModelList.get(position).getImageFile());
+                                    mainPlayModel.setLike(mainPlayModelList.get(position).getLike());
+                                    mainPlayModel.setDownload(mainPlayModelList.get(position).getDownload());
+                                    mainPlayModel.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
+                                    arrayList.add(mainPlayModel);
+                                } else if (queuePlay) {
+                                    LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
+                                    mainPlayModel.setID(addToQueueModelList.get(position).getID());
+                                    mainPlayModel.setName(addToQueueModelList.get(position).getName());
+                                    mainPlayModel.setAudioFile(addToQueueModelList.get(position).getAudioFile());
+                                    mainPlayModel.setAudioDirection(addToQueueModelList.get(position).getAudioDirection());
+                                    mainPlayModel.setAudiomastercat(addToQueueModelList.get(position).getAudiomastercat());
+                                    mainPlayModel.setAudioSubCategory(addToQueueModelList.get(position).getAudioSubCategory());
+                                    mainPlayModel.setImageFile(addToQueueModelList.get(position).getImageFile());
+                                    mainPlayModel.setLike(addToQueueModelList.get(position).getLike());
+                                    mainPlayModel.setDownload(addToQueueModelList.get(position).getDownload());
+                                    mainPlayModel.setAudioDuration(addToQueueModelList.get(position).getAudioDuration());
+                                    arrayList.add(mainPlayModel);
+                                }
+                                mainPlayModelList.add(mainPlayModelList.get(position));
+
+                                SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedd.edit();
+                                Gson gson = new Gson();
+                                String jsonx = gson.toJson(mainPlayModelList);
+                                String json1 = gson.toJson(arrayList);
+                                editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
+                                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                                editor.putInt(CONSTANTS.PREF_KEY_position, pos);
+                                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
+                                editor.commit();
+                            }
+                        }
                             if (queuePlay) {
                                 addToQueueModelList.get(position).setLike(Like);
                             } else
