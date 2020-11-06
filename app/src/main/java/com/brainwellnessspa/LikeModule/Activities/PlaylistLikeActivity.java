@@ -276,7 +276,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("LikePlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
@@ -296,7 +296,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("LikePlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
@@ -449,7 +449,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
         editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         editor.putString(CONSTANTS.PREF_KEY_PlaylistId, playlistID);
         editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikePlayList");
+        editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "SubPlayList");
         editor.commit();
         try {
             Fragment fragment = new TransparentPlayerFragment();

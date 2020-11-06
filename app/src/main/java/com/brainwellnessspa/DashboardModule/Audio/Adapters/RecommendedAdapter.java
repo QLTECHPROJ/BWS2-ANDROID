@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -149,11 +150,11 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
             isCompleteStop = false;
 
 
-            Fragment fragment = new TransparentPlayerFragment();
+            /*Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .add(R.id.flContainer, fragment)
-                    .commit();
+                    .commit();*/
 
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -182,6 +183,9 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
             editor.commit();
+            Intent i = new Intent(ctx, PlayWellnessActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            ctx.startActivity(i);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.bumptech.glide.Glide;
@@ -182,11 +183,11 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
             isMediaStart = false;
             isPrepare = false;
             isCompleteStop = false;
-            Fragment fragment = new TransparentPlayerFragment();
+           /* Fragment fragment = new TransparentPlayerFragment();
             FragmentManager fragmentManager1 = activity.getSupportFragmentManager();
             fragmentManager1.beginTransaction()
                     .add(R.id.flContainer, fragment)
-                    .commit();
+                    .commit();*/
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
             Gson gson = new Gson();
@@ -199,6 +200,9 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
             editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
             editor.commit();
+            Intent i = new Intent(ctx, PlayWellnessActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            ctx.startActivity(i);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -61,7 +61,6 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class LikeAudiosFragment extends Fragment {
     FragmentLikesBinding binding;
     String UserID, AudioFlag;
-    private List<LikesHistoryModel.ResponseData.Audio> listModelList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -171,14 +170,14 @@ public class LikeAudiosFragment extends Fragment {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall remove after the disclaimer", ctx);
                         } else {
-                            if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList") && listModelList.size() == 1) {
+                            if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList") && modelList.size() == 1) {
                                 BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
                             } else {
                                 callAlert(position);
                             }
                         }
                     } else {
-                        if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList") && listModelList.size() == 1) {
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList") && modelList.size() == 1) {
                             BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
                         } else {
                             callAlert(position);
@@ -205,24 +204,23 @@ public class LikeAudiosFragment extends Fragment {
                     SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                     Log.e("postion of paly", String.valueOf(position));
                     if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
                         if (isDisclaimer == 1) {
                             BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
-                            callTransFrag(pos, listModelList);
+                            callTransFrag(pos, modelList);
                         }
                     } else {
                         isDisclaimer = 0;
                         disclaimerPlayed = 0;
                         List<LikesHistoryModel.ResponseData.Audio> listModelList2 = new ArrayList<>();
                         if (position != 0) {
-                            listModelList2.addAll(listModelList);
+                            listModelList2.addAll(modelList);
                             listModelList2.add(pos, mainPlayModel);
                         } else {
                             listModelList2.add(mainPlayModel);
-                            listModelList2.addAll(listModelList);
+                            listModelList2.addAll(modelList);
                         }
                         callTransFrag(pos, listModelList2);
                     }
@@ -253,7 +251,7 @@ public class LikeAudiosFragment extends Fragment {
             });
 
             Btn.setOnClickListener(v4 -> {
-                callRemoveLike(modelList.get(position).getID(), position, listModelList);
+                callRemoveLike(modelList.get(position).getID(), position, modelList);
                 dialog.dismiss();
             });
             tvGoBack.setOnClickListener(v3 -> dialog.dismiss());
@@ -355,14 +353,14 @@ public class LikeAudiosFragment extends Fragment {
                                         if (isDisclaimer == 1) {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                                         } else {
-                                            callTransFrag(position, listModelList);
+                                            callTransFrag(position, listModelList2);
                                         }
                                     } else if (pos == position && position == listModelList2.size() - 1) {
                                         pos = 0;
                                         if (isDisclaimer == 1) {
 //                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
                                         } else {
-                                            callTransFrag(position, listModelList);
+                                            callTransFrag(position, listModelList2);
                                         }
                                     } else if (pos < position && pos < listModelList2.size() - 1) {
                                         saveToPref(pos, listModelList2);

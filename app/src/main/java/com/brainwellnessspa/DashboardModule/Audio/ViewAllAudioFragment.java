@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
@@ -485,7 +486,10 @@ public class ViewAllAudioFragment extends Fragment {
                 editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                 editor.commit();
-                openMyFragment();
+//                openMyFragment();
+                Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                getActivity().startActivity(i);
             }
 
         } catch (Exception e) {
