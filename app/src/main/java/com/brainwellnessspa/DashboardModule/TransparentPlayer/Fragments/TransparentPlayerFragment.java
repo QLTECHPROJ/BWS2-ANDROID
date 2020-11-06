@@ -864,7 +864,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 Intent i = new Intent(ctx, PlayWellnessActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
-                BWSApplication.simple_Notification(playbackStatus, mainPlayModelList, getActivity(), position);
+                BWSApplication.simple_Notification(playbackStatus, mainPlayModelList, getActivity(), position, getActivity());
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -1299,11 +1299,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-        }else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+        } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
             Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
             }.getType();
             ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {

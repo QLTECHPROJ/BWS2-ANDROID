@@ -7,6 +7,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,6 +45,7 @@ import com.brainwellnessspa.Utility.CryptLib;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.MusicService;
+import com.brainwellnessspa.Utility.NotificationDismissedReceiver;
 import com.brainwellnessspa.Utility.PlaybackStatus;
 
 import java.io.IOException;
@@ -76,17 +78,27 @@ public class BWSApplication extends Application {
     private static BWSApplication BWSApplication;
     private static List<DownloadAudioDetails> downloadAudioDetailsList;
     private static final int NOTIFICATION_ID = 101;
-    public static final String ACTION_PLAY = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_PLAY";
-    public static final String ACTION_PAUSE = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_PAUSE";
-    public static final String ACTION_PREVIOUS = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_PREVIOUS";
-    public static final String ACTION_NEXT = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_NEXT";
-    public static final String ACTION_STOP = "com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.ACTION_STOP";
+    public static final String ACTION_PLAY = "com.brainwellnessspa.ACTION_PLAY";
+    public static final String ACTION_PAUSE = "com.brainwellnessspa.ACTION_PAUSE";
+    public static final String ACTION_PREVIOUS = "com.brainwellnessspa.ACTION_PREVIOUS";
+    public static final String ACTION_NEXT = "com.brainwellnessspa.ACTION_NEXT";
+    public static final String ACTION_STOP = "com.brainwellnessspa.ACTION_STOP";
+    public static final String NOTIFICATION_DISMISSED = "com.brainwellnessspa.NOTIFICATION_DISMISSED";
+    public static final String NOTIFICATION_CHANNEL = "music_player_channel";
     private static Bitmap myBitmap;
+    private static Service service;
+    private static Bitmap mCurrTrackCover;
+    public static MediaSessionCompat mMediaSession = null;
+    public static PendingIntent play_pauseAction = null;
+    public static boolean usesChronometer = false;
+    public static boolean showWhen = false;
+    public static Long notifWhen = 0L;
+//    playPauseIcon = if (getIsPlaying()) R.drawable.ic_pause_vector else R.drawable.ic_play_vector
 
     //MediaSession
-    private MediaSessionManager mediaSessionManager;
-    private MediaSessionCompat mediaSession;
-    private MediaControllerCompat.TransportControls transportControls;
+    public static MediaSessionManager mediaSessionManager;
+    public static MediaSessionCompat mediaSession;
+    public static MediaControllerCompat.TransportControls transportControls;
 
     public static Context getContext() {
         return mContext;
@@ -119,8 +131,8 @@ public class BWSApplication extends Application {
         }
     };
 
-    public static void simple_Notification(PlaybackStatus playbackStatus, ArrayList<MainPlayModel> mainPlayModelList, Activity activity, int position) {
-      /*  Bitmap mCurrTrackCover;
+    public static void simple_Notification(PlaybackStatus playbackStatus, ArrayList<MainPlayModel> mainPlayModelList, Activity activity, int position, Context ctx) {
+        /*  Bitmap mCurrTrackCover;
         boolean showWhen = false;
         var notifWhen = 0L*/
 
@@ -193,30 +205,6 @@ public class BWSApplication extends Application {
         }
 
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-
-        /*NotificationCompat.Builder notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL)
-                .setContentTitle(mainPlayModelList.get(position).getName())
-                .setContentText(mainPlayModelList.get(position).getAudioDirection())
-                .setSmallIcon(android.R.drawable.stat_sys_headset)
-                .setLargeIcon(mCurrTrackCover)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setWhen(notifWhen)
-                .setShowWhen(showWhen)
-                .setUsesChronometer(usesChronometer)
-                .setContentIntent(getContentIntent())
-//                .setOngoing(ongoing)
-                .setChannelId(NOTIFICATION_CHANNEL)
-                .setCategory(Notification.CATEGORY_SERVICE)
-                .setStyle(androidx.media.app.NotificationCompat.MediaStyle()
-                        .setShowActionsInCompactView(0, 1, 2)
-                        .setMediaSession(mMediaSession ?.sessionToken))
-            .setDeleteIntent(notificationDismissedPendingIntent)
-                .addAction(android.R.drawable.ic_media_previous, getString(R.string.previous), playbackAction(3, activity))
-                .addAction(playPauseIcon, getString(R.string.playpause), play_pauseAction)
-                .addAction(android.R.drawable.ic_media_next, getString(R.string.next), playbackAction(2, activity))
-
-        startForeground(NOTIFICATION_ID, notification.build())*/
     }
 
 

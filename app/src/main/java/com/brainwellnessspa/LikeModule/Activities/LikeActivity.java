@@ -11,7 +11,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity;
 import com.brainwellnessspa.LikeModule.Fragments.LikeAudiosFragment;
 import com.brainwellnessspa.LikeModule.Fragments.LikePlaylistsFragment;
@@ -37,11 +40,35 @@ public class LikeActivity extends AppCompatActivity {
         ctx = LikeActivity.this;
         SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         binding.llBack.setOnClickListener(view -> finish());
-
         prepareData();
+        RefreshData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        RefreshData();
+    }
+
+    public void RefreshData() {
+        SharedPreferences shared22 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        AudioFlag = shared22.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        if (!AudioFlag.equalsIgnoreCase("0")) {
+            Fragment fragment = new TransparentPlayerFragment();
+            FragmentManager fragmentManager1 = getSupportFragmentManager();
+            fragmentManager1.beginTransaction()
+                    .add(R.id.flContainer, fragment)
+                    .commit();
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//            params.setMargins(10, 8, 10, 210);
+//            binding.llSpace.setLayoutParams(params);
+        }
+      /*  else {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.setMargins(10, 8, 10, 20);
+            binding.llSpace.setLayoutParams(params);
+        }*/
     }
 
     public void prepareData() {
@@ -49,7 +76,6 @@ public class LikeActivity extends AppCompatActivity {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audios"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Playlists"));
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), ctx, binding.tabLayout.getTabCount());
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
@@ -70,6 +96,7 @@ public class LikeActivity extends AppCompatActivity {
 
             }
         });
+        RefreshData();
     }
 
     @Override

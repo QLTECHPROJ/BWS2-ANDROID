@@ -309,7 +309,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
         }.getType();
         mainPlayModelList = gson.fromJson(json, type);
-        BWSApplication.simple_Notification(playbackStatus, mainPlayModelList, PlayWellnessActivity.this, position);
+        BWSApplication.simple_Notification(playbackStatus, mainPlayModelList, PlayWellnessActivity.this, position, PlayWellnessActivity.this);
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
             Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
