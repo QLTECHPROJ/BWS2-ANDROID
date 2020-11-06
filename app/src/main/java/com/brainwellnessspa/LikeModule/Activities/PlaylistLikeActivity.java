@@ -155,6 +155,22 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                         } else {
                             binding.ivBanner.setImageResource(R.drawable.audio_bg);
                         }
+
+                        if (listModel.getResponseData().getTotalAudio().equalsIgnoreCase("") ||
+                                listModel.getResponseData().getTotalAudio().equalsIgnoreCase("0") &&
+                                        listModel.getResponseData().getTotalhour().equalsIgnoreCase("")
+                                        && listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                            binding.tvLibraryDetail.setText("0 Audio | 0h 0m");
+                        } else {
+                            if (listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                binding.tvLibraryDetail.setText(listModel.getResponseData().getTotalAudio() + " Audio | "
+                                        + listModel.getResponseData().getTotalhour() + "h 0m");
+                            } else {
+                                binding.tvLibraryDetail.setText(listModel.getResponseData().getTotalAudio() + " Audio | "
+                                        + listModel.getResponseData().getTotalhour() + "h " +
+                                        listModel.getResponseData().getTotalminute() + "m");
+                            }
+                        }
                         binding.rlSearch.setVisibility(View.VISIBLE);
                         binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
                         binding.tvTag.setText(R.string.Audios_in_Playlist);

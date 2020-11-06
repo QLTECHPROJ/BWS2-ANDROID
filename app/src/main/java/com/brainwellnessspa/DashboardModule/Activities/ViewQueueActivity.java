@@ -336,7 +336,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         });
 
         binding.llnext.setOnClickListener(view -> {
-
             if (BWSApplication.isNetworkConnected(ctx)) {
                 stopMedia();
                 isMediaStart = false;
@@ -494,10 +493,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
         downloadAudioDetailsList = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadAudioDetailsList = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -532,7 +529,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
             }
         }
-
         GetMedia st = new GetMedia();
         st.execute();
     }
@@ -1006,7 +1002,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         oTime = binding.simpleSeekbar.getProgress();
         // forward or backward to certain seconds
         SeekTo(currentPosition);
-
         // update timer progress again
         updateProgressBar();
     }
@@ -1015,7 +1010,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     public void requestDrag(RecyclerView.ViewHolder viewHolder) {
         touchHelper.startDrag(viewHolder);
     }
-
 
  /*   @Override
     public void onAudioFocusChange(int i) {
@@ -1189,20 +1183,13 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);
             editor.commit();
             addToQueueModelList2 = listModelList;
-
-
         }
 
         @Override
-        public void onRowSelected(RecyclerView.ViewHolder myViewHolder) {
-
-        }
+        public void onRowSelected(RecyclerView.ViewHolder myViewHolder) { }
 
         @Override
-        public void onRowClear(RecyclerView.ViewHolder myViewHolder) {
-
-        }
-
+        public void onRowClear(RecyclerView.ViewHolder myViewHolder) { }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             QueueListLayoutBinding binding;
