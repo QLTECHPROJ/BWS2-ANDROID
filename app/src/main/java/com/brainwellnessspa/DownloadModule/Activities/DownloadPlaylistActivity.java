@@ -105,12 +105,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             Totalminute = getIntent().getStringExtra("Totalminute");
         }
 
-        binding.llBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        binding.llBack.setOnClickListener(view -> finish());
         PrepareData();
     }
 
