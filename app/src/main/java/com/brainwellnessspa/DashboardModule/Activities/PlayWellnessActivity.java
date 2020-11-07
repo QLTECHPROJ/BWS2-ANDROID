@@ -295,6 +295,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         downloadAudioDetailsList = new ArrayList<>();
         downloadAudioDetailsList1 = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
+        MakeArray();
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
@@ -336,7 +337,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
         }*/
-        MakeArray();
         callRepeatShuffle();
         if(isMediaStart /*&& !audioFile.equalsIgnoreCase("")*/){
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {

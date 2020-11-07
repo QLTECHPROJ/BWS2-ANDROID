@@ -362,7 +362,7 @@ public class ViewAllAudioFragment extends Fragment {
                         if(!Name.equalsIgnoreCase(getString(R.string.top_categories))){
                             callnewTrans(position,listModelList);
                         }else{
-                            callTransFrag(position, listModelList,"0");
+                            callTransFrag(position, listModelList);
                         }
                     } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
@@ -377,7 +377,7 @@ public class ViewAllAudioFragment extends Fragment {
                         if(!Name.equalsIgnoreCase(getString(R.string.top_categories))){
                             callnewTrans(position, listModelList);
                         }else{
-                            callTransFrag(position, listModelList,"0");
+                            callTransFrag(position, listModelList);
                         }
                     } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModelList.get(position).getIsPlay().equalsIgnoreCase("")) {
@@ -389,7 +389,7 @@ public class ViewAllAudioFragment extends Fragment {
                     if(!Name.equalsIgnoreCase(getString(R.string.top_categories))){
                         callnewTrans(position, listModelList);
                     }else{
-                        callTransFrag(position, listModelList,"0");
+                        callTransFrag(position, listModelList);
                     }
                 }
             });
@@ -420,7 +420,7 @@ public class ViewAllAudioFragment extends Fragment {
             if (isDisclaimer == 1) {
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
             } else {
-                callTransFrag(position, listModelList,"1");
+                callTransFrag(position, listModelList);
             }
         } else {
             isDisclaimer = 0;
@@ -439,11 +439,11 @@ public class ViewAllAudioFragment extends Fragment {
             mainPlayModel.setAudioDuration("0:48");
             listModelList2.addAll(listModelList);
             listModelList2.add(position, mainPlayModel);
-            callTransFrag(position, listModelList2,"1");
+            callTransFrag(position, listModelList2);
         }
     }
 
-    private void callTransFrag(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList,String s) {
+    private void callTransFrag(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList) {
         try {
             SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -508,8 +508,6 @@ public class ViewAllAudioFragment extends Fragment {
                     openMyFragment();
                 }
             } else {
-
-                if(s.equalsIgnoreCase("1")) {
                     listModelList2 = new ArrayList<>();
                     mainPlayModel.setID("0");
                     mainPlayModel.setName("Disclaimer");
@@ -532,11 +530,10 @@ public class ViewAllAudioFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                     editor.commit();
-//                openMyFragment();
-                    Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    getActivity().startActivity(i);
-                }
+                openMyFragment();
+//                    Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
+//                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//                    getActivity().startActivity(i);
             }
 
         } catch (Exception e) {
