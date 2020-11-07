@@ -40,15 +40,12 @@ public class AudioDownloadsFragment extends Fragment {
     String UserID, AudioFlag;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_downloads, container, false);
         View view = binding.getRoot();
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
         }
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         audioList = new ArrayList<>();
         audioList = GetAllMedia(getActivity());
         binding.tvFound.setText("Your downloaded audios will appear here");
@@ -67,6 +64,8 @@ public class AudioDownloadsFragment extends Fragment {
     }
 
     public void RefreshData() {
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (!AudioFlag.equalsIgnoreCase("0")) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(13, 9, 13, 84);

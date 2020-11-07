@@ -52,6 +52,7 @@ public class LikeActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_like);
         activity = LikeActivity.this;
         ctx = LikeActivity.this;
+        ComeScreenAccount = 0;
         SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {

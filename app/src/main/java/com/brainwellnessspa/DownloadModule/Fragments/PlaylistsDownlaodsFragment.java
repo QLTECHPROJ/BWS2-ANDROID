@@ -43,14 +43,7 @@ public class PlaylistsDownlaodsFragment extends Fragment {
         View view = binding.getRoot();
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
-//            playlistList = getArguments().getParcelableArrayList("playlistsDownlaodsFragment");
         }
-//        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-//        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
-//        binding.tvFound.setText("Audio you are searching for is not available in the list");
         playlistList = new ArrayList<>();
         binding.tvFound.setText("Your downloaded playlists will appear here");
         GetAllMedia(getActivity());
@@ -74,6 +67,8 @@ public class PlaylistsDownlaodsFragment extends Fragment {
     }
 
     public void RefreshData() {
+        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (!AudioFlag.equalsIgnoreCase("0")) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(13, 9, 13, 84);

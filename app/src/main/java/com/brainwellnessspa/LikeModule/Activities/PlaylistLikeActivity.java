@@ -98,6 +98,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_playlist_like);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        ComeScreenAccount = 0;
         ctx = PlaylistLikeActivity.this;
         activity = PlaylistLikeActivity.this;
         if (getIntent().getExtras() != null) {
