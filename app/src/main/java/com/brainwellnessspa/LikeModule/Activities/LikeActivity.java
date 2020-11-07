@@ -54,7 +54,6 @@ public class LikeActivity extends AppCompatActivity {
         ctx = LikeActivity.this;
         SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
         binding.llBack.setOnClickListener(view -> {
             comefromDownload = "0";
             ComeScreenAccount = 1;
@@ -177,7 +176,6 @@ public class LikeActivity extends AppCompatActivity {
 
             }
         });
-//        RefreshData();
     }
 
     @Override

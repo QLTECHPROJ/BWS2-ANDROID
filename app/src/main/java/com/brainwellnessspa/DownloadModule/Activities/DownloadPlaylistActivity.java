@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -32,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
@@ -74,7 +76,7 @@ import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.
 public class DownloadPlaylistActivity extends AppCompatActivity {
     ActivityDownloadPlaylistBinding binding;
     PlayListsAdpater adpater;
-    String UserID, SearchFlag, AudioFlag, PlaylistID, PlaylistName, PlaylistImage, TotalAudio, Totalhour, Totalminute,PlaylistImageDetails;
+    String UserID, SearchFlag, AudioFlag, PlaylistID, PlaylistName, PlaylistImage, TotalAudio, Totalhour, Totalminute, PlaylistImageDetails;
     EditText searchEditText;
     Context ctx;
     private List<DownloadPlaylistDetails> listModelList;
@@ -119,7 +121,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     }
 
     public void PrepareData() {
-
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         if (!AudioFlag.equalsIgnoreCase("0")) {
@@ -152,7 +153,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     arrayList.remove(0);
                 }
                 audioID = arrayList.get(0).getID();
-
                 if (UnlockAudioList.contains(audioID)) {
                 } else {
                     SharedPreferences sharedm = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -193,7 +193,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             }
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 comefromDownload = "1";
                 Fragment fragment = new TransparentPlayerFragment();
@@ -289,7 +288,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         comeDeletePlaylist = 1;
                         dialog.dismiss();
                     });
-
                     tvGoBack.setOnClickListener(v -> dialog.dismiss());
                     dialog.show();
                     dialog.setCancelable(false);
@@ -298,18 +296,14 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             }
         });
 
-        if (TotalAudio.equalsIgnoreCase("") ||
-                TotalAudio.equalsIgnoreCase("0") &&
-                        Totalhour.equalsIgnoreCase("")
-                        && Totalminute.equalsIgnoreCase("")) {
+        if (TotalAudio.equalsIgnoreCase("") || TotalAudio.equalsIgnoreCase("0") &&
+                Totalhour.equalsIgnoreCase("") && Totalminute.equalsIgnoreCase("")) {
             binding.tvLibraryDetail.setText("0 Audio | 0h 0m");
         } else {
             if (Totalminute.equalsIgnoreCase("")) {
-                binding.tvLibraryDetail.setText(TotalAudio + " Audio | "
-                        + Totalhour + "h 0m");
+                binding.tvLibraryDetail.setText(TotalAudio + " Audio | " + Totalhour + "h 0m");
             } else {
-                binding.tvLibraryDetail.setText(TotalAudio + " Audio | "
-                        + Totalhour + "h " + Totalminute + "m");
+                binding.tvLibraryDetail.setText(TotalAudio + " Audio | " + Totalhour + "h " + Totalminute + "m");
             }
         }
         RecyclerView.LayoutManager playList = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
@@ -344,7 +338,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     }
 
     private void getDownloadData() {
-        List<String> fileNameList,fileNameList1, audioFile, playlistDownloadId;
+        List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
         try {
             SharedPreferences sharedy = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
             Gson gson = new Gson();
@@ -378,9 +372,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
                 editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
                 editor.commit();
-                if(fileNameList.get(0).equalsIgnoreCase(filename) &&playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)){
+                if (fileNameList.get(0).equalsIgnoreCase(filename) && playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
                     PRDownloader.cancel(downloadIdOne);
-                    filename ="";
+                    filename = "";
                 }
             }
         } catch (Exception e) {
@@ -536,9 +530,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull MyViewHolders holder, int position) {
             final List<DownloadAudioDetails> mData = listFilterData;
             holder.binding.tvTitleA.setText(mData.get(position).getName());
-//            holder.binding.tvTitleB.setText(mData.get(position).getName());
             holder.binding.tvTimeA.setText(mData.get(position).getAudioDuration());
-//            holder.binding.tvTimeB.setText(mData.get(position).getAudioDuration());
             String id = mData.get(position).getID();
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
@@ -547,7 +539,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-//            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);
             binding.ivPlaylistStatus.setOnClickListener(view -> {
                 if (isPlayPlaylist == 1) {
                     pauseMedia();
@@ -567,7 +558,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                             if (isPause) {
                                 resumeMedia();
                             } else
-                            BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
                             callTransparentFrag(0, ctx, listModelList, "", PlaylistName);
                         }
@@ -611,26 +602,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
             });
 
-          /*  if (Created.equalsIgnoreCase("1")) {
-                holder.binding.llMore.setVisibility(View.GONE);
-                holder.binding.llCenterLayoutA.setVisibility(View.GONE);
-                holder.binding.llCenterLayoutB.setVisibility(View.VISIBLE);
-                holder.binding.llDownload.setVisibility(View.VISIBLE);
-                holder.binding.llRemove.setVisibility(View.VISIBLE);
-                holder.binding.llSort.setVisibility(View.VISIBLE);
-                binding.tvSearch.setVisibility(View.VISIBLE);
-                binding.searchView.setVisibility(View.GONE);
-            } else if (Created.equalsIgnoreCase("0")) {
-                holder.binding.llMore.setVisibility(View.VISIBLE);
-                holder.binding.llCenterLayoutA.setVisibility(View.VISIBLE);
-                holder.binding.llCenterLayoutB.setVisibility(View.GONE);
-                holder.binding.llDownload.setVisibility(View.GONE);
-                holder.binding.llRemove.setVisibility(View.GONE);
-                holder.binding.llSort.setVisibility(View.GONE);
-                binding.tvSearch.setVisibility(View.GONE);
-                binding.searchView.setVisibility(View.VISIBLE);
-            }*/
-
             if (BWSApplication.isNetworkConnected(ctx)) {
                 holder.binding.llMore.setClickable(true);
                 holder.binding.llMore.setEnabled(true);
@@ -646,16 +617,15 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-              /*  if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistID)) {
+                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("You can see details after the disclaimer", ctx);
                     } else {
                         Intent i = new Intent(ctx, AddQueueActivity.class);
                         i.putExtra("play", "playlist");
                         i.putExtra("ID", mData.get(position).getID());
-                        i.putExtra("PlaylistAudioId", mData.get(position).getPlaylistAudioId());
+                        i.putExtra("PlaylistAudioId", "");
                         i.putExtra("position", position);
-                        i.putParcelableArrayListExtra("data", mData);
                         i.putExtra("comeFrom", "myPlayList");
                         startActivity(i);
                     }
@@ -663,12 +633,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     Intent i = new Intent(ctx, AddQueueActivity.class);
                     i.putExtra("play", "playlist");
                     i.putExtra("ID", mData.get(position).getID());
-                    i.putExtra("PlaylistAudioId", mData.get(position).getPlaylistAudioId());
+                    i.putExtra("PlaylistAudioId", "");
                     i.putExtra("position", position);
-                    i.putParcelableArrayListExtra("data", mData);
                     i.putExtra("comeFrom", "myPlayList");
                     startActivity(i);
-                }*/
+                }
             });
         }
 

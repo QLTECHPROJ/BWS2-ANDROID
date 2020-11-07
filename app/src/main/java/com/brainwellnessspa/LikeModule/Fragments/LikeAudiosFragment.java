@@ -372,7 +372,7 @@ public class LikeAudiosFragment extends Fragment {
                                 }
                                 prepareData();
                             }
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 

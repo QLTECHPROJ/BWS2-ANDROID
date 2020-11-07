@@ -2,6 +2,7 @@ package com.brainwellnessspa.LikeModule.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -35,6 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity;
 import com.brainwellnessspa.DashboardModule.Models.PlaylistLikeModel;
 import com.brainwellnessspa.DashboardModule.Models.ReminderStatusPlaylistModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
@@ -102,18 +104,6 @@ public class PlaylistLikeActivity extends AppCompatActivity {
             PlaylistID = getIntent().getStringExtra("PlaylistID");
         }
         addDisclaimer();
-        binding.searchView.onActionViewExpanded();
-        searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
-        searchEditText.setTextColor(getResources().getColor(R.color.gray));
-        searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
-        ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
-        binding.searchView.clearFocus();
-        searchEditText.setHint("Search for audios");
-        closeButton.setOnClickListener(v -> {
-            binding.searchView.clearFocus();
-            searchEditText.setText("");
-            binding.searchView.setQuery("", false);
-        });
         binding.llBack.setOnClickListener(view -> finish());
         PrepareData();
     }
@@ -226,6 +216,20 @@ public class PlaylistLikeActivity extends AppCompatActivity {
             isPlayPlaylist = 0;
             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
         }
+
+        binding.searchView.onActionViewExpanded();
+        searchEditText = binding.searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchEditText.setTextColor(getResources().getColor(R.color.gray));
+        searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
+        ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
+        binding.searchView.clearFocus();
+        searchEditText.setHint("Search for audios");
+        closeButton.setOnClickListener(v -> {
+            binding.searchView.clearFocus();
+            searchEditText.setText("");
+            binding.searchView.setQuery("", false);
+        });
+
         if (BWSApplication.isNetworkConnected(ctx)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<SubPlayListModel> listCall = APIClient.getClient().getSubPlayLists(UserID, PlaylistID);
@@ -247,7 +251,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                         binding.tvLibraryName.setText(listModel.getResponseData().getPlaylistName());
                         if (!listModel.getResponseData().getPlaylistImage().equalsIgnoreCase("")) {
                             try {
-                                Glide.with(ctx).load(listModel.getResponseData().getPlaylistImage()).thumbnail(0.05f)
+                                Glide.with(ctx).load(listModel.getResponseData().getPlaylistImageDetail()).thumbnail(0.05f)
                                         .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -280,6 +284,27 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                         adpater = new PlayListsAdpater(listModel.getResponseData().getPlaylistSongs(), ctx);
                         binding.rvPlayLists.setAdapter(adpater);
 
+                        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                            @Override
+                            public boolean onQueryTextSubmit(String search) {
+                                binding.searchView.clearFocus();
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onQueryTextChange(String search) {
+                                try {
+                                    if (adpater != null) {
+                                        adpater.getFilter().filter(search);
+                                        SearchFlag = search;
+                                        Log.e("searchsearch", "" + search);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                return false;
+                            }
+                        });
                         binding.llLike.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -465,7 +490,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-              /*  if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistID)) {
+                if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("You can see details after the disclaimer", ctx);
                     } else {
@@ -487,7 +512,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                     i.putParcelableArrayListExtra("data", mData);
                     i.putExtra("comeFrom", "myPlayList");
                     startActivity(i);
-                }*/
+                }
             });
 
         }

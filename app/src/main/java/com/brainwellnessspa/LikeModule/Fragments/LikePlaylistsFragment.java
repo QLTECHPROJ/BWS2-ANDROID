@@ -64,7 +64,6 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class LikePlaylistsFragment extends Fragment {
     FragmentLikesBinding binding;
     String UserID, AudioFlag;
-    private List<LikesHistoryModel.ResponseData.Playlist> listModelList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

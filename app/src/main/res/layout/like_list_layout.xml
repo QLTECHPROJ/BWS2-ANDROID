@@ -114,7 +114,7 @@
                 android:id="@+id/ivLikes"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
-                android:padding="@dimen/_9sdp"
+                android:padding="@dimen/_10sdp"
                 android:src="@drawable/ic_fill_like_icon" />
 
         </LinearLayout>
@@ -132,7 +132,7 @@
                 android:id="@+id/ivMenu"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
-                android:padding="@dimen/_9sdp"
+                android:padding="@dimen/_11sdp"
                 android:src="@drawable/ic_menu_icon" />
 
         </LinearLayout>

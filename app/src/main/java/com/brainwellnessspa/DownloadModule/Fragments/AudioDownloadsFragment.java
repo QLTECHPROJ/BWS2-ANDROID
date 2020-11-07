@@ -21,8 +21,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -38,7 +36,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class AudioDownloadsFragment extends Fragment {
     FragmentDownloadsBinding binding;
-    //    ArrayList<DownloadlistModel.Audio> audioList;
     List<DownloadAudioDetails> audioList;
     String UserID, AudioFlag;
 
@@ -49,20 +46,16 @@ public class AudioDownloadsFragment extends Fragment {
         View view = binding.getRoot();
         if (getArguments() != null) {
             UserID = getArguments().getString("UserID");
-//            audioList = getArguments().getParcelableArrayList("audioDownloadsFragment");
         }
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
         audioList = new ArrayList<>();
         audioList = GetAllMedia(getActivity());
         binding.tvFound.setText("Your downloaded audios will appear here");
-
         RefreshData();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
-
         return view;
     }
 
