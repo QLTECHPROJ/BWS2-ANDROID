@@ -10,25 +10,22 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
-import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.BigBoxLayoutBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -43,14 +40,14 @@ import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
-public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.MyViewHolder> {
+public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHolder> {
     Context ctx;
     FragmentActivity activity;
     String IsLock,HomeView;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
-    public RecommendedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
-                              String IsLock,String HomeView) {
+    public LibraryAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
+                          String IsLock,String HomeView) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
@@ -147,7 +144,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
-        if (audioPlay && AudioFlag.equalsIgnoreCase("MainAudioList") && MyPlaylist.equalsIgnoreCase(HomeView)) {
+        if (audioPlay && AudioFlag.equalsIgnoreCase("MainAudioList")&& MyPlaylist.equalsIgnoreCase(HomeView)) {
             if (isDisclaimer == 1) {
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {

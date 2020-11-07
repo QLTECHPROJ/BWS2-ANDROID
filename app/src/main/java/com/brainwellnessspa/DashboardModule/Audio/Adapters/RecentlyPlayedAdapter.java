@@ -49,13 +49,15 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
     FragmentActivity activity;
     String IsLock;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
+    String HomeView;
 
     public RecentlyPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
-                                 String IsLock) {
+                                  String IsLock,String HomeView) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
         this.IsLock = IsLock;
+        this.HomeView = HomeView;
     }
 
     @NonNull
@@ -150,7 +152,8 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if (audioPlay && AudioFlag.equalsIgnoreCase("MainAudioList")) {
+        String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+        if (audioPlay && AudioFlag.equalsIgnoreCase("MainAudioList")&& MyPlaylist.equalsIgnoreCase(HomeView)) {
             if (isDisclaimer == 1) {
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
@@ -202,7 +205,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
             editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, HomeView);
             editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
             editor.commit();
             Intent i = new Intent(ctx, PlayWellnessActivity.class);

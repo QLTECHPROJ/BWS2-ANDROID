@@ -416,7 +416,8 @@ public class ViewAllAudioFragment extends Fragment {
         SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        if (audioPlay && AudioFlag.equalsIgnoreCase("MainAudioList")) {
+        String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
+        if (audioPlay && AudioFlag.equalsIgnoreCase("ViewAllAudioList") && MyPlaylist.equalsIgnoreCase(Name)) {
             if (isDisclaimer == 1) {
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
             } else {
@@ -470,7 +471,7 @@ public class ViewAllAudioFragment extends Fragment {
                         editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                         editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                         editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                        editor.putString(CONSTANTS.PREF_KEY_myPlaylist, Name);
                         editor.commit();
                         openMyFragment();
                     }
@@ -503,7 +504,7 @@ public class ViewAllAudioFragment extends Fragment {
                     editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                     editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, Name);
                     editor.commit();
                     openMyFragment();
                 }
@@ -528,7 +529,7 @@ public class ViewAllAudioFragment extends Fragment {
                     editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                     editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, Name);
                     editor.commit();
                 openMyFragment();
 //                    Intent i = new Intent(getActivity(), PlayWellnessActivity.class);

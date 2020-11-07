@@ -441,11 +441,12 @@ public class AptAudioFragment extends Fragment {
                     boolean audioPlay = sharedx1.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     Gson gsonx = new Gson();
                     String json11 = sharedx1.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
+                    String jsonw = sharedx1.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonx));
                     Type type1 = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
                     }.getType();
-                    Gson gson11 = new Gson();
-                    ArrayList<DownloadAudioDetails> arrayList = gson11.fromJson(json11, type1);
-                    ArrayList<MainPlayModel> arrayList2 = gson11.fromJson(json11, type1);
+                    Gson gson1 = new Gson();
+                    ArrayList<DownloadAudioDetails> arrayList = gson1.fromJson(jsonw, type1);
+                    ArrayList<MainPlayModel> arrayList2 = gson1.fromJson(json11, type1);
                     int position = sharedx1.getInt(CONSTANTS.PREF_KEY_position, 0);
                     if(audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                         arrayList.add(downloadAudioDetails);

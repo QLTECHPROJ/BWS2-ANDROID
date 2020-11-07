@@ -1403,6 +1403,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     GetMedia();
                     GetMedia2();
                 }
+                BWSApplication.simple_Notification(playbackStatus, mainPlayModelList, PlayWellnessActivity.this, position, PlayWellnessActivity.this);
                 startTime = getStartTime();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -2111,7 +2112,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         MainPlayModel mainPlayModel;
         mainPlayModelList = new ArrayList<>();
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-        BWSApplication.simple_Notification(playbackStatus, mainPlayModelList, PlayWellnessActivity.this, position, PlayWellnessActivity.this);
         String json2 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         if (!json2.equalsIgnoreCase(String.valueOf(gson))) {
             Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
