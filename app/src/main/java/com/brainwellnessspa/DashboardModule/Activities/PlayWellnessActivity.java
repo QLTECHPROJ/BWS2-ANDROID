@@ -303,23 +303,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
-        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-        position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-        }.getType();
-        mainPlayModelList = gson.fromJson(json, type);
-        BWSApplication.simple_Notification(playbackStatus, mainPlayModelList, PlayWellnessActivity.this, position, PlayWellnessActivity.this);
-        String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
-        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
-            Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
-            }.getType();
-            addToQueueModelList = gson.fromJson(json1, type1);
-        }
-        queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-        audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.92f, 0);
         binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -2125,8 +2108,18 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
        String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-       MainPlayModel mainPlayModel;
+        MainPlayModel mainPlayModel;
         mainPlayModelList = new ArrayList<>();
+        position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+        BWSApplication.simple_Notification(playbackStatus, mainPlayModelList, PlayWellnessActivity.this, position, PlayWellnessActivity.this);
+        String json2 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
+        if (!json2.equalsIgnoreCase(String.valueOf(gson))) {
+            Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
+            }.getType();
+            addToQueueModelList = gson.fromJson(json2, type1);
+        }
+        queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+        audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();
