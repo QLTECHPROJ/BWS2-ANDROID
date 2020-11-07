@@ -100,7 +100,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     ArrayList<AddToQueueModel> addToQueueModelList;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     List<DownloadAudioDetails> downloadAudioDetailsList1;
-    long myProgress = 0,diff = 0;
+    long myProgress = 0, diff = 0;
     private long mLastClickTime = 0, totalDuration, currentDuration = 0;
     private Handler handler;
     PlaybackStatus playbackStatus;
@@ -209,10 +209,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")) {
                 callComplete();
             }
-            if (currentDuration == totalDuration && currentDuration != 0 && !isStop &&isMediaStart && url.equalsIgnoreCase("")) {
+            if (currentDuration == totalDuration && currentDuration != 0 && !isStop && isMediaStart && url.equalsIgnoreCase("")) {
                 mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                     callComplete();
-                    Log.e("calll complete real","real");
+                    Log.e("calll complete real", "real");
                 });
             }
             progress = getProgressPercentage(currentDuration, totalDuration);
@@ -221,12 +221,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llProgressBar.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.VISIBLE);
-            }else if (currentDuration == 0 && isprogressbar) {
+            } else if (currentDuration == 0 && isprogressbar) {
                 binding.progressBar.setVisibility(View.VISIBLE);
                 binding.llProgressBar.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.GONE);
-            }else if (currentDuration >= 1 && !isPause) {
+            } else if (currentDuration >= 1 && !isPause) {
                 binding.progressBar.setVisibility(View.GONE);
                 binding.llProgressBar.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);
@@ -321,10 +321,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             handler1.removeCallbacks(UpdateSongTime1);
         }*/
         callRepeatShuffle();
-        if(isMediaStart /*&& !audioFile.equalsIgnoreCase("")*/){
+        if (isMediaStart /*&& !audioFile.equalsIgnoreCase("")*/) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
-                Log.e("calll complete real","real");
+                Log.e("calll complete real", "real");
             });
         }
         binding.llBack.setOnClickListener(view -> {
@@ -342,7 +342,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         binding.llDownload.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 callDownload();
-            }else{
+            } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
         });
@@ -395,16 +395,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (!isMediaStart) {
                 isCompleteStop = false;
                 isprogressbar = true;
-                handler.postDelayed(UpdateSongTime,500);
+                handler.postDelayed(UpdateSongTime, 500);
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.GONE);
                 binding.llProgressBar.setVisibility(View.VISIBLE);
                 binding.progressBar.setVisibility(View.VISIBLE);
                 callMedia();
-            }else if(isCompleteStop){
+            } else if (isCompleteStop) {
                 isCompleteStop = false;
                 isprogressbar = true;
-                handler.postDelayed(UpdateSongTime,500);
+                handler.postDelayed(UpdateSongTime, 500);
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.GONE);
                 binding.llProgressBar.setVisibility(View.VISIBLE);
@@ -604,7 +604,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callRepeatShuffle() {
-        if (url.equalsIgnoreCase("")){
+        if (url.equalsIgnoreCase("")) {
             binding.llShuffle.setClickable(false);
             binding.llShuffle.setEnabled(false);
             binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -612,7 +612,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llRepeat.setClickable(false);
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-        }else {
+        } else {
             if (IsShuffle.equalsIgnoreCase("")) {
                 if (listSize == 1) {
                     binding.llShuffle.setClickable(false);
@@ -1216,6 +1216,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         GetMedia st = new GetMedia();
         st.execute();
     }
+
     public void GetMedia2() {
 
         downloadAudioDetailsList1 = new ArrayList<>();
@@ -1318,7 +1319,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (listSize == 1) {
                 position = 0;
             }
-            if(listSize!=0) {
+            if (listSize != 0) {
                 id = addToQueueModelList.get(position).getID();
                 name = addToQueueModelList.get(position).getName();
                 url = addToQueueModelList.get(position).getAudioFile();
@@ -1362,7 +1363,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 if (listSize == 1) {
                     position = 0;
                 }
-                if(listSize!=0) {
+                if (listSize != 0) {
                     id = mainPlayModelList.get(position).getID();
                     name = mainPlayModelList.get(position).getName();
                     url = mainPlayModelList.get(position).getAudioFile();
@@ -1423,9 +1424,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }*/
         getMediaByPer();
         if (!url.equalsIgnoreCase("")) {
-            if(!id.equalsIgnoreCase(addToRecentPlayId)) {
+            if (!id.equalsIgnoreCase(addToRecentPlayId)) {
                 addToRecentPlay();
-                Log.e("Api call recent",id);
+                Log.e("Api call recent", id);
             }
         }
         addToRecentPlayId = id;
@@ -1499,10 +1500,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     private void callMedia() {
         FileDescriptor fileDescriptor = null;
-        if(url.equalsIgnoreCase("")){
+        if (url.equalsIgnoreCase("")) {
             setMediaPlayer("2", fileDescriptor);
 
-        }else {
+        } else {
             if (downloadAudioDetailsList.size() != 0) {
                 isprogressbar = true;
                 binding.llProgressBar.setVisibility(View.VISIBLE);
@@ -1599,7 +1600,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 if (queuePlay) {
                     try {
                         addToQueueModelList.remove(position);
-                    }catch (Exception e){}
+                    } catch (Exception e) {
+                    }
                     listSize = addToQueueModelList.size();
                     if (listSize == 0) {
                         binding.llPlay.setVisibility(View.VISIBLE);
@@ -1648,7 +1650,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 if (queuePlay) {
                     try {
                         addToQueueModelList.remove(position);
-                    }catch (Exception e){}
+                    } catch (Exception e) {
+                    }
                     listSize = addToQueueModelList.size();
                     if (position < listSize - 1) {
                         getPrepareShowData(position);
@@ -1739,7 +1742,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json1, type);
 
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1770,7 +1773,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json1, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1796,11 +1799,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-        }else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
+        } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
             Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
             }.getType();
             ArrayList<SearchBothModel.ResponseData> arrayList = gson.fromJson(json1, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1826,11 +1829,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             String jsonz = gsonz.toJson(mainPlayModelList);
             editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
             editor.commit();
-        }else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
+        } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
             Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
             }.getType();
             ArrayList<SuggestedModel.ResponseData> arrayList = gson.fromJson(json1, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1861,7 +1864,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
             }.getType();
             ArrayList<AppointmentDetailModel.Audio> arrayList = gson.fromJson(json1, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1892,7 +1895,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
             }.getType();
             ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json1, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1923,7 +1926,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
             }.getType();
             ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json1, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1954,7 +1957,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json1, type);
-            if(arrayList.get(0).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(0);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -1985,7 +1988,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json1, type);
-            if(arrayList.get(position).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -2015,7 +2018,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json1, type);
-            if(arrayList.get(position).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -2045,7 +2048,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json1, type);
-            if(arrayList.get(position).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -2075,7 +2078,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json1, type);
-            if(arrayList.get(position).getAudioFile().equalsIgnoreCase("")){
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
                 arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
@@ -2104,10 +2107,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }
         MakeArray();
     }
+
     private void MakeArray() {
         Gson gson = new Gson();
-       SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-       String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
+        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         MainPlayModel mainPlayModel;
         mainPlayModelList = new ArrayList<>();
@@ -2678,7 +2682,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         } else if (audioPlay) {
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
             listSize = mainPlayModelList.size();
-            if(listSize!=0) {
+            if (listSize != 0) {
                 if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
                     binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                 } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
