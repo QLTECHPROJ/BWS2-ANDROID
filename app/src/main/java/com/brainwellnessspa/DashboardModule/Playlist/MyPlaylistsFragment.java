@@ -838,10 +838,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     private List<DownloadAudioDetails> getMyMedia() {
         downloadedSingleAudio = new ArrayList<>();
         class GetMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadedSingleAudio = DatabaseClient
                         .getInstance(getActivity())
                         .getaudioDatabase()
@@ -889,7 +887,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     private void getMediaByPer(String playlistID, int totalAudio) {
         class getMediaByPer extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
                 count = DatabaseClient.getInstance(getActivity())
@@ -903,7 +900,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             @Override
             protected void onPostExecute(Void aVoid) {
                 downloadPlaylistDetailsList = GetPlaylistDetail(downloadPlaylistDetails.getDownload());
-
                 if (downloadPlaylistDetailsList.size() != 0) {
                     if (count <= totalAudio) {
                         if (count == totalAudio) {
@@ -1059,16 +1055,16 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     binding.ivDownloads.setColorFilter(activity.getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                     enableDisableDownload(false, "orange");
                     binding.ivReminder.setColorFilter(activity.getResources().getColor(R.color.gray), PorterDuff.Mode.SRC_IN);
-
                 } else {
                     binding.llDownloads.setVisibility(View.VISIBLE);
                     binding.llReminder.setVisibility(View.VISIBLE);
                     if (listModel.getCreated().equalsIgnoreCase("1")) {
+                        binding.rvPlayLists.setVisibility(View.VISIBLE);
+                        binding.rvPlayLists1.setVisibility(View.VISIBLE);
                         binding.rvPlayLists2.setVisibility(View.GONE);
                         adpater1 = new PlayListsAdpater1(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated(), this);
                         binding.rvPlayLists.setAdapter(adpater1);
                         adpater = new PlayListsAdpater(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated(), this);
-//                        SongListSize = listModel.getPlaylistSongs().size();
                         ItemTouchHelper.Callback callback = new ItemMoveCallback(adpater);
                         touchHelper = new ItemTouchHelper(callback);
                         touchHelper.attachToRecyclerView(binding.rvPlayLists1);
