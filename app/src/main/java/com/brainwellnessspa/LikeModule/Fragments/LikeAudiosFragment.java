@@ -160,6 +160,7 @@ public class LikeAudiosFragment extends Fragment {
                     startActivity(i);
                 }
             });
+
             holder.binding.llLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

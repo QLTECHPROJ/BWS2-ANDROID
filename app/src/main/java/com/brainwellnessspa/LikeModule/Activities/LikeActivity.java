@@ -33,6 +33,7 @@ import java.util.List;
 
 import retrofit2.Callback;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
@@ -53,9 +54,13 @@ public class LikeActivity extends AppCompatActivity {
         ctx = LikeActivity.this;
         SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        binding.llBack.setOnClickListener(view -> finish());
+
+        binding.llBack.setOnClickListener(view -> {
+            comefromDownload = "0";
+            ComeScreenAccount = 1;
+            finish();
+        });
         prepareData();
-        RefreshData();
     }
 
     @Override
@@ -67,6 +72,7 @@ public class LikeActivity extends AppCompatActivity {
     public void RefreshData() {
         callMembershipMediaPlayer();
     }
+
     private void callMembershipMediaPlayer() {
         try {
             SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -144,7 +150,9 @@ public class LikeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     public void prepareData() {
+        callMembershipMediaPlayer();
         binding.viewPager.setOffscreenPageLimit(2);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Audios"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Playlists"));
@@ -169,11 +177,13 @@ public class LikeActivity extends AppCompatActivity {
 
             }
         });
-        RefreshData();
+//        RefreshData();
     }
 
     @Override
     public void onBackPressed() {
+        comefromDownload = "0";
+        ComeScreenAccount = 1;
         finish();
     }
 

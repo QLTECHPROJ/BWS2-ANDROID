@@ -63,6 +63,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenReminder;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
@@ -122,6 +123,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
         super.onResume();
         PrepareData();
     }
+
     private void callMembershipMediaPlayer() {
         try {
             SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -194,7 +196,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                         .add(R.id.flContainer, fragment)
                         .commit();
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                params.setMargins(10, 8, 10, 210);
+                params.setMargins(10, 8, 10, 180);
                 binding.llSpace.setLayoutParams(params);
             } else {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -205,6 +207,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     public void PrepareData() {
         callMembershipMediaPlayer();
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -394,27 +397,27 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 } else {
-                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-                    if (isDisclaimer == 1) {
-                        if (isPause) {
-                            resumeMedia();
-                        } else
-                        BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                        if (isDisclaimer == 1) {
+                            if (isPause) {
+                                resumeMedia();
+                            } else
+                                BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
+                        } else {
+                            callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
+                        }
                     } else {
-                        callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
+                        isDisclaimer = 0;
+                        disclaimerPlayed = 0;
+                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
+                        listModelList2.add(addDisclaimer);
+                        listModelList2.addAll(listModelList);
+                        callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
                     }
-                } else {
-                    isDisclaimer = 0;
-                    disclaimerPlayed = 0;
-                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
-                    listModelList2.add(addDisclaimer);
-                    listModelList2.addAll(listModelList);
-                    callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
-                }
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
