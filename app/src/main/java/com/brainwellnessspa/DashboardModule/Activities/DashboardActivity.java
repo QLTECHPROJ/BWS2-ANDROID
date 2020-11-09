@@ -55,7 +55,8 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);
-
+        Intent playbackServiceIntent = new Intent(this, MusicService.class);
+        startService(playbackServiceIntent);
         if (getIntent().hasExtra("Goplaylist")) {
             Goplaylist = getIntent().getStringExtra("Goplaylist");
             PlaylistID = getIntent().getStringExtra("PlaylistID");
