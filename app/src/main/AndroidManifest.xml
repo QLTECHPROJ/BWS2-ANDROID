@@ -41,6 +41,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name=".LikeModule.Activities.PlaylistLikeActivity"
             android:configChanges="orientation|screenSize"
@@ -279,6 +280,9 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".Services.NotificationActionService" />
+        <service android:name=".Services.OnClearFromRecentService" />
     </application>
 
 </manifest>

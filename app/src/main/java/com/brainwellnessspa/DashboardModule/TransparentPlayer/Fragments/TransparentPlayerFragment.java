@@ -120,6 +120,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     Gson gson;
     private long totalDuration, currentDuration = 0;
     private Handler handler12;
+    BroadcastReceiver broadcastReceiver;
     private Runnable UpdateSongTime12 = new Runnable() {
         @Override
         public void run() {
@@ -320,7 +321,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             IsShuffle = "";
         }
 
-        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+
+        broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getExtras().getString("actionname");
@@ -342,7 +344,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
         };
 
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+          /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             BWSApplication.createChannel(getActivity());
             getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
             getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
@@ -351,8 +353,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
         getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
 //        }
-
-
         binding.ivPause.setOnClickListener(view1 -> {
             handler12.removeCallbacks(UpdateSongTime12);
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
@@ -706,35 +706,49 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         position--;
         BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
                 R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-//        title.setText(tracks.get(position).getTitle());
-
+        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
     }
 
     @Override
     public void onTrackPlay() {
-        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
-                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-        binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
-        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-        isPlaying = true;
+//        if (isPlaying) {
+//            BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+//                    R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
+//            binding.ivPause.setImageResource(R.drawable.ic_play_icon);
+//            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+//            isPlaying = false;
+//        } else {
+            BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+                    R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
+            binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
+            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+            isPlaying = true;
+//        }
     }
 
     @Override
     public void onTrackPause() {
-        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
-                R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
-        binding.ivPause.setImageResource(R.drawable.ic_play_icon);
-        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-        isPlaying = false;
+//        if (isPlaying) {
+            BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+                    R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
+            binding.ivPause.setImageResource(R.drawable.ic_play_icon);
+            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+            isPlaying = false;
+//        } else {
+//            BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+//                    R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
+//            binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
+//            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+//            isPlaying = true;
+//        }
     }
 
     @Override
     public void onTrackNext() {
-//        position++;
+        position++;
         BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
                 R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-//        title.setText(tracks.get(position).getTitle());
-
+        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
     }
 
     private void addToRecentPlay() {
