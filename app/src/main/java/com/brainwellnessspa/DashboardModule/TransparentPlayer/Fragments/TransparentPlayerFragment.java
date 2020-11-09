@@ -350,15 +350,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
         };
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             BWSApplication.createChannel(getActivity());
             getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
             getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
-        }else {
-            BWSApplication.createChannel(getActivity());
-            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-            getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
-        }
+        }else {*/
+        BWSApplication.createChannel(getActivity());
+        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
+//        }
 
 
         binding.ivPause.setOnClickListener(view1 -> {
