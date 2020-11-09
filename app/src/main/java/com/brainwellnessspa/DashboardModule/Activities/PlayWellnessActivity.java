@@ -1742,8 +1742,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json1, type);
 
-            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
-                arrayList.remove(0);
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
+                arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
@@ -1773,8 +1773,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json1, type);
-            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
-                arrayList.remove(0);
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
+                arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
@@ -1895,39 +1895,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
             }.getType();
             ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json1, type);
-            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
-                arrayList.remove(0);
-            }
-            for (int i = 0; i < arrayList.size(); i++) {
-
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
-                mainPlayModel.setName(arrayList.get(i).getName());
-                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-            }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedz.edit();
-            Gson gsonz = new Gson();
-            String json = gson.toJson(arrayList);
-            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-            String jsonz = gsonz.toJson(mainPlayModelList);
-            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-            editor.commit();
-        } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
-            Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
-            }.getType();
-            ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json1, type);
-            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
-                arrayList.remove(0);
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
+                arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
 
@@ -1957,8 +1926,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json1, type);
-            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
-                arrayList.remove(0);
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
+                arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
 
@@ -2027,36 +1996,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 mainPlayModel.setName(arrayList.get(i).getName());
                 mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
                 mainPlayModel.setPlaylistID("");
-                mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
-                mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
-                mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());
-                mainPlayModel.setImageFile(arrayList.get(i).getImageFile());
-                mainPlayModel.setLike(arrayList.get(i).getLike());
-                mainPlayModel.setDownload(arrayList.get(i).getDownload());
-                mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
-                mainPlayModelList.add(mainPlayModel);
-            }
-            SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedz.edit();
-            Gson gsonz = new Gson();
-            String json = gson.toJson(arrayList);
-            editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-            String jsonz = gsonz.toJson(mainPlayModelList);
-            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonz);
-            editor.commit();
-        } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
-            Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
-            }.getType();
-            ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json1, type);
-            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
-                arrayList.remove(position);
-            }
-            for (int i = 0; i < arrayList.size(); i++) {
-                mainPlayModel = new MainPlayModel();
-                mainPlayModel.setID(arrayList.get(i).getID());
-                mainPlayModel.setName(arrayList.get(i).getName());
-                mainPlayModel.setAudioFile(arrayList.get(i).getAudioFile());
-                mainPlayModel.setPlaylistID(arrayList.get(i).getPlaylistID());
                 mainPlayModel.setAudioDirection(arrayList.get(i).getAudioDirection());
                 mainPlayModel.setAudiomastercat(arrayList.get(i).getAudiomastercat());
                 mainPlayModel.setAudioSubCategory(arrayList.get(i).getAudioSubCategory());

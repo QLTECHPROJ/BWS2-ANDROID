@@ -354,56 +354,69 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
 //        }
         binding.ivPause.setOnClickListener(view1 -> {
-            handler12.removeCallbacks(UpdateSongTime12);
-            binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
-            if (!isMediaStart && !isPlaying) {
-//                callAsyncTask();
-                onTrackPlay();
-                callMedia();
-            } else {
-                onTrackPause();
-                pauseMedia();
-                binding.ivPause.setVisibility(View.GONE);
-                binding.ivPlay.setVisibility(View.VISIBLE);
-            }
-            oTime = binding.simpleSeekbar.getProgress();
+            callPause();
         });
 
         binding.ivPlay.setOnClickListener(view12 -> {
-            if (!isMediaStart && !isPlaying) {
-                isCompleteStop = false;
-                isprogressbar = true;
-                handler12.postDelayed(UpdateSongTime12, 500);
-                binding.progressBar.setVisibility(View.VISIBLE);
-//                binding.llProgress.setVisibility(View.GONE);
-                binding.ivPlay.setVisibility(View.GONE);
-                binding.ivPause.setVisibility(View.GONE);
-                onTrackPlay();
-                callMedia();
-            } else if (isCompleteStop) {
-                isCompleteStop = false;
-                isprogressbar = true;
-                onTrackPause();
-                handler12.postDelayed(UpdateSongTime12, 500);
-                binding.progressBar.setVisibility(View.VISIBLE);
-//                binding.llProgress.setVisibility(View.GONE);
-                binding.ivPlay.setVisibility(View.GONE);
-                binding.ivPause.setVisibility(View.GONE);
-                callMedia();
-            } else {
-                resumeMedia();
-                onTrackPause();
-                binding.progressBar.setVisibility(View.GONE);
-//                binding.llProgress.setVisibility(View.GONE);
-                binding.ivPlay.setVisibility(View.GONE);
-                binding.ivPause.setVisibility(View.VISIBLE);
-                isPause = false;
-            }
-            player = 1;
-            handler12.postDelayed(UpdateSongTime12, 100);
+            callPlay();
         });
 
         return view;
+    }
+
+    private void callPlay() {
+        if (isPlaying) {
+            onTrackPause();
+        } else {
+            onTrackPlay();
+        }
+        if (!isMediaStart) {
+            isCompleteStop = false;
+            isprogressbar = true;
+            handler12.postDelayed(UpdateSongTime12, 500);
+            binding.progressBar.setVisibility(View.VISIBLE);
+//                binding.llProgress.setVisibility(View.GONE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.GONE);
+            callMedia();
+        } else if (isCompleteStop) {
+            isCompleteStop = false;
+            isprogressbar = true;
+            handler12.postDelayed(UpdateSongTime12, 500);
+            binding.progressBar.setVisibility(View.VISIBLE);
+//                binding.llProgress.setVisibility(View.GONE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.GONE);
+            callMedia();
+        } else {
+            resumeMedia();
+            binding.progressBar.setVisibility(View.GONE);
+//                binding.llProgress.setVisibility(View.GONE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.VISIBLE);
+            isPause = false;
+        }
+        player = 1;
+        handler12.postDelayed(UpdateSongTime12, 100);
+    }
+
+    private void callPause() {
+        handler12.removeCallbacks(UpdateSongTime12);
+        binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
+        if (isPlaying) {
+            onTrackPause();
+        } else {
+            onTrackPlay();
+        }
+        if (!isMediaStart) {
+//                callAsyncTask();
+            callMedia();
+        } else {
+            pauseMedia();
+            binding.ivPause.setVisibility(View.GONE);
+            binding.ivPlay.setVisibility(View.VISIBLE);
+        }
+        oTime = binding.simpleSeekbar.getProgress();
     }
 
     private void MakeArray() {
@@ -694,10 +707,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onTrackPrevious() {
-        position--;
-        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
-                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+        if(!audioFile.equalsIgnoreCase(""))
+        callPrev();
+//        position--;
+//        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+//                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
+//        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
     }
 
     @Override
@@ -711,7 +726,35 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //        } else {
             BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
                     R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-            binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
+//            binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
+        if (!isMediaStart) {
+            isCompleteStop = false;
+            isprogressbar = true;
+            handler12.postDelayed(UpdateSongTime12, 500);
+            binding.progressBar.setVisibility(View.VISIBLE);
+//                binding.llProgress.setVisibility(View.GONE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.GONE);
+            callMedia();
+        } else if (isCompleteStop) {
+            isCompleteStop = false;
+            isprogressbar = true;
+            handler12.postDelayed(UpdateSongTime12, 500);
+            binding.progressBar.setVisibility(View.VISIBLE);
+//                binding.llProgress.setVisibility(View.GONE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.GONE);
+            callMedia();
+        } else {
+            resumeMedia();
+            binding.progressBar.setVisibility(View.GONE);
+//                binding.llProgress.setVisibility(View.GONE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.VISIBLE);
+            isPause = false;
+        }
+        player = 1;
+        handler12.postDelayed(UpdateSongTime12, 100);
             binding.tvTitle.setText(mainPlayModelList.get(position).getName());
             isPlaying = true;
 //        }
@@ -722,9 +765,17 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //        if (isPlaying) {
             BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
                     R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
-            binding.ivPause.setImageResource(R.drawable.ic_play_icon);
+//            binding.ivPause.setImageResource(R.drawable.ic_play_icon);
             binding.tvTitle.setText(mainPlayModelList.get(position).getName());
             isPlaying = false;
+        if (!isMediaStart) {
+//                callAsyncTask();
+            callMedia();
+        } else {
+            pauseMedia();
+            binding.ivPause.setVisibility(View.GONE);
+            binding.ivPlay.setVisibility(View.VISIBLE);
+        }
 //        } else {
 //            BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
 //                    R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
@@ -736,10 +787,164 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onTrackNext() {
-        position++;
-        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
-                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+        if(!audioFile.equalsIgnoreCase(""))
+        callNext();
+//        position++;
+//        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+//                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
+//        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+    }
+
+    private void callPrev() {
+        if (isPrepare || isMediaStart || isPause) {
+            stopMedia();
+        }
+        isMediaStart = false;
+        isPrepare = false;
+        isPause = false;
+        isCompleteStop = false;
+        if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
+            // repeat is on play same song again
+            if (position > 0) {
+                position = position - 1;
+                getPrepareShowData();
+            } else if (listSize != 1) {
+                position = listSize - 1;
+                getPrepareShowData();
+            }
+        }/* else if (IsRepeat.equalsIgnoreCase("0")) {
+                getPrepareShowData(position);
+            }*/ else if (IsShuffle.equalsIgnoreCase("1")) {
+            // shuffle is on - play a random song
+            if (queuePlay) {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    addToQueueModelList.remove(position);
+                    listSize = addToQueueModelList.size();
+                    if (listSize == 0) {
+                        stopMedia();
+                    } else if (listSize == 1) {
+                        stopMedia();
+                    } else {
+                        Random random = new Random();
+                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                        getPrepareShowData();
+                    }
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
+            } else {
+                Random random = new Random();
+                position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                getPrepareShowData();
+            }
+        } else {
+            if (queuePlay) {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    addToQueueModelList.remove(position);
+                    listSize = addToQueueModelList.size();
+                    if (position > 0) {
+                        position = position-1;
+                        getPrepareShowData();
+                    } else {
+                        if (listSize == 0) {
+                            savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                            binding.ivPlay.setVisibility(View.VISIBLE);
+                            binding.ivPause.setVisibility(View.GONE);
+                            stopMedia();
+                        } else {
+                            position = 0;
+                            getPrepareShowData();
+                        }
+                    }
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
+            } else {
+                if (position > 0) {
+                    position = position - 1;
+
+                    getPrepareShowData();
+                } else if (listSize != 1) {
+                    position = listSize - 1;
+                    getPrepareShowData();
+                }
+            }
+        }
+    }
+
+    private void callNext() {
+
+        if (isPrepare || isMediaStart || isPause) {
+            stopMedia();
+        }
+        isMediaStart = false;
+        isPrepare = false;
+        isPause = false;
+        isCompleteStop = false;
+        if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
+            // repeat is on play same song again
+            if (position < listSize - 1) {
+                position = position + 1;
+            } else {
+                position = 0;
+            }
+            getPrepareShowData();
+        }/* else if (IsRepeat.equalsIgnoreCase("0")) {
+                getPrepareShowData(position);
+            }*/ else if (IsShuffle.equalsIgnoreCase("1")) {
+            // shuffle is on - play a random song
+            if (queuePlay) {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    addToQueueModelList.remove(position);
+                    listSize = addToQueueModelList.size();
+                    if (listSize == 0) {
+                        isCompleteStop = true;
+                        stopMedia();
+                    } else if (listSize == 1) {
+                        isCompleteStop = true;
+                        stopMedia();
+                    } else {
+                        Random random = new Random();
+                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                        getPrepareShowData();
+                    }
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
+            } else {
+                Random random = new Random();
+                position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                getPrepareShowData();
+            }
+        } else {
+            if (queuePlay) {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    addToQueueModelList.remove(position);
+                    listSize = addToQueueModelList.size();
+                    if (position < listSize - 1) {
+                        getPrepareShowData();
+                    } else {
+                        if (listSize == 0) {
+                            savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                            stopMedia();
+                        } else {
+                            position = 0;
+                            getPrepareShowData();
+                        }
+                    }
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
+            } else {
+                if (position < listSize - 1) {
+                    position = position + 1;
+                    getPrepareShowData();
+                } else if (listSize != 1) {
+                    position = 0;
+                    getPrepareShowData();
+                }
+            }
+        }
     }
 
     private void addToRecentPlay() {
@@ -1226,8 +1431,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
 
-            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
-                arrayList.remove(0);
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
+                arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
                 mainPlayModel = new MainPlayModel();
@@ -1257,8 +1462,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
             }.getType();
             ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gson.fromJson(json, type);
-            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
-                arrayList.remove(0);
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
+                arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
 
@@ -1380,8 +1585,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
             }.getType();
             ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json, type);
-            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
-                arrayList.remove(0);
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
+                arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
 
@@ -1411,8 +1616,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
-            if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
-                arrayList.remove(0);
+            if (arrayList.get(position).getAudioFile().equalsIgnoreCase("")) {
+                arrayList.remove(position);
             }
             for (int i = 0; i < arrayList.size(); i++) {
 
