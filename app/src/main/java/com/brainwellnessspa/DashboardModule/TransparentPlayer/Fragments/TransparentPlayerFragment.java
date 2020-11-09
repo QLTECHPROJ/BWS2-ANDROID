@@ -331,8 +331,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     case BWSApplication.ACTION_PLAY:
                         if (isPlaying) {
                             onTrackPause();
+                            binding.progressBar.setVisibility(View.GONE);
+//                binding.llProgress.setVisibility(View.GONE);
+                            binding.ivPlay.setVisibility(View.VISIBLE);
+                            binding.ivPause.setVisibility(View.GONE);
                         } else {
                             onTrackPlay();
+                            binding.progressBar.setVisibility(View.GONE);
+//                binding.llProgress.setVisibility(View.GONE);
+                            binding.ivPlay.setVisibility(View.GONE);
+                            binding.ivPause.setVisibility(View.VISIBLE);
                         }
                         break;
                     case BWSApplication.ACTION_NEXT:
