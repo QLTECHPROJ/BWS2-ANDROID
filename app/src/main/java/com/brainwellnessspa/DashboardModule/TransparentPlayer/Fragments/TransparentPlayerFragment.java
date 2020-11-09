@@ -718,18 +718,17 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     public void onTrackPlay() {
         BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
                 R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-//        play.setImageResource(R.drawable.ic_pause_black_24dp);
-//        title.setText(tracks.get(position).getTitle());
+//        binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
+//        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
         isPlaying = true;
-
     }
 
     @Override
     public void onTrackPause() {
         BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
                 R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
-//        play.setImageResource(R.drawable.ic_play_arrow_black_24dp);
-//        title.setText(tracks.get(position).getTitle());
+//        binding.ivPause.setImageResource(R.drawable.ic_play_icon);
+//        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
         isPlaying = false;
     }
 
