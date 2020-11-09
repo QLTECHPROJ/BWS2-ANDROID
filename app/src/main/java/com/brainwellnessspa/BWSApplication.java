@@ -174,7 +174,7 @@ public class BWSApplication extends Application {
                     .setSmallIcon(R.drawable.ic_music_note)
                     .setContentTitle(track.getName())
                     .setContentText(track.getAudioDirection())
-                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.logo_design))
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.square_app_icon))
                     .setOnlyAlertOnce(true)//show notification for only first time
                     .setShowWhen(false)
                     .addAction(drw_previous, "Previous", pendingIntentPrevious)

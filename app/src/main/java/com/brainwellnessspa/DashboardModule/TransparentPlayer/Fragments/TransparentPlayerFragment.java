@@ -331,16 +331,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     case BWSApplication.ACTION_PLAY:
                         if (isPlaying) {
                             onTrackPause();
-                            binding.progressBar.setVisibility(View.GONE);
-//                binding.llProgress.setVisibility(View.GONE);
-                            binding.ivPlay.setVisibility(View.VISIBLE);
-                            binding.ivPause.setVisibility(View.GONE);
                         } else {
                             onTrackPlay();
-                            binding.progressBar.setVisibility(View.GONE);
-//                binding.llProgress.setVisibility(View.GONE);
-                            binding.ivPlay.setVisibility(View.GONE);
-                            binding.ivPause.setVisibility(View.VISIBLE);
                         }
                         break;
                     case BWSApplication.ACTION_NEXT:
@@ -722,8 +714,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     public void onTrackPlay() {
         BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
                 R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-//        binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
-//        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+        binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
+        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
         isPlaying = true;
     }
 
@@ -731,8 +723,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     public void onTrackPause() {
         BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
                 R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
-//        binding.ivPause.setImageResource(R.drawable.ic_play_icon);
-//        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+        binding.ivPause.setImageResource(R.drawable.ic_play_icon);
+        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
         isPlaying = false;
     }
 
