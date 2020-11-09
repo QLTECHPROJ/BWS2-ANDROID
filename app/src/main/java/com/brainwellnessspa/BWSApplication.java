@@ -82,10 +82,6 @@ public class BWSApplication extends Application {
     private static BWSApplication BWSApplication;
     private static List<DownloadAudioDetails> downloadAudioDetailsList;
     private static final int NOTIFICATION_ID = 101;
-    public static final String ACTION_PAUSE = "com.brainwellnessspa.ACTION_PAUSE";
-    public static final String ACTION_STOP = "com.brainwellnessspa.ACTION_STOP";
-    public static final String NOTIFICATION_DISMISSED = "com.brainwellnessspa.NOTIFICATION_DISMISSED";
-    public static final String NOTIFICATION_CHANNEL = "music_player_channel";
     private static Bitmap myBitmap;
     private static Service service;
     private static Bitmap mCurrTrackCover;
@@ -94,9 +90,6 @@ public class BWSApplication extends Application {
     public static boolean usesChronometer = false;
     public static boolean showWhen = false;
     public static Long notifWhen = 0L;
-//    playPauseIcon = if (getIsPlaying()) R.drawable.ic_pause_vector else R.drawable.ic_play_vector
-
-    //MediaSession
     public static MediaSessionManager mediaSessionManager;
     public static MediaSessionCompat mediaSession;
     public static MediaControllerCompat.TransportControls transportControls;
@@ -112,9 +105,7 @@ public class BWSApplication extends Application {
         return mContext;
     }
 
-    public static MeasureRatio measureRatio(Context context, float outerMargin, float aspectX, float aspectY,
-                                            float proportion, float innerMargin) {
-
+    public static MeasureRatio measureRatio(Context context, float outerMargin, float aspectX, float aspectY, float proportion, float innerMargin) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         try {
             WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

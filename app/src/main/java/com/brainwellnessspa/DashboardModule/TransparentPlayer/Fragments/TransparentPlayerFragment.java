@@ -354,6 +354,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             BWSApplication.createChannel(getActivity());
             getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
             getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
+        }else {
+            BWSApplication.createChannel(getActivity());
+            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+            getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
         }
 
 
