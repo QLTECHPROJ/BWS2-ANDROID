@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -131,7 +132,6 @@ public class BWSApplication extends Application {
     };
 
     public static void createNotification(Context context, MainPlayModel track, int playbutton, int pos, int size) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
             MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
             PendingIntent pendingIntentPrevious;
@@ -187,8 +187,6 @@ public class BWSApplication extends Application {
                     .build();
 
             notificationManagerCompat.notify(1, notification);
-
-        }
     }
 
     public static void createChannel(Context ctx) {
@@ -200,14 +198,7 @@ public class BWSApplication extends Application {
             if (notificationManager != null) {
                 notificationManager.createNotificationChannel(channel);
             }
-        } else {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    "KOD Dev", NotificationManager.IMPORTANCE_LOW);
-
-            notificationManager = ctx.getSystemService(NotificationManager.class);
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
-            }
+        }else{
         }
     }
 
