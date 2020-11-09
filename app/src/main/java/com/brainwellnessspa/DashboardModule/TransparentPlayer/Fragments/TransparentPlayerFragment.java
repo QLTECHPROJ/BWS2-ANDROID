@@ -356,15 +356,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         binding.ivPause.setOnClickListener(view1 -> {
             handler12.removeCallbacks(UpdateSongTime12);
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
-            if (isPlaying) {
-                onTrackPause();
-            } else {
-                onTrackPlay();
-            }
-            if (!isMediaStart) {
+            if (!isMediaStart && !isPlaying) {
 //                callAsyncTask();
+                onTrackPlay();
                 callMedia();
             } else {
+                onTrackPause();
                 pauseMedia();
                 binding.ivPause.setVisibility(View.GONE);
                 binding.ivPlay.setVisibility(View.VISIBLE);
@@ -373,12 +370,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         });
 
         binding.ivPlay.setOnClickListener(view12 -> {
-            if (isPlaying) {
-                onTrackPause();
-            } else {
-                onTrackPlay();
-            }
-            if (!isMediaStart) {
+            if (!isMediaStart && !isPlaying) {
                 isCompleteStop = false;
                 isprogressbar = true;
                 handler12.postDelayed(UpdateSongTime12, 500);
@@ -386,10 +378,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                binding.llProgress.setVisibility(View.GONE);
                 binding.ivPlay.setVisibility(View.GONE);
                 binding.ivPause.setVisibility(View.GONE);
+                onTrackPlay();
                 callMedia();
             } else if (isCompleteStop) {
                 isCompleteStop = false;
                 isprogressbar = true;
+                onTrackPause();
                 handler12.postDelayed(UpdateSongTime12, 500);
                 binding.progressBar.setVisibility(View.VISIBLE);
 //                binding.llProgress.setVisibility(View.GONE);
@@ -398,6 +392,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 callMedia();
             } else {
                 resumeMedia();
+                onTrackPause();
                 binding.progressBar.setVisibility(View.GONE);
 //                binding.llProgress.setVisibility(View.GONE);
                 binding.ivPlay.setVisibility(View.GONE);
@@ -560,7 +555,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
-
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
@@ -588,7 +582,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
             for (int i = 0; i < listSize; i++) {
-
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
                 mainPlayModel.setName(arrayList.get(i).getName());
@@ -615,7 +608,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             ArrayList<DownloadAudioDetails> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
-
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
@@ -643,7 +635,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gson.fromJson(json, type);
             listSize = arrayList.size();
-
             for (int i = 0; i < listSize; i++) {
                 mainPlayModel = new MainPlayModel();
                 mainPlayModel.setID(arrayList.get(i).getID());
