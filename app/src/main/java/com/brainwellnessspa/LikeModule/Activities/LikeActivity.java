@@ -45,6 +45,7 @@ public class LikeActivity extends AppCompatActivity {
     Activity activity;
     String AudioFlag, UserID;
     Context ctx;
+    public static boolean ComeFrom_LikePlaylist = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,12 @@ public class LikeActivity extends AppCompatActivity {
             ComeScreenAccount = 1;
             finish();
         });
+        if (ComeFrom_LikePlaylist) {
+            binding.viewPager.setCurrentItem(1);
+            ComeFrom_LikePlaylist = false;
+        } else {
+            binding.viewPager.setCurrentItem(0);
+        }
         prepareData();
     }
 

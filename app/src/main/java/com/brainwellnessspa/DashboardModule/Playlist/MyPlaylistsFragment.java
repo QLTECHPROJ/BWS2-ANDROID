@@ -55,6 +55,7 @@ import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayMod
 import com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
+import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReminderModule.Activities.ReminderActivity;
@@ -102,6 +103,7 @@ import static com.brainwellnessspa.DashboardModule.Playlist.ViewAllPlaylistFragm
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity.ComeFrom_Playlist;
+import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.ComeFrom_LikePlaylist;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
@@ -529,6 +531,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         .replace(R.id.flContainer, fragment)
                         .commit();
                 comefrom_search = 0;
+            } else if (comefrom_search == 4) {
+                Intent i = new Intent(getActivity(), LikeActivity.class);
+                ComeFrom_LikePlaylist = true;
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(i);
+                getActivity().finish();
+                //            comefrom_search = 0;
             } else if (comefrom_search == 3) {
                 Intent i = new Intent(getActivity(), DownloadsActivity.class);
                 ComeFrom_Playlist = true;

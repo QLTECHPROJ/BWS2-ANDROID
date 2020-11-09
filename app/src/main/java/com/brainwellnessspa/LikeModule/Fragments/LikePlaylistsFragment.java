@@ -31,6 +31,7 @@ import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.PlaylistLikeModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
+import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
 import com.brainwellnessspa.InvoiceModule.Models.InvoiceListModel;
 import com.brainwellnessspa.LikeModule.Activities.PlaylistLikeActivity;
@@ -54,6 +55,7 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.LikeModule.Activities.PlaylistLikeActivity.RefreshLikePlaylist;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
@@ -222,9 +224,19 @@ public class LikePlaylistsFragment extends Fragment {
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(getActivity(), PlaylistLikeActivity.class);
-                    i.putExtra("PlaylistID", modelList.get(position).getPlaylistId());
-                    startActivity(i);
+                    comefrom_search = 4;
+                    Bundle bundle = new Bundle();
+                    Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                    FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                    bundle.putString("New", "");
+                    bundle.putString("PlaylistID", modelList.get(position).getPlaylistId());
+                    bundle.putString("PlaylistName", modelList.get(position).getPlaylistName());
+                    bundle.putString("PlaylistImage", modelList.get(position).getPlaylistImage());
+                    bundle.putString("MyDownloads", "");
+                    myPlaylistsFragment.setArguments(bundle);
+                    fragmentManager1.beginTransaction()
+                            .replace(R.id.flContainer, myPlaylistsFragment)
+                            .commit();
                 }
             });
 

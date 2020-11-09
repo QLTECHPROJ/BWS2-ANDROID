@@ -81,8 +81,7 @@ public class AccountFragment extends Fragment {
     private long mLastClickTime = 0;
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false);
         View view = binding.getRoot();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);

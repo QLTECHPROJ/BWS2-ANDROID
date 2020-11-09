@@ -1404,7 +1404,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     GetMedia();
                     GetMedia2();
                 }
-                BWSApplication.simple_Notification(playbackStatus, mainPlayModelList, PlayWellnessActivity.this, position, PlayWellnessActivity.this);
+//                BWSApplication.simple_Notification(playbackStatus, mainPlayModelList, PlayWellnessActivity.this, position, PlayWellnessActivity.this);
                 startTime = getStartTime();
             } catch (Exception e) {
                 e.printStackTrace();
