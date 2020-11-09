@@ -50,14 +50,15 @@ public class DownloadsActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_downloads);
         ctx = DownloadsActivity.this;
         ComeScreenAccount = 0;
+        comefromDownload = "1";
         SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
         binding.llBack.setOnClickListener(view -> {
-            comefromDownload = "0";
             ComeScreenAccount = 1;
+            comefromDownload = "0";
             finish();
         });
         prepareData();
@@ -65,8 +66,8 @@ public class DownloadsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        comefromDownload = "0";
         ComeScreenAccount = 1;
+        comefromDownload = "0";
         finish();
     }
 

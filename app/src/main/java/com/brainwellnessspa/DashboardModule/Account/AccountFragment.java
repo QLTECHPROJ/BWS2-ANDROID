@@ -70,6 +70,7 @@ import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 
 public class AccountFragment extends Fragment {
     public static String IsLock = "";
@@ -247,6 +248,7 @@ public class AccountFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        ComeScreenAccount = 1;
         comefromDownload = "0";
         profileViewData(getActivity());
     }

@@ -23,6 +23,8 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -77,6 +79,23 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
             fragmentManager1.beginTransaction()
                     .replace(R.id.flContainer, myPlaylistsFragment)
                     .commit();
+        }
+
+        if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {
+            ComeScreenAccount = 0;
+            comefromDownload = "0";
+        } else if (binding.navView.getSelectedItemId() == R.id.navigation_playlist) {
+            ComeScreenAccount = 0;
+            comefromDownload = "0";
+        } else if (binding.navView.getSelectedItemId() == R.id.navigation_search) {
+            ComeScreenAccount = 0;
+            comefromDownload = "0";
+        } else if (binding.navView.getSelectedItemId() == R.id.navigation_appointment) {
+            ComeScreenAccount = 0;
+            comefromDownload = "0";
+        } else if (binding.navView.getSelectedItemId() == R.id.navigation_account) {
+            ComeScreenAccount = 1;
+            comefromDownload = "0";
         }
 //
 //        ConnectivityManager connMgr = (ConnectivityManager)
@@ -159,8 +178,8 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
             case AudioManager.AUDIOFOCUS_GAIN:
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 // Resume your media player here
-                if(audioPause)
-                resumeMedia();
+                if (audioPause)
+                    resumeMedia();
                 audioPause = false;
                 break;
             case AudioManager.AUDIOFOCUS_LOSS:

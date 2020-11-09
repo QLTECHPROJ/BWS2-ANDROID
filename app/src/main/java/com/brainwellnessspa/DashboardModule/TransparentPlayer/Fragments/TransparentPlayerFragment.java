@@ -324,7 +324,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getExtras().getString("actionname");
-
                 switch (action) {
                     case BWSApplication.ACTION_PREVIUOS:
                         onTrackPrevious();
@@ -353,6 +352,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         binding.ivPause.setOnClickListener(view1 -> {
             handler12.removeCallbacks(UpdateSongTime12);
             binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
+            if (isPlaying) {
+                onTrackPause();
+            } else {
+                onTrackPlay();
+            }
             if (!isMediaStart) {
 //                callAsyncTask();
                 callMedia();
