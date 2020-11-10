@@ -74,12 +74,12 @@
                 android:src="@drawable/ic_lock_icon"
                 android:visibility="gone" />
 
-          <!--  <TextView
+            <TextView
                 android:id="@+id/tvAddToPlaylist"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/bottom_add_sheet"/>-->
+                android:background="@drawable/bottom_add_sheet"/>
         </RelativeLayout>
     </LinearLayout>
 </layout>

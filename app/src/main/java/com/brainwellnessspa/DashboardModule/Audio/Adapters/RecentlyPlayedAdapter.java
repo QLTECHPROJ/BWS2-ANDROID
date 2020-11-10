@@ -97,16 +97,22 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             holder.binding.ivLock.setVisibility(View.GONE);
         }
 
-//        holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+        holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+        holder.binding.tvAddToPlaylist.setText("Add To Playlist");
         holder.binding.llMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-//                holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+                holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+        holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 Intent i = new Intent(ctx, AddPlaylistActivity.class);
                 i.putExtra("AudioId", listModelList.get(position).getID());
                 i.putExtra("PlaylistID", "");
                 ctx.startActivity(i);
-                return false;
             }
         });
         holder.binding.llMainLayout.setOnClickListener(view -> {
