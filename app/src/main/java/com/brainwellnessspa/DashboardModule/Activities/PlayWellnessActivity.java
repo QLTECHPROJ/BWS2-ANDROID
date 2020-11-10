@@ -1,8 +1,10 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.media.AudioAttributes;
@@ -39,9 +41,11 @@ import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Services.OnClearFromRecentService;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.Utility.Playable;
 import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.brainwellnessspa.databinding.ActivityPlayWellnessBinding;
 import com.bumptech.glide.Glide;
@@ -89,7 +93,7 @@ import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.savePrefQueue;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
-public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, AudioManager.OnAudioFocusChangeListener, OnProgressListener*/ {
+public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, Playable/*, AudioManager.OnAudioFocusChangeListener, OnProgressListener*/ {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url;
     int startTime = 0, endTime = 0, position, listSize, myCount, progress, downloadPercentage;
@@ -104,6 +108,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     private long mLastClickTime = 0, totalDuration, currentDuration = 0;
     private Handler handler;
     PlaybackStatus playbackStatus;
+    BroadcastReceiver broadcastReceiver;
+    boolean isPlaying = false;
     //    private Handler handler1;
     //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -321,6 +327,41 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             handler1.removeCallbacks(UpdateSongTime1);
         }*/
         callRepeatShuffle();
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getExtras().getString("actionname");
+                switch (action) {
+                    case BWSApplication.ACTION_PREVIUOS:
+                        onTrackPrevious();
+                        if (isPlaying) {
+                            onTrackPause();
+                        } else {
+                            onTrackPlay();
+                        }
+                        break;
+                    case BWSApplication.ACTION_PLAY:
+                        if (isPlaying) {
+                            onTrackPause();
+                        } else {
+                            onTrackPlay();
+                        }
+                        break;
+                    case BWSApplication.ACTION_NEXT:
+                        onTrackNext();
+                        if (isPlaying) {
+                            onTrackPause();
+                        } else {
+                            onTrackPlay();
+                        }
+                        break;
+                }
+            }
+        };
+        BWSApplication.createChannel(ctx);
+        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
         if (isMediaStart /*&& !audioFile.equalsIgnoreCase("")*/) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();
@@ -392,6 +433,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         });
 
         binding.llPlay.setOnClickListener(v -> {
+            if (isPlaying) {
+                onTrackPause();
+            } else {
+                onTrackPlay();
+            }
             if (!isMediaStart) {
                 isCompleteStop = false;
                 isprogressbar = true;
@@ -422,14 +468,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         });
 
         binding.llPause.setOnClickListener(view -> {
-            handler.removeCallbacks(UpdateSongTime);
-            binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
-            pauseMedia();
-            binding.llProgressBar.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            binding.llPlay.setVisibility(View.VISIBLE);
-            binding.llPause.setVisibility(View.GONE);
-            oTime = binding.simpleSeekbar.getProgress();
+            if (isPlaying) {
+                onTrackPause();
+            } else {
+                onTrackPlay();
+            }
         });
 
         binding.llForwardSec.setOnClickListener(v -> {
@@ -449,158 +492,166 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         });
 
         binding.llnext.setOnClickListener(view -> {
-            if (isPrepare || isMediaStart || isPause) {
-                stopMedia();
-            }
-            isMediaStart = false;
-            isPrepare = false;
-            isPause = false;
-            isCompleteStop = false;
-            binding.pbProgress.setVisibility(View.GONE);
-            binding.ivDownloads.setVisibility(View.VISIBLE);
-            if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
-                // repeat is on play same song again
-                if (position < listSize - 1) {
-                    position = position + 1;
-                } else {
-                    position = 0;
-                }
-                getPrepareShowData(position);
-            }/* else if (IsRepeat.equalsIgnoreCase("0")) {
-                getPrepareShowData(position);
-            }*/ else if (IsShuffle.equalsIgnoreCase("1")) {
-                // shuffle is on - play a random song
-                if (queuePlay) {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        addToQueueModelList.remove(position);
-                        listSize = addToQueueModelList.size();
-                        if (listSize == 0) {
-                            isCompleteStop = true;
-                            stopMedia();
-                        } else if (listSize == 1) {
-                            isCompleteStop = true;
-                            stopMedia();
-                        } else {
-                            Random random = new Random();
-                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                            getPrepareShowData(position);
-                        }
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                    }
-                } else {
-                    Random random = new Random();
-                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                    getPrepareShowData(position);
-                }
-            } else {
-                if (queuePlay) {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        addToQueueModelList.remove(position);
-                        listSize = addToQueueModelList.size();
-                        if (position < listSize - 1) {
-                            getPrepareShowData(position);
-                        } else {
-                            if (listSize == 0) {
-                                savePrefQueue(0, false, true, addToQueueModelList, ctx);
-                                stopMedia();
-                            } else {
-                                position = 0;
-                                getPrepareShowData(position);
-                            }
-                        }
-                    } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                    }
-                } else {
-                    if (position < listSize - 1) {
-                        position = position + 1;
-                        getPrepareShowData(position);
-                    } else if (listSize != 1) {
-                        position = 0;
-                        getPrepareShowData(position);
-                    }
-                }
-            }
+            callNext();
         });
 
         binding.llprev.setOnClickListener(view -> {
-            if (isPrepare || isMediaStart || isPause) {
-                stopMedia();
+            callPrevious();
+        });
+    }
+
+    private void callPrevious() {
+        if (isPrepare || isMediaStart || isPause) {
+            stopMedia();
+        }
+        isMediaStart = false;
+        isPrepare = false;
+        isPause = false;
+        isCompleteStop = false;
+        binding.pbProgress.setVisibility(View.GONE);
+        binding.ivDownloads.setVisibility(View.VISIBLE);
+        if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
+            // repeat is on play same song again
+            if (position > 0) {
+                position = position - 1;
+                getPrepareShowData(position);
+            } else if (listSize != 1) {
+                position = listSize - 1;
+                getPrepareShowData(position);
             }
-            isMediaStart = false;
-            isPrepare = false;
-            isPause = false;
-            isCompleteStop = false;
-            binding.pbProgress.setVisibility(View.GONE);
-            binding.ivDownloads.setVisibility(View.VISIBLE);
-            if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
-                // repeat is on play same song again
+        }/* else if (IsRepeat.equalsIgnoreCase("0")) {
+                getPrepareShowData(position);
+            }*/ else if (IsShuffle.equalsIgnoreCase("1")) {
+            // shuffle is on - play a random song
+            if (queuePlay) {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    addToQueueModelList.remove(position);
+                    listSize = addToQueueModelList.size();
+                    if (listSize == 0) {
+                        stopMedia();
+                    } else if (listSize == 1) {
+                        stopMedia();
+                    } else {
+                        Random random = new Random();
+                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                        getPrepareShowData(position);
+                    }
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
+            } else {
+                Random random = new Random();
+                position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                getPrepareShowData(position);
+            }
+        } else {
+            if (queuePlay) {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    addToQueueModelList.remove(position);
+                    listSize = addToQueueModelList.size();
+                    if (position > 0) {
+                        getPrepareShowData(position - 1);
+                    } else {
+                        if (listSize == 0) {
+                            savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                            binding.llPlay.setVisibility(View.VISIBLE);
+                            binding.llPause.setVisibility(View.GONE);
+                            stopMedia();
+                        } else {
+                            position = 0;
+                            getPrepareShowData(position);
+                        }
+                    }
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
+            } else {
                 if (position > 0) {
                     position = position - 1;
+
                     getPrepareShowData(position);
                 } else if (listSize != 1) {
                     position = listSize - 1;
                     getPrepareShowData(position);
                 }
-            }/* else if (IsRepeat.equalsIgnoreCase("0")) {
+            }
+        }
+    }
+
+    private void callNext() {
+        if (isPrepare || isMediaStart || isPause) {
+            stopMedia();
+        }
+        isMediaStart = false;
+        isPrepare = false;
+        isPause = false;
+        isCompleteStop = false;
+        binding.pbProgress.setVisibility(View.GONE);
+        binding.ivDownloads.setVisibility(View.VISIBLE);
+        if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
+            // repeat is on play same song again
+            if (position < listSize - 1) {
+                position = position + 1;
+            } else {
+                position = 0;
+            }
+            getPrepareShowData(position);
+        }/* else if (IsRepeat.equalsIgnoreCase("0")) {
                 getPrepareShowData(position);
             }*/ else if (IsShuffle.equalsIgnoreCase("1")) {
-                // shuffle is on - play a random song
-                if (queuePlay) {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        addToQueueModelList.remove(position);
-                        listSize = addToQueueModelList.size();
-                        if (listSize == 0) {
-                            stopMedia();
-                        } else if (listSize == 1) {
-                            stopMedia();
-                        } else {
-                            Random random = new Random();
-                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                            getPrepareShowData(position);
-                        }
+            // shuffle is on - play a random song
+            if (queuePlay) {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    addToQueueModelList.remove(position);
+                    listSize = addToQueueModelList.size();
+                    if (listSize == 0) {
+                        isCompleteStop = true;
+                        stopMedia();
+                    } else if (listSize == 1) {
+                        isCompleteStop = true;
+                        stopMedia();
                     } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                        Random random = new Random();
+                        position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                        getPrepareShowData(position);
                     }
                 } else {
-                    Random random = new Random();
-                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                    getPrepareShowData(position);
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                 }
             } else {
-                if (queuePlay) {
-                    if (BWSApplication.isNetworkConnected(ctx)) {
-                        addToQueueModelList.remove(position);
-                        listSize = addToQueueModelList.size();
-                        if (position > 0) {
-                            getPrepareShowData(position - 1);
-                        } else {
-                            if (listSize == 0) {
-                                savePrefQueue(0, false, true, addToQueueModelList, ctx);
-                                binding.llPlay.setVisibility(View.VISIBLE);
-                                binding.llPause.setVisibility(View.GONE);
-                                stopMedia();
-                            } else {
-                                position = 0;
-                                getPrepareShowData(position);
-                            }
-                        }
+                Random random = new Random();
+                position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                getPrepareShowData(position);
+            }
+        } else {
+            if (queuePlay) {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    addToQueueModelList.remove(position);
+                    listSize = addToQueueModelList.size();
+                    if (position < listSize - 1) {
+                        getPrepareShowData(position);
                     } else {
-                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                        if (listSize == 0) {
+                            savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                            stopMedia();
+                        } else {
+                            position = 0;
+                            getPrepareShowData(position);
+                        }
                     }
                 } else {
-                    if (position > 0) {
-                        position = position - 1;
-
-                        getPrepareShowData(position);
-                    } else if (listSize != 1) {
-                        position = listSize - 1;
-                        getPrepareShowData(position);
-                    }
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
+            } else {
+                if (position < listSize - 1) {
+                    position = position + 1;
+                    getPrepareShowData(position);
+                } else if (listSize != 1) {
+                    position = 0;
+                    getPrepareShowData(position);
                 }
             }
-        });
+        }
     }
 
     private void callRepeatShuffle() {
@@ -1728,6 +1779,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
         callRepeatShuffle();
+        BWSApplication.createChannel(ctx);
+        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
     private void removeArray() {
@@ -2535,7 +2589,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }
     }*/
 
-
     @Override
     public void onBackPressed() {
         callBack();
@@ -2581,6 +2634,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
+//        BWSApplication.notificationManager.cancelAll();
+//        unregisterReceiver(broadcastReceiver);
 //        releasePlayer();
     }
 
@@ -2815,6 +2870,80 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
+
+    @Override
+    public void onTrackPrevious() {
+        if (!url.equalsIgnoreCase("")) {
+            isPlaying = false;
+            callPrevious();
+        }
+
+        BWSApplication.createChannel(ctx);
+        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+    }
+
+    @Override
+    public void onTrackPlay() {
+        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
+                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
+        if (!isMediaStart) {
+            isCompleteStop = false;
+            isprogressbar = true;
+            handler.postDelayed(UpdateSongTime, 500);
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.GONE);
+            binding.llProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            callMedia();
+        } else if (isCompleteStop) {
+            isCompleteStop = false;
+            isprogressbar = true;
+            handler.postDelayed(UpdateSongTime, 500);
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.GONE);
+            binding.llProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            callMedia();
+        } else {
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.VISIBLE);
+            binding.llProgressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
+            resumeMedia();
+            isPause = false;
+        }
+        handler.postDelayed(UpdateSongTime, 100);
+        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+        isPlaying = true;
+    }
+
+    @Override
+    public void onTrackPause() {
+        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
+                R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
+        isPlaying = false;
+        handler.removeCallbacks(UpdateSongTime);
+        binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
+        pauseMedia();
+        binding.llProgressBar.setVisibility(View.GONE);
+        binding.progressBar.setVisibility(View.GONE);
+        binding.llPlay.setVisibility(View.VISIBLE);
+        binding.llPause.setVisibility(View.GONE);
+        oTime = binding.simpleSeekbar.getProgress();
+    }
+
+    @Override
+    public void onTrackNext() {
+        if (!url.equalsIgnoreCase("")) {
+            isPlaying = false;
+            callNext();
+        }
+        BWSApplication.createChannel(ctx);
+        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+    }
+
  /*   @Override
     public void onAudioFocusChange(int i) {
         switch (i) {

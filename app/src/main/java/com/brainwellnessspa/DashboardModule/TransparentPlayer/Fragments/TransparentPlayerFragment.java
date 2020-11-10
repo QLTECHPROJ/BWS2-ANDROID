@@ -717,7 +717,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onTrackPrevious() {
-        if(!audioFile.equalsIgnoreCase("")){
+        if (!audioFile.equalsIgnoreCase("")) {
             isPlaying = false;
             callPrev();
         }
@@ -740,8 +740,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
 //            isPlaying = false;
 //        } else {
-            BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
-                    R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
+        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
 //            binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
         if (!isMediaStart) {
             isCompleteStop = false;
@@ -771,18 +771,18 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
         player = 1;
         handler12.postDelayed(UpdateSongTime12, 100);
-            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-            isPlaying = true;
+        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+        isPlaying = true;
 //        }
     }
 
     @Override
     public void onTrackPause() {
 //        if (isPlaying) {
-            BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
-                    R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
+        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+                R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
 //            binding.ivPause.setImageResource(R.drawable.ic_play_icon);
-            isPlaying = false;
+        isPlaying = false;
         if (!isMediaStart) {
 //                callAsyncTask();
             callMedia();
@@ -802,7 +802,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onTrackNext() {
-        if(!audioFile.equalsIgnoreCase("")){
+        if (!audioFile.equalsIgnoreCase("")) {
             isPlaying = false;
             callNext();
         }
@@ -863,7 +863,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     addToQueueModelList.remove(position);
                     listSize = addToQueueModelList.size();
                     if (position > 0) {
-                        position = position-1;
+                        position = position - 1;
                         getPrepareShowData();
                     } else {
                         if (listSize == 0) {
@@ -1438,6 +1438,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
+        BWSApplication.createChannel(getActivity());
+        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
     }
 
     private void removeArray() {
@@ -1896,9 +1899,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            BWSApplication.notificationManager.cancelAll();
-        }
+        BWSApplication.notificationManager.cancelAll();
         getActivity().unregisterReceiver(broadcastReceiver);
     }
 }
