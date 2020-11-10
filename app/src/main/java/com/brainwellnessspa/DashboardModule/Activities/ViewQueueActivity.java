@@ -284,6 +284,9 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 editor.putString(CONSTANTS.PREF_KEY_queueList, json22);
                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                 editor.commit();
+                Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(i);
                 finish();
             } else {
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
