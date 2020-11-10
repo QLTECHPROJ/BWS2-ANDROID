@@ -1374,7 +1374,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             ArrayList<DownloadAudioDetails> arrayList = gson1.fromJson(jsonw, type1);
             ArrayList<MainPlayModel> arrayList2 = gson1.fromJson(json, type1);
 
-            if(audioPlay&&AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+            if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                 DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
                 mainPlayModel.setID(playlistSongs.get(position).getID());
                 mainPlayModel.setName(playlistSongs.get(position).getName());
@@ -1745,7 +1745,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
           /*  holder.binding.llMainLayout.setVisibility(View.GONE);
             holder.binding.llDownload.setVisibility(View.GONE);
             holder.binding.llRemove.setVisibility(View.GONE);*/
-
+            holder.binding.llHighLight.setBackgroundResource(R.color.highlight_background);
 //          holder.binding.llThirdLayout.setWeightSum(0.13f);
             holder.binding.llSort.setOnTouchListener((v, event) -> {
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -2239,7 +2239,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-            holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
+            holder.binding.llHighLight.setBackgroundResource(R.color.highlight_background);
             holder.binding.equalizerview.animateBars();
 //            holder.binding.equalizerview.stopBars();
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
