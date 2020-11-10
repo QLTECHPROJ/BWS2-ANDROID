@@ -333,7 +333,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                     Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
                     i.putExtra("AudioId", "");
                     i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
-                    ctx.startActivity(i);
+                    startActivity(i);
                 }
             });
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
