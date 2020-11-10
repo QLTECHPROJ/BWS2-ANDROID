@@ -570,7 +570,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         if (comefrom_search == 3) {
             binding.llExtra.setVisibility(View.VISIBLE);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            params.setMargins(10, 8, 10, 260);
+            params.setMargins(0, 8, 0, 260);
             binding.llSpace.setLayoutParams(params);
         }
 
@@ -646,11 +646,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             if (!AudioFlag.equalsIgnoreCase("0")) {
                 callAddTransFrag();
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                params.setMargins(10, 8, 10, 260);
+                params.setMargins(0, 8, 0, 260);
                 binding.llSpace.setLayoutParams(params);
             } else {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                params.setMargins(10, 8, 10, 50);
+                params.setMargins(0, 8, 0, 50);
                 binding.llSpace.setLayoutParams(params);
             }
         } catch (Exception e) {
@@ -2239,6 +2239,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+            holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
             holder.binding.equalizerview.animateBars();
 //            holder.binding.equalizerview.stopBars();
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
@@ -2569,6 +2570,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+
+            holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 //            GetMedia(id, activity, mData.get(position).getDownload(), holder.binding.llDownload, holder.binding.ivDownloads);

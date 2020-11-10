@@ -12,6 +12,7 @@
     <color name="gray">#666666</color>
     <color name="blue">#005BAA</color>
     <color name="black">#000000</color>
+    <color name="highlight_background">#372A3042</color>
     <color name="light_black">#313131</color>
     <color name="dark_blue">#0468b0</color>
     <color name="light_white">#F9F9F9</color>
