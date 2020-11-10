@@ -330,7 +330,7 @@ public class ViewAllPlaylistFragment extends Fragment {
             holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                    Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
                     i.putExtra("AudioId", "");
                     i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
                     ctx.startActivity(i);
