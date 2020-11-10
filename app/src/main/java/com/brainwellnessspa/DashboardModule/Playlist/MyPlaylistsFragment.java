@@ -2230,14 +2230,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
             }
 
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+           /* MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
+            holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);*/
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
             holder.binding.llHighLight.setBackgroundResource(R.color.highlight_background);
             holder.binding.equalizerview.animateBars();
