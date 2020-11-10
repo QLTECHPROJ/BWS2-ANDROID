@@ -1,27 +1,18 @@
 package com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments;
 
 import android.app.Activity;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,13 +20,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
-import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.media.MediaSessionManager;
 
 import com.brainwellnessspa.BWSApplication;
-import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
@@ -55,10 +43,7 @@ import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.OnClearFromRecentService;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.Utility.Playable;
-import com.brainwellnessspa.Utility.PlaybackStatus;
-import com.brainwellnessspa.Utility.Track;
 import com.brainwellnessspa.databinding.FragmentTransparentPlayerBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -102,14 +87,14 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, Playable/*, AudioManager.OnAudioFocusChangeListener*/ {
     public static int isDisclaimer = 0;
+    public static String addToRecentPlayId = "";
+    public static ArrayList<MainPlayModel> mainPlayModelList;
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
-    public static String addToRecentPlayId = "";
     int position = 0, startTime, listSize, myCount;
     MainPlayModel mainPlayModel;
     boolean isPlaying = false;
     Boolean queuePlay, audioPlay;
-    public static ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     Activity activity;
@@ -118,9 +103,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     SharedPreferences shared;
     String json;
     Gson gson;
+    BroadcastReceiver broadcastReceiver;
     private long totalDuration, currentDuration = 0;
     private Handler handler12;
-    BroadcastReceiver broadcastReceiver;
     private Runnable UpdateSongTime12 = new Runnable() {
         @Override
         public void run() {

@@ -629,7 +629,10 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         i.putExtra("ID", mData.get(position).getID());
                         i.putExtra("PlaylistAudioId", "");
                         i.putExtra("position", position);
-                        i.putExtra("comeFrom", "myDownloadPlayList");
+                        Gson gson = new Gson();
+                        String json = gson.toJson(mData);
+                        i.putExtra("data",json);
+                        i.putExtra("comeFrom", "myDownloadPlaylist");
                         startActivity(i);
                     }
                 } else {
@@ -638,7 +641,10 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     i.putExtra("ID", mData.get(position).getID());
                     i.putExtra("PlaylistAudioId", "");
                     i.putExtra("position", position);
-                    i.putExtra("comeFrom", "myDownloadPlayList");
+                    Gson gson = new Gson();
+                    String json = gson.toJson(mData);
+                    i.putExtra("data",json);
+                    i.putExtra("comeFrom", "myDownloadPlaylist");
                     startActivity(i);
                 }
             });
