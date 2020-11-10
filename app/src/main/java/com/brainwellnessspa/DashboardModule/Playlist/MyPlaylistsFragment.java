@@ -471,14 +471,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         super.onResume();
         addDisclaimer();
 
-//        if (binding.searchView != null) {
-//            binding.searchView.clearFocus();
-////            binding.searchView.onActionViewCollapsed();
-//            isclose = true;
-//            Toast.makeText(activity, "closeeeeeee", Toast.LENGTH_SHORT).show();
-//        }
+        if (binding.searchView != null) {
+            binding.searchView.clearFocus();
+//            binding.searchView.onActionViewCollapsed();
+            isclose = true;
+            Toast.makeText(activity, "closeeeeeee", Toast.LENGTH_SHORT).show();
+        }
 
-//        if (isclose) {
+        if (isclose) {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
@@ -492,7 +492,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
             return false;
         });
-//        }
+        }
 
         if (deleteFrg == 1) {
             binding.searchView.clearFocus();
