@@ -24,6 +24,7 @@ import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.broadcastReceiver;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
@@ -57,8 +58,13 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);
-        Intent playbackServiceIntent = new Intent(this, MusicService.class);
-        startService(playbackServiceIntent);
+        try {
+            Intent playbackServiceIntent = new Intent(this, MusicService.class);
+            startService(playbackServiceIntent);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         if (getIntent().hasExtra("Goplaylist")) {
             Goplaylist = getIntent().getStringExtra("Goplaylist");
             PlaylistID = getIntent().getStringExtra("PlaylistID");
@@ -172,6 +178,8 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
     protected void onDestroy() {
         super.onDestroy();
         mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+        BWSApplication.notificationManager.cancelAll();
+        unregisterReceiver(broadcastReceiver);
     }
 
     @Override

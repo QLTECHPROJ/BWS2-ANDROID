@@ -103,7 +103,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     SharedPreferences shared;
     String json;
     Gson gson;
-    BroadcastReceiver broadcastReceiver;
+    public static BroadcastReceiver broadcastReceiver;
     private long totalDuration, currentDuration = 0;
     private Handler handler12;
     private Runnable UpdateSongTime12 = new Runnable() {
@@ -1879,12 +1879,5 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         handler12.removeCallbacks(UpdateSongTime12);
         Log.e("Stop runnble", "stop");
         super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        BWSApplication.notificationManager.cancelAll();
-        getActivity().unregisterReceiver(broadcastReceiver);
     }
 }
