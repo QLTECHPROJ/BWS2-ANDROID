@@ -329,6 +329,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 switch (action) {
                     case BWSApplication.ACTION_PREVIUOS:
                         onTrackPrevious();
+                        if (isPlaying) {
+                            onTrackPause();
+                        } else {
+                            onTrackPlay();
+                        }
                         break;
                     case BWSApplication.ACTION_PLAY:
                         if (isPlaying) {
@@ -339,6 +344,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         break;
                     case BWSApplication.ACTION_NEXT:
                         onTrackNext();
+                        if (isPlaying) {
+                            onTrackPause();
+                        } else {
+                            onTrackPlay();
+                        }
                         break;
                 }
             }
@@ -707,8 +717,14 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onTrackPrevious() {
-        if(!audioFile.equalsIgnoreCase(""))
-        callPrev();
+        if(!audioFile.equalsIgnoreCase("")){
+            isPlaying = false;
+            callPrev();
+        }
+
+        BWSApplication.createChannel(getActivity());
+        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
 //        position--;
 //        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
 //                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
@@ -766,7 +782,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
                     R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
 //            binding.ivPause.setImageResource(R.drawable.ic_play_icon);
-            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
             isPlaying = false;
         if (!isMediaStart) {
 //                callAsyncTask();
@@ -787,8 +802,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onTrackNext() {
-        if(!audioFile.equalsIgnoreCase(""))
-        callNext();
+        if(!audioFile.equalsIgnoreCase("")){
+            isPlaying = false;
+            callNext();
+        }
+        BWSApplication.createChannel(getActivity());
+        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
 //        position++;
 //        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
 //                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);

@@ -129,9 +129,11 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         public void onCallStateChanged(int state, String incomingNumber) {
             // Test for incoming call, dialing call, active or on hold
             if (state == TelephonyManager.CALL_STATE_RINGING || state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                if(!isPause){
                 if (isMediaStart && !audioPause) {
                     pauseMedia();
                     audioPause = true;
+                }
                 }  // Put here the code to stop your music
             } else if (state == TelephonyManager.CALL_STATE_IDLE) {
             }

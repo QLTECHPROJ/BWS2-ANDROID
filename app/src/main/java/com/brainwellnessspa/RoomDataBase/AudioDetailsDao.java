@@ -9,10 +9,10 @@ import java.util.List;
 @Dao
 public interface AudioDetailsDao {
 
-    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId")// ORDER BY uid ASC
+    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId ORDER BY uid DESC")// ORDER BY uid ASC
     List<DownloadAudioDetails> geAllData(String PlaylistId);
 
-    @Query("SELECT * FROM audio_table")// ORDER BY uid ASC
+    @Query("SELECT * FROM audio_table  ORDER BY uid DESC")// ORDER BY uid ASC
     List<DownloadAudioDetails> geAllData1();
 
     @Insert
@@ -36,13 +36,13 @@ public interface AudioDetailsDao {
     @Query("SELECT * FROM audio_table WHERE AudioFile =:AudioFile and PlaylistId =:PlaylistId")
     List<DownloadAudioDetails> getaudioByPlaylist(String AudioFile,String PlaylistId);
 
-    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId ORDER BY uid ASC")
+    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId ORDER BY uid DESC")
     List<DownloadAudioDetails> getAllAudioByPlaylist(String PlaylistId);
 
-    @Query("SELECT * FROM playlist_table WHERE PlaylistId =:PlaylistId ORDER BY uid ASC")
+    @Query("SELECT * FROM playlist_table WHERE PlaylistId =:PlaylistId ORDER BY uid DESC")
     List<DownloadPlaylistDetails> getPlaylist(String PlaylistId);
 
-    @Query("SELECT * FROM playlist_table ORDER BY uid ASC")
+    @Query("SELECT * FROM playlist_table ORDER BY uid DESC")
     List<DownloadPlaylistDetails> getAllPlaylist();
 
     @Query("UPDATE audio_table SET IsDownload =:IsDownload WHERE Name =:Name and PlaylistId =:PlaylistId")
