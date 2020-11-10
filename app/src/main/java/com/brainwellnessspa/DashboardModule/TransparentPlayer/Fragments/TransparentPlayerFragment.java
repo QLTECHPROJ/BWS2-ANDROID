@@ -87,8 +87,8 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, Playable/*, AudioManager.OnAudioFocusChangeListener*/ {
     public static int isDisclaimer = 0;
-    public static String addToRecentPlayId = "";
-    public static ArrayList<MainPlayModel> mainPlayModelList;
+    public static String addToRecentPlayId = "",myAudioId;
+    public ArrayList<MainPlayModel> mainPlayModelList;
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
     int position = 0, startTime, listSize, myCount;
@@ -233,6 +233,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 } else {
                     binding.simpleSeekbar.setProgress(progress);
                 }
+                myAudioId = id;
                 // Running this thread after 100 milliseconds
                 handler12.postDelayed(this, 100);
             } catch (Exception e) {
