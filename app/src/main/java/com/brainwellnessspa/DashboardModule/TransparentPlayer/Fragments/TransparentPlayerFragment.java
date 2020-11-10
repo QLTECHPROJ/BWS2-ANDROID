@@ -109,7 +109,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     MainPlayModel mainPlayModel;
     boolean isPlaying = false;
     Boolean queuePlay, audioPlay;
-    ArrayList<MainPlayModel> mainPlayModelList;
+    public static ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     List<DownloadAudioDetails> downloadAudioDetailsList;
     Activity activity;

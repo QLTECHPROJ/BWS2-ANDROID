@@ -531,21 +531,8 @@ public class ViewAllAudioFragment extends Fragment {
                     openMyFragment();
                 }
             } else {
-                listModelList2 = new ArrayList<>();
-                mainPlayModel.setID("0");
-                mainPlayModel.setName("Disclaimer");
-                mainPlayModel.setAudioFile("");
-                mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                mainPlayModel.setAudiomastercat("");
-                mainPlayModel.setAudioSubCategory("");
-                mainPlayModel.setImageFile("");
-                mainPlayModel.setLike("");
-                mainPlayModel.setDownload("");
-                mainPlayModel.setAudioDuration("0:48");
-                listModelList2.add(mainPlayModel);
-                listModelList2.add(listModelList.get(position));
-                json = gson.toJson(listModelList2);
-                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "ViewAllAudioList");
+                json = gson.toJson(listModelList);
+                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "ViewAllAudioList");
                 editor.putString(CONSTANTS.PREF_KEY_modelList, json);
                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                 editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);

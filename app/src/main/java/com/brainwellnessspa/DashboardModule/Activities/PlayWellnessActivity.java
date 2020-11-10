@@ -2645,6 +2645,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         if (listSize == 1) {
             position = 0;
         }
+        SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
+        IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
+        IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
+        callRepeatShuffle();
        /* if (isPrepare && !isMediaStart) {
             callMedia();
         } else if ((isMediaStart && isPlaying()) && !isPause) {

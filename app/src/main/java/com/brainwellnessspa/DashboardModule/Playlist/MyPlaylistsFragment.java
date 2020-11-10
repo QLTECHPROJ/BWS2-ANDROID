@@ -79,6 +79,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -108,10 +109,15 @@ import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdO
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
+import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
+import static com.brainwellnessspa.Utility.MusicService.getStartTime;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
+import static com.brainwellnessspa.Utility.MusicService.isStop;
+import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
+import static com.brainwellnessspa.Utility.MusicService.oTime;
 import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
@@ -148,7 +154,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
     SubPlayListModel.ResponseData.PlaylistSong songListDownload = new SubPlayListModel.ResponseData.PlaylistSong();
     boolean isclose = false;
-    private Handler handler1, handler2;
+    private Handler handler1, handler2,handler3;
+    private Runnable UpdateSongTime3;
 //    private Runnable UpdateSongTime1 = new Runnable() {
 //        @Override
 //        public void run() {
@@ -198,6 +205,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //            handler1.postDelayed(this, 500);
 //        }
 //    };
+    int position = 0, startTime, listSize, myCount;
+    private long totalDuration, currentDuration = 0;
+    long myProgress = 0, diff = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -205,6 +215,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         view = binding.getRoot();
 //        handler1 = new Handler();
         handler2 = new Handler();
+        handler3 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         activity = getActivity();
@@ -226,7 +237,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             PlaylistImage = getArguments().getString("PlaylistImage");
             MyDownloads = getArguments().getString("MyDownloads");
         }
-
         binding.llBack.setOnClickListener(view1 -> {
             binding.searchView.clearFocus();
             callBack();
@@ -820,6 +830,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 if (isMediaStart) {
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                    handler3.postDelayed(UpdateSongTime3,500);
                 } else {
                     isPlayPlaylist = 0;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
@@ -832,6 +843,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                 if (isMediaStart) {
                     isPlayPlaylist = 1;
+                    handler3.postDelayed(UpdateSongTime3,500);
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 } else {
                     isPlayPlaylist = 0;
@@ -2115,7 +2127,33 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             final ArrayList<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
-
+            UpdateSongTime3 = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        startTime = getStartTime();
+                        myProgress = currentDuration;
+                        currentDuration = getStartTime();
+                        diff = totalDuration - myProgress;
+                        if (currentDuration == 0 && isCompleteStop) {
+                            binding.progressBar1.setVisibility(View.GONE);
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        } else if (currentDuration == 0 && !isPause) {
+                            binding.progressBar1.setVisibility(View.VISIBLE);
+                            binding.ivPlaylistStatus.setVisibility(View.GONE);
+                        } else if (currentDuration >= 1 && !isPause) {
+                            binding.progressBar1.setVisibility(View.GONE);
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                        } else if (currentDuration >= 1 && isPause) {
+                            binding.progressBar1.setVisibility(View.GONE);
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    handler3.postDelayed(this, 500);
+                }
+            };
             UpdateSongTime2 = new Runnable() {
                 @Override
                 public void run() {
@@ -2252,6 +2290,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 } else if (isPlayPlaylist == 2) {
                     resumeMedia();
                     isPlayPlaylist = 1;
+                    handler3.postDelayed(UpdateSongTime3,500);
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 } else {
                     SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -2276,6 +2315,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID);
                     }
                     isPlayPlaylist = 1;
+                    handler3.postDelayed(UpdateSongTime3,500);
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
             });
@@ -2307,6 +2347,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     callTransparentFrag(pos, ctx, listModelList2, "myPlaylist", PlaylistID);
                 }
                 isPlayPlaylist = 1;
+                handler3.postDelayed(UpdateSongTime3,500);
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
             });
 
@@ -2550,6 +2591,33 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder2 holder, int position) {
+            UpdateSongTime3 = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        startTime = getStartTime();
+                        myProgress = currentDuration;
+                        currentDuration = getStartTime();
+                        diff = totalDuration - myProgress;
+                        if (currentDuration == 0 && isCompleteStop) {
+                            binding.progressBar1.setVisibility(View.GONE);
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        } else if (currentDuration == 0 && !isPause) {
+                            binding.progressBar1.setVisibility(View.VISIBLE);
+                            binding.ivPlaylistStatus.setVisibility(View.GONE);
+                        } else if (currentDuration >= 1 && !isPause) {
+                            binding.progressBar1.setVisibility(View.GONE);
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                        } else if (currentDuration >= 1 && isPause) {
+                            binding.progressBar1.setVisibility(View.GONE);
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    handler3.postDelayed(this, 500);
+                }
+            };
             searchEditText.setHint("Search for audios");
             binding.tvSearch.setHint("Search for audios");
 
