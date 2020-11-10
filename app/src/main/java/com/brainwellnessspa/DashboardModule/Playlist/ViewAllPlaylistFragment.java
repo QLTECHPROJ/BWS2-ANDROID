@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
 import com.bumptech.glide.Glide;
@@ -129,7 +130,6 @@ public class ViewAllPlaylistFragment extends Fragment {
                 ArrayList<ViewAllPlayListModel.ResponseData.Detail> listModelList = new ArrayList<>();
                 for (int i = 0; i < playlistList.size(); i++) {
                     ViewAllPlayListModel.ResponseData.Detail detail = new ViewAllPlayListModel.ResponseData.Detail();
-
                     detail.setTotalAudio(playlistList.get(i).getTotalAudio());
                     detail.setTotalhour(playlistList.get(i).getTotalhour());
                     detail.setTotalminute(playlistList.get(i).getTotalminute());
@@ -304,7 +304,8 @@ public class ViewAllPlaylistFragment extends Fragment {
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-
+            holder.binding.tvAddToPlaylist.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.tvAddToPlaylist.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.tvPlaylistName.setText(listModelList.get(position).getPlaylistName());
             Glide.with(getActivity()).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
@@ -316,7 +317,25 @@ public class ViewAllPlaylistFragment extends Fragment {
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
+            holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+            holder.binding.tvAddToPlaylist.setText("Add To Playlist");
 
+            holder.binding.rlMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+                    return false;
+                }
+            });
+            holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                    i.putExtra("AudioId", "");
+                    i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                    ctx.startActivity(i);
+                }
+            });
             holder.binding.rlMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
