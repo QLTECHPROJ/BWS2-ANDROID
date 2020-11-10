@@ -64,42 +64,41 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
-    / TODO Firebase Dependency /
-    implementation 'com.google.firebase:firebase-auth:19.4.0'
-    implementation 'com.google.firebase:firebase-core:17.5.1'
-    implementation 'com.google.firebase:firebase-analytics:17.6.0'
-    implementation 'com.google.firebase:firebase-messaging:20.3.0'
-    / TODO Room Database Dependency /
+    /* TODO Firebase Dependency */
+    implementation 'com.google.firebase:firebase-auth:20.0.0'
+    implementation 'com.google.firebase:firebase-core:18.0.0'
+    implementation 'com.google.firebase:firebase-analytics:18.0.0'
+    implementation 'com.google.firebase:firebase-messaging:21.0.0'
+    /* TODO Room Database Dependency */
     implementation "android.arch.persistence.room:runtime:$room_version"
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
     testImplementation "android.arch.persistence.room:testing:$room_version"
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
     debugImplementation 'com.amitshekhar.android:debug-db-encrypt:1.0.6'
 
-    / TODO Material Design Dependency /
+    /* TODO Material Design Dependency */
     implementation 'com.google.android.material:material:1.2.1'
     /* TODO Bottom Menu and Fragment*/
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.navigation:navigation-fragment:2.3.0'
-    implementation 'androidx.navigation:navigation-ui:2.3.0'
+    implementation 'androidx.navigation:navigation-fragment:2.3.1'
+    implementation 'androidx.navigation:navigation-ui:2.3.1'
     implementation 'androidx.navigation:navigation-fragment:2.3.1'
     implementation 'androidx.navigation:navigation-ui:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    / TODO Stripe Payment Gateway /
+    /* TODO Stripe Payment Gateway */
     implementation 'com.stripe:stripe-android:2.0.2'
-    / TODO Use Youtube Video Player /
+    /* TODO Use Youtube Video Player */
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
-    / TODO Cardview Design Dependency /
+    /* TODO Cardview Design Dependency */
     implementation 'androidx.cardview:cardview:1.0.0'
-    / TODO Recyclerview Design & Development Dependency /
+    /* TODO Recyclerview Design & Development Dependency */
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    / TODO Circle Imageview Design Dependency /
+    / TODO Circle Imageview Design Dependency */
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-    / TODO Retrofit Development Dependency /
+    /* TODO Retrofit Development Dependency */
     implementation 'com.squareup.retrofit:retrofit:1.9.0'
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
@@ -115,4 +114,6 @@ dependencies {
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
+    implementation 'com.github.claucookie.miniequalizer:library:1.0.0'
+
 }

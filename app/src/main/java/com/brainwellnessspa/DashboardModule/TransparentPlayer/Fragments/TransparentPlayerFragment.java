@@ -1892,4 +1892,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         Log.e("Stop runnble", "stop");
         super.onPause();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            BWSApplication.notificationManager.cancelAll();
+        }
+        getActivity().unregisterReceiver(broadcastReceiver);
+    }
 }
