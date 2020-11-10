@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
@@ -87,6 +88,23 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
             holder.binding.ivLock.setVisibility(View.GONE);
         }
+        holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+        holder.binding.tvAddToPlaylist.setText("Add To Playlist");
+        holder.binding.llMainLayout.setOnLongClickListener(v -> {
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), this);
+            }
+
+            return false;
+        });
+        holder.binding.tvAddToPlaylist.setOnClickListener(view -> {
+            Intent i = new Intent(ctx, AddPlaylistActivity.class);
+            i.putExtra("AudioId", listModelList.get(position).getID());
+            i.putExtra("PlaylistID", "");
+            ctx.startActivity(i);
+        });
         holder.binding.llMainLayout.setOnClickListener(view -> {
             try {
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

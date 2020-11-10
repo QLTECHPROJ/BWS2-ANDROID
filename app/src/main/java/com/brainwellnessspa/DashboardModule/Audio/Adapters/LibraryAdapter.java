@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
@@ -43,11 +44,11 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHolder> {
     Context ctx;
     FragmentActivity activity;
-    String IsLock,HomeView;
+    String IsLock, HomeView;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
     public LibraryAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
-                          String IsLock,String HomeView) {
+                          String IsLock, String HomeView) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
@@ -71,6 +72,8 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        holder.binding.tvAddToPlaylist.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        holder.binding.tvAddToPlaylist.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
         if (IsLock.equalsIgnoreCase("1")) {
@@ -90,6 +93,25 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
             holder.binding.ivLock.setVisibility(View.GONE);
         }
+
+        holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+        holder.binding.tvAddToPlaylist.setText("Add To Playlist");
+        holder.binding.llMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+        holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                i.putExtra("AudioId", listModelList.get(position).getID());
+                i.putExtra("PlaylistID", "");
+                ctx.startActivity(i);
+            }
+        });
 
         holder.binding.llMainLayout.setOnClickListener(view -> {
 //       TODO                 Active and cancelled = 0, InActive = 1, Suspeded = 2
@@ -138,13 +160,14 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
             }
         });
     }
+
     private void callnewTrans(int position) {
 
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
-        if (audioPlay && AudioFlag.equalsIgnoreCase("MainAudioList")&& MyPlaylist.equalsIgnoreCase(HomeView)) {
+        if (audioPlay && AudioFlag.equalsIgnoreCase("MainAudioList") && MyPlaylist.equalsIgnoreCase(HomeView)) {
             if (isDisclaimer == 1) {
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {
@@ -171,7 +194,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
         }
     }
 
-    private void callTransFrag(int position,ArrayList<MainAudioModel.ResponseData.Detail> listModelList) {
+    private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList) {
         try {
             player = 1;
             if (isPrepare || isMediaStart || isPause) {

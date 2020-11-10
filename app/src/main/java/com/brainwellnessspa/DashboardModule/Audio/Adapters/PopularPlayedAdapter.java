@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
@@ -72,6 +73,8 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
         holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        holder.binding.tvAddToPlaylist.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        holder.binding.tvAddToPlaylist.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
@@ -93,6 +96,24 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
             holder.binding.ivLock.setVisibility(View.GONE);
         }
 
+        holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+        holder.binding.tvAddToPlaylist.setText("Add To Playlist");
+        holder.binding.llMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+        holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                i.putExtra("AudioId", listModelList.get(position).getID());
+                i.putExtra("PlaylistID", "");
+                ctx.startActivity(i);
+            }
+        });
         holder.binding.llMainLayout.setOnClickListener(view -> {
 //       TODO                 Active and cancelled = 0, InActive = 1, Suspeded = 2
             SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
@@ -249,7 +250,6 @@ public class PlaylistFragment extends Fragment {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadPlaylistDetailsList = DatabaseClient
                         .getInstance(getActivity())
                         .getaudioDatabase()
@@ -260,7 +260,6 @@ public class PlaylistFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
                 if (downloadPlaylistDetailsList.size() != 0) {
                     for (int i = 0; i < downloadPlaylistDetailsList.size(); i++) {
                         MainPlayListModel.ResponseData.Detail detail = new MainPlayListModel.ResponseData.Detail();
@@ -578,7 +577,8 @@ public class PlaylistFragment extends Fragment {
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-
+            holder.binding.tvAddToPlaylist.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.tvAddToPlaylist.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             MeasureRatio measureRatio1 = BWSApplication.measureRatio(getActivity(), 0,
                     1, 1, 0.38f, 0);
             holder.binding.rlMainLayout.getLayoutParams().height = (int) (measureRatio1.getHeight() * measureRatio1.getRatio());
@@ -596,6 +596,24 @@ public class PlaylistFragment extends Fragment {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
+            holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+            holder.binding.tvAddToPlaylist.setText("Add To Playlist");
+            holder.binding.rlMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+                    return false;
+                }
+            });
+            holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(ctx, AddPlaylistActivity.class);
+                    i.putExtra("AudioId", "");
+                    i.putExtra("PlaylistID", listModelList.get(position).getPlaylistID());
+                    ctx.startActivity(i);
+                }
+            });
             holder.binding.rlMainLayout.setOnClickListener(view -> {
                 if (IsLock.equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);

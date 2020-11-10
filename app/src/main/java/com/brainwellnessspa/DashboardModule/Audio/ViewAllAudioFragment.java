@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
+import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
@@ -242,7 +243,7 @@ public class ViewAllAudioFragment extends Fragment {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if(isMediaStart){
+                    if (isMediaStart) {
                         stopMedia();
                         releasePlayer();
                     }
@@ -261,7 +262,7 @@ public class ViewAllAudioFragment extends Fragment {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if(isMediaStart){
+                if (isMediaStart) {
                     stopMedia();
                     releasePlayer();
                 }
@@ -312,7 +313,8 @@ public class ViewAllAudioFragment extends Fragment {
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-
+            holder.binding.tvAddToPlaylist.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.tvAddToPlaylist.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.tvPlaylistName.setText(listModelList.get(position).getName());
             Glide.with(getActivity()).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
@@ -334,6 +336,25 @@ public class ViewAllAudioFragment extends Fragment {
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
+
+            holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+            holder.binding.tvAddToPlaylist.setText("Add To Playlist");
+            holder.binding.rlMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+                    return false;
+                }
+            });
+            holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
+                    i.putExtra("AudioId", listModelList.get(position).getID());
+                    i.putExtra("PlaylistID", "");
+                    startActivity(i);
+                }
+            });
 
             holder.binding.rlMainLayout.setOnClickListener(view -> {
                 SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -359,9 +380,9 @@ public class ViewAllAudioFragment extends Fragment {
 
                     if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        if(!Name.equalsIgnoreCase(getString(R.string.top_categories))){
-                            callnewTrans(position,listModelList);
-                        }else{
+                        if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
+                            callnewTrans(position, listModelList);
+                        } else {
                             callTransFrag(position, listModelList);
                         }
                     } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
@@ -374,9 +395,9 @@ public class ViewAllAudioFragment extends Fragment {
                 } else if (IsLock.equalsIgnoreCase("2")) {
                     if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
-                        if(!Name.equalsIgnoreCase(getString(R.string.top_categories))){
+                        if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                             callnewTrans(position, listModelList);
-                        }else{
+                        } else {
                             callTransFrag(position, listModelList);
                         }
                     } else if (listModelList.get(position).getIsPlay().equalsIgnoreCase("0")
@@ -386,9 +407,9 @@ public class ViewAllAudioFragment extends Fragment {
                     }
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
-                    if(!Name.equalsIgnoreCase(getString(R.string.top_categories))){
+                    if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                         callnewTrans(position, listModelList);
-                    }else{
+                    } else {
                         callTransFrag(position, listModelList);
                     }
                 }
@@ -411,6 +432,7 @@ public class ViewAllAudioFragment extends Fragment {
             }
         }
     }
+
     private void callnewTrans(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList) {
 
         SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -459,7 +481,7 @@ public class ViewAllAudioFragment extends Fragment {
                 String catName = shared1.getString(CONSTANTS.PREF_KEY_Cat_Name, "");
                 if (audioPlay && AudioFlag.equalsIgnoreCase("TopCategories") && catName.equalsIgnoreCase(Category)) {
                     if (isDisclaimer == 1) {
-                        BWSApplication.showToast("The audio shall start playing after the disclaimer",context);
+                        BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
                     } else {
                         listModelList2 = new ArrayList<>();
                         listModelList2.addAll(listModelList);
@@ -489,10 +511,10 @@ public class ViewAllAudioFragment extends Fragment {
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
                     mainPlayModel.setAudioDuration("0:48");
-                    if(position!=0){
+                    if (position != 0) {
                         listModelList2.addAll(listModelList);
-                        listModelList2.add(position,mainPlayModel);
-                    }else{
+                        listModelList2.add(position, mainPlayModel);
+                    } else {
                         listModelList2.add(mainPlayModel);
                         listModelList2.addAll(listModelList);
                     }
@@ -509,28 +531,28 @@ public class ViewAllAudioFragment extends Fragment {
                     openMyFragment();
                 }
             } else {
-                    listModelList2 = new ArrayList<>();
-                    mainPlayModel.setID("0");
-                    mainPlayModel.setName("Disclaimer");
-                    mainPlayModel.setAudioFile("");
-                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                    mainPlayModel.setAudiomastercat("");
-                    mainPlayModel.setAudioSubCategory("");
-                    mainPlayModel.setImageFile("");
-                    mainPlayModel.setLike("");
-                    mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("0:48");
-                    listModelList2.add(mainPlayModel);
-                    listModelList2.add(listModelList.get(position));
-                    json = gson.toJson(listModelList2);
-                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "ViewAllAudioList");
-                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, Name);
-                    editor.commit();
+                listModelList2 = new ArrayList<>();
+                mainPlayModel.setID("0");
+                mainPlayModel.setName("Disclaimer");
+                mainPlayModel.setAudioFile("");
+                mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
+                mainPlayModel.setAudiomastercat("");
+                mainPlayModel.setAudioSubCategory("");
+                mainPlayModel.setImageFile("");
+                mainPlayModel.setLike("");
+                mainPlayModel.setDownload("");
+                mainPlayModel.setAudioDuration("0:48");
+                listModelList2.add(mainPlayModel);
+                listModelList2.add(listModelList.get(position));
+                json = gson.toJson(listModelList2);
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "ViewAllAudioList");
+                editor.putString(CONSTANTS.PREF_KEY_modelList, json);
+                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, Name);
+                editor.commit();
                 openMyFragment();
 //                    Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
 //                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
