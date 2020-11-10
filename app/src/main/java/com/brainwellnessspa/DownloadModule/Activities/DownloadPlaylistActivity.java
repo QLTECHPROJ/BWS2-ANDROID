@@ -629,7 +629,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         i.putExtra("ID", mData.get(position).getID());
                         i.putExtra("PlaylistAudioId", "");
                         i.putExtra("position", position);
-                        i.putExtra("comeFrom", "myPlayList");
+                        i.putExtra("comeFrom", "myDownloadPlayList");
                         startActivity(i);
                     }
                 } else {
@@ -638,7 +638,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     i.putExtra("ID", mData.get(position).getID());
                     i.putExtra("PlaylistAudioId", "");
                     i.putExtra("position", position);
-                    i.putExtra("comeFrom", "myPlayList");
+                    i.putExtra("comeFrom", "myDownloadPlayList");
                     startActivity(i);
                 }
             });

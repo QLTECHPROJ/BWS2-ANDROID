@@ -1487,6 +1487,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         editor.commit();
         handler.postDelayed(UpdateSongTime, 100);
         BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
+
+        BWSApplication.createChannel(ctx);
+        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
     private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {
