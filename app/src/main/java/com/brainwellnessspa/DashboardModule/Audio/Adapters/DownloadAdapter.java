@@ -94,7 +94,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
             if (BWSApplication.isNetworkConnected(ctx)) {
                 holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
             } else {
-                BWSApplication.showToast(ctx.getString(R.string.no_server_found), this);
+                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
             }
 
             return false;
