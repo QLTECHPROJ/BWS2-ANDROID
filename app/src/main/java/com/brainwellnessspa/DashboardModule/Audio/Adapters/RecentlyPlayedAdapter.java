@@ -104,7 +104,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             @Override
             public boolean onLongClick(View v) {
                 holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-                return false;
+                return true;
             }
         });
         holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {

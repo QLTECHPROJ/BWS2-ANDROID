@@ -100,7 +100,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
             @Override
             public boolean onLongClick(View v) {
                 holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-                return false;
+                return true;
             }
         });
         holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {

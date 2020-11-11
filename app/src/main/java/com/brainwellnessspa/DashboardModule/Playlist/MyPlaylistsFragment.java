@@ -2392,11 +2392,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID);
                     }
                     isPlayPlaylist = 1;
-                    songId = mData.get(position).getID();
-                    myAudioId =songId;
-                    handler3.postDelayed(UpdateSongTime3,500);
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
+                songId = mData.get(position).getID();
+                myAudioId =songId;
+                handler3.postDelayed(UpdateSongTime3,500);
             });
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
