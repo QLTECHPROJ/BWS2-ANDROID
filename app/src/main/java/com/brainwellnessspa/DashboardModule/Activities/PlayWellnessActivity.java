@@ -1163,12 +1163,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         AudioFlag = sharedq.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                         Gson gsonq = new Gson();
                         String jsonq = sharedq.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonq));
-                        mainPlayModelList = new ArrayList<>();
                         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                         SharedPreferences.Editor editor = shared.edit();
                         Gson gson = new Gson();
-                        String json = gson.toJson(mainPlayModelList);
-                        editor.putString(CONSTANTS.PREF_KEY_audioList, json);
                         if (audioPlay) {
                             if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
                                 Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
@@ -1247,6 +1244,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         } else
                             mainPlayModelList.get(position).setLike(model.getResponseData().getFlag());
 
+                        String json = gson.toJson(mainPlayModelList);
+                        editor.putString(CONSTANTS.PREF_KEY_audioList, json);
                         String json1 = gson.toJson(addToQueueModelList);
                         if (queuePlay) {
                             editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
