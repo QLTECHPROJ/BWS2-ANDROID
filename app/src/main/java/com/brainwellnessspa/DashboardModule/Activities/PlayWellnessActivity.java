@@ -1497,8 +1497,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     if (url.equalsIgnoreCase("") || url.isEmpty()) {
                         isDisclaimer = 1;
                         callAllDisable(false);
-
+                        binding.tvNowPlaying.setText("");
                     } else {
+                        binding.tvNowPlaying.setText(R.string.NOW_PLAYING_FROM);
                         isDisclaimer = 0;
                         callAllDisable(true);
                     }
@@ -1715,8 +1716,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         isPause = false;
         if (audioPlay && (url.equalsIgnoreCase("") || url.isEmpty())) {
             isDisclaimer = 0;
+            binding.tvNowPlaying.setText("");
             removeArray();
         } else {
+            binding.tvNowPlaying.setText(R.string.NOW_PLAYING_FROM);
             if (IsRepeat.equalsIgnoreCase("1")) {
                 if (position < (listSize - 1)) {
                     position = position + 1;
@@ -2767,8 +2770,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (url.equalsIgnoreCase("") || url.isEmpty()) {
                 isDisclaimer = 1;
                 callAllDisable(false);
-
+                binding.tvNowPlaying.setText("");
             } else {
+                binding.tvNowPlaying.setText(R.string.NOW_PLAYING_FROM);
                 isDisclaimer = 0;
                 callAllDisable(true);
             }
