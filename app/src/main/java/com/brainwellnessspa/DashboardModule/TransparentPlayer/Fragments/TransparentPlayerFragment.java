@@ -233,7 +233,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 } else {
                     binding.simpleSeekbar.setProgress(progress);
                 }
-                myAudioId = id;
                 // Running this thread after 100 milliseconds
                 handler12.postDelayed(this, 100);
             } catch (Exception e) {
@@ -1071,6 +1070,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
                 if (listSize != 0) {
                     id = addToQueueModelList.get(position).getID();
+                    myAudioId = id;
                     name = addToQueueModelList.get(position).getName();
                     audioFile = addToQueueModelList.get(position).getAudioFile();
                     GetMedia(audioFile, ctx);
@@ -1087,6 +1087,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
                 if (listSize != 0) {
                     id = mainPlayModelList.get(position).getID();
+                    myAudioId = id;
                     name = mainPlayModelList.get(position).getName();
                     audioFile = mainPlayModelList.get(position).getAudioFile();
                     binding.tvTitle.setText(mainPlayModelList.get(position).getName());
@@ -1820,6 +1821,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
                 listSize = addToQueueModelList.size();
                 id = addToQueueModelList.get(position).getID();
+                myAudioId = id;
                 name = addToQueueModelList.get(position).getName();
                 audioFile = addToQueueModelList.get(position).getAudioFile();
             } else if (audioPlay) {
@@ -1830,6 +1832,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
                 if (listSize != 0) {
                     id = mainPlayModelList.get(position).getID();
+                    myAudioId = id;
                     name = mainPlayModelList.get(position).getName();
                     audioFile = mainPlayModelList.get(position).getAudioFile();
        /*         if (audioFile.equalsIgnoreCase("")) {

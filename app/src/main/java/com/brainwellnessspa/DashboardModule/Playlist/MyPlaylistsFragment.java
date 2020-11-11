@@ -2241,7 +2241,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
                 return false;
             });*/
-            String id = mData.get(position).getID();
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -2368,6 +2367,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             } else
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
+                            songId = "0";
                             callTransparentFrag(0, ctx, listModelList, "myPlaylist", PlaylistID);
                         }
                     } else {
@@ -2376,12 +2376,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                         listModelList2.add(addDisclaimer);
                         listModelList2.addAll(listModelList);
+                        songId = "0";
                         callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID);
                     }
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
-                songId = mData.get(position).getID();
                 handler3.postDelayed(UpdateSongTime3,500);
             });
 
@@ -2391,6 +2391,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                songId = mData.get(pos).getID();
                 Log.e("postion of paly", String.valueOf(position));
                 if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                     if (isDisclaimer == 1) {
@@ -2412,7 +2413,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     callTransparentFrag(pos, ctx, listModelList2, "myPlaylist", PlaylistID);
                 }
                 isPlayPlaylist = 1;
-                songId = mData.get(position).getID();
                 handler3.postDelayed(UpdateSongTime3,500);
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
             });
@@ -2796,6 +2796,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 } else
                                     BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                             } else {
+                                songId ="0";
                                 callTransparentFrag(0, ctx, listModelList, "", PlaylistID);
                             }
                         } else {
@@ -2804,13 +2805,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList2 = new ArrayList<>();
                             listModelList2.add(addDisclaimer);
                             listModelList2.addAll(listModelList);
+                            songId ="0";
                             callTransparentFrag(0, ctx, listModelList2, "", PlaylistID);
                         }
                     }
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
-                songId = mData.get(position).getID();
                 handler3.postDelayed(UpdateSongTime3,500);
             });
             holder.binding.llMainLayout.setOnClickListener(view -> {
