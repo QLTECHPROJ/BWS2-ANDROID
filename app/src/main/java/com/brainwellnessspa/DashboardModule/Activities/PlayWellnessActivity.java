@@ -1246,8 +1246,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
                         String json = gson.toJson(mainPlayModelList);
                         editor.putString(CONSTANTS.PREF_KEY_audioList, json);
-                        String json1 = gson.toJson(addToQueueModelList);
                         if (queuePlay) {
+                            String json1 = gson.toJson(addToQueueModelList);
                             editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
                         }
                         editor.putInt(CONSTANTS.PREF_KEY_position, position);
