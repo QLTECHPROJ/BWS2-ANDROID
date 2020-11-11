@@ -1748,18 +1748,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            if (MyDownloads.equalsIgnoreCase("1")) {
-                if (audioPlayz && AudioFlag.equalsIgnoreCase("Downloadlist") && pIDz.equalsIgnoreCase(PlaylistName)) {
-                    if(myAudioId.equalsIgnoreCase(mData.get(position).getID())){
-                        holder.binding.llHighLight.setBackgroundResource(R.color.highlight_background);
-                    }else{
-                        holder.binding.llHighLight.setBackgroundResource(R.color.white);
-                    }
-                }else{
-                    holder.binding.llHighLight.setBackgroundResource(R.color.white);
-                    handler3.removeCallbacks(UpdateSongTime3);
-                }
-            } else {
+
                 if (audioPlayz && AudioFlag.equalsIgnoreCase("SubPlayList") && pIDz.equalsIgnoreCase(PlaylistID)) {
                     if(myAudioId.equalsIgnoreCase(mData.get(position).getID())){
                         holder.binding.llHighLight.setBackgroundResource(R.color.highlight_background);
@@ -1769,9 +1758,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
                 }else{
                     holder.binding.llHighLight.setBackgroundResource(R.color.white);
-                    handler3.removeCallbacks(UpdateSongTime3);
                 }
-            }
+
 
           /*  holder.binding.llMainLayout.setVisibility(View.GONE);
             holder.binding.llDownload.setVisibility(View.GONE);
@@ -2161,7 +2149,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         } else if (currentDuration >= 1 && isPause) {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
-                        if(!addToRecentPlayId.equalsIgnoreCase(myAudioId)){
+//                        if(!addToRecentPlayId.equalsIgnoreCase(myAudioId)){
+                        if(currentDuration == 0 && isCompleteStop){
                             notifyDataSetChanged();
                         }
                     } catch (Exception e) {
@@ -2246,38 +2235,16 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            if (MyDownloads.equalsIgnoreCase("1")) {
-                if (audioPlayz && AudioFlag.equalsIgnoreCase("Downloadlist") && pIDz.equalsIgnoreCase(PlaylistName)) {
+                if (audioPlayz && AudioFlag.equalsIgnoreCase("SubPlayList") && pIDz.equalsIgnoreCase(PlaylistID)) {
                     if(myAudioId.equalsIgnoreCase(mData.get(position).getID())){
                         songId = myAudioId;
-                        songOldId = myAudioId;
+                        if(isPause || !isMediaStart){
+                            holder.binding.equalizerview.stopBars();
+                        }else
                         holder.binding.equalizerview.animateBars();
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                         holder.binding.llHighLight.setBackgroundResource(R.color.highlight_background);
                         adpater.notifyDataSetChanged();
-                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                        holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            holder.binding.equalizerview.stopBars();
-                    }else{
-                        holder.binding.equalizerview.setVisibility(View.GONE);
-                        holder.binding.llHighLight.setBackgroundResource(R.color.white);
-                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    }
-                }else{
-                    holder.binding.equalizerview.setVisibility(View.GONE);
-                    holder.binding.llHighLight.setBackgroundResource(R.color.white);
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    handler3.removeCallbacks(UpdateSongTime3);
-                }
-                handler3.postDelayed(UpdateSongTime3,500);
-            } else {
-                if (audioPlayz && AudioFlag.equalsIgnoreCase("SubPlayList") && pIDz.equalsIgnoreCase(PlaylistID)) {
-                    if(myAudioId.equalsIgnoreCase(mData.get(position).getID())){
-                        songId = myAudioId;
-                        holder.binding.equalizerview.animateBars();
-                        holder.binding.equalizerview.setVisibility(View.VISIBLE);
-                        holder.binding.llHighLight.setBackgroundResource(R.color.highlight_background);
-                        adpater.notifyItemChanged(position);
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
 //            holder.binding.equalizerview.stopBars();
@@ -2293,7 +2260,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     handler3.removeCallbacks(UpdateSongTime3);
                 }
-            }
+
             if (fileNameList.size() != 0) {
                 for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
@@ -2364,11 +2331,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                     if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(listModelList.get(0).getPlaylistID())) {
                         if (isDisclaimer == 1) {
-                            if (isPause) {
+                            if(isPause || !isMediaStart){
                                 resumeMedia();
                             } else
                                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                         } else {
+                            myAudioId = mData.get(0).getID();
                             callTransparentFrag(0, ctx, listModelList, "myPlaylist", PlaylistID);
                         }
                     } else {
@@ -2380,8 +2348,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         callTransparentFrag(0, ctx, listModelList2, "myPlaylist", PlaylistID);
                     }
                     isPlayPlaylist = 1;
-                    songId = mData.get(0).getID();
-                    myAudioId = mData.get(0).getID();
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
                 notifyDataSetChanged();
@@ -2401,6 +2367,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
+                        myAudioId = mData.get(pos).getID();
                         callTransparentFrag(pos, ctx, listModelList, "myPlaylist", PlaylistID);
                     }
                 } else {
@@ -2418,8 +2385,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
                 isPlayPlaylist = 1;
                 handler3.postDelayed(UpdateSongTime3,500);
-                songId = mData.get(pos).getID();
-                myAudioId = mData.get(pos).getID();
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 notifyDataSetChanged();
             });
@@ -2679,9 +2644,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
 
-                        /*if(!songId.equalsIgnoreCase(myAudioId)){
+                        if(!addToRecentPlayId.equalsIgnoreCase(myAudioId)){
                             notifyDataSetChanged();
-                        }*/
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -2720,6 +2685,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             if (MyDownloads.equalsIgnoreCase("1")) {
                 if (audioPlayz && AudioFlag.equalsIgnoreCase("Downloadlist") && pIDz.equalsIgnoreCase(PlaylistName)) {
                     if(myAudioId.equalsIgnoreCase(mData.get(position).getID())){
+                        if(isPause || !isMediaStart){
+                        holder.binding.equalizerview.stopBars();
+                    }else
                         holder.binding.equalizerview.animateBars();
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
@@ -2742,6 +2710,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             } else {
                 if (audioPlayz && AudioFlag.equalsIgnoreCase("SubPlayList") && pIDz.equalsIgnoreCase(PlaylistID)) {
                     if(myAudioId.equalsIgnoreCase(mData.get(position).getID())){
+                        if(isPause || !isMediaStart){
+                        holder.binding.equalizerview.stopBars();
+                    }else
                         holder.binding.equalizerview.animateBars();
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
@@ -2815,8 +2786,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         }
                     }
                     isPlayPlaylist = 1;
-                    songId = mData.get(0).getID();
-                    myAudioId = mData.get(0).getID();
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
                 handler3.postDelayed(UpdateSongTime3,500);
@@ -2870,8 +2839,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                songId = mData.get(position).getID();
-                myAudioId = mData.get(position).getID();
                 handler3.postDelayed(UpdateSongTime3,500);
                 notifyDataSetChanged();
             });

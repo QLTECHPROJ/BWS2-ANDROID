@@ -549,9 +549,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         } else if (currentDuration >= 1 && isPause) {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
-//                        if(!songId.equalsIgnoreCase(myAudioId)){
-//                            notifyDataSetChanged();
-//                        }
+                        if(!addToRecentPlayId.equalsIgnoreCase(myAudioId)){
+                            notifyDataSetChanged();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -586,7 +586,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         holder.binding.equalizerview.animateBars();
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
-                        adpater.notifyItemChanged(position);
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
 //            holder.binding.equalizerview.stopBars();
@@ -636,9 +635,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
-
-                songId = mData.get(0).getID();
-                myAudioId = mData.get(0).getID();
                 handler3.postDelayed(UpdateSongTime3,500);
                 notifyDataSetChanged();
             });
@@ -668,8 +664,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 }
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                songId = mData.get(position).getID();
-                myAudioId = mData.get(position).getID();
                 handler3.postDelayed(UpdateSongTime3,500);
                 notifyDataSetChanged();
             });
