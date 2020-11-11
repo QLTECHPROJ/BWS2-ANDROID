@@ -2268,7 +2268,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         adpater.notifyItemChanged(position);
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-                        handler3.postDelayed(UpdateSongTime3,500);
 //            holder.binding.equalizerview.stopBars();
                     }else{
                         holder.binding.equalizerview.setVisibility(View.GONE);
@@ -2281,6 +2280,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     handler3.removeCallbacks(UpdateSongTime3);
                 }
+                handler3.postDelayed(UpdateSongTime3,500);
             } else {
                 if (audioPlayz && AudioFlag.equalsIgnoreCase("SubPlayList") && pIDz.equalsIgnoreCase(PlaylistID)) {
                     if(myAudioId.equalsIgnoreCase(mData.get(position).getID())){
@@ -2291,13 +2291,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         adpater.notifyItemChanged(position);
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-                        handler3.postDelayed(UpdateSongTime3,500);
 //            holder.binding.equalizerview.stopBars();
                     }else{
                         holder.binding.equalizerview.setVisibility(View.GONE);
                         holder.binding.llHighLight.setBackgroundResource(R.color.white);
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     }
+                    handler3.postDelayed(UpdateSongTime3,500);
                 }else{
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llHighLight.setBackgroundResource(R.color.white);
@@ -2367,7 +2367,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 } else if (isPlayPlaylist == 2) {
                     resumeMedia();
                     isPlayPlaylist = 1;
-                    handler3.postDelayed(UpdateSongTime3,500);
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 } else {
                     SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -2395,7 +2394,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
                 songId = mData.get(position).getID();
-                myAudioId =songId;
                 handler3.postDelayed(UpdateSongTime3,500);
             });
 
@@ -2427,7 +2425,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
                 isPlayPlaylist = 1;
                 songId = mData.get(position).getID();
-                myAudioId =songId;
                 handler3.postDelayed(UpdateSongTime3,500);
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
             });
@@ -2734,13 +2731,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         songId = myAudioId;
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-                        handler3.postDelayed(UpdateSongTime3,500);
 //            holder.binding.equalizerview.stopBars();
                     }else{
                         holder.binding.equalizerview.setVisibility(View.GONE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     }
+                    handler3.postDelayed(UpdateSongTime3,500);
                 }else{
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
@@ -2756,13 +2753,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         songId = myAudioId;
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-                        handler3.postDelayed(UpdateSongTime3,500);
 //            holder.binding.equalizerview.stopBars();
                     }else{
                         holder.binding.equalizerview.setVisibility(View.GONE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     }
+                    handler3.postDelayed(UpdateSongTime3,500);
                 }else{
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
@@ -2826,7 +2823,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
                 songId = mData.get(position).getID();
-                myAudioId =songId;
                 handler3.postDelayed(UpdateSongTime3,500);
             });
             holder.binding.llMainLayout.setOnClickListener(view -> {
@@ -2878,7 +2874,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 songId = mData.get(position).getID();
-                myAudioId =songId;
                 handler3.postDelayed(UpdateSongTime3,500);
             });
 

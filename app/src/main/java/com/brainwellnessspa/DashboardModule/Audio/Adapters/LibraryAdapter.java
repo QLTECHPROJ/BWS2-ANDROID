@@ -43,6 +43,7 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHolder> {
     Context ctx;
+    int index = -1;
     FragmentActivity activity;
     String IsLock, HomeView;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
@@ -94,12 +95,17 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
             holder.binding.ivLock.setVisibility(View.GONE);
         }
 
+        if(index == position){
+            holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+        }else
         holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
         holder.binding.tvAddToPlaylist.setText("Add To Playlist");
         holder.binding.llMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+                index = position;
+                notifyDataSetChanged();
                 return true;
             }
         });
