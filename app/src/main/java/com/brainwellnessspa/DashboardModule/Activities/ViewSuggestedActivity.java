@@ -301,7 +301,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                             mainPlayModel.setImageFile("");
                             mainPlayModel.setLike("");
                             mainPlayModel.setDownload("");
-                            mainPlayModel.setAudioDuration("0:48");
+                            mainPlayModel.setAudioDuration("00:48");
                             listModelList2.add(mainPlayModel);
                             listModelList2.add(AudiolistsModel.get(position));
                             String json = gson.toJson(listModelList2);
@@ -352,7 +352,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         mainPlayModel.setImageFile("");
                         mainPlayModel.setLike("");
                         mainPlayModel.setDownload("");
-                        mainPlayModel.setAudioDuration("0:48");
+                        mainPlayModel.setAudioDuration("00:48");
                         listModelList2.add(mainPlayModel);
                         listModelList2.add(AudiolistsModel.get(position));
                         String json = gson.toJson(listModelList2);

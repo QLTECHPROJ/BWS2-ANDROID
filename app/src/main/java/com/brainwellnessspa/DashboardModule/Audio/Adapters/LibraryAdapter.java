@@ -193,7 +193,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
             mainPlayModel.setImageFile("");
             mainPlayModel.setLike("");
             mainPlayModel.setDownload("");
-            mainPlayModel.setAudioDuration("0:48");
+            mainPlayModel.setAudioDuration("00:48");
             listModelList2.addAll(listModelList);
             listModelList2.add(position, mainPlayModel);
             callTransFrag(position, listModelList2);

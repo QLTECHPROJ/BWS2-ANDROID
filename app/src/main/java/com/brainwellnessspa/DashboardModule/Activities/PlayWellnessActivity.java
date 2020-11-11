@@ -888,6 +888,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         binding.ivDownloads.setVisibility(View.VISIBLE);
 //                        handler1.removeCallbacks(UpdateSongTime1);
                     }
+                }else{ 
+                    binding.pbProgress.setVisibility(View.GONE);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
                 }
                 super.onPostExecute(aVoid);
             }
@@ -1451,7 +1454,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 name = addToQueueModelList.get(position).getName();
                 url = addToQueueModelList.get(position).getAudioFile();
                 binding.tvName.setText(addToQueueModelList.get(position).getName());
-                binding.tvDireName.setText(R.string.Directions);
                 binding.tvDireName.setText(R.string.Directions);
                 if (addToQueueModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
                     binding.llDirection.setVisibility(View.GONE);
@@ -2710,7 +2712,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         mainPlayModel.setImageFile("");
         mainPlayModel.setLike("");
         mainPlayModel.setDownload("");
-        mainPlayModel.setAudioDuration("0:48");
+        mainPlayModel.setAudioDuration("00:48");
         mainPlayModelList.add(mainPlayModel);
     }
 

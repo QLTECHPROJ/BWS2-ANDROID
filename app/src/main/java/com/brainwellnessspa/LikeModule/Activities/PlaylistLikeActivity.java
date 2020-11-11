@@ -585,7 +585,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
         addDisclaimer.setImageFile("");
         addDisclaimer.setLike("");
         addDisclaimer.setDownload("");
-        addDisclaimer.setAudioDuration("0:48");
+        addDisclaimer.setAudioDuration("00:48");
     }
 
     private void callTransparentFrag(int position, Context ctx, ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, String s, String playlistID) {

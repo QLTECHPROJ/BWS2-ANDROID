@@ -256,7 +256,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     mainPlayModel.setImageFile("");
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("0:48");
+                    mainPlayModel.setAudioDuration("00:48");
                     listModelList2.addAll(listModelList);
                     listModelList2.add(position,mainPlayModel);
                     callTransFrag(position,listModelList2);
@@ -307,7 +307,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     mainPlayModel.setImageFile("");
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("0:48");
+                    mainPlayModel.setAudioDuration("00:48");
                     listModelList2.addAll(listModelList);
                     listModelList2.add(position,mainPlayModel);
 

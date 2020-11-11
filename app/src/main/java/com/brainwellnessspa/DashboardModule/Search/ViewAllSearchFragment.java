@@ -284,7 +284,7 @@ public class ViewAllSearchFragment extends Fragment {
                     mainPlayModel.setImageFile("");
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("0:48");
+                    mainPlayModel.setAudioDuration("00:48");
                     listModelList2.add(mainPlayModel);
                     listModelList2.add(AudiolistModel.get(position));
                     String json = gson.toJson(listModelList2);

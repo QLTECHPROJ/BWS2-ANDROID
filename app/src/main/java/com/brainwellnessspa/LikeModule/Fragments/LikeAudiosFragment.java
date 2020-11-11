@@ -210,7 +210,7 @@ public class LikeAudiosFragment extends Fragment {
                     mainPlayModel.setImageFile("");
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("0:48");
+                    mainPlayModel.setAudioDuration("00:48");
 
                     int pos = holder.getAdapterPosition();
                     SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);

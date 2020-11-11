@@ -464,7 +464,7 @@ public class ViewAllAudioFragment extends Fragment {
             mainPlayModel.setImageFile("");
             mainPlayModel.setLike("");
             mainPlayModel.setDownload("");
-            mainPlayModel.setAudioDuration("0:48");
+            mainPlayModel.setAudioDuration("00:48");
             listModelList2.addAll(listModelList);
             listModelList2.add(position, mainPlayModel);
             callTransFrag(position, listModelList2);
@@ -515,7 +515,7 @@ public class ViewAllAudioFragment extends Fragment {
                     mainPlayModel.setImageFile("");
                     mainPlayModel.setLike("");
                     mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("0:48");
+                    mainPlayModel.setAudioDuration("00:48");
                     if (position != 0) {
                         listModelList2.addAll(listModelList);
                         listModelList2.add(position, mainPlayModel);

@@ -58,6 +58,7 @@ import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
@@ -548,9 +549,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         } else if (currentDuration >= 1 && isPause) {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
-                        if(!songId.equalsIgnoreCase(myAudioId)){
-                            notifyDataSetChanged();
-                        }
+//                        if(!songId.equalsIgnoreCase(myAudioId)){
+//                            notifyDataSetChanged();
+//                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -635,8 +636,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
-                songId = mData.get(position).getID();
+
+                songId = mData.get(0).getID();
+                myAudioId = mData.get(0).getID();
                 handler3.postDelayed(UpdateSongTime3,500);
+                notifyDataSetChanged();
             });
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -665,7 +669,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 songId = mData.get(position).getID();
+                myAudioId = mData.get(position).getID();
                 handler3.postDelayed(UpdateSongTime3,500);
+                notifyDataSetChanged();
             });
 
             if (BWSApplication.isNetworkConnected(ctx)) {
@@ -780,7 +786,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         addDisclaimer.setImageFile("");
         addDisclaimer.setLike("");
         addDisclaimer.setDownload("");
-        addDisclaimer.setAudioDuration("0:48");
+        addDisclaimer.setAudioDuration("00:48");
     }
 
     private void callTransparentFrag(int position, Context ctx, List<DownloadAudioDetails> listModelList, String s, String playlistID) {
