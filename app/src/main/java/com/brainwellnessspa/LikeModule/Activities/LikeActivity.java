@@ -62,12 +62,7 @@ public class LikeActivity extends AppCompatActivity {
             ComeScreenAccount = 1;
             finish();
         });
-        if (ComeFrom_LikePlaylist) {
-            binding.viewPager.setCurrentItem(1);
-            ComeFrom_LikePlaylist = false;
-        } else {
-            binding.viewPager.setCurrentItem(0);
-        }
+
         prepareData();
     }
 
@@ -170,7 +165,12 @@ public class LikeActivity extends AppCompatActivity {
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), ctx, binding.tabLayout.getTabCount());
         binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
-
+        if (ComeFrom_LikePlaylist) {
+            binding.viewPager.setCurrentItem(1);
+            ComeFrom_LikePlaylist = false;
+        } else {
+            binding.viewPager.setCurrentItem(0);
+        }
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

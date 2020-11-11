@@ -46,6 +46,7 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
     Context ctx;
     FragmentActivity activity;
     String IsLock,HomeView;
+    int index = -1;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
     public PopularPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
@@ -96,13 +97,18 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
             holder.binding.ivLock.setVisibility(View.GONE);
         }
 
-        holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+        if(index == position){
+            holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+        }else
+            holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
         holder.binding.tvAddToPlaylist.setText("Add To Playlist");
         holder.binding.llMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-                return false;
+                index = position;
+                notifyDataSetChanged();
+                return true;
             }
         });
         holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {

@@ -283,6 +283,7 @@ public class ViewAllPlaylistFragment extends Fragment {
     public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
         private List<ViewAllPlayListModel.ResponseData.Detail> listModelList;
         String IsLock;
+        int index = -1;
 
         public PlaylistAdapter(List<ViewAllPlayListModel.ResponseData.Detail> listModelList, String IsLock) {
             this.listModelList = listModelList;
@@ -317,14 +318,18 @@ public class ViewAllPlaylistFragment extends Fragment {
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
-            holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+            if (index == position) {
+                holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+            } else
+                holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
             holder.binding.tvAddToPlaylist.setText("Add To Playlist");
-
             holder.binding.rlMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-                    return false;
+                    index = position;
+                    notifyDataSetChanged();
+                    return true;
                 }
             });
             holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {

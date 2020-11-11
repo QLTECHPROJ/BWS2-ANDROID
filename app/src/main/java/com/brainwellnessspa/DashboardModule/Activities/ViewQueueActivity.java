@@ -1,8 +1,10 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
@@ -35,6 +37,8 @@ import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
+import com.brainwellnessspa.Services.OnClearFromRecentService;
+import com.brainwellnessspa.Utility.Playable;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -91,7 +95,7 @@ import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.savePrefQueue;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
-public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,/* AudioManager.OnAudioFocusChangeListener,*/ StartDragListener {
+public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,/* AudioManager.OnAudioFocusChangeListener,*/ StartDragListener/*, Playable */{
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
     String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name, StrigRemoveName;
@@ -110,6 +114,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     private long mLastClickTime = 0;
     private Handler handler;
     boolean addSong = false;
+//    boolean isPlaying = false;
+//    BroadcastReceiver broadcastReceiver;
     //    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
         @Override
@@ -208,7 +214,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -268,6 +273,40 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             callBack();
         });
 
+       /* broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getExtras().getString("actionname");
+                switch (action) {
+                    case BWSApplication.ACTION_PREVIUOS:
+                        onTrackPrevious();
+                        if (isPlaying) {
+                            onTrackPause();
+                        } else {
+                            onTrackPlay();
+                        }
+                        break;
+                    case BWSApplication.ACTION_PLAY:
+                        if (isPlaying) {
+                            onTrackPause();
+                        } else {
+                            onTrackPlay();
+                        }
+                        break;
+                    case BWSApplication.ACTION_NEXT:
+                        onTrackNext();
+                        if (isPlaying) {
+                            onTrackPause();
+                        } else {
+                            onTrackPlay();
+                        }
+                        break;
+                }
+            }
+        };
+        BWSApplication.createChannel(ctx);
+        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));*/
         getPrepareShowData(position);
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         callAdapterMethod();
@@ -841,9 +880,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
         }
-    } private void removeArray() {
+    }
+
+    private void removeArray() {
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-       String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         Gson gson = new Gson();
         String json1 = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         mainPlayModelList = new ArrayList<>();
@@ -1818,10 +1859,12 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
 
         @Override
-        public void onRowSelected(RecyclerView.ViewHolder myViewHolder) { }
+        public void onRowSelected(RecyclerView.ViewHolder myViewHolder) {
+        }
 
         @Override
-        public void onRowClear(RecyclerView.ViewHolder myViewHolder) { }
+        public void onRowClear(RecyclerView.ViewHolder myViewHolder) {
+        }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             QueueListLayoutBinding binding;
@@ -1832,4 +1875,77 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             }
         }
     }
+
+/*    @Override
+    public void onTrackPrevious() {
+        if (!url.equalsIgnoreCase("")) {
+            isPlaying = false;
+            callPrevious();
+        }
+
+        BWSApplication.createChannel(ctx);
+        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+    }
+
+    @Override
+    public void onTrackPlay() {
+        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
+                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
+        if (!isMediaStart) {
+            isCompleteStop = false;
+            isprogressbar = true;
+            handler.postDelayed(UpdateSongTime, 500);
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.GONE);
+            binding.llProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            callMedia();
+        } else if (isCompleteStop) {
+            isCompleteStop = false;
+            isprogressbar = true;
+            handler.postDelayed(UpdateSongTime, 500);
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.GONE);
+            binding.llProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            callMedia();
+        } else {
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.VISIBLE);
+            binding.llProgressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
+            resumeMedia();
+            isPause = false;
+        }
+        handler.postDelayed(UpdateSongTime, 100);
+        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+        isPlaying = true;
+    }
+
+    @Override
+    public void onTrackPause() {
+        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
+                R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
+        isPlaying = false;
+        handler.removeCallbacks(UpdateSongTime);
+        binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
+        pauseMedia();
+        binding.llProgressBar.setVisibility(View.GONE);
+        binding.progressBar.setVisibility(View.GONE);
+        binding.llPlay.setVisibility(View.VISIBLE);
+        binding.llPause.setVisibility(View.GONE);
+        oTime = binding.simpleSeekbar.getProgress();
+    }
+
+    @Override
+    public void onTrackNext() {
+        if (!url.equalsIgnoreCase("")) {
+            isPlaying = false;
+            callNext();
+        }
+        BWSApplication.createChannel(ctx);
+        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+    }*/
 }

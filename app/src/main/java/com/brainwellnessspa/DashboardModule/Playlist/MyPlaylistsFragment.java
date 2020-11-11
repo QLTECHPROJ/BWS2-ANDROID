@@ -476,7 +476,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.searchView.clearFocus();
 //            binding.searchView.onActionViewCollapsed();
             isclose = true;
-            Toast.makeText(activity, "closeeeeeee", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(activity, "closeeeeeee", Toast.LENGTH_SHORT).show();
         }
 
         if (isclose) {

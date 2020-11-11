@@ -52,6 +52,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
     Context ctx;
     FragmentActivity activity;
     String IsLock;
+    int index = -1;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
     public DownloadAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
@@ -88,16 +89,19 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
             holder.binding.ivLock.setVisibility(View.GONE);
         }
-        holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+        if(index == position){
+            holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+        }else
+            holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
         holder.binding.tvAddToPlaylist.setText("Add To Playlist");
-        holder.binding.llMainLayout.setOnLongClickListener(v -> {
-            if (BWSApplication.isNetworkConnected(ctx)) {
+        holder.binding.llMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
                 holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-            } else {
-                BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
+                index = position;
+                notifyDataSetChanged();
+                return true;
             }
-
-            return false;
         });
         holder.binding.tvAddToPlaylist.setOnClickListener(view -> {
             Intent i = new Intent(ctx, AddPlaylistActivity.class);

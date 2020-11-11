@@ -132,6 +132,7 @@ public class BWSApplication extends Application {
     };
 
     public static void createNotification(Context context, MainPlayModel track, int playbutton, int pos, int size) {
+        try {
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
             MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
             PendingIntent pendingIntentPrevious;
@@ -188,6 +189,9 @@ public class BWSApplication extends Application {
                     .build();
 
             notificationManagerCompat.notify(1, notification);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public static void createChannel(Context ctx) {
@@ -199,8 +203,13 @@ public class BWSApplication extends Application {
             if (notificationManager != null) {
                 notificationManager.createNotificationChannel(channel);
             }
-        }else{
+        } else {
         }
+    }
+
+    public static void cancelNotification(Context ctx) {
+        notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(NOTIFICATION_ID); // Notification ID to cancel
     }
 
     public static void getLatasteUpdate(Context context) {

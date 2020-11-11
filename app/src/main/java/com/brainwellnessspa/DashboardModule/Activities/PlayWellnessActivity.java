@@ -360,6 +360,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         BWSApplication.createChannel(ctx);
         registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+
         if (isMediaStart /*&& !audioFile.equalsIgnoreCase("")*/) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 callComplete();

@@ -292,6 +292,7 @@ public class ViewAllAudioFragment extends Fragment {
     public class AudiolistAdapter extends RecyclerView.Adapter<AudiolistAdapter.MyViewHolder> {
         String IsLock;
         private ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList;
+        int index = -1;
 
         public AudiolistAdapter(ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList, String IsLock) {
             this.listModelList = listModelList;
@@ -336,14 +337,18 @@ public class ViewAllAudioFragment extends Fragment {
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
-
-            holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+            if (index == position) {
+                holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+            } else
+                holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
             holder.binding.tvAddToPlaylist.setText("Add To Playlist");
             holder.binding.rlMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-                    return false;
+                    index = position;
+                    notifyDataSetChanged();
+                    return true;
                 }
             });
             holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
@@ -532,7 +537,7 @@ public class ViewAllAudioFragment extends Fragment {
                 }
             } else {
                 json = gson.toJson(listModelList);
-                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "ViewAllAudioList");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "ViewAllAudioList");
                 editor.putString(CONSTANTS.PREF_KEY_modelList, json);
                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                 editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);

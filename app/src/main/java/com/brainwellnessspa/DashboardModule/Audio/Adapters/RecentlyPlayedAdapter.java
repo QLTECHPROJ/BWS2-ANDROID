@@ -49,6 +49,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
     Context ctx;
     FragmentActivity activity;
     String IsLock;
+    int index = -1;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
     String HomeView;
 
@@ -98,12 +99,17 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
             holder.binding.ivLock.setVisibility(View.GONE);
         }
-        holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+        if(index == position){
+            holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+        }else
+            holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
         holder.binding.tvAddToPlaylist.setText("Add To Playlist");
         holder.binding.llMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+                index = position;
+                notifyDataSetChanged();
                 return true;
             }
         });

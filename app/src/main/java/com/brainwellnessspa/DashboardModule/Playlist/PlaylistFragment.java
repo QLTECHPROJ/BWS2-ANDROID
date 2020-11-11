@@ -552,6 +552,7 @@ public class PlaylistFragment extends Fragment {
     public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
         Context ctx;
         String IsLock, MyDownloads;
+        int index = -1;
         private ArrayList<MainPlayListModel.ResponseData.Detail> listModelList;
 
         public PlaylistAdapter(ArrayList<MainPlayListModel.ResponseData.Detail> listModelList, Context ctx, String IsLock, String MyDownloads) {
@@ -571,7 +572,6 @@ public class PlaylistFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
             MeasureRatio measureRatio = BWSApplication.measureRatio(getActivity(), 0,
                     1, 1, 0.38f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -596,13 +596,18 @@ public class PlaylistFragment extends Fragment {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
-            holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+            if (index == position) {
+                holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+            } else
+                holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
             holder.binding.tvAddToPlaylist.setText("Add To Playlist");
             holder.binding.rlMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-                    return false;
+                    index = position;
+                    notifyDataSetChanged();
+                    return true;
                 }
             });
             holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {

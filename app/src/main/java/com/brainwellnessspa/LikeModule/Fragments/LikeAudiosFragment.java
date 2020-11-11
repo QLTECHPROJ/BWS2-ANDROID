@@ -75,7 +75,7 @@ public class LikeAudiosFragment extends Fragment {
         binding.rvLikesList.setItemAnimator(new DefaultItemAnimator());
         prepareData();
         binding.llError.setVisibility(View.GONE);
-        binding.tvFound.setText("No result found");
+        binding.tvFound.setText("Your like audios will appear here");
         return view;
     }
 
