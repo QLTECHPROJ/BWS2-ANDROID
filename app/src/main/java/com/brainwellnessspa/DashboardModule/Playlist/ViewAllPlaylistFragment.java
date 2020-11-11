@@ -206,7 +206,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if(isMediaStart){
+                    if (isMediaStart) {
                         stopMedia();
                         releasePlayer();
                     }
@@ -225,7 +225,7 @@ public class ViewAllPlaylistFragment extends Fragment {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if(isMediaStart){
+                if (isMediaStart) {
                     stopMedia();
                     releasePlayer();
                 }
@@ -368,20 +368,20 @@ public class ViewAllPlaylistFragment extends Fragment {
                             i.putExtra("MyDownloads", "1");
                             getActivity().startActivity(i);
                         } else {*/
-                            Bundle bundle = new Bundle();
-                            comefrom_search = 2;
-                            GetPlaylistLibraryID = GetLibraryID;
-                            Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                            bundle.putString("New", "0");
-                            bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
-                            bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
-                            bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
-                            bundle.putString("MyDownloads", MyDownloads);
-                            myPlaylistsFragment.setArguments(bundle);
-                            fragmentManager1.beginTransaction()
-                                    .replace(R.id.flContainer, myPlaylistsFragment)
-                                    .commit();
+                        Bundle bundle = new Bundle();
+                        comefrom_search = 2;
+                        GetPlaylistLibraryID = GetLibraryID;
+                        Fragment myPlaylistsFragment = new MyPlaylistsFragment();
+                        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                        bundle.putString("New", "0");
+                        bundle.putString("PlaylistID", listModelList.get(position).getPlaylistID());
+                        bundle.putString("PlaylistName", listModelList.get(position).getPlaylistName());
+                        bundle.putString("PlaylistImage", listModelList.get(position).getPlaylistImage());
+                        bundle.putString("MyDownloads", MyDownloads);
+                        myPlaylistsFragment.setArguments(bundle);
+                        fragmentManager1.beginTransaction()
+                                .replace(R.id.flContainer, myPlaylistsFragment)
+                                .commit();
 //                        }
                     }
                 }
@@ -419,7 +419,7 @@ public class ViewAllPlaylistFragment extends Fragment {
             protected void onPostExecute(Void aVoid) {
                 SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                if(queuePlay){
+                if (queuePlay) {
                     int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
                     ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
                     Gson gson = new Gson();

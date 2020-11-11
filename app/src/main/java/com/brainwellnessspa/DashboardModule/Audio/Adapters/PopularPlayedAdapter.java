@@ -45,12 +45,12 @@ import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdapter.MyViewHolder> {
     Context ctx;
     FragmentActivity activity;
-    String IsLock,HomeView;
+    String IsLock, HomeView;
     int index = -1;
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
     public PopularPlayedAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
-                                String IsLock,String HomeView) {
+                                String IsLock, String HomeView) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
@@ -97,9 +97,9 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
             holder.binding.ivLock.setVisibility(View.GONE);
         }
 
-        if(index == position){
+        if (index == position) {
             holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-        }else
+        } else
             holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
         holder.binding.tvAddToPlaylist.setText("Add To Playlist");
         holder.binding.llMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
@@ -165,7 +165,7 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
                 }
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                 holder.binding.ivLock.setVisibility(View.GONE);
-                    callnewTrans(position);
+                callnewTrans(position);
             }
         });
     }
@@ -203,7 +203,7 @@ public class PopularPlayedAdapter extends RecyclerView.Adapter<PopularPlayedAdap
         }
     }
 
-    private void callTransFrag(int position,ArrayList<MainAudioModel.ResponseData.Detail> listModelList) {
+    private void callTransFrag(int position, ArrayList<MainAudioModel.ResponseData.Detail> listModelList) {
         try {
             player = 1;
             if (isPrepare || isMediaStart || isPause) {

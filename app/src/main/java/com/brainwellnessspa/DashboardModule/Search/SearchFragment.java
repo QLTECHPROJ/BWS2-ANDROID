@@ -671,6 +671,7 @@ public class SearchFragment extends Fragment {
 
     public class SearchPlaylistAdapter extends RecyclerView.Adapter<SearchPlaylistAdapter.MyViewHolder> {
         private List<SearchPlaylistModel.ResponseData> modelList;
+        int index = -1;
 
         public SearchPlaylistAdapter(List<SearchPlaylistModel.ResponseData> listModelList) {
             this.modelList = listModelList;
@@ -691,7 +692,8 @@ public class SearchFragment extends Fragment {
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-
+            holder.binding.tvAddToPlaylist.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.tvAddToPlaylist.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             MeasureRatio measureRatio1 = BWSApplication.measureRatio(getActivity(), 0,
                     1, 1, 0.38f, 0);
             holder.binding.rlMainLayout.getLayoutParams().height = (int) (measureRatio1.getHeight() * measureRatio1.getRatio());
@@ -710,6 +712,29 @@ public class SearchFragment extends Fragment {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
+            if (index == position) {
+                holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+            } else
+                holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+            holder.binding.tvAddToPlaylist.setText("Add To Playlist");
+            holder.binding.rlMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
+                    index = position;
+                    notifyDataSetChanged();
+                    return true;
+                }
+            });
+            holder.binding.tvAddToPlaylist.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(getActivity(), AddPlaylistActivity.class);
+                    i.putExtra("AudioId", "");
+                    i.putExtra("PlaylistID", modelList.get(position).getID());
+                    startActivity(i);
+                }
+            });
             holder.binding.rlMainLayout.setOnClickListener(view -> {
                 if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);

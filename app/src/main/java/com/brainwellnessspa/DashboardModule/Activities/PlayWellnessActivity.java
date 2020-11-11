@@ -1294,14 +1294,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     public void GetMedia() {
-
         downloadAudioDetailsList = new ArrayList<>();
-
         class GetMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadAudioDetailsList = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -1348,14 +1344,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     public void GetMedia2() {
-
         downloadAudioDetailsList1 = new ArrayList<>();
-
         class GetMedia extends AsyncTask<Void, Void, Void> {
-
             @Override
             protected Void doInBackground(Void... voids) {
-
                 downloadAudioDetailsList1 = DatabaseClient
                         .getInstance(ctx)
                         .getaudioDatabase()
@@ -1386,11 +1378,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                     }
                 }
-
                 getMediaByPer();
-
                 super.onPostExecute(aVoid);
-
             }
         }
         GetMedia st = new GetMedia();
@@ -1633,6 +1622,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callMedia() {
+        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
+                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
         FileDescriptor fileDescriptor = null;
         if (url.equalsIgnoreCase("")) {
             setMediaPlayer("2", fileDescriptor);
@@ -1671,7 +1662,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     private void getDownloadMedia(DownloadMedia downloadMedia) {
         class getDownloadMedia extends AsyncTask<Void, Void, Void> {
             FileDescriptor fileDescriptor = null;
-
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
@@ -3004,7 +2994,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             isPause = false;
         }
         handler.postDelayed(UpdateSongTime, 100);
-        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+        binding.tvTitle.setText(mainPlayModelList.get(position).getAudiomastercat());
+        binding.tvName.setText(mainPlayModelList.get(position).getName());
         isPlaying = true;
     }
 

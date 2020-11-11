@@ -83,7 +83,7 @@ public class AudioFragment extends Fragment {
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
         if (!isDownloading) {
-            if(BWSApplication.isNetworkConnected(getActivity())) {
+            if (BWSApplication.isNetworkConnected(getActivity())) {
                 SharedPreferences sharedx = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
                 Gson gson = new Gson();
                 String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
@@ -224,7 +224,8 @@ public class AudioFragment extends Fragment {
                             try {
                                 IsLock = listModel.getResponseData().getIsLock();
                                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = shared.edit(); ;
+                                SharedPreferences.Editor editor = shared.edit();
+                                ;
                                 editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().getIsLock());
                                 Gson gson = new Gson();
                                 editor.putString(CONSTANTS.PREF_KEY_UnLockAudiList, gson.toJson(listModel.getResponseData().getID()));
@@ -232,7 +233,7 @@ public class AudioFragment extends Fragment {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                         }
+                        }
                     }
 
                     @Override
@@ -332,7 +333,7 @@ public class AudioFragment extends Fragment {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if(isMediaStart){
+                    if (isMediaStart) {
                         stopMedia();
                         releasePlayer();
                     }
@@ -351,7 +352,7 @@ public class AudioFragment extends Fragment {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if(isMediaStart){
+                if (isMediaStart) {
                     stopMedia();
                     releasePlayer();
                 }
@@ -439,7 +440,7 @@ public class AudioFragment extends Fragment {
                     }
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Library))) {
                     LibraryAdapter recommendedAdapter = new LibraryAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock(),listModelList.get(position).getView());
+                            listModelList.get(position).getIsLock(), listModelList.get(position).getView());
                     IsLock = listModelList.get(position).getIsLock();
                     RecyclerView.LayoutManager recommended = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recommended);
@@ -460,7 +461,7 @@ public class AudioFragment extends Fragment {
                     holder.binding.rvMainAudio.setAdapter(recentlyPlayedAdapter);*/
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.recently_played))) {
                     RecentlyPlayedAdapter recentlyPlayedAdapter = new RecentlyPlayedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock(),listModelList.get(position).getView());
+                            listModelList.get(position).getIsLock(), listModelList.get(position).getView());
                     RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recentlyPlayed);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
@@ -473,7 +474,7 @@ public class AudioFragment extends Fragment {
                     }
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.get_inspired))) {
                     RecommendedAdapter inspiredAdapter = new RecommendedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock(),listModelList.get(position).getView());
+                            listModelList.get(position).getIsLock(), listModelList.get(position).getView());
                     RecyclerView.LayoutManager inspired = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(inspired);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
@@ -486,7 +487,7 @@ public class AudioFragment extends Fragment {
                     }
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.popular))) {
                     PopularPlayedAdapter popularPlayedAdapter = new PopularPlayedAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock(),listModelList.get(position).getView());
+                            listModelList.get(position).getIsLock(), listModelList.get(position).getView());
                     RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(recentlyPlayed);
                     holder.binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());

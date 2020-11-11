@@ -38,6 +38,8 @@ import androidx.media.MediaSessionManager;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
+import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.NotificationActionService;
@@ -53,6 +55,7 @@ import com.brainwellnessspa.Utility.NotificationDismissedReceiver;
 import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.brainwellnessspa.Utility.Track;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -100,7 +103,7 @@ public class BWSApplication extends Application {
     public static final String ACTION_PLAY = "actionplay";
     public static final String ACTION_NEXT = "actionnext";
     public static Notification notification;
-    public static NotificationManager notificationManager;
+    public static NotificationManager notificationManager = null;
 
     public static Context getContext() {
         return mContext;
@@ -136,12 +139,10 @@ public class BWSApplication extends Application {
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
             MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
             PendingIntent pendingIntentPrevious;
-          /*  try {
-                byte[] encodeByte = Base64.decode(track.getImageFile(), Base64.DEFAULT);
-                myBitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            } catch (Exception e) {
-                e.getMessage();
-            }*/
+            Intent intent = new Intent(context, PlayWellnessActivity.class);
+            intent.putExtra("com.brainwellnessspa.notifyId", NOTIFICATION_ID);
+            PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
             int drw_previous;
             if (pos == 0) {
                 pendingIntentPrevious = null;
@@ -169,7 +170,13 @@ public class BWSApplication extends Application {
                         intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
                 drw_next = R.drawable.ic_skip_next_black_24dp;
             }
-
+//            BitmapFactory.decodeResource(context.getResources(), R.drawable.square_app_icon)
+            try {
+                byte[] encodeByte = Base64.decode(track.getImageFile(), Base64.DEFAULT);
+                myBitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            } catch (Exception e) {
+                e.getMessage();
+            }
             //create notification
             notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_music_note)
@@ -179,17 +186,17 @@ public class BWSApplication extends Application {
                     .setOnlyAlertOnce(true)//show notification for only first time
                     .setShowWhen(false)
                     .setOngoing(true)
+                    .setContentIntent(pIntent)
                     .addAction(drw_previous, "Previous", pendingIntentPrevious)
                     .addAction(playbutton, "Play", pendingIntentPlay)
                     .addAction(drw_next, "Next", pendingIntentNext)
                     .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                            .setShowActionsInCompactView(0, 1, 2)
-                            .setMediaSession(mediaSessionCompat.getSessionToken()))
+                            .setShowActionsInCompactView(0, 1, 2))
                     .setPriority(NotificationCompat.PRIORITY_LOW)
                     .build();
-
+//.setMediaSession(mediaSessionCompat.getSessionToken())
             notificationManagerCompat.notify(1, notification);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

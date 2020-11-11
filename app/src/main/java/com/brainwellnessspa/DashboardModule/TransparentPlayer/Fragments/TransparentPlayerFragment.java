@@ -87,7 +87,7 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, Playable/*, AudioManager.OnAudioFocusChangeListener*/ {
     public static int isDisclaimer = 0;
-    public static String addToRecentPlayId = "",myAudioId;
+    public static String addToRecentPlayId = "", myAudioId;
     public ArrayList<MainPlayModel> mainPlayModelList;
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
@@ -1155,6 +1155,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
             });
+            BWSApplication.createChannel(getActivity());
+            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+            getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1220,6 +1223,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void callMedia() {
+        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
+                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
         binding.progressBar.setVisibility(View.VISIBLE);
 //        binding.llProgress.setVisibility(View.VISIBLE);
         binding.ivPlay.setVisibility(View.GONE);

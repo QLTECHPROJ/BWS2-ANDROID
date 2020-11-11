@@ -89,9 +89,9 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
             holder.binding.ivLock.setVisibility(View.GONE);
         }
-        if(index == position){
+        if (index == position) {
             holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-        }else
+        } else
             holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
         holder.binding.tvAddToPlaylist.setText("Add To Playlist");
         holder.binding.llMainLayout.setOnLongClickListener(new View.OnLongClickListener() {

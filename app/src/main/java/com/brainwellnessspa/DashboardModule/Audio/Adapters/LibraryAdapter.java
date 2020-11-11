@@ -95,10 +95,10 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
             holder.binding.ivLock.setVisibility(View.GONE);
         }
 
-        if(index == position){
+        if (index == position) {
             holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
-        }else
-        holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
+        } else
+            holder.binding.tvAddToPlaylist.setVisibility(View.GONE);
         holder.binding.tvAddToPlaylist.setText("Add To Playlist");
         holder.binding.llMainLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
