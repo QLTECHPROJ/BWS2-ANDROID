@@ -235,18 +235,22 @@ public class BWSApplication extends Application {
     }
 
     public static void createChannel(Context ctx) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    "KOD Dev", NotificationManager.IMPORTANCE_LOW);
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                        "KOD Dev", NotificationManager.IMPORTANCE_LOW);
 
-            notificationManager = ctx.getSystemService(NotificationManager.class);
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 notificationManager = ctx.getSystemService(NotificationManager.class);
+                if (notificationManager != null) {
+                    notificationManager.createNotificationChannel(channel);
+                }
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    notificationManager = ctx.getSystemService(NotificationManager.class);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,8 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
+import static com.brainwellnessspa.Utility.MusicService.getStartTime;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -68,15 +71,21 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class SearchFragment extends Fragment {
     FragmentSearchBinding binding;
-    String UserID;
+    String UserID, AudioFlag;
     EditText searchEditText;
     SerachListAdpater adpater;
     public static int comefrom_search = 0;
+    Handler handler3;
+    int startTime;
+    private long currentDuration = 0;
+    long myProgress = 0, diff = 0;
+    private Runnable UpdateSongTime3;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false);
         View view = binding.getRoot();
+        handler3 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         ComeScreenAccount = 0;
@@ -169,6 +178,12 @@ public class SearchFragment extends Fragment {
 
 
     @Override
+    public void onPause() {
+        handler3.removeCallbacks(UpdateSongTime3);
+        super.onPause();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         prepareSuggestedData();
@@ -176,7 +191,7 @@ public class SearchFragment extends Fragment {
 
     private void prepareSuggestedData() {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
 
         try {
             SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -339,7 +354,7 @@ public class SearchFragment extends Fragment {
 
     public class SerachListAdpater extends RecyclerView.Adapter<SerachListAdpater.MyViewHolder> {
         Context ctx;
-        String UserID;
+        String UserID, songId;
         RecyclerView rvSerachList;
         private List<SearchBothModel.ResponseData> modelList;
 
@@ -377,6 +392,64 @@ public class SearchFragment extends Fragment {
             if (modelList.get(position).getIscategory().equalsIgnoreCase("1")) {
                 holder.binding.tvPart.setText(R.string.Audio);
                 holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
+
+                UpdateSongTime3 = new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            startTime = getStartTime();
+                            myProgress = currentDuration;
+                            currentDuration = getStartTime();
+                            if (currentDuration == 0 && isCompleteStop) {
+                                notifyDataSetChanged();
+//                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                            } else if (currentDuration >= 1 && !isPause) {
+//                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                            } else if (currentDuration >= 1 && isPause) {
+//                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                            }
+                        /*if(isPause && ps == 0){
+                            ps++;
+                            notifyDataSetChanged();
+                        }else if(!isPause && nps == 0){
+                            nps++;
+                            notifyDataSetChanged();
+                        }*/
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        handler3.postDelayed(this, 500);
+                    }
+                };
+
+                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
+                        !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
+                    if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
+                        songId = myAudioId;
+                        holder.binding.equalizerview.animateBars();
+                        holder.binding.equalizerview.setVisibility(View.VISIBLE);
+                        holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
+                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                        holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+//            holder.binding.equalizerview.stopBars();
+//                        ps =0;
+//                        nps = 0;
+                    } else {
+                        holder.binding.equalizerview.setVisibility(View.GONE);
+                        holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    }
+                    handler3.postDelayed(UpdateSongTime3, 500);
+                } else {
+                    holder.binding.equalizerview.setVisibility(View.GONE);
+                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    handler3.removeCallbacks(UpdateSongTime3);
+                }
                 holder.binding.llRemoveAudio.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -454,6 +527,8 @@ public class SearchFragment extends Fragment {
                             /*Intent i = new Intent(ctx, PlayWellnessActivity.class);
                             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                             ctx.startActivity(i);*/
+                            handler3.postDelayed(UpdateSongTime3, 500);
+                            notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -539,7 +614,9 @@ public class SearchFragment extends Fragment {
 
     public class SuggestionAudiosAdpater extends RecyclerView.Adapter<SuggestionAudiosAdpater.MyViewHolder> {
         Context ctx;
+        String songId;
         private List<SuggestedModel.ResponseData> modelList;
+        int ps = 0, nps = 0;
 
         public SuggestionAudiosAdpater(List<SuggestedModel.ResponseData> modelList, Context ctx) {
             this.modelList = modelList;
@@ -556,6 +633,35 @@ public class SearchFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            UpdateSongTime3 = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        startTime = getStartTime();
+                        myProgress = currentDuration;
+                        currentDuration = getStartTime();
+                        if (currentDuration == 0 && isCompleteStop) {
+                            notifyDataSetChanged();
+//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        } else if (currentDuration >= 1 && !isPause) {
+//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                        } else if (currentDuration >= 1 && isPause) {
+//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        }
+                        /*if(isPause && ps == 0){
+                            ps++;
+                            notifyDataSetChanged();
+                        }else if(!isPause && nps == 0){
+                            nps++;
+                            notifyDataSetChanged();
+                        }*/
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    handler3.postDelayed(this, 500);
+                }
+            };
+
             holder.binding.tvTitle.setText(modelList.get(position).getName());
             holder.binding.tvTime.setText(modelList.get(position).getAudioDuration());
             holder.binding.pbProgress.setVisibility(View.GONE);
@@ -563,6 +669,9 @@ public class SearchFragment extends Fragment {
                     1, 1, 0.12f, 0);
             holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(getActivity()).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
@@ -578,6 +687,34 @@ public class SearchFragment extends Fragment {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
+            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+            if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
+                    !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
+                if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
+                    songId = myAudioId;
+                    holder.binding.equalizerview.animateBars();
+                    holder.binding.equalizerview.setVisibility(View.VISIBLE);
+                    holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+//            holder.binding.equalizerview.stopBars();
+//                        ps =0;
+//                        nps = 0;
+                } else {
+                    holder.binding.equalizerview.setVisibility(View.GONE);
+                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                }
+                handler3.postDelayed(UpdateSongTime3, 500);
+            } else {
+                holder.binding.equalizerview.setVisibility(View.GONE);
+                holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                handler3.removeCallbacks(UpdateSongTime3);
+            }
             holder.binding.llMainLayoutForPlayer.setOnClickListener(view -> {
                 try {
                     player = 1;
@@ -623,6 +760,8 @@ public class SearchFragment extends Fragment {
                     fragmentManager1.beginTransaction()
                             .add(R.id.flContainer, fragment)
                             .commit();
+                    handler3.postDelayed(UpdateSongTime3, 500);
+                    notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -107,6 +107,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.binding.tvTitle.setText(listModelList.get(position).getPlaylistName());
+        holder.binding.equalizerview.setVisibility(View.GONE);
         UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {

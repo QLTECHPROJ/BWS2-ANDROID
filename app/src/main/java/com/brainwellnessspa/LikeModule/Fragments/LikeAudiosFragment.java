@@ -211,8 +211,8 @@ public class LikeAudiosFragment extends Fragment {
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-                if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())  && modelList.get(position).getID().equalsIgnoreCase("1")) {
+            if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
+                if (myAudioId.equalsIgnoreCase(modelList.get(position).getID()) && modelList.get(position).getID().equalsIgnoreCase("1")) {
                     songId = myAudioId;
                     holder.binding.equalizerview.animateBars();
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
@@ -313,7 +313,7 @@ public class LikeAudiosFragment extends Fragment {
                         }
                         callTransFrag(pos, listModelList2);
                     }
-                    handler3.postDelayed(UpdateSongTime3,500);
+                    handler3.postDelayed(UpdateSongTime3, 500);
                     notifyDataSetChanged();
                 }
             });

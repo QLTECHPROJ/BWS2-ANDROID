@@ -156,6 +156,7 @@ public class LikePlaylistsFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(modelList.get(position).getPlaylistName());
+            holder.binding.equalizerview.setVisibility(View.GONE);
             if (modelList.get(position).getTotalAudio().equalsIgnoreCase("") ||
                     modelList.get(position).getTotalAudio().equalsIgnoreCase("0") &&
                             modelList.get(position).getTotalhour().equalsIgnoreCase("")
