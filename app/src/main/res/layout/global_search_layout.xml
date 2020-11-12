@@ -57,14 +57,6 @@
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        <es.claucookie.miniequalizerlibrary.EqualizerView
-                            android:id="@+id/equalizerview"
-                            custom:animDuration="4800"
-                            custom:foregroundColor="@color/white"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="@dimen/_10sdp" />
-
                     </RelativeLayout>
 
                     <ImageView
@@ -74,6 +66,14 @@
                         android:layout_centerInParent="true"
                         android:scaleType="fitXY"
                         android:visibility="gone" />
+
+                    <es.claucookie.miniequalizerlibrary.EqualizerView
+                        android:id="@+id/equalizerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="@dimen/_10sdp"
+                        custom:animDuration="4800"
+                        custom:foregroundColor="@color/white" />
 
                     <ImageView
                         android:id="@+id/ivLock"
