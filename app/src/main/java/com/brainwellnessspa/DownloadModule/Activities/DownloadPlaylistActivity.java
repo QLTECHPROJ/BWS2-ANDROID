@@ -120,6 +120,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        handler3.removeCallbacks(UpdateSongTime3);
+        super.onPause();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         PrepareData();
