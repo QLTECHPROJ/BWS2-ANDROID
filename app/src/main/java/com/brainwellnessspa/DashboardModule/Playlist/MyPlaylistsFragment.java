@@ -2158,6 +2158,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         } else if (currentDuration >= 1 && isPause) {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
+                        if(currentDuration == 0){
+                            notifyDataSetChanged();
+                        }
                         /*if(isPause && ps == 0){
                             ps++;
                             notifyDataSetChanged();
