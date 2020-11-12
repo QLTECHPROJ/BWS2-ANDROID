@@ -200,11 +200,11 @@ public class ViewAllSearchFragment extends Fragment {
                         .add(R.id.flContainer, fragment)
                         .commit();
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(4, 6, 4, 260);
+                params.setMargins(0, 6, 0, 260);
                 binding.llSpace.setLayoutParams(params);
             } else {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(4, 6, 4, 50);
+                params.setMargins(0, 6, 0, 50);
                 binding.llSpace.setLayoutParams(params);
             }
         } catch (Exception e) {
@@ -283,15 +283,14 @@ public class ViewAllSearchFragment extends Fragment {
             holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
+            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
             Glide.with(getActivity()).load(AudiolistModel.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
-            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-//            TODO appointment as it is audioflag changes (audioPlayz && AudioFlag.equalsIgnoreCase("AppointmentDetailList"))
             if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
                     !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                 if (myAudioId.equalsIgnoreCase(AudiolistModel.get(position).getID())) {

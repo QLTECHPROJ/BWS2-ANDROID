@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/_13sdp"
         android:weightSum="1">
 
         <LinearLayout
@@ -50,16 +51,7 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
                 </RelativeLayout>
-
-                <es.claucookie.miniequalizerlibrary.EqualizerView
-                    android:id="@+id/equalizerview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="@dimen/_10sdp"
-                    custom:animDuration="4800"
-                    custom:foregroundColor="@color/white" />
 
                 <ImageView
                     android:id="@+id/ivBackgroundImage"
@@ -68,6 +60,14 @@
                     android:layout_centerInParent="true"
                     android:scaleType="fitXY"
                     android:visibility="visible" />
+
+                <es.claucookie.miniequalizerlibrary.EqualizerView
+                    android:id="@+id/equalizerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/_10sdp"
+                    custom:animDuration="4800"
+                    custom:foregroundColor="@color/white" />
 
                 <ImageView
                     android:id="@+id/ivLock"
