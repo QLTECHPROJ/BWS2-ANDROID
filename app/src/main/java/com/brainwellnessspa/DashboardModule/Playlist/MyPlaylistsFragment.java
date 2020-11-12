@@ -2253,11 +2253,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         adpater.notifyDataSetChanged();
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-                        if(ps == 1){
+                        /*if(ps == 1){
                             ps = 0;
                         }if(nps == 1){
                             nps = 0;
-                        }
+                        }*/
 //            holder.binding.equalizerview.stopBars();
                     }else{
                         adpater.notifyDataSetChanged();
@@ -2712,11 +2712,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         songId = myAudioId;
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-                        if(ps == 1){
+                        /*if(ps == 1){
                             ps = 0;
                         }if(nps == 1){
                             nps = 0;
-                        }
+                        }*/
 //            holder.binding.equalizerview.stopBars();
                     }else{
                         holder.binding.equalizerview.setVisibility(View.GONE);
@@ -2742,11 +2742,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         songId = myAudioId;
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-                        if(ps == 1){
+                        /*if(ps == 1){
                             ps = 0;
                         }if(nps == 1){
                             nps = 0;
-                        }
+                        }*/
 //            holder.binding.equalizerview.stopBars();
                     }else{
                         holder.binding.equalizerview.setVisibility(View.GONE);
