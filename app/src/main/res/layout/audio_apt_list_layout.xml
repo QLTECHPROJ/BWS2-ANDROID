@@ -2,6 +2,7 @@
 <layout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:id="@+id/llMainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,6 +38,20 @@
                     android:layout_centerInParent="true"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_round_play_icon" />
+
+               <!-- <ImageView
+                    android:id="@+id/ivBackgroundImaged"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="-6dp" />-->
+
+                <es.claucookie.miniequalizerlibrary.EqualizerView
+                    android:id="@+id/equalizerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/_10sdp"
+                    custom:animDuration="4800"
+                    custom:foregroundColor="@color/white" />
 
             </RelativeLayout>
         </LinearLayout>

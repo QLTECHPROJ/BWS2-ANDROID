@@ -248,6 +248,9 @@ public class AptAudioFragment extends Fragment {
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+//            holder.binding.ivBackgroundImaged.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+//            holder.binding.ivBackgroundImaged.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+//            holder.binding.ivBackgroundImaged.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(getActivity()).load(audiolist.getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
