@@ -2,9 +2,13 @@ package com.brainwellnessspa.DashboardModule.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
@@ -34,7 +38,7 @@ import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
-public class DashboardActivity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener {
+public class DashboardActivity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener, SensorEventListener {
     public static int player = 0;
     ActivityDashboardBinding binding;
     boolean doubleBackToExitPressedOnce = false;
@@ -64,7 +68,10 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         }catch (Exception e){
             e.printStackTrace();
         }
-
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                "com.brainwellnessspa::MyWakelockTag");
+        wakeLock.acquire();
         if (getIntent().hasExtra("Goplaylist")) {
             Goplaylist = getIntent().getStringExtra("Goplaylist");
             PlaylistID = getIntent().getStringExtra("PlaylistID");
@@ -205,5 +212,15 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
 //                MusicService.pauseMedia();// Pause your media player here
                 break;
         }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }

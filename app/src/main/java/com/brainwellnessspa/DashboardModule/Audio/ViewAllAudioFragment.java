@@ -545,10 +545,18 @@ public class ViewAllAudioFragment extends Fragment {
                 editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 editor.putString(CONSTANTS.PREF_KEY_myPlaylist, Name);
                 editor.commit();
-                openMyFragment();
-//                    Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
-//                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//                    getActivity().startActivity(i);
+//                openMyFragment();
+                player = 1;
+                if (isPrepare || isMediaStart || isPause) {
+                    stopMedia();
+                }
+                isPause = false;
+                isMediaStart = false;
+                isPrepare = false;
+                isCompleteStop = false;
+                    Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    getActivity().startActivity(i);
             }
 
         } catch (Exception e) {

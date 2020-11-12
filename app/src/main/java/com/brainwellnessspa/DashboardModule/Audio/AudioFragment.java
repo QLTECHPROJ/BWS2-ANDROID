@@ -94,6 +94,7 @@ public class AudioFragment extends Fragment {
                     }.getType();
                     fileNameList = gson.fromJson(json, type);
                     audioFile = gson.fromJson(json1, type);
+
             /*if(json2.equalsIgnoreCase(String.valueOf(gson))){
                 playlistDownloadId = new ArrayList<>();
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
