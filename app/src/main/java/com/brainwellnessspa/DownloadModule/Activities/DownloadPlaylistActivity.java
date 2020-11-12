@@ -518,6 +518,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         String UserID,songId;
         private List<DownloadAudioDetails> listModelList;
         private List<DownloadAudioDetails> listFilterData;
+        int ps = 0,nps = 0;
 
         public PlayListsAdpater(List<DownloadAudioDetails> listModelList, Context ctx) {
             this.listModelList = listModelList;
@@ -543,13 +544,18 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         myProgress = currentDuration;
                         currentDuration = getStartTime();
                         if (currentDuration == 0 && isCompleteStop) {
+                            notifyDataSetChanged();
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }  else if (currentDuration >= 1 && !isPause) {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                         } else if (currentDuration >= 1 && isPause) {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
-                        if(!addToRecentPlayId.equalsIgnoreCase(myAudioId)){
+                        if(isPause && ps == 0){
+                            ps++;
+                            notifyDataSetChanged();
+                        }else if(!isPause && nps == 0){
+                            nps++;
                             notifyDataSetChanged();
                         }
                     } catch (Exception e) {
@@ -589,6 +595,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
 //            holder.binding.equalizerview.stopBars();
+                        ps =0;
+                        nps = 0;
                     }else{
                         holder.binding.equalizerview.setVisibility(View.GONE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white);

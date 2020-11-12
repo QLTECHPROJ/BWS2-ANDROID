@@ -194,11 +194,13 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
                 break;
             case AudioManager.AUDIOFOCUS_LOSS:
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                if (isMediaStart && !audioPause) {
-                    pauseMedia();
-                    audioPause = true;
+                if(!isPause) {
+                    if (isMediaStart && !audioPause) {
+                        pauseMedia();
+                        audioPause = true;
 //                    binding.ivPlay.setVisibility(View.VISIBLE);
 //                    binding.ivPause.setVisibility(View.GONE);
+                    }
                 }
 //                MusicService.pauseMedia();// Pause your media player here
                 break;
