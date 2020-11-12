@@ -408,6 +408,10 @@ public class SearchFragment extends Fragment {
                             } else if (currentDuration >= 1 && isPause) {
 //                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                             }
+
+                            if(currentDuration <= 555){
+                                notifyDataSetChanged();
+                            }
                         /*if(isPause && ps == 0){
                             ps++;
                             notifyDataSetChanged();
@@ -647,6 +651,10 @@ public class SearchFragment extends Fragment {
 //                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                         } else if (currentDuration >= 1 && isPause) {
 //                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        }
+
+                        if(currentDuration <= 555){
+                            notifyDataSetChanged();
                         }
                         /*if(isPause && ps == 0){
                             ps++;

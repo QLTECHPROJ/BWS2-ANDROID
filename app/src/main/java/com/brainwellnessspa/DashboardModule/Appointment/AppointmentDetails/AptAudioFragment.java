@@ -223,6 +223,10 @@ public class AptAudioFragment extends Fragment {
                         } else if (currentDuration >= 1 && isPause) {
 //                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
+
+                        if(currentDuration <= 555){
+                            notifyDataSetChanged();
+                        }
                         /*if(isPause && ps == 0){
                             ps++;
                             notifyDataSetChanged();

@@ -114,7 +114,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     public void getLatasteUpdate(Context context) {
         String appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa";
         if (BWSApplication.isNetworkConnected(context)) {
-            Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(String.valueOf(BuildConfig.VERSION_NAME), CONSTANTS.FLAG_ONE);
+            Call<VersionModel> listCall = APIClient.getClient().getVersionDatas(String.valueOf(BuildConfig.VERSION_CODE), CONSTANTS.FLAG_ONE);
             listCall.enqueue(new Callback<VersionModel>() {
                 @Override
                 public void onResponse(Call<VersionModel> call, Response<VersionModel> response) {
