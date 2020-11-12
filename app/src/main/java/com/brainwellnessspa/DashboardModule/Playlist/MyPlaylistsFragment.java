@@ -2152,13 +2152,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         } else if (currentDuration >= 1 && isPause) {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
-                        if(isPause && ps == 0){
+                        /*if(isPause && ps == 0){
                             ps++;
                             notifyDataSetChanged();
                         }else if(!isPause && nps == 0){
                             nps++;
                             notifyDataSetChanged();
-                        }
+                        }*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -2658,13 +2658,13 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
 
-                        if(isPause && ps == 0){
+                        /*if(isPause && ps == 0){
                             ps++;
                             notifyDataSetChanged();
                         }else if(!isPause && nps == 0){
                             nps++;
                             notifyDataSetChanged();
-                        }
+                        }*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

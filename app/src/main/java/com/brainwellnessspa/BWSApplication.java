@@ -17,6 +17,7 @@ import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -136,77 +137,116 @@ public class BWSApplication extends Application {
 
     public static void createNotification(Context context, MainPlayModel track, int playbutton, int pos, int size) {
         try {
-            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-            MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
-            PendingIntent pendingIntentPrevious;
-            Intent intent = new Intent(context, PlayWellnessActivity.class);
-            intent.putExtra("com.brainwellnessspa.notifyId", NOTIFICATION_ID);
-            PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-            int drw_previous;
-//            if (pos == 0) {
-//                pendingIntentPrevious = null;
-//                drw_previous = 0;
-//            } else {
-            Intent intentPrevious = new Intent(context, NotificationActionService.class)
-                    .setAction(ACTION_PREVIUOS);
-            pendingIntentPrevious = PendingIntent.getBroadcast(context, 0,
-                    intentPrevious, PendingIntent.FLAG_UPDATE_CURRENT);
-            drw_previous = R.drawable.ic_skip_previous_black_24dp;
-//            }
-
-            Intent intentPlay = new Intent(context, NotificationActionService.class).setAction(ACTION_PLAY);
-            PendingIntent pendingIntentPlay = PendingIntent.getBroadcast(context, 0, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            PendingIntent pendingIntentNext;
-            int drw_next;
-//            if (pos == size) {
-//                pendingIntentNext = null;
-//                drw_next = 0;
-//            } else {
-            Intent intentNext = new Intent(context, NotificationActionService.class)
-                    .setAction(ACTION_NEXT);
-            pendingIntentNext = PendingIntent.getBroadcast(context, 0,
-                    intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
-            drw_next = R.drawable.ic_skip_next_black_24dp;
-//            }
-//            BitmapFactory.decodeResource(context.getResources(), R.drawable.square_app_icon)
-            try {
-                byte[] encodeByte = Base64.decode(track.getImageFile(), Base64.DEFAULT);
-                myBitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            } catch (Exception e) {
-                e.getMessage();
-            }
-            //create notification
-            notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_music_note)
-                    .setContentTitle(track.getName())
-                    .setContentText(track.getAudioDirection())
-                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.square_app_icon))
-                    .setOnlyAlertOnce(true)//show notification for only first time
-                    .setShowWhen(false)
-                    .setOngoing(true)
-                    .setContentIntent(pIntent)
-                    .addAction(drw_previous, "Previous", pendingIntentPrevious)
-                    .addAction(playbutton, "Play", pendingIntentPlay)
-                    .addAction(drw_next, "Next", pendingIntentNext)
-                    .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                            .setShowActionsInCompactView(0, 1, 2))
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
-                    .build();
-//.setMediaSession(mediaSessionCompat.getSessionToken())
-            notificationManagerCompat.notify(1, notification);
+            getMediaBitmep(track.getImageFile(),track,context,playbutton,pos,size);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private static void getMediaBitmep(String imageFile, MainPlayModel track, Context context, int playbutton, int pos, int size) {
+
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    if(track.getAudioFile().equalsIgnoreCase("")){
+                        myBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.disclaimer);
+                    }else {
+                        URL url = new URL(imageFile);
+                        myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+                MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
+                PendingIntent pendingIntentPrevious;
+                Intent intent = new Intent(context, PlayWellnessActivity.class);
+                intent.putExtra("com.brainwellnessspa.notifyId", NOTIFICATION_ID);
+                PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+                int drw_previous;
+//            if (pos == 0) {
+//                pendingIntentPrevious = null;
+//                drw_previous = 0;
+//            } else {
+                Intent intentPrevious = new Intent(context, NotificationActionService.class)
+                        .setAction(ACTION_PREVIUOS);
+                pendingIntentPrevious = PendingIntent.getBroadcast(context, 0,
+                        intentPrevious, PendingIntent.FLAG_UPDATE_CURRENT);
+                drw_previous = R.drawable.ic_skip_previous_black_24dp;
+//            }
+
+                Intent intentPlay = new Intent(context, NotificationActionService.class).setAction(ACTION_PLAY);
+                PendingIntent pendingIntentPlay = PendingIntent.getBroadcast(context, 0, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                PendingIntent pendingIntentNext;
+                int drw_next;
+//            if (pos == size) {
+//                pendingIntentNext = null;
+//                drw_next = 0;
+//            } else {
+                Intent intentNext = new Intent(context, NotificationActionService.class)
+                        .setAction(ACTION_NEXT);
+                pendingIntentNext = PendingIntent.getBroadcast(context, 0,
+                        intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
+                drw_next = R.drawable.ic_skip_next_black_24dp;
+//            }
+//            BitmapFactory.decodeResource(context.getResources(), R.drawable.square_app_icon)
+                try {
+//                byte[] encodeByte = Base64.decode(track.getImageFile(), Base64.DEFAULT);
+//                myBitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+
+                } catch (Exception e) {
+                    e.getMessage();
+                }
+                //create notification
+                notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_music_note)
+                        .setContentTitle(track.getName())
+                        .setContentText(track.getAudioDirection())
+                        .setLargeIcon(myBitmap)
+                        .setOnlyAlertOnce(true)//show notification for only first time
+                        .setShowWhen(false)
+                        .setOngoing(true)
+                        .setContentIntent(pIntent)
+                        .addAction(drw_previous, "Previous", pendingIntentPrevious)
+                        .addAction(playbutton, "Play", pendingIntentPlay)
+                        .addAction(drw_next, "Next", pendingIntentNext)
+                        .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                                .setShowActionsInCompactView(0, 1, 2))
+                        .setPriority(NotificationCompat.PRIORITY_LOW)
+                        .build();
+//.setMediaSession(mediaSessionCompat.getSessionToken())
+                notificationManagerCompat.notify(1, notification);
+                super.onPostExecute(aVoid);
+
+            }
+        }
+
+        GetMedia st = new GetMedia();
+        st.execute();
+    }
+
     public static void createChannel(Context ctx) {
-        notificationManager = ctx.getSystemService(NotificationManager.class);
-        NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                "KOD Dev", NotificationManager.IMPORTANCE_LOW);
-        if (notificationManager != null) {
-            notificationManager.createNotificationChannel(channel);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                    "KOD Dev", NotificationManager.IMPORTANCE_LOW);
+
+            notificationManager = ctx.getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                notificationManager = ctx.getSystemService(NotificationManager.class);
+            }
         }
     }
 

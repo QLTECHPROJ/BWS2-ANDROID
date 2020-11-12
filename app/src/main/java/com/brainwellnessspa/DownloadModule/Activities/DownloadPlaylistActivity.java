@@ -551,13 +551,13 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         } else if (currentDuration >= 1 && isPause) {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
-                        if(isPause && ps == 0){
+                        /*if(isPause && ps == 0){
                             ps++;
                             notifyDataSetChanged();
                         }else if(!isPause && nps == 0){
                             nps++;
                             notifyDataSetChanged();
-                        }
+                        }*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -595,8 +595,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
 //            holder.binding.equalizerview.stopBars();
-                        ps =0;
-                        nps = 0;
+//                        ps =0;
+//                        nps = 0;
                     }else{
                         holder.binding.equalizerview.setVisibility(View.GONE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white);
