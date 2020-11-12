@@ -66,6 +66,7 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.ItemMoveCallback;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.Utility.Playable;
 import com.brainwellnessspa.Utility.StartDragListener;
 import com.brainwellnessspa.databinding.FragmentMyPlaylistsBinding;
 import com.brainwellnessspa.databinding.MyPlaylistLayoutBinding;
@@ -103,8 +104,10 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.ViewAllPlaylistFragment.GetPlaylistLibraryID;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.addToRecentPlayId;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.currentDuration;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.totalDuration;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity.ComeFrom_Playlist;
 import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.ComeFrom_LikePlaylist;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
@@ -125,7 +128,7 @@ import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
-
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.startTime;
 public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int RefreshIconData = 0;
     public static String RefreshNew = "";
@@ -208,8 +211,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //            handler1.postDelayed(this, 500);
 //        }
 //    };
-    int position = 0, startTime, listSize, myCount;
-    private long totalDuration, currentDuration = 0;
     long myProgress = 0, diff = 0;
 
     @Override
@@ -467,6 +468,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         GetTask st = new GetTask();
         st.execute();
         return downloadAudioDetailsList;
+    }
+
+    @Override
+    public void onPause() {
+        handler3.removeCallbacks(UpdateSongTime3);
+        super.onPause();
     }
 
     @Override
@@ -2622,6 +2629,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
         int ps = 0,nps = 0;
+        boolean aps = false ,bps = false;
 
         public PlayListsAdpater2(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
                                  String Created) {
@@ -2661,9 +2669,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
                         /*if(isPause && ps == 0){
                             ps++;
+                            aps = true;
                             notifyDataSetChanged();
                         }else if(!isPause && nps == 0){
                             nps++;
+                            bps = true;
                             notifyDataSetChanged();
                         }*/
                     } catch (Exception e) {
@@ -2713,10 +2723,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         songId = myAudioId;
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-                        /*if(ps == 1){
+                        /*if(ps == 1 && aps){
                             ps = 0;
-                        }if(nps == 1){
+                            aps = false;
+                        }if(nps == 1 && bps){
                             nps = 0;
+                            bps = false;
                         }*/
 //            holder.binding.equalizerview.stopBars();
                     }else{

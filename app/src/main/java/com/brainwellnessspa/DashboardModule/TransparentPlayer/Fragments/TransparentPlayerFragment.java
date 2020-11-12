@@ -1,7 +1,6 @@
 package com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -90,25 +89,26 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, Playable/*, AudioManager.OnAudioFocusChangeListener*/ {
     public static int isDisclaimer = 0;
     public static String addToRecentPlayId = "", myAudioId;
-    public ArrayList<MainPlayModel> mainPlayModelList;
-    public FragmentTransparentPlayerBinding binding;
-    String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
-    int position = 0, startTime, listSize, myCount;
-    MainPlayModel mainPlayModel;
+    public static ArrayList<MainPlayModel> mainPlayModelList;
+    public static FragmentTransparentPlayerBinding binding;
+    public static String  UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
+    public static int position = 0, startTime, listSize, myCount;
+    public static MainPlayModel mainPlayModel;
     public static boolean isPlaying = false;
-    Boolean queuePlay, audioPlay;
-    ArrayList<AddToQueueModel> addToQueueModelList;
-    List<DownloadAudioDetails> downloadAudioDetailsList;
-    Activity activity;
-    Context ctx;
-    long myProgress = 0, diff = 0;
-    SharedPreferences shared;
-    String json;
-    Gson gson;
+    public static Boolean queuePlay, audioPlay,playPause;
+    public static ArrayList<AddToQueueModel> addToQueueModelList;
+    public static List<DownloadAudioDetails> downloadAudioDetailsList;
+    public static Activity activity;
+    public static Context ctx;
+    public static long myProgress = 0, diff = 0;
+    public static SharedPreferences shared;
+    public static String json;
+    public static Gson gson;
     public static BroadcastReceiver broadcastReceiver;
-    private long totalDuration, currentDuration = 0;
-    private Handler handler12;
-    private Runnable UpdateSongTime12 = new Runnable() {
+    public static long totalDuration, currentDuration = 0;
+    public static Handler handler12;
+    public static Context context;
+    public static Runnable UpdateSongTime12 = new Runnable() {
         @Override
         public void run() {
             try {
@@ -331,13 +331,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         };
 
           /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            BWSApplication.createChannel(getActivity());
-            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-            getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
+            BWSApplication.createChannel(ctx);
+            ctx.registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+            ctx.startService(new Intent(ctx.getBaseContext(), OnClearFromRecentService.class));
         }else {*/
-        BWSApplication.createChannel(getActivity());
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
+        BWSApplication.createChannel(ctx);
+        ctx.registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        ctx.startService(new Intent(activity.getBaseContext(), OnClearFromRecentService.class));
 //        }
         binding.ivPause.setOnClickListener(view1 -> {
             callPause();
@@ -405,7 +405,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         oTime = binding.simpleSeekbar.getProgress();
     }
 
-    private void MakeArray() {
+    private static void MakeArray() {
         shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         mainPlayModelList = new ArrayList<>();
@@ -701,14 +701,14 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
             isPlaying = false;
             callPrev();
-            BWSApplication.createChannel(getActivity());
-            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-            getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
+            BWSApplication.createChannel(ctx);
+            ctx.registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+            ctx.startService(new Intent(activity.getBaseContext(), OnClearFromRecentService.class));
         }
 
 
 //        position--;
-//        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+//        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
 //                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
 //        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
     }
@@ -716,13 +716,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     @Override
     public void onTrackPlay() {
 //        if (isPlaying) {
-//            BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+//            BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
 //                    R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
 //            binding.ivPause.setImageResource(R.drawable.ic_play_icon);
 //            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
 //            isPlaying = false;
 //        } else {
-        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
                 R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
 //            binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
         if (!isMediaStart) {
@@ -761,7 +761,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     @Override
     public void onTrackPause() {
 //        if (isPlaying) {
-        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
                 R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
 //            binding.ivPause.setImageResource(R.drawable.ic_play_icon);
         isPlaying = false;
@@ -774,7 +774,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.VISIBLE);
         }
 //        } else {
-//            BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+//            BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
 //                    R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
 //            binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
 //            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
@@ -793,15 +793,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             isPlaying = false;
             callNext();
             try {
-                BWSApplication.createChannel(getActivity());
-                getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-                getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
+            BWSApplication.createChannel(ctx);
+            ctx.registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+            ctx.startService(new Intent(activity.getBaseContext(), OnClearFromRecentService.class));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 //        position++;
-//        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+//        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
 //                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
 //        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
     }
@@ -958,7 +958,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
     }
 
-    private void addToRecentPlay() {
+    private static void addToRecentPlay() {
         if (BWSApplication.isNetworkConnected(ctx)) {
 //            BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
             Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(id, UserID);
@@ -981,7 +981,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
     }
 
-    public void GetMedia(String url, Context ctx) {
+    public static void GetMedia(String url, Context ctx) {
         try {
             downloadAudioDetailsList = new ArrayList<>();
             class GetMedia extends AsyncTask<Void, Void, Void> {
@@ -1063,7 +1063,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
     }
 
-    private void getPrepareShowData() {
+    private static void getPrepareShowData() {
         handler12.postDelayed(UpdateSongTime12, 100);
         try {
             if (queuePlay) {
@@ -1161,17 +1161,17 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
             });
-            BWSApplication.createChannel(getActivity());
-            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-            getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
+            BWSApplication.createChannel(ctx);
+            ctx.registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+            ctx.startService(new Intent(activity.getBaseContext(), OnClearFromRecentService.class));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {
+    private static void setMediaPlayer(String download, FileDescriptor fileDescriptor) {
         if (download.equalsIgnoreCase("2")) {
-            mediaPlayer = MediaPlayer.create(getActivity(), R.raw.brain_wellness_spa_declaimer);
+            mediaPlayer = MediaPlayer.create(ctx, R.raw.brain_wellness_spa_declaimer);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 //            Uri uri = Uri.parse("android.resource://com.brainwellnessspa/" + R.raw.brain_wellness_spa_declaimer);
 //            mediaPlayer.setDataSource(String.valueOf(uri));
@@ -1228,7 +1228,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
     }
 
-    private void callMedia() {
+    public static void callMedia() {
         BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
                 R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
         binding.progressBar.setVisibility(View.VISIBLE);
@@ -1264,7 +1264,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                        binding.llProgress.setVisibility(View.GONE);
                             binding.ivPlay.setVisibility(View.VISIBLE);
                             binding.ivPause.setVisibility(View.GONE);
-                            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                            BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                         }
                     }
                 }
@@ -1283,7 +1283,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                binding.llProgress.setVisibility(View.GONE);
                     binding.ivPlay.setVisibility(View.VISIBLE);
                     binding.ivPause.setVisibility(View.GONE);
-                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    BWSApplication.showToast(ctx.getString(R.string.no_server_found), ctx);
                 }
             }
         }
@@ -1299,7 +1299,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     byte[] decrypt = null;
                     decrypt = downloadMedia.decrypt(name);
                     if (decrypt != null) {
-                        fileDescriptor = FileUtils.getTempFileDescriptor(getActivity(), decrypt);
+                        fileDescriptor = FileUtils.getTempFileDescriptor(ctx, decrypt);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -1330,7 +1330,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         st.execute();
     }
 
-    private void callComplete() {
+    private static void callComplete() {
         handler12.removeCallbacks(UpdateSongTime12);
         isPrepare = false;
         isMediaStart = false;
@@ -1436,12 +1436,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
-        BWSApplication.createChannel(getActivity());
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
+        BWSApplication.createChannel(ctx);
+        ctx.registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        ctx.startService(new Intent(activity.getBaseContext(), OnClearFromRecentService.class));
     }
 
-    private void removeArray() {
+    private static void removeArray() {
         shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         gson = new Gson();

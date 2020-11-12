@@ -37,6 +37,11 @@ public class MusicService extends Service {
     static public Handler handler;
     static boolean isPlaying = false;
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return super.onStartCommand(intent, flags, startId);
+    }
+
     public static void initMediaPlayer() {
         if (null == mediaPlayer) {
             mediaPlayer = new MediaPlayer();
