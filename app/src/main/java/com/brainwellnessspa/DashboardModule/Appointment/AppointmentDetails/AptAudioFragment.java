@@ -63,12 +63,15 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class AptAudioFragment extends Fragment {
     public FragmentManager f_manager;
     FragmentAptAudioBinding binding;
-    String UserID;
+    String UserID, AudioFlag;
     ArrayList<AppointmentDetailModel.Audio> appointmentDetail;
     List<DownloadAudioDetails> oneAudioDetailsList;
     public static int comeRefreshData = 0;
     private Handler handler1;
     Handler handler3;
+    int startTime;
+    private long currentDuration = 0;
+    long myProgress = 0;
     private Runnable UpdateSongTime3;
 
     @Override
@@ -95,8 +98,9 @@ public class AptAudioFragment extends Fragment {
         return view;
     }
 
+
     @Override
-    protected void onPause() {
+    public void onPause() {
         handler3.removeCallbacks(UpdateSongTime3);
         super.onPause();
     }
@@ -232,12 +236,12 @@ public class AptAudioFragment extends Fragment {
                     handler3.postDelayed(this, 500);
                 }
             };
-            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-            String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");)
+            String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
             if (audioPlayz && AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
-                if (myAudioId.equalsIgnoreCase(mData.get(position).getID())) {
+                if (myAudioId.equalsIgnoreCase(audiolist.getID())) {
                     songId = myAudioId;
                     holder.binding.equalizerview.animateBars();
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
