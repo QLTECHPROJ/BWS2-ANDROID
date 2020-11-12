@@ -34,9 +34,7 @@ import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invo
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
-import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
-import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class DashboardActivity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener, SensorEventListener {
     public static int player = 0;

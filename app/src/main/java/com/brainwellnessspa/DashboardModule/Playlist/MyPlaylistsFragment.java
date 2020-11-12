@@ -107,6 +107,7 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.T
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.currentDuration;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myProgress;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.totalDuration;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity.ComeFrom_Playlist;
 import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.ComeFrom_LikePlaylist;
@@ -211,7 +212,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 //            handler1.postDelayed(this, 500);
 //        }
 //    };
-    long myProgress = 0, diff = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -2150,8 +2150,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         startTime = getStartTime();
                         myProgress = currentDuration;
                         currentDuration = getStartTime();
-                        diff = totalDuration - myProgress;
-                        if (currentDuration == 0 && isCompleteStop) {
+                         if (currentDuration == 0 && isCompleteStop) {
                             notifyDataSetChanged();
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }  else if (currentDuration >= 1 && !isPause) {
@@ -2657,7 +2656,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         startTime = getStartTime();
                         myProgress = currentDuration;
                         currentDuration = getStartTime();
-                        diff = totalDuration - myProgress;
                         if (currentDuration == 0 && isCompleteStop) {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                             notifyDataSetChanged();
@@ -2665,6 +2663,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                         } else if (currentDuration >= 1 && isPause) {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        }
+                        if(currentDuration == 0){
+                            notifyDataSetChanged();
                         }
 
                         /*if(isPause && ps == 0){

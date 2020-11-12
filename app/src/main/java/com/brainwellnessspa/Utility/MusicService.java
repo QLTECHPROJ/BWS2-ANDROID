@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.media.session.MediaButtonReceiver;
 
 import com.google.gson.Gson;
 import com.brainwellnessspa.BWSApplication;
@@ -37,11 +39,44 @@ public class MusicService extends Service {
     static public Handler handler;
     static boolean isPlaying = false;
 
+    public static MediaSessionCompat mMediaSessionCompat;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        MediaButtonReceiver.handleIntent(mMediaSessionCompat, intent);
         return super.onStartCommand(intent, flags, startId);
     }
-
+//    public static void initMediaSession() {
+//        ComponentName mediaButtonReceiver = new ComponentName(getApplicationContext(), MediaButtonReceiver.class);
+//        mMediaSessionCompat = new MediaSessionCompat(getApplicationContext(), "Tag", mediaButtonReceiver, null);
+//
+//        mMediaSessionCompat.setCallback(mMediaSessionCallback);
+//        mMediaSessionCompat.setFlags( MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS );
+//
+//        Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+//        mediaButtonIntent.setClass(this, MediaButtonReceiver.class);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent, 0);
+//        mMediaSessionCompat.setMediaButtonReceiver(pendingIntent);
+//
+////        setSessionToken(mMediaSessionCompat.getSessionToken());
+//    }
+//    public static MediaSessionCompat.Callback mMediaSessionCallback = new MediaSessionCompat.Callback() {
+//
+//        @Override
+//        public void onPlay() {
+//            super.onPlay();
+//        }
+//
+//        @Override
+//        public void onPause() {
+//            super.onPause();
+//        }
+//
+//        @Override
+//        public void onPlayFromMediaId(String mediaId, Bundle extras) {
+//            super.onPlayFromMediaId(mediaId, extras);
+//        }
+//    };
     public static void initMediaPlayer() {
         if (null == mediaPlayer) {
             mediaPlayer = new MediaPlayer();

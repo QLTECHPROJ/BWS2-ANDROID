@@ -406,13 +406,18 @@ public class AddQueueActivity extends AppCompatActivity {
     private void callAddToQueue() {
         addToQueueModel = new AddToQueueModel();
         int i = position;
+
         if (!comeFrom.equalsIgnoreCase("")) {
             if(comeFrom.equalsIgnoreCase("myDownloadPlaylist")){
+                AudioFile = mDataDownload.get(i).getAudioFile();
+                if(AudioFile.equalsIgnoreCase("")){
+                    i = i+1;
+                    AudioFile = mDataDownload.get(i).getAudioFile();
+                }
+                PlaylistId = "";
                 addToQueueModel.setID(mDataDownload.get(i).getID());
                 addToQueueModel.setName(mDataDownload.get(i).getName());
                 addToQueueModel.setAudioFile(mDataDownload.get(i).getAudioFile());
-                AudioFile = mDataDownload.get(i).getAudioFile();
-                PlaylistId = "";
                 addToQueueModel.setPlaylistID("");
                 addToQueueModel.setAudioDirection(mDataDownload.get(i).getAudioDirection());
                 addToQueueModel.setAudiomastercat(mDataDownload.get(i).getAudiomastercat());
@@ -422,11 +427,15 @@ public class AddQueueActivity extends AppCompatActivity {
                 addToQueueModel.setDownload(mDataDownload.get(i).getDownload());
                 addToQueueModel.setAudioDuration(mDataDownload.get(i).getAudioDuration());
             }else {
+                AudioFile = mData.get(i).getAudioFile();
+                if(AudioFile.equalsIgnoreCase("")){
+                    i = i+1;
+                    AudioFile = mData.get(i).getAudioFile();
+                }
+                PlaylistId = mData.get(i).getPlaylistID();
                 addToQueueModel.setID(mData.get(i).getID());
                 addToQueueModel.setName(mData.get(i).getName());
                 addToQueueModel.setAudioFile(mData.get(i).getAudioFile());
-                AudioFile = mData.get(i).getAudioFile();
-                PlaylistId = mData.get(i).getPlaylistID();
                 addToQueueModel.setPlaylistID(mData.get(i).getPlaylistID());
                 addToQueueModel.setAudioDirection(mData.get(i).getAudioDirection());
                 addToQueueModel.setAudiomastercat(mData.get(i).getAudiomastercat());
@@ -437,11 +446,15 @@ public class AddQueueActivity extends AppCompatActivity {
                 addToQueueModel.setAudioDuration(mData.get(i).getAudioDuration());
             }
         } else {
+            AudioFile = mainPlayModelList.get(i).getAudioFile();
+            if(AudioFile.equalsIgnoreCase("")){
+                i = i+1;
+                AudioFile = mainPlayModelList.get(i).getAudioFile();
+            }
+            PlaylistId = mainPlayModelList.get(i).getPlaylistID();
             addToQueueModel.setID(mainPlayModelList.get(i).getID());
             addToQueueModel.setName(mainPlayModelList.get(i).getName());
             addToQueueModel.setAudioFile(mainPlayModelList.get(i).getAudioFile());
-            AudioFile = mainPlayModelList.get(i).getAudioFile();
-            PlaylistId = mainPlayModelList.get(i).getPlaylistID();
             addToQueueModel.setPlaylistID(mainPlayModelList.get(i).getPlaylistID());
             addToQueueModel.setAudioDirection(mainPlayModelList.get(i).getAudioDirection());
             addToQueueModel.setAudiomastercat(mainPlayModelList.get(i).getAudiomastercat());

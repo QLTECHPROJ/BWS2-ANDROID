@@ -22,6 +22,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.media.MediaSessionManager;
+import androidx.media.session.MediaButtonReceiver;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
@@ -221,6 +223,8 @@ public class BWSApplication extends Application {
                         .addAction(drw_next, "Next", pendingIntentNext)
                         .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                                 .setShowActionsInCompactView(0, 1, 2))
+                        .setDeleteIntent(
+                                MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP))
                         .setPriority(NotificationCompat.PRIORITY_LOW)
                         .build();
 //.setMediaSession(mediaSessionCompat.getSessionToken())
