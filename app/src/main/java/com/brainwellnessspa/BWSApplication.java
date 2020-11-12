@@ -103,7 +103,7 @@ public class BWSApplication extends Application {
     public static final String ACTION_PLAY = "actionplay";
     public static final String ACTION_NEXT = "actionnext";
     public static Notification notification;
-    public static NotificationManager notificationManager = null;
+    public static NotificationManager notificationManager;
 
     public static Context getContext() {
         return mContext;
@@ -144,32 +144,32 @@ public class BWSApplication extends Application {
             PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
             int drw_previous;
-            if (pos == 0) {
-                pendingIntentPrevious = null;
-                drw_previous = 0;
-            } else {
-                Intent intentPrevious = new Intent(context, NotificationActionService.class)
-                        .setAction(ACTION_PREVIUOS);
-                pendingIntentPrevious = PendingIntent.getBroadcast(context, 0,
-                        intentPrevious, PendingIntent.FLAG_UPDATE_CURRENT);
-                drw_previous = R.drawable.ic_skip_previous_black_24dp;
-            }
+//            if (pos == 0) {
+//                pendingIntentPrevious = null;
+//                drw_previous = 0;
+//            } else {
+            Intent intentPrevious = new Intent(context, NotificationActionService.class)
+                    .setAction(ACTION_PREVIUOS);
+            pendingIntentPrevious = PendingIntent.getBroadcast(context, 0,
+                    intentPrevious, PendingIntent.FLAG_UPDATE_CURRENT);
+            drw_previous = R.drawable.ic_skip_previous_black_24dp;
+//            }
 
             Intent intentPlay = new Intent(context, NotificationActionService.class).setAction(ACTION_PLAY);
             PendingIntent pendingIntentPlay = PendingIntent.getBroadcast(context, 0, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
 
             PendingIntent pendingIntentNext;
             int drw_next;
-            if (pos == size) {
-                pendingIntentNext = null;
-                drw_next = 0;
-            } else {
-                Intent intentNext = new Intent(context, NotificationActionService.class)
-                        .setAction(ACTION_NEXT);
-                pendingIntentNext = PendingIntent.getBroadcast(context, 0,
-                        intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
-                drw_next = R.drawable.ic_skip_next_black_24dp;
-            }
+//            if (pos == size) {
+//                pendingIntentNext = null;
+//                drw_next = 0;
+//            } else {
+            Intent intentNext = new Intent(context, NotificationActionService.class)
+                    .setAction(ACTION_NEXT);
+            pendingIntentNext = PendingIntent.getBroadcast(context, 0,
+                    intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
+            drw_next = R.drawable.ic_skip_next_black_24dp;
+//            }
 //            BitmapFactory.decodeResource(context.getResources(), R.drawable.square_app_icon)
             try {
                 byte[] encodeByte = Base64.decode(track.getImageFile(), Base64.DEFAULT);
@@ -202,15 +202,11 @@ public class BWSApplication extends Application {
     }
 
     public static void createChannel(Context ctx) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    "KOD Dev", NotificationManager.IMPORTANCE_LOW);
-
-            notificationManager = ctx.getSystemService(NotificationManager.class);
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
-            }
-        } else {
+        notificationManager = ctx.getSystemService(NotificationManager.class);
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                "KOD Dev", NotificationManager.IMPORTANCE_LOW);
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(channel);
         }
     }
 
