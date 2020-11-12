@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -51,7 +53,9 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
 import static com.brainwellnessspa.LikeModule.Activities.PlaylistLikeActivity.RefreshLikePlaylist;
+import static com.brainwellnessspa.Utility.MusicService.getStartTime;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -61,11 +65,17 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class LikeAudiosFragment extends Fragment {
     FragmentLikesBinding binding;
     String UserID, AudioFlag;
+    Handler handler3;
+    int startTime;
+    private long currentDuration = 0;
+    long myProgress = 0;
+    private Runnable UpdateSongTime3;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_likes, container, false);
         View view = binding.getRoot();
+        handler3 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -77,6 +87,12 @@ public class LikeAudiosFragment extends Fragment {
         binding.llError.setVisibility(View.GONE);
         binding.tvFound.setText("Your like audios will appear here");
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        handler3.removeCallbacks(UpdateSongTime3);
+        super.onPause();
     }
 
     @Override
@@ -133,6 +149,8 @@ public class LikeAudiosFragment extends Fragment {
     public class LikeAudiosAdapter extends RecyclerView.Adapter<LikeAudiosAdapter.MyViewHolder> {
         private List<LikesHistoryModel.ResponseData.Audio> modelList;
         Context ctx;
+        String songId;
+        int ps = 0, nps = 0;
 
         public LikeAudiosAdapter(List<LikesHistoryModel.ResponseData.Audio> modelList, Context ctx) {
             this.modelList = modelList;
@@ -148,15 +166,74 @@ public class LikeAudiosFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            UpdateSongTime3 = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        startTime = getStartTime();
+                        myProgress = currentDuration;
+                        currentDuration = getStartTime();
+                        if (currentDuration == 0 && isCompleteStop) {
+                            notifyDataSetChanged();
+//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        } else if (currentDuration >= 1 && !isPause) {
+//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                        } else if (currentDuration >= 1 && isPause) {
+//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        }
+                        /*if(isPause && ps == 0){
+                            ps++;
+                            notifyDataSetChanged();
+                        }else if(!isPause && nps == 0){
+                            nps++;
+                            notifyDataSetChanged();
+                        }*/
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    handler3.postDelayed(this, 500);
+                }
+            };
+
             holder.binding.tvTitle.setText(modelList.get(position).getName());
             holder.binding.tvTime.setText(modelList.get(position).getAudioDuration());
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(ctx).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
+            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+            if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())  && modelList.get(position).getID().equalsIgnoreCase("1")) {
+                    songId = myAudioId;
+                    holder.binding.equalizerview.animateBars();
+                    holder.binding.equalizerview.setVisibility(View.VISIBLE);
+                    holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                    holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+//            holder.binding.equalizerview.stopBars();
+//                        ps =0;
+//                        nps = 0;
+                } else {
+                    holder.binding.equalizerview.setVisibility(View.GONE);
+                    holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                }
+                handler3.postDelayed(UpdateSongTime3, 500);
+            } else {
+                holder.binding.equalizerview.setVisibility(View.GONE);
+                holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                handler3.removeCallbacks(UpdateSongTime3);
+            }
             holder.binding.llMenu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -236,6 +313,8 @@ public class LikeAudiosFragment extends Fragment {
                         }
                         callTransFrag(pos, listModelList2);
                     }
+                    handler3.postDelayed(UpdateSongTime3,500);
+                    notifyDataSetChanged();
                 }
             });
         }
