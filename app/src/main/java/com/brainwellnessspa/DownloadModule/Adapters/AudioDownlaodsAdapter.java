@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -53,9 +54,11 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
+import static com.brainwellnessspa.Utility.MusicService.getStartTime;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -66,7 +69,7 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
     public static String comefromDownload = "0";
     FragmentActivity ctx;
-    String UserID;
+    String UserID, songId, AudioFlag;
     FrameLayout progressBarHolder;
     ProgressBar ImgV;
     LinearLayout llError;
@@ -78,6 +81,11 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     private List<DownloadAudioDetails> listModelList;
     private Handler handler1;
     List<DownloadAudioDetails> downloadedSingleAudio;
+    Handler handler3;
+    int startTime;
+    private long currentDuration = 0;
+    long myProgress = 0;
+    private Runnable UpdateSongTime3;
 
 
     public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, String UserID,
@@ -116,6 +124,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        handler3 = new Handler();
         UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {
@@ -162,7 +171,37 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     handler1.postDelayed(this, 3000);
                 } catch (Exception e) {
                 }
-            }};
+            }
+        };
+        UpdateSongTime3 = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    startTime = getStartTime();
+                    myProgress = currentDuration;
+                    currentDuration = getStartTime();
+                    if (currentDuration == 0 && isCompleteStop) {
+                        notifyDataSetChanged();
+//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                    } else if (currentDuration >= 1 && !isPause) {
+//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                    } else if (currentDuration >= 1 && isPause) {
+//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                    }
+                        /*if(isPause && ps == 0){
+                            ps++;
+                            notifyDataSetChanged();
+                        }else if(!isPause && nps == 0){
+                            nps++;
+                            notifyDataSetChanged();
+                        }*/
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                handler3.postDelayed(this, 500);
+            }
+        };
+
         if (fileNameList.size() != 0) {
             for (int i = 0; i < fileNameList.size(); i++) {
                 if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
@@ -194,6 +233,9 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 1, 1, 0.12f, 0);
         holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(ctx).load(listModelList.get(position).getImageFile()).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
@@ -207,6 +249,35 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
             holder.binding.ivBackgroundImage.setVisibility(View.GONE);
             holder.binding.ivLock.setVisibility(View.GONE);
+        }
+
+        SharedPreferences sharedzw = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+        boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+        AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+        String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+//            TODO appointment as it is audioflag changes (audioPlayz && AudioFlag.equalsIgnoreCase("AppointmentDetailList"))
+        if (audioPlayz && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+            if (myAudioId.equalsIgnoreCase(listModelList.get(position).getID())) {
+                songId = myAudioId;
+                holder.binding.equalizerview.animateBars();
+                holder.binding.equalizerview.setVisibility(View.VISIBLE);
+                holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
+                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
+                holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+//            holder.binding.equalizerview.stopBars();
+//                        ps =0;
+//                        nps = 0;
+            } else {
+                holder.binding.equalizerview.setVisibility(View.GONE);
+                holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+            }
+            handler3.postDelayed(UpdateSongTime3, 500);
+        } else {
+            holder.binding.equalizerview.setVisibility(View.GONE);
+            holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+            holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+            handler3.removeCallbacks(UpdateSongTime3);
         }
 
         holder.binding.llMainLayout.setOnClickListener(view -> {
@@ -233,20 +304,20 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 } catch (IOException e) {
                     e.printStackTrace();
                 }*/
-                SharedPreferences shared =ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                     if (isDisclaimer == 1) {
                         BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                     } else {
-                        callTransFrag(position,listModelList);
+                        callTransFrag(position, listModelList);
                     }
                 } else {
                     isDisclaimer = 0;
                     disclaimerPlayed = 0;
                     List<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                    DownloadAudioDetails  mainPlayModel = new DownloadAudioDetails();
+                    DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
                     mainPlayModel.setID("0");
                     mainPlayModel.setName("Disclaimer");
                     mainPlayModel.setAudioFile("");
@@ -258,8 +329,8 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     mainPlayModel.setDownload("");
                     mainPlayModel.setAudioDuration("00:48");
                     listModelList2.addAll(listModelList);
-                    listModelList2.add(position,mainPlayModel);
-                    callTransFrag(position,listModelList2);
+                    listModelList2.add(position, mainPlayModel);
+                    callTransFrag(position, listModelList2);
                 }
                /* try {
                     SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -329,40 +400,43 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     e.printStackTrace();
                 }*/
             }
+            handler3.postDelayed(UpdateSongTime3, 500);
+            notifyDataSetChanged();
         });
 
         holder.binding.llRemoveAudio.setOnClickListener(view -> {
-            try{
+            try {
                 SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    String AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                    if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-                        String name = "";
-                        SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                        Gson gson = new Gson();
-                        String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-                        Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-                        }.getType();
-                        ArrayList<MainPlayModel> arrayList = gson.fromJson(json, type);
+                String AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                    String name = "";
+                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                    Gson gson = new Gson();
+                    String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                    Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                    }.getType();
+                    ArrayList<MainPlayModel> arrayList = gson.fromJson(json, type);
 
-                        if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
-                            arrayList.remove(0);
-                        }
-                        name = arrayList.get(0).getName();
+                    if (arrayList.get(0).getAudioFile().equalsIgnoreCase("")) {
+                        arrayList.remove(0);
+                    }
+                    name = arrayList.get(0).getName();
 
-                        if (name.equalsIgnoreCase(listModelList.get(position).getName())) {
-                            BWSApplication.showToast("Currently this audio is in player,so you can't delete this audio as of now", ctx);
-                        } else {
-                            deleteAudio(holder.getAdapterPosition());
-                        }
+                    if (name.equalsIgnoreCase(listModelList.get(position).getName())) {
+                        BWSApplication.showToast("Currently this audio is in player,so you can't delete this audio as of now", ctx);
                     } else {
                         deleteAudio(holder.getAdapterPosition());
-
                     }
+                } else {
+                    deleteAudio(holder.getAdapterPosition());
+
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
     }
+
     private void callTransFrag(int position, List<DownloadAudioDetails> listModelList) {
         try {
             SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -587,6 +661,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         st.execute();
         return downloadAudioDetailsList;
     }
+
     @Override
     public int getItemViewType(int position) {
         return position;
@@ -596,6 +671,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     public long getItemId(int position) {
         return position;
     }
+
     @Override
     public int getItemCount() {
         return listModelList.size();
