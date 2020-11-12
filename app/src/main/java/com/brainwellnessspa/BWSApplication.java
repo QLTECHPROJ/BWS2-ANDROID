@@ -137,13 +137,13 @@ public class BWSApplication extends Application {
 
     public static void createNotification(Context context, MainPlayModel track, int playbutton, int pos, int size) {
         try {
-            getMediaBitmep(track.getImageFile(),track,context,playbutton,pos,size);
+            getMediaBitmep(track,context,playbutton);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static void getMediaBitmep(String imageFile, MainPlayModel track, Context context, int playbutton, int pos, int size) {
+    private static void getMediaBitmep(MainPlayModel track, Context context, int playbutton) {
 
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
@@ -152,7 +152,7 @@ public class BWSApplication extends Application {
                     if(track.getAudioFile().equalsIgnoreCase("")){
                         myBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.disclaimer);
                     }else {
-                        URL url = new URL(imageFile);
+                        URL url = new URL(track.getImageFile());
                         myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     }
                 } catch (Exception e) {

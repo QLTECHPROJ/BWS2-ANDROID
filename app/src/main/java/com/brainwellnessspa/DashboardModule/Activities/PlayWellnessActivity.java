@@ -333,11 +333,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 switch (action) {
                     case BWSApplication.ACTION_PREVIUOS:
                         onTrackPrevious();
-                        if (isPlaying) {
-                            onTrackPause();
-                        } else {
-                            onTrackPlay();
-                        }
                         break;
                     case BWSApplication.ACTION_PLAY:
                         if (isPlaying) {
@@ -348,11 +343,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         break;
                     case BWSApplication.ACTION_NEXT:
                         onTrackNext();
-                        if (isPlaying) {
-                            onTrackPause();
-                        } else {
-                            onTrackPlay();
-                        }
                         break;
                 }
             }
@@ -2954,13 +2944,17 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     @Override
     public void onTrackPrevious() {
         if (!url.equalsIgnoreCase("")) {
+            if (isPlaying) {
+                onTrackPause();
+            } else {
+                onTrackPlay();
+            }
             isPlaying = false;
             callPrevious();
+            BWSApplication.createChannel(ctx);
+            registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+            startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
         }
-
-        BWSApplication.createChannel(ctx);
-        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
     @Override
@@ -3017,12 +3011,17 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     @Override
     public void onTrackNext() {
         if (!url.equalsIgnoreCase("")) {
+            if (isPlaying) {
+            onTrackPause();
+        } else {
+            onTrackPlay();
+        }
             isPlaying = false;
             callNext();
+            BWSApplication.createChannel(ctx);
+            registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+            startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
         }
-        BWSApplication.createChannel(ctx);
-        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
  /*   @Override

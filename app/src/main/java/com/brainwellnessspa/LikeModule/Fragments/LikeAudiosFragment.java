@@ -354,7 +354,7 @@ public class LikeAudiosFragment extends Fragment {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
                                 AudioLikeModel model = response.body();
                                 BWSApplication.showToast(model.getResponseMessage(), getActivity());
-                                listModelList2.remove(position);
+                                /*listModelList2.remove(position);
                                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -380,7 +380,7 @@ public class LikeAudiosFragment extends Fragment {
                                         pos = pos - 1;
                                         saveToPref(pos, listModelList2);
                                     }
-                                }
+                                }*/
                                 prepareData();
                             }
                         } catch (Exception e) {

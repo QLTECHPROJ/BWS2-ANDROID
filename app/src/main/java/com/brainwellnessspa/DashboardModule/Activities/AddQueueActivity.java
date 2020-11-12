@@ -686,13 +686,28 @@ public class AddQueueActivity extends AppCompatActivity {
             if(comeFrom.equalsIgnoreCase("myDownloadPlaylist")){
                 Name = mDataDownload.get(i).getName();
                 audioFile = mDataDownload.get(i).getAudioFile();
+                if(audioFile.equalsIgnoreCase("")){
+                    i = i+1;
+                    Name = mDataDownload.get(i).getName();
+                    audioFile = mDataDownload.get(i).getAudioFile();
+                }
             }else{
                 Name = mData.get(i).getName();
                 audioFile = mData.get(i).getAudioFile();
+                if(audioFile.equalsIgnoreCase("")){
+                    i = i+1;
+                    Name = mData.get(i).getName();
+                    audioFile = mData.get(i).getAudioFile();
+                }
             }
         } else {
             Name = mainPlayModelList.get(i).getName();
             audioFile = mainPlayModelList.get(i).getAudioFile();
+            if(audioFile.equalsIgnoreCase("")){
+                i = i+1;
+                Name = mainPlayModelList.get(i).getName();
+                audioFile = mainPlayModelList.get(i).getAudioFile();
+            }
         }
         List<String> url1 = new ArrayList<>();
         List<String> name1 = new ArrayList<>();
@@ -748,6 +763,7 @@ public class AddQueueActivity extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... voids) {
                 DownloadAudioDetails downloadAudioDetails = new DownloadAudioDetails();
+
                 if (!comeFrom.equalsIgnoreCase("")) {
                         downloadAudioDetails.setID(mData.get(i).getID());
                         downloadAudioDetails.setName(mData.get(i).getName());

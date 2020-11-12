@@ -1,6 +1,7 @@
 package com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -63,6 +64,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.brainwellnessspa.BWSApplication.ACTION_PLAY;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
@@ -93,7 +95,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
     int position = 0, startTime, listSize, myCount;
     MainPlayModel mainPlayModel;
-    boolean isPlaying = false;
+    public static boolean isPlaying = false;
     Boolean queuePlay, audioPlay;
     ArrayList<AddToQueueModel> addToQueueModelList;
     List<DownloadAudioDetails> downloadAudioDetailsList;
@@ -264,7 +266,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             addToQueueModelList = gson.fromJson(json1, type1);
         }
-
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, 0, 130);
         binding.llLayout.setLayoutParams(params);
@@ -314,13 +315,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 switch (action) {
                     case BWSApplication.ACTION_PREVIUOS:
                         onTrackPrevious();
-                        if (isPlaying) {
-                            onTrackPause();
-                        } else {
-                            onTrackPlay();
-                        }
                         break;
-                    case BWSApplication.ACTION_PLAY:
+                    case ACTION_PLAY:
                         if (isPlaying) {
                             onTrackPause();
                         } else {
@@ -329,11 +325,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         break;
                     case BWSApplication.ACTION_NEXT:
                         onTrackNext();
-                        if (isPlaying) {
-                            onTrackPause();
-                        } else {
-                            onTrackPlay();
-                        }
                         break;
                 }
             }
@@ -703,13 +694,19 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     @Override
     public void onTrackPrevious() {
         if (!audioFile.equalsIgnoreCase("")) {
+            if (isPlaying) {
+                onTrackPause();
+            } else {
+                onTrackPlay();
+            }
             isPlaying = false;
             callPrev();
+            BWSApplication.createChannel(getActivity());
+            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+            getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
         }
 
-        BWSApplication.createChannel(getActivity());
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
+
 //        position--;
 //        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
 //                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
@@ -788,12 +785,17 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     @Override
     public void onTrackNext() {
         if (!audioFile.equalsIgnoreCase("")) {
+            if (isPlaying) {
+                onTrackPause();
+            } else {
+                onTrackPlay();
+            }
             isPlaying = false;
             callNext();
+            BWSApplication.createChannel(getActivity());
+            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+            getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
         }
-        BWSApplication.createChannel(getActivity());
-        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));
 //        position++;
 //        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
 //                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
