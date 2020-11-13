@@ -88,11 +88,11 @@ import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, Playable/*, AudioManager.OnAudioFocusChangeListener*/ {
     public static int isDisclaimer = 0;
-    public static String addToRecentPlayId = "", myAudioId;
+    public static String addToRecentPlayId = "", myAudioId = "";
     public static ArrayList<MainPlayModel> mainPlayModelList;
     public static FragmentTransparentPlayerBinding binding;
     public static String  UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
-    public static int position = 0, startTime, listSize, myCount;
+    public static int position = 0, startTime = 0, listSize = 0, myCount = 0;
     public static MainPlayModel mainPlayModel;
     public static boolean isPlaying = false;
     public static Boolean queuePlay, audioPlay,playPause;
@@ -105,7 +105,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     public static String json;
     public static Gson gson;
     public static BroadcastReceiver broadcastReceiver;
-    public static long totalDuration, currentDuration = 0;
+    public static long totalDuration = 0, currentDuration = 0;
     public static Handler handler12;
     public static Context context;
     public static Runnable UpdateSongTime12 = new Runnable() {
