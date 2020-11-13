@@ -260,7 +260,7 @@ public class ViewAllSearchFragment extends Fragment {
 //                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
 
-                        if(currentDuration <= 555){
+                        if (currentDuration <= 555) {
                             notifyDataSetChanged();
                         }
                         /*if(isPause && ps == 0){
@@ -450,7 +450,7 @@ public class ViewAllSearchFragment extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(PlaylistModel.get(position).getName());
             holder.binding.pbProgress.setVisibility(View.GONE);
-
+            holder.binding.equalizerview.setVisibility(View.GONE);
             if (PlaylistModel.get(position).getTotalAudio().equalsIgnoreCase("") ||
                     PlaylistModel.get(position).getTotalAudio().equalsIgnoreCase("0") &&
                             PlaylistModel.get(position).getTotalhour().equalsIgnoreCase("")

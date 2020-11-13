@@ -137,6 +137,7 @@ public class BWSApplication extends Application {
         }
     };
 
+/*
     public static void createNotification(Context context, MainPlayModel track, int playbutton, int pos, int size) {
         try {
             getMediaBitmep(track,context,playbutton);
@@ -144,9 +145,10 @@ public class BWSApplication extends Application {
             e.printStackTrace();
         }
     }
+*/
 
+/*
     private static void getMediaBitmep(MainPlayModel track, Context context, int playbutton) {
-
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -165,46 +167,38 @@ public class BWSApplication extends Application {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-
                 NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
                 MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
                 PendingIntent pendingIntentPrevious;
                 Intent intent = new Intent(context, PlayWellnessActivity.class);
                 intent.putExtra("com.brainwellnessspa.notifyId", NOTIFICATION_ID);
-                PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 int drw_previous;
 //            if (pos == 0) {
 //                pendingIntentPrevious = null;
 //                drw_previous = 0;
 //            } else {
-                Intent intentPrevious = new Intent(context, NotificationActionService.class)
-                        .setAction(ACTION_PREVIUOS);
-                pendingIntentPrevious = PendingIntent.getBroadcast(context, 0,
-                        intentPrevious, PendingIntent.FLAG_UPDATE_CURRENT);
+                Intent intentPrevious = new Intent(context, NotificationActionService.class).setAction(ACTION_PREVIUOS);
+                pendingIntentPrevious = PendingIntent.getBroadcast(context, 0, intentPrevious, PendingIntent.FLAG_UPDATE_CURRENT);
                 drw_previous = R.drawable.ic_skip_previous_black_24dp;
 //            }
 
                 Intent intentPlay = new Intent(context, NotificationActionService.class).setAction(ACTION_PLAY);
                 PendingIntent pendingIntentPlay = PendingIntent.getBroadcast(context, 0, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
-
                 PendingIntent pendingIntentNext;
                 int drw_next;
 //            if (pos == size) {
 //                pendingIntentNext = null;
 //                drw_next = 0;
 //            } else {
-                Intent intentNext = new Intent(context, NotificationActionService.class)
-                        .setAction(ACTION_NEXT);
-                pendingIntentNext = PendingIntent.getBroadcast(context, 0,
-                        intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
+                Intent intentNext = new Intent(context, NotificationActionService.class).setAction(ACTION_NEXT);
+                pendingIntentNext = PendingIntent.getBroadcast(context, 0, intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
                 drw_next = R.drawable.ic_skip_next_black_24dp;
 //            }
 //            BitmapFactory.decodeResource(context.getResources(), R.drawable.square_app_icon)
                 try {
 //                byte[] encodeByte = Base64.decode(track.getImageFile(), Base64.DEFAULT);
 //                myBitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-
                 } catch (Exception e) {
                     e.getMessage();
                 }
@@ -237,7 +231,9 @@ public class BWSApplication extends Application {
         GetMedia st = new GetMedia();
         st.execute();
     }
+*/
 
+/*
     public static void createChannel(Context ctx) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -257,6 +253,7 @@ public class BWSApplication extends Application {
             e.printStackTrace();
         }
     }
+*/
 
     public static void cancelNotification(Context ctx) {
         notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);

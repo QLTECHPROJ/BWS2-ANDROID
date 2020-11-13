@@ -93,7 +93,7 @@ import static com.brainwellnessspa.Utility.MusicService.savePrefQueue;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, Playable/*, AudioManager.OnAudioFocusChangeListener, OnProgressListener*/ {
+public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, Playable, AudioManager.OnAudioFocusChangeListener, OnProgressListener*/ {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url;
     int startTime = 0, endTime = 0, position, listSize, myCount, progress, downloadPercentage;
@@ -106,7 +106,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     List<DownloadAudioDetails> downloadAudioDetailsList1;
     long myProgress = 0, diff = 0;
     PlaybackStatus playbackStatus;
-    BroadcastReceiver broadcastReceiver;
     boolean isPlaying = false;
     private long mLastClickTime = 0, totalDuration, currentDuration = 0;
     private Handler handler;
@@ -293,6 +292,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         super.onCreate(savedInstanceState);
 //        overridePendingTransition(R.anim.enter, R.anim.exit);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_wellness);
+
         handler = new Handler();
 //        handler1 = new Handler();
         ctx = PlayWellnessActivity.this;
@@ -317,7 +317,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 /*        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);*/
-        CallBoardcast();
         callLLMoreViewQClicks();
         handler.postDelayed(UpdateSongTime, 100);
         getPrepareShowData(position);
@@ -400,11 +399,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         });
 
         binding.llPlay.setOnClickListener(v -> {
-            if (isPlaying) {
+          /*  if (isPlaying) {
                 onTrackPause();
             } else {
                 onTrackPlay();
-            }
+            }*/
             if (!isMediaStart) {
                 isCompleteStop = false;
                 isprogressbar = true;
@@ -435,11 +434,19 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         });
 
         binding.llPause.setOnClickListener(view -> {
-            if (isPlaying) {
+           /* if (isPlaying) {
                 onTrackPause();
             } else {
                 onTrackPlay();
-            }
+            }*/
+            handler.removeCallbacks(UpdateSongTime);
+            binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
+            pauseMedia();
+            binding.llProgressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
+            binding.llPlay.setVisibility(View.VISIBLE);
+            binding.llPause.setVisibility(View.GONE);
+            oTime = binding.simpleSeekbar.getProgress();
         });
 
         binding.llForwardSec.setOnClickListener(v -> {
@@ -466,6 +473,30 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             callPrevious();
         });
     }
+
+/*
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getExtras().getString("actionname");
+            switch (action) {
+                case BWSApplication.ACTION_PREVIUOS:
+                    onTrackPrevious();
+                    break;
+                case BWSApplication.ACTION_PLAY:
+                    if (isPlaying) {
+                        onTrackPause();
+                    } else {
+                        onTrackPlay();
+                    }
+                    break;
+                case BWSApplication.ACTION_NEXT:
+                    onTrackNext();
+                    break;
+            }
+        }
+    };
+*/
 
     private void callPrevious() {
         if (isPrepare || isMediaStart || isPause) {
@@ -1524,9 +1555,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         handler.postDelayed(UpdateSongTime, 100);
         BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
 
-        BWSApplication.createChannel(ctx);
+       /* BWSApplication.createChannel(ctx);
         registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));*/
     }
 
     private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {
@@ -1590,8 +1621,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callMedia() {
-        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
-                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
+       /* BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
+                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);*/
         FileDescriptor fileDescriptor = null;
         if (url.equalsIgnoreCase("")) {
             setMediaPlayer("2", fileDescriptor);
@@ -1823,9 +1854,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
         callRepeatShuffle();
-        BWSApplication.createChannel(ctx);
+       /* BWSApplication.createChannel(ctx);
         registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
+        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));*/
     }
 
     private void removeArray() {
@@ -2683,7 +2714,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     @Override
     protected void onResume() {
-        CallBoardcast();
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         Gson gson = new Gson();
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
@@ -2764,33 +2794,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         super.onResume();
     }
 
-    public void CallBoardcast() {
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getExtras().getString("actionname");
-                switch (action) {
-                    case BWSApplication.ACTION_PREVIUOS:
-                        onTrackPrevious();
-                        break;
-                    case BWSApplication.ACTION_PLAY:
-                        if (isPlaying) {
-                            onTrackPause();
-                        } else {
-                            onTrackPlay();
-                        }
-                        break;
-                    case BWSApplication.ACTION_NEXT:
-                        onTrackNext();
-                        break;
-                }
-            }
-        };
-        BWSApplication.createChannel(ctx);
-        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
-    }
-
     private void callLLMoreViewQClicks() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             if (IsLock.equalsIgnoreCase("1")) {
@@ -2831,7 +2834,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
-
 
     private void callAllDisable(boolean b) {
         if (b) {
@@ -2946,7 +2948,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     }
 
-    @Override
+  /*  @Override
     public void onTrackPrevious() {
         if (!url.equalsIgnoreCase("")) {
             if (isPlaying) {
@@ -2956,9 +2958,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             isPlaying = false;
             callPrevious();
-            BWSApplication.createChannel(ctx);
-            registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-            startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
         }
     }
 
@@ -3023,12 +3022,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
             isPlaying = false;
             callNext();
-            BWSApplication.createChannel(ctx);
-            registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-            startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
         }
     }
-
+*/
  /*   @Override
     public void onAudioFocusChange(int i) {
         switch (i) {

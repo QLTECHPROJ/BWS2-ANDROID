@@ -67,6 +67,7 @@ import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeS
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -89,6 +90,7 @@ public class PlaylistFragment extends Fragment {
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         ComeScreenAccount = 0;
+        comefromDownload = "0";
         if (getArguments() != null) {
             Check = getArguments().getString("Check");
         }
@@ -124,6 +126,8 @@ public class PlaylistFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        ComeScreenAccount = 0;
+        comefromDownload = "0";
         prepareData();
     }
 

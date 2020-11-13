@@ -48,6 +48,7 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
@@ -75,6 +76,7 @@ public class AppointmentFragment extends Fragment {
         binding.rvPreviousData.setLayoutManager(recentlyPlayed);
         binding.rvPreviousData.setItemAnimator(new DefaultItemAnimator());
         ComeScreenAccount = 0;
+        comefromDownload = "0";
         binding.cvSetSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,6 +92,8 @@ public class AppointmentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        ComeScreenAccount = 0;
+        comefromDownload = "0";
         preparePreviousAppointmentsData();
     }
 
