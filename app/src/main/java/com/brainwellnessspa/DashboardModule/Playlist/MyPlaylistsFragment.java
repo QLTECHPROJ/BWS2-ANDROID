@@ -104,11 +104,8 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.ViewAllPlaylistFragment.GetPlaylistLibraryID;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.addToRecentPlayId;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.currentDuration;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myProgress;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.totalDuration;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity.ComeFrom_Playlist;
 import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.ComeFrom_LikePlaylist;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
@@ -129,7 +126,6 @@ import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.startTime;
 public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int RefreshIconData = 0;
     public static String RefreshNew = "";
@@ -163,6 +159,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     boolean isclose = false;
     private Handler handler1, handler2,handler3;
     private Runnable UpdateSongTime3;
+    int position = 0, startTime, listSize, myCount;
+    private long totalDuration, currentDuration = 0;
+    long myProgress = 0, diff = 0;
 //    private Runnable UpdateSongTime1 = new Runnable() {
 //        @Override
 //        public void run() {
