@@ -105,8 +105,8 @@ public class BWSApplication extends Application {
     public static final String ACTION_PREVIUOS = "actionprevious";
     public static final String ACTION_PLAY = "actionplay";
     public static final String ACTION_NEXT = "actionnext";
-    public static Notification notification;
-    public static NotificationManager notificationManager;
+//    public static Notification notification;
+//    public static NotificationManager notificationManager;
 
     public static Context getContext() {
         return mContext;
@@ -255,10 +255,10 @@ public class BWSApplication extends Application {
     }
 */
 
-    public static void cancelNotification(Context ctx) {
+ /*   public static void cancelNotification(Context ctx) {
         notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID); // Notification ID to cancel
-    }
+    }*/
 
     public static void getLatasteUpdate(Context context) {
         String appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa";
