@@ -2966,7 +2966,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         if (!isMediaStart) {
             isCompleteStop = false;
             isprogressbar = true;
-            handler.postDelayed(UpdateSongTime, 500);
+//            handler.postDelayed(UpdateSongTime, 500);
             binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.GONE);
             binding.llProgressBar.setVisibility(View.VISIBLE);
@@ -2975,7 +2975,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         } else if (isCompleteStop) {
             isCompleteStop = false;
             isprogressbar = true;
-            handler.postDelayed(UpdateSongTime, 500);
+//            handler.postDelayed(UpdateSongTime, 500);
             binding.llPlay.setVisibility(View.GONE);
             binding.llPause.setVisibility(View.GONE);
             binding.llProgressBar.setVisibility(View.VISIBLE);
@@ -2989,7 +2989,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             resumeMedia();
             isPause = false;
         }
-        handler.postDelayed(UpdateSongTime, 100);
+//        handler.postDelayed(UpdateSongTime, 100);
         binding.tvTitle.setText(mainPlayModelList.get(position).getAudiomastercat());
         binding.tvName.setText(mainPlayModelList.get(position).getName());
         isPlaying = true;
@@ -3000,7 +3000,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
                 R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
         isPlaying = false;
-        handler.removeCallbacks(UpdateSongTime);
+//        handler.removeCallbacks(UpdateSongTime);
         binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
         pauseMedia();
         binding.llProgressBar.setVisibility(View.GONE);

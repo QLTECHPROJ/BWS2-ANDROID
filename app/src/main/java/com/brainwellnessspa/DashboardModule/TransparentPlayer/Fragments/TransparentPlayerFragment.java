@@ -728,7 +728,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         if (!isMediaStart) {
             isCompleteStop = false;
             isprogressbar = true;
-            handler12.postDelayed(UpdateSongTime12, 500);
+//            handler12.postDelayed(UpdateSongTime12, 500);
             binding.progressBar.setVisibility(View.VISIBLE);
 //                binding.llProgress.setVisibility(View.GONE);
             binding.ivPlay.setVisibility(View.GONE);
@@ -737,7 +737,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         } else if (isCompleteStop) {
             isCompleteStop = false;
             isprogressbar = true;
-            handler12.postDelayed(UpdateSongTime12, 500);
+//            handler12.postDelayed(UpdateSongTime12, 500);
             binding.progressBar.setVisibility(View.VISIBLE);
 //                binding.llProgress.setVisibility(View.GONE);
             binding.ivPlay.setVisibility(View.GONE);
@@ -752,7 +752,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             isPause = false;
         }
         player = 1;
-        handler12.postDelayed(UpdateSongTime12, 100);
+//        handler12.postDelayed(UpdateSongTime12, 100);
         binding.tvTitle.setText(mainPlayModelList.get(position).getName());
         isPlaying = true;
 //        }
