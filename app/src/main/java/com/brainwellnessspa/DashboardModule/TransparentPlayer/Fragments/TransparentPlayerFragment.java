@@ -95,11 +95,11 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener, Playable/*, AudioManager.OnAudioFocusChangeListener*/ {
     public static int isDisclaimer = 0;
-    public static String addToRecentPlayId = "", myAudioId;
+    public static String addToRecentPlayId = "", myAudioId = "";
     public ArrayList<MainPlayModel> mainPlayModelList;
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
-    int position = 0, startTime, listSize, myCount;
+    int position = 0, startTime = 0, listSize = 0, myCount = 0;
     MainPlayModel mainPlayModel;
     public static boolean isPlaying = false;
     Boolean queuePlay, audioPlay;
@@ -1955,7 +1955,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     @Override
     public void onPause() {
 //        handler12.removeCallbacks(UpdateSongTime12);
-        Log.e("Stop runnble", "stop");
+//        Log.e("Stop runnble", "stop");
         super.onPause();
     }
 }
