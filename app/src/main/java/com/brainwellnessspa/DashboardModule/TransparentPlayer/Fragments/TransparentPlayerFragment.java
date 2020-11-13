@@ -91,11 +91,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     public static String addToRecentPlayId = "", myAudioId = "";
     public static ArrayList<MainPlayModel> mainPlayModelList;
     public static FragmentTransparentPlayerBinding binding;
-    public static String  UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
+    public static String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
     public static int position = 0, startTime = 0, listSize = 0, myCount = 0;
     public static MainPlayModel mainPlayModel;
     public static boolean isPlaying = false;
-    public static Boolean queuePlay, audioPlay,playPause;
+    public static Boolean queuePlay, audioPlay, playPause;
     public static ArrayList<AddToQueueModel> addToQueueModelList;
     public static List<DownloadAudioDetails> downloadAudioDetailsList;
     public static Activity activity;
@@ -266,6 +266,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             addToQueueModelList = gson.fromJson(json1, type1);
         }
+
+        CallBroadcast();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, 0, 130);
         binding.llLayout.setLayoutParams(params);
@@ -286,7 +288,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 Log.e("calll complete real", "real");
             });
         }
-
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -308,36 +309,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
 
 
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getExtras().getString("actionname");
-                switch (action) {
-                    case BWSApplication.ACTION_PREVIUOS:
-                        onTrackPrevious();
-                        break;
-                    case ACTION_PLAY:
-                        if (isPlaying) {
-                            onTrackPause();
-                        } else {
-                            onTrackPlay();
-                        }
-                        break;
-                    case BWSApplication.ACTION_NEXT:
-                        onTrackNext();
-                        break;
-                }
-            }
-        };
-
-          /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            BWSApplication.createChannel(ctx);
-            ctx.registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-            ctx.startService(new Intent(ctx.getBaseContext(), OnClearFromRecentService.class));
-        }else {*/
-        BWSApplication.createChannel(ctx);
-        ctx.registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        ctx.startService(new Intent(activity.getBaseContext(), OnClearFromRecentService.class));
 //        }
         binding.ivPause.setOnClickListener(view1 -> {
             callPause();
@@ -793,9 +764,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             isPlaying = false;
             callNext();
             try {
-            BWSApplication.createChannel(ctx);
-            ctx.registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-            ctx.startService(new Intent(activity.getBaseContext(), OnClearFromRecentService.class));
+                BWSApplication.createChannel(ctx);
+                ctx.registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+                ctx.startService(new Intent(activity.getBaseContext(), OnClearFromRecentService.class));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1801,7 +1772,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     @Override
     public void onResume() {
         super.onResume();
-
+        CallBroadcast();
+          /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            BWSApplication.createChannel(ctx);
+            ctx.registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+            ctx.startService(new Intent(ctx.getBaseContext(), OnClearFromRecentService.class));
+        }else {*/
+        BWSApplication.createChannel(ctx);
+        ctx.registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
+        ctx.startService(new Intent(activity.getBaseContext(), OnClearFromRecentService.class));
         if (ComeScreenAccount == 1) {
             binding.llLayout.setVisibility(View.GONE);
         } else if (ComeScreenAccount == 0) {
@@ -1887,6 +1866,30 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.GONE);
             binding.ivPause.setVisibility(View.GONE);
         }*/
+    }
+
+    public void CallBroadcast() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getExtras().getString("actionname");
+                switch (action) {
+                    case BWSApplication.ACTION_PREVIUOS:
+                        onTrackPrevious();
+                        break;
+                    case ACTION_PLAY:
+                        if (isPlaying) {
+                            onTrackPause();
+                        } else {
+                            onTrackPlay();
+                        }
+                        break;
+                    case BWSApplication.ACTION_NEXT:
+                        onTrackNext();
+                        break;
+                }
+            }
+        };
     }
 
     @Override
