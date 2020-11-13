@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,8 @@ import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Services.OnClearFromRecentService;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.Utility.MusicService;
+import com.brainwellnessspa.Utility.MyService;
 import com.brainwellnessspa.Utility.Playable;
 import com.brainwellnessspa.databinding.FragmentTransparentPlayerBinding;
 import com.bumptech.glide.Glide;
@@ -65,6 +68,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.content.Context.POWER_SERVICE;
 import static com.brainwellnessspa.BWSApplication.ACTION_PLAY;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
@@ -252,7 +256,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         View view = binding.getRoot();
         activity = getActivity();
         ctx = getActivity();
-        FacebookSdk.sdkInitialize(ctx.getApplicationContext());
         mainPlayModelList = new ArrayList<>();
         addToQueueModelList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
@@ -269,7 +272,28 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             addToQueueModelList = gson.fromJson(json1, type1);
         }
-
+        try {
+            getApplicationContext().startService(new Intent(getApplicationContext(), MusicService.class));
+            getApplicationContext().startService(new Intent(getApplicationContext(), MyService.class));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        PowerManager powerManager = (PowerManager) ctx.getSystemService(POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                "com.brainwellnessspa::MyWakelockTag");
+        wakeLock.acquire();
+        PowerManager.WakeLock wakeLock1 = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,
+                "com.brainwellnessspa::MyWakelockTag");
+        wakeLock1.acquire();
+        PowerManager.WakeLock wakeLock2 = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
+                "com.brainwellnessspa::MyWakelockTag");
+        wakeLock2.acquire();
+        PowerManager.WakeLock wakeLock3 = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
+                "com.brainwellnessspa::MyWakelockTag");
+        wakeLock3.acquire();
+        PowerManager.WakeLock wakeLock4 = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
+                "com.brainwellnessspa::MyWakelockTag");
+        wakeLock4.acquire();
         CallBroadcast();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, 0, 130);
