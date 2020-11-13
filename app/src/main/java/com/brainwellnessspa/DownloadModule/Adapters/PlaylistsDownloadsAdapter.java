@@ -92,7 +92,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         handler1 = new Handler();
         playlistWiseAudioDetails = new ArrayList<>();
         oneAudioDetailsList = new ArrayList<>();
-//        getDownloadData();
+        getDownloadData();
     }
 
     @NonNull
@@ -112,8 +112,13 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
             @Override
             public void run() {
                 try {
-                    for (int i = 0; i < listModelList.size(); i++) {
-                        getMediaByPer(listModelList.get(holder.getAdapterPosition()).getPlaylistID(), listModelList.get(holder.getAdapterPosition()).getTotalAudio(), holder.binding.pbProgress);
+                    getDownloadData();
+                    if(fileNameList.size()!=0) {
+                        for (int f = 0; f < fileNameList.size(); f++) {
+                            if (playlistDownloadId.get(f).equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
+                                getMediaByPer(listModelList.get(position).getPlaylistID(), listModelList.get(position).getTotalAudio(), holder.binding.pbProgress);
+                            }
+                        }
                     }
                 }catch (Exception e){}
 
@@ -127,7 +132,14 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                 holder.binding.pbProgress.setVisibility(View.GONE);
             }
         }*/
-        getMediaByPer(listModelList.get(position).getPlaylistID(), listModelList.get(position).getTotalAudio(), holder.binding.pbProgress);
+        if(fileNameList.size()!=0) {
+                for (int f = 0; f < fileNameList.size(); f++) {
+                    if (playlistDownloadId.get(f).equalsIgnoreCase(listModelList.get(position).getPlaylistID())) {
+                        getMediaByPer(listModelList.get(position).getPlaylistID(), listModelList.get(position).getTotalAudio(), holder.binding.pbProgress);
+                    }
+                }
+
+        }
         if (listModelList.get(position).getTotalAudio().equalsIgnoreCase("") ||
                 listModelList.get(position).getTotalAudio().equalsIgnoreCase("0") &&
                         listModelList.get(position).getTotalhour().equalsIgnoreCase("")
@@ -289,7 +301,32 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         }
 
     }
-
+    private void getDownloadData() {
+        try {
+            SharedPreferences sharedy = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+            Gson gson = new Gson();
+            String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+            String jsonx = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+            String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+            if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                fileNameList = gson.fromJson(jsony, type);
+                playlistDownloadId = gson.fromJson(jsonq, type);
+                if (fileNameList.size() != 0) {
+                    handler1.postDelayed(UpdateSongTime1, 3000);
+                } else {
+                    fileNameList = new ArrayList<>();
+                    playlistDownloadId = new ArrayList<>();
+                }
+            } else {
+                fileNameList = new ArrayList<>();
+                playlistDownloadId = new ArrayList<>();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private void getMediaByPer(String playlistID, String totalAudio, ProgressBar pbProgress) {
         class getMediaByPer extends AsyncTask<Void, Void, Void> {
             @Override
