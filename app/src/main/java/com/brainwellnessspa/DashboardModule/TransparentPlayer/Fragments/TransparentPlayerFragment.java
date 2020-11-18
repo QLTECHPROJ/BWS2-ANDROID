@@ -157,7 +157,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //            initMediaPlayer();
 //            updateMetaData();
 
-            if (isPause || !isMediaStart) {
+            /* todo: foram notification comment*/
+            /*if (isPause || !isMediaStart) {
                 binding.ivPlay.setVisibility(View.VISIBLE);
                 binding.ivPause.setVisibility(View.GONE);
                 buildNotification(PlaybackStatus.PAUSED, context, mainPlayModelList.get(position));
@@ -165,7 +166,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 binding.ivPause.setVisibility(View.VISIBLE);
                 binding.ivPlay.setVisibility(View.GONE);
                 buildNotification(PlaybackStatus.PLAYING, context, mainPlayModelList.get(position));
-            }
+            }*/
 
         }
     };
@@ -436,7 +437,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             isPause = false;
         }
         player = 1;
-        buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+        /* todo: foram notification comment*/
+//        buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
         handler12.postDelayed(UpdateSongTime12, 100);
     }
 
@@ -457,7 +459,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.VISIBLE);
         }
         oTime = binding.simpleSeekbar.getProgress();
-        buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList.get(position));
+        /* todo: foram notification comment*/
+//        buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList.get(position));
     }
 
    /* @Override
@@ -1277,7 +1280,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 });
             }
         }
-        if (isPause) {
+        /* todo: foram notification comment*/
+        /*if (isPause) {
             binding.ivPlay.setVisibility(View.VISIBLE);
             binding.ivPause.setVisibility(View.GONE);
             buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList.get(position));
@@ -1285,7 +1289,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPause.setVisibility(View.VISIBLE);
             binding.ivPlay.setVisibility(View.GONE);
             buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
-        }
+        }*/
     }
 
     private void initMediaplyer() {
@@ -1330,7 +1334,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 if (!audioFile.equalsIgnoreCase("")) {
                     callNext();
 //                updateMetaData();
-                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                    /* todo: foram notification comment*/
+//                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
                 }
             }
 
@@ -1340,7 +1345,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 if (!audioFile.equalsIgnoreCase("")) {
                     callPrev();
 //                updateMetaData();
-                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                    /* todo: foram notification comment*/
+//                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
                 }
             }
 
