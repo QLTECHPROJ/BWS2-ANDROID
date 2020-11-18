@@ -115,9 +115,11 @@ public class MusicService extends Service {
         // Resume on hangup.
         callStateListener();
         //ACTION_AUDIO_BECOMING_NOISY -- change in audio outputs -- BroadcastReceiver
-        registerBecomingNoisyReceiver();
+        /* todo: foram notification comment*/
+//        registerBecomingNoisyReceiver();
         //Listen for new Audio to play -- BroadcastReceiver
-        register_playNewAudio();
+        /* todo: foram notification comment*/
+//        register_playNewAudio();
     }
 
     //The system calls this method when an activity, requests the service be started
@@ -176,8 +178,9 @@ public class MusicService extends Service {
         removeNotification();
 
         //unregister BroadcastReceivers
-        unregisterReceiver(becomingNoisyReceiver);
-        unregisterReceiver(playNewAudio);
+        /* todo: foram notification comment*/
+//        unregisterReceiver(becomingNoisyReceiver);
+//        unregisterReceiver(playNewAudio);
 
         //clear cached playlist
 //        new StorageUtil(getApplicationContext()).clearCachedAudioPlaylist();
@@ -344,7 +347,7 @@ public class MusicService extends Service {
     /**
      * ACTION_AUDIO_BECOMING_NOISY -- change in audio outputs
      */
-    private BroadcastReceiver becomingNoisyReceiver = new BroadcastReceiver() {
+/*    private BroadcastReceiver becomingNoisyReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             //pause audio on ACTION_AUDIO_BECOMING_NOISY
@@ -357,7 +360,7 @@ public class MusicService extends Service {
         //register after getting audio focus
         IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         registerReceiver(becomingNoisyReceiver, intentFilter);
-    }
+    }*/
 
     /**
      * Handle PhoneState changes
@@ -482,6 +485,8 @@ public class MusicService extends Service {
 //                .build());
 //    }
 
+
+    /* todo: foram notification comment*/
         public static void buildNotification(PlaybackStatus playbackStatus,Context context,MainPlayModel track) {
 
         /**
@@ -536,33 +541,17 @@ public class MusicService extends Service {
                 intent.putExtra("com.brainwellnessspa.notifyId", NOTIFICATION_ID);
                 PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         int drw_previous;
-//            if (pos == 0) {
-//                pendingIntentPrevious = null;
-//                drw_previous = 0;
-//            } else {
         Intent intentPrevious = new Intent(context, NotificationActionService.class).setAction(ACTION_PREVIUOS);
         pendingIntentPrevious = PendingIntent.getBroadcast(context, 0, intentPrevious, PendingIntent.FLAG_UPDATE_CURRENT);
         drw_previous = R.drawable.ic_skip_previous_black_24dp;
-//            }
+
         Intent intentPlay = new Intent(context, NotificationActionService.class).setAction(ACTION_PLAY);
         PendingIntent pendingIntentPlay = PendingIntent.getBroadcast(context, 0, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent pendingIntentNext;
         int drw_next;
-//           if (pos == size) {
-//                pendingIntentNext = null;
-//                drw_next = 0;
-//            } else {
         Intent intentNext = new Intent(context, NotificationActionService.class).setAction(ACTION_NEXT);
         pendingIntentNext = PendingIntent.getBroadcast(context, 0, intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
         drw_next = R.drawable.ic_skip_next_black_24dp;
-//            }
-//            BitmapFactory.decodeResource(context.getResources(), R.drawable.square_app_icon)
-                try {
-//                byte[] encodeByte = Base64.decode(track.getImageFile(), Base64.DEFAULT);
-//                myBitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-                } catch (Exception e) {
-                    e.getMessage();
-                }
                 //create notification
                 Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_music_note)
@@ -689,9 +678,9 @@ public class MusicService extends Service {
     /**
      * Play new Audio
      */
-    private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
+  /*  private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, Intent intent) {*/
 
 //            //Get the new media index form SharedPreferences
 //            audioIndex = new StorageUtil(getApplicationContext()).loadAudioIndex();
@@ -708,15 +697,17 @@ public class MusicService extends Service {
 //            mediaPlayer.reset();
 //            initMediaPlayer();
 //            updateMetaData();
-            buildNotification(PlaybackStatus.PLAYING,context,mainPlayModel);
-        }
-    };
+            /* todo: foram notification comment*/
+//            buildNotification(PlaybackStatus.PLAYING,context,mainPlayModel);
+//        }
+//    };
 
-    private void register_playNewAudio() {
+    /* todo: foram notification comment*/
+ /*   private void register_playNewAudio() {
         //Register playNewMedia receiver
         IntentFilter filter = new IntentFilter(Broadcast_PLAY_NEW_AUDIO);
         registerReceiver(playNewAudio, filter);
-    }
+    }*/
 
     private void createChannel() {
         // The id of the channel.

@@ -461,7 +461,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         binding.llPlay.setVisibility(View.VISIBLE);
         binding.llPause.setVisibility(View.GONE);
         oTime = binding.simpleSeekbar.getProgress();
-        buildNotification(PlaybackStatus.PAUSED,ctx,mainPlayModelList.get(position));
+        /* todo: foram notification comment*/
+//        buildNotification(PlaybackStatus.PAUSED,ctx,mainPlayModelList.get(position));
     }
 
     private void callPlay() {
@@ -492,7 +493,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             isPause = false;
         }
         handler.postDelayed(UpdateSongTime, 100);
-        buildNotification(PlaybackStatus.PLAYING,ctx,mainPlayModelList.get(position));
+        /* todo: foram notification comment*/
+//        buildNotification(PlaybackStatus.PLAYING,ctx,mainPlayModelList.get(position));
     }
 
 /*
@@ -1562,8 +1564,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             });
         }*/
 
-        IntentFilter filter = new IntentFilter(Broadcast_PLAY_NEW_AUDIO);
-        registerReceiver(playNewAudio, filter);
+//        IntentFilter filter = new IntentFilter(Broadcast_PLAY_NEW_AUDIO);
+//        registerReceiver(playNewAudio, filter);
         getMediaByPer();
         if (!url.equalsIgnoreCase("")) {
             if (!id.equalsIgnoreCase(addToRecentPlayId)) {
@@ -1583,28 +1585,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));*/
     }
-
-    private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
-        @Override
+    /* todo: foram notification comment*/
+      /*private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
+       @Override
         public void onReceive(Context context, Intent intent) {
 
-//            //Get the new media index form SharedPreferences
-//            audioIndex = new StorageUtil(getApplicationContext()).loadAudioIndex();
-//            if (audioIndex != -1 && audioIndex < audioList.size()) {
-//                //index is in a valid range
-//                activeAudio = audioList.get(audioIndex);
-//            } else {
-//                stopSelf();
-//            }
-
-            //A PLAY_NEW_AUDIO action received
-            //reset mediaPlayer to play the new Audio
-//            stopMedia();
-//            mediaPlayer.reset();
-//            initMediaPlayer();
-//            updateMetaData();
-
-            if(isPause || !isMediaStart){
+           if(isPause || !isMediaStart){
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
                 buildNotification(PlaybackStatus.PAUSED,context,mainPlayModelList.get(position));
@@ -1613,9 +1599,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.llPlay.setVisibility(View.GONE);
                 buildNotification(PlaybackStatus.PLAYING,context,mainPlayModelList.get(position));
             }
-
-        }
-    };
+       }
+//    };*/
     private void setMediaPlayer(String download, FileDescriptor fileDescriptor) {
         if (download.equalsIgnoreCase("2")) {
             mediaPlayer = MediaPlayer.create(ctx, R.raw.brain_wellness_spa_declaimer);
@@ -1677,7 +1662,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 });
             }
         }
-        if(isPause){
+        /* todo: foram notification comment*/
+        /*if(isPause){
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
             buildNotification(PlaybackStatus.PAUSED,ctx,mainPlayModelList.get(position));
@@ -1685,7 +1671,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llPause.setVisibility(View.VISIBLE);
             binding.llPlay.setVisibility(View.GONE);
             buildNotification(PlaybackStatus.PLAYING,ctx,mainPlayModelList.get(position));
-        }
+        }*/
     }
     private void initMediaplyer() {
         if (mediaSessionManager != null) return; //mediaSessionManager exists
@@ -1728,7 +1714,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 if (!url.equalsIgnoreCase("")) {
                     callNext();
 //                updateMetaData();
-                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                    /* todo: foram notification comment*/
+//                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
                 }
             }
 
@@ -1739,7 +1726,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 if (!url.equalsIgnoreCase("")) {
                     callPrevious();
 //                updateMetaData();
-                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                    /* todo: foram notification comment*/
+//                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
                 }
             }
 
@@ -2847,7 +2835,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(playNewAudio);
+        /* todo: foram notification comment*/
+//        unregisterReceiver(playNewAudio);
         super.onDestroy();
 //        releasePlayer();
     }
