@@ -614,7 +614,23 @@ public class MusicService extends Service {
                         .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3,context))
                         .addAction(notificationAction, "pause", play_pauseAction)
                         .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2,context));*/
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                                "KOD Dev", NotificationManager.IMPORTANCE_LOW);
 
+                        NotificationManager  notificationManager = context.getSystemService(NotificationManager.class);
+                        if (notificationManager != null) {
+                            notificationManager.createNotificationChannel(channel);
+                        }
+                    } else {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            NotificationManager  notificationManager = context.getSystemService(NotificationManager.class);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         }
