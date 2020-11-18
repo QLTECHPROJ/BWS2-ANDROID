@@ -1,8 +1,6 @@
 package com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments;
 
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -45,17 +43,14 @@ import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.Services.OnClearFromRecentService;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.Utility.MyService;
-import com.brainwellnessspa.Utility.Playable;
 import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.brainwellnessspa.databinding.FragmentTransparentPlayerBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.facebook.FacebookSdk;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -73,16 +68,12 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.POWER_SERVICE;
-import static com.brainwellnessspa.BWSApplication.ACTION_PLAY;
-import static com.brainwellnessspa.Utility.MusicService.Broadcast_PLAY_NEW_AUDIO;
-import static com.brainwellnessspa.Utility.MusicService.buildNotification;
-import static com.brainwellnessspa.Utility.MusicService.mediaSession;
-import static com.brainwellnessspa.Utility.MusicService.transportControls;
-import static com.brainwellnessspa.Utility.MusicService.mediaSessionManager;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
+import static com.brainwellnessspa.Utility.MusicService.Broadcast_PLAY_NEW_AUDIO;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
+import static com.brainwellnessspa.Utility.MusicService.buildNotification;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
 import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
@@ -94,23 +85,26 @@ import static com.brainwellnessspa.Utility.MusicService.isPreparing;
 import static com.brainwellnessspa.Utility.MusicService.isStop;
 import static com.brainwellnessspa.Utility.MusicService.isprogressbar;
 import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
+import static com.brainwellnessspa.Utility.MusicService.mediaSession;
+import static com.brainwellnessspa.Utility.MusicService.mediaSessionManager;
 import static com.brainwellnessspa.Utility.MusicService.oTime;
 import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
 import static com.brainwellnessspa.Utility.MusicService.progressToTimer;
 import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.savePrefQueue;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.Utility.MusicService.transportControls;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener/*, Playable, AudioManager.OnAudioFocusChangeListener*/ {
     public static int isDisclaimer = 0;
     public static String addToRecentPlayId = "", myAudioId = "";
+    public static boolean isPlaying = false;
     public ArrayList<MainPlayModel> mainPlayModelList;
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name;
     int position = 0, startTime = 0, listSize = 0, myCount = 0;
     MainPlayModel mainPlayModel;
-    public static boolean isPlaying = false;
     Boolean queuePlay, audioPlay;
     ArrayList<AddToQueueModel> addToQueueModelList;
     List<DownloadAudioDetails> downloadAudioDetailsList;
@@ -122,6 +116,59 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     Gson gson;
     private long totalDuration, currentDuration = 0;
     private Handler handler12;
+    /*    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getExtras().getString("actionname");
+                switch (action) {
+                    case BWSApplication.ACTION_PREVIUOS:
+                        onTrackPrevious();
+                        break;
+                    case ACTION_PLAY:
+                        if (isPlaying) {
+                            onTrackPause();
+                        } else {
+                            onTrackPlay();
+                        }
+                        break;
+                    case BWSApplication.ACTION_NEXT:
+                        onTrackNext();
+                        break;
+                }
+            }
+        };*/
+    private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+//            //Get the new media index form SharedPreferences
+//            audioIndex = new StorageUtil(getApplicationContext()).loadAudioIndex();
+//            if (audioIndex != -1 && audioIndex < audioList.size()) {
+//                //index is in a valid range
+//                activeAudio = audioList.get(audioIndex);
+//            } else {
+//                stopSelf();
+//            }
+
+            //A PLAY_NEW_AUDIO action received
+            //reset mediaPlayer to play the new Audio
+//            stopMedia();
+//            mediaPlayer.reset();
+//            initMediaPlayer();
+//            updateMetaData();
+
+            if (isPause || !isMediaStart) {
+                binding.ivPlay.setVisibility(View.VISIBLE);
+                binding.ivPause.setVisibility(View.GONE);
+                buildNotification(PlaybackStatus.PAUSED, context, mainPlayModelList.get(position));
+            } else {
+                binding.ivPause.setVisibility(View.VISIBLE);
+                binding.ivPlay.setVisibility(View.GONE);
+                buildNotification(PlaybackStatus.PLAYING, context, mainPlayModelList.get(position));
+            }
+
+        }
+    };
     private Runnable UpdateSongTime12 = new Runnable() {
         @Override
         public void run() {
@@ -389,7 +436,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             isPause = false;
         }
         player = 1;
-        buildNotification(PlaybackStatus.PLAYING,ctx,mainPlayModelList.get(position));
+        buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
         handler12.postDelayed(UpdateSongTime12, 100);
     }
 
@@ -410,8 +457,113 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.VISIBLE);
         }
         oTime = binding.simpleSeekbar.getProgress();
-        buildNotification(PlaybackStatus.PAUSED,ctx,mainPlayModelList.get(position));
+        buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList.get(position));
     }
+
+   /* @Override
+    public void onTrackPrevious() {
+        if (!audioFile.equalsIgnoreCase("")) {
+            if (isPlaying) {
+                onTrackPause();
+            } else {
+                onTrackPlay();
+            }
+            isPlaying = false;
+            callPrev();
+        }
+
+
+//        position--;
+//        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+//                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
+//        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+    }
+*/
+   /* @Override
+    public void onTrackPlay() {
+//        if (isPlaying) {
+//            BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+//                    R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
+//            binding.ivPause.setImageResource(R.drawable.ic_play_icon);
+//            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+//            isPlaying = false;
+//        } else {
+        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
+//            binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
+        if (!isMediaStart) {
+            isCompleteStop = false;
+            isprogressbar = true;
+//            handler12.postDelayed(UpdateSongTime12, 500);
+            binding.progressBar.setVisibility(View.VISIBLE);
+//                binding.llProgress.setVisibility(View.GONE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.GONE);
+            callMedia();
+        } else if (isCompleteStop) {
+            isCompleteStop = false;
+            isprogressbar = true;
+//            handler12.postDelayed(UpdateSongTime12, 500);
+            binding.progressBar.setVisibility(View.VISIBLE);
+//                binding.llProgress.setVisibility(View.GONE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.GONE);
+            callMedia();
+        } else {
+            resumeMedia();
+            binding.progressBar.setVisibility(View.GONE);
+//                binding.llProgress.setVisibility(View.GONE);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.VISIBLE);
+            isPause = false;
+        }
+        player = 1;
+//        handler12.postDelayed(UpdateSongTime12, 100);
+        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+        isPlaying = true;
+//        }
+    }
+*/
+   /* @Override
+    public void onTrackPause() {
+//        if (isPlaying) {
+        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+                R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
+//            binding.ivPause.setImageResource(R.drawable.ic_play_icon);
+        isPlaying = false;
+        if (!isMediaStart) {
+//                callAsyncTask();
+            callMedia();
+        } else {
+            pauseMedia();
+            binding.ivPause.setVisibility(View.GONE);
+            binding.ivPlay.setVisibility(View.VISIBLE);
+        }
+//        } else {
+//            BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+//                    R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
+//            binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
+//            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+//            isPlaying = true;
+//        }
+    }*/
+
+  /*  @Override
+    public void onTrackNext() {
+        if (!audioFile.equalsIgnoreCase("")) {
+            if (isPlaying) {
+                onTrackPause();
+            } else {
+                onTrackPlay();
+            }
+            isPlaying = false;
+            callNext();
+        }
+//        position++;
+//        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
+//                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
+//        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
+    }*/
 
     private void MakeArray() {
         shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -698,111 +850,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             getPrepareShowData();
         }
     }
-
-   /* @Override
-    public void onTrackPrevious() {
-        if (!audioFile.equalsIgnoreCase("")) {
-            if (isPlaying) {
-                onTrackPause();
-            } else {
-                onTrackPlay();
-            }
-            isPlaying = false;
-            callPrev();
-        }
-
-
-//        position--;
-//        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
-//                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-//        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-    }
-*/
-   /* @Override
-    public void onTrackPlay() {
-//        if (isPlaying) {
-//            BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
-//                    R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
-//            binding.ivPause.setImageResource(R.drawable.ic_play_icon);
-//            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-//            isPlaying = false;
-//        } else {
-        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
-                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-//            binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
-        if (!isMediaStart) {
-            isCompleteStop = false;
-            isprogressbar = true;
-//            handler12.postDelayed(UpdateSongTime12, 500);
-            binding.progressBar.setVisibility(View.VISIBLE);
-//                binding.llProgress.setVisibility(View.GONE);
-            binding.ivPlay.setVisibility(View.GONE);
-            binding.ivPause.setVisibility(View.GONE);
-            callMedia();
-        } else if (isCompleteStop) {
-            isCompleteStop = false;
-            isprogressbar = true;
-//            handler12.postDelayed(UpdateSongTime12, 500);
-            binding.progressBar.setVisibility(View.VISIBLE);
-//                binding.llProgress.setVisibility(View.GONE);
-            binding.ivPlay.setVisibility(View.GONE);
-            binding.ivPause.setVisibility(View.GONE);
-            callMedia();
-        } else {
-            resumeMedia();
-            binding.progressBar.setVisibility(View.GONE);
-//                binding.llProgress.setVisibility(View.GONE);
-            binding.ivPlay.setVisibility(View.GONE);
-            binding.ivPause.setVisibility(View.VISIBLE);
-            isPause = false;
-        }
-        player = 1;
-//        handler12.postDelayed(UpdateSongTime12, 100);
-        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-        isPlaying = true;
-//        }
-    }
-*/
-   /* @Override
-    public void onTrackPause() {
-//        if (isPlaying) {
-        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
-                R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
-//            binding.ivPause.setImageResource(R.drawable.ic_play_icon);
-        isPlaying = false;
-        if (!isMediaStart) {
-//                callAsyncTask();
-            callMedia();
-        } else {
-            pauseMedia();
-            binding.ivPause.setVisibility(View.GONE);
-            binding.ivPlay.setVisibility(View.VISIBLE);
-        }
-//        } else {
-//            BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
-//                    R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-//            binding.ivPlay.setImageResource(R.drawable.ic_all_pause_icon);
-//            binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-//            isPlaying = true;
-//        }
-    }*/
-
-  /*  @Override
-    public void onTrackNext() {
-        if (!audioFile.equalsIgnoreCase("")) {
-            if (isPlaying) {
-                onTrackPause();
-            } else {
-                onTrackPlay();
-            }
-            isPlaying = false;
-            callNext();
-        }
-//        position++;
-//        BWSApplication.createNotification(getActivity(), mainPlayModelList.get(position),
-//                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-//        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
-    }*/
 
     private void callPrev() {
         if (isPrepare || isMediaStart || isPause) {
@@ -1230,14 +1277,14 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 });
             }
         }
-        if(isPause){
+        if (isPause) {
             binding.ivPlay.setVisibility(View.VISIBLE);
             binding.ivPause.setVisibility(View.GONE);
-            buildNotification(PlaybackStatus.PAUSED,ctx,mainPlayModelList.get(position));
-        }else{
+            buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList.get(position));
+        } else {
             binding.ivPause.setVisibility(View.VISIBLE);
             binding.ivPlay.setVisibility(View.GONE);
-            buildNotification(PlaybackStatus.PLAYING,ctx,mainPlayModelList.get(position));
+            buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
         }
     }
 
@@ -1280,18 +1327,21 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             public void onSkipToNext() {
                 super.onSkipToNext();
 
-                callNext();
+                if (!audioFile.equalsIgnoreCase("")) {
+                    callNext();
 //                updateMetaData();
-                buildNotification(PlaybackStatus.PLAYING,ctx,mainPlayModelList.get(position));
+                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                }
             }
 
             @Override
             public void onSkipToPrevious() {
                 super.onSkipToPrevious();
-
-                callPrev();
+                if (!audioFile.equalsIgnoreCase("")) {
+                    callPrev();
 //                updateMetaData();
-                buildNotification(PlaybackStatus.PLAYING,ctx,mainPlayModelList.get(position));
+                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                }
             }
 
             @Override
@@ -2011,60 +2061,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPause.setVisibility(View.GONE);
         }*/
     }
-
-/*    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getExtras().getString("actionname");
-            switch (action) {
-                case BWSApplication.ACTION_PREVIUOS:
-                    onTrackPrevious();
-                    break;
-                case ACTION_PLAY:
-                    if (isPlaying) {
-                        onTrackPause();
-                    } else {
-                        onTrackPlay();
-                    }
-                    break;
-                case BWSApplication.ACTION_NEXT:
-                    onTrackNext();
-                    break;
-            }
-        }
-    };*/
-    private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-
-//            //Get the new media index form SharedPreferences
-//            audioIndex = new StorageUtil(getApplicationContext()).loadAudioIndex();
-//            if (audioIndex != -1 && audioIndex < audioList.size()) {
-//                //index is in a valid range
-//                activeAudio = audioList.get(audioIndex);
-//            } else {
-//                stopSelf();
-//            }
-
-        //A PLAY_NEW_AUDIO action received
-        //reset mediaPlayer to play the new Audio
-//            stopMedia();
-//            mediaPlayer.reset();
-//            initMediaPlayer();
-//            updateMetaData();
-
-        if(isPause || !isMediaStart){
-            binding.ivPlay.setVisibility(View.VISIBLE);
-            binding.ivPause.setVisibility(View.GONE);
-            buildNotification(PlaybackStatus.PAUSED,context,mainPlayModelList.get(position));
-        }else{
-            binding.ivPause.setVisibility(View.VISIBLE);
-            binding.ivPlay.setVisibility(View.GONE);
-            buildNotification(PlaybackStatus.PLAYING,context,mainPlayModelList.get(position));
-        }
-
-        }
-    };
 
     @Override
     public void onPause() {

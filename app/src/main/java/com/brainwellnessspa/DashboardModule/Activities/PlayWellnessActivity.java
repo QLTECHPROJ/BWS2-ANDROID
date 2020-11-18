@@ -1725,19 +1725,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             @Override
             public void onSkipToNext() {
                 super.onSkipToNext();
-
-                callNext();
+                if (!url.equalsIgnoreCase("")) {
+                    callNext();
 //                updateMetaData();
-                buildNotification(PlaybackStatus.PLAYING,ctx,mainPlayModelList.get(position));
+                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                }
             }
 
             @Override
             public void onSkipToPrevious() {
                 super.onSkipToPrevious();
 
-                callPrevious();
+                if (!url.equalsIgnoreCase("")) {
+                    callPrevious();
 //                updateMetaData();
-                buildNotification(PlaybackStatus.PLAYING,ctx,mainPlayModelList.get(position));
+                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                }
             }
 
             @Override
