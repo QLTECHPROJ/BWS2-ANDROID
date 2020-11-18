@@ -1,6 +1,7 @@
 package com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,11 +11,13 @@ import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.session.MediaSessionManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +51,7 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.Utility.MyService;
 import com.brainwellnessspa.Utility.Playable;
+import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.brainwellnessspa.databinding.FragmentTransparentPlayerBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -70,6 +74,11 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.POWER_SERVICE;
 import static com.brainwellnessspa.BWSApplication.ACTION_PLAY;
+import static com.brainwellnessspa.Utility.MusicService.Broadcast_PLAY_NEW_AUDIO;
+import static com.brainwellnessspa.Utility.MusicService.buildNotification;
+import static com.brainwellnessspa.Utility.MusicService.mediaSession;
+import static com.brainwellnessspa.Utility.MusicService.transportControls;
+import static com.brainwellnessspa.Utility.MusicService.mediaSessionManager;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
@@ -380,6 +389,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             isPause = false;
         }
         player = 1;
+        buildNotification(PlaybackStatus.PLAYING,ctx,mainPlayModelList.get(position));
         handler12.postDelayed(UpdateSongTime12, 100);
     }
 
@@ -400,6 +410,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.VISIBLE);
         }
         oTime = binding.simpleSeekbar.getProgress();
+        buildNotification(PlaybackStatus.PAUSED,ctx,mainPlayModelList.get(position));
     }
 
     private void MakeArray() {
@@ -1148,7 +1159,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
             });
-            /*BWSApplication.createChannel(getActivity());
+            IntentFilter filter = new IntentFilter(Broadcast_PLAY_NEW_AUDIO);
+            getActivity().registerReceiver(playNewAudio, filter);
+
+                /*BWSApplication.createChannel(getActivity());
             getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
             getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));*/
         } catch (Exception e) {
@@ -1160,6 +1174,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         if (download.equalsIgnoreCase("2")) {
             mediaPlayer = MediaPlayer.create(getActivity(), R.raw.brain_wellness_spa_declaimer);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            initMediaplyer();
 //            Uri uri = Uri.parse("android.resource://com.brainwellnessspa/" + R.raw.brain_wellness_spa_declaimer);
 //            mediaPlayer.setDataSource(String.valueOf(uri));
             mediaPlayer.start();
@@ -1176,6 +1191,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             try {
                 if (mediaPlayer == null)
                     mediaPlayer = new MediaPlayer();
+                initMediaplyer();
                 if (mediaPlayer.isPlaying()) {
                     Log.e("Playinggggg", "stoppppp");
                     mediaPlayer.stop();
@@ -1184,6 +1200,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
                 isPreparing = true;
                 mediaPlayer = new MediaPlayer();
+                initMediaplyer();
                 if (download.equalsIgnoreCase("1")) {
                     mediaPlayer.setDataSource(fileDescriptor);
                 } else {
@@ -1213,6 +1230,84 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 });
             }
         }
+        if(isPause){
+            binding.ivPlay.setVisibility(View.VISIBLE);
+            binding.ivPause.setVisibility(View.GONE);
+            buildNotification(PlaybackStatus.PAUSED,ctx,mainPlayModelList.get(position));
+        }else{
+            binding.ivPause.setVisibility(View.VISIBLE);
+            binding.ivPlay.setVisibility(View.GONE);
+            buildNotification(PlaybackStatus.PLAYING,ctx,mainPlayModelList.get(position));
+        }
+    }
+
+    private void initMediaplyer() {
+        if (mediaSessionManager != null) return; //mediaSessionManager exists
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mediaSessionManager = (MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE);
+        }
+        // Create a new MediaSession
+        mediaSession = new MediaSessionCompat(ctx.getApplicationContext(), "AudioPlayer");
+        //Get MediaSessions transport controls
+        transportControls = mediaSession.getController().getTransportControls();
+        //set MediaSession -> ready to receive media commands
+        mediaSession.setActive(true);
+        //indicate that the MediaSession handles transport control commands
+        // through its MediaSessionCompat.Callback.
+        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+        //Set mediaSession's MetaData
+//        updateMetaData();
+
+        // Attach Callback to receive MediaSession updates
+
+        mediaSession.setCallback(new MediaSessionCompat.Callback() {
+            // Implement callbacks
+            @Override
+            public void onPlay() {
+                super.onPlay();
+                callPlay();
+            }
+
+            @Override
+            public void onPause() {
+                super.onPause();
+                callPause();
+            }
+
+            @Override
+            public void onSkipToNext() {
+                super.onSkipToNext();
+
+                callNext();
+//                updateMetaData();
+                buildNotification(PlaybackStatus.PLAYING,ctx,mainPlayModelList.get(position));
+            }
+
+            @Override
+            public void onSkipToPrevious() {
+                super.onSkipToPrevious();
+
+                callPrev();
+//                updateMetaData();
+                buildNotification(PlaybackStatus.PLAYING,ctx,mainPlayModelList.get(position));
+            }
+
+            @Override
+            public void onStop() {
+                super.onStop();
+//                    removeNotification();
+//                    //Stop the service
+//                    stopSelf();
+            }
+
+            @Override
+            public void onSeekTo(long position) {
+                super.onSeekTo(position);
+            }
+        });
+
     }
 
     private void callMedia1() {
@@ -1822,6 +1917,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     @Override
+    public void onDestroy() {
+        getActivity().unregisterReceiver(playNewAudio);
+        super.onDestroy();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (ComeScreenAccount == 1) {
@@ -1911,8 +2012,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }*/
     }
 
-/*
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+/*    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getExtras().getString("actionname");
@@ -1932,8 +2032,39 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     break;
             }
         }
+    };*/
+    private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+
+//            //Get the new media index form SharedPreferences
+//            audioIndex = new StorageUtil(getApplicationContext()).loadAudioIndex();
+//            if (audioIndex != -1 && audioIndex < audioList.size()) {
+//                //index is in a valid range
+//                activeAudio = audioList.get(audioIndex);
+//            } else {
+//                stopSelf();
+//            }
+
+        //A PLAY_NEW_AUDIO action received
+        //reset mediaPlayer to play the new Audio
+//            stopMedia();
+//            mediaPlayer.reset();
+//            initMediaPlayer();
+//            updateMetaData();
+
+        if(isPause || !isMediaStart){
+            binding.ivPlay.setVisibility(View.VISIBLE);
+            binding.ivPause.setVisibility(View.GONE);
+            buildNotification(PlaybackStatus.PAUSED,context,mainPlayModelList.get(position));
+        }else{
+            binding.ivPause.setVisibility(View.VISIBLE);
+            binding.ivPlay.setVisibility(View.GONE);
+            buildNotification(PlaybackStatus.PLAYING,context,mainPlayModelList.get(position));
+        }
+
+        }
     };
-*/
 
     @Override
     public void onPause() {

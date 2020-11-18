@@ -2160,6 +2160,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         if(currentDuration <= 555){
                             notifyDataSetChanged();
                         }
+
                         /*if(isPause && ps == 0){
                             ps++;
                             notifyDataSetChanged();
