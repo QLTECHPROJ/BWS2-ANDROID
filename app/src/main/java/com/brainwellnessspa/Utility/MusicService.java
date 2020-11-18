@@ -516,7 +516,7 @@ public class MusicService extends Service {
 
             @Override
             protected void onPostExecute(Void aVoid) {  super.onPostExecute(aVoid);
-                int notificationAction = android.R.drawable.ic_media_pause;//needs to be initialized
+                int notificationAction = 0;//needs to be initialized
                 PendingIntent play_pauseAction = null;
 
                 //Build a new notification according to the current state of the MediaPlayer
@@ -544,7 +544,6 @@ public class MusicService extends Service {
         pendingIntentPrevious = PendingIntent.getBroadcast(context, 0, intentPrevious, PendingIntent.FLAG_UPDATE_CURRENT);
         drw_previous = R.drawable.ic_skip_previous_black_24dp;
 //            }
-//
         Intent intentPlay = new Intent(context, NotificationActionService.class).setAction(ACTION_PLAY);
         PendingIntent pendingIntentPlay = PendingIntent.getBroadcast(context, 0, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent pendingIntentNext;
