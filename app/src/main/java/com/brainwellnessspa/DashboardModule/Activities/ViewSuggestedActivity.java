@@ -260,7 +260,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             holder.binds.tvTitle.setText(AudiolistsModel.get(position).getName());
             holder.binds.tvTime.setText(AudiolistsModel.get(position).getAudioDuration());
             holder.binds.pbProgress.setVisibility(View.GONE);
-            holder.binding.equalizerview.setVisibility(View.GONE);
+            holder.binds.equalizerview.setVisibility(View.GONE);
 //            TODO MANSI HIGHLIGHTS
 /*
             UpdateSongTime3 = new Runnable() {
