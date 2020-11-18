@@ -173,6 +173,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 }
             }
         };
+/*
         UpdateSongTime3 = new Runnable() {
             @Override
             public void run() {
@@ -188,13 +189,15 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     } else if (currentDuration >= 1 && isPause) {
 //                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                     }
-                        /*if(isPause && ps == 0){
+                        */
+/*if(isPause && ps == 0){
                             ps++;
                             notifyDataSetChanged();
                         }else if(!isPause && nps == 0){
                             nps++;
                             notifyDataSetChanged();
-                        }*/
+                        }*//*
+
                     if(currentDuration <= 555){
                         notifyDataSetChanged();
                     }
@@ -204,6 +207,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 handler3.postDelayed(this, 500);
             }
         };
+*/
 
         if (fileNameList.size() != 0) {
             for (int i = 0; i < fileNameList.size(); i++) {
@@ -230,6 +234,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         } else {
             holder.binding.pbProgress.setVisibility(View.GONE);
         }
+        holder.binding.equalizerview.setVisibility(View.GONE);
         holder.binding.tvTitle.setText(listModelList.get(position).getName());
         holder.binding.tvTime.setText(listModelList.get(position).getAudioDuration());
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
@@ -254,7 +259,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             holder.binding.ivLock.setVisibility(View.GONE);
         }
 
-        SharedPreferences sharedzw = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+       /* SharedPreferences sharedzw = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -284,7 +289,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
             holder.binding.llMainLayout.setBackgroundResource(R.color.white);
             holder.binding.ivBackgroundImage.setVisibility(View.GONE);
             handler3.removeCallbacks(UpdateSongTime3);
-        }
+        }*/
 
         holder.binding.llMainLayout.setOnClickListener(view -> {
             if (IsLock.equalsIgnoreCase("1")) {
@@ -406,8 +411,8 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     e.printStackTrace();
                 }*/
             }
-            handler3.postDelayed(UpdateSongTime3, 500);
-            notifyDataSetChanged();
+           /* handler3.postDelayed(UpdateSongTime3, 500);
+            notifyDataSetChanged();*/
         });
 
         holder.binding.llRemoveAudio.setOnClickListener(view -> {
