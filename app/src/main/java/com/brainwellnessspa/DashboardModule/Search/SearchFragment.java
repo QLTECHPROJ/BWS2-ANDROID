@@ -179,11 +179,11 @@ public class SearchFragment extends Fragment {
     }
 
 
-    @Override
+   /* @Override
     public void onPause() {
         handler3.removeCallbacks(UpdateSongTime3);
         super.onPause();
-    }
+    }*/
 
     @Override
     public void onResume() {
@@ -396,7 +396,8 @@ public class SearchFragment extends Fragment {
             if (modelList.get(position).getIscategory().equalsIgnoreCase("1")) {
                 holder.binding.tvPart.setText(R.string.Audio);
                 holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
-
+                holder.binding.equalizerview.setVisibility(View.GONE);
+/*
                 UpdateSongTime3 = new Runnable() {
                     @Override
                     public void run() {
@@ -413,24 +414,27 @@ public class SearchFragment extends Fragment {
 //                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                             }
 
-                            if(currentDuration <= 555){
+                            if (currentDuration <= 555) {
                                 notifyDataSetChanged();
                             }
-                        /*if(isPause && ps == 0){
+                        */
+/*if(isPause && ps == 0){
                             ps++;
                             notifyDataSetChanged();
                         }else if(!isPause && nps == 0){
                             nps++;
                             notifyDataSetChanged();
-                        }*/
+                        }*//*
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         handler3.postDelayed(this, 500);
                     }
                 };
+*/
 
-                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+              /*  SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -438,7 +442,10 @@ public class SearchFragment extends Fragment {
                         !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                     if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
                         songId = myAudioId;
-                        holder.binding.equalizerview.animateBars();
+                        if (isPause) {
+                            holder.binding.equalizerview.stopBars();
+                        } else
+                            holder.binding.equalizerview.animateBars();
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -457,7 +464,7 @@ public class SearchFragment extends Fragment {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     handler3.removeCallbacks(UpdateSongTime3);
-                }
+                }*/
                 holder.binding.llRemoveAudio.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -535,8 +542,8 @@ public class SearchFragment extends Fragment {
                             /*Intent i = new Intent(ctx, PlayWellnessActivity.class);
                             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                             ctx.startActivity(i);*/
-                            handler3.postDelayed(UpdateSongTime3, 500);
-                            notifyDataSetChanged();
+                          /*  handler3.postDelayed(UpdateSongTime3, 500);
+                            notifyDataSetChanged();*/
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -645,6 +652,9 @@ public class SearchFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.binding.equalizerview.setVisibility(View.GONE);
+//            TODO MANSI HIGHLIGHTS
+/*
             UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -654,29 +664,20 @@ public class SearchFragment extends Fragment {
                         currentDuration = getStartTime();
                         if (currentDuration == 0 && isCompleteStop) {
                             notifyDataSetChanged();
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         } else if (currentDuration >= 1 && !isPause) {
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                         } else if (currentDuration >= 1 && isPause) {
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
 
-                        if(currentDuration <= 555){
+                        if (currentDuration <= 555) {
                             notifyDataSetChanged();
                         }
-                        /*if(isPause && ps == 0){
-                            ps++;
-                            notifyDataSetChanged();
-                        }else if(!isPause && nps == 0){
-                            nps++;
-                            notifyDataSetChanged();
-                        }*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     handler3.postDelayed(this, 500);
                 }
             };
+*/
 
             holder.binding.tvTitle.setText(modelList.get(position).getName());
             holder.binding.tvTime.setText(modelList.get(position).getAudioDuration());
@@ -703,7 +704,7 @@ public class SearchFragment extends Fragment {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
-            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+           /* SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -711,14 +712,14 @@ public class SearchFragment extends Fragment {
                     !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                 if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
                     songId = myAudioId;
-                    holder.binding.equalizerview.animateBars();
+                    if (isPause) {
+                        holder.binding.equalizerview.stopBars();
+                    } else
+                        holder.binding.equalizerview.animateBars();
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            holder.binding.equalizerview.stopBars();
-//                        ps =0;
-//                        nps = 0;
                 } else {
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
@@ -730,7 +731,7 @@ public class SearchFragment extends Fragment {
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 handler3.removeCallbacks(UpdateSongTime3);
-            }
+            }*/
             holder.binding.llMainLayoutForPlayer.setOnClickListener(view -> {
                 try {
                     player = 1;
@@ -776,8 +777,8 @@ public class SearchFragment extends Fragment {
                     fragmentManager1.beginTransaction()
                             .add(R.id.flContainer, fragment)
                             .commit();
-                    handler3.postDelayed(UpdateSongTime3, 500);
-                    notifyDataSetChanged();
+                  /*  handler3.postDelayed(UpdateSongTime3, 500);
+                    notifyDataSetChanged();*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

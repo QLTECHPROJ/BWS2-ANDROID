@@ -99,11 +99,11 @@ public class AptAudioFragment extends Fragment {
     }
 
 
-    @Override
+   /* @Override
     public void onPause() {
         handler3.removeCallbacks(UpdateSongTime3);
         super.onPause();
-    }
+    }*/
 
     public void GetMedia(String AudioFile, Context ctx, String download, RelativeLayout llDownload, ImageView ivDownload) {
         oneAudioDetailsList = new ArrayList<>();
@@ -169,6 +169,8 @@ public class AptAudioFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.binding.equalizerview.setVisibility(View.GONE);
+
             AppointmentDetailModel.Audio audiolist = listModelList.get(position);
             UpdateSongTime1 = new Runnable() {
                 @Override
@@ -208,6 +210,9 @@ public class AptAudioFragment extends Fragment {
                     handler1.postDelayed(this, 300);
                 }
             };
+//            TODO MANSI HIGHLIGHTS
+
+/*
             UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -227,46 +232,52 @@ public class AptAudioFragment extends Fragment {
                         if(currentDuration <= 555){
                             notifyDataSetChanged();
                         }
-                        /*if(isPause && ps == 0){
+                        */
+/*if(isPause && ps == 0){
                             ps++;
                             notifyDataSetChanged();
                         }else if(!isPause && nps == 0){
                             nps++;
                             notifyDataSetChanged();
-                        }*/
+                        }*//*
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     handler3.postDelayed(this, 500);
                 }
             };
-            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+*/
+           /* SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
             if (audioPlayz && AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 if (myAudioId.equalsIgnoreCase(audiolist.getID())) {
                     songId = myAudioId;
-                    holder.binding.equalizerview.animateBars();
+                    if (isPause) {
+                        holder.binding.equalizerview.stopBars();
+                    } else
+                        holder.binding.equalizerview.animateBars();
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
+                    holder.binding.ivPlayIcon.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            holder.binding.equalizerview.stopBars();
-//                        ps =0;
-//                        nps = 0;
                 } else {
                     holder.binding.equalizerview.setVisibility(View.GONE);
+                    holder.binding.ivPlayIcon.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 }
                 handler3.postDelayed(UpdateSongTime3, 500);
             } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
+                holder.binding.ivPlayIcon.setVisibility(View.VISIBLE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
-                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 handler3.removeCallbacks(UpdateSongTime3);
-            }
+            }*/
             holder.binding.tvTitle.setText(audiolist.getName());
             if (audiolist.getAudioDirection().equalsIgnoreCase("")) {
                 holder.binding.tvTime.setVisibility(View.GONE);
@@ -395,8 +406,8 @@ public class AptAudioFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
                     editor.commit();
 
-                    handler3.postDelayed(UpdateSongTime3, 500);
-                    notifyDataSetChanged();
+                   /* handler3.postDelayed(UpdateSongTime3, 500);
+                    notifyDataSetChanged();*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

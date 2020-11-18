@@ -105,8 +105,8 @@ public class BWSApplication extends Application {
     public static final String ACTION_PREVIUOS = "actionprevious";
     public static final String ACTION_PLAY = "actionplay";
     public static final String ACTION_NEXT = "actionnext";
-//    public static Notification notification;
-//    public static NotificationManager notificationManager;
+    public static Notification notification;
+    public static NotificationManager notificationManager;
 
     public static Context getContext() {
         return mContext;
@@ -137,25 +137,22 @@ public class BWSApplication extends Application {
         }
     };
 
-/*
     public static void createNotification(Context context, MainPlayModel track, int playbutton, int pos, int size) {
         try {
-            getMediaBitmep(track,context,playbutton);
+            getMediaBitmep(track, context, playbutton);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-*/
 
-/*
     private static void getMediaBitmep(MainPlayModel track, Context context, int playbutton) {
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
-                    if(track.getAudioFile().equalsIgnoreCase("")){
-                        myBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.disclaimer);
-                    }else {
+                    if (track.getAudioFile().equalsIgnoreCase("")) {
+                        myBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.disclaimer);
+                    } else {
                         URL url = new URL(track.getImageFile());
                         myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     }
@@ -195,13 +192,7 @@ public class BWSApplication extends Application {
                 pendingIntentNext = PendingIntent.getBroadcast(context, 0, intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
                 drw_next = R.drawable.ic_skip_next_black_24dp;
 //            }
-//            BitmapFactory.decodeResource(context.getResources(), R.drawable.square_app_icon)
-                try {
-//                byte[] encodeByte = Base64.decode(track.getImageFile(), Base64.DEFAULT);
-//                myBitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-                } catch (Exception e) {
-                    e.getMessage();
-                }
+
                 //create notification
                 notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_music_note)
@@ -231,9 +222,7 @@ public class BWSApplication extends Application {
         GetMedia st = new GetMedia();
         st.execute();
     }
-*/
 
-/*
     public static void createChannel(Context ctx) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -245,20 +234,17 @@ public class BWSApplication extends Application {
                     notificationManager.createNotificationChannel(channel);
                 }
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    notificationManager = ctx.getSystemService(NotificationManager.class);
-                }
+                notificationManager = ctx.getSystemService(NotificationManager.class);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-*/
 
- /*   public static void cancelNotification(Context ctx) {
+    public static void cancelNotification(Context ctx) {
         notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID); // Notification ID to cancel
-    }*/
+    }
 
     public static void getLatasteUpdate(Context context) {
         String appURI = "https://play.google.com/store/apps/details?id=com.brainwellnessspa";

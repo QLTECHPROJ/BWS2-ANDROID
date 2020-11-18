@@ -88,7 +88,105 @@ public class AddPlaylistActivity extends AppCompatActivity {
         RecyclerView.LayoutManager played = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvPlayLists.setLayoutManager(played);
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
+        binding.llError.setVisibility(View.GONE);
+        binding.tvFound.setText("No result found");
         prepareData(ctx);
+
+        binding.btnAddPlatLists.setOnClickListener(view -> {
+            final Dialog dialog = new Dialog(ctx);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.create_palylist);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
+            final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+            final Button btnSendCode = dialog.findViewById(R.id.btnSendCode);
+
+            dialog.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                    return true;
+                }
+                return false;
+            });
+
+            TextWatcher popupTextWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    String number = edtCreate.getText().toString().trim();
+                    if (!number.isEmpty()) {
+                        btnSendCode.setEnabled(true);
+                        btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                        btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
+                    } else {
+                        btnSendCode.setEnabled(false);
+                        btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                        btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            };
+
+
+            edtCreate.addTextChangedListener(popupTextWatcher);
+            btnSendCode.setOnClickListener(view1 -> {
+                if (edtCreate.getText().toString().equalsIgnoreCase("")) {
+                    BWSApplication.showToast("Please provide the playlist's name", ctx);
+                } else {
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
+                        listCall.enqueue(new Callback<CreatePlaylistModel>() {
+                            @Override
+                            public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
+                                if (response.isSuccessful()) {
+                                    CreatePlaylistModel listsModel = response.body();
+                                    if (listsModel.getResponseData().getIscreated().equalsIgnoreCase("1")) {
+                                        dialog.dismiss();
+                                        prepareData(ctx);
+                                        String PlaylistID = listsModel.getResponseData().getId();
+                                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                                            if (isDisclaimer == 1) {
+                                                BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                                            } else {
+                                                callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
+                                            }
+                                        } else {
+                                            callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
+
+                                        }
+                                    } else {
+                                        BWSApplication.showToast(listsModel.getResponseMessage(), ctx);
+                                    }
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
+                            }
+                        });
+                    } else {
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    }
+
+
+                }
+            });
+            tvCancel.setOnClickListener(v -> dialog.dismiss());
+            dialog.show();
+            dialog.setCancelable(false);
+        });
     }
 
     @Override
@@ -113,8 +211,15 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         PlaylistingModel model = response.body();
-                        AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
-                        binding.rvPlayLists.setAdapter(addPlaylistAdapter);
+                        if (model.getResponseData().size() == 0) {
+                            binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvPlayLists.setVisibility(View.GONE);
+                        } else {
+                            binding.llError.setVisibility(View.GONE);
+                            binding.rvPlayLists.setVisibility(View.VISIBLE);
+                            AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
+                            binding.rvPlayLists.setAdapter(addPlaylistAdapter);
+                        }
                     }
                 }
 
@@ -327,103 +432,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
             holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             Glide.with(ctx).load(listModel.get(position).getImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-
-            binding.btnAddPlatLists.setOnClickListener(view -> {
-                final Dialog dialog = new Dialog(ctx);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.create_palylist);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
-                final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-                final Button btnSendCode = dialog.findViewById(R.id.btnSendCode);
-
-                dialog.setOnKeyListener((v, keyCode, event) -> {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss();
-                        return true;
-                    }
-                    return false;
-                });
-
-                TextWatcher popupTextWatcher = new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        String number = edtCreate.getText().toString().trim();
-                        if (!number.isEmpty()) {
-                            btnSendCode.setEnabled(true);
-                            btnSendCode.setTextColor(getResources().getColor(R.color.white));
-                            btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
-                        } else {
-                            btnSendCode.setEnabled(false);
-                            btnSendCode.setTextColor(getResources().getColor(R.color.white));
-                            btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
-                        }
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                    }
-                };
-
-
-                edtCreate.addTextChangedListener(popupTextWatcher);
-                btnSendCode.setOnClickListener(view1 -> {
-                    if (edtCreate.getText().toString().equalsIgnoreCase("")) {
-                        BWSApplication.showToast("Please provide the playlist's name", ctx);
-                    } else {
-                        if (BWSApplication.isNetworkConnected(ctx)) {
-                            Call<CreatePlaylistModel> listCall = APIClient.getClient().getCreatePlaylist(UserID, edtCreate.getText().toString());
-                            listCall.enqueue(new Callback<CreatePlaylistModel>() {
-                                @Override
-                                public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
-                                    if (response.isSuccessful()) {
-                                        CreatePlaylistModel listsModel = response.body();
-                                        if (listsModel.getResponseData().getIscreated().equalsIgnoreCase("1")) {
-                                            dialog.dismiss();
-                                            prepareData(ctx);
-                                            String PlaylistID = listsModel.getResponseData().getId();
-                                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                                            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-                                                if (isDisclaimer == 1) {
-                                                    BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
-                                                } else {
-                                                    callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
-                                                }
-                                            } else {
-                                                callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
-
-                                            }
-                                        } else {
-                                            BWSApplication.showToast(listsModel.getResponseMessage(), ctx);
-                                        }
-
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<CreatePlaylistModel> call, Throwable t) {
-                                }
-                            });
-                        } else {
-                            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                        }
-
-
-                    }
-                });
-                tvCancel.setOnClickListener(v -> dialog.dismiss());
-                dialog.show();
-                dialog.setCancelable(false);
-
-            });
 
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -53,19 +53,48 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginHorizontal="@dimen/_55sdp"
+                android:layout_marginBottom="@dimen/_8sdp"
                 android:background="@drawable/extra_round_cornor"
                 android:fontFamily="@font/montserrat_medium"
                 android:text="@string/New_PLaylist"
                 android:textColor="@color/white" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvPlayLists"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_16sdp"
-                android:overScrollMode="never"
-                tools:listitem="@layout/add_play_list_layout" />
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvPlayLists"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginBottom="@dimen/_16sdp"
+                    android:overScrollMode="never"
+                    tools:listitem="@layout/add_play_list_layout" />
+
+                <LinearLayout
+                    android:id="@+id/llError"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvFound"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginHorizontal="@dimen/_20sdp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:gravity="center"
+                        android:lineSpacingExtra="@dimen/_4sdp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_16sdp" />
+
+                </LinearLayout>
+            </RelativeLayout>
+
         </LinearLayout>
 
         <LinearLayout

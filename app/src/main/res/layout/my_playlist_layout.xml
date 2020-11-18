@@ -4,6 +4,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:custom="http://schemas.android.com/apk/res-auto"
+        xmlns:vumeter="http://schemas.android.com/apk/res-auto"
         android:id="@+id/llMainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,6 +48,7 @@
                         android:padding="@dimen/_10sdp"
                         custom:animDuration="4800"
                         custom:foregroundColor="@color/white" />
+
                 </RelativeLayout>
 
             </androidx.cardview.widget.CardView>

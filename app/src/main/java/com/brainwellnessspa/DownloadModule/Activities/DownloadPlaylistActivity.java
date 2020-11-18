@@ -118,11 +118,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         PrepareData();
     }
 
-    @Override
+  /*  @Override
     public void onPause() {
         handler3.removeCallbacks(UpdateSongTime3);
         super.onPause();
-    }
+    }*/
 
     @Override
     protected void onResume() {
@@ -222,7 +222,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
             if (isMediaStart) {
                 isPlayPlaylist = 1;
-                handler3.postDelayed(UpdateSongTime3,500);
+//                handler3.postDelayed(UpdateSongTime3,500);
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
             } else {
                 isPlayPlaylist = 0;
@@ -520,10 +520,10 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolders> implements Filterable {
         Context ctx;
-        String UserID,songId;
+        String UserID, songId;
         private List<DownloadAudioDetails> listModelList;
         private List<DownloadAudioDetails> listFilterData;
-        int ps = 0,nps = 0;
+        int ps = 0, nps = 0;
 
         public PlayListsAdpater(List<DownloadAudioDetails> listModelList, Context ctx) {
             this.listModelList = listModelList;
@@ -541,6 +541,9 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolders holder, int position) {
+            holder.binding.equalizerview.setVisibility(View.GONE);
+//            TODO MANSI HIGHLIGHTS
+/*
             UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -556,13 +559,15 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         } else if (currentDuration >= 1 && isPause) {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
-                        /*if(isPause && ps == 0){
+                        */
+/*if(isPause && ps == 0){
                             ps++;
                             notifyDataSetChanged();
                         }else if(!isPause && nps == 0){
                             nps++;
                             notifyDataSetChanged();
-                        }*/
+                        }*//*
+
                         if(currentDuration <= 555){
                             notifyDataSetChanged();
                         }
@@ -572,6 +577,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     handler3.postDelayed(this, 500);
                 }
             };
+*/
             final List<DownloadAudioDetails> mData = listFilterData;
             holder.binding.tvTitleA.setText(mData.get(position).getName());
             holder.binding.tvTimeA.setText(mData.get(position).getAudioDuration());
@@ -590,15 +596,19 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 //                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 //            holder.binding.equalizerview.animateBars();
 //            holder.binding.equalizerview.stopBars();
-            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            //            TODO MANSI HIGHLIGHTS
+
+            /*SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-//            TODO appointment as it is audioflag changes (audioPlayz && AudioFlag.equalsIgnoreCase("AppointmentDetailList"))
                 if (audioPlayz && AudioFlag.equalsIgnoreCase("Downloadlist") && pIDz.equalsIgnoreCase(PlaylistName)) {
                     if(myAudioId.equalsIgnoreCase(mData.get(position).getID())){
                         songId = myAudioId;
-                        holder.binding.equalizerview.animateBars();
+                        if (isPause) {
+                            holder.binding.equalizerview.stopBars();
+                        } else
+                            holder.binding.equalizerview.animateBars();
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -617,7 +627,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     handler3.removeCallbacks(UpdateSongTime3);
-                }
+                }*/
             binding.ivPlaylistStatus.setOnClickListener(view -> {
                 if (isPlayPlaylist == 1) {
                     pauseMedia();
@@ -652,8 +662,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
-                handler3.postDelayed(UpdateSongTime3,500);
-                notifyDataSetChanged();
+             /*   handler3.postDelayed(UpdateSongTime3,500);
+                notifyDataSetChanged();*/
             });
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -681,8 +691,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 }
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                handler3.postDelayed(UpdateSongTime3,500);
-                notifyDataSetChanged();
+              /*  handler3.postDelayed(UpdateSongTime3,500);
+                notifyDataSetChanged();*/
             });
 
             if (BWSApplication.isNetworkConnected(ctx)) {
@@ -711,7 +721,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         i.putExtra("position", position);
                         Gson gson = new Gson();
                         String json = gson.toJson(mData);
-                        i.putExtra("data",json);
+                        i.putExtra("data", json);
                         i.putExtra("comeFrom", "myDownloadPlaylist");
                         startActivity(i);
                     }
@@ -723,7 +733,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     i.putExtra("position", position);
                     Gson gson = new Gson();
                     String json = gson.toJson(mData);
-                    i.putExtra("data",json);
+                    i.putExtra("data", json);
                     i.putExtra("comeFrom", "myDownloadPlaylist");
                     startActivity(i);
                 }

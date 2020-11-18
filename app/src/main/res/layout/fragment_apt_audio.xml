@@ -17,8 +17,6 @@
                 android:id="@+id/rvAudioList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_12sdp"
-                android:nestedScrollingEnabled="true"
                 android:overScrollMode="never"
                 android:paddingTop="@dimen/_8sdp"
                 android:paddingBottom="@dimen/_8sdp" />

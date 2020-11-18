@@ -228,7 +228,6 @@ public class AudioFragment extends Fragment {
                                 IsLock = listModel.getResponseData().getIsLock();
                                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = shared.edit();
-                                ;
                                 editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().getIsLock());
                                 Gson gson = new Gson();
                                 editor.putString(CONSTANTS.PREF_KEY_UnLockAudiList, gson.toJson(listModel.getResponseData().getID()));

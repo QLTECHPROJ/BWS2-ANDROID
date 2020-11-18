@@ -262,7 +262,10 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
         if (audioPlayz && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
             if (myAudioId.equalsIgnoreCase(listModelList.get(position).getID())) {
                 songId = myAudioId;
-                holder.binding.equalizerview.animateBars();
+                if (isPause) {
+                    holder.binding.equalizerview.stopBars();
+                } else
+                    holder.binding.equalizerview.animateBars();
                 holder.binding.equalizerview.setVisibility(View.VISIBLE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);

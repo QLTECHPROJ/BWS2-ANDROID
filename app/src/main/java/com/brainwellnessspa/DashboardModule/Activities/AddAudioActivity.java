@@ -322,6 +322,8 @@ public class AddAudioActivity extends AppCompatActivity {
             if (modelList.get(position).getIscategory().equalsIgnoreCase("1")) {
                 holder.binding.tvPart.setText(R.string.Audio);
                 holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
+                holder.binding.equalizerview.setVisibility(View.GONE);
+/*
                 UpdateSongTime3 = new Runnable() {
                     @Override
                     public void run() {
@@ -341,21 +343,24 @@ public class AddAudioActivity extends AppCompatActivity {
                             if (currentDuration <= 555) {
                                 notifyDataSetChanged();
                             }
-                        /*if(isPause && ps == 0){
+                        */
+/*if(isPause && ps == 0){
                             ps++;
                             notifyDataSetChanged();
                         }else if(!isPause && nps == 0){
                             nps++;
                             notifyDataSetChanged();
-                        }*/
+                        }*//*
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         handler3.postDelayed(this, 500);
                     }
                 };
+*/
 
-                SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+              /*  SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -363,7 +368,10 @@ public class AddAudioActivity extends AppCompatActivity {
                         !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                     if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
                         songId = myAudioId;
-                        holder.binding.equalizerview.animateBars();
+                        if (isPause) {
+                            holder.binding.equalizerview.stopBars();
+                        } else
+                            holder.binding.equalizerview.animateBars();
                         holder.binding.equalizerview.setVisibility(View.VISIBLE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -382,7 +390,7 @@ public class AddAudioActivity extends AppCompatActivity {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     handler3.removeCallbacks(UpdateSongTime3);
-                }
+                }*/
                 holder.binding.llRemoveAudio.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
@@ -507,8 +515,8 @@ public class AddAudioActivity extends AppCompatActivity {
                             fragmentManager1.beginTransaction()
                                     .add(R.id.flContainer, fragment)
                                     .commit();
-                            handler3.postDelayed(UpdateSongTime3, 500);
-                            notifyDataSetChanged();
+                            /*handler3.postDelayed(UpdateSongTime3, 500);
+                            notifyDataSetChanged();*/
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -735,6 +743,9 @@ public class AddAudioActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModel.get(position).getName());
             holder.binding.tvTime.setText(listModel.get(position).getAudioDuration());
+            holder.binding.equalizerview.setVisibility(View.GONE);
+//            TODO MANSI HIGHLIGHTS
+/*
             UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -754,20 +765,23 @@ public class AddAudioActivity extends AppCompatActivity {
                         if (currentDuration <= 555) {
                             notifyDataSetChanged();
                         }
-                        /*if(isPause && ps == 0){
+                        */
+/*if(isPause && ps == 0){
                             ps++;
                             notifyDataSetChanged();
                         }else if(!isPause && nps == 0){
                             nps++;
                             notifyDataSetChanged();
-                        }*/
+                        }*//*
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     handler3.postDelayed(this, 500);
                 }
             };
-            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+*/
+          /*  SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -775,7 +789,10 @@ public class AddAudioActivity extends AppCompatActivity {
                     !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                 if (myAudioId.equalsIgnoreCase(listModel.get(position).getID())) {
                     songId = myAudioId;
-                    holder.binding.equalizerview.animateBars();
+                    if (isPause) {
+                        holder.binding.equalizerview.stopBars();
+                    } else
+                        holder.binding.equalizerview.animateBars();
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -794,7 +811,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 handler3.removeCallbacks(UpdateSongTime3);
-            }
+            }*/
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -917,8 +934,8 @@ public class AddAudioActivity extends AppCompatActivity {
                         fragmentManager1.beginTransaction()
                                 .add(R.id.flContainer, fragment)
                                 .commit();
-                        handler3.postDelayed(UpdateSongTime3, 500);
-                        notifyDataSetChanged();
+                     /*   handler3.postDelayed(UpdateSongTime3, 500);
+                        notifyDataSetChanged();*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

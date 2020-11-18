@@ -193,7 +193,7 @@ public class LikeAudiosFragment extends Fragment {
 //                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
 
-                        if(currentDuration <= 555){
+                        if (currentDuration <= 555) {
                             notifyDataSetChanged();
                         }
                         /*if(isPause && ps == 0){
@@ -229,7 +229,10 @@ public class LikeAudiosFragment extends Fragment {
             if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                 if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
                     songId = myAudioId;
-                    holder.binding.equalizerview.animateBars();
+                    if (isPause) {
+                        holder.binding.equalizerview.stopBars();
+                    } else
+                        holder.binding.equalizerview.animateBars();
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
