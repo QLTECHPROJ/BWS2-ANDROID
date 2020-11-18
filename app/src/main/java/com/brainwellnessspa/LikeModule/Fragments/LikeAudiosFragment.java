@@ -29,10 +29,19 @@ import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.AddQueueActivity;
+import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
+import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
 import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
+import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
+import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
+import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
+import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
+import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
+import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
@@ -41,7 +50,9 @@ import com.brainwellnessspa.databinding.LikeListLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -256,7 +267,7 @@ public class LikeAudiosFragment extends Fragment {
             holder.binding.llLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                  /*  SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                     AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                     if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
@@ -275,7 +286,8 @@ public class LikeAudiosFragment extends Fragment {
                         } else {
                             callAlert(position);
                         }
-                    }
+                    }*/
+                  callAlert(position);
                 }
             });
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
@@ -464,6 +476,209 @@ public class LikeAudiosFragment extends Fragment {
                                         saveToPref(pos, listModelList2);
                                     }
                                 }*/
+
+                        /*if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                            if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
+                                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                 AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                                Gson gsonx = new Gson();
+                                String json = sharedx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
+                                Type type1 = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
+                                }.getType();
+                                Gson gson1 = new Gson();
+                                ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson1.fromJson(json, type1);
+
+                                mainPlayModelList.add(mainPlayModelList.get(position));
+
+                                SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedd.edit();
+                                Gson gson = new Gson();
+                                String jsonx = gson.toJson(mainPlayModelList);
+                                String json1 = gson.toJson(arrayList);
+                                editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
+                                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                                editor.putInt(CONSTANTS.PREF_KEY_position, pos);
+                                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
+                                editor.commit();
+
+                            } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                                Gson gsonx = new Gson();
+                                String json = sharedx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
+                                Type type = new TypeToken<ArrayList<MainPlayModel>>() {
+                                }.getType();
+                                ArrayList<MainPlayModel> mainPlayModelListold = new ArrayList<>();
+                                mainPlayModelListold = gsonx.fromJson(json, type);
+                                String id = mainPlayModelListold.get(pos).getID();
+                                Type type1 = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
+                                }.getType();
+                                Gson gson1 = new Gson();
+                                ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson1.fromJson(json, type1);
+                                int x = 0;
+                                for (int i = 0; i < mainPlayModelList.size(); i++) {
+                                    if (mainPlayModelList.get(i).getID().equalsIgnoreCase(id)) {
+                                        x++;
+                                    }if(x== 0) {
+                                        if (audioPlay) {
+                                            LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
+                                            mainPlayModel.setID(mainPlayModelList.get(position).getID());
+                                            mainPlayModel.setName(mainPlayModelList.get(position).getName());
+                                            mainPlayModel.setAudioFile(mainPlayModelList.get(position).getAudioFile());
+                                            mainPlayModel.setAudioDirection(mainPlayModelList.get(position).getAudioDirection());
+                                            mainPlayModel.setAudiomastercat(mainPlayModelList.get(position).getAudiomastercat());
+                                            mainPlayModel.setAudioSubCategory(mainPlayModelList.get(position).getAudioSubCategory());
+                                            mainPlayModel.setImageFile(mainPlayModelList.get(position).getImageFile());
+                                            mainPlayModel.setLike(mainPlayModelList.get(position).getLike());
+                                            mainPlayModel.setDownload(mainPlayModelList.get(position).getDownload());
+                                            mainPlayModel.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
+                                            arrayList.add(mainPlayModel);
+                                        } else if (queuePlay) {
+                                            LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
+                                            mainPlayModel.setID(addToQueueModelList.get(position).getID());
+                                            mainPlayModel.setName(addToQueueModelList.get(position).getName());
+                                            mainPlayModel.setAudioFile(addToQueueModelList.get(position).getAudioFile());
+                                            mainPlayModel.setAudioDirection(addToQueueModelList.get(position).getAudioDirection());
+                                            mainPlayModel.setAudiomastercat(addToQueueModelList.get(position).getAudiomastercat());
+                                            mainPlayModel.setAudioSubCategory(addToQueueModelList.get(position).getAudioSubCategory());
+                                            mainPlayModel.setImageFile(addToQueueModelList.get(position).getImageFile());
+                                            mainPlayModel.setLike(addToQueueModelList.get(position).getLike());
+                                            mainPlayModel.setDownload(addToQueueModelList.get(position).getDownload());
+                                            mainPlayModel.setAudioDuration(addToQueueModelList.get(position).getAudioDuration());
+                                            arrayList.add(mainPlayModel);
+                                        }
+                                        mainPlayModelList.add(mainPlayModelList.get(position));
+                                    }
+                                }
+                                SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedd.edit();
+                                Gson gson = new Gson();
+                                String jsonx = gson.toJson(mainPlayModelList);
+                                String json1 = gson.toJson(arrayList);
+                                editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
+                                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                                editor.putInt(CONSTANTS.PREF_KEY_position, pos);
+                                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
+                                editor.commit();
+                            }
+                        }*/
+                                SharedPreferences sharedq = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                AudioFlag = sharedq.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                                boolean audioPlay = sharedq.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                boolean queuePlay = sharedq.getBoolean(CONSTANTS.PREF_KEY_queuePlay, true);
+                                Gson gsonq = new Gson();
+                                String jsonq = sharedq.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonq));
+                                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                SharedPreferences.Editor editor = shared.edit();
+                                Gson gson = new Gson();
+                                ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
+                                ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
+                                String json23 = sharedq.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
+                                if (!json23.equalsIgnoreCase(String.valueOf(gson))) {
+                                    Type type2 = new TypeToken<ArrayList<AddToQueueModel>>() {
+                                    }.getType();
+                                    addToQueueModelList = gson.fromJson(json23, type2);
+                                }
+                                String json33 = sharedq.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                                if (!json33.equalsIgnoreCase(String.valueOf(gson))) {
+                                    Type type23 = new TypeToken<ArrayList<MainPlayModel>>() {
+                                    }.getType();
+                                    mainPlayModelList = gson.fromJson(json33, type23);
+                                }
+                                if (audioPlay) {
+                                    if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
+                                        Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
+                                        }.getType();
+                                        ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
+                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                        String json2 = gson.toJson(arrayList);
+                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                    } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
+                                        Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
+                                        }.getType();
+                                        ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
+                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                        String json2 = gson.toJson(arrayList);
+                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                    } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
+                                        Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
+                                        }.getType();
+                                        ArrayList<SearchBothModel.ResponseData> arrayList = gsonq.fromJson(jsonq, type);
+                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                        String json2 = gson.toJson(arrayList);
+                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                    } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
+                                        Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
+                                        }.getType();
+                                        ArrayList<SuggestedModel.ResponseData> arrayList = gsonq.fromJson(jsonq, type);
+                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                        String json2 = gson.toJson(arrayList);
+                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                    } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                                        Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
+                                        }.getType();
+                                        ArrayList<AppointmentDetailModel.Audio> arrayList = gsonq.fromJson(jsonq, type);
+                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                        String json2 = gson.toJson(arrayList);
+                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                    } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                                        Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
+                                        }.getType();
+                                        ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gsonq.fromJson(jsonq, type);
+                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                        String json2 = gson.toJson(arrayList);
+                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                    } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                                        Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                                        }.getType();
+                                        ArrayList<DownloadAudioDetails> arrayList = gsonq.fromJson(jsonq, type);
+                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                        String json2 = gson.toJson(arrayList);
+                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                    } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
+                                        Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                                        }.getType();
+                                        ArrayList<DownloadAudioDetails> arrayList = gsonq.fromJson(jsonq, type);
+                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                        String json2 = gson.toJson(arrayList);
+                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                    } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
+                                        Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+                                        }.getType();
+                                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gsonq.fromJson(jsonq, type);
+                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                        String json2 = gson.toJson(arrayList);
+                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                    } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                                        Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+                                        }.getType();
+                                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gsonq.fromJson(jsonq, type);
+                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                        String json2 = gson.toJson(arrayList);
+                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                    }
+                                }
+                                if (queuePlay) {
+                                    addToQueueModelList.get(position).setLike(model.getResponseData().getFlag());
+                                } else
+                                    mainPlayModelList.get(position).setLike(model.getResponseData().getFlag());
+
+                                String json = gson.toJson(mainPlayModelList);
+                                editor.putString(CONSTANTS.PREF_KEY_audioList, json);
+                                if (queuePlay) {
+                                    String json1 = gson.toJson(addToQueueModelList);
+                                    editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
+                                }
+                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                                editor.commit();
                                 prepareData();
                             }
                         } catch (Exception e) {
