@@ -407,35 +407,39 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         } else {
             onTrackPlay();
         }*/
-        if (!isMediaStart) {
-            isCompleteStop = false;
-            isprogressbar = true;
-            handler12.postDelayed(UpdateSongTime12, 500);
-            binding.progressBar.setVisibility(View.VISIBLE);
+        try {
+            if (!isMediaStart) {
+                isCompleteStop = false;
+                isprogressbar = true;
+                handler12.postDelayed(UpdateSongTime12, 500);
+                binding.progressBar.setVisibility(View.VISIBLE);
 //                binding.llProgress.setVisibility(View.GONE);
-            binding.ivPlay.setVisibility(View.GONE);
-            binding.ivPause.setVisibility(View.GONE);
-            callMedia();
-        } else if (isCompleteStop) {
-            isCompleteStop = false;
-            isprogressbar = true;
-            handler12.postDelayed(UpdateSongTime12, 500);
-            binding.progressBar.setVisibility(View.VISIBLE);
+                binding.ivPlay.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.GONE);
+                callMedia();
+            } else if (isCompleteStop) {
+                isCompleteStop = false;
+                isprogressbar = true;
+                handler12.postDelayed(UpdateSongTime12, 500);
+                binding.progressBar.setVisibility(View.VISIBLE);
 //                binding.llProgress.setVisibility(View.GONE);
-            binding.ivPlay.setVisibility(View.GONE);
-            binding.ivPause.setVisibility(View.GONE);
-            callMedia();
-        } else {
-            resumeMedia();
-            binding.progressBar.setVisibility(View.GONE);
+                binding.ivPlay.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.GONE);
+                callMedia();
+            } else {
+                resumeMedia();
+                binding.progressBar.setVisibility(View.GONE);
 //                binding.llProgress.setVisibility(View.GONE);
-            binding.ivPlay.setVisibility(View.GONE);
-            binding.ivPause.setVisibility(View.VISIBLE);
-            isPause = false;
+                binding.ivPlay.setVisibility(View.GONE);
+                binding.ivPause.setVisibility(View.VISIBLE);
+                isPause = false;
+            }
+            player = 1;
+            buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+            handler12.postDelayed(UpdateSongTime12, 100);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        player = 1;
-        buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
-        handler12.postDelayed(UpdateSongTime12, 100);
     }
 
     private void callPause() {
