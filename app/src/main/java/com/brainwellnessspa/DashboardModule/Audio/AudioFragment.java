@@ -29,8 +29,6 @@ import com.brainwellnessspa.DashboardModule.Audio.Adapters.DownloadAdapter;
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.LibraryAdapter;
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.PopularPlayedAdapter;
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.RecentlyPlayedAdapter;
-import com.brainwellnessspa.DashboardModule.Audio.Adapters.RecommendedAdapter;
-import com.brainwellnessspa.DashboardModule.Audio.Adapters.TopCategoriesAdapter;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.UnlockAudioList;

@@ -140,7 +140,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
 //            //Get the new media index form SharedPreferences
 //            audioIndex = new StorageUtil(getApplicationContext()).loadAudioIndex();
 //            if (audioIndex != -1 && audioIndex < audioList.size()) {
@@ -166,7 +165,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 binding.ivPlay.setVisibility(View.GONE);
                 buildNotification(PlaybackStatus.PLAYING, context, mainPlayModelList.get(position));
             }
-
         }
     };
     private Runnable UpdateSongTime12 = new Runnable() {
@@ -479,6 +477,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //        binding.tvTitle.setText(mainPlayModelList.get(position).getName());
     }
 */
+
    /* @Override
     public void onTrackPlay() {
 //        if (isPlaying) {
@@ -524,6 +523,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //        }
     }
 */
+
    /* @Override
     public void onTrackPause() {
 //        if (isPlaying) {

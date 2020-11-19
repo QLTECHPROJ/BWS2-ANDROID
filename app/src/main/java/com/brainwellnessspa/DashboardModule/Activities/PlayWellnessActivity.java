@@ -1407,6 +1407,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void getPrepareShowData(int position) {
+        binding.tvDireName.setText(R.string.Directions);
         handler.postDelayed(UpdateSongTime, 100);
         if (queuePlay) {
             binding.llRepeat.setEnabled(false);
@@ -1459,11 +1460,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 position = 0;
             }
             if (listSize != 0) {
+                binding.tvDireName.setText(R.string.Directions);
                 id = addToQueueModelList.get(position).getID();
                 name = addToQueueModelList.get(position).getName();
                 url = addToQueueModelList.get(position).getAudioFile();
                 binding.tvName.setText(addToQueueModelList.get(position).getName());
-                binding.tvDireName.setText(R.string.Directions);
                 if (addToQueueModelList.get(position).getAudioDirection().equalsIgnoreCase("")) {
                     binding.llDirection.setVisibility(View.GONE);
                 } else {
