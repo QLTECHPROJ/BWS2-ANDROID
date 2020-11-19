@@ -159,12 +159,16 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             OtpModel otpModel = response.body();
                             if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                binding.txtError.setVisibility(View.GONE);
                                 Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
                                 i.putExtra("MobileNo", MobileNo);
-                                i.putExtra("Code",Code);
+                                i.putExtra("Code", Code);
                                 startActivity(i);
                                 finish();
                             } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                binding.txtError.setText(otpModel.getResponseMessage());
+                                binding.txtError.setVisibility(View.VISIBLE);
+                            } else {
                                 binding.txtError.setText(otpModel.getResponseMessage());
                                 binding.txtError.setVisibility(View.VISIBLE);
                             }
@@ -282,14 +286,16 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
     void prepareData() {
         if (BWSApplication.isNetworkConnected(ctx)) {
             tvSendOTPbool = false;
+            binding.txtError.setText("");
+            binding.txtError.setVisibility(View.GONE);
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            String countryCode = Code.replace("+","");
+            String countryCode = Code.replace("+", "");
             SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
             String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
-            if(key.equalsIgnoreCase("")){
+            if (key.equalsIgnoreCase("")) {
                 key = getKey(ctx);
             }
-            Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE,  key);
+            Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, key);
             listCall.enqueue(new Callback<SignUpModel>() {
                 @Override
                 public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {

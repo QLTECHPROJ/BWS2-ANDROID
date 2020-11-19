@@ -322,8 +322,6 @@ public class AddAudioActivity extends AppCompatActivity {
             if (modelList.get(position).getIscategory().equalsIgnoreCase("1")) {
                 holder.binding.tvPart.setText(R.string.Audio);
                 holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
-                holder.binding.equalizerview.setVisibility(View.GONE);
-/*
                 UpdateSongTime3 = new Runnable() {
                     @Override
                     public void run() {
@@ -333,34 +331,21 @@ public class AddAudioActivity extends AppCompatActivity {
                             currentDuration = getStartTime();
                             if (currentDuration == 0 && isCompleteStop) {
                                 notifyDataSetChanged();
-//                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                             } else if (currentDuration >= 1 && !isPause) {
-//                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                             } else if (currentDuration >= 1 && isPause) {
-//                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                             }
 
                             if (currentDuration <= 555) {
                                 notifyDataSetChanged();
                             }
-                        */
-/*if(isPause && ps == 0){
-                            ps++;
-                            notifyDataSetChanged();
-                        }else if(!isPause && nps == 0){
-                            nps++;
-                            notifyDataSetChanged();
-                        }*//*
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         handler3.postDelayed(this, 500);
                     }
                 };
-*/
 
-              /*  SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -376,9 +361,6 @@ public class AddAudioActivity extends AppCompatActivity {
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            holder.binding.equalizerview.stopBars();
-//                        ps =0;
-//                        nps = 0;
                     } else {
                         holder.binding.equalizerview.setVisibility(View.GONE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white);
@@ -390,7 +372,8 @@ public class AddAudioActivity extends AppCompatActivity {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     handler3.removeCallbacks(UpdateSongTime3);
-                }*/
+                }
+
                 holder.binding.llRemoveAudio.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         if (modelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
@@ -499,7 +482,6 @@ public class AddAudioActivity extends AppCompatActivity {
                             mainPlayModel.setDownload("");
                             mainPlayModel.setAudioDuration("00:48");
                             listModelList2.add(mainPlayModel);
-
                             listModelList2.add(modelList.get(position));
                             String json = gson.toJson(listModelList2);
                             editor.putString(CONSTANTS.PREF_KEY_modelList, json);
@@ -515,14 +497,13 @@ public class AddAudioActivity extends AppCompatActivity {
                             fragmentManager1.beginTransaction()
                                     .add(R.id.flContainer, fragment)
                                     .commit();
-                            /*handler3.postDelayed(UpdateSongTime3, 500);
-                            notifyDataSetChanged();*/
+                            handler3.postDelayed(UpdateSongTime3, 500);
+                            notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 });
-
             } else if (modelList.get(position).getIscategory().equalsIgnoreCase("0")) {
                 holder.binding.tvPart.setText(R.string.Playlist);
                 holder.binding.equalizerview.setVisibility(View.GONE);
@@ -575,17 +556,6 @@ public class AddAudioActivity extends AppCompatActivity {
                         MyPlaylistIds = modelList.get(position).getID();
                         PlaylistIDMS = PlaylistID;
                         finish();
-                    /*Fragment myPlaylistsFragment = new MyPlaylistsFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("New", "0");
-                    bundle.putString("PlaylistID", PlaylistModel.get(position).getID());
-                    bundle.putString("PlaylistName", PlaylistModel.get(position).getName());
-                    bundle.putString("MyDownloads", "0");
-                    myPlaylistsFragment.setArguments(bundle);
-                    FragmentManager fragmentManager1 = getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .replace(R.id.flContainer, myPlaylistsFragment)
-                            .commit();*/
                     }
                 });
             }
@@ -743,9 +713,6 @@ public class AddAudioActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModel.get(position).getName());
             holder.binding.tvTime.setText(listModel.get(position).getAudioDuration());
-            holder.binding.equalizerview.setVisibility(View.GONE);
-//            TODO MANSI HIGHLIGHTS
-/*
             UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -755,33 +722,21 @@ public class AddAudioActivity extends AppCompatActivity {
                         currentDuration = getStartTime();
                         if (currentDuration == 0 && isCompleteStop) {
                             notifyDataSetChanged();
-//                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         } else if (currentDuration >= 1 && !isPause) {
-//                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                         } else if (currentDuration >= 1 && isPause) {
-//                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
 
                         if (currentDuration <= 555) {
                             notifyDataSetChanged();
                         }
-                        */
-/*if(isPause && ps == 0){
-                            ps++;
-                            notifyDataSetChanged();
-                        }else if(!isPause && nps == 0){
-                            nps++;
-                            notifyDataSetChanged();
-                        }*//*
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     handler3.postDelayed(this, 500);
                 }
             };
-*/
-          /*  SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+
+            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -797,9 +752,6 @@ public class AddAudioActivity extends AppCompatActivity {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            holder.binding.equalizerview.stopBars();
-//                        ps =0;
-//                        nps = 0;
                 } else {
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
@@ -811,7 +763,8 @@ public class AddAudioActivity extends AppCompatActivity {
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 handler3.removeCallbacks(UpdateSongTime3);
-            }*/
+            }
+
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -881,6 +834,8 @@ public class AddAudioActivity extends AppCompatActivity {
                             fragmentManager1.beginTransaction()
                                     .add(R.id.flContainer, fragment)
                                     .commit();
+                            handler3.postDelayed(UpdateSongTime3, 500);
+                            notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -934,8 +889,8 @@ public class AddAudioActivity extends AppCompatActivity {
                         fragmentManager1.beginTransaction()
                                 .add(R.id.flContainer, fragment)
                                 .commit();
-                     /*   handler3.postDelayed(UpdateSongTime3, 500);
-                        notifyDataSetChanged();*/
+                        handler3.postDelayed(UpdateSongTime3, 500);
+                        notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

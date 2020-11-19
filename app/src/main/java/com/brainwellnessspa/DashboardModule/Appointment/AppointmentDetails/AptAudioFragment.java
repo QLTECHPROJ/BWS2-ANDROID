@@ -99,11 +99,11 @@ public class AptAudioFragment extends Fragment {
     }
 
 
-   /* @Override
+    @Override
     public void onPause() {
         handler3.removeCallbacks(UpdateSongTime3);
         super.onPause();
-    }*/
+    }
 
     public void GetMedia(String AudioFile, Context ctx, String download, RelativeLayout llDownload, ImageView ivDownload) {
         oneAudioDetailsList = new ArrayList<>();
@@ -169,8 +169,6 @@ public class AptAudioFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.binding.equalizerview.setVisibility(View.GONE);
-
             AppointmentDetailModel.Audio audiolist = listModelList.get(position);
             UpdateSongTime1 = new Runnable() {
                 @Override
@@ -184,12 +182,8 @@ public class AptAudioFragment extends Fragment {
                                             if (BWSApplication.isNetworkConnected(ctx)) {
                                                 notifyItemChanged(f);
                                             }
-                                         /*   holder.binding.pbProgress.setProgress(downloadProgress);
-                                            holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                                            holder.binding.ivDownloads.setVisibility(View.GONE);*/
                                         } else {
                                             holder.binding.pbProgress.setVisibility(View.GONE);
-                                            //                                            handler2.removeCallbacks(UpdateSongTime2);
                                             getDownloadData();
                                         }
                                     } else {
@@ -210,9 +204,7 @@ public class AptAudioFragment extends Fragment {
                     handler1.postDelayed(this, 300);
                 }
             };
-//            TODO MANSI HIGHLIGHTS
 
-/*
             UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -222,33 +214,21 @@ public class AptAudioFragment extends Fragment {
                         currentDuration = getStartTime();
                         if (currentDuration == 0 && isCompleteStop) {
                             notifyDataSetChanged();
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         } else if (currentDuration >= 1 && !isPause) {
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                         } else if (currentDuration >= 1 && isPause) {
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
 
                         if(currentDuration <= 555){
                             notifyDataSetChanged();
                         }
-                        */
-/*if(isPause && ps == 0){
-                            ps++;
-                            notifyDataSetChanged();
-                        }else if(!isPause && nps == 0){
-                            nps++;
-                            notifyDataSetChanged();
-                        }*//*
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     handler3.postDelayed(this, 500);
                 }
             };
-*/
-           /* SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+
+            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -277,7 +257,7 @@ public class AptAudioFragment extends Fragment {
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 handler3.removeCallbacks(UpdateSongTime3);
-            }*/
+            }
             holder.binding.tvTitle.setText(audiolist.getName());
             if (audiolist.getAudioDirection().equalsIgnoreCase("")) {
                 holder.binding.tvTime.setVisibility(View.GONE);
@@ -286,16 +266,6 @@ public class AptAudioFragment extends Fragment {
                 holder.binding.tvTime.setText(audiolist.getAudioDirection());
             }
             if (fileNameList.size() != 0) {
-             /*   for (int i = 0; i < fileNameList.size(); i++) {
-                    if (fileNameList.get(i).equalsIgnoreCase(mData.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
-                        holder.binding.pbProgress.setVisibility(View.VISIBLE);
-                        holder.binding.ivDownloads.setVisibility(View.GONE);
-                        isDownloading++;
-                        break;
-                    }else{
-                        holder.binding.pbProgress.setVisibility(View.GONE);
-                    }
-                }*/
                 for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName())) {
                         if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(listModelList.get(position).getName())) {
@@ -311,7 +281,6 @@ public class AptAudioFragment extends Fragment {
                             } else {
                                 holder.binding.pbProgress.setVisibility(View.GONE);
                                 holder.binding.ivDownload.setVisibility(View.VISIBLE);
-//                                handler2.removeCallbacks(UpdateSongTime2);
                             }
                         } else {
                             holder.binding.pbProgress.setVisibility(View.VISIBLE);
@@ -334,9 +303,6 @@ public class AptAudioFragment extends Fragment {
             holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
             holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            holder.binding.ivBackgroundImaged.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-//            holder.binding.ivBackgroundImaged.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-//            holder.binding.ivBackgroundImaged.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(getActivity()).load(audiolist.getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
@@ -405,9 +371,8 @@ public class AptAudioFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
                     editor.commit();
-
-                   /* handler3.postDelayed(UpdateSongTime3, 500);
-                    notifyDataSetChanged();*/
+                    handler3.postDelayed(UpdateSongTime3, 500);
+                    notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

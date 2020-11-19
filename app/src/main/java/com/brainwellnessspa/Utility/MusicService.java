@@ -115,11 +115,9 @@ public class MusicService extends Service {
         // Resume on hangup.
         callStateListener();
         //ACTION_AUDIO_BECOMING_NOISY -- change in audio outputs -- BroadcastReceiver
-        /* todo: foram notification comment*/
-//        registerBecomingNoisyReceiver();
+        registerBecomingNoisyReceiver();
         //Listen for new Audio to play -- BroadcastReceiver
-        /* todo: foram notification comment*/
-//        register_playNewAudio();
+        register_playNewAudio();
     }
 
     //The system calls this method when an activity, requests the service be started
@@ -178,9 +176,8 @@ public class MusicService extends Service {
         removeNotification();
 
         //unregister BroadcastReceivers
-        /* todo: foram notification comment*/
-//        unregisterReceiver(becomingNoisyReceiver);
-//        unregisterReceiver(playNewAudio);
+        unregisterReceiver(becomingNoisyReceiver);
+        unregisterReceiver(playNewAudio);
 
         //clear cached playlist
 //        new StorageUtil(getApplicationContext()).clearCachedAudioPlaylist();
@@ -347,7 +344,7 @@ public class MusicService extends Service {
     /**
      * ACTION_AUDIO_BECOMING_NOISY -- change in audio outputs
      */
-/*    private BroadcastReceiver becomingNoisyReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver becomingNoisyReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             //pause audio on ACTION_AUDIO_BECOMING_NOISY
@@ -360,7 +357,7 @@ public class MusicService extends Service {
         //register after getting audio focus
         IntentFilter intentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         registerReceiver(becomingNoisyReceiver, intentFilter);
-    }*/
+    }
 
     /**
      * Handle PhoneState changes
@@ -486,7 +483,6 @@ public class MusicService extends Service {
 //    }
 
 
-    /* todo: foram notification comment*/
         public static void buildNotification(PlaybackStatus playbackStatus,Context context,MainPlayModel track) {
 
         /**
@@ -678,9 +674,9 @@ public class MusicService extends Service {
     /**
      * Play new Audio
      */
-  /*  private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
+    private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {*/
+        public void onReceive(Context context, Intent intent) {
 
 //            //Get the new media index form SharedPreferences
 //            audioIndex = new StorageUtil(getApplicationContext()).loadAudioIndex();
@@ -697,17 +693,15 @@ public class MusicService extends Service {
 //            mediaPlayer.reset();
 //            initMediaPlayer();
 //            updateMetaData();
-            /* todo: foram notification comment*/
-//            buildNotification(PlaybackStatus.PLAYING,context,mainPlayModel);
-//        }
-//    };
+            buildNotification(PlaybackStatus.PLAYING,context,mainPlayModel);
+        }
+    };
 
-    /* todo: foram notification comment*/
- /*   private void register_playNewAudio() {
+    private void register_playNewAudio() {
         //Register playNewMedia receiver
         IntentFilter filter = new IntentFilter(Broadcast_PLAY_NEW_AUDIO);
         registerReceiver(playNewAudio, filter);
-    }*/
+    }
 
     private void createChannel() {
         // The id of the channel.

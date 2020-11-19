@@ -111,11 +111,11 @@ public class ViewAllSearchFragment extends Fragment {
         return view;
     }
 
-    /*@Override
+    @Override
     public void onPause() {
         handler3.removeCallbacks(UpdateSongTime3);
         super.onPause();
-    }*/
+    }
 
     private void callBack() {
         Fragment fragment = new SearchFragment();
@@ -244,9 +244,6 @@ public class ViewAllSearchFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.binding.equalizerview.setVisibility(View.GONE);
-//            TODO MANSI HIGHLIGHTS
-/*
             UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -256,48 +253,21 @@ public class ViewAllSearchFragment extends Fragment {
                         currentDuration = getStartTime();
                         if (currentDuration == 0 && isCompleteStop) {
                             notifyDataSetChanged();
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         } else if (currentDuration >= 1 && !isPause) {
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                         } else if (currentDuration >= 1 && isPause) {
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
 
                         if (currentDuration <= 555) {
                             notifyDataSetChanged();
                         }
-                        */
-/*if(isPause && ps == 0){
-                            ps++;
-                            notifyDataSetChanged();
-                        }else if(!isPause && nps == 0){
-                            nps++;
-                            notifyDataSetChanged();
-                        }*//*
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     handler3.postDelayed(this, 500);
                 }
             };
-*/
 
-            holder.binding.tvTitle.setText(AudiolistModel.get(position).getName());
-            holder.binding.tvTime.setText(AudiolistModel.get(position).getAudioDuration());
-            holder.binding.pbProgress.setVisibility(View.GONE);
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.12f, 0);
-            holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-            Glide.with(getActivity()).load(AudiolistModel.get(position).getImageFile()).thumbnail(0.05f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
-           /* SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -313,9 +283,6 @@ public class ViewAllSearchFragment extends Fragment {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            holder.binding.equalizerview.stopBars();
-//                        ps =0;
-//                        nps = 0;
                 } else {
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
@@ -327,7 +294,8 @@ public class ViewAllSearchFragment extends Fragment {
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 handler3.removeCallbacks(UpdateSongTime3);
-            }*/
+            }
+
             if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
@@ -338,6 +306,21 @@ public class ViewAllSearchFragment extends Fragment {
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
+            holder.binding.tvTitle.setText(AudiolistModel.get(position).getName());
+            holder.binding.tvTime.setText(AudiolistModel.get(position).getAudioDuration());
+            holder.binding.pbProgress.setVisibility(View.GONE);
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                    1, 1, 0.12f, 0);
+            holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
+            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+            Glide.with(getActivity()).load(AudiolistModel.get(position).getImageFile()).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+
             holder.binding.llMainLayoutForPlayer.setOnClickListener(view -> {
                 if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -391,17 +374,14 @@ public class ViewAllSearchFragment extends Fragment {
                         fragmentManager1.beginTransaction()
                                 .add(R.id.flContainer, fragment)
                                 .commit();
-                    /*Intent i = new Intent(ctx, PlayWellnessActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    ctx.startActivity(i);*/
-                        /*handler3.postDelayed(UpdateSongTime3, 500);
-                        notifyDataSetChanged();*/
+                        handler3.postDelayed(UpdateSongTime3, 500);
+                        notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-
             });
+
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);

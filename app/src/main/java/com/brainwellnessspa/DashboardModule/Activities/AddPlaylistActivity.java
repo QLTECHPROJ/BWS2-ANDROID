@@ -134,7 +134,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                 }
             };
 
-
             edtCreate.addTextChangedListener(popupTextWatcher);
             btnSendCode.setOnClickListener(view1 -> {
                 if (edtCreate.getText().toString().equalsIgnoreCase("")) {
@@ -163,12 +162,10 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             }
                                         } else {
                                             callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
-
                                         }
                                     } else {
                                         BWSApplication.showToast(listsModel.getResponseMessage(), ctx);
                                     }
-
                                 }
                             }
 
@@ -179,8 +176,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     } else {
                         BWSApplication.showToast(getString(R.string.no_server_found), ctx);
                     }
-
-
                 }
             });
             tvCancel.setOnClickListener(v -> dialog.dismiss());
@@ -228,7 +223,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                     BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                 }
             });
-
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
@@ -294,7 +288,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                             mainPlayModel.setAudioDuration(listModels.getResponseData().get(i).getAudioDuration());
                                             playlistSongs.add(mainPlayModel);
                                         }
-
                                         for (int i = 0; i < mainPlayModelList.size(); i++) {
                                             if (mainPlayModelList.get(i).getID().equalsIgnoreCase(id)) {
                                                 pos = i;
@@ -325,7 +318,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                                     final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
                                     final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
-
                                     dialog.setOnKeyListener((v, keyCode, event) -> {
                                         if (keyCode == KeyEvent.KEYCODE_BACK) {
                                             dialog.dismiss();
@@ -358,7 +350,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
                                     dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                                     final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
                                     final RelativeLayout rlCreate = dialog.findViewById(R.id.rlCreate);
-
                                     dialog.setOnKeyListener((v, keyCode, event) -> {
                                         if (keyCode == KeyEvent.KEYCODE_BACK) {
                                             dialog.dismiss();

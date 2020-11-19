@@ -72,7 +72,7 @@ public class OtpActivity extends AppCompatActivity implements
     CountDownTimer countDownTimer;
     private long mLastClickTime = 0;
     public static int comeLogin = 0;
-    List<DownloadAudioDetails> downloadAudioDetails=new ArrayList<>();
+    List<DownloadAudioDetails> downloadAudioDetails = new ArrayList<>();
     private BroadcastReceiver receiver;
 //    AppEventsLogger logger;
 
@@ -148,31 +148,40 @@ public class OtpActivity extends AppCompatActivity implements
                             if (response.isSuccessful()) {
                                 BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                 OtpModel otpModel = response.body();
-                                if (otpModel.getResponseData().getError().equalsIgnoreCase("0") ||
-                                        otpModel.getResponseData().getError().equalsIgnoreCase("")) {
-                                    SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = shared.edit();
-                                    String UserID =  otpModel.getResponseData().getUserID();
-                                    String MobileNO=  otpModel.getResponseData().getPhoneNumber();
-                                    editor.putString(CONSTANTS.PREF_KEY_UserID,UserID);
-                                    editor.putString(CONSTANTS.PREF_KEY_MobileNo,MobileNO );
-                                    editor.commit();
-                                    SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
-                                    String Logout_UserID = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, ""));
-                                    String Logout_MobileNo = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO, ""));
+                                if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                    binding.txtError.setVisibility(View.GONE);
+                                    if (otpModel.getResponseData().getError().equalsIgnoreCase("0") ||
+                                            otpModel.getResponseData().getError().equalsIgnoreCase("")) {
+                                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = shared.edit();
+                                        String UserID = otpModel.getResponseData().getUserID();
+                                        String MobileNO = otpModel.getResponseData().getPhoneNumber();
+                                        editor.putString(CONSTANTS.PREF_KEY_UserID, UserID);
+                                        editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNO);
+                                        editor.commit();
+                                        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
+                                        String Logout_UserID = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, ""));
+                                        String Logout_MobileNo = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO, ""));
 
-                                    if(!UserID.equalsIgnoreCase(Logout_UserID)
-                                    && !MobileNO.equalsIgnoreCase(Logout_MobileNo)){
-                                        GetAllMedia();
-                                    }else{
-                                        GetAllMedia2();
+                                        if (!UserID.equalsIgnoreCase(Logout_UserID)
+                                                && !MobileNO.equalsIgnoreCase(Logout_MobileNo)) {
+                                            GetAllMedia();
+                                        } else {
+                                            GetAllMedia2();
+                                        }
+
+                                        Log.e("New UserId MobileNo", UserID + "....." + MobileNO);
+                                        Log.e("Old UserId MobileNo", Logout_UserID + "....." + Logout_MobileNo);
+                                        logout = false;
+                                        BWSApplication.showToast(otpModel.getResponseMessage(), OtpActivity.this);
+                                    } else if (otpModel.getResponseData().getError().equalsIgnoreCase("1")) {
+                                        binding.txtError.setText(otpModel.getResponseMessage());
+                                        binding.txtError.setVisibility(View.VISIBLE);
                                     }
-
-                                    Log.e("New UserId MobileNo",UserID+"....." +MobileNO);
-                                    Log.e("Old UserId MobileNo",Logout_UserID+"....." + Logout_MobileNo);
-                                    logout = false;
-                                    BWSApplication.showToast(otpModel.getResponseMessage(), OtpActivity.this);
-                                } else if (otpModel.getResponseData().getError().equalsIgnoreCase("1")) {
+                                } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                    binding.txtError.setText(otpModel.getResponseMessage());
+                                    binding.txtError.setVisibility(View.VISIBLE);
+                                } else {
                                     binding.txtError.setText(otpModel.getResponseMessage());
                                     binding.txtError.setVisibility(View.VISIBLE);
                                 }
@@ -220,8 +229,8 @@ public class OtpActivity extends AppCompatActivity implements
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                if(downloadAudioDetails.size()!=0){
-                    for(int i = 0;i<downloadAudioDetails.size();i++){
+                if (downloadAudioDetails.size() != 0) {
+                    for (int i = 0; i < downloadAudioDetails.size(); i++) {
                         FileUtils.deleteDownloadedFile(getApplicationContext(), downloadAudioDetails.get(i).getName());
                     }
                 }
@@ -259,9 +268,9 @@ public class OtpActivity extends AppCompatActivity implements
                 List<String> audioFile = new ArrayList<>();
                 List<String> playlistDownloadId = new ArrayList<>();
 
-                if(downloadAudioDetails.size()!=0){
-                    for(int i = 0;i<downloadAudioDetails.size();i++){
-                        if(downloadAudioDetails.get(i).getDownloadProgress()<100){
+                if (downloadAudioDetails.size() != 0) {
+                    for (int i = 0; i < downloadAudioDetails.size(); i++) {
+                        if (downloadAudioDetails.get(i).getDownloadProgress() < 100) {
                             fileNameList.add(downloadAudioDetails.get(i).getName());
                             audioFile.add(downloadAudioDetails.get(i).getAudioFile());
                             playlistDownloadId.add(downloadAudioDetails.get(i).getPlaylistId());
@@ -424,10 +433,10 @@ public class OtpActivity extends AppCompatActivity implements
             binding.txtError.setText("");
             binding.txtError.setVisibility(View.GONE);
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            String countryCode = Code.replace("+","");
+            String countryCode = Code.replace("+", "");
             SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
             String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
-            if(key.equalsIgnoreCase("")){
+            if (key.equalsIgnoreCase("")) {
                 key = getKey(OtpActivity.this);
             }
             Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(MobileNo, countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, key);
@@ -444,6 +453,7 @@ public class OtpActivity extends AppCompatActivity implements
                                     binding.llResendSms.setEnabled(false);
                                     binding.tvResendOTP.setText(Html.fromHtml(millisUntilFinished / 1000 + "<font color=\"#999999\">" + " Resent SMS" + "</font>"));
                                 }
+
                                 public void onFinish() {
                                     binding.llResendSms.setEnabled(true);
                                     binding.tvResendOTP.setText(getString(R.string.resent_sms));

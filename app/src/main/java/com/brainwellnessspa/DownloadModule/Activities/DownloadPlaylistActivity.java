@@ -118,11 +118,11 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         PrepareData();
     }
 
-  /*  @Override
+    @Override
     public void onPause() {
         handler3.removeCallbacks(UpdateSongTime3);
         super.onPause();
-    }*/
+    }
 
     @Override
     protected void onResume() {
@@ -222,7 +222,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
             if (isMediaStart) {
                 isPlayPlaylist = 1;
-//                handler3.postDelayed(UpdateSongTime3,500);
+                handler3.postDelayed(UpdateSongTime3,500);
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
             } else {
                 isPlayPlaylist = 0;
@@ -541,9 +541,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolders holder, int position) {
-            holder.binding.equalizerview.setVisibility(View.GONE);
-//            TODO MANSI HIGHLIGHTS
-/*
             UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -559,14 +556,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         } else if (currentDuration >= 1 && isPause) {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
-                        */
-/*if(isPause && ps == 0){
-                            ps++;
-                            notifyDataSetChanged();
-                        }else if(!isPause && nps == 0){
-                            nps++;
-                            notifyDataSetChanged();
-                        }*//*
 
                         if(currentDuration <= 555){
                             notifyDataSetChanged();
@@ -577,7 +566,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     handler3.postDelayed(this, 500);
                 }
             };
-*/
+
             final List<DownloadAudioDetails> mData = listFilterData;
             holder.binding.tvTitleA.setText(mData.get(position).getName());
             holder.binding.tvTimeA.setText(mData.get(position).getAudioDuration());
@@ -594,11 +583,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 //            holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
 //            Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
 //                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-//            holder.binding.equalizerview.animateBars();
-//            holder.binding.equalizerview.stopBars();
-            //            TODO MANSI HIGHLIGHTS
-
-            /*SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -613,9 +598,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            holder.binding.equalizerview.stopBars();
-//                        ps =0;
-//                        nps = 0;
                     }else{
                         holder.binding.equalizerview.setVisibility(View.GONE);
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white);
@@ -627,7 +609,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     handler3.removeCallbacks(UpdateSongTime3);
-                }*/
+                }
+
             binding.ivPlaylistStatus.setOnClickListener(view -> {
                 if (isPlayPlaylist == 1) {
                     pauseMedia();
@@ -662,9 +645,10 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
-             /*   handler3.postDelayed(UpdateSongTime3,500);
-                notifyDataSetChanged();*/
+                handler3.postDelayed(UpdateSongTime3,500);
+                notifyDataSetChanged();
             });
+
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -691,8 +675,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 }
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-              /*  handler3.postDelayed(UpdateSongTime3,500);
-                notifyDataSetChanged();*/
+                handler3.postDelayed(UpdateSongTime3,500);
+                notifyDataSetChanged();
             });
 
             if (BWSApplication.isNetworkConnected(ctx)) {

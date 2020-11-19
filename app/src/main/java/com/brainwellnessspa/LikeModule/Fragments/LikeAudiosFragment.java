@@ -100,11 +100,11 @@ public class LikeAudiosFragment extends Fragment {
         return view;
     }
 
-   /* @Override
+    @Override
     public void onPause() {
         handler3.removeCallbacks(UpdateSongTime3);
         super.onPause();
-    }*/
+    }
 
     @Override
     public void onResume() {
@@ -177,7 +177,6 @@ public class LikeAudiosFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-/*
             UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -197,23 +196,12 @@ public class LikeAudiosFragment extends Fragment {
                         if (currentDuration <= 555) {
                             notifyDataSetChanged();
                         }
-                        */
-/*if(isPause && ps == 0){
-                            ps++;
-                            notifyDataSetChanged();
-                        }else if(!isPause && nps == 0){
-                            nps++;
-                            notifyDataSetChanged();
-                        }*//*
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     handler3.postDelayed(this, 500);
                 }
             };
-*/
-            holder.binding.equalizerview.setVisibility(View.GONE);
             holder.binding.tvTitle.setText(modelList.get(position).getName());
             holder.binding.tvTime.setText(modelList.get(position).getAudioDuration());
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
@@ -226,7 +214,7 @@ public class LikeAudiosFragment extends Fragment {
             Glide.with(ctx).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-           /* SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -241,9 +229,6 @@ public class LikeAudiosFragment extends Fragment {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            holder.binding.equalizerview.stopBars();
-//                        ps =0;
-//                        nps = 0;
                 } else {
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
@@ -255,7 +240,8 @@ public class LikeAudiosFragment extends Fragment {
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 handler3.removeCallbacks(UpdateSongTime3);
-            }*/
+            }
+
             holder.binding.llMenu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -297,6 +283,7 @@ public class LikeAudiosFragment extends Fragment {
                   callAlert(position);
                 }
             });
+
             holder.binding.llMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -336,8 +323,8 @@ public class LikeAudiosFragment extends Fragment {
                         }
                         callTransFrag(pos, listModelList2);
                     }
-                   /* handler3.postDelayed(UpdateSongTime3, 500);
-                    notifyDataSetChanged();*/
+                    handler3.postDelayed(UpdateSongTime3, 500);
+                    notifyDataSetChanged();
                 }
             });
         }

@@ -260,9 +260,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             holder.binds.tvTitle.setText(AudiolistsModel.get(position).getName());
             holder.binds.tvTime.setText(AudiolistsModel.get(position).getAudioDuration());
             holder.binds.pbProgress.setVisibility(View.GONE);
-            holder.binds.equalizerview.setVisibility(View.GONE);
-//            TODO MANSI HIGHLIGHTS
-/*
             UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -272,33 +269,21 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         currentDuration = getStartTime();
                         if (currentDuration == 0 && isCompleteStop) {
                             notifyDataSetChanged();
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         } else if (currentDuration >= 1 && !isPause) {
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                         } else if (currentDuration >= 1 && isPause) {
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
 
                         if (currentDuration <= 555) {
                             notifyDataSetChanged();
                         }
-                        */
-/*if(isPause && ps == 0){
-                            ps++;
-                            notifyDataSetChanged();
-                        }else if(!isPause && nps == 0){
-                            nps++;
-                            notifyDataSetChanged();
-                        }*//*
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     handler3.postDelayed(this, 500);
                 }
             };
-*/
-           /* SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+
+            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -314,9 +299,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     holder.binds.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binds.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binds.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
-//            holder.binding.equalizerview.stopBars();
-//                        ps =0;
-//                        nps = 0;
                 } else {
                     holder.binds.equalizerview.setVisibility(View.GONE);
                     holder.binds.llMainLayout.setBackgroundResource(R.color.white);
@@ -328,7 +310,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 holder.binds.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binds.ivBackgroundImage.setVisibility(View.GONE);
                 handler3.removeCallbacks(UpdateSongTime3);
-            }*/
+            }
+
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
             holder.binds.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -396,6 +379,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                             FragmentManager fragmentManager1 = getSupportFragmentManager();
                             fragmentManager1.beginTransaction()
                                     .add(R.id.flContainer, fragment).commit();
+                            handler3.postDelayed(UpdateSongTime3, 500);
+                            notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -447,9 +432,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         FragmentManager fragmentManager1 = getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
                                 .add(R.id.flContainer, fragment).commit();
-
-                       /* handler3.postDelayed(UpdateSongTime3, 500);
-                        notifyDataSetChanged();*/
+                        handler3.postDelayed(UpdateSongTime3, 500);
+                        notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

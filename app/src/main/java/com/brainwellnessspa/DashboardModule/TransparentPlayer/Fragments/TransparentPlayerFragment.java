@@ -157,8 +157,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //            initMediaPlayer();
 //            updateMetaData();
 
-            /* todo: foram notification comment*/
-            /*if (isPause || !isMediaStart) {
+            if (isPause || !isMediaStart) {
                 binding.ivPlay.setVisibility(View.VISIBLE);
                 binding.ivPause.setVisibility(View.GONE);
                 buildNotification(PlaybackStatus.PAUSED, context, mainPlayModelList.get(position));
@@ -166,7 +165,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 binding.ivPause.setVisibility(View.VISIBLE);
                 binding.ivPlay.setVisibility(View.GONE);
                 buildNotification(PlaybackStatus.PLAYING, context, mainPlayModelList.get(position));
-            }*/
+            }
 
         }
     };
@@ -437,8 +436,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             isPause = false;
         }
         player = 1;
-        /* todo: foram notification comment*/
-//        buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+        buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
         handler12.postDelayed(UpdateSongTime12, 100);
     }
 
@@ -459,8 +457,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.VISIBLE);
         }
         oTime = binding.simpleSeekbar.getProgress();
-        /* todo: foram notification comment*/
-//        buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList.get(position));
+        buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList.get(position));
     }
 
    /* @Override
@@ -1280,8 +1277,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 });
             }
         }
-        /* todo: foram notification comment*/
-        /*if (isPause) {
+
+        if (isPause) {
             binding.ivPlay.setVisibility(View.VISIBLE);
             binding.ivPause.setVisibility(View.GONE);
             buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList.get(position));
@@ -1289,7 +1286,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPause.setVisibility(View.VISIBLE);
             binding.ivPlay.setVisibility(View.GONE);
             buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
-        }*/
+        }
     }
 
     private void initMediaplyer() {
@@ -1307,12 +1304,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         //indicate that the MediaSession handles transport control commands
         // through its MediaSessionCompat.Callback.
         mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
         //Set mediaSession's MetaData
 //        updateMetaData();
-
         // Attach Callback to receive MediaSession updates
-
         mediaSession.setCallback(new MediaSessionCompat.Callback() {
             // Implement callbacks
             @Override
@@ -1334,8 +1328,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 if (!audioFile.equalsIgnoreCase("")) {
                     callNext();
 //                updateMetaData();
-                    /* todo: foram notification comment*/
-//                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
                 }
             }
 
@@ -1345,8 +1338,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 if (!audioFile.equalsIgnoreCase("")) {
                     callPrev();
 //                updateMetaData();
-                    /* todo: foram notification comment*/
-//                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
                 }
             }
 

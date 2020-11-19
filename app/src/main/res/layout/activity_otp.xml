@@ -23,7 +23,7 @@
                     android:id="@+id/ivLogo"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
-                    android:layout_marginTop="@dimen/_60sdp"
+                    android:layout_marginTop="@dimen/_58sdp"
                     android:src="@drawable/logo_design" />
 
             </LinearLayout>
@@ -31,8 +31,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0sdp"
+                android:layout_marginTop="@dimen/_36sdp"
                 android:layout_weight="0.82"
-                android:layout_marginTop="@dimen/_40sdp"
                 android:orientation="vertical">
 
                 <TextView
@@ -62,21 +62,21 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="67dp"
-                    android:layout_marginTop="@dimen/_35sdp"
+                    android:layout_marginTop="@dimen/_31sdp"
                     android:layout_marginRight="67dp"
                     android:layout_marginBottom="@dimen/_8sdp"
                     android:gravity="center"
                     android:weightSum="6">
 
-                  <!--  android:background="@drawable/edittext_line"-->
+                    <!--  android:background="@drawable/edittext_line"-->
                     <EditText
                         android:id="@+id/edtOTP1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:backgroundTint="@color/white"
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="center"
-                        android:backgroundTint="@color/white"
                         android:imeOptions="actionNext"
                         android:inputType="number|textNoSuggestions"
                         android:maxLength="1"
@@ -93,7 +93,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_6sdp"
-                        android:layout_toRightOf="@id/edtOTP1"
                         android:layout_weight="1"
                         android:backgroundTint="@color/white"
                         android:fontFamily="@font/montserrat_medium"
@@ -114,7 +113,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_6sdp"
-                        android:layout_toRightOf="@id/edtOTP2"
                         android:layout_weight="1"
                         android:backgroundTint="@color/white"
                         android:fontFamily="@font/montserrat_medium"
@@ -135,7 +133,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_6sdp"
-                        android:layout_toRightOf="@id/edtOTP3"
                         android:layout_weight="1"
                         android:backgroundTint="@color/white"
                         android:fontFamily="@font/montserrat_medium"
@@ -192,11 +189,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/gray_round_cornor"
+                    android:enabled="false"
+                    android:fontFamily="@font/montserrat_medium"
                     android:paddingHorizontal="@dimen/_90sdp"
                     android:paddingVertical="@dimen/_4sdp"
                     android:text="NEXT"
-                    android:enabled="false"
-                    android:fontFamily="@font/montserrat_medium"
                     android:textColor="@color/white" />
 
 
@@ -220,8 +217,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_16sdp"
-                        android:gravity="center"
                         android:fontFamily="@font/montserrat_regular"
+                        android:gravity="center"
                         android:text="@string/resent_sms"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_12sdp" />
@@ -245,8 +242,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="@dimen/_16sdp"
-                        android:gravity="center"
                         android:fontFamily="@font/montserrat_regular"
+                        android:gravity="center"
                         android:text="@string/edit_phone_number"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_12sdp" />
