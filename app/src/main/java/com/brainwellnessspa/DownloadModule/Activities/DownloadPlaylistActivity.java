@@ -120,10 +120,10 @@ private BroadcastReceiver listener = new BroadcastReceiver() {
                         }*/
                         if (data.equalsIgnoreCase("play")) {
                             isPlayPlaylist = 0;
-                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                         } else {
                             isPlayPlaylist = 1;
-                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
                         adpater.notifyDataSetChanged();
 

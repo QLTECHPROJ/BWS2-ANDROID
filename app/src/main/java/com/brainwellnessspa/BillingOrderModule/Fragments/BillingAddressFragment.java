@@ -232,6 +232,14 @@ public class BillingAddressFragment extends Fragment {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            }else if (Name.equalsIgnoreCase(UserName) && Email.equalsIgnoreCase(UserEmail) && MobileNumber.equalsIgnoreCase(UserMobileNumber)
+                    && Country.equalsIgnoreCase(UserCountry) && AddressLine1.equalsIgnoreCase(UserAddressLine1)
+                    && AddressLine2.equalsIgnoreCase("") && UserAddressLine2.equalsIgnoreCase("")
+                    && City.equalsIgnoreCase(UserCity) && State.equalsIgnoreCase(UserState)
+                    && PostCode.equalsIgnoreCase(UserPostCode)) {
+                binding.btnSave.setEnabled(false);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
             } else {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));

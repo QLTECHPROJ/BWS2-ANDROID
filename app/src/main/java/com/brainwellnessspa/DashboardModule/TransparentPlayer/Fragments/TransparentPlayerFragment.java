@@ -1101,7 +1101,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                                 binding.ivPause.setVisibility(View.GONE);
                                 binding.ivPlay.setVisibility(View.VISIBLE);
                                 binding.simpleSeekbar.setProgress(oTime);
-                                localIntent.putExtra("MyData", "play");
+                                localIntent.putExtra("MyData", "pause");
                                 localBroadcastManager.sendBroadcast(localIntent);
                             } else if (isCompleteStop) {
                                 binding.progressBar.setVisibility(View.GONE);
@@ -1112,7 +1112,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                        binding.llProgress.setVisibility(View.GONE);
                                 binding.ivPause.setVisibility(View.VISIBLE);
                                 binding.ivPlay.setVisibility(View.GONE);
-                                localIntent.putExtra("MyData", "pause");
+                                localIntent.putExtra("MyData", "play");
                                 localBroadcastManager.sendBroadcast(localIntent);
                             } else {
                                 binding.progressBar.setVisibility(View.VISIBLE);
@@ -1127,6 +1127,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                    binding.llProgress.setVisibility(View.GONE);
                             binding.ivPause.setVisibility(View.GONE);
                             binding.ivPlay.setVisibility(View.VISIBLE);
+                            localIntent.putExtra("MyData", "pause");
+                            localBroadcastManager.sendBroadcast(localIntent);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1312,7 +1314,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     Log.e("Playinggggg", "Startinggg");
                     mediaPlayer.start();
                     isMediaStart = true;
-                    localIntent.putExtra("MyData", "pause");
+                    localIntent.putExtra("MyData", "play");
                     localBroadcastManager.sendBroadcast(localIntent);
                 });
             }
@@ -2023,7 +2025,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     @Override
     public void onDestroy() {
 //        getActivity().unregisterReceiver(playNewAudio);
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+//        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onDestroy();
     }
 

@@ -482,6 +482,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     @Override
     public void onPause() {
 //        handler3.removeCallbacks(UpdateSongTime3);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onPause();
     }
 
@@ -578,7 +579,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             prepareData(UserID, PlaylistIDs);
             MyPlaylistIds = "";
         }
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
     }
 
     private void searchClear(EditText searchEditText) {
@@ -1195,6 +1195,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     saveToPref(pos, mData);
                                 }
                             }
+                            adpater1.notifyItemRemoved(position);
                             prepareData(UserID, PlaylistID);
                             BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                         }
@@ -2577,14 +2578,14 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID) && mData.size() == 1) {
                                 BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
                             } else {
-                                callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId(), mData, position);
+                                callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId(), mData, holder.getAdapterPosition());
                             }
                         }
                     } else {
                         if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID) && mData.size() == 1) {
                             BWSApplication.showToast("Currently you play this playlist, you can't remove last audio", ctx);
                         } else {
-                            callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId(), mData, position);
+                            callRemove(mData.get(position).getID(), mData.get(position).getPlaylistAudioId(), mData, holder.getAdapterPosition());
                         }
                     }
                 });
