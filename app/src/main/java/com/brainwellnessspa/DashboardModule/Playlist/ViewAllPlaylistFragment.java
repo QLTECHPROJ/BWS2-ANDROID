@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.DownloadModule.Activities.DownloadPlaylistActivity;
+import com.brainwellnessspa.databinding.PlaylistViewAllLayoutBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -297,8 +298,8 @@ public class ViewAllPlaylistFragment extends Fragment {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            PlaylistCustomLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
-                    , R.layout.playlist_custom_layout, parent, false);
+            PlaylistViewAllLayoutBinding v = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                    , R.layout.playlist_view_all_layout, parent, false);
             return new MyViewHolder(v);
         }
 
@@ -398,9 +399,9 @@ public class ViewAllPlaylistFragment extends Fragment {
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
-            PlaylistCustomLayoutBinding binding;
+            PlaylistViewAllLayoutBinding binding;
 
-            public MyViewHolder(PlaylistCustomLayoutBinding binding) {
+            public MyViewHolder(PlaylistViewAllLayoutBinding binding) {
                 super(binding.getRoot());
                 this.binding = binding;
             }

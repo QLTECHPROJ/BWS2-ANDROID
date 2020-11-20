@@ -15,13 +15,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/_16sdp"
                 android:layout_marginBottom="@dimen/_26sdp"
                 android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/rlLayout"
                     android:layout_width="match_parent"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_height="@dimen/_56sdp">
 
                     <LinearLayout
@@ -46,6 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:gravity="center_horizontal">
 
                     <LinearLayout
@@ -137,6 +138,7 @@
                     android:id="@+id/cvImage"
                     android:layout_width="@dimen/_150sdp"
                     android:layout_height="@dimen/_150sdp"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/_30sdp"
                     android:visibility="gone"
@@ -165,6 +167,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_26sdp"
                     android:ellipsize="end"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="center"
                     android:maxLines="1"
@@ -177,6 +180,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_6sdp"
                     android:ellipsize="end"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
                     android:maxLines="1"
@@ -189,6 +193,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
                     android:ellipsize="end"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
                     android:textColor="#838383"
@@ -202,6 +207,7 @@
                     android:layout_marginTop="@dimen/_20sdp"
                     android:fontFamily="@font/montserrat_semi_bold"
                     android:gravity="start"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:text="@string/Description"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_16sdp"
@@ -209,7 +215,8 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_10sdp">
 
                     <TextView
                         android:id="@+id/tvSubDec"
@@ -239,15 +246,15 @@
                         android:visibility="gone" />
                 </RelativeLayout>
 
-
                 <TextView
                     android:id="@+id/tvDire"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_4sdp"
+                    android:layout_marginLeft="@dimen/_14sdp"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:fontFamily="@font/montserrat_semi_bold"
                     android:gravity="start"
+                    android:layout_marginRight="@dimen/_10sdp"
                     android:text="@string/Directions"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_16sdp"
@@ -257,8 +264,9 @@
                     android:id="@+id/tvSubDire"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_4sdp"
+                    android:layout_marginLeft="@dimen/_14sdp"
                     android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="start"
                     android:justificationMode="inter_word"
@@ -273,12 +281,12 @@
                     android:layout_marginTop="@dimen/_4sdp"
                     android:overScrollMode="never" />
 
-
                 <LinearLayout
                     android:id="@+id/llLike"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:gravity="center_vertical"
                     android:visibility="gone">
 
@@ -306,6 +314,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:gravity="center_vertical"
                     android:visibility="gone">
 
@@ -332,6 +341,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:gravity="center_vertical"
                     android:visibility="gone">
 
@@ -359,6 +369,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:gravity="center_vertical"
                     android:visibility="gone">
 
@@ -385,6 +396,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginBottom="@dimen/_30sdp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"

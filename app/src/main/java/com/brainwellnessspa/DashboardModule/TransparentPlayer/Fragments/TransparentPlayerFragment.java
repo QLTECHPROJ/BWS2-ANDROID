@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -120,6 +121,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     Intent localIntent;
     private long totalDuration, currentDuration = 0;
     private Handler handler12;
+    private long mLastClickTime = 0;
     /*    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -1208,6 +1210,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             Log.e("addToRecentPlayID", addToRecentPlayId);
             Log.e("new addToRecentPlayID", id);
             binding.llPlayearMain.setOnClickListener(view -> {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 handler12.removeCallbacks(UpdateSongTime12);
                 if (player == 0) {
                     player = 1;

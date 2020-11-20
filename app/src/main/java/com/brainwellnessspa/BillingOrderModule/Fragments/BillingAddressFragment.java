@@ -47,6 +47,9 @@ public class BillingAddressFragment extends Fragment {
         binding.etCity.addTextChangedListener(billingTextWatcher);
         binding.etState.addTextChangedListener(billingTextWatcher);
         binding.etPostCode.addTextChangedListener(billingTextWatcher);
+        binding.btnSave.setEnabled(false);
+        binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+        binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
         binding.btnSave.setOnClickListener(view1 -> {
             if (BWSApplication.isNetworkConnected(getActivity())) {
                 binding.tlName.setError("");
@@ -181,6 +184,7 @@ public class BillingAddressFragment extends Fragment {
 
             if (Name.equalsIgnoreCase(UserName) && Email.equalsIgnoreCase(UserEmail) && MobileNumber.equalsIgnoreCase(UserMobileNumber)
                     && Country.equalsIgnoreCase(UserCountry) && AddressLine1.equalsIgnoreCase(UserAddressLine1)
+                    && AddressLine2.equalsIgnoreCase(UserAddressLine2)
                     && City.equalsIgnoreCase(UserCity) && State.equalsIgnoreCase(UserState)
                     && PostCode.equalsIgnoreCase(UserPostCode)) {
                 binding.btnSave.setEnabled(false);
@@ -206,6 +210,10 @@ public class BillingAddressFragment extends Fragment {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
+            } else if (!AddressLine2.equalsIgnoreCase(UserAddressLine2)) {
+                binding.btnSave.setEnabled(true);
+                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
+                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
             } else if (!City.equalsIgnoreCase(UserCity)) {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
@@ -219,12 +227,6 @@ public class BillingAddressFragment extends Fragment {
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
             } else {
-                binding.btnSave.setEnabled(true);
-                binding.btnSave.setTextColor(getResources().getColor(R.color.white));
-                binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);
-            }
-
-            if (!AddressLine2.equalsIgnoreCase(UserAddressLine2)) {
                 binding.btnSave.setEnabled(true);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
                 binding.btnSave.setBackgroundResource(R.drawable.extra_round_cornor);

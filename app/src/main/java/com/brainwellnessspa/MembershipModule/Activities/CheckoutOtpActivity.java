@@ -98,6 +98,73 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
         binding.txtError.setText("");
         binding.txtError.setVisibility(View.GONE);
 
+        binding.llResendSms.setOnClickListener(view -> {
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                binding.txtError.setText("");
+                binding.txtError.setVisibility(View.GONE);
+                tvSendOTPbool = false;
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                String countryCode = Code.replace("+", "");
+                SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
+                String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
+                if (key.equalsIgnoreCase("")) {
+                    key = getKey(ctx);
+                }
+                Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, key);
+                listCall.enqueue(new Callback<SignUpModel>() {
+                    @Override
+                    public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {
+                        try {
+                            if (response.isSuccessful()) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                SignUpModel loginModel = response.body();
+                                if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                    countDownTimer = new CountDownTimer(30000, 1000) {
+                                        public void onTick(long millisUntilFinished) {
+                                            binding.llResendSms.setEnabled(false);
+                                            binding.tvResendOTP.setText(Html.fromHtml(millisUntilFinished / 1000 + "<font color=\"#999999\">" + " Resent SMS" + "</font>"));
+                                        }
+
+                                        public void onFinish() {
+                                            binding.llResendSms.setEnabled(true);
+                                            binding.tvResendOTP.setText(getString(R.string.resent_sms));
+                                            binding.tvResendOTP.setTextColor(getResources().getColor(R.color.dark_blue_gray));
+                                            binding.tvResendOTP.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                                            binding.tvResendOTP.getPaint().setMaskFilter(null);
+                                        }
+                                    }.start();
+                                    binding.edtOTP1.requestFocus();
+                                    binding.edtOTP1.setText("");
+                                    binding.edtOTP2.setText("");
+                                    binding.edtOTP3.setText("");
+                                    binding.edtOTP4.setText("");
+                                    tvSendOTPbool = true;
+                                    BWSApplication.showToast(loginModel.getResponseMessage(), getApplicationContext());
+                                    startSMSListener();
+                                } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                    binding.txtError.setVisibility(View.VISIBLE);
+                                    binding.txtError.setText(loginModel.getResponseMessage());
+                                } else {
+                                    binding.txtError.setVisibility(View.VISIBLE);
+                                    binding.txtError.setText(loginModel.getResponseMessage());
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SignUpModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        BWSApplication.showToast(t.getMessage(), getApplicationContext());
+                    }
+                });
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getApplicationContext());
+            }
+        });
+
         binding.llBack.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -190,20 +257,7 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
             }
         });
 
-        binding.llResendSms.setOnClickListener(view -> prepareData());
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        comeRegister = 0;
-        Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
-        i.putExtra("MobileNo", MobileNo);
-        i.putExtra("Name", Name);
-        i.putExtra("Code", Code);
-        startActivity(i);
-        finish();
     }
 
     private void startSMSListener() {
@@ -228,6 +282,18 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        comeRegister = 0;
+        Intent i = new Intent(ctx, CheckoutGetCodeActivity.class);
+        i.putExtra("MobileNo", MobileNo);
+        i.putExtra("Name", Name);
+        i.putExtra("Code", Code);
+        startActivity(i);
+        finish();
     }
 
     @Override
@@ -285,72 +351,6 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
     public void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-    }
-
-    void prepareData() {
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            tvSendOTPbool = false;
-            binding.txtError.setText("");
-            binding.txtError.setVisibility(View.GONE);
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            String countryCode = Code.replace("+", "");
-            SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
-            String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
-            if (key.equalsIgnoreCase("")) {
-                key = getKey(ctx);
-            }
-            Call<SignUpModel> listCall = APIClient.getClient().getSignUpDatas(MobileNo, countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ONE, key);
-            listCall.enqueue(new Callback<SignUpModel>() {
-                @Override
-                public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {
-                    try {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            SignUpModel loginModel = response.body();
-                            if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                countDownTimer = new CountDownTimer(30000, 1000) {
-                                    public void onTick(long millisUntilFinished) {
-                                        binding.llResendSms.setEnabled(false);
-                                        binding.tvResendOTP.setText(Html.fromHtml(millisUntilFinished / 1000 + "<font color=\"#999999\">" + " Resent SMS" + "</font>"));
-                                    }
-
-                                    public void onFinish() {
-                                        binding.llResendSms.setEnabled(true);
-                                        binding.tvResendOTP.setText(getString(R.string.resent_sms));
-                                        binding.tvResendOTP.setTextColor(getResources().getColor(R.color.dark_blue_gray));
-                                        binding.tvResendOTP.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                                        binding.tvResendOTP.getPaint().setMaskFilter(null);
-                                    }
-                                }.start();
-                                binding.edtOTP1.requestFocus();
-                                binding.edtOTP1.setText("");
-                                binding.edtOTP2.setText("");
-                                binding.edtOTP3.setText("");
-                                binding.edtOTP4.setText("");
-                                tvSendOTPbool = true;
-                                BWSApplication.showToast(loginModel.getResponseMessage(), getApplicationContext());
-                            } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                binding.txtError.setVisibility(View.VISIBLE);
-                                binding.txtError.setText(loginModel.getResponseMessage());
-                            } else {
-                                binding.txtError.setVisibility(View.VISIBLE);
-                                binding.txtError.setText(loginModel.getResponseMessage());
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<SignUpModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                    BWSApplication.showToast(t.getMessage(), getApplicationContext());
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), getApplicationContext());
-        }
     }
 
     public class PinTextWatcher implements TextWatcher {

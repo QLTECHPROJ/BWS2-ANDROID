@@ -204,11 +204,11 @@ public class PlaylistFragment extends Fragment {
                         .commit();
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(13, 6, 13, 200);
+                params.setMargins(0, 6, 0, 200);
                 binding.llSpace.setLayoutParams(params);
             } else {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(13, 6, 13, 0);
+                params.setMargins(0, 6, 0, 0);
                 binding.llSpace.setLayoutParams(params);
             }
         } catch (Exception e) {
