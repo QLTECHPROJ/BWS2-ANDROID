@@ -471,7 +471,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 i.putExtra("AudioId", "");
                                 i.putExtra("PlaylistID", model.getResponseData().getPlaylistID());
                                 startActivity(i);
-                                finish();
                             });
                             if (model.getResponseData().getCreated().equalsIgnoreCase("1")) {
                                 binding.llOptions.setVisibility(View.GONE);

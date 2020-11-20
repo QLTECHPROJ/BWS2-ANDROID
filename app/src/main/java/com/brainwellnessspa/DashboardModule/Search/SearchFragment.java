@@ -76,17 +76,17 @@ public class SearchFragment extends Fragment {
     EditText searchEditText;
     SerachListAdpater adpater;
     public static int comefrom_search = 0;
-    Handler handler3;
+//    Handler handler3;
     int startTime;
     private long currentDuration = 0;
     long myProgress = 0, diff = 0;
-    private Runnable UpdateSongTime3;
+//    private Runnable UpdateSongTime3;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false);
         View view = binding.getRoot();
-        handler3 = new Handler();
+//        handler3 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         ComeScreenAccount = 0;
@@ -183,11 +183,11 @@ public class SearchFragment extends Fragment {
     }
 
 
-    @Override
+   /* @Override
     public void onPause() {
         handler3.removeCallbacks(UpdateSongTime3);
         super.onPause();
-    }
+    }*/
 
     @Override
     public void onResume() {
@@ -405,6 +405,8 @@ public class SearchFragment extends Fragment {
             if (modelList.get(position).getIscategory().equalsIgnoreCase("1")) {
                 holder.binding.tvPart.setText(R.string.Audio);
                 holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
+                holder.binding.equalizerview.setVisibility(View.GONE);
+/*
                 UpdateSongTime3 = new Runnable() {
                     @Override
                     public void run() {
@@ -427,8 +429,9 @@ public class SearchFragment extends Fragment {
                         handler3.postDelayed(this, 500);
                     }
                 };
+*/
 
-                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+              /*  SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -449,13 +452,14 @@ public class SearchFragment extends Fragment {
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     }
-                    handler3.postDelayed(UpdateSongTime3, 500);
+//                    handler3.postDelayed(UpdateSongTime3, 500);
                 } else {
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    handler3.removeCallbacks(UpdateSongTime3);
-                }
+//                    handler3.removeCallbacks(UpdateSongTime3);
+                }*/
+
                 holder.binding.llRemoveAudio.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                         holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -530,8 +534,8 @@ public class SearchFragment extends Fragment {
                             fragmentManager1.beginTransaction()
                                     .add(R.id.flContainer, fragment)
                                     .commit();
-                            handler3.postDelayed(UpdateSongTime3, 500);
-                            notifyDataSetChanged();
+                          /*  handler3.postDelayed(UpdateSongTime3, 500);
+                            notifyDataSetChanged();*/
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -640,6 +644,8 @@ public class SearchFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.binding.equalizerview.setVisibility(View.GONE);
+/*
             UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -662,6 +668,7 @@ public class SearchFragment extends Fragment {
                     handler3.postDelayed(this, 500);
                 }
             };
+*/
 
             holder.binding.tvTitle.setText(modelList.get(position).getName());
             holder.binding.tvTime.setText(modelList.get(position).getAudioDuration());
@@ -688,7 +695,7 @@ public class SearchFragment extends Fragment {
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
-            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+         /*   SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -709,13 +716,13 @@ public class SearchFragment extends Fragment {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 }
-                handler3.postDelayed(UpdateSongTime3, 500);
+//                handler3.postDelayed(UpdateSongTime3, 500);
             } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                handler3.removeCallbacks(UpdateSongTime3);
-            }
+//                handler3.removeCallbacks(UpdateSongTime3);
+            }*/
 
             holder.binding.llMainLayoutForPlayer.setOnClickListener(view -> {
                 try {
@@ -759,8 +766,8 @@ public class SearchFragment extends Fragment {
                     fragmentManager1.beginTransaction()
                             .add(R.id.flContainer, fragment)
                             .commit();
-                    handler3.postDelayed(UpdateSongTime3, 500);
-                    notifyDataSetChanged();
+                 /*   handler3.postDelayed(UpdateSongTime3, 500);
+                    notifyDataSetChanged();*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

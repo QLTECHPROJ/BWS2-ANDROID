@@ -63,11 +63,11 @@ public class ViewAllSearchFragment extends Fragment {
     FragmentViewAllSearchBinding binding;
     View view;
     String UserID, AudioFlag, Name;
-    Handler handler3;
+//    Handler handler3;
     int startTime;
     private long currentDuration = 0;
     long myProgress = 0, diff = 0;
-    private Runnable UpdateSongTime3;
+//    private Runnable UpdateSongTime3;
     ArrayList<SearchPlaylistModel.ResponseData> PlaylistModel;
     ArrayList<SuggestedModel.ResponseData> AudiolistModel;
 
@@ -75,7 +75,7 @@ public class ViewAllSearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_all_search, container, false);
         view = binding.getRoot();
-        handler3 = new Handler();
+//        handler3 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -107,12 +107,12 @@ public class ViewAllSearchFragment extends Fragment {
         return view;
     }
 
-    @Override
+   /* @Override
     public void onPause() {
         handler3.removeCallbacks(UpdateSongTime3);
         super.onPause();
     }
-
+*/
     private void callBack() {
         Fragment fragment = new SearchFragment();
         FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
@@ -240,6 +240,8 @@ public class ViewAllSearchFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.binding.equalizerview.setVisibility(View.GONE);
+/*
             UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -262,8 +264,9 @@ public class ViewAllSearchFragment extends Fragment {
                     handler3.postDelayed(this, 500);
                 }
             };
+*/
 
-            SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+           /* SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -290,7 +293,7 @@ public class ViewAllSearchFragment extends Fragment {
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 handler3.removeCallbacks(UpdateSongTime3);
-            }
+            }*/
 
             if (AudiolistModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
@@ -370,8 +373,8 @@ public class ViewAllSearchFragment extends Fragment {
                         fragmentManager1.beginTransaction()
                                 .add(R.id.flContainer, fragment)
                                 .commit();
-                        handler3.postDelayed(UpdateSongTime3, 500);
-                        notifyDataSetChanged();
+                        /*handler3.postDelayed(UpdateSongTime3, 500);
+                        notifyDataSetChanged();*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

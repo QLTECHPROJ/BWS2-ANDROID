@@ -67,11 +67,11 @@ public class ViewSuggestedActivity extends AppCompatActivity {
     String UserID, AudioFlag, Name, PlaylistID;
     ArrayList<SuggestedModel.ResponseData> AudiolistsModel;
     ArrayList<SearchPlaylistModel.ResponseData> PlaylistModel;
-    Handler handler3;
+//    Handler handler3;
     int startTime;
     private long currentDuration = 0;
     long myProgress = 0, diff = 0;
-    private Runnable UpdateSongTime3;
+//    private Runnable UpdateSongTime3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_view_suggested);
         ctx = ViewSuggestedActivity.this;
         activity = ViewSuggestedActivity.this;
-        handler3 = new Handler();
+//        handler3 = new Handler();
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.llBack.setOnClickListener(view -> {
@@ -264,6 +264,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             holder.binds.tvTitle.setText(AudiolistsModel.get(position).getName());
             holder.binds.tvTime.setText(AudiolistsModel.get(position).getAudioDuration());
             holder.binds.pbProgress.setVisibility(View.GONE);
+            holder.binds.equalizerview.setVisibility(View.GONE);
+/*
             UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -286,8 +288,9 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     handler3.postDelayed(this, 500);
                 }
             };
+*/
 
-            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+          /*  SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -314,7 +317,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                 holder.binds.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binds.ivBackgroundImage.setVisibility(View.GONE);
                 handler3.removeCallbacks(UpdateSongTime3);
-            }
+            }*/
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);
@@ -383,8 +386,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                             FragmentManager fragmentManager1 = getSupportFragmentManager();
                             fragmentManager1.beginTransaction()
                                     .add(R.id.flContainer, fragment).commit();
-                            handler3.postDelayed(UpdateSongTime3, 500);
-                            notifyDataSetChanged();
+                           /* handler3.postDelayed(UpdateSongTime3, 500);
+                            notifyDataSetChanged();*/
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -436,8 +439,8 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         FragmentManager fragmentManager1 = getSupportFragmentManager();
                         fragmentManager1.beginTransaction()
                                 .add(R.id.flContainer, fragment).commit();
-                        handler3.postDelayed(UpdateSongTime3, 500);
-                        notifyDataSetChanged();
+                       /* handler3.postDelayed(UpdateSongTime3, 500);
+                        notifyDataSetChanged();*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
