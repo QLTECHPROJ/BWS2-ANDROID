@@ -109,30 +109,34 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<RemiderDetailsModel>() {
                 @Override
                 public void onResponse(Call<RemiderDetailsModel> call, Response<RemiderDetailsModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        RemiderDetailsModel listModel = response.body();
-                        listReminderModel = listModel;
-                        adapter = new RemiderDetailsAdapter(listModel.getResponseData());
-                        binding.rvReminderDetails.setAdapter(adapter);
-                        binding.btnAddReminder.setVisibility(View.VISIBLE);
-                        if (listModel.getResponseData().size() == 0) {
-                            binding.llError.setVisibility(View.VISIBLE);
-                            binding.rvReminderDetails.setVisibility(View.GONE);
-                        } else {
-                            binding.llError.setVisibility(View.GONE);
-                            binding.rvReminderDetails.setVisibility(View.VISIBLE);
-                        }
-
-                        if (remiderIds.size() == 0) {
-                            binding.llSelectAll.setVisibility(View.GONE);
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            RemiderDetailsModel listModel = response.body();
+                            listReminderModel = listModel;
+                            adapter = new RemiderDetailsAdapter(listModel.getResponseData());
+                            binding.rvReminderDetails.setAdapter(adapter);
                             binding.btnAddReminder.setVisibility(View.VISIBLE);
-                            binding.btnDeleteReminder.setVisibility(View.GONE);
-                        } else {
-                            binding.llSelectAll.setVisibility(View.VISIBLE);
-                            binding.btnAddReminder.setVisibility(View.GONE);
-                            binding.btnDeleteReminder.setVisibility(View.VISIBLE);
+                            if (listModel.getResponseData().size() == 0) {
+                                binding.llError.setVisibility(View.VISIBLE);
+                                binding.rvReminderDetails.setVisibility(View.GONE);
+                            } else {
+                                binding.llError.setVisibility(View.GONE);
+                                binding.rvReminderDetails.setVisibility(View.VISIBLE);
+                            }
+
+                            if (remiderIds.size() == 0) {
+                                binding.llSelectAll.setVisibility(View.GONE);
+                                binding.btnAddReminder.setVisibility(View.VISIBLE);
+                                binding.btnDeleteReminder.setVisibility(View.GONE);
+                            } else {
+                                binding.llSelectAll.setVisibility(View.VISIBLE);
+                                binding.btnAddReminder.setVisibility(View.GONE);
+                                binding.btnDeleteReminder.setVisibility(View.VISIBLE);
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -170,12 +174,16 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                     listCall.enqueue(new Callback<DeleteRemiderModel>() {
                         @Override
                         public void onResponse(Call<DeleteRemiderModel> call, Response<DeleteRemiderModel> response) {
-                            if (response.isSuccessful()) {
-                                DeleteRemiderModel model = response.body();
-                                remiderIds.clear();
-                                BWSApplication.showToast(model.getResponseMessage(), ctx);
-                                dialog.dismiss();
-                                prepareData();
+                            try {
+                                if (response.isSuccessful()) {
+                                    DeleteRemiderModel model = response.body();
+                                    remiderIds.clear();
+                                    BWSApplication.showToast(model.getResponseMessage(), ctx);
+                                    dialog.dismiss();
+                                    prepareData();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
 
@@ -395,10 +403,14 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<ReminderStatusModel>() {
                 @Override
                 public void onResponse(Call<ReminderStatusModel> call, Response<ReminderStatusModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        ReminderStatusModel listModel = response.body();
-                        BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            ReminderStatusModel listModel = response.body();
+                            BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -449,11 +461,15 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                         listCall.enqueue(new Callback<DeleteRemiderModel>() {
                             @Override
                             public void onResponse(Call<DeleteRemiderModel> call, Response<DeleteRemiderModel> response) {
-                                if (response.isSuccessful()) {
-                                    DeleteRemiderModel model = response.body();
-                                    BWSApplication.showToast(model.getResponseMessage(), ctx);
-                                    prepareData();
-                                    dialog.dismiss();
+                                try {
+                                    if (response.isSuccessful()) {
+                                        DeleteRemiderModel model = response.body();
+                                        BWSApplication.showToast(model.getResponseMessage(), ctx);
+                                        prepareData();
+                                        dialog.dismiss();
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
                             }
 

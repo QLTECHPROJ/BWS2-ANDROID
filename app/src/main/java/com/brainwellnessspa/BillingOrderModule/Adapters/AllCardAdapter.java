@@ -94,7 +94,8 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                 listCall.enqueue(new Callback<CardListModel>() {
                     @Override
                     public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
-                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);{
+                        try {
+                            BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
                             CardListModel cardListModel = response.body();
                             if (cardListModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
                                 if (cardListModel.getResponseData().size() == 0) {
@@ -109,7 +110,8 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                             } else {
                                 BWSApplication.showToast(cardListModel.getResponseMessage(), activity);
                             }
-
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 
@@ -157,16 +159,20 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
                             listCall.enqueue(new Callback<CardModel>() {
                                 @Override
                                 public void onResponse(Call<CardModel> call, Response<CardModel> response) {
-                                    BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
-                                    if (response.isSuccessful()) {
-                                        CardModel cardModel = response.body();
-                                        if (cardModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
-                                            getCardList();
-                                            dialog.dismiss();
-                                            BWSApplication.showToast(cardModel.getResponseMessage(), activity);
-                                        } else {
-                                            BWSApplication.showToast(cardModel.getResponseMessage(), activity);
+                                    try {
+                                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+                                        if (response.isSuccessful()) {
+                                            CardModel cardModel = response.body();
+                                            if (cardModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
+                                                getCardList();
+                                                dialog.dismiss();
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), activity);
+                                            } else {
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), activity);
+                                            }
                                         }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
                                 }
 
@@ -218,21 +224,25 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
             listCall.enqueue(new Callback<CardListModel>() {
                 @Override
                 public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
-                        CardListModel cardListModel = response.body();
-                        if (cardListModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
-                            if (cardListModel.getResponseData().size() == 0) {
-                                rvCardList.setAdapter(null);
-                                rvCardList.setVisibility(View.GONE);
-                            } else {
-                                rvCardList.setVisibility(View.VISIBLE);
-                                adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList);
-                                rvCardList.setAdapter(adapter);
-                            }
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(ImgV, progressBarHolder, activity);
+                            CardListModel cardListModel = response.body();
+                            if (cardListModel.getResponseCode().equalsIgnoreCase(activity.getString(R.string.ResponseCodesuccess))) {
+                                if (cardListModel.getResponseData().size() == 0) {
+                                    rvCardList.setAdapter(null);
+                                    rvCardList.setVisibility(View.GONE);
+                                } else {
+                                    rvCardList.setVisibility(View.VISIBLE);
+                                    adapter = new AllCardAdapter(cardListModel.getResponseData(), activity, userId, ImgV, progressBarHolder, rvCardList);
+                                    rvCardList.setAdapter(adapter);
+                                }
 
-                        } else {
+                            } else {
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

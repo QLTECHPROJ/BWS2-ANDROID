@@ -1014,9 +1014,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                    if (response.isSuccessful()) {
+                    try {
+                        if (response.isSuccessful()) {
 //                        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
-                        SucessModel model = response.body();
+                            SucessModel model = response.body();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

@@ -80,15 +80,12 @@ public class ViewAllSearchFragment extends Fragment {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
         if (getArguments() != null) {
             Name = getArguments().getString("Name");
         }
-
         if (getArguments() != null) {
             AudiolistModel = getArguments().getParcelableArrayList("AudiolistModel");
         }
-
         if (getArguments() != null) {
             PlaylistModel = getArguments().getParcelableArrayList("PlaylistModel");
         }
@@ -106,7 +103,6 @@ public class ViewAllSearchFragment extends Fragment {
         binding.llBack.setOnClickListener(view1 -> {
             callBack();
         });
-
         PrepareData();
         return view;
     }

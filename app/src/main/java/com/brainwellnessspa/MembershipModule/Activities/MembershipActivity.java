@@ -77,12 +77,16 @@ public class MembershipActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<FaqListModel>() {
                 @Override
                 public void onResponse(Call<FaqListModel> call, Response<FaqListModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        FaqListModel listModel = response.body();
-                        binding.tvFaqTitle.setText(R.string.f_A_Q);
-                        adapter = new MembershipFaqAdapter(listModel.getResponseData(), ctx, binding.rvFaqList, binding.tvFound);
-                        binding.rvFaqList.setAdapter(adapter);
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            FaqListModel listModel = response.body();
+                            binding.tvFaqTitle.setText(R.string.f_A_Q);
+                            adapter = new MembershipFaqAdapter(listModel.getResponseData(), ctx, binding.rvFaqList, binding.tvFound);
+                            binding.rvFaqList.setAdapter(adapter);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -104,72 +108,76 @@ public class MembershipActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<MembershipPlanListModel>() {
                 @Override
                 public void onResponse(Call<MembershipPlanListModel> call, Response<MembershipPlanListModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        MembershipPlanListModel membershipPlanListModel = response.body();
-                        if (membershipPlanListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            binding.btnFreeJoin.setVisibility(View.VISIBLE);
-                            binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
-                            binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
-                            binding.tvTag.setText(R.string.membership_title);
-                            binding.tvText.setText(getString(R.string.privacy_policy_t_n_c));
-                            binding.tvtncs.setText(getString(R.string.t_n_csm));
-                            binding.tvPrivacyPolicys.setText(getString(R.string.privacy_policysm));
-                            binding.tvAnd.setText(getString(R.string.and));
-                            binding.tvDisclaimers.setText(R.string.disclaimers);
-                            binding.tvtncs.getPaint().setUnderlineText(true);
-                            binding.tvPrivacyPolicys.getPaint().setUnderlineText(true);
-                            binding.tvDisclaimers.getPaint().setUnderlineText(true);
-                            binding.tvtncs.setOnClickListener(view -> {
-                                Intent i = new Intent(ctx, TncActivity.class);
-                                i.putExtra(CONSTANTS.Web, "Tnc");
-                                startActivity(i);
-                            });
-
-                            binding.tvPrivacyPolicys.setOnClickListener(view -> {
-                                Intent i = new Intent(ctx, TncActivity.class);
-                                i.putExtra(CONSTANTS.Web, "PrivacyPolicy");
-                                startActivity(i);
-                            });
-
-                            binding.tvDisclaimers.setOnClickListener(view -> {
-                                final Dialog dialog = new Dialog(ctx);
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog.setContentView(R.layout.full_desc_layout);
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-                                final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
-                                final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
-                                tvTitle.setText(R.string.Disclaimer);
-                                tvDesc.setText(R.string.Disclaimer_text);
-                                dialog.setOnKeyListener((v, keyCode, event) -> {
-                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                        dialog.dismiss();
-                                        return true;
-                                    }
-                                    return false;
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            MembershipPlanListModel membershipPlanListModel = response.body();
+                            if (membershipPlanListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                binding.btnFreeJoin.setVisibility(View.VISIBLE);
+                                binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
+                                binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
+                                binding.tvTag.setText(R.string.membership_title);
+                                binding.tvText.setText(getString(R.string.privacy_policy_t_n_c));
+                                binding.tvtncs.setText(getString(R.string.t_n_csm));
+                                binding.tvPrivacyPolicys.setText(getString(R.string.privacy_policysm));
+                                binding.tvAnd.setText(getString(R.string.and));
+                                binding.tvDisclaimers.setText(R.string.disclaimers);
+                                binding.tvtncs.getPaint().setUnderlineText(true);
+                                binding.tvPrivacyPolicys.getPaint().setUnderlineText(true);
+                                binding.tvDisclaimers.getPaint().setUnderlineText(true);
+                                binding.tvtncs.setOnClickListener(view -> {
+                                    Intent i = new Intent(ctx, TncActivity.class);
+                                    i.putExtra(CONSTANTS.Web, "Tnc");
+                                    startActivity(i);
                                 });
 
-                                tvClose.setOnClickListener(v -> dialog.dismiss());
-                                dialog.show();
-                                dialog.setCancelable(false);
-                            });
-                            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                                    5, 3, 1f, 0);
-                            binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-                            binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-                            binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-                            binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner);
+                                binding.tvPrivacyPolicys.setOnClickListener(view -> {
+                                    Intent i = new Intent(ctx, TncActivity.class);
+                                    i.putExtra(CONSTANTS.Web, "PrivacyPolicy");
+                                    startActivity(i);
+                                });
 
-                            membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan(), ctx, binding.btnFreeJoin,
-                                    membershipPlanListModel.getResponseData().getTrialPeriod());
-                            binding.rvPlanList.setAdapter(membershipPlanAdapter);
+                                binding.tvDisclaimers.setOnClickListener(view -> {
+                                    final Dialog dialog = new Dialog(ctx);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.setContentView(R.layout.full_desc_layout);
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                    final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+                                    final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
+                                    final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
+                                    tvTitle.setText(R.string.Disclaimer);
+                                    tvDesc.setText(R.string.Disclaimer_text);
+                                    dialog.setOnKeyListener((v, keyCode, event) -> {
+                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                            dialog.dismiss();
+                                            return true;
+                                        }
+                                        return false;
+                                    });
 
-                            subscriptionAdapter = new SubscriptionAdapter(membershipPlanListModel.getResponseData().getAudioFiles(), ctx);
-                            binding.rvList.setAdapter(subscriptionAdapter);
+                                    tvClose.setOnClickListener(v -> dialog.dismiss());
+                                    dialog.show();
+                                    dialog.setCancelable(false);
+                                });
+                                MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                                        5, 3, 1f, 0);
+                                binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+                                binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+                                binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                                binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner);
 
+                                membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan(), ctx, binding.btnFreeJoin,
+                                        membershipPlanListModel.getResponseData().getTrialPeriod());
+                                binding.rvPlanList.setAdapter(membershipPlanAdapter);
+
+                                subscriptionAdapter = new SubscriptionAdapter(membershipPlanListModel.getResponseData().getAudioFiles(), ctx);
+                                binding.rvList.setAdapter(subscriptionAdapter);
+
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

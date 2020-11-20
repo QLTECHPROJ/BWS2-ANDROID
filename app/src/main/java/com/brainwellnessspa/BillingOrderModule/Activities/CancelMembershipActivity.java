@@ -154,13 +154,17 @@ public class CancelMembershipActivity extends YouTubeBaseActivity implements
                                 listCall.enqueue(new Callback<CancelPlanModel>() {
                                     @Override
                                     public void onResponse(Call<CancelPlanModel> call, Response<CancelPlanModel> response) {
-                                        if (response.isSuccessful()) {
-                                            CancelPlanModel model = response.body();
-                                            BWSApplication.showToast(model.getResponseMessage(), ctx);
-                                            dialog.dismiss();
-                                            resumeMedia();
-                                            isPause = false;
-                                            finish();
+                                        try {
+                                            if (response.isSuccessful()) {
+                                                CancelPlanModel model = response.body();
+                                                BWSApplication.showToast(model.getResponseMessage(), ctx);
+                                                dialog.dismiss();
+                                                resumeMedia();
+                                                isPause = false;
+                                                finish();
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
                                     }
 

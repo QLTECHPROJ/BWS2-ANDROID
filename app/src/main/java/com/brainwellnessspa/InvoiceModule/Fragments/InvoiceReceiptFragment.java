@@ -68,58 +68,62 @@ public class InvoiceReceiptFragment extends DialogFragment {
             listCall.enqueue(new Callback<InvoiceDetailModel>() {
                 @Override
                 public void onResponse(Call<InvoiceDetailModel> call, Response<InvoiceDetailModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        InvoiceDetailModel listModel = response.body();
-                        binding.tvFromTitle.setText("From");
-                        binding.tvDateTitle.setText("Order Date:");
-                        binding.tvOrderIdTitle.setText("Order #:");
-                        binding.tvTotalTitle.setText("Order Total:");
-                        binding.tvItemsTitle.setText("Items:");
-                        binding.tvGstTitle.setText("GST:");
-                        binding.tvOrderTotalAmountTitle.setText("Order Total:");
-                        if (Flag.equalsIgnoreCase("1")) {
-                            binding.tvSession.setVisibility(View.GONE);
-                            binding.tvPaymentDetails.setText(listModel.getResponseData().getCardBrand() + " ending **** " +
-                                    listModel.getResponseData().getCardDigit() + "\n" + listModel.getResponseData().getEmail());
-                        } else if (Flag.equalsIgnoreCase("2")) {
-                            binding.tvSession.setVisibility(View.VISIBLE);
-                            binding.tvText.setVisibility(View.GONE);
-                            binding.views.setVisibility(View.GONE);
-                            binding.tvPaymentDetails.setVisibility(View.GONE);
-                            binding.tvPaymentDetails.setText(listModel.getResponseData().getEmail());
-                        }
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            InvoiceDetailModel listModel = response.body();
+                            binding.tvFromTitle.setText("From");
+                            binding.tvDateTitle.setText("Order Date:");
+                            binding.tvOrderIdTitle.setText("Order #:");
+                            binding.tvTotalTitle.setText("Order Total:");
+                            binding.tvItemsTitle.setText("Items:");
+                            binding.tvGstTitle.setText("GST:");
+                            binding.tvOrderTotalAmountTitle.setText("Order Total:");
+                            if (Flag.equalsIgnoreCase("1")) {
+                                binding.tvSession.setVisibility(View.GONE);
+                                binding.tvPaymentDetails.setText(listModel.getResponseData().getCardBrand() + " ending **** " +
+                                        listModel.getResponseData().getCardDigit() + "\n" + listModel.getResponseData().getEmail());
+                            } else if (Flag.equalsIgnoreCase("2")) {
+                                binding.tvSession.setVisibility(View.VISIBLE);
+                                binding.tvText.setVisibility(View.GONE);
+                                binding.views.setVisibility(View.GONE);
+                                binding.tvPaymentDetails.setVisibility(View.GONE);
+                                binding.tvPaymentDetails.setText(listModel.getResponseData().getEmail());
+                            }
 
-                        binding.tvOrderId.setText(listModel.getResponseData().getInvoiceNumber());
-                        binding.tvDate.setText(listModel.getResponseData().getInvoiceDate());
-                        binding.tvTotal.setText("$" + listModel.getResponseData().getTotalAmount());
-                        binding.tvOrderTotal.setText("$" + listModel.getResponseData().getAmount());
+                            binding.tvOrderId.setText(listModel.getResponseData().getInvoiceNumber());
+                            binding.tvDate.setText(listModel.getResponseData().getInvoiceDate());
+                            binding.tvTotal.setText("$" + listModel.getResponseData().getTotalAmount());
+                            binding.tvOrderTotal.setText("$" + listModel.getResponseData().getAmount());
 
-                        binding.tvTitle.setText(listModel.getResponseData().getName());
-                        binding.tvQty.setText("Qty: " + listModel.getResponseData().getQty());
-                        binding.tvSession.setText("Session: " + listModel.getResponseData().getSession());
-                        binding.tvItems.setText("$" + listModel.getResponseData().getAmount());
-                        binding.tvFromAddress.setText(listModel.getResponseData().getInvoiceFrom());
-                        if (listModel.getResponseData().getInvoiceTo().equalsIgnoreCase("")) {
-                            binding.llBilledTo.setVisibility(View.GONE);
-                        } else {
-                            binding.llBilledTo.setVisibility(View.VISIBLE);
-                            binding.tvBilledToTitle.setText("Billed to");
-                            binding.tvBilledTo.setText(listModel.getResponseData().getInvoiceTo());
-                        }
+                            binding.tvTitle.setText(listModel.getResponseData().getName());
+                            binding.tvQty.setText("Qty: " + listModel.getResponseData().getQty());
+                            binding.tvSession.setText("Session: " + listModel.getResponseData().getSession());
+                            binding.tvItems.setText("$" + listModel.getResponseData().getAmount());
+                            binding.tvFromAddress.setText(listModel.getResponseData().getInvoiceFrom());
+                            if (listModel.getResponseData().getInvoiceTo().equalsIgnoreCase("")) {
+                                binding.llBilledTo.setVisibility(View.GONE);
+                            } else {
+                                binding.llBilledTo.setVisibility(View.VISIBLE);
+                                binding.tvBilledToTitle.setText("Billed to");
+                                binding.tvBilledTo.setText(listModel.getResponseData().getInvoiceTo());
+                            }
 
-                        binding.tvGst.setText("$" + listModel.getResponseData().getGstAmount());
-                        if (listModel.getResponseData().getTotalAmount().equalsIgnoreCase("0.00")){
-                            binding.tvText.setVisibility(View.GONE);
-                            binding.views.setVisibility(View.GONE);
-                            binding.tvPaymentDetails.setVisibility(View.GONE);
-                            binding.tvOrderTotalAmount.setText("$" + listModel.getResponseData().getTotalAmount());
-                        }else {
-                            binding.tvText.setVisibility(View.VISIBLE);
-                            binding.views.setVisibility(View.VISIBLE);
-                            binding.tvPaymentDetails.setVisibility(View.VISIBLE);
-                            binding.tvOrderTotalAmount.setText("$" + listModel.getResponseData().getTotalAmount());
+                            binding.tvGst.setText("$" + listModel.getResponseData().getGstAmount());
+                            if (listModel.getResponseData().getTotalAmount().equalsIgnoreCase("0.00")) {
+                                binding.tvText.setVisibility(View.GONE);
+                                binding.views.setVisibility(View.GONE);
+                                binding.tvPaymentDetails.setVisibility(View.GONE);
+                                binding.tvOrderTotalAmount.setText("$" + listModel.getResponseData().getTotalAmount());
+                            } else {
+                                binding.tvText.setVisibility(View.VISIBLE);
+                                binding.views.setVisibility(View.VISIBLE);
+                                binding.tvPaymentDetails.setVisibility(View.VISIBLE);
+                                binding.tvOrderTotalAmount.setText("$" + listModel.getResponseData().getTotalAmount());
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

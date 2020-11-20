@@ -221,11 +221,15 @@ public class PlaylistFragment extends Fragment {
             listCall.enqueue(new Callback<MainPlayListModel>() {
                 @Override
                 public void onResponse(Call<MainPlayListModel> call, Response<MainPlayListModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        MainPlayListModel listModel = response.body();
-                        binding.rlCreatePlaylist.setVisibility(View.VISIBLE);
-                        downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData());
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            MainPlayListModel listModel = response.body();
+                            binding.rlCreatePlaylist.setVisibility(View.VISIBLE);
+                            downloadPlaylistDetailsList = GetPlaylistDetail(listModel.getResponseData());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -413,16 +417,20 @@ public class PlaylistFragment extends Fragment {
                             listCall.enqueue(new Callback<CreatePlaylistModel>() {
                                 @Override
                                 public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
-                                    if (response.isSuccessful()) {
-                                        CreatePlaylistModel listModel = response.body();
-                                        if (listModel.getResponseData().getIscreated().equalsIgnoreCase("0")) {
-                                            BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
-                                        } else if (listModel.getResponseData().getIscreated().equalsIgnoreCase("1") ||
-                                                listModel.getResponseData().getIscreated().equalsIgnoreCase("")) {
-                                            callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0");
-                                            dialog.dismiss();
-                                        }
+                                    try {
+                                        if (response.isSuccessful()) {
+                                            CreatePlaylistModel listModel = response.body();
+                                            if (listModel.getResponseData().getIscreated().equalsIgnoreCase("0")) {
+                                                BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
+                                            } else if (listModel.getResponseData().getIscreated().equalsIgnoreCase("1") ||
+                                                    listModel.getResponseData().getIscreated().equalsIgnoreCase("")) {
+                                                callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0");
+                                                dialog.dismiss();
+                                            }
 
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
                                 }
 

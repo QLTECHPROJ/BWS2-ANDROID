@@ -132,25 +132,27 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        if (response.isSuccessful()) {
-                            SignUpModel loginModel = response.body();
-                            if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                Intent i = new Intent(ctx, CheckoutOtpActivity.class);
+                        try {
+                            if (response.isSuccessful()) {
+                                SignUpModel loginModel = response.body();
+                                if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                    Intent i = new Intent(ctx, CheckoutOtpActivity.class);
 //                            i.putParcelableArrayListExtra("PlanData",listModelList);
 //                            i.putExtra("TrialPeriod",TrialPeriod);
 //                            i.putExtra("position",position);
-                                i.putExtra("MobileNo", binding.edtNumber.getText().toString());
-                                i.putExtra("Name", binding.tvCountry.getText().toString());
-                                i.putExtra("Code", binding.tvCountryCode.getText().toString());
-                                BWSApplication.showToast(loginModel.getResponseMessage(), ctx);
-                                startActivity(i);
-                                finish();
-                            } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                binding.txtError.setVisibility(View.VISIBLE);
-                                binding.txtError.setText(loginModel.getResponseMessage());
+                                    i.putExtra("MobileNo", binding.edtNumber.getText().toString());
+                                    i.putExtra("Name", binding.tvCountry.getText().toString());
+                                    i.putExtra("Code", binding.tvCountryCode.getText().toString());
+                                    BWSApplication.showToast(loginModel.getResponseMessage(), ctx);
+                                    startActivity(i);
+                                    finish();
+                                } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                    binding.txtError.setVisibility(View.VISIBLE);
+                                    binding.txtError.setText(loginModel.getResponseMessage());
+                                }
                             }
-                        } else {
-                            BWSApplication.showToast(response.message(), ctx);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 

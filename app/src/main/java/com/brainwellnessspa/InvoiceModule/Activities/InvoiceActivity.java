@@ -75,38 +75,42 @@ public class InvoiceActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<InvoiceListModel>() {
                 @Override
                 public void onResponse(Call<InvoiceListModel> call, Response<InvoiceListModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        InvoiceListModel listModel = response.body();
-                        appointmentList = new ArrayList<>();
-                        memberShipList = new ArrayList<>();
-                        appointmentList = listModel.getResponseData().getAppointment();
-                        memberShipList = listModel.getResponseData().getMemberShip();
-                        binding.viewPager.setOffscreenPageLimit(2);
-                        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Membership"));
-                        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Appointment"));
-                        binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            InvoiceListModel listModel = response.body();
+                            appointmentList = new ArrayList<>();
+                            memberShipList = new ArrayList<>();
+                            appointmentList = listModel.getResponseData().getAppointment();
+                            memberShipList = listModel.getResponseData().getMemberShip();
+                            binding.viewPager.setOffscreenPageLimit(2);
+                            binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Membership"));
+                            binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Appointment"));
+                            binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-                        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), InvoiceActivity.this, binding.tabLayout.getTabCount());
-                        binding.viewPager.setAdapter(adapter);
-                        binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
+                            TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), InvoiceActivity.this, binding.tabLayout.getTabCount());
+                            binding.viewPager.setAdapter(adapter);
+                            binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
 
-                        binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                            @Override
-                            public void onTabSelected(TabLayout.Tab tab) {
-                                binding.viewPager.setCurrentItem(tab.getPosition());
-                            }
+                            binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                                @Override
+                                public void onTabSelected(TabLayout.Tab tab) {
+                                    binding.viewPager.setCurrentItem(tab.getPosition());
+                                }
 
-                            @Override
-                            public void onTabUnselected(TabLayout.Tab tab) {
+                                @Override
+                                public void onTabUnselected(TabLayout.Tab tab) {
 
-                            }
+                                }
 
-                            @Override
-                            public void onTabReselected(TabLayout.Tab tab) {
+                                @Override
+                                public void onTabReselected(TabLayout.Tab tab) {
 
-                            }
-                        });
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

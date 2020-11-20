@@ -67,19 +67,23 @@ public class AudioBooksFragment extends Fragment {
         listCall.enqueue(new Callback<ResourceListModel>() {
             @Override
             public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
-                if (response.isSuccessful()) {
-                    ResourceListModel listModel = response.body();
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                    AudioBooksAdapter adapter = new AudioBooksAdapter(listModel.getResponseData(), getActivity(), audio_books);
-                    binding.rvAudioBooksList.setAdapter(adapter);
+                try {
+                    if (response.isSuccessful()) {
+                        ResourceListModel listModel = response.body();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                        AudioBooksAdapter adapter = new AudioBooksAdapter(listModel.getResponseData(), getActivity(), audio_books);
+                        binding.rvAudioBooksList.setAdapter(adapter);
 
-                    if (listModel.getResponseData().size() != 0) {
-                        binding.llError.setVisibility(View.GONE);
-                        binding.rvAudioBooksList.setVisibility(View.VISIBLE);
-                    } else {
-                        binding.llError.setVisibility(View.VISIBLE);
-                        binding.rvAudioBooksList.setVisibility(View.GONE);
+                        if (listModel.getResponseData().size() != 0) {
+                            binding.llError.setVisibility(View.GONE);
+                            binding.rvAudioBooksList.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvAudioBooksList.setVisibility(View.GONE);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

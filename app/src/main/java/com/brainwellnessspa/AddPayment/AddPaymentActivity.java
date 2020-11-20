@@ -173,18 +173,22 @@ public class AddPaymentActivity extends AppCompatActivity {
                                     @Override
                                     public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                        if (response.isSuccessful()) {
-                                            AddCardModel cardModel = response.body();
-                                            if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                                InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                                keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                                finish();
-                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                            } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                            } else {
-                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                        try {
+                                            if (response.isSuccessful()) {
+                                                AddCardModel cardModel = response.body();
+                                                if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                                    InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                                    keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                                    finish();
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                                } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                                } else {
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                                }
                                             }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
                                     }
 

@@ -144,28 +144,32 @@ public class AddPlaylistActivity extends AppCompatActivity {
                         listCall.enqueue(new Callback<CreatePlaylistModel>() {
                             @Override
                             public void onResponse(Call<CreatePlaylistModel> call, Response<CreatePlaylistModel> response) {
-                                if (response.isSuccessful()) {
-                                    CreatePlaylistModel listsModel = response.body();
-                                    if (listsModel.getResponseData().getIscreated().equalsIgnoreCase("1")) {
-                                        dialog.dismiss();
-                                        prepareData(ctx);
-                                        String PlaylistID = listsModel.getResponseData().getId();
-                                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                        String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-                                            if (isDisclaimer == 1) {
-                                                BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                                try {
+                                    if (response.isSuccessful()) {
+                                        CreatePlaylistModel listsModel = response.body();
+                                        if (listsModel.getResponseData().getIscreated().equalsIgnoreCase("1")) {
+                                            dialog.dismiss();
+                                            prepareData(ctx);
+                                            String PlaylistID = listsModel.getResponseData().getId();
+                                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                                            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+                                            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                                                if (isDisclaimer == 1) {
+                                                    BWSApplication.showToast("The audio shall add after playing the disclaimer", ctx);
+                                                } else {
+                                                    callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
+                                                }
                                             } else {
                                                 callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
                                             }
                                         } else {
-                                            callAddPlaylistFromPlaylist(PlaylistID, listsModel.getResponseData().getName(), dialog, "0");
+                                            BWSApplication.showToast(listsModel.getResponseMessage(), ctx);
                                         }
-                                    } else {
-                                        BWSApplication.showToast(listsModel.getResponseMessage(), ctx);
                                     }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
                             }
 
@@ -203,18 +207,22 @@ public class AddPlaylistActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<PlaylistingModel>() {
                 @Override
                 public void onResponse(Call<PlaylistingModel> call, Response<PlaylistingModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        PlaylistingModel model = response.body();
-                        if (model.getResponseData().size() == 0) {
-                            binding.llError.setVisibility(View.VISIBLE);
-                            binding.rvPlayLists.setVisibility(View.GONE);
-                        } else {
-                            binding.llError.setVisibility(View.GONE);
-                            binding.rvPlayLists.setVisibility(View.VISIBLE);
-                            AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
-                            binding.rvPlayLists.setAdapter(addPlaylistAdapter);
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            PlaylistingModel model = response.body();
+                            if (model.getResponseData().size() == 0) {
+                                binding.llError.setVisibility(View.VISIBLE);
+                                binding.rvPlayLists.setVisibility(View.GONE);
+                            } else {
+                                binding.llError.setVisibility(View.GONE);
+                                binding.rvPlayLists.setVisibility(View.VISIBLE);
+                                AddPlaylistAdapter addPlaylistAdapter = new AddPlaylistAdapter(model.getResponseData(), ctx);
+                                binding.rvPlayLists.setAdapter(addPlaylistAdapter);
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

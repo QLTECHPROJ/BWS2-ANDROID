@@ -156,13 +156,17 @@ public class PaymentActivity extends AppCompatActivity {
                                                 listCall.enqueue(new Callback<PayNowDetailsModel>() {
                                                     @Override
                                                     public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
-                                                        if (response.isSuccessful()) {
-                                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                                            PayNowDetailsModel listModel1 = response.body();
-                                                            BWSApplication.showToast(listModel1.getResponseMessage(), context);
-                                                            Intent i = new Intent(context, BillingOrderActivity.class);
-                                                            startActivity(i);
-                                                            finish();
+                                                        try {
+                                                            if (response.isSuccessful()) {
+                                                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                                                PayNowDetailsModel listModel1 = response.body();
+                                                                BWSApplication.showToast(listModel1.getResponseMessage(), context);
+                                                                Intent i = new Intent(context, BillingOrderActivity.class);
+                                                                startActivity(i);
+                                                                finish();
+                                                            }
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
                                                         }
                                                     }
 
@@ -248,20 +252,24 @@ public class PaymentActivity extends AppCompatActivity {
                     listCall.enqueue(new Callback<CardListModel>() {
                         @Override
                         public void onResponse(Call<CardListModel> call, Response<CardListModel> response) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            CardListModel cardListModel = response.body();
-                            if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                if (cardListModel.getResponseData().size() == 0) {
-                                    rvCardList.setAdapter(null);
-                                    rvCardList.setVisibility(View.GONE);
+                            try {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                CardListModel cardListModel = response.body();
+                                if (cardListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                    if (cardListModel.getResponseData().size() == 0) {
+                                        rvCardList.setAdapter(null);
+                                        rvCardList.setVisibility(View.GONE);
+                                    } else {
+                                        rvCardList.setVisibility(View.VISIBLE);
+                                        adapter = new AllCardsAdapter(cardListModel.getResponseData(), ImgV, progressBarHolder, rvCardList);
+                                        rvCardList.setAdapter(adapter);
+                                    }
+                                    BWSApplication.showToast(cardListModel.getResponseMessage(), activity);
                                 } else {
-                                    rvCardList.setVisibility(View.VISIBLE);
-                                    adapter = new AllCardsAdapter(cardListModel.getResponseData(), ImgV, progressBarHolder, rvCardList);
-                                    rvCardList.setAdapter(adapter);
+                                    BWSApplication.showToast(cardListModel.getResponseMessage(), context);
                                 }
-                                BWSApplication.showToast(cardListModel.getResponseMessage(), activity);
-                            } else {
-                                BWSApplication.showToast(cardListModel.getResponseMessage(), context);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
 
@@ -309,15 +317,19 @@ public class PaymentActivity extends AppCompatActivity {
                                     @Override
                                     public void onResponse(Call<CardModel> call, Response<CardModel> response) {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                        if (response.isSuccessful()) {
-                                            CardModel cardModel = response.body();
-                                            if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                                prepareCardList();
-                                                dialog.dismiss();
-                                                BWSApplication.showToast(cardModel.getResponseMessage(), activity);
-                                            } else {
-                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                        try {
+                                            if (response.isSuccessful()) {
+                                                CardModel cardModel = response.body();
+                                                if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                                    prepareCardList();
+                                                    dialog.dismiss();
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), activity);
+                                                } else {
+                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                                }
                                             }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
                                     }
 

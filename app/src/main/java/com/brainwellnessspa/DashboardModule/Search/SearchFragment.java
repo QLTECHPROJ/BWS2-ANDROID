@@ -146,25 +146,29 @@ public class SearchFragment extends Fragment {
             listCall.enqueue(new Callback<SearchBothModel>() {
                 @Override
                 public void onResponse(Call<SearchBothModel> call, Response<SearchBothModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        SearchBothModel listModel = response.body();
-                        if (!searchEditText.getText().toString().equalsIgnoreCase("")) {
-                            if (listModel.getResponseData().size() == 0) {
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            SearchBothModel listModel = response.body();
+                            if (!searchEditText.getText().toString().equalsIgnoreCase("")) {
+                                if (listModel.getResponseData().size() == 0) {
+                                    binding.rvSerachList.setVisibility(View.GONE);
+                                    binding.llError.setVisibility(View.VISIBLE);
+                                    binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
+                                } else {
+                                    binding.llError.setVisibility(View.GONE);
+                                    binding.rvSerachList.setVisibility(View.VISIBLE);
+                                    adpater = new SerachListAdpater(listModel.getResponseData(), getActivity(), binding.rvSerachList, UserID);
+                                    binding.rvSerachList.setAdapter(adpater);
+                                }
+                            } else if (searchEditText.getText().toString().equalsIgnoreCase("")) {
+                                binding.rvSerachList.setAdapter(null);
                                 binding.rvSerachList.setVisibility(View.GONE);
-                                binding.llError.setVisibility(View.VISIBLE);
-                                binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
-                            } else {
                                 binding.llError.setVisibility(View.GONE);
-                                binding.rvSerachList.setVisibility(View.VISIBLE);
-                                adpater = new SerachListAdpater(listModel.getResponseData(), getActivity(), binding.rvSerachList, UserID);
-                                binding.rvSerachList.setAdapter(adpater);
                             }
-                        } else if (searchEditText.getText().toString().equalsIgnoreCase("")) {
-                            binding.rvSerachList.setAdapter(null);
-                            binding.rvSerachList.setVisibility(View.GONE);
-                            binding.llError.setVisibility(View.GONE);
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -286,25 +290,29 @@ public class SearchFragment extends Fragment {
             listCall.enqueue(new Callback<SuggestedModel>() {
                 @Override
                 public void onResponse(Call<SuggestedModel> call, Response<SuggestedModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        SuggestedModel listModel = response.body();
-                        binding.tvSuggestedAudios.setText(R.string.Recommended_Audios);
-                        binding.tvSAViewAll.setVisibility(View.VISIBLE);
-                        SuggestionAudiosAdpater suggestedAdpater = new SuggestionAudiosAdpater(listModel.getResponseData(), getActivity());
-                        binding.rvDownloadsList.setAdapter(suggestedAdpater);
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            SuggestedModel listModel = response.body();
+                            binding.tvSuggestedAudios.setText(R.string.Recommended_Audios);
+                            binding.tvSAViewAll.setVisibility(View.VISIBLE);
+                            SuggestionAudiosAdpater suggestedAdpater = new SuggestionAudiosAdpater(listModel.getResponseData(), getActivity());
+                            binding.rvDownloadsList.setAdapter(suggestedAdpater);
 
-                        binding.tvSAViewAll.setOnClickListener(view -> {
-                            Fragment fragment = new ViewAllSearchFragment();
-                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .replace(R.id.flContainer, fragment)
-                                    .commit();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("Name", "Recommended  Audios");
-                            bundle.putParcelableArrayList("AudiolistModel", listModel.getResponseData());
-                            fragment.setArguments(bundle);
-                        });
+                            binding.tvSAViewAll.setOnClickListener(view -> {
+                                Fragment fragment = new ViewAllSearchFragment();
+                                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                                fragmentManager1.beginTransaction()
+                                        .replace(R.id.flContainer, fragment)
+                                        .commit();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("Name", "Recommended  Audios");
+                                bundle.putParcelableArrayList("AudiolistModel", listModel.getResponseData());
+                                fragment.setArguments(bundle);
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -323,26 +331,27 @@ public class SearchFragment extends Fragment {
             listCall.enqueue(new Callback<SearchPlaylistModel>() {
                 @Override
                 public void onResponse(Call<SearchPlaylistModel> call, Response<SearchPlaylistModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        SearchPlaylistModel listModel = response.body();
-                        binding.tvSuggestedPlaylist.setText(R.string.Recommendeds_Playlist);
-                        binding.tvSPViewAll.setVisibility(View.VISIBLE);
-
-                        SearchPlaylistAdapter suggestedAdpater = new SearchPlaylistAdapter(listModel.getResponseData());
-                        binding.rvPlayList.setAdapter(suggestedAdpater);
-
-                        binding.tvSPViewAll.setOnClickListener(view -> {
-                            Fragment fragment = new ViewAllSearchFragment();
-                            FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-                            fragmentManager1.beginTransaction()
-                                    .replace(R.id.flContainer, fragment)
-                                    .commit();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("Name", "Recommended Playlist");
-                            bundle.putParcelableArrayList("PlaylistModel", listModel.getResponseData());
-                            fragment.setArguments(bundle);
-                        });
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            SearchPlaylistModel listModel = response.body();
+                            binding.tvSuggestedPlaylist.setText(R.string.Recommendeds_Playlist);
+                            binding.tvSPViewAll.setVisibility(View.VISIBLE);
+                            SearchPlaylistAdapter suggestedAdpater = new SearchPlaylistAdapter(listModel.getResponseData());
+                            binding.rvPlayList.setAdapter(suggestedAdpater);
+                            binding.tvSPViewAll.setOnClickListener(view -> {
+                                Fragment fragment = new ViewAllSearchFragment();
+                                FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
+                                fragmentManager1.beginTransaction()
+                                        .replace(R.id.flContainer, fragment).commit();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("Name", "Recommended Playlist");
+                                bundle.putParcelableArrayList("PlaylistModel", listModel.getResponseData());
+                                fragment.setArguments(bundle);
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

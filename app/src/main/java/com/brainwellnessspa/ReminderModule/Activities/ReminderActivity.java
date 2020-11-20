@@ -132,9 +132,9 @@ public class ReminderActivity extends AppCompatActivity {
             timePickerDialog = new TimePickerDialog(ReminderActivity.this, R.style.TimePickerTheme,
                     (view1, hourOfDay, minute) -> {
                         if (hourOfDay < 10) {
-                            if(hourOfDay == 0){
+                            if (hourOfDay == 0) {
                                 hourString = "12";
-                            }else{
+                            } else {
                                 hourString = "0" + hourOfDay;
                             }
                             am_pm = "AM";
@@ -145,7 +145,7 @@ public class ReminderActivity extends AppCompatActivity {
                             if (hourOfDay < 10) {
                                 hourString = "0" + hourString;
                             }
-                        }  else if (hourOfDay == 12) {
+                        } else if (hourOfDay == 12) {
                             am_pm = "PM";
                             hourString = "" + hourOfDay;
                         } else {
@@ -323,19 +323,23 @@ public class ReminderActivity extends AppCompatActivity {
                         listCall.enqueue(new Callback<SetReminderModel>() {
                             @Override
                             public void onResponse(Call<SetReminderModel> call, Response<SetReminderModel> response) {
-                                if (response.isSuccessful()) {
-                                    Log.e("remiderDays", TextUtils.join(",", remiderDays));
-                                    remiderDays.clear();
-                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                    SetReminderModel listModel = response.body();
-                                    BWSApplication.showToast(listModel.getResponseMessage(), activity);
-                                    if (ComeScreenReminder == 1) {
-                                        Intent i = new Intent(context, ReminderDetailsActivity.class);
-                                        startActivity(i);
-                                        finish();
-                                    } else {
-                                        finish();
+                                try {
+                                    if (response.isSuccessful()) {
+                                        Log.e("remiderDays", TextUtils.join(",", remiderDays));
+                                        remiderDays.clear();
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        SetReminderModel listModel = response.body();
+                                        BWSApplication.showToast(listModel.getResponseMessage(), activity);
+                                        if (ComeScreenReminder == 1) {
+                                            Intent i = new Intent(context, ReminderDetailsActivity.class);
+                                            startActivity(i);
+                                            finish();
+                                        } else {
+                                            finish();
+                                        }
                                     }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
                             }
 
@@ -377,19 +381,23 @@ public class ReminderActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<SelectPlaylistModel>() {
                 @Override
                 public void onResponse(Call<SelectPlaylistModel> call, Response<SelectPlaylistModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity);
-                        SelectPlaylistModel listModel = response.body();
-                        adapter = new SelectPlaylistAdapter(listModel.getResponseData());
-                        rvSelectPlaylist.setAdapter(adapter);
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(progressBar, progressBarHolder, activity);
+                            SelectPlaylistModel listModel = response.body();
+                            adapter = new SelectPlaylistAdapter(listModel.getResponseData());
+                            rvSelectPlaylist.setAdapter(adapter);
 
-                        if (listModel.getResponseData().size() == 0) {
-                            llError.setVisibility(View.GONE);
-                            rvSelectPlaylist.setVisibility(View.GONE);
-                        } else {
-                            llError.setVisibility(View.GONE);
-                            rvSelectPlaylist.setVisibility(View.VISIBLE);
+                            if (listModel.getResponseData().size() == 0) {
+                                llError.setVisibility(View.GONE);
+                                rvSelectPlaylist.setVisibility(View.GONE);
+                            } else {
+                                llError.setVisibility(View.GONE);
+                                rvSelectPlaylist.setVisibility(View.VISIBLE);
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

@@ -56,10 +56,10 @@ public class LoginActivity extends AppCompatActivity {
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
-            if(mediaPlayer!=null || isMediaStart){
+            if (mediaPlayer != null || isMediaStart) {
                 stopMedia();
                 releasePlayer();
-                if(isrelese){
+                if (isrelese) {
                     handler.removeCallbacks(UpdateSongTime);
                 }
             }
@@ -85,8 +85,8 @@ public class LoginActivity extends AppCompatActivity {
             releasePlayer();
         }
 
-        if(mediaPlayer!=null){
-            handler.postDelayed(UpdateSongTime,100);
+        if (mediaPlayer != null) {
+            handler.postDelayed(UpdateSongTime, 100);
         }
         binding.edtNumber.addTextChangedListener(loginTextWatcher);
         if (Code.equalsIgnoreCase("") || Name.equalsIgnoreCase("")) {
@@ -201,36 +201,38 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_Splash, MODE_PRIVATE);
                 String key = (shared1.getString(CONSTANTS.PREF_KEY_SplashKey, ""));
 
-                if(key.equalsIgnoreCase("")){
-                   key = getKey(ctx);
+                if (key.equalsIgnoreCase("")) {
+                    key = getKey(ctx);
                 }
                 Call<LoginModel> listCall = APIClient.getClient().getLoginDatas(binding.edtNumber.getText().toString(), countryCode, CONSTANTS.FLAG_ONE, CONSTANTS.FLAG_ZERO, key);
                 listCall.enqueue(new Callback<LoginModel>() {
                     @Override
                     public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        binding.txtError.setVisibility(View.GONE);
-                        if (response.isSuccessful()) {
-                            LoginModel loginModel = response.body();
-                            if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                    return;
+                        try {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            binding.txtError.setVisibility(View.GONE);
+                            if (response.isSuccessful()) {
+                                LoginModel loginModel = response.body();
+                                if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                        return;
+                                    }
+                                    mLastClickTime = SystemClock.elapsedRealtime();
+                                    Intent i = new Intent(ctx, OtpActivity.class);
+                                    i.putExtra("MobileNo", binding.edtNumber.getText().toString());
+                                    i.putExtra("Name", binding.tvCountry.getText().toString());
+                                    i.putExtra("Code", binding.tvCountryCode.getText().toString());
+                                    handler.removeCallbacks(UpdateSongTime);
+                                    startActivity(i);
+                                    finish();
+                                    BWSApplication.showToast(loginModel.getResponseMessage(), ctx);
+                                } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                    binding.txtError.setVisibility(View.VISIBLE);
+                                    binding.txtError.setText(loginModel.getResponseMessage());
                                 }
-                                mLastClickTime = SystemClock.elapsedRealtime();
-                                Intent i = new Intent(ctx, OtpActivity.class);
-                                i.putExtra("MobileNo", binding.edtNumber.getText().toString());
-                                i.putExtra("Name", binding.tvCountry.getText().toString());
-                                i.putExtra("Code", binding.tvCountryCode.getText().toString());
-                                handler.removeCallbacks(UpdateSongTime);
-                                startActivity(i);
-                                finish();
-                                BWSApplication.showToast(loginModel.getResponseMessage(), ctx);
-                            } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                binding.txtError.setVisibility(View.VISIBLE);
-                                binding.txtError.setText(loginModel.getResponseMessage());
                             }
-                        } else {
-                            BWSApplication.showToast(response.message(), ctx);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 

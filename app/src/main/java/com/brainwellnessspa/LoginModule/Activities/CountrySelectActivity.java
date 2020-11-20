@@ -40,7 +40,7 @@ import retrofit2.Response;
 public class CountrySelectActivity extends AppCompatActivity {
     ActivityCountrySelectBinding binding;
     CountrySelectAdapter adapter;
-//    String TrialPeriod;
+    //    String TrialPeriod;
 //    private ArrayList<MembershipPlanListModel.Plan> listModelList;
 //    int position;
     Context ctx;
@@ -123,13 +123,17 @@ public class CountrySelectActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<CountryListModel>() {
                 @Override
                 public void onResponse(Call<CountryListModel> call, Response<CountryListModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        CountryListModel listModel = response.body();
-                        if (listModel != null) {
-                            adapter = new CountrySelectAdapter(listModel.getResponseData());
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            CountryListModel listModel = response.body();
+                            if (listModel != null) {
+                                adapter = new CountrySelectAdapter(listModel.getResponseData());
+                            }
+                            binding.rvCountryList.setAdapter(adapter);
                         }
-                        binding.rvCountryList.setAdapter(adapter);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

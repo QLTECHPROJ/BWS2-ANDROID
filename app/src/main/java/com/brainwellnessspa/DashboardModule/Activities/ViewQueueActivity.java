@@ -97,7 +97,7 @@ import static com.brainwellnessspa.Utility.MusicService.savePrefQueue;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,/* AudioManager.OnAudioFocusChangeListener,*/ StartDragListener/*, Playable */{
+public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,/* AudioManager.OnAudioFocusChangeListener,*/ StartDragListener/*, Playable */ {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
     String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name, StrigRemoveName;
@@ -116,7 +116,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     private long mLastClickTime = 0;
     private Handler handler;
     boolean addSong = false;
-//    boolean isPlaying = false;
+    //    boolean isPlaying = false;
 //    BroadcastReceiver broadcastReceiver;
     //    private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -1538,26 +1538,29 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     private void addToRecentPlay() {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         String UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
-            Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(id, UserID);
-            listCall.enqueue(new Callback<SucessModel>() {
-                @Override
-                public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
-                        SucessModel model = response.body();
+        try {
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
+                Call<SucessModel> listCall = APIClient.getClient().getRecentlyplayed(id, UserID);
+                listCall.enqueue(new Callback<SucessModel>() {
+                    @Override
+                    public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
+                            SucessModel model = response.body();
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<SucessModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
-                }
-            });
-        } else {
+                    @Override
+                    public void onFailure(Call<SucessModel> call, Throwable t) {
+                        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
+                    }
+                });
+            } else {
 //            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

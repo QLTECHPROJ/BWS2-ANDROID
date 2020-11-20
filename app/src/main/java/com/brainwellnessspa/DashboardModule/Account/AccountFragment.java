@@ -278,18 +278,22 @@ public class AccountFragment extends Fragment {
             listCall.enqueue(new Callback<LogoutModel>() {
                 @Override
                 public void onResponse(Call<LogoutModel> call, Response<LogoutModel> response) {
-                    if (response.isSuccessful()) {
-                        LogoutModel loginModel = response.body();
-                        dialog.hide();
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                            return;
+                    try {
+                        if (response.isSuccessful()) {
+                            LogoutModel loginModel = response.body();
+                            dialog.hide();
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                return;
+                            }
+                            mLastClickTime = SystemClock.elapsedRealtime();
+                            Intent i = new Intent(getActivity(), LoginActivity.class);
+                            startActivity(i);
+                        } else {
+                            BWSApplication.showToast(response.message(), getActivity());
                         }
-                        mLastClickTime = SystemClock.elapsedRealtime();
-                        Intent i = new Intent(getActivity(), LoginActivity.class);
-                        startActivity(i);
-                    } else {
-                        BWSApplication.showToast(response.message(), getActivity());
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -369,56 +373,57 @@ public class AccountFragment extends Fragment {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onResponse(Call<ProfileViewModel> call, Response<ProfileViewModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        ProfileViewModel viewModel = response.body();
-                        binding.tvViewProfile.setVisibility(View.VISIBLE);
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            ProfileViewModel viewModel = response.body();
+                            binding.tvViewProfile.setVisibility(View.VISIBLE);
 
-                        if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
-                                viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
-                                viewModel.getResponseData().getName() == null) {
-                            binding.tvName.setText(R.string.Guest);
-                        } else {
-                            binding.tvName.setText(viewModel.getResponseData().getName());
-                        }
-                        if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
-                            String Letter = "G";
-                            String profilePicPath = viewModel.getResponseData().getImage();
-                            IsLock = viewModel.getResponseData().getIsLock();
-                            if (profilePicPath.equalsIgnoreCase("")) {
-                                binding.civProfile.setVisibility(View.GONE);
-                                binding.rlLetter.setVisibility(View.VISIBLE);
-                                binding.tvLetter.setText(Letter);
+                            if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
+                                    viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
+                                    viewModel.getResponseData().getName() == null) {
+                                binding.tvName.setText(R.string.Guest);
                             } else {
-                                binding.civProfile.setVisibility(View.VISIBLE);
-                                binding.rlLetter.setVisibility(View.GONE);
-                                Glide.with(ctx).load(profilePicPath).thumbnail(1f).dontAnimate().into(binding.civProfile);
+                                binding.tvName.setText(viewModel.getResponseData().getName());
                             }
-                        } else {
-                            String Name = viewModel.getResponseData().getName();
-                            String Letter = Name.substring(0, 1);
-                            String profilePicPath = viewModel.getResponseData().getImage();
-                            IsLock = viewModel.getResponseData().getIsLock();
-                            if (profilePicPath.equalsIgnoreCase("")) {
-                                binding.civProfile.setVisibility(View.GONE);
-                                binding.rlLetter.setVisibility(View.VISIBLE);
-                                binding.tvLetter.setText(Letter);
+                            if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
+                                String Letter = "G";
+                                String profilePicPath = viewModel.getResponseData().getImage();
+                                IsLock = viewModel.getResponseData().getIsLock();
+                                if (profilePicPath.equalsIgnoreCase("")) {
+                                    binding.civProfile.setVisibility(View.GONE);
+                                    binding.rlLetter.setVisibility(View.VISIBLE);
+                                    binding.tvLetter.setText(Letter);
+                                } else {
+                                    binding.civProfile.setVisibility(View.VISIBLE);
+                                    binding.rlLetter.setVisibility(View.GONE);
+                                    Glide.with(ctx).load(profilePicPath).thumbnail(1f).dontAnimate().into(binding.civProfile);
+                                }
                             } else {
-                                binding.civProfile.setVisibility(View.VISIBLE);
-                                binding.rlLetter.setVisibility(View.GONE);
-                                Glide.with(ctx).load(profilePicPath).thumbnail(1f).dontAnimate().into(binding.civProfile);
+                                String Name = viewModel.getResponseData().getName();
+                                String Letter = Name.substring(0, 1);
+                                String profilePicPath = viewModel.getResponseData().getImage();
+                                IsLock = viewModel.getResponseData().getIsLock();
+                                if (profilePicPath.equalsIgnoreCase("")) {
+                                    binding.civProfile.setVisibility(View.GONE);
+                                    binding.rlLetter.setVisibility(View.VISIBLE);
+                                    binding.tvLetter.setText(Letter);
+                                } else {
+                                    binding.civProfile.setVisibility(View.VISIBLE);
+                                    binding.rlLetter.setVisibility(View.GONE);
+                                    Glide.with(ctx).load(profilePicPath).thumbnail(1f).dontAnimate().into(binding.civProfile);
+                                }
                             }
-                        }
 
 
-                        binding.llUserProfile.setOnClickListener(view13 -> {
+                            binding.llUserProfile.setOnClickListener(view13 -> {
 //                            if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("1")){
-                            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                return;
-                            }
-                            mLastClickTime = SystemClock.elapsedRealtime();
-                            Intent i = new Intent(getActivity(), UserProfileActivity.class);
-                            startActivity(i);
+                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                                    return;
+                                }
+                                mLastClickTime = SystemClock.elapsedRealtime();
+                                Intent i = new Intent(getActivity(), UserProfileActivity.class);
+                                startActivity(i);
                            /* }else if (viewModel.getResponseData().getPatientid().equalsIgnoreCase("0")) {
                                 final Dialog dialog = new Dialog(ctx);
                                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -440,21 +445,24 @@ public class AccountFragment extends Fragment {
                                 dialog.show();
                                 dialog.setCancelable(false);
                             }*/
-                        });
+                            });
 
-                        if (viewModel.getResponseData().getOrderTotal().equalsIgnoreCase("")) {
-                            binding.tvCrtPlan.setText("Premium Team Plan one");
-                        } else {
-                            if (viewModel.getResponseData().getPlanperiod().equalsIgnoreCase("")) {
-                                binding.tvCrtPlan.setText("Current plan: " + viewModel.getResponseData().getOrderTotal());
+                            if (viewModel.getResponseData().getOrderTotal().equalsIgnoreCase("")) {
+                                binding.tvCrtPlan.setText("Premium Team Plan one");
                             } else {
-                                binding.tvCrtPlan.setText("Current plan: " + viewModel.getResponseData().getOrderTotal() + " / " +
-                                        viewModel.getResponseData().getPlanperiod());
+                                if (viewModel.getResponseData().getPlanperiod().equalsIgnoreCase("")) {
+                                    binding.tvCrtPlan.setText("Current plan: " + viewModel.getResponseData().getOrderTotal());
+                                } else {
+                                    binding.tvCrtPlan.setText("Current plan: " + viewModel.getResponseData().getOrderTotal() + " / " +
+                                            viewModel.getResponseData().getPlanperiod());
+                                }
                             }
-                        }
 
-                    } else {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                        } else {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

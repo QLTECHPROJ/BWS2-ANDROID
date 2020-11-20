@@ -181,16 +181,20 @@ public class ViewAllAudioFragment extends Fragment {
             listCall.enqueue(new Callback<ViewAllAudioListModel>() {
                 @Override
                 public void onResponse(Call<ViewAllAudioListModel> call, Response<ViewAllAudioListModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        ViewAllAudioListModel listModel = response.body();
-                        if (Category.equalsIgnoreCase("")) {
-                            binding.tvTitle.setText(listModel.getResponseData().getView());
-                        } else {
-                            binding.tvTitle.setText(Category);
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            ViewAllAudioListModel listModel = response.body();
+                            if (Category.equalsIgnoreCase("")) {
+                                binding.tvTitle.setText(listModel.getResponseData().getView());
+                            } else {
+                                binding.tvTitle.setText(Category);
+                            }
+                            AudiolistAdapter adapter = new AudiolistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
+                            binding.rvMainAudio.setAdapter(adapter);
                         }
-                        AudiolistAdapter adapter = new AudiolistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
-                        binding.rvMainAudio.setAdapter(adapter);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -554,9 +558,9 @@ public class ViewAllAudioFragment extends Fragment {
                 isMediaStart = false;
                 isPrepare = false;
                 isCompleteStop = false;
-                    Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    getActivity().startActivity(i);
+                Intent i = new Intent(getActivity(), PlayWellnessActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                getActivity().startActivity(i);
             }
 
         } catch (Exception e) {

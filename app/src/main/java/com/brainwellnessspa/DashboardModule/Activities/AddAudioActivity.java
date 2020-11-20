@@ -153,25 +153,29 @@ public class AddAudioActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<SearchBothModel>() {
                 @Override
                 public void onResponse(Call<SearchBothModel> call, Response<SearchBothModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        SearchBothModel listModel = response.body();
-                        if (!searchEditText.getText().toString().equalsIgnoreCase("")) {
-                            if (listModel.getResponseData().size() == 0) {
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            SearchBothModel listModel = response.body();
+                            if (!searchEditText.getText().toString().equalsIgnoreCase("")) {
+                                if (listModel.getResponseData().size() == 0) {
+                                    binding.rvSerachList.setVisibility(View.GONE);
+                                    binding.llError.setVisibility(View.VISIBLE);
+                                    binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
+                                } else {
+                                    binding.llError.setVisibility(View.GONE);
+                                    binding.rvSerachList.setVisibility(View.VISIBLE);
+                                    adpater = new SerachListAdpater(listModel.getResponseData(), activity, binding.rvSerachList, UserID);
+                                    binding.rvSerachList.setAdapter(adpater);
+                                }
+                            } else if (searchEditText.getText().toString().equalsIgnoreCase("")) {
+                                binding.rvSerachList.setAdapter(null);
                                 binding.rvSerachList.setVisibility(View.GONE);
-                                binding.llError.setVisibility(View.VISIBLE);
-                                binding.tvFound.setText("Couldn't find '" + search + "'. Try searching again");
-                            } else {
                                 binding.llError.setVisibility(View.GONE);
-                                binding.rvSerachList.setVisibility(View.VISIBLE);
-                                adpater = new SerachListAdpater(listModel.getResponseData(), activity, binding.rvSerachList, UserID);
-                                binding.rvSerachList.setAdapter(adpater);
                             }
-                        } else if (searchEditText.getText().toString().equalsIgnoreCase("")) {
-                            binding.rvSerachList.setAdapter(null);
-                            binding.rvSerachList.setVisibility(View.GONE);
-                            binding.llError.setVisibility(View.GONE);
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -209,22 +213,27 @@ public class AddAudioActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<SuggestedModel>() {
                 @Override
                 public void onResponse(Call<SuggestedModel> call, Response<SuggestedModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        SuggestedModel listModel = response.body();
-                        binding.tvSuggestedAudios.setText(R.string.Recommended_Audios);
-                        binding.tvSAViewAll.setVisibility(View.VISIBLE);
-                        SuggestedAdpater suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), ctx);
-                        binding.rvSuggestedList.setAdapter(suggestedAdpater);
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            SuggestedModel listModel = response.body();
+                            binding.tvSuggestedAudios.setText(R.string.Recommended_Audios);
+                            binding.tvSAViewAll.setVisibility(View.VISIBLE);
+                            SuggestedAdpater suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), ctx);
+                            binding.rvSuggestedList.setAdapter(suggestedAdpater);
 
-                        binding.tvSAViewAll.setOnClickListener(view -> {
-                            Intent i = new Intent(ctx, ViewSuggestedActivity.class);
-                            i.putExtra("Name", "Recommended  Audios");
-                            i.putExtra("PlaylistID", PlaylistID);
-                            i.putParcelableArrayListExtra("AudiolistModel", listModel.getResponseData());
-                            startActivity(i);
-                            finish();
-                        });
+                            binding.tvSAViewAll.setOnClickListener(view -> {
+                                Intent i = new Intent(ctx, ViewSuggestedActivity.class);
+                                i.putExtra("Name", "Recommended  Audios");
+                                i.putExtra("PlaylistID", PlaylistID);
+                                i.putParcelableArrayListExtra("AudiolistModel", listModel.getResponseData());
+                                startActivity(i);
+                                finish();
+                            });
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -243,23 +252,27 @@ public class AddAudioActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<SearchPlaylistModel>() {
                 @Override
                 public void onResponse(Call<SearchPlaylistModel> call, Response<SearchPlaylistModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        SearchPlaylistModel listModel = response.body();
-                        binding.tvSuggestedPlaylist.setText(R.string.Recommendeds_Playlist);
-                        binding.tvSPViewAll.setVisibility(View.VISIBLE);
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            SearchPlaylistModel listModel = response.body();
+                            binding.tvSuggestedPlaylist.setText(R.string.Recommendeds_Playlist);
+                            binding.tvSPViewAll.setVisibility(View.VISIBLE);
 
-                        SuggestedPlayListsAdpater suggestedAdpater = new SuggestedPlayListsAdpater(listModel.getResponseData());
-                        binding.rvPlayList.setAdapter(suggestedAdpater);
+                            SuggestedPlayListsAdpater suggestedAdpater = new SuggestedPlayListsAdpater(listModel.getResponseData());
+                            binding.rvPlayList.setAdapter(suggestedAdpater);
 
-                        binding.tvSPViewAll.setOnClickListener(view -> {
-                            Intent i = new Intent(ctx, ViewSuggestedActivity.class);
-                            i.putExtra("Name", "Recommended Playlist");
-                            i.putExtra("PlaylistID", PlaylistID);
-                            i.putParcelableArrayListExtra("PlaylistModel", listModel.getResponseData());
-                            startActivity(i);
-                            finish();
-                        });
+                            binding.tvSPViewAll.setOnClickListener(view -> {
+                                Intent i = new Intent(ctx, ViewSuggestedActivity.class);
+                                i.putExtra("Name", "Recommended Playlist");
+                                i.putExtra("PlaylistID", PlaylistID);
+                                i.putParcelableArrayListExtra("PlaylistModel", listModel.getResponseData());
+                                startActivity(i);
+                                finish();
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

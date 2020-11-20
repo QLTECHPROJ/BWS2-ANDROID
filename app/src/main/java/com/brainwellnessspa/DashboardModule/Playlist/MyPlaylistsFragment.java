@@ -709,12 +709,16 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                                         @Override
                                                         public void onResponse(Call<ReminderStatusPlaylistModel> call1, Response<ReminderStatusPlaylistModel> response1) {
                                                             if (response1.isSuccessful()) {
-                                                                ReminderStatusPlaylistModel listModel1 = response1.body();
+                                                                try {
+                                                                    ReminderStatusPlaylistModel listModel1 = response1.body();
 //                                                                prepareData(UserID, PlaylistID);
-                                                                listModel.getResponseData().setIsReminder(listModel1.getResponseData().getIsCheck());
-                                                                binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
-                                                                dialog.dismiss();
-                                                                BWSApplication.showToast(listModel1.getResponseMessage(), activity);
+                                                                    listModel.getResponseData().setIsReminder(listModel1.getResponseData().getIsCheck());
+                                                                    binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
+                                                                    dialog.dismiss();
+                                                                    BWSApplication.showToast(listModel1.getResponseMessage(), activity);
+                                                                } catch (Exception e) {
+                                                                    e.printStackTrace();
+                                                                }
                                                             }
                                                         }
 
@@ -1128,43 +1132,47 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             listCall.enqueue(new Callback<SucessModel>() {
                 @Override
                 public void onResponse(Call<SucessModel> call, Response<SucessModel> response) {
-                    if (response.isSuccessful()) {
-                        handler2.removeCallbacks(UpdateSongTime2);
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        SucessModel listModel = response.body();
-                        mData.remove(position);
-                        if (mData.size() == 0) {
-                            enableDisableDownload(false, "gray");
-                        }
-                        SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                        AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                        int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-                        String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-                            if (pos == position && position < mData.size() - 1) {
-//                                            pos = pos + 1;
-                                if (isDisclaimer == 1) {
-//                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
-                                } else {
-                                    callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
-                                }
-                            } else if (pos == position && position == mData.size() - 1) {
-                                pos = 0;
-                                if (isDisclaimer == 1) {
-//                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
-                                } else {
-                                    callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
-                                }
-                            } else if (pos < position && pos < mData.size() - 1) {
-                                saveToPref(pos, mData);
-                            } else if (pos > position && pos == mData.size()) {
-                                pos = pos - 1;
-                                saveToPref(pos, mData);
+                    try {
+                        if (response.isSuccessful()) {
+                            handler2.removeCallbacks(UpdateSongTime2);
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            SucessModel listModel = response.body();
+                            mData.remove(position);
+                            if (mData.size() == 0) {
+                                enableDisableDownload(false, "gray");
                             }
+                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                            AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                            int pos = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
+                            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                                if (pos == position && position < mData.size() - 1) {
+//                                            pos = pos + 1;
+                                    if (isDisclaimer == 1) {
+//                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
+                                    } else {
+                                        callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
+                                    }
+                                } else if (pos == position && position == mData.size() - 1) {
+                                    pos = 0;
+                                    if (isDisclaimer == 1) {
+//                                    BWSApplication.showToast("The audio shall remove after the disclaimer", getActivity());
+                                    } else {
+                                        callTransparentFrag(pos, getActivity(), mData, "myPlaylist", PlaylistID);
+                                    }
+                                } else if (pos < position && pos < mData.size() - 1) {
+                                    saveToPref(pos, mData);
+                                } else if (pos > position && pos == mData.size()) {
+                                    pos = pos - 1;
+                                    saveToPref(pos, mData);
+                                }
+                            }
+                            prepareData(UserID, PlaylistID);
+                            BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                         }
-                        prepareData(UserID, PlaylistID);
-                        BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -1989,20 +1997,24 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
 
         private void callDragApi() {
-            if (BWSApplication.isNetworkConnected(getActivity())) {
-                Call<CardModel> listCall = APIClient.getClient().setShortedAudio(UserID, PlaylistID, TextUtils.join(",", changedAudio));
-                listCall.enqueue(new Callback<CardModel>() {
-                    @Override
-                    public void onResponse(Call<CardModel> call, Response<CardModel> response) {
-                        if (response.isSuccessful()) {
-                            CardModel listModel = response.body();
+            try {
+                if (BWSApplication.isNetworkConnected(getActivity())) {
+                    Call<CardModel> listCall = APIClient.getClient().setShortedAudio(UserID, PlaylistID, TextUtils.join(",", changedAudio));
+                    listCall.enqueue(new Callback<CardModel>() {
+                        @Override
+                        public void onResponse(Call<CardModel> call, Response<CardModel> response) {
+                            if (response.isSuccessful()) {
+                                CardModel listModel = response.body();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<CardModel> call, Throwable t) {
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<CardModel> call, Throwable t) {
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 

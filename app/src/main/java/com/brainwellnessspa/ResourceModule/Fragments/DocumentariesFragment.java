@@ -65,19 +65,23 @@ public class DocumentariesFragment extends Fragment {
         listCall.enqueue(new Callback<ResourceListModel>() {
             @Override
             public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
-                if (response.isSuccessful()) {
-                    ResourceListModel listModel = response.body();
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                    DocumentariesAdapter adapter = new DocumentariesAdapter(listModel.getResponseData(), getActivity(), documentaries);
-                    binding.rvDocumentariesList.setAdapter(adapter);
+                try {
+                    if (response.isSuccessful()) {
+                        ResourceListModel listModel = response.body();
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                        DocumentariesAdapter adapter = new DocumentariesAdapter(listModel.getResponseData(), getActivity(), documentaries);
+                        binding.rvDocumentariesList.setAdapter(adapter);
 
-                    if (listModel.getResponseData().size() != 0) {
-                        binding.llError.setVisibility(View.GONE);
-                        binding.rvDocumentariesList.setVisibility(View.VISIBLE);
-                    } else {
-                        binding.llError.setVisibility(View.VISIBLE);
-                        binding.rvDocumentariesList.setVisibility(View.GONE);
+                        if (listModel.getResponseData().size() != 0) {
+                            binding.llError.setVisibility(View.GONE);
+                            binding.rvDocumentariesList.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvDocumentariesList.setVisibility(View.GONE);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

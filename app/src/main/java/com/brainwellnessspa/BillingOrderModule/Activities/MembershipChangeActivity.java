@@ -93,24 +93,27 @@ public class MembershipChangeActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<PlanListBillingModel>() {
                 @Override
                 public void onResponse(Call<PlanListBillingModel> call, Response<PlanListBillingModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        PlanListBillingModel membershipPlanListModel = response.body();
-                        if (membershipPlanListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
-                            binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
-                            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                                    5, 3, 1f, 0);
-                            binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-                            binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-                            binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-                            binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner);
-
-                            membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan()
-                                    , ctx, binding.btnFreeJoin);
-                            binding.rvPlanList.setAdapter(membershipPlanAdapter);
-
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            PlanListBillingModel membershipPlanListModel = response.body();
+                            if (membershipPlanListModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                binding.tvTitle.setText(membershipPlanListModel.getResponseData().getTitle());
+                                binding.tvDesc.setText(membershipPlanListModel.getResponseData().getDesc());
+                                MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                                        5, 3, 1f, 0);
+                                binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+                                binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+                                binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                                binding.ivRestaurantImage.setImageResource(R.drawable.ic_membership_banner);
+                                membershipPlanAdapter = new MembershipPlanAdapter(membershipPlanListModel.getResponseData().getPlan()
+                                        , ctx, binding.btnFreeJoin);
+                                binding.rvPlanList.setAdapter(membershipPlanAdapter);
+                            }
                         }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -208,7 +211,7 @@ public class MembershipChangeActivity extends AppCompatActivity {
             renewPlanId = listModel.getPlanID();
             i = new Intent(ctx, OrderSummaryActivity.class);
             i.putExtra("comeFrom", "membership");
-            i.putExtra("ComesTrue",ComeFrom);
+            i.putExtra("ComesTrue", ComeFrom);
             i.putParcelableArrayListExtra("PlanData", listModelList);
             i.putExtra("TrialPeriod", "");
             i.putExtra("position", position);

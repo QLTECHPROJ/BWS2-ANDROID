@@ -155,23 +155,27 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
                 listCall.enqueue(new Callback<OtpModel>() {
                     @Override
                     public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            OtpModel otpModel = response.body();
-                            if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                binding.txtError.setVisibility(View.GONE);
-                                Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
-                                i.putExtra("MobileNo", MobileNo);
-                                i.putExtra("Code", Code);
-                                startActivity(i);
-                                finish();
-                            } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                binding.txtError.setText(otpModel.getResponseMessage());
-                                binding.txtError.setVisibility(View.VISIBLE);
-                            } else {
-                                binding.txtError.setText(otpModel.getResponseMessage());
-                                binding.txtError.setVisibility(View.VISIBLE);
+                        try {
+                            if (response.isSuccessful()) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                OtpModel otpModel = response.body();
+                                if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                    binding.txtError.setVisibility(View.GONE);
+                                    Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
+                                    i.putExtra("MobileNo", MobileNo);
+                                    i.putExtra("Code", Code);
+                                    startActivity(i);
+                                    finish();
+                                } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                    binding.txtError.setText(otpModel.getResponseMessage());
+                                    binding.txtError.setVisibility(View.VISIBLE);
+                                } else {
+                                    binding.txtError.setText(otpModel.getResponseMessage());
+                                    binding.txtError.setVisibility(View.VISIBLE);
+                                }
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 
@@ -299,38 +303,42 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
             listCall.enqueue(new Callback<SignUpModel>() {
                 @Override
                 public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        SignUpModel loginModel = response.body();
-                        if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            countDownTimer = new CountDownTimer(30000, 1000) {
-                                public void onTick(long millisUntilFinished) {
-                                    binding.llResendSms.setEnabled(false);
-                                    binding.tvResendOTP.setText(Html.fromHtml(millisUntilFinished / 1000 + "<font color=\"#999999\">" + " Resent SMS" + "</font>"));
-                                }
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            SignUpModel loginModel = response.body();
+                            if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                countDownTimer = new CountDownTimer(30000, 1000) {
+                                    public void onTick(long millisUntilFinished) {
+                                        binding.llResendSms.setEnabled(false);
+                                        binding.tvResendOTP.setText(Html.fromHtml(millisUntilFinished / 1000 + "<font color=\"#999999\">" + " Resent SMS" + "</font>"));
+                                    }
 
-                                public void onFinish() {
-                                    binding.llResendSms.setEnabled(true);
-                                    binding.tvResendOTP.setText(getString(R.string.resent_sms));
-                                    binding.tvResendOTP.setTextColor(getResources().getColor(R.color.dark_blue_gray));
-                                    binding.tvResendOTP.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                                    binding.tvResendOTP.getPaint().setMaskFilter(null);
-                                }
-                            }.start();
-                            binding.edtOTP1.requestFocus();
-                            binding.edtOTP1.setText("");
-                            binding.edtOTP2.setText("");
-                            binding.edtOTP3.setText("");
-                            binding.edtOTP4.setText("");
-                            tvSendOTPbool = true;
-                            BWSApplication.showToast(loginModel.getResponseMessage(), getApplicationContext());
-                        } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                            binding.txtError.setVisibility(View.VISIBLE);
-                            binding.txtError.setText(loginModel.getResponseMessage());
-                        } else {
-                            binding.txtError.setVisibility(View.VISIBLE);
-                            binding.txtError.setText(loginModel.getResponseMessage());
+                                    public void onFinish() {
+                                        binding.llResendSms.setEnabled(true);
+                                        binding.tvResendOTP.setText(getString(R.string.resent_sms));
+                                        binding.tvResendOTP.setTextColor(getResources().getColor(R.color.dark_blue_gray));
+                                        binding.tvResendOTP.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                                        binding.tvResendOTP.getPaint().setMaskFilter(null);
+                                    }
+                                }.start();
+                                binding.edtOTP1.requestFocus();
+                                binding.edtOTP1.setText("");
+                                binding.edtOTP2.setText("");
+                                binding.edtOTP3.setText("");
+                                binding.edtOTP4.setText("");
+                                tvSendOTPbool = true;
+                                BWSApplication.showToast(loginModel.getResponseMessage(), getApplicationContext());
+                            } else if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                binding.txtError.setVisibility(View.VISIBLE);
+                                binding.txtError.setText(loginModel.getResponseMessage());
+                            } else {
+                                binding.txtError.setVisibility(View.VISIBLE);
+                                binding.txtError.setText(loginModel.getResponseMessage());
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

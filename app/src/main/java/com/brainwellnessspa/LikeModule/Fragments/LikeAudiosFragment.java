@@ -130,21 +130,25 @@ public class LikeAudiosFragment extends Fragment {
             listCall.enqueue(new Callback<LikesHistoryModel>() {
                 @Override
                 public void onResponse(Call<LikesHistoryModel> call, Response<LikesHistoryModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        LikesHistoryModel listModel = response.body();
-                        List<LikesHistoryModel.ResponseData.Audio> listDataModel = listModel.getResponseData().getAudio();
-                        if (listDataModel.size() == 0) {
-                            binding.tvFound.setVisibility(View.VISIBLE);
-                            binding.llError.setVisibility(View.VISIBLE);
-                            binding.rvLikesList.setVisibility(View.GONE);
-                        } else {
-                            binding.llError.setVisibility(View.GONE);
-                            binding.rvLikesList.setVisibility(View.VISIBLE);
-                            LikeAudiosAdapter adapter = new LikeAudiosAdapter(listModel.getResponseData().getAudio(), getActivity());
-                            binding.rvLikesList.setAdapter(adapter);
-                        }
-                    }
+                   try {
+                       if (response.isSuccessful()) {
+                           BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                           LikesHistoryModel listModel = response.body();
+                           List<LikesHistoryModel.ResponseData.Audio> listDataModel = listModel.getResponseData().getAudio();
+                           if (listDataModel.size() == 0) {
+                               binding.tvFound.setVisibility(View.VISIBLE);
+                               binding.llError.setVisibility(View.VISIBLE);
+                               binding.rvLikesList.setVisibility(View.GONE);
+                           } else {
+                               binding.llError.setVisibility(View.GONE);
+                               binding.rvLikesList.setVisibility(View.VISIBLE);
+                               LikeAudiosAdapter adapter = new LikeAudiosAdapter(listModel.getResponseData().getAudio(), getActivity());
+                               binding.rvLikesList.setAdapter(adapter);
+                           }
+                       }
+                   }catch (Exception e){
+                       e.printStackTrace();
+                   }
                 }
 
                 @Override

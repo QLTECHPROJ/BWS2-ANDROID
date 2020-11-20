@@ -88,10 +88,15 @@ public class BillingAddressFragment extends Fragment {
                         @Override
                         public void onResponse(Call<BillingAddressSaveModel> call, Response<BillingAddressSaveModel> response) {
                             if (response.isSuccessful()) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                                BillingAddressSaveModel listModel = response.body();
-                                BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
-                                getActivity().finish();
+                                try {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                                    BillingAddressSaveModel listModel = response.body();
+                                    BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
+                                    getActivity().finish();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
                             }
                         }
 
@@ -114,35 +119,39 @@ public class BillingAddressFragment extends Fragment {
         listCall.enqueue(new Callback<BillingAddressViewModel>() {
             @Override
             public void onResponse(Call<BillingAddressViewModel> call, Response<BillingAddressViewModel> response) {
-                if (response.isSuccessful()) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                    BillingAddressViewModel listModel = response.body();
-                    if (listModel.getResponseData().getName().equalsIgnoreCase("") ||
-                            listModel.getResponseData().getName().equalsIgnoreCase(" ") ||
-                            listModel.getResponseData().getName() == null) {
-                        binding.etName.setText("");
-                    } else {
-                        binding.etName.setText(listModel.getResponseData().getName());
+                try {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                        BillingAddressViewModel listModel = response.body();
+                        if (listModel.getResponseData().getName().equalsIgnoreCase("") ||
+                                listModel.getResponseData().getName().equalsIgnoreCase(" ") ||
+                                listModel.getResponseData().getName() == null) {
+                            binding.etName.setText("");
+                        } else {
+                            binding.etName.setText(listModel.getResponseData().getName());
+                        }
+                        UserName = listModel.getResponseData().getName();
+                        UserEmail = listModel.getResponseData().getEmail();
+                        UserMobileNumber = listModel.getResponseData().getPhoneNumber();
+                        UserCountry = listModel.getResponseData().getCountry();
+                        UserAddressLine1 = listModel.getResponseData().getAddress1();
+                        UserAddressLine2 = listModel.getResponseData().getAddress2();
+                        UserCity = listModel.getResponseData().getSuburb();
+                        UserState = listModel.getResponseData().getState();
+                        UserPostCode = listModel.getResponseData().getPostcode();
+                        binding.etEmail.setText(listModel.getResponseData().getEmail());
+                        binding.etMobileNumber.setText(listModel.getResponseData().getPhoneNumber());
+                        binding.etMobileNumber.setEnabled(false);
+                        binding.etMobileNumber.setClickable(false);
+                        binding.etCountry.setText(listModel.getResponseData().getCountry());
+                        binding.etAddressLine1.setText(listModel.getResponseData().getAddress1());
+                        binding.etAddressLine2.setText(listModel.getResponseData().getAddress2());
+                        binding.etCity.setText(listModel.getResponseData().getSuburb());
+                        binding.etState.setText(listModel.getResponseData().getState());
+                        binding.etPostCode.setText(listModel.getResponseData().getPostcode());
                     }
-                    UserName = listModel.getResponseData().getName();
-                    UserEmail = listModel.getResponseData().getEmail();
-                    UserMobileNumber = listModel.getResponseData().getPhoneNumber();
-                    UserCountry = listModel.getResponseData().getCountry();
-                    UserAddressLine1 = listModel.getResponseData().getAddress1();
-                    UserAddressLine2 = listModel.getResponseData().getAddress2();
-                    UserCity = listModel.getResponseData().getSuburb();
-                    UserState = listModel.getResponseData().getState();
-                    UserPostCode = listModel.getResponseData().getPostcode();
-                    binding.etEmail.setText(listModel.getResponseData().getEmail());
-                    binding.etMobileNumber.setText(listModel.getResponseData().getPhoneNumber());
-                    binding.etMobileNumber.setEnabled(false);
-                    binding.etMobileNumber.setClickable(false);
-                    binding.etCountry.setText(listModel.getResponseData().getCountry());
-                    binding.etAddressLine1.setText(listModel.getResponseData().getAddress1());
-                    binding.etAddressLine2.setText(listModel.getResponseData().getAddress2());
-                    binding.etCity.setText(listModel.getResponseData().getSuburb());
-                    binding.etState.setText(listModel.getResponseData().getState());
-                    binding.etPostCode.setText(listModel.getResponseData().getPostcode());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

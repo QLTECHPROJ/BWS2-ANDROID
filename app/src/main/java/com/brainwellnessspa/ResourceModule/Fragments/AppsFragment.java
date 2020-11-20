@@ -64,19 +64,23 @@ public class AppsFragment extends Fragment {
         listCall.enqueue(new Callback<ResourceListModel>() {
             @Override
             public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
-                if (response.isSuccessful()) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                    ResourceListModel listModel = response.body();
-                    AppsAdapter adapter = new AppsAdapter(listModel.getResponseData(), getActivity(), apps);
-                    binding.rvAppsList.setAdapter(adapter);
+                try {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                        ResourceListModel listModel = response.body();
+                        AppsAdapter adapter = new AppsAdapter(listModel.getResponseData(), getActivity(), apps);
+                        binding.rvAppsList.setAdapter(adapter);
 
-                    if (listModel.getResponseData().size() != 0) {
-                        binding.llError.setVisibility(View.GONE);
-                        binding.rvAppsList.setVisibility(View.VISIBLE);
-                    } else {
-                        binding.llError.setVisibility(View.VISIBLE);
-                        binding.rvAppsList.setVisibility(View.GONE);
+                        if (listModel.getResponseData().size() != 0) {
+                            binding.llError.setVisibility(View.GONE);
+                            binding.rvAppsList.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvAppsList.setVisibility(View.GONE);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

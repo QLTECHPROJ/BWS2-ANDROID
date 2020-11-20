@@ -154,10 +154,15 @@ public class ResourceActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<ResourceFilterModel>() {
                 @Override
                 public void onResponse(Call<ResourceFilterModel> call, Response<ResourceFilterModel> response) {
-                    if (response.isSuccessful()) {
-                        ResourceFilterModel listModel = response.body();
-                        ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx, dialogBox, tvAll, ivFilter);
-                        rvFilterList.setAdapter(adapter);
+                    try {
+                        if (response.isSuccessful()) {
+                            ResourceFilterModel listModel = response.body();
+                            ResourceFilterAdapter adapter = new ResourceFilterAdapter(listModel.getResponseData(), ctx, dialogBox, tvAll, ivFilter);
+                            rvFilterList.setAdapter(adapter);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

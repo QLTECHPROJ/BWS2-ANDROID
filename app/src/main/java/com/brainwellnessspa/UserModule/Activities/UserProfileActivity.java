@@ -112,46 +112,50 @@ public class UserProfileActivity extends AppCompatActivity {
                 && !BWSApplication.isEmailValid(binding.etEmail.getText().toString())) {
             binding.tlEmail.setError("Please enter a valid email address");
         } else {
-        binding.flUser.setError("");
-        binding.tlCalendar.setError("");
-        binding.flUser.clearFocus();
-        binding.tlEmail.clearFocus();
-        if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            String dob = "";
-            if (!binding.etCalendar.getText().toString().isEmpty()) {
-                dob = binding.etCalendar.getText().toString();
-                SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
-                Date newDate = new Date();
-                try {
-                    newDate = spf.parse(dob);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+            binding.flUser.setError("");
+            binding.tlCalendar.setError("");
+            binding.flUser.clearFocus();
+            binding.tlEmail.clearFocus();
+            if (BWSApplication.isNetworkConnected(ctx)) {
+                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                String dob = "";
+                if (!binding.etCalendar.getText().toString().isEmpty()) {
+                    dob = binding.etCalendar.getText().toString();
+                    SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
+                    Date newDate = new Date();
+                    try {
+                        newDate = spf.parse(dob);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
+                    dob = spf.format(newDate);
                 }
-                spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
-                dob = spf.format(newDate);
-            }
-            Call<ProfileUpdateModel> listCall = APIClient.getClient().getProfileUpdate(UserID, binding.etUser.getText().toString(), dob,
-                    binding.etMobileNumber.getText().toString(), binding.etEmail.getText().toString(), "");
-            listCall.enqueue(new Callback<ProfileUpdateModel>() {
-                @Override
-                public void onResponse(Call<ProfileUpdateModel> call, Response<ProfileUpdateModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        ProfileUpdateModel viewModel = response.body();
-                        finish();
-                        BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
-                    } else {
+                Call<ProfileUpdateModel> listCall = APIClient.getClient().getProfileUpdate(UserID, binding.etUser.getText().toString(), dob,
+                        binding.etMobileNumber.getText().toString(), binding.etEmail.getText().toString(), "");
+                listCall.enqueue(new Callback<ProfileUpdateModel>() {
+                    @Override
+                    public void onResponse(Call<ProfileUpdateModel> call, Response<ProfileUpdateModel> response) {
+                        try {
+                            if (response.isSuccessful()) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                ProfileUpdateModel viewModel = response.body();
+                                finish();
+                                BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
+                            } else {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ProfileUpdateModel> call, Throwable t) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                     }
-                }
-
-                @Override
-                public void onFailure(Call<ProfileUpdateModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                }
-            });
-        }
+                });
+            }
         }
     }
 
@@ -219,47 +223,48 @@ public class UserProfileActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<ProfileViewModel>() {
                 @Override
                 public void onResponse(Call<ProfileViewModel> call, Response<ProfileViewModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        ProfileViewModel viewModel = response.body();
-                        binding.etUser.addTextChangedListener(userTextWatcher);
-                        binding.etCalendar.addTextChangedListener(userTextWatcher);
-                        binding.etMobileNumber.addTextChangedListener(userTextWatcher);
-                        binding.etEmail.addTextChangedListener(userTextWatcher);
-                        if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
-                                viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
-                                viewModel.getResponseData().getName() == null) {
-                            binding.etUser.setText(R.string.Guest);
-                        } else {
-                            binding.etUser.setText(viewModel.getResponseData().getName());
-                        }
-                        UserName = viewModel.getResponseData().getName();
-                        UserCalendar = viewModel.getResponseData().getDOB();
-                        UserMobileNumber = viewModel.getResponseData().getPhoneNumber();
-                        UserEmail = viewModel.getResponseData().getEmail();
-                        String Name;
-                        profilePicPath = viewModel.getResponseData().getImage();
-                        if (profilePicPath.equalsIgnoreCase("")) {
-                            binding.civProfile.setVisibility(View.GONE);
-                            if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
-                                Name = "Guest";
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            ProfileViewModel viewModel = response.body();
+                            binding.etUser.addTextChangedListener(userTextWatcher);
+                            binding.etCalendar.addTextChangedListener(userTextWatcher);
+                            binding.etMobileNumber.addTextChangedListener(userTextWatcher);
+                            binding.etEmail.addTextChangedListener(userTextWatcher);
+                            if (viewModel.getResponseData().getName().equalsIgnoreCase("") ||
+                                    viewModel.getResponseData().getName().equalsIgnoreCase(" ") ||
+                                    viewModel.getResponseData().getName() == null) {
+                                binding.etUser.setText(R.string.Guest);
                             } else {
-                                Name = viewModel.getResponseData().getName();
+                                binding.etUser.setText(viewModel.getResponseData().getName());
                             }
-                            String Letter = Name.substring(0, 1);
-                            binding.rlLetter.setVisibility(View.VISIBLE);
-                            binding.tvLetter.setText(Letter);
-                        } else {
-                            binding.civProfile.setVisibility(View.VISIBLE);
-                            binding.rlLetter.setVisibility(View.GONE);
-                            Glide.with(getApplicationContext()).load(profilePicPath)
-                                    .thumbnail(0.1f)
-                                    .skipMemoryCache(false).into(binding.civProfile);
-                        }
+                            UserName = viewModel.getResponseData().getName();
+                            UserCalendar = viewModel.getResponseData().getDOB();
+                            UserMobileNumber = viewModel.getResponseData().getPhoneNumber();
+                            UserEmail = viewModel.getResponseData().getEmail();
+                            String Name;
+                            profilePicPath = viewModel.getResponseData().getImage();
+                            if (profilePicPath.equalsIgnoreCase("")) {
+                                binding.civProfile.setVisibility(View.GONE);
+                                if (viewModel.getResponseData().getName().equalsIgnoreCase("")) {
+                                    Name = "Guest";
+                                } else {
+                                    Name = viewModel.getResponseData().getName();
+                                }
+                                String Letter = Name.substring(0, 1);
+                                binding.rlLetter.setVisibility(View.VISIBLE);
+                                binding.tvLetter.setText(Letter);
+                            } else {
+                                binding.civProfile.setVisibility(View.VISIBLE);
+                                binding.rlLetter.setVisibility(View.GONE);
+                                Glide.with(getApplicationContext()).load(profilePicPath)
+                                        .thumbnail(0.1f)
+                                        .skipMemoryCache(false).into(binding.civProfile);
+                            }
 
-                        if (viewModel.getResponseData().getDOB().equalsIgnoreCase("0000-00-00")) {
-                            binding.etCalendar.setText("");
-                        } else {
+                            if (viewModel.getResponseData().getDOB().equalsIgnoreCase("0000-00-00")) {
+                                binding.etCalendar.setText("");
+                            } else {
                             /*String date = viewModel.getResponseData().getDOB();
                             SimpleDateFormat spf = new SimpleDateFormat(CONSTANTS.YEAR_TO_DATE_FORMAT);
                             if (!date.isEmpty()) {
@@ -271,80 +276,83 @@ public class UserProfileActivity extends AppCompatActivity {
                                 }
                                 spf = new SimpleDateFormat(CONSTANTS.MONTH_DATE_YEAR_FORMAT);
                                 date = spf.format(newDate);*/
-                            binding.etCalendar.setText(viewModel.getResponseData().getDOB());
+                                binding.etCalendar.setText(viewModel.getResponseData().getDOB());
 //                            }
-                        }
-
-                        if (!viewModel.getResponseData().getEmail().equalsIgnoreCase("")
-                                && BWSApplication.isEmailValid(viewModel.getResponseData().getEmail())) {
-                            binding.ivCheckEmail.setColorFilter(ContextCompat.getColor(ctx, R.color.green_dark), android.graphics.PorterDuff.Mode.SRC_IN);
-                        } else {
-                            binding.ivCheckEmail.setColorFilter(ContextCompat.getColor(ctx, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
-
-                        }
-                        binding.etEmail.setText(viewModel.getResponseData().getEmail());
-                        binding.etMobileNumber.setText(viewModel.getResponseData().getPhoneNumber());
-
-                        if (!viewModel.getResponseData().getEmail().equalsIgnoreCase("")) {
-                            binding.etEmail.setEnabled(true);
-                            binding.etEmail.setClickable(true);
-                        } else {
-                            binding.etEmail.setEnabled(true);
-                            binding.etEmail.setClickable(true);
-                        }
-
-                        if (!viewModel.getResponseData().getPhoneNumber().equalsIgnoreCase("")) {
-                            binding.etMobileNumber.setEnabled(false);
-                            binding.etMobileNumber.setClickable(false);
-                        } else {
-                            binding.etMobileNumber.setEnabled(true);
-                            binding.etMobileNumber.setClickable(true);
-                        }
-
-                        binding.etCalendar.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                    setDate();
-                                }
                             }
-                        });
 
-                        if ((viewModel.getResponseData().getIsVerify().equalsIgnoreCase("0"))) {
-                            binding.ivCheckEmail.setVisibility(View.GONE);
-                            binding.llEmailApply.setClickable(true);
-                            binding.llEmailApply.setEnabled(true);
-                            binding.tlEmail.setErrorEnabled(false);
-                            binding.tlEmail.clearFocus();
+                            if (!viewModel.getResponseData().getEmail().equalsIgnoreCase("")
+                                    && BWSApplication.isEmailValid(viewModel.getResponseData().getEmail())) {
+                                binding.ivCheckEmail.setColorFilter(ContextCompat.getColor(ctx, R.color.green_dark), android.graphics.PorterDuff.Mode.SRC_IN);
+                            } else {
+                                binding.ivCheckEmail.setColorFilter(ContextCompat.getColor(ctx, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+
+                            }
+                            binding.etEmail.setText(viewModel.getResponseData().getEmail());
+                            binding.etMobileNumber.setText(viewModel.getResponseData().getPhoneNumber());
+
+                            if (!viewModel.getResponseData().getEmail().equalsIgnoreCase("")) {
+                                binding.etEmail.setEnabled(true);
+                                binding.etEmail.setClickable(true);
+                            } else {
+                                binding.etEmail.setEnabled(true);
+                                binding.etEmail.setClickable(true);
+                            }
+
+                            if (!viewModel.getResponseData().getPhoneNumber().equalsIgnoreCase("")) {
+                                binding.etMobileNumber.setEnabled(false);
+                                binding.etMobileNumber.setClickable(false);
+                            } else {
+                                binding.etMobileNumber.setEnabled(true);
+                                binding.etMobileNumber.setClickable(true);
+                            }
+
+                            binding.etCalendar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                        setDate();
+                                    }
+                                }
+                            });
+
+                            if ((viewModel.getResponseData().getIsVerify().equalsIgnoreCase("0"))) {
+                                binding.ivCheckEmail.setVisibility(View.GONE);
+                                binding.llEmailApply.setClickable(true);
+                                binding.llEmailApply.setEnabled(true);
+                                binding.tlEmail.setErrorEnabled(false);
+                                binding.tlEmail.clearFocus();
 //                            tvApply.setEnabled(true);
 //                            tvApply.setClickable(true);
 //                            tvApply.setText("Verify");
 //                            tvApply.setTextColor(getResources().getColor(R.color.gray));
 //                            tvApplytimer.setVisibility(View.GONE);
-                        } else if (viewModel.getResponseData().getIsVerify().equalsIgnoreCase("1")) {
-                            binding.ivCheckEmail.setVisibility(View.VISIBLE);
-                            binding.llEmailApply.setClickable(false);
-                            binding.llEmailApply.setEnabled(false);
-                            binding.tlEmail.setErrorEnabled(false);
-                            binding.tlEmail.clearFocus();
+                            } else if (viewModel.getResponseData().getIsVerify().equalsIgnoreCase("1")) {
+                                binding.ivCheckEmail.setVisibility(View.VISIBLE);
+                                binding.llEmailApply.setClickable(false);
+                                binding.llEmailApply.setEnabled(false);
+                                binding.tlEmail.setErrorEnabled(false);
+                                binding.tlEmail.clearFocus();
 //                            tvApply.setText("Verified");
 //                            tvApply.setTextColor(getResources().getColor(R.color.green));
 //                            tvApply.setEnabled(false);
 //                            tvApply.setClickable(false);
 //                            tvApplytimer.setVisibility(View.GONE);
-                        } else if (viewModel.getResponseData().getIsVerify().equalsIgnoreCase("2")) {
-                            binding.llEmailApply.setEnabled(false);
-                            binding.llEmailApply.setClickable(false);
-                            binding.tlEmail.setError(tryafter);
-                            binding.tlEmail.setErrorEnabled(true);
+                            } else if (viewModel.getResponseData().getIsVerify().equalsIgnoreCase("2")) {
+                                binding.llEmailApply.setEnabled(false);
+                                binding.llEmailApply.setClickable(false);
+                                binding.tlEmail.setError(tryafter);
+                                binding.tlEmail.setErrorEnabled(true);
 //                            tvApply.setText("Verify");
 //                            tvApplytimer.setVisibility(View.GONE);
 //                            tvApply.setClickable(false);
 //                            tvApply.setEnabled(false);
 //                            tvApply.setTextColor(getResources().getColor(R.color.gray));
+                            }
+                        } else {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                         }
-                    } else {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -398,11 +406,15 @@ public class UserProfileActivity extends AppCompatActivity {
                             listCall.enqueue(new Callback<RemoveProfileModel>() {
                                 @Override
                                 public void onResponse(Call<RemoveProfileModel> call, Response<RemoveProfileModel> response) {
-                                    if (response.isSuccessful()) {
-                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                        RemoveProfileModel viewModel = response.body();
-                                        BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
-                                        profileViewData(ctx);
+                                    try {
+                                        if (response.isSuccessful()) {
+                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                            RemoveProfileModel viewModel = response.body();
+                                            BWSApplication.showToast(viewModel.getResponseMessage(), ctx);
+                                            profileViewData(ctx);
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
                                 }
 

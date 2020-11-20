@@ -63,20 +63,25 @@ public class WebsiteFragment extends Fragment {
         listCall.enqueue(new Callback<ResourceListModel>() {
             @Override
             public void onResponse(Call<ResourceListModel> call, Response<ResourceListModel> response) {
-                if (response.isSuccessful()) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                    ResourceListModel listModel = response.body();
-                    WebsiteAdapter adapter = new WebsiteAdapter(listModel.getResponseData(), getActivity(), website);
-                    binding.rvWebsiteList.setAdapter(adapter);
+                try {
+                    if (response.isSuccessful()) {
+                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                        ResourceListModel listModel = response.body();
+                        WebsiteAdapter adapter = new WebsiteAdapter(listModel.getResponseData(), getActivity(), website);
+                        binding.rvWebsiteList.setAdapter(adapter);
 
-                    if (listModel.getResponseData().size() != 0) {
-                        binding.llError.setVisibility(View.GONE);
-                        binding.rvWebsiteList.setVisibility(View.VISIBLE);
-                    } else {
-                        binding.llError.setVisibility(View.VISIBLE);
-                        binding.rvWebsiteList.setVisibility(View.GONE);
+                        if (listModel.getResponseData().size() != 0) {
+                            binding.llError.setVisibility(View.GONE);
+                            binding.rvWebsiteList.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.llError.setVisibility(View.VISIBLE);
+                            binding.rvWebsiteList.setVisibility(View.GONE);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
             }
 
             @Override

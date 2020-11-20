@@ -150,7 +150,7 @@ public class CurrentPlanFragment extends Fragment {
                                 }
                                 mLastClickTime = SystemClock.elapsedRealtime();
                                 Intent i = new Intent(getActivity(), MembershipChangeActivity.class);
-                                i.putExtra("ComeFrom","");
+                                i.putExtra("ComeFrom", "");
                                 startActivity(i);
                                 getActivity().finish();
                             });
@@ -174,11 +174,15 @@ public class CurrentPlanFragment extends Fragment {
                                 listCall.enqueue(new Callback<PayNowDetailsModel>() {
                                     @Override
                                     public void onResponse(Call<PayNowDetailsModel> call, Response<PayNowDetailsModel> response) {
-                                        if (response.isSuccessful()) {
-                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                                            PayNowDetailsModel listModel1 = response.body();
-                                            BWSApplication.showToast(listModel1.getResponseMessage(), getActivity());
-                                            getActivity().finish();
+                                        try {
+                                            if (response.isSuccessful()) {
+                                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                                                PayNowDetailsModel listModel1 = response.body();
+                                                BWSApplication.showToast(listModel1.getResponseMessage(), getActivity());
+                                                getActivity().finish();
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
                                     }
 

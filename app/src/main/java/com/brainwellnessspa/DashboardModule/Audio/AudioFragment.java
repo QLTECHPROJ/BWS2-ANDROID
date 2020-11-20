@@ -237,19 +237,23 @@ public class AudioFragment extends Fragment {
                 listCall1.enqueue(new Callback<UnlockAudioList>() {
                     @Override
                     public void onResponse(Call<UnlockAudioList> call, Response<UnlockAudioList> response) {
-                        if (response.isSuccessful()) {
-                            UnlockAudioList listModel = response.body();
-                            try {
-                                IsLock = listModel.getResponseData().getIsLock();
-                                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = shared.edit();
-                                editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().getIsLock());
-                                Gson gson = new Gson();
-                                editor.putString(CONSTANTS.PREF_KEY_UnLockAudiList, gson.toJson(listModel.getResponseData().getID()));
-                                editor.commit();
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                        try {
+                            if (response.isSuccessful()) {
+                                UnlockAudioList listModel = response.body();
+                                try {
+                                    IsLock = listModel.getResponseData().getIsLock();
+                                    SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = shared.edit();
+                                    editor.putString(CONSTANTS.PREF_KEY_IsLock, listModel.getResponseData().getIsLock());
+                                    Gson gson = new Gson();
+                                    editor.putString(CONSTANTS.PREF_KEY_UnLockAudiList, gson.toJson(listModel.getResponseData().getID()));
+                                    editor.commit();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 

@@ -145,46 +145,50 @@ public class OtpActivity extends AppCompatActivity implements
                     listCall.enqueue(new Callback<OtpModel>() {
                         @Override
                         public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
-                            if (response.isSuccessful()) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                OtpModel otpModel = response.body();
-                                if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                    binding.txtError.setVisibility(View.GONE);
-                                    if (otpModel.getResponseData().getError().equalsIgnoreCase("0") ||
-                                            otpModel.getResponseData().getError().equalsIgnoreCase("")) {
-                                        SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = shared.edit();
-                                        String UserID = otpModel.getResponseData().getUserID();
-                                        String MobileNO = otpModel.getResponseData().getPhoneNumber();
-                                        editor.putString(CONSTANTS.PREF_KEY_UserID, UserID);
-                                        editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNO);
-                                        editor.commit();
-                                        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
-                                        String Logout_UserID = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, ""));
-                                        String Logout_MobileNo = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO, ""));
+                            try {
+                                if (response.isSuccessful()) {
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                    OtpModel otpModel = response.body();
+                                    if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                        binding.txtError.setVisibility(View.GONE);
+                                        if (otpModel.getResponseData().getError().equalsIgnoreCase("0") ||
+                                                otpModel.getResponseData().getError().equalsIgnoreCase("")) {
+                                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = shared.edit();
+                                            String UserID = otpModel.getResponseData().getUserID();
+                                            String MobileNO = otpModel.getResponseData().getPhoneNumber();
+                                            editor.putString(CONSTANTS.PREF_KEY_UserID, UserID);
+                                            editor.putString(CONSTANTS.PREF_KEY_MobileNo, MobileNO);
+                                            editor.commit();
+                                            SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGOUT, Context.MODE_PRIVATE);
+                                            String Logout_UserID = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_UserID, ""));
+                                            String Logout_MobileNo = (shared1.getString(CONSTANTS.PREF_KEY_LOGOUT_MobileNO, ""));
 
-                                        if (!UserID.equalsIgnoreCase(Logout_UserID)
-                                                && !MobileNO.equalsIgnoreCase(Logout_MobileNo)) {
-                                            GetAllMedia();
-                                        } else {
-                                            GetAllMedia2();
+                                            if (!UserID.equalsIgnoreCase(Logout_UserID)
+                                                    && !MobileNO.equalsIgnoreCase(Logout_MobileNo)) {
+                                                GetAllMedia();
+                                            } else {
+                                                GetAllMedia2();
+                                            }
+
+                                            Log.e("New UserId MobileNo", UserID + "....." + MobileNO);
+                                            Log.e("Old UserId MobileNo", Logout_UserID + "....." + Logout_MobileNo);
+                                            logout = false;
+                                            BWSApplication.showToast(otpModel.getResponseMessage(), OtpActivity.this);
+                                        } else if (otpModel.getResponseData().getError().equalsIgnoreCase("1")) {
+                                            binding.txtError.setText(otpModel.getResponseMessage());
+                                            binding.txtError.setVisibility(View.VISIBLE);
                                         }
-
-                                        Log.e("New UserId MobileNo", UserID + "....." + MobileNO);
-                                        Log.e("Old UserId MobileNo", Logout_UserID + "....." + Logout_MobileNo);
-                                        logout = false;
-                                        BWSApplication.showToast(otpModel.getResponseMessage(), OtpActivity.this);
-                                    } else if (otpModel.getResponseData().getError().equalsIgnoreCase("1")) {
+                                    } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                        binding.txtError.setText(otpModel.getResponseMessage());
+                                        binding.txtError.setVisibility(View.VISIBLE);
+                                    } else {
                                         binding.txtError.setText(otpModel.getResponseMessage());
                                         binding.txtError.setVisibility(View.VISIBLE);
                                     }
-                                } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                    binding.txtError.setText(otpModel.getResponseMessage());
-                                    binding.txtError.setVisibility(View.VISIBLE);
-                                } else {
-                                    binding.txtError.setText(otpModel.getResponseMessage());
-                                    binding.txtError.setVisibility(View.VISIBLE);
                                 }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
 
@@ -443,36 +447,40 @@ public class OtpActivity extends AppCompatActivity implements
             listCall.enqueue(new Callback<LoginModel>() {
                 @Override
                 public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        LoginModel loginModel = response.body();
-                        if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                            logout = false;
-                            countDownTimer = new CountDownTimer(30000, 1000) {
-                                public void onTick(long millisUntilFinished) {
-                                    binding.llResendSms.setEnabled(false);
-                                    binding.tvResendOTP.setText(Html.fromHtml(millisUntilFinished / 1000 + "<font color=\"#999999\">" + " Resent SMS" + "</font>"));
-                                }
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            LoginModel loginModel = response.body();
+                            if (loginModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                logout = false;
+                                countDownTimer = new CountDownTimer(30000, 1000) {
+                                    public void onTick(long millisUntilFinished) {
+                                        binding.llResendSms.setEnabled(false);
+                                        binding.tvResendOTP.setText(Html.fromHtml(millisUntilFinished / 1000 + "<font color=\"#999999\">" + " Resent SMS" + "</font>"));
+                                    }
 
-                                public void onFinish() {
-                                    binding.llResendSms.setEnabled(true);
-                                    binding.tvResendOTP.setText(getString(R.string.resent_sms));
-                                    binding.tvResendOTP.setTextColor(getResources().getColor(R.color.white));
-                                    binding.tvResendOTP.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                                    binding.tvResendOTP.getPaint().setMaskFilter(null);
-                                }
-                            }.start();
-                            binding.edtOTP1.requestFocus();
-                            binding.edtOTP1.setText("");
-                            binding.edtOTP2.setText("");
-                            binding.edtOTP3.setText("");
-                            binding.edtOTP4.setText("");
-                            tvSendOTPbool = true;
-                            BWSApplication.showToast(loginModel.getResponseMessage(), OtpActivity.this);
-                        } else {
-                            binding.txtError.setVisibility(View.VISIBLE);
-                            binding.txtError.setText(loginModel.getResponseMessage());
+                                    public void onFinish() {
+                                        binding.llResendSms.setEnabled(true);
+                                        binding.tvResendOTP.setText(getString(R.string.resent_sms));
+                                        binding.tvResendOTP.setTextColor(getResources().getColor(R.color.white));
+                                        binding.tvResendOTP.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                                        binding.tvResendOTP.getPaint().setMaskFilter(null);
+                                    }
+                                }.start();
+                                binding.edtOTP1.requestFocus();
+                                binding.edtOTP1.setText("");
+                                binding.edtOTP2.setText("");
+                                binding.edtOTP3.setText("");
+                                binding.edtOTP4.setText("");
+                                tvSendOTPbool = true;
+                                BWSApplication.showToast(loginModel.getResponseMessage(), OtpActivity.this);
+                            } else {
+                                binding.txtError.setVisibility(View.VISIBLE);
+                                binding.txtError.setText(loginModel.getResponseMessage());
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

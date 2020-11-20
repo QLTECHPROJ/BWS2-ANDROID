@@ -238,107 +238,111 @@ public class PlaylistLikeActivity extends AppCompatActivity {
                 @SuppressLint("ClickableViewAccessibility")
                 @Override
                 public void onResponse(Call<SubPlayListModel> call, Response<SubPlayListModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        SubPlayListModel listModel = response.body();
-                        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                                5, 3, 1f, 0);
-                        binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-                        binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-                        binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
-                        binding.tvTag.setVisibility(View.VISIBLE);
-                        binding.tvTag.setText("Audios in Playlist");
-                        binding.tvPlaylist.setText("Playlist");
-                        binding.tvLibraryName.setText(listModel.getResponseData().getPlaylistName());
-                        if (!listModel.getResponseData().getPlaylistImage().equalsIgnoreCase("")) {
-                            try {
-                                Glide.with(ctx).load(listModel.getResponseData().getPlaylistImageDetail()).thumbnail(0.05f)
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            binding.ivBanner.setImageResource(R.drawable.audio_bg);
-                        }
-
-                        if (listModel.getResponseData().getTotalAudio().equalsIgnoreCase("") ||
-                                listModel.getResponseData().getTotalAudio().equalsIgnoreCase("0") &&
-                                        listModel.getResponseData().getTotalhour().equalsIgnoreCase("")
-                                        && listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
-                            binding.tvLibraryDetail.setText("0 Audio | 0h 0m");
-                        } else {
-                            if (listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
-                                binding.tvLibraryDetail.setText(listModel.getResponseData().getTotalAudio() + " Audio | "
-                                        + listModel.getResponseData().getTotalhour() + "h 0m");
-                            } else {
-                                binding.tvLibraryDetail.setText(listModel.getResponseData().getTotalAudio() + " Audio | "
-                                        + listModel.getResponseData().getTotalhour() + "h " +
-                                        listModel.getResponseData().getTotalminute() + "m");
-                            }
-                        }
-                        binding.rlSearch.setVisibility(View.VISIBLE);
-                        binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
-                        binding.tvTag.setText(R.string.Audios_in_Playlist);
-                        RecyclerView.LayoutManager playList = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
-                        binding.rvPlayLists.setLayoutManager(playList);
-                        binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
-                        adpater = new PlayListsAdpater(listModel.getResponseData().getPlaylistSongs(), ctx);
-                        binding.rvPlayLists.setAdapter(adpater);
-
-                        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                            @Override
-                            public boolean onQueryTextSubmit(String search) {
-                                binding.searchView.clearFocus();
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onQueryTextChange(String search) {
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            SubPlayListModel listModel = response.body();
+                            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                                    5, 3, 1f, 0);
+                            binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+                            binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+                            binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
+                            binding.tvTag.setVisibility(View.VISIBLE);
+                            binding.tvTag.setText("Audios in Playlist");
+                            binding.tvPlaylist.setText("Playlist");
+                            binding.tvLibraryName.setText(listModel.getResponseData().getPlaylistName());
+                            if (!listModel.getResponseData().getPlaylistImage().equalsIgnoreCase("")) {
                                 try {
-                                    if (adpater != null) {
-                                        adpater.getFilter().filter(search);
-                                        SearchFlag = search;
-                                        Log.e("searchsearch", "" + search);
-                                    }
+                                    Glide.with(ctx).load(listModel.getResponseData().getPlaylistImageDetail()).thumbnail(0.05f)
+                                            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivBanner);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                return false;
+                            } else {
+                                binding.ivBanner.setImageResource(R.drawable.audio_bg);
                             }
-                        });
-                        binding.llLike.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Dialog dialog = new Dialog(ctx);
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog.setContentView(R.layout.logout_layout);
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
-                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                                final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
-                                final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
-                                final Button Btn = dialog.findViewById(R.id.Btn);
-                                tvTitle.setText("Remove from Liked Playlists?");
-                                tvHeader.setText(listModel.getResponseData().getPlaylistName());
-                                Btn.setText("Remove");
-                                tvGoBack.setText("Cancel");
-                                dialog.setOnKeyListener((v1, keyCode, event) -> {
-                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                        dialog.dismiss();
+                            if (listModel.getResponseData().getTotalAudio().equalsIgnoreCase("") ||
+                                    listModel.getResponseData().getTotalAudio().equalsIgnoreCase("0") &&
+                                            listModel.getResponseData().getTotalhour().equalsIgnoreCase("")
+                                            && listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                binding.tvLibraryDetail.setText("0 Audio | 0h 0m");
+                            } else {
+                                if (listModel.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                    binding.tvLibraryDetail.setText(listModel.getResponseData().getTotalAudio() + " Audio | "
+                                            + listModel.getResponseData().getTotalhour() + "h 0m");
+                                } else {
+                                    binding.tvLibraryDetail.setText(listModel.getResponseData().getTotalAudio() + " Audio | "
+                                            + listModel.getResponseData().getTotalhour() + "h " +
+                                            listModel.getResponseData().getTotalminute() + "m");
+                                }
+                            }
+                            binding.rlSearch.setVisibility(View.VISIBLE);
+                            binding.ivPlaylistStatus.setVisibility(View.VISIBLE);
+                            binding.tvTag.setText(R.string.Audios_in_Playlist);
+                            RecyclerView.LayoutManager playList = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
+                            binding.rvPlayLists.setLayoutManager(playList);
+                            binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
+                            adpater = new PlayListsAdpater(listModel.getResponseData().getPlaylistSongs(), ctx);
+                            binding.rvPlayLists.setAdapter(adpater);
+
+                            binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                @Override
+                                public boolean onQueryTextSubmit(String search) {
+                                    binding.searchView.clearFocus();
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onQueryTextChange(String search) {
+                                    try {
+                                        if (adpater != null) {
+                                            adpater.getFilter().filter(search);
+                                            SearchFlag = search;
+                                            Log.e("searchsearch", "" + search);
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
                                     return false;
-                                });
+                                }
+                            });
+                            binding.llLike.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Dialog dialog = new Dialog(ctx);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.setContentView(R.layout.logout_layout);
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ctx.getResources().getColor(R.color.dark_blue_gray)));
+                                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                                Btn.setOnClickListener(v2 -> {
-                                    callRemoveLike(PlaylistID);
-                                    dialog.dismiss();
-                                });
-                                tvGoBack.setOnClickListener(v3 -> dialog.dismiss());
-                                dialog.show();
-                                dialog.setCancelable(false);
-                            }
-                        });
+                                    final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                                    final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+                                    final TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+                                    final Button Btn = dialog.findViewById(R.id.Btn);
+                                    tvTitle.setText("Remove from Liked Playlists?");
+                                    tvHeader.setText(listModel.getResponseData().getPlaylistName());
+                                    Btn.setText("Remove");
+                                    tvGoBack.setText("Cancel");
+                                    dialog.setOnKeyListener((v1, keyCode, event) -> {
+                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                            dialog.dismiss();
+                                        }
+                                        return false;
+                                    });
+
+                                    Btn.setOnClickListener(v2 -> {
+                                        callRemoveLike(PlaylistID);
+                                        dialog.dismiss();
+                                    });
+                                    tvGoBack.setOnClickListener(v3 -> dialog.dismiss());
+                                    dialog.show();
+                                    dialog.setCancelable(false);
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -359,13 +363,17 @@ public class PlaylistLikeActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<PlaylistLikeModel>() {
                 @Override
                 public void onResponse(Call<PlaylistLikeModel> call, Response<PlaylistLikeModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        PlaylistLikeModel model = response.body();
-                        BWSApplication.showToast(model.getResponseMessage(), ctx);
-                        PrepareData();
-                        finish();
-                        RefreshLikePlaylist = 1;
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            PlaylistLikeModel model = response.body();
+                            BWSApplication.showToast(model.getResponseMessage(), ctx);
+                            PrepareData();
+                            finish();
+                            RefreshLikePlaylist = 1;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

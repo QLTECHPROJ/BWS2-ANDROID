@@ -257,12 +257,16 @@ public class ViewAllPlaylistFragment extends Fragment {
                 listCall.enqueue(new Callback<ViewAllPlayListModel>() {
                     @Override
                     public void onResponse(Call<ViewAllPlayListModel> call, Response<ViewAllPlayListModel> response) {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                            ViewAllPlayListModel listModel = response.body();
-                            binding.tvTitle.setText(listModel.getResponseData().getView());
-                            PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
-                            binding.rvMainAudio.setAdapter(adapter);
+                        try {
+                            if (response.isSuccessful()) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                                ViewAllPlayListModel listModel = response.body();
+                                binding.tvTitle.setText(listModel.getResponseData().getView());
+                                PlaylistAdapter adapter = new PlaylistAdapter(listModel.getResponseData().getDetails(), listModel.getResponseData().getIsLock());
+                                binding.rvMainAudio.setAdapter(adapter);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 

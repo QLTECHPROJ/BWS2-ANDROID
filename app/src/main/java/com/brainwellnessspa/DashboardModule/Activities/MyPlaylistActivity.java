@@ -680,13 +680,17 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                         listCall1.enqueue(new Callback<RenamePlaylistModel>() {
                                             @Override
                                             public void onResponse(Call<RenamePlaylistModel> call1, Response<RenamePlaylistModel> response1) {
-                                                if (response1.isSuccessful()) {
-                                                    comeRename = 1;
-                                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                                    RenamePlaylistModel listModel = response1.body();
-                                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                                    dialog.dismiss();
-                                                    finish();
+                                                try {
+                                                    if (response1.isSuccessful()) {
+                                                        comeRename = 1;
+                                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                                        RenamePlaylistModel listModel = response1.body();
+                                                        BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                                        dialog.dismiss();
+                                                        finish();
+                                                    }
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
                                                 }
                                             }
 
@@ -745,13 +749,17 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                             listCall12.enqueue(new Callback<SucessModel>() {
                                                 @Override
                                                 public void onResponse(Call<SucessModel> call12, Response<SucessModel> response12) {
-                                                    if (response12.isSuccessful()) {
-                                                        deleteFrg = 1;
-                                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                                        SucessModel listModel = response12.body();
-                                                        dialog.dismiss();
-                                                        BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                                        finish();
+                                                    try {
+                                                        if (response12.isSuccessful()) {
+                                                            deleteFrg = 1;
+                                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                                            SucessModel listModel = response12.body();
+                                                            dialog.dismiss();
+                                                            BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                                            finish();
+                                                        }
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
                                                     }
                                                 }
 

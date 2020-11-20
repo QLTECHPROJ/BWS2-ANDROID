@@ -109,21 +109,25 @@ public class LikePlaylistsFragment extends Fragment {
             listCall.enqueue(new Callback<LikesHistoryModel>() {
                 @Override
                 public void onResponse(Call<LikesHistoryModel> call, Response<LikesHistoryModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                        LikesHistoryModel listModel = response.body();
-                        List<LikesHistoryModel.ResponseData.Playlist> listDataModel = listModel.getResponseData().getPlaylist();
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            LikesHistoryModel listModel = response.body();
+                            List<LikesHistoryModel.ResponseData.Playlist> listDataModel = listModel.getResponseData().getPlaylist();
 
-                        if (listDataModel.size() == 0) {
-                            binding.tvFound.setVisibility(View.VISIBLE);
-                            binding.llError.setVisibility(View.VISIBLE);
-                            binding.rvLikesList.setVisibility(View.GONE);
-                        } else {
-                            binding.llError.setVisibility(View.GONE);
-                            binding.rvLikesList.setVisibility(View.VISIBLE);
-                            LikePlaylistsAdapter adapter = new LikePlaylistsAdapter(listModel.getResponseData().getPlaylist(), getActivity());
-                            binding.rvLikesList.setAdapter(adapter);
+                            if (listDataModel.size() == 0) {
+                                binding.tvFound.setVisibility(View.VISIBLE);
+                                binding.llError.setVisibility(View.VISIBLE);
+                                binding.rvLikesList.setVisibility(View.GONE);
+                            } else {
+                                binding.llError.setVisibility(View.GONE);
+                                binding.rvLikesList.setVisibility(View.VISIBLE);
+                                LikePlaylistsAdapter adapter = new LikePlaylistsAdapter(listModel.getResponseData().getPlaylist(), getActivity());
+                                binding.rvLikesList.setAdapter(adapter);
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -300,11 +304,15 @@ public class LikePlaylistsFragment extends Fragment {
                 listCall.enqueue(new Callback<PlaylistLikeModel>() {
                     @Override
                     public void onResponse(Call<PlaylistLikeModel> call, Response<PlaylistLikeModel> response) {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                            PlaylistLikeModel model = response.body();
-                            prepareData();
-                            BWSApplication.showToast(model.getResponseMessage(), getActivity());
+                        try {
+                            if (response.isSuccessful()) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                                PlaylistLikeModel model = response.body();
+                                prepareData();
+                                BWSApplication.showToast(model.getResponseMessage(), getActivity());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 

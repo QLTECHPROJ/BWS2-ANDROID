@@ -37,10 +37,14 @@ public class FaqActivity extends AppCompatActivity {
             listCall.enqueue(new Callback<FaqListModel>() {
                 @Override
                 public void onResponse(Call<FaqListModel> call, Response<FaqListModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                        FaqListModel listModel = response.body();
-                        faqListModel = listModel;
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            FaqListModel listModel = response.body();
+                            faqListModel = listModel;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
