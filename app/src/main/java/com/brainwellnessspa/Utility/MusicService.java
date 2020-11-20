@@ -522,10 +522,8 @@ public class MusicService extends Service {
                 int notificationAction = 0;//needs to be initialized
                 PendingIntent play_pauseAction = null;
 
-                Intent localIntent;
-                LocalBroadcastManager localBroadcastManager;
-                localIntent = new Intent("play_pause_Action");
-                localBroadcastManager = LocalBroadcastManager.getInstance(context);
+                Intent localIntent = new Intent("play_pause_Action");
+                LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
                 //Build a new notification according to the current state of the MediaPlayer
                 if (playbackStatus == PlaybackStatus.PLAYING) {
                     notificationAction = R.drawable.ic_pause_black_24dp;
@@ -580,33 +578,8 @@ public class MusicService extends Service {
                                 MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP))
                         .setPriority(NotificationCompat.PRIORITY_LOW)
                         .build();
-//.setMediaSession(mediaSessionCompat.getSessionToken())
-//                notificationManagerCompat.notify(1, notification);
-                ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
-/*
-                // Create a new Notification
-                NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(context, MEDIA_CHANNEL_ID)
-                        // Hide the timestamp
-                        .setShowWhen(false)
-                        // Set the Notification style
-                        .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                                // Attach our MediaSession token
-                                .setMediaSession(mediaSession.getSessionToken())
-                                // Show our playback controls in the compat view
-                                .setShowActionsInCompactView(0, 1, 2))
-                        // Set the Notification color
-                        .setColor(context.getResources().getColor(R.color.colorAccent))
-                        // Set the large and small icons
-                        .setLargeIcon(myBitmap)
-                        .setSmallIcon(android.R.drawable.stat_sys_headset)
-                        // Set Notification content information
-//                .setContentText(activeAudio.getArtist())
-//                .setContentTitle(activeAudio.getAlbum())
-//                .setContentInfo(activeAudio.getTitle())
-                        // Add playback actions
-                        .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3,context))
-                        .addAction(notificationAction, "pause", play_pauseAction)
-                        .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2,context));*/
+                      /* TODO: temp comment*/
+               /* ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
@@ -623,7 +596,7 @@ public class MusicService extends Service {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
 
             }
         }

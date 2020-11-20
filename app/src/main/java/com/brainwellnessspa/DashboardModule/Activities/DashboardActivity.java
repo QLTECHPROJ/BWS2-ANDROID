@@ -185,10 +185,8 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
     protected void onDestroy() {
         super.onDestroy();
         mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
-//        BWSApplication.notificationManager.cancelAll();
-//        unregisterReceiver(broadcastReceiver);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID);
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        notificationManager.cancel(NOTIFICATION_ID);
     }
 
     @Override
