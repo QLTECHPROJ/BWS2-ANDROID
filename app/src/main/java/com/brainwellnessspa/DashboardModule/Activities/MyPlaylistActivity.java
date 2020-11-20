@@ -423,6 +423,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             SubPlayListModel model = response.body();
+                            binding.llDownload.setVisibility(View.VISIBLE);
                             playlistSongsList = model.getResponseData().getPlaylistSongs();
                             downloadPlaylistDetails = new DownloadPlaylistDetails();
                             downloadPlaylistDetails.setPlaylistID(model.getResponseData().getPlaylistID());
@@ -581,7 +582,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                         }*/
 
-                            binding.llDownload.setVisibility(View.VISIBLE);
+
 /*                          binding.llDownload.setOnClickListener(view -> {
                                 if (BWSApplication.isNetworkConnected(ctx)) {
                                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
