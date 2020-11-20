@@ -2479,6 +2479,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             Glide.with(ctx).load(mData.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             binding.ivPlaylistStatus.setOnClickListener(view -> {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                params.setMargins(0, 8, 0, 260);
+                binding.llSpace.setLayoutParams(params);
                 if (isPlayPlaylist == 1) {
                     pauseMedia();
                     isPlayPlaylist = 2;
@@ -2518,6 +2521,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             });
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                params.setMargins(0, 8, 0, 260);
+                binding.llSpace.setLayoutParams(params);
                 int pos = holder.getAdapterPosition();
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -2784,6 +2790,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
 
             binding.ivPlaylistStatus.setOnClickListener(view -> {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                params.setMargins(0, 8, 0, 260);
+                binding.llSpace.setLayoutParams(params);
                 if (isPlayPlaylist == 1) {
                     pauseMedia();
                     isPlayPlaylist = 2;
@@ -2842,6 +2851,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             });
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                params.setMargins(0, 8, 0, 260);
+                binding.llSpace.setLayoutParams(params);
                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

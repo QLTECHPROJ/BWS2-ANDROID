@@ -38,15 +38,7 @@ public class BillingAddressFragment extends Fragment {
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         getPrepareData();
-        binding.etName.addTextChangedListener(billingTextWatcher);
-        binding.etEmail.addTextChangedListener(billingTextWatcher);
-        binding.etMobileNumber.addTextChangedListener(billingTextWatcher);
-        binding.etCountry.addTextChangedListener(billingTextWatcher);
-        binding.etAddressLine1.addTextChangedListener(billingTextWatcher);
-        binding.etAddressLine2.addTextChangedListener(billingTextWatcher);
-        binding.etCity.addTextChangedListener(billingTextWatcher);
-        binding.etState.addTextChangedListener(billingTextWatcher);
-        binding.etPostCode.addTextChangedListener(billingTextWatcher);
+
         binding.btnSave.setEnabled(false);
         binding.btnSave.setTextColor(getResources().getColor(R.color.white));
         binding.btnSave.setBackgroundResource(R.drawable.gray_round_cornor);
@@ -152,6 +144,16 @@ public class BillingAddressFragment extends Fragment {
                         binding.etCity.setText(listModel.getResponseData().getSuburb());
                         binding.etState.setText(listModel.getResponseData().getState());
                         binding.etPostCode.setText(listModel.getResponseData().getPostcode());
+
+                        binding.etName.addTextChangedListener(billingTextWatcher);
+                        binding.etEmail.addTextChangedListener(billingTextWatcher);
+                        binding.etMobileNumber.addTextChangedListener(billingTextWatcher);
+                        binding.etCountry.addTextChangedListener(billingTextWatcher);
+                        binding.etAddressLine1.addTextChangedListener(billingTextWatcher);
+                        binding.etAddressLine2.addTextChangedListener(billingTextWatcher);
+                        binding.etCity.addTextChangedListener(billingTextWatcher);
+                        binding.etState.addTextChangedListener(billingTextWatcher);
+                        binding.etPostCode.addTextChangedListener(billingTextWatcher);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -172,20 +174,24 @@ public class BillingAddressFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String Name = binding.etName.getText().toString().trim();
-            String Email = binding.etEmail.getText().toString().trim();
-            String MobileNumber = binding.etMobileNumber.getText().toString().trim();
-            String Country = binding.etCountry.getText().toString().trim();
-            String AddressLine1 = binding.etAddressLine1.getText().toString().trim();
-            String AddressLine2 = binding.etAddressLine2.getText().toString().trim();
-            String City = binding.etCity.getText().toString().trim();
-            String State = binding.etState.getText().toString().trim();
-            String PostCode = binding.etPostCode.getText().toString().trim();
+            String Name = binding.etName.getText().toString();
+            String Email = binding.etEmail.getText().toString();
+            String MobileNumber = binding.etMobileNumber.getText().toString();
+            String Country = binding.etCountry.getText().toString();
+            String AddressLine1 = binding.etAddressLine1.getText().toString();
+            String AddressLine2 = binding.etAddressLine2.getText().toString();
+            String City = binding.etCity.getText().toString();
+            String State = binding.etState.getText().toString();
+            String PostCode = binding.etPostCode.getText().toString();
 
-            if (Name.equalsIgnoreCase(UserName) && Email.equalsIgnoreCase(UserEmail) && MobileNumber.equalsIgnoreCase(UserMobileNumber)
-                    && Country.equalsIgnoreCase(UserCountry) && AddressLine1.equalsIgnoreCase(UserAddressLine1)
+            if (Name.equalsIgnoreCase(UserName)
+                    && Email.equalsIgnoreCase(UserEmail)
+                    && MobileNumber.equalsIgnoreCase(UserMobileNumber)
+                    && Country.equalsIgnoreCase(UserCountry)
+                    && AddressLine1.equalsIgnoreCase(UserAddressLine1)
                     && AddressLine2.equalsIgnoreCase(UserAddressLine2)
-                    && City.equalsIgnoreCase(UserCity) && State.equalsIgnoreCase(UserState)
+                    && City.equalsIgnoreCase(UserCity)
+                    && State.equalsIgnoreCase(UserState)
                     && PostCode.equalsIgnoreCase(UserPostCode)) {
                 binding.btnSave.setEnabled(false);
                 binding.btnSave.setTextColor(getResources().getColor(R.color.white));
