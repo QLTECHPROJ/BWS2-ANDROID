@@ -3,8 +3,10 @@ package com.brainwellnessspa.DashboardModule.Playlist;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -27,7 +29,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -35,6 +36,7 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -57,24 +59,20 @@ import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
 import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LikeModule.Activities.LikeActivity;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
-import com.brainwellnessspa.LoginModule.Activities.LoginActivity;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.ReminderModule.Activities.ReminderActivity;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.RoomDataBase.DownloadPlaylistDetails;
-import com.brainwellnessspa.SplashModule.SplashScreenActivity;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.ItemMoveCallback;
 import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.Utility.Playable;
 import com.brainwellnessspa.Utility.StartDragListener;
 import com.brainwellnessspa.databinding.FragmentMyPlaylistsBinding;
 import com.brainwellnessspa.databinding.MyPlaylistLayoutBinding;
 import com.brainwellnessspa.databinding.MyPlaylistLayoutSorting1Binding;
 import com.brainwellnessspa.databinding.MyPlaylistLayoutSorting2Binding;
-import com.brainwellnessspa.databinding.MyPlaylistLayoutSortingBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.downloader.PRDownloader;
@@ -82,7 +80,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -105,25 +102,18 @@ import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.Playlist.ViewAllPlaylistFragment.GetPlaylistLibraryID;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
-import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Activities.DownloadsActivity.ComeFrom_Playlist;
-import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.ComeFrom_LikePlaylist;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.isDownloading;
-import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
+import static com.brainwellnessspa.LikeModule.Activities.LikeActivity.ComeFrom_LikePlaylist;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
-import static com.brainwellnessspa.Utility.MusicService.isResume;
-import static com.brainwellnessspa.Utility.MusicService.isStop;
-import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
-import static com.brainwellnessspa.Utility.MusicService.oTime;
 import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
@@ -133,10 +123,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int RefreshIconData = 0;
     public static String RefreshNew = "";
     public static int disclaimerPlayed = 0;
-    public boolean RefreshPlaylist = false;
     public static int isPlayPlaylist = 0;
+    public boolean RefreshPlaylist = false;
     FragmentMyPlaylistsBinding binding;
-    String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "";
+    String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
     int RefreshIcon;
     PlayListsAdpater adpater;
     PlayListsAdpater1 adpater1;
@@ -160,12 +150,81 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     SubPlayListModel.ResponseData.PlaylistSong addDisclaimer = new SubPlayListModel.ResponseData.PlaylistSong();
     SubPlayListModel.ResponseData.PlaylistSong songListDownload = new SubPlayListModel.ResponseData.PlaylistSong();
     boolean isclose = false;
-    private Handler handler1, handler2, handler3;
-    private Runnable UpdateSongTime3;
     int position = 0, startTime, listSize, myCount;
-    private long totalDuration, currentDuration = 0;
     long myProgress = 0, diff = 0;
     boolean Isclose = false;
+    private Handler handler1, handler2;
+    private long totalDuration, currentDuration = 0;
+    private BroadcastReceiver listener = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra("MyData")) {
+                String data = intent.getStringExtra("MyData");
+                Log.d("play_pause_Action", data);
+
+                SharedPreferences sharedw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                boolean audioPlay = sharedw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                AudioFlag = sharedw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                String pID = sharedw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                if (MyDownloads.equalsIgnoreCase("1")) {
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                        /*if (data.equalsIgnoreCase("pause")) {
+                            isPlayPlaylist = 1;
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+//                            handler3.postDelayed(UpdateSongTime3, 500);
+                            adpater2.notifyDataSetChanged();
+
+                        } else {
+                            isPlayPlaylist = 0;
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        }*/
+                        if (MyDownloads.equalsIgnoreCase("1")) {
+                            if (data.equalsIgnoreCase("play")) {
+                                isPlayPlaylist = 0;
+                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                            } else {
+                                isPlayPlaylist = 1;
+                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                            }
+                                adpater2.notifyDataSetChanged();
+                        }
+                    } else {
+                        isPlayPlaylist = 0;
+                        binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                    }
+                } else {
+                    if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                        /*if (isMediaStart) {
+                            isPlayPlaylist = 1;
+//                            handler3.postDelayed(UpdateSongTime3, 500);
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                        } else {
+                            isPlayPlaylist = 0;
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        }*/
+
+                            if (!MyDownloads.equalsIgnoreCase("1")) {
+                                if(data.equalsIgnoreCase("play")){
+                                isPlayPlaylist = 0;
+                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                            }else{
+                                isPlayPlaylist = 1;
+                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                            }
+                            if (MyCreated.equalsIgnoreCase("1")) {
+                                adpater1.notifyDataSetChanged();
+                            } else {
+                                adpater2.notifyDataSetChanged();
+                            }
+                        }
+                    } else {
+                        isPlayPlaylist = 0;
+                        binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                    }
+                }
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -173,7 +232,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         view = binding.getRoot();
 //        handler1 = new Handler();
         handler2 = new Handler();
-        handler3 = new Handler();
+//        handler3 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         activity = getActivity();
@@ -425,7 +484,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
     @Override
     public void onPause() {
-        handler3.removeCallbacks(UpdateSongTime3);
+//        handler3.removeCallbacks(UpdateSongTime3);
         super.onPause();
     }
 
@@ -522,6 +581,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             prepareData(UserID, PlaylistIDs);
             MyPlaylistIds = "";
         }
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
     }
 
     private void searchClear(EditText searchEditText) {
@@ -787,39 +847,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             downloadPlaylistDetailsList = GetPlaylistDetail2();
             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
-        SharedPreferences sharedw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-        boolean audioPlay = sharedw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-        AudioFlag = sharedw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-        String pID = sharedw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-        if (MyDownloads.equalsIgnoreCase("1")) {
-            if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
-                if (isMediaStart) {
-                    isPlayPlaylist = 1;
-                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                    handler3.postDelayed(UpdateSongTime3, 500);
-                } else {
-                    isPlayPlaylist = 0;
-                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-                }
-            } else {
-                isPlayPlaylist = 0;
-                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-            }
-        } else {
-            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-                if (isMediaStart) {
-                    isPlayPlaylist = 1;
-                    handler3.postDelayed(UpdateSongTime3, 500);
-                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                } else {
-                    isPlayPlaylist = 0;
-                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-                }
-            } else {
-                isPlayPlaylist = 0;
-                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-            }
-        }
     }
 
     private List<DownloadAudioDetails> getMyMedia() {
@@ -973,6 +1000,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.ivBanner.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
+        MyCreated = listModel.getCreated();
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(listener, new IntentFilter("play_pause_Action"));
         if (listModel.getPlaylistName().equalsIgnoreCase("") ||
                 listModel.getPlaylistName() == null) {
             binding.tvLibraryName.setText(R.string.My_Playlist);
@@ -1652,6 +1682,150 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         addDisclaimer.setAudioDuration("00:48");
     }
 
+    public List<DownloadAudioDetails> GetPlaylistMedia(String playlistID) {
+        playlistWiseAudioDetails = new ArrayList<>();
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                playlistWiseAudioDetails = DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getAllAudioByPlaylist(playlistID);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                deleteDownloadFile(getActivity(), playlistID);
+                for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
+                    GetSingleMedia(playlistWiseAudioDetails.get(i).getAudioFile(), getActivity(), playlistID);
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetMedia st = new GetMedia();
+        st.execute();
+        return playlistWiseAudioDetails;
+    }
+
+    private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
+        class DeleteMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient.getInstance(applicationContext)
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deleteByPlaylistId(PlaylistId);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+//                notifyItemRemoved(position);
+                deletePlaylist(PlaylistID);
+                super.onPostExecute(aVoid);
+            }
+        }
+        DeleteMedia st = new DeleteMedia();
+        st.execute();
+    }
+
+    public void GetSingleMedia(String AudioFile, Context ctx, String playlistID) {
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                oneAudioDetailsList = DatabaseClient
+                        .getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .getLastIdByuId(AudioFile);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                try {
+                    if (oneAudioDetailsList.size() != 0) {
+                        if (oneAudioDetailsList.size() == 1) {
+                            FileUtils.deleteDownloadedFile(ctx, oneAudioDetailsList.get(0).getName());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                super.onPostExecute(aVoid);
+            }
+        }
+        GetMedia sts = new GetMedia();
+        sts.execute();
+    }
+
+    public void getDeleteDownloadData() {
+        List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
+        try {
+            SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+            Gson gson = new Gson();
+            String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+            String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+            String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+            if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                fileNameList = gson.fromJson(jsony, type);
+                fileNameList1 = gson.fromJson(jsony, type);
+                audioFile = gson.fromJson(json1, type);
+                playlistDownloadId = gson.fromJson(jsonq, type);
+
+                if (playlistDownloadId.size() != 0) {
+                    playlistDownloadId.contains(PlaylistID);
+                    for (int i = 1; i < fileNameList1.size(); i++) {
+                        if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
+                            fileNameList.remove(i);
+                            audioFile.remove(i);
+                            playlistDownloadId.remove(i);
+                        }
+                    }
+                }
+                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                String nameJson = gson.toJson(fileNameList);
+                String urlJson = gson.toJson(audioFile);
+                String playlistIdJson = gson.toJson(playlistDownloadId);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
+                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
+                editor.commit();
+                if (fileNameList.get(0).equalsIgnoreCase(filename) && playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
+                    PRDownloader.cancel(downloadIdOne);
+                    filename = "";
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deletePlaylist(String playlistId) {
+        class DeleteMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient.getInstance(getActivity())
+                        .getaudioDatabase()
+                        .taskDao()
+                        .deletePlaylist(playlistId);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }
+        DeleteMedia st = new DeleteMedia();
+        st.execute();
+    }
+
     public class PlayListsAdpater extends RecyclerView.Adapter<PlayListsAdpater.MyViewHolder> implements Filterable/*, StartDragListener*/, ItemMoveCallback.ItemTouchHelperContract {
         Context ctx;
         String UserID, Created, name;
@@ -2091,9 +2265,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         Context ctx;
         String UserID, Created, name, songId, songOldId;
         StartDragListener startDragListener;
+        int ps = 0, nps = 0;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
         private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
-        int ps = 0, nps = 0;
 
         public PlayListsAdpater1(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
                                  String Created, StartDragListener startDragListener) {
@@ -2117,7 +2291,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             final ArrayList<SubPlayListModel.ResponseData.PlaylistSong> mData = listFilterData;
-            UpdateSongTime3 = new Runnable() {
+          /*  UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -2136,20 +2310,20 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             notifyDataSetChanged();
                         }
 
-                       /* if (isPause) {
+                       *//* if (isPause) {
                             holder.binding.equalizerview.stopBars();
                             notifyDataSetChanged();
                         } else if (!isPause) {
                             holder.binding.equalizerview.animateBars();
                             notifyDataSetChanged();
-                        }*/
+                        }*//*
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     handler3.postDelayed(this, 300);
                 }
-            };
+            };*/
 
             UpdateSongTime2 = new Runnable() {
                 @Override
@@ -2231,7 +2405,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             if (audioPlayz && AudioFlag.equalsIgnoreCase("SubPlayList") && pIDz.equalsIgnoreCase(PlaylistID)) {
                 if (myAudioId.equalsIgnoreCase(mData.get(position).getID())) {
                     songId = myAudioId;
-                    if (isPause) {
+                    if (isPause || !isMediaStart) {
                         holder.binding.equalizerview.stopBars();
                     } else
                         holder.binding.equalizerview.animateBars();
@@ -2247,12 +2421,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     holder.binding.llHighLight.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 }
-                handler3.postDelayed(UpdateSongTime3, 500);
+//                handler3.postDelayed(UpdateSongTime3, 500);
             } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llHighLight.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                handler3.removeCallbacks(UpdateSongTime3);
+//                handler3.removeCallbacks(UpdateSongTime3);
             }
 
             if (fileNameList.size() != 0) {
@@ -2343,7 +2517,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
                 notifyDataSetChanged();
-                handler3.postDelayed(UpdateSongTime3, 500);
+//                handler3.postDelayed(UpdateSongTime3, 500);
             });
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
@@ -2376,7 +2550,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     callTransparentFrag(pos, ctx, listModelList2, "myPlaylist", PlaylistID);
                 }
                 isPlayPlaylist = 1;
-                handler3.postDelayed(UpdateSongTime3, 500);
+//                handler3.postDelayed(UpdateSongTime3, 500);
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 notifyDataSetChanged();
             });
@@ -2485,10 +2659,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public class PlayListsAdpater2 extends RecyclerView.Adapter<PlayListsAdpater2.MyViewHolder2> implements Filterable {
         Context ctx;
         String UserID, Created, songId;
-        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
-        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
         int ps = 0, nps = 0;
         boolean aps = false, bps = false;
+        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList;
+        private ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listFilterData;
 
         public PlayListsAdpater2(ArrayList<SubPlayListModel.ResponseData.PlaylistSong> listModelList, Context ctx, String UserID,
                                  String Created) {
@@ -2509,7 +2683,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder2 holder, int position) {
-            UpdateSongTime3 = new Runnable() {
+            /*UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -2533,7 +2707,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     }
                     handler3.postDelayed(this, 300);
                 }
-            };
+            };*/
 
             searchEditText.setHint("Search for audios");
             binding.tvSearch.setHint("Search for audios");
@@ -2565,7 +2739,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             if (MyDownloads.equalsIgnoreCase("1")) {
                 if (audioPlayz && AudioFlag.equalsIgnoreCase("Downloadlist") && pIDz.equalsIgnoreCase(PlaylistName)) {
                     if (myAudioId.equalsIgnoreCase(mData.get(position).getID())) {
-                        if (isPause) {
+                        if (isPause|| !isMediaStart) {
                             holder.binding.equalizerview.stopBars();
                         } else
                             holder.binding.equalizerview.animateBars();
@@ -2579,12 +2753,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     }
-                    handler3.postDelayed(UpdateSongTime3, 500);
+//                    handler3.postDelayed(UpdateSongTime3, 500);
                 } else {
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    handler3.removeCallbacks(UpdateSongTime3);
+//                    handler3.removeCallbacks(UpdateSongTime3);
                 }
             } else {
                 if (audioPlayz && AudioFlag.equalsIgnoreCase("SubPlayList") && pIDz.equalsIgnoreCase(PlaylistID)) {
@@ -2603,12 +2777,12 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     }
-                    handler3.postDelayed(UpdateSongTime3, 500);
+//                    handler3.postDelayed(UpdateSongTime3, 500);
                 } else {
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    handler3.removeCallbacks(UpdateSongTime3);
+//                    handler3.removeCallbacks(UpdateSongTime3);
                 }
             }
 
@@ -2666,7 +2840,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
-                handler3.postDelayed(UpdateSongTime3, 500);
+//                handler3.postDelayed(UpdateSongTime3, 500);
                 notifyDataSetChanged();
             });
 
@@ -2718,7 +2892,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                handler3.postDelayed(UpdateSongTime3, 500);
+//                handler3.postDelayed(UpdateSongTime3, 500);
                 notifyDataSetChanged();
             });
 
@@ -2861,149 +3035,5 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 this.binding = binding;
             }
         }
-    }
-
-    public List<DownloadAudioDetails> GetPlaylistMedia(String playlistID) {
-        playlistWiseAudioDetails = new ArrayList<>();
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                playlistWiseAudioDetails = DatabaseClient
-                        .getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getAllAudioByPlaylist(playlistID);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                deleteDownloadFile(getActivity(), playlistID);
-                for (int i = 0; i < playlistWiseAudioDetails.size(); i++) {
-                    GetSingleMedia(playlistWiseAudioDetails.get(i).getAudioFile(), getActivity(), playlistID);
-                }
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetMedia st = new GetMedia();
-        st.execute();
-        return playlistWiseAudioDetails;
-    }
-
-    private void deleteDownloadFile(Context applicationContext, String PlaylistId) {
-        class DeleteMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient.getInstance(applicationContext)
-                        .getaudioDatabase()
-                        .taskDao()
-                        .deleteByPlaylistId(PlaylistId);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-//                notifyItemRemoved(position);
-                deletePlaylist(PlaylistID);
-                super.onPostExecute(aVoid);
-            }
-        }
-        DeleteMedia st = new DeleteMedia();
-        st.execute();
-    }
-
-    public void GetSingleMedia(String AudioFile, Context ctx, String playlistID) {
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                oneAudioDetailsList = DatabaseClient
-                        .getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getLastIdByuId(AudioFile);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                try {
-                    if (oneAudioDetailsList.size() != 0) {
-                        if (oneAudioDetailsList.size() == 1) {
-                            FileUtils.deleteDownloadedFile(ctx, oneAudioDetailsList.get(0).getName());
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                super.onPostExecute(aVoid);
-            }
-        }
-        GetMedia sts = new GetMedia();
-        sts.execute();
-    }
-
-    public void getDeleteDownloadData() {
-        List<String> fileNameList, fileNameList1, audioFile, playlistDownloadId;
-        try {
-            SharedPreferences sharedy = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-            Gson gson = new Gson();
-            String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-            String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-            String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-            if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
-                Type type = new TypeToken<List<String>>() {
-                }.getType();
-                fileNameList = gson.fromJson(jsony, type);
-                fileNameList1 = gson.fromJson(jsony, type);
-                audioFile = gson.fromJson(json1, type);
-                playlistDownloadId = gson.fromJson(jsonq, type);
-
-                if (playlistDownloadId.size() != 0) {
-                    playlistDownloadId.contains(PlaylistID);
-                    for (int i = 1; i < fileNameList1.size(); i++) {
-                        if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
-                            fileNameList.remove(i);
-                            audioFile.remove(i);
-                            playlistDownloadId.remove(i);
-                        }
-                    }
-                }
-                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                String nameJson = gson.toJson(fileNameList);
-                String urlJson = gson.toJson(audioFile);
-                String playlistIdJson = gson.toJson(playlistDownloadId);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadName, nameJson);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadUrl, urlJson);
-                editor.putString(CONSTANTS.PREF_KEY_DownloadPlaylistId, playlistIdJson);
-                editor.commit();
-                if (fileNameList.get(0).equalsIgnoreCase(filename) && playlistDownloadId.get(0).equalsIgnoreCase(PlaylistID)) {
-                    PRDownloader.cancel(downloadIdOne);
-                    filename = "";
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void deletePlaylist(String playlistId) {
-        class DeleteMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DatabaseClient.getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .deletePlaylist(playlistId);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-            }
-        }
-        DeleteMedia st = new DeleteMedia();
-        st.execute();
     }
 }

@@ -39,6 +39,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.media.session.MediaButtonReceiver;
 
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
@@ -71,6 +72,7 @@ public class MusicService extends Service {
     public static final String ACTION_STOP = "com.valdioveliu.valdio.audioplayer.ACTION_STOP";
     public static final String MEDIA_CHANNEL_ID = "media_playback_channel";
     public static final String Broadcast_PLAY_NEW_AUDIO = "com.brainwellnessspa.PlayNewAudio";
+    public static final String Broadcast_PLAY_PAUSE = "com.brainwellnessspa.Broadcast";
     //MediaSession
     private static Bitmap myBitmap;
     public static MainPlayModel mainPlayModel;
@@ -520,16 +522,23 @@ public class MusicService extends Service {
                 int notificationAction = 0;//needs to be initialized
                 PendingIntent play_pauseAction = null;
 
+                Intent localIntent;
+                LocalBroadcastManager localBroadcastManager;
+                localIntent = new Intent("play_pause_Action");
+                localBroadcastManager = LocalBroadcastManager.getInstance(context);
                 //Build a new notification according to the current state of the MediaPlayer
                 if (playbackStatus == PlaybackStatus.PLAYING) {
                     notificationAction = R.drawable.ic_pause_black_24dp;
                     //create the pause action
+                    localIntent.putExtra("MyData", "pause");
                     play_pauseAction = playbackAction(1,context);
                 } else if (playbackStatus == PlaybackStatus.PAUSED) {
                     notificationAction = R.drawable.ic_play_arrow_black_24dp;
                     //create the play action
+                    localIntent.putExtra("MyData", "play");
                     play_pauseAction = playbackAction(0,context);
                 }
+                localBroadcastManager.sendBroadcast(localIntent);
                 NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
 //        MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
         PendingIntent pendingIntentPrevious;

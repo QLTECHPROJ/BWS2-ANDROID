@@ -1,16 +1,20 @@
 package com.brainwellnessspa.LikeModule.Fragments;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -80,13 +84,29 @@ public class LikeAudiosFragment extends Fragment {
     int startTime;
     private long currentDuration = 0;
     long myProgress = 0;
-    private Runnable UpdateSongTime3;
+    LikeAudiosAdapter adapter;
+    private BroadcastReceiver listener = new BroadcastReceiver() {
+        @Override
+        public void onReceive( Context context, Intent intent ) {
+            if(intent.hasExtra("MyData")) {
+                String data = intent.getStringExtra("MyData");
+                Log.d("play_pause_Action", data);
 
+                if(data.equalsIgnoreCase("play")){
+//                    BWSApplication.showToast("Play", getActivity());
+                    adapter.notifyDataSetChanged();
+                }else{
+//                    BWSApplication.showToast("pause", getActivity());
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        }
+    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_likes, container, false);
         View view = binding.getRoot();
-        handler3 = new Handler();
+//        handler3 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -97,12 +117,17 @@ public class LikeAudiosFragment extends Fragment {
         prepareData();
         binding.llError.setVisibility(View.GONE);
         binding.tvFound.setText("Your like audios will appear here");
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(listener, new IntentFilter("play_pause_Action"));
         return view;
     }
 
+
     @Override
     public void onPause() {
-        handler3.removeCallbacks(UpdateSongTime3);
+//        handler3.removeCallbacks(UpdateSongTime3);
+
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onPause();
     }
 
@@ -142,7 +167,7 @@ public class LikeAudiosFragment extends Fragment {
                            } else {
                                binding.llError.setVisibility(View.GONE);
                                binding.rvLikesList.setVisibility(View.VISIBLE);
-                               LikeAudiosAdapter adapter = new LikeAudiosAdapter(listModel.getResponseData().getAudio(), getActivity());
+                               adapter = new LikeAudiosAdapter(listModel.getResponseData().getAudio(), getActivity());
                                binding.rvLikesList.setAdapter(adapter);
                            }
                        }
@@ -181,7 +206,7 @@ public class LikeAudiosFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            UpdateSongTime3 = new Runnable() {
+            /*UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -205,7 +230,8 @@ public class LikeAudiosFragment extends Fragment {
                     }
                     handler3.postDelayed(this, 500);
                 }
-            };
+            };*/
+
             holder.binding.tvTitle.setText(modelList.get(position).getName());
             holder.binding.tvTime.setText(modelList.get(position).getAudioDuration());
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
@@ -238,12 +264,13 @@ public class LikeAudiosFragment extends Fragment {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 }
-                handler3.postDelayed(UpdateSongTime3, 500);
+                GetMedia();
+//                handler3.postDelayed(UpdateSongTime3, 500);
             } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                handler3.removeCallbacks(UpdateSongTime3);
+//                handler3.removeCallbacks(UpdateSongTime3);
             }
 
             holder.binding.llMenu.setOnClickListener(new View.OnClickListener() {
@@ -327,7 +354,9 @@ public class LikeAudiosFragment extends Fragment {
                         }
                         callTransFrag(pos, listModelList2);
                     }
-                    handler3.postDelayed(UpdateSongTime3, 500);
+
+                    GetMedia();
+//                    handler3.postDelayed(UpdateSongTime3, 500);
                     notifyDataSetChanged();
                 }
             });
@@ -376,6 +405,50 @@ public class LikeAudiosFragment extends Fragment {
                 super(binding.getRoot());
                 this.binding = binding;
             }
+        }
+    }
+    public void GetMedia() {
+        try {
+            class GetMedia extends AsyncTask<Void, Void, Void> {
+                int ps = 0;
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    try {
+                        startTime = getStartTime();
+                        myProgress = currentDuration;
+                        currentDuration = getStartTime();
+                        if (currentDuration == 0 && isCompleteStop) {
+//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        } else if (currentDuration >= 1 && !isPause) {
+//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                        } else if (currentDuration >= 1 && isPause) {
+//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        }
+
+                        if (currentDuration <= 555) {
+                            ps = 1;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    if(ps == 1){
+
+                    }
+                    GetMedia();
+                    super.onPostExecute(aVoid);
+
+                }
+            }
+
+            GetMedia st = new GetMedia();
+            st.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

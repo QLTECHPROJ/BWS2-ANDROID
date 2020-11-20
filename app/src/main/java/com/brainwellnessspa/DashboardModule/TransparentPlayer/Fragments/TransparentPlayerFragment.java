@@ -25,6 +25,7 @@ import android.widget.SeekBar;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
@@ -72,6 +73,7 @@ import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeS
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
 import static com.brainwellnessspa.Utility.MusicService.Broadcast_PLAY_NEW_AUDIO;
+import static com.brainwellnessspa.Utility.MusicService.Broadcast_PLAY_PAUSE;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.buildNotification;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
@@ -140,22 +142,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-//            //Get the new media index form SharedPreferences
-//            audioIndex = new StorageUtil(getApplicationContext()).loadAudioIndex();
-//            if (audioIndex != -1 && audioIndex < audioList.size()) {
-//                //index is in a valid range
-//                activeAudio = audioList.get(audioIndex);
-//            } else {
-//                stopSelf();
-//            }
-
-            //A PLAY_NEW_AUDIO action received
-            //reset mediaPlayer to play the new Audio
-//            stopMedia();
-//            mediaPlayer.reset();
-//            initMediaPlayer();
-//            updateMetaData();
-
             if (isPause || !isMediaStart) {
                 binding.ivPlay.setVisibility(View.VISIBLE);
                 binding.ivPause.setVisibility(View.GONE);
@@ -430,13 +416,18 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 resumeMedia();
                 binding.progressBar.setVisibility(View.GONE);
 //                binding.llProgress.setVisibility(View.GONE);
-                binding.ivPlay.setVisibility(View.GONE);
-                binding.ivPause.setVisibility(View.VISIBLE);
-                isPause = false;
-            }
-            player = 1;
-            buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
-            handler12.postDelayed(UpdateSongTime12, 100);
+            binding.ivPlay.setVisibility(View.GONE);
+            binding.ivPause.setVisibility(View.VISIBLE);
+            isPause = false;
+        }
+        player = 1;
+        buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+        handler12.postDelayed(UpdateSongTime12, 100);
+        /*Intent intent = new Intent();
+        intent.setAction("com.brainwellnessspa.Broadcast");
+        intent.putExtra("MyData", "play");
+        getActivity().sendBroadcast(intent);*/
+//        getActivity().registerReceiver(broadcastReceiver_playPause, filter);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -460,6 +451,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
         oTime = binding.simpleSeekbar.getProgress();
         buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList.get(position));
+       /* Intent intent = new Intent();
+        intent.setAction("com.brainwellnessspa.Broadcast");
+        intent.putExtra("MyData", "pause");
+        getActivity().sendBroadcast(intent); */
+//        getActivity().registerReceiver(broadcastReceiver_playPause, filter);
+
     }
 
    /* @Override
