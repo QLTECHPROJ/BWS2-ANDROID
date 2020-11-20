@@ -7,13 +7,16 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -60,7 +63,7 @@ import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeS
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
-import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
+import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.disclaimerPlayed;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
@@ -88,12 +91,49 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
     DownloadAudioDetails addDisclaimer = new DownloadAudioDetails();
     List<DownloadAudioDetails> oneAudioDetailsList;
     public static int comeDeletePlaylist = 0;
-    Handler handler3;
+//    Handler handler3;
     int startTime;
     private long currentDuration = 0;
     long myProgress = 0, diff = 0;
-    private Runnable UpdateSongTime3;
+//    private Runnable UpdateSongTime3;
+private BroadcastReceiver listener = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (intent.hasExtra("MyData")) {
+            String data = intent.getStringExtra("MyData");
+            Log.d("play_pause_Action", data);
 
+            SharedPreferences sharedw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            boolean audioPlay = sharedw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            AudioFlag = sharedw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            String pID = sharedw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+            if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                        /*if (data.equalsIgnoreCase("pause")) {
+                            isPlayPlaylist = 1;
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+//                            handler3.postDelayed(UpdateSongTime3, 500);
+                            adpater2.notifyDataSetChanged();
+
+                        } else {
+                            isPlayPlaylist = 0;
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        }*/
+                        if (data.equalsIgnoreCase("play")) {
+                            isPlayPlaylist = 0;
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        } else {
+                            isPlayPlaylist = 1;
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                        }
+                        adpater.notifyDataSetChanged();
+
+                } else {
+                    isPlayPlaylist = 0;
+                    binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                }
+        }
+    }
+};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +143,6 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         ctx = DownloadPlaylistActivity.this;
         addDisclaimer();
         ComeScreenAccount = 0;
-        handler3 = new Handler();
         if (getIntent() != null) {
             PlaylistID = getIntent().getStringExtra("PlaylistID");
             PlaylistName = getIntent().getStringExtra("PlaylistName");
@@ -114,13 +153,18 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             Totalminute = getIntent().getStringExtra("Totalminute");
         }
 
-        binding.llBack.setOnClickListener(view -> finish());
+        binding.llBack.setOnClickListener(view ->{
+            LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener);
+            finish();
+        });
         PrepareData();
     }
 
     @Override
     public void onPause() {
-        handler3.removeCallbacks(UpdateSongTime3);
+//        handler3.removeCallbacks(UpdateSongTime3);
+
+        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener);
         super.onPause();
     }
 
@@ -142,6 +186,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
             params.setMargins(10, 8, 10, 20);
             binding.llSpace.setLayoutParams(params);
         }
+        LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, new IntentFilter("play_pause_Action"));
         try {
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
             String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
@@ -222,7 +267,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
         if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
             if (isMediaStart) {
                 isPlayPlaylist = 1;
-                handler3.postDelayed(UpdateSongTime3,500);
+//                handler3.postDelayed(UpdateSongTime3,500);
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
             } else {
                 isPlayPlaylist = 0;
@@ -397,6 +442,8 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
+        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener);
         finish();
     }
 
@@ -541,7 +588,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolders holder, int position) {
-            UpdateSongTime3 = new Runnable() {
+            /*UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -565,7 +612,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     }
                     handler3.postDelayed(this, 500);
                 }
-            };
+            };*/
 
             final List<DownloadAudioDetails> mData = listFilterData;
             holder.binding.tvTitleA.setText(mData.get(position).getName());
@@ -603,12 +650,12 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     }
-                    handler3.postDelayed(UpdateSongTime3,500);
+//                    handler3.postDelayed(UpdateSongTime3,500);
                 }else{
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    handler3.removeCallbacks(UpdateSongTime3);
+//                    handler3.removeCallbacks(UpdateSongTime3);
                 }
 
             binding.ivPlaylistStatus.setOnClickListener(view -> {
@@ -645,7 +692,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                     isPlayPlaylist = 1;
                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                 }
-                handler3.postDelayed(UpdateSongTime3,500);
+//                handler3.postDelayed(UpdateSongTime3,500);
                 notifyDataSetChanged();
             });
 
@@ -675,7 +722,7 @@ public class DownloadPlaylistActivity extends AppCompatActivity {
                 }
                 isPlayPlaylist = 1;
                 binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                handler3.postDelayed(UpdateSongTime3,500);
+//                handler3.postDelayed(UpdateSongTime3,500);
                 notifyDataSetChanged();
             });
 

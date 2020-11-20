@@ -71,7 +71,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.POWER_SERVICE;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
-import static com.brainwellnessspa.DownloadModule.Adapters.AudioDownlaodsAdapter.comefromDownload;
+import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.Utility.MusicService.Broadcast_PLAY_NEW_AUDIO;
 import static com.brainwellnessspa.Utility.MusicService.Broadcast_PLAY_PAUSE;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;

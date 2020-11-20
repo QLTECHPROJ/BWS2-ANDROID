@@ -1,12 +1,15 @@
 package com.brainwellnessspa.DashboardModule.Appointment.AppointmentDetails;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -68,28 +72,48 @@ public class AptAudioFragment extends Fragment {
     List<DownloadAudioDetails> oneAudioDetailsList;
     public static int comeRefreshData = 0;
     private Handler handler1;
-    Handler handler3;
+//    Handler handler3;
     int startTime;
+    AudioListAdapter appointmentsAdapter;
     private long currentDuration = 0;
     long myProgress = 0;
-    private Runnable UpdateSongTime3;
+//    private Runnable UpdateSongTime3;
 
+    private BroadcastReceiver listener = new BroadcastReceiver() {
+        @Override
+        public void onReceive( Context context, Intent intent ) {
+            if(intent.hasExtra("MyData")) {
+                String data = intent.getStringExtra("MyData");
+                Log.d("play_pause_Action", data);
+
+                if(data.equalsIgnoreCase("play")){
+//                    BWSApplication.showToast("Play", getActivity());
+                    appointmentsAdapter.notifyDataSetChanged();
+                }else{
+//                    BWSApplication.showToast("pause", getActivity());
+                    appointmentsAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_audio, container, false);
         View view = binding.getRoot();
         oneAudioDetailsList = new ArrayList<>();
         handler1 = new Handler();
-        handler3 = new Handler();
+//        handler3 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(listener, new IntentFilter("play_pause_Action"));
         appointmentDetail = new ArrayList<>();
         if (getArguments() != null) {
             appointmentDetail = getArguments().getParcelableArrayList("AppointmentDetailList");
         }
         if (appointmentDetail.size() == 0) {
         } else {
-            AudioListAdapter appointmentsAdapter = new AudioListAdapter(appointmentDetail, getActivity(), f_manager);
+
+            appointmentsAdapter = new AudioListAdapter(appointmentDetail, getActivity(), f_manager);
             RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             binding.rvAudioList.setLayoutManager(recentlyPlayed);
             binding.rvAudioList.setItemAnimator(new DefaultItemAnimator());
@@ -101,7 +125,8 @@ public class AptAudioFragment extends Fragment {
 
     @Override
     public void onPause() {
-        handler3.removeCallbacks(UpdateSongTime3);
+//        handler3.removeCallbacks(UpdateSongTime3);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onPause();
     }
 
@@ -205,7 +230,7 @@ public class AptAudioFragment extends Fragment {
                 }
             };
 
-            UpdateSongTime3 = new Runnable() {
+          /*  UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -226,7 +251,7 @@ public class AptAudioFragment extends Fragment {
                     }
                     handler3.postDelayed(this, 500);
                 }
-            };
+            };*/
 
             SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -250,13 +275,13 @@ public class AptAudioFragment extends Fragment {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 }
-                handler3.postDelayed(UpdateSongTime3, 500);
+//                handler3.postDelayed(UpdateSongTime3, 500);
             } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.ivPlayIcon.setVisibility(View.VISIBLE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                handler3.removeCallbacks(UpdateSongTime3);
+//                handler3.removeCallbacks(UpdateSongTime3);
             }
             holder.binding.tvTitle.setText(audiolist.getName());
             if (audiolist.getAudioDirection().equalsIgnoreCase("")) {
@@ -371,7 +396,7 @@ public class AptAudioFragment extends Fragment {
                     editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "AppointmentDetailList");
                     editor.commit();
-                    handler3.postDelayed(UpdateSongTime3, 500);
+//                    handler3.postDelayed(UpdateSongTime3, 500);
                     notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();

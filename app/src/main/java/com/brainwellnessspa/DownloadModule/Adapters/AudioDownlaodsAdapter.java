@@ -65,9 +65,8 @@ import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 
-
+import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAdapter.MyViewHolder> {
-    public static String comefromDownload = "0";
     FragmentActivity ctx;
     String UserID, songId, AudioFlag;
     FrameLayout progressBarHolder;
@@ -81,11 +80,11 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
     private List<DownloadAudioDetails> listModelList;
     private Handler handler1;
     List<DownloadAudioDetails> downloadedSingleAudio;
-    Handler handler3;
+//    Handler handler3;
     int startTime;
     private long currentDuration = 0;
     long myProgress = 0;
-    private Runnable UpdateSongTime3;
+//    private Runnable UpdateSongTime3;
 
 
     public AudioDownlaodsAdapter(List<DownloadAudioDetails> listModelList, FragmentActivity ctx, String UserID,
@@ -124,7 +123,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        handler3 = new Handler();
+//        handler3 = new Handler();
         UpdateSongTime1 = new Runnable() {
             @Override
             public void run() {
@@ -173,7 +172,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 }
             }
         };
-        UpdateSongTime3 = new Runnable() {
+       /* UpdateSongTime3 = new Runnable() {
             @Override
             public void run() {
                 try {
@@ -195,7 +194,7 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 handler3.postDelayed(this, 500);
             }
         };
-
+*/
         if (fileNameList.size() != 0) {
             for (int i = 0; i < fileNameList.size(); i++) {
                 if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
@@ -264,12 +263,12 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
             }
-            handler3.postDelayed(UpdateSongTime3, 500);
+//            handler3.postDelayed(UpdateSongTime3, 500);
         } else {
             holder.binding.equalizerview.setVisibility(View.GONE);
             holder.binding.llMainLayout.setBackgroundResource(R.color.white);
             holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-            handler3.removeCallbacks(UpdateSongTime3);
+//            handler3.removeCallbacks(UpdateSongTime3);
         }
 
         holder.binding.llMainLayout.setOnClickListener(view -> {
@@ -287,15 +286,6 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                 comefromDownload = "1";
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
-          /*      DownloadMedia downloadMedia = new DownloadMedia(ctx.getApplicationContext());
-                try {
-                    FileDescriptor fileDescriptor = FileUtils.getTempFileDescriptor(ctx.getApplicationContext(), downloadMedia.decrypt(listModelList.get(position).getName()));
-                    play2(fileDescriptor);
-                    playMedia();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
                 SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -324,75 +314,8 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
                     listModelList2.add(position, mainPlayModel);
                     callTransFrag(position, listModelList2);
                 }
-               /* try {
-                    SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    if (queuePlay) {
-                        int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
-                        ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
-                        Gson gson = new Gson();
-                        String json1 = shared1.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
-                        if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
-                            Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
-                            }.getType();
-                            addToQueueModelList = gson.fromJson(json1, type1);
-                        }
-                        addToQueueModelList.remove(position1);
-                        SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = shared2.edit();
-                        String json = gson.toJson(addToQueueModelList);
-                        editor.putString(CONSTANTS.PREF_KEY_queueList, json);
-                        editor.commit();
-
-                    }
-
-                    player = 1;
-                    if (isPrepare || isMediaStart || isPause) {
-                        stopMedia();
-                    }
-                    isPause = false;
-                    isMediaStart = false;
-                    isPrepare = false;
-
-                    isCompleteStop = false;
-
-                    SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = shared.edit();
-                    Gson gson = new Gson();
-                    ArrayList<DownloadAudioDetails> listModelList2 = new ArrayList<>();
-                    DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
-                    mainPlayModel.setID("0");
-                    mainPlayModel.setName("Disclaimer");
-                    mainPlayModel.setAudioFile("");
-                    mainPlayModel.setAudioDirection("The audio shall start playing after the disclaimer");
-                    mainPlayModel.setAudiomastercat("");
-                    mainPlayModel.setAudioSubCategory("");
-                    mainPlayModel.setImageFile("");
-                    mainPlayModel.setLike("");
-                    mainPlayModel.setDownload("");
-                    mainPlayModel.setAudioDuration("00:48");
-                    listModelList2.addAll(listModelList);
-                    listModelList2.add(position,mainPlayModel);
-
-                    String json = gson.toJson(listModelList2);
-                    editor.putString(CONSTANTS.PREF_KEY_modelList, json);
-                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
-                    editor.commit();
-                    Fragment fragment = new TransparentPlayerFragment();
-                    FragmentManager fragmentManager1 = ctx.getSupportFragmentManager();
-                    fragmentManager1.beginTransaction()
-                            .add(R.id.flContainer, fragment)
-                            .commit();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }*/
             }
-            handler3.postDelayed(UpdateSongTime3, 500);
+//            handler3.postDelayed(UpdateSongTime3, 500);
             notifyDataSetChanged();
         });
 
