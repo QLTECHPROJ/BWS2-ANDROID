@@ -841,21 +841,21 @@ public class AddQueueActivity extends AppCompatActivity {
                     mainPlayModel1.setDownload(downloadAudioDetails.getDownload());
                     mainPlayModel1.setAudioDuration(downloadAudioDetails.getAudioDuration());
                     arrayList2.add(mainPlayModel1);
+                    SharedPreferences sharedd = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedd.edit();
+                    Gson gson = new Gson();
+                    String jsonx = gson.toJson(arrayList2);
+                    String json1q1 = gson.toJson(arrayList);
+                    editor.putString(CONSTANTS.PREF_KEY_modelList, json1q1);
+                    editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                    editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                    editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                    editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
+                    editor.commit();
                 }
-                SharedPreferences sharedd = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedd.edit();
-                Gson gson = new Gson();
-                String jsonx = gson.toJson(arrayList2);
-                String json1q1 = gson.toJson(arrayList);
-                editor.putString(CONSTANTS.PREF_KEY_modelList, json1q1);
-                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
-                editor.commit();
                 DatabaseClient.getInstance(activity)
                         .getaudioDatabase()
                         .taskDao()

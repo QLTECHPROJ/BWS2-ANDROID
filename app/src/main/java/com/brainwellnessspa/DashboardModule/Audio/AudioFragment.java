@@ -449,7 +449,7 @@ public class AudioFragment extends Fragment {
                 holder.binding.tvTitle.setText(listModelList.get(position).getView());
                 if (listModelList.get(position).getView().equalsIgnoreCase("My Downloads")) {
                     DownloadAdapter myDownloadsAdapter = new DownloadAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock());
+                            listModelList.get(position).getIsLock(),listModelList.get(position).getView());
                     IsLock = listModelList.get(position).getIsLock();
                     RecyclerView.LayoutManager myDownloads = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(myDownloads);
@@ -680,7 +680,8 @@ public class AudioFragment extends Fragment {
             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
-            if (audioPlay && AudioFlag.equalsIgnoreCase("MainAudioList") && MyPlaylist.equalsIgnoreCase(HomeView)) {
+            if (audioPlay && (AudioFlag.equalsIgnoreCase("MainAudioList") ||
+                    AudioFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(HomeView)) {
                 if (isDisclaimer == 1) {
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
                 } else {

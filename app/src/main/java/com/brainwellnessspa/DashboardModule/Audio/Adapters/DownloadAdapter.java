@@ -56,7 +56,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
     public DownloadAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
-                           String IsLock) {
+                           String isLock, String IsLock) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;

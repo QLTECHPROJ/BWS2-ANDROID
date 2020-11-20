@@ -181,10 +181,10 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         if (MyDownloads.equalsIgnoreCase("1")) {
                             if (data.equalsIgnoreCase("play")) {
                                 isPlayPlaylist = 0;
-                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                             } else {
                                 isPlayPlaylist = 1;
-                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                             }
                                 adpater2.notifyDataSetChanged();
                         }
@@ -202,20 +202,17 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             isPlayPlaylist = 0;
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }*/
-
-                            if (!MyDownloads.equalsIgnoreCase("1")) {
-                                if(data.equalsIgnoreCase("play")){
-                                isPlayPlaylist = 0;
-                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-                            }else{
-                                isPlayPlaylist = 1;
-                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                            }
-                            if (MyCreated.equalsIgnoreCase("1")) {
-                                adpater1.notifyDataSetChanged();
-                            } else {
-                                adpater2.notifyDataSetChanged();
-                            }
+                        if(data.equalsIgnoreCase("play")){
+                            isPlayPlaylist = 0;
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                         }else{
+                            isPlayPlaylist = 1;
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                        }
+                        if (MyCreated.equalsIgnoreCase("1")) {
+                            adpater1.notifyDataSetChanged();
+                        } else {
+                            adpater2.notifyDataSetChanged();
                         }
                     } else {
                         isPlayPlaylist = 0;
@@ -1411,22 +1408,22 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 mainPlayModel1.setDownload(playlistSongs.get(position).getDownload());
                 mainPlayModel1.setAudioDuration(playlistSongs.get(position).getAudioDuration());
                 arrayList2.add(mainPlayModel1);
+                SharedPreferences sharedd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedd.edit();
+                Gson gson = new Gson();
+                String jsonx = gson.toJson(arrayList2);
+                String json1 = gson.toJson(arrayList);
+                editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
+                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
+                editor.putInt(CONSTANTS.PREF_KEY_position, position1);
+                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
+                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
+                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
+                editor.commit();
+                callAddTransFrag();
             }
-            SharedPreferences sharedd = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedd.edit();
-            Gson gson = new Gson();
-            String jsonx = gson.toJson(arrayList2);
-            String json1 = gson.toJson(arrayList);
-            editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
-            editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-            editor.putInt(CONSTANTS.PREF_KEY_position, position1);
-            editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-            editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-            editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-            editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-            editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
-            editor.commit();
-            callAddTransFrag();
             handler2.postDelayed(UpdateSongTime2, 2000);
         }
     }

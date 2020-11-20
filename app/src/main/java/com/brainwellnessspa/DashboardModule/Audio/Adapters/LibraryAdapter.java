@@ -173,7 +173,8 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MyViewHo
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
-        if (audioPlay && AudioFlag.equalsIgnoreCase("MainAudioList") && MyPlaylist.equalsIgnoreCase(HomeView)) {
+        if (audioPlay && (AudioFlag.equalsIgnoreCase("MainAudioList") ||
+                AudioFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(HomeView)) {
             if (isDisclaimer == 1) {
                 BWSApplication.showToast("The audio shall start playing after the disclaimer", ctx);
             } else {

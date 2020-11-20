@@ -522,21 +522,16 @@ public class MusicService extends Service {
                 int notificationAction = 0;//needs to be initialized
                 PendingIntent play_pauseAction = null;
 
-                Intent localIntent = new Intent("play_pause_Action");
-                LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
                 //Build a new notification according to the current state of the MediaPlayer
                 if (playbackStatus == PlaybackStatus.PLAYING) {
                     notificationAction = R.drawable.ic_pause_black_24dp;
                     //create the pause action
-                    localIntent.putExtra("MyData", "pause");
                     play_pauseAction = playbackAction(1,context);
                 } else if (playbackStatus == PlaybackStatus.PAUSED) {
                     notificationAction = R.drawable.ic_play_arrow_black_24dp;
                     //create the play action
-                    localIntent.putExtra("MyData", "play");
                     play_pauseAction = playbackAction(0,context);
                 }
-                localBroadcastManager.sendBroadcast(localIntent);
                 NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
 //        MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
         PendingIntent pendingIntentPrevious;

@@ -85,13 +85,18 @@ public class AptAudioFragment extends Fragment {
             if(intent.hasExtra("MyData")) {
                 String data = intent.getStringExtra("MyData");
                 Log.d("play_pause_Action", data);
-
-                if(data.equalsIgnoreCase("play")){
+                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                if (audioPlayz && AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                    if (data.equalsIgnoreCase("play")) {
 //                    BWSApplication.showToast("Play", getActivity());
-                    appointmentsAdapter.notifyDataSetChanged();
-                }else{
+                        appointmentsAdapter.notifyDataSetChanged();
+                    } else {
 //                    BWSApplication.showToast("pause", getActivity());
-                    appointmentsAdapter.notifyDataSetChanged();
+                        appointmentsAdapter.notifyDataSetChanged();
+                    }
                 }
             }
         }
