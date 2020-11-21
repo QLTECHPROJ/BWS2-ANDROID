@@ -464,6 +464,26 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                             + model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
                                 }
                             }
+
+                            if (model.getResponseData().getCreated().equalsIgnoreCase("1")) {
+                                binding.llOptions.setVisibility(View.GONE);
+                                binding.llRename.setVisibility(View.VISIBLE);
+                                binding.llDelete.setVisibility(View.VISIBLE);
+                                binding.llFind.setVisibility(View.GONE);
+                                binding.llLikes.setVisibility(View.VISIBLE);
+                            } else if (model.getResponseData().getCreated().equalsIgnoreCase("0")) {
+                                binding.llOptions.setVisibility(View.VISIBLE);
+                                binding.llRename.setVisibility(View.GONE);
+                                binding.llDelete.setVisibility(View.GONE);
+                                binding.llLikes.setVisibility(View.VISIBLE);
+
+                                if (Liked.equalsIgnoreCase("1")) {
+                                    binding.llFind.setVisibility(View.GONE);
+                                } else if (Liked.equalsIgnoreCase("0") || Liked.equalsIgnoreCase("")) {
+                                    binding.llFind.setVisibility(View.VISIBLE);
+                                }
+                            }
+
                             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 20,
                                     1, 1, 0.54f, 20);
                             binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -494,24 +514,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 i.putExtra("PlaylistID", model.getResponseData().getPlaylistID());
                                 startActivity(i);
                             });
-                            if (model.getResponseData().getCreated().equalsIgnoreCase("1")) {
-                                binding.llOptions.setVisibility(View.GONE);
-                                binding.llRename.setVisibility(View.VISIBLE);
-                                binding.llDelete.setVisibility(View.VISIBLE);
-                                binding.llFind.setVisibility(View.GONE);
-                                binding.llLikes.setVisibility(View.VISIBLE);
-                            } else if (model.getResponseData().getCreated().equalsIgnoreCase("0")) {
-                                binding.llOptions.setVisibility(View.VISIBLE);
-                                binding.llRename.setVisibility(View.GONE);
-                                binding.llDelete.setVisibility(View.GONE);
-                                binding.llLikes.setVisibility(View.VISIBLE);
 
-                                if (Liked.equalsIgnoreCase("1")) {
-                                    binding.llFind.setVisibility(View.GONE);
-                                } else if (Liked.equalsIgnoreCase("0") || Liked.equalsIgnoreCase("")) {
-                                    binding.llFind.setVisibility(View.VISIBLE);
-                                }
-                            }
                             if (model.getResponseData().getLike().equalsIgnoreCase("1")) {
                                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                             } else if (model.getResponseData().getLike().equalsIgnoreCase("0") ||

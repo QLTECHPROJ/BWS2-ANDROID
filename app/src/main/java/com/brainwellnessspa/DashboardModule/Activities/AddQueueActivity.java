@@ -1114,8 +1114,13 @@ public class AddQueueActivity extends AppCompatActivity {
                         binding.llShuffle.setVisibility(View.VISIBLE);
                         binding.llRepeat.setVisibility(View.VISIBLE);
                         binding.llViewQueue.setVisibility(View.VISIBLE);
-                        Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile()).thumbnail(0.05f)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+
+                        try {
+                            Glide.with(ctx).load(directionModel.getResponseData().get(0).getImageFile()).thumbnail(0.05f)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                         if (directionModel.getResponseData().get(0).getAudioDescription().equalsIgnoreCase("")) {
                             binding.tvTitleDec.setVisibility(View.GONE);
