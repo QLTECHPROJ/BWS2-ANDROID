@@ -1036,8 +1036,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         binding.ivBanner.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
         binding.ivBanner.setScaleType(ImageView.ScaleType.FIT_XY);
         MyCreated = listModel.getCreated();
-        LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(listener, new IntentFilter("play_pause_Action"));
         if (listModel.getPlaylistName().equalsIgnoreCase("") ||
                 listModel.getPlaylistName() == null) {
             binding.tvLibraryName.setText(R.string.My_Playlist);
@@ -1132,6 +1130,9 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            LocalBroadcastManager.getInstance(getActivity())
+                    .registerReceiver(listener, new IntentFilter("play_pause_Action"));
         }
     }
 

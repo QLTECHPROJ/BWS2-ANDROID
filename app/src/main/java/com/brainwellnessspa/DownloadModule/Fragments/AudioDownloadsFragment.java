@@ -118,9 +118,6 @@ public class AudioDownloadsFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDownloadsList.setLayoutManager(mLayoutManager);
         binding.rvDownloadsList.setItemAnimator(new DefaultItemAnimator());
-
-        LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(listener, new IntentFilter("play_pause_Action"));
         return view;
     }
 
@@ -195,6 +192,8 @@ public class AudioDownloadsFragment extends Fragment {
             binding.llError.setVisibility(View.GONE);
             binding.llSpace.setVisibility(View.VISIBLE);
              adapter = new AudioDownlaodsAdapter(historyList, getActivity(), UserID, progressBarHolder, ImgV, llError, rvDownloadsList, binding.tvFound);
+            LocalBroadcastManager.getInstance(getActivity())
+                    .registerReceiver(listener, new IntentFilter("play_pause_Action"));
             binding.rvDownloadsList.setAdapter(adapter);
         }
     }
@@ -692,6 +691,8 @@ public class AudioDownloadsFragment extends Fragment {
                             tvFound.setVisibility(View.VISIBLE);
                         } else {
                             llError.setVisibility(View.GONE);
+                            LocalBroadcastManager.getInstance(getActivity())
+                                    .registerReceiver(listener, new IntentFilter("play_pause_Action"));
                             adapter = new AudioDownlaodsAdapter(downloadAudioDetailsList, ctx, UserID, progressBarHolder, ImgV, llError, rvDownloadsList, tvFound);
                             rvDownloadsList.setAdapter(adapter);
                         }

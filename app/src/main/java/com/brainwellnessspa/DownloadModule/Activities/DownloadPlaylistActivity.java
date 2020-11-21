@@ -188,7 +188,6 @@ private BroadcastReceiver listener = new BroadcastReceiver() {
             params.setMargins(10, 8, 10, 20);
             binding.llSpace.setLayoutParams(params);
         }
-        LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, new IntentFilter("play_pause_Action"));
         try {
             SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
             String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
@@ -464,6 +463,7 @@ private BroadcastReceiver listener = new BroadcastReceiver() {
             @Override
             protected void onPostExecute(Void aVoid) {
                 adpater = new PlayListsAdpater(playlistWiseAudioDetails, ctx);
+                LocalBroadcastManager.getInstance(ctx).registerReceiver(listener, new IntentFilter("play_pause_Action"));
                 binding.rvPlayLists.setAdapter(adpater);
                 super.onPostExecute(aVoid);
             }
