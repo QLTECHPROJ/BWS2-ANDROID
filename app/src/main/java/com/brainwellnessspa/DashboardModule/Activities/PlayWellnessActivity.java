@@ -193,6 +193,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 } else
                     totalDuration = t.getTime();
             }
+
+            if (isMediaStart && url.equalsIgnoreCase("")) {
+                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                    if(mediaPlayer.isPlaying()) {
+                        callComplete();
+                    }
+                    Log.e("calll complete real", "real");
+                });
+            }
             myProgress = currentDuration;
             currentDuration = getStartTime();
             diff = totalDuration - myProgress;
@@ -223,14 +232,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 callComplete();
             }
 
-            if (currentDuration == totalDuration && currentDuration != 0 && !isStop && isMediaStart && url.equalsIgnoreCase("")) {
-                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                    if(mediaPlayer.isPlaying()) {
-                        callComplete();
-                    }
-                    Log.e("calll complete real", "real");
-                });
-            }
 
             progress = getProgressPercentage(currentDuration, totalDuration);
             if (currentDuration == 0 && isCompleteStop) {
@@ -830,48 +831,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
             downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
 
-          /*  if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(name)) {
-                handler1.postDelayed(UpdateSongTime1, 500);
-            } else {
-                binding.pbProgress.setVisibility(View.GONE);
-                handler1.removeCallbacks(UpdateSongTime1);
-            }*/
             binding.pbProgress.setVisibility(View.VISIBLE);
             binding.ivDownloads.setVisibility(View.GONE);
             SaveMedia(EncodeBytes, FileUtils.getFilePath(getApplicationContext(), name));
-   /*     if (BWSApplication.isNetworkConnected(ctx)) {
-            BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
-            Call<DownloadPlaylistModel> listCall = APIClient.getClient().getDownloadlistPlaylist(UserID, id, PlaylistId);
-            listCall.enqueue(new Callback<DownloadPlaylistModel>() {
-                @Override
-                public void onResponse(Call<DownloadPlaylistModel> call, Response<DownloadPlaylistModel> response) {
-                    if (response.isSuccessful()) {
-                        BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
-                        DownloadPlaylistModel model = response.body();
-                        if (model.getResponseData().getFlag().equalsIgnoreCase("0")
-                                || model.getResponseData().getFlag().equalsIgnoreCase("")) {
-                            binding.llDownloads.setClickable(true);
-                            binding.llDownloads.setEnabled(true);
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                        } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                            binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                            binding.llDownloads.setClickable(false);
-                            binding.llDownloads.setEnabled(false);
-                        }
-                        BWSApplication.showToast(model.getResponseMessage(), ctx);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<DownloadPlaylistModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
-                }
-            });
-
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-        }*/
         }
     }
 
@@ -1002,7 +964,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 } else
                     binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-//                BWSApplication.showToast("Shuffle mode has been turned on", ctx);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else if (IsShuffle.equalsIgnoreCase("1")) {
@@ -1011,7 +972,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             editor.putString(CONSTANTS.PREF_KEY_IsShuffle, "");
             editor.commit();
             IsShuffle = "";
-//            BWSApplication.showToast("Shuffle mode has been turned off", ctx);
             binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
@@ -1033,7 +993,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             IsRepeat = "0";
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
-//            BWSApplication.showToast("Repeat mode has been turned on", ctx);
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         } else if (IsRepeat.equalsIgnoreCase("0")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
@@ -1045,11 +1004,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (listSize == 1) {
                 editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
                 IsRepeat = "";
-//                BWSApplication.showToast("Repeat mode has been turned off", ctx);
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {
-//                BWSApplication.showToast("Repeat mode has been turned on", ctx);
                 binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
                 binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             }
@@ -1069,7 +1026,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             editor.commit();
             binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-//            BWSApplication.showToast("Repeat mode has been turned off", ctx);
         }
     }
 
@@ -1093,99 +1049,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                             boolean audioPlay = sharedxx.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                             int pos = sharedxx.getInt(CONSTANTS.PREF_KEY_position, 0);
                             AudioFlag = sharedxx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                        /*if (audioPlay && AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-                            if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
-                                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                                 AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                                Gson gsonx = new Gson();
-                                String json = sharedx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
-                                Type type1 = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
-                                }.getType();
-                                Gson gson1 = new Gson();
-                                ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson1.fromJson(json, type1);
-
-                                mainPlayModelList.add(mainPlayModelList.get(position));
-
-                                SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedd.edit();
-                                Gson gson = new Gson();
-                                String jsonx = gson.toJson(mainPlayModelList);
-                                String json1 = gson.toJson(arrayList);
-                                editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
-                                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                                editor.putInt(CONSTANTS.PREF_KEY_position, pos);
-                                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
-                                editor.commit();
-
-                            } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                SharedPreferences sharedx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                                AudioFlag = sharedx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                                Gson gsonx = new Gson();
-                                String json = sharedx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
-                                Type type = new TypeToken<ArrayList<MainPlayModel>>() {
-                                }.getType();
-                                ArrayList<MainPlayModel> mainPlayModelListold = new ArrayList<>();
-                                mainPlayModelListold = gsonx.fromJson(json, type);
-                                String id = mainPlayModelListold.get(pos).getID();
-                                Type type1 = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
-                                }.getType();
-                                Gson gson1 = new Gson();
-                                ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gson1.fromJson(json, type1);
-                                int x = 0;
-                                for (int i = 0; i < mainPlayModelList.size(); i++) {
-                                    if (mainPlayModelList.get(i).getID().equalsIgnoreCase(id)) {
-                                        x++;
-                                    }if(x== 0) {
-                                        if (audioPlay) {
-                                            LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
-                                            mainPlayModel.setID(mainPlayModelList.get(position).getID());
-                                            mainPlayModel.setName(mainPlayModelList.get(position).getName());
-                                            mainPlayModel.setAudioFile(mainPlayModelList.get(position).getAudioFile());
-                                            mainPlayModel.setAudioDirection(mainPlayModelList.get(position).getAudioDirection());
-                                            mainPlayModel.setAudiomastercat(mainPlayModelList.get(position).getAudiomastercat());
-                                            mainPlayModel.setAudioSubCategory(mainPlayModelList.get(position).getAudioSubCategory());
-                                            mainPlayModel.setImageFile(mainPlayModelList.get(position).getImageFile());
-                                            mainPlayModel.setLike(mainPlayModelList.get(position).getLike());
-                                            mainPlayModel.setDownload(mainPlayModelList.get(position).getDownload());
-                                            mainPlayModel.setAudioDuration(mainPlayModelList.get(position).getAudioDuration());
-                                            arrayList.add(mainPlayModel);
-                                        } else if (queuePlay) {
-                                            LikesHistoryModel.ResponseData.Audio mainPlayModel = new LikesHistoryModel.ResponseData.Audio();
-                                            mainPlayModel.setID(addToQueueModelList.get(position).getID());
-                                            mainPlayModel.setName(addToQueueModelList.get(position).getName());
-                                            mainPlayModel.setAudioFile(addToQueueModelList.get(position).getAudioFile());
-                                            mainPlayModel.setAudioDirection(addToQueueModelList.get(position).getAudioDirection());
-                                            mainPlayModel.setAudiomastercat(addToQueueModelList.get(position).getAudiomastercat());
-                                            mainPlayModel.setAudioSubCategory(addToQueueModelList.get(position).getAudioSubCategory());
-                                            mainPlayModel.setImageFile(addToQueueModelList.get(position).getImageFile());
-                                            mainPlayModel.setLike(addToQueueModelList.get(position).getLike());
-                                            mainPlayModel.setDownload(addToQueueModelList.get(position).getDownload());
-                                            mainPlayModel.setAudioDuration(addToQueueModelList.get(position).getAudioDuration());
-                                            arrayList.add(mainPlayModel);
-                                        }
-                                        mainPlayModelList.add(mainPlayModelList.get(position));
-                                    }
-                                }
-                                SharedPreferences sharedd = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedd.edit();
-                                Gson gson = new Gson();
-                                String jsonx = gson.toJson(mainPlayModelList);
-                                String json1 = gson.toJson(arrayList);
-                                editor.putString(CONSTANTS.PREF_KEY_modelList, json1);
-                                editor.putString(CONSTANTS.PREF_KEY_audioList, jsonx);
-                                editor.putInt(CONSTANTS.PREF_KEY_position, pos);
-                                editor.putBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-                                editor.putBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                editor.putString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                                editor.putString(CONSTANTS.PREF_KEY_myPlaylist, "");
-                                editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "LikeAudioList");
-                                editor.commit();
-                            }
-                        }*/
                             SharedPreferences sharedq = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                             AudioFlag = sharedq.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                             Gson gsonq = new Gson();
@@ -1316,7 +1179,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     }
                 });
             } else {
-//            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1492,6 +1354,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                 } else if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
                     binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                }else{
+                    binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
                 }
                 binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
                 GetMedia();
@@ -1548,6 +1412,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
                         binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                     } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
+                        binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                    }else{
                         binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
                     }
                     binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
@@ -2886,6 +2752,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
             } else if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
                 binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+            }else{
+                binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
             }
         } else if (audioPlay) {
             position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -2894,6 +2762,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
                     binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                 } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
+                    binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                }else{
                     binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
                 }
                 url = mainPlayModelList.get(position).getAudioFile();
