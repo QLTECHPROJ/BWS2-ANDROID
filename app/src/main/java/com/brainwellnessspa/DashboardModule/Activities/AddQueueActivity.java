@@ -821,12 +821,15 @@ public class AddQueueActivity extends AppCompatActivity {
                 Gson gsonx = new Gson();
                 String json11 = sharedx1.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
                 String jsonw = sharedx1.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonx));
-                Type type1 = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
-                }.getType();
-                Gson gson1 = new Gson();
-                ArrayList<DownloadAudioDetails> arrayList = gson1.fromJson(jsonw, type1);
-                ArrayList<MainPlayModel> arrayList2 = gson1.fromJson(json11, type1);
-
+                ArrayList<DownloadAudioDetails> arrayList = new ArrayList<>();
+                ArrayList<MainPlayModel> arrayList2 = new ArrayList<>();
+                if (!jsonw.equalsIgnoreCase(String.valueOf(gsonx))) {
+                    Type type1 = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                    }.getType();
+                    Gson gson1 = new Gson();
+                    arrayList = gson1.fromJson(jsonw, type1);
+                    arrayList2 = gson1.fromJson(json11, type1);
+                }
                 if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                     arrayList.add(downloadAudioDetails);
                     MainPlayModel mainPlayModel1 = new MainPlayModel();

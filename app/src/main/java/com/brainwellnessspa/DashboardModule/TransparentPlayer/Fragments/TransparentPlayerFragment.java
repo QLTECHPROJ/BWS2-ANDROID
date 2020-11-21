@@ -225,6 +225,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         totalDuration = t.getTime();
                     }
                 }
+                if (isMediaStart && audioFile.equalsIgnoreCase("")) {
+                    mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                        if(mediaPlayer.isPlaying()) {
+                            callComplete();
+                        }
+                    });
+                }
                 myProgress = currentDuration;
                 currentDuration = getStartTime();
                 diff = totalDuration - myProgress;
@@ -257,12 +264,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     callComplete();
                     Log.e("calll complete trans", "trans");
 
-                }
-                if (currentDuration == totalDuration && currentDuration != 0 && !isStop && audioFile.equalsIgnoreCase("")) {
-                    mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                        if(mediaPlayer.isPlaying())
-                        callComplete();
-                    });
                 }
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
                 if (player == 1) {
@@ -2030,6 +2031,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     public void onDestroy() {
 //        getActivity().unregisterReceiver(playNewAudio);
 //        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+        handler12.removeCallbacks(UpdateSongTime12);
         super.onDestroy();
     }
 
@@ -2137,4 +2139,5 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onPause();
     }
+
 }

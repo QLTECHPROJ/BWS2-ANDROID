@@ -139,8 +139,6 @@ public class LikeAudiosFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(listener, new IntentFilter("play_pause_Action"));
         prepareData();
     }
 
