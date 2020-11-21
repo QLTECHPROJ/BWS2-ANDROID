@@ -56,7 +56,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
     private ArrayList<MainAudioModel.ResponseData.Detail> listModelList;
 
     public DownloadAdapter(ArrayList<MainAudioModel.ResponseData.Detail> listModelList, Context ctx, FragmentActivity activity,
-                           String isLock, String IsLock) {
+                           String IsLock) {
         this.listModelList = listModelList;
         this.ctx = ctx;
         this.activity = activity;
@@ -113,7 +113,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         });
         holder.binding.llMainLayout.setOnClickListener(view -> {
             try {
-                SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+               /* SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
                 if (queuePlay) {
                     int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -132,7 +132,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                     editor.putString(CONSTANTS.PREF_KEY_queueList, json);
                     editor.commit();
 
-                }
+                }*/
                 if (IsLock.equalsIgnoreCase("1")) {
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                     Intent i = new Intent(ctx, MembershipChangeActivity.class);
@@ -192,7 +192,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                     }.getType();
                     addToQueueModelList = gson.fromJson(json1, type1);
                 }
-                addToQueueModelList.remove(position1);
+//                addToQueueModelList.remove(position1);
                 SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared2.edit();
                 String json = gson.toJson(addToQueueModelList);

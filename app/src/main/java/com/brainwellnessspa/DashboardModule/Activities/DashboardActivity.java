@@ -155,11 +155,6 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
     };
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onBackPressed() {
         if (invoiceToDashboard == 1) {
             finishAffinity();

@@ -449,7 +449,7 @@ public class AudioFragment extends Fragment {
                 holder.binding.tvTitle.setText(listModelList.get(position).getView());
                 if (listModelList.get(position).getView().equalsIgnoreCase("My Downloads")) {
                     DownloadAdapter myDownloadsAdapter = new DownloadAdapter(listModelList.get(position).getDetails(), getActivity(), activity,
-                            listModelList.get(position).getIsLock(),listModelList.get(position).getView());
+                            listModelList.get(position).getIsLock());
                     IsLock = listModelList.get(position).getIsLock();
                     RecyclerView.LayoutManager myDownloads = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     holder.binding.rvMainAudio.setLayoutManager(myDownloads);

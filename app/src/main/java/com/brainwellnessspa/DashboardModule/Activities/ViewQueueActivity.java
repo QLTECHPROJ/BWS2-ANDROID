@@ -8,12 +8,14 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
+import android.media.session.MediaSessionManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -40,6 +42,7 @@ import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.Services.OnClearFromRecentService;
 import com.brainwellnessspa.Utility.Playable;
+import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -78,6 +81,7 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.addToRecentPlayId;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
+import static com.brainwellnessspa.Utility.MusicService.buildNotification;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
 import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
@@ -89,12 +93,15 @@ import static com.brainwellnessspa.Utility.MusicService.isPrepare;
 import static com.brainwellnessspa.Utility.MusicService.isStop;
 import static com.brainwellnessspa.Utility.MusicService.isprogressbar;
 import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
+import static com.brainwellnessspa.Utility.MusicService.mediaSession;
+import static com.brainwellnessspa.Utility.MusicService.mediaSessionManager;
 import static com.brainwellnessspa.Utility.MusicService.oTime;
 import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
 import static com.brainwellnessspa.Utility.MusicService.progressToTimer;
 import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.savePrefQueue;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
+import static com.brainwellnessspa.Utility.MusicService.transportControls;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,/* AudioManager.OnAudioFocusChangeListener,*/ StartDragListener/*, Playable */ {
@@ -346,177 +353,197 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         });
 
         binding.llPause.setOnClickListener(view -> {
-            handler.removeCallbacks(UpdateSongTime);
-            binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
-            pauseMedia();
-            binding.llPlay.setVisibility(View.VISIBLE);
-            binding.llPause.setVisibility(View.GONE);
-            binding.llProgressBar.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            oTime = binding.simpleSeekbar.getProgress();
+            callPause();
         });
 
         binding.llPlay.setOnClickListener(view -> {
-            if (!isMediaStart) {
-                isCompleteStop = false;
-                isprogressbar = true;
-                handler.postDelayed(UpdateSongTime, 500);
-                binding.llPlay.setVisibility(View.GONE);
-                binding.llPause.setVisibility(View.GONE);
-                binding.llProgressBar.setVisibility(View.VISIBLE);
-                binding.progressBar.setVisibility(View.VISIBLE);
-                callMedia();
-            } else if (isCompleteStop) {
-                isCompleteStop = false;
-                isprogressbar = true;
-                handler.postDelayed(UpdateSongTime, 500);
-                binding.llPlay.setVisibility(View.GONE);
-                binding.llPause.setVisibility(View.GONE);
-                binding.llProgressBar.setVisibility(View.VISIBLE);
-                binding.progressBar.setVisibility(View.VISIBLE);
-                callMedia();
-            } else {
-                binding.llPlay.setVisibility(View.GONE);
-                binding.llPause.setVisibility(View.VISIBLE);
-                binding.llProgressBar.setVisibility(View.GONE);
-                binding.progressBar.setVisibility(View.GONE);
-                resumeMedia();
-                isPause = false;
-                handler.postDelayed(UpdateSongTime, 500);
-            }
+            callPlay();
         });
 
         binding.llnext.setOnClickListener(view -> {
-            if (BWSApplication.isNetworkConnected(ctx)) {
-                stopMedia();
-                isMediaStart = false;
-                isPrepare = false;
-                isPause = false;
-                if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
-                    // repeat is on play same song again
-                    if (position < listSize - 1) {
-                        position = position + 1;
-                    } else {
-                        position = 0;
-                    }
+            callNext();
+        });
+
+        binding.llprev.setOnClickListener(view -> {
+            callPrevious    ();
+        });
+    }
+
+    private void callPause() {
+
+        handler.removeCallbacks(UpdateSongTime);
+        binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
+        pauseMedia();
+        binding.llPlay.setVisibility(View.VISIBLE);
+        binding.llPause.setVisibility(View.GONE);
+        binding.llProgressBar.setVisibility(View.GONE);
+        binding.progressBar.setVisibility(View.GONE);
+        oTime = binding.simpleSeekbar.getProgress();
+    }
+
+    private void callPrevious() {
+
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            stopMedia();
+            isMediaStart = false;
+            isPrepare = false;
+            isPause = false;
+            if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
+                // repeat is on play same song again
+                if (position > 0) {
+                    position = position - 1;
                     getPrepareShowData(position);
-                } /*else if (IsRepeat.equalsIgnoreCase("0")) {
+                } else if (listSize != 1) {
+                    position = listSize - 1;
+                    getPrepareShowData(position);
+                }
+            }/* else if (IsRepeat.equalsIgnoreCase("0")) {
                     getPrepareShowData(position);
                 } */ else if (IsShuffle.equalsIgnoreCase("1")) {
-                    // shuffle is on - play a random song
-                    if (queuePlay) {
-                        adapter.callRemoveList(position, "1");
-                        listSize = addToQueueModelList.size();
-                        if (listSize == 0) {
-                            stopMedia();
-                        } else if (listSize == 1) {
-                            stopMedia();
-                        } else {
-                            Random random = new Random();
-                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                            getPrepareShowData(position);
-                        }
+                // shuffle is on - play a random song
+                if (queuePlay) {
+                    adapter.callRemoveList(position, "1");
+                    listSize = addToQueueModelList.size();
+                    if (listSize == 0) {
+                        stopMedia();
+                    } else if (listSize == 1) {
+                        stopMedia();
                     } else {
                         Random random = new Random();
                         position = random.nextInt((listSize - 1) - 0 + 1) + 0;
                         getPrepareShowData(position);
                     }
                 } else {
-                    if (queuePlay) {
-                        adapter.callRemoveList(position, "1");
-                        listSize = addToQueueModelList.size();
-                        if (position < listSize - 1) {
-                            getPrepareShowData(position);
-                        } else {
-                            if (listSize == 0) {
-                                savePrefQueue(0, false, true, addToQueueModelList, ctx);
-                                stopMedia();
-                            } else {
-                                position = 0;
-                                getPrepareShowData(position);
-                            }
-                        }
+                    Random random = new Random();
+                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                    getPrepareShowData(position);
+                }
+            } else {
+                if (queuePlay) {
+                    adapter.callRemoveList(position, "1");
+                    listSize = addToQueueModelList.size();
+                    if (position > 0) {
+                        getPrepareShowData(position - 1);
                     } else {
-                        if (position < listSize - 1) {
-                            position = position + 1;
-                            getPrepareShowData(position);
-                        } else if (listSize != 1) {
+                        if (listSize == 0) {
+                            savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                            stopMedia();
+                        } else {
                             position = 0;
                             getPrepareShowData(position);
                         }
                     }
-                }
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-            }
-        });
-
-        binding.llprev.setOnClickListener(view -> {
-            if (BWSApplication.isNetworkConnected(ctx)) {
-                stopMedia();
-                isMediaStart = false;
-                isPrepare = false;
-                isPause = false;
-                if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
-                    // repeat is on play same song again
+                } else {
                     if (position > 0) {
                         position = position - 1;
+
                         getPrepareShowData(position);
                     } else if (listSize != 1) {
                         position = listSize - 1;
                         getPrepareShowData(position);
                     }
-                }/* else if (IsRepeat.equalsIgnoreCase("0")) {
+                }
+            }
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+    }
+
+    private void callNext() {
+
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            stopMedia();
+            isMediaStart = false;
+            isPrepare = false;
+            isPause = false;
+            if (IsRepeat.equalsIgnoreCase("1") || IsRepeat.equalsIgnoreCase("0")) {
+                // repeat is on play same song again
+                if (position < listSize - 1) {
+                    position = position + 1;
+                } else {
+                    position = 0;
+                }
+                getPrepareShowData(position);
+            } /*else if (IsRepeat.equalsIgnoreCase("0")) {
                     getPrepareShowData(position);
                 } */ else if (IsShuffle.equalsIgnoreCase("1")) {
-                    // shuffle is on - play a random song
-                    if (queuePlay) {
-                        adapter.callRemoveList(position, "1");
-                        listSize = addToQueueModelList.size();
-                        if (listSize == 0) {
-                            stopMedia();
-                        } else if (listSize == 1) {
-                            stopMedia();
-                        } else {
-                            Random random = new Random();
-                            position = random.nextInt((listSize - 1) - 0 + 1) + 0;
-                            getPrepareShowData(position);
-                        }
+                // shuffle is on - play a random song
+                if (queuePlay) {
+                    adapter.callRemoveList(position, "1");
+                    listSize = addToQueueModelList.size();
+                    if (listSize == 0) {
+                        stopMedia();
+                    } else if (listSize == 1) {
+                        stopMedia();
                     } else {
                         Random random = new Random();
                         position = random.nextInt((listSize - 1) - 0 + 1) + 0;
                         getPrepareShowData(position);
                     }
                 } else {
-                    if (queuePlay) {
-                        adapter.callRemoveList(position, "1");
-                        listSize = addToQueueModelList.size();
-                        if (position > 0) {
-                            getPrepareShowData(position - 1);
-                        } else {
-                            if (listSize == 0) {
-                                savePrefQueue(0, false, true, addToQueueModelList, ctx);
-                                stopMedia();
-                            } else {
-                                position = 0;
-                                getPrepareShowData(position);
-                            }
-                        }
+                    Random random = new Random();
+                    position = random.nextInt((listSize - 1) - 0 + 1) + 0;
+                    getPrepareShowData(position);
+                }
+            } else {
+                if (queuePlay) {
+                    adapter.callRemoveList(position, "1");
+                    listSize = addToQueueModelList.size();
+                    if (position < listSize - 1) {
+                        getPrepareShowData(position);
                     } else {
-                        if (position > 0) {
-                            position = position - 1;
-
-                            getPrepareShowData(position);
-                        } else if (listSize != 1) {
-                            position = listSize - 1;
+                        if (listSize == 0) {
+                            savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                            stopMedia();
+                        } else {
+                            position = 0;
                             getPrepareShowData(position);
                         }
                     }
+                } else {
+                    if (position < listSize - 1) {
+                        position = position + 1;
+                        getPrepareShowData(position);
+                    } else if (listSize != 1) {
+                        position = 0;
+                        getPrepareShowData(position);
+                    }
                 }
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), ctx);
             }
-        });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+        }
+    }
+
+    private void callPlay() {
+
+        if (!isMediaStart) {
+            isCompleteStop = false;
+            isprogressbar = true;
+            handler.postDelayed(UpdateSongTime, 500);
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.GONE);
+            binding.llProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            callMedia();
+        } else if (isCompleteStop) {
+            isCompleteStop = false;
+            isprogressbar = true;
+            handler.postDelayed(UpdateSongTime, 500);
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.GONE);
+            binding.llProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+            callMedia();
+        } else {
+            binding.llPlay.setVisibility(View.GONE);
+            binding.llPause.setVisibility(View.VISIBLE);
+            binding.llProgressBar.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
+            resumeMedia();
+            isPause = false;
+            handler.postDelayed(UpdateSongTime, 500);
+        }
     }
 
     private void callAdapterMethod() {
@@ -675,6 +702,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         try {
             if (mediaPlayer == null)
                 mediaPlayer = new MediaPlayer();
+            initMediaplyer();
             if (mediaPlayer.isPlaying()) {
                 Log.e("Playinggggg", "stoppppp");
                 mediaPlayer.stop();
@@ -682,6 +710,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 isPrepare = false;
             }
             mediaPlayer = new MediaPlayer();
+            initMediaplyer();
             if (download.equalsIgnoreCase("1")) {
                 mediaPlayer.setDataSource(fileDescriptor);
             } else {
@@ -712,6 +741,77 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 binding.llPause.setVisibility(View.VISIBLE);
             });
         }
+    }
+    private void initMediaplyer() {
+        if (mediaSessionManager != null) return; //mediaSessionManager exists
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mediaSessionManager = (MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE);
+        }
+        // Create a new MediaSession
+        mediaSession = new MediaSessionCompat(ctx.getApplicationContext(), "AudioPlayer");
+        //Get MediaSessions transport controls
+        transportControls = mediaSession.getController().getTransportControls();
+        //set MediaSession -> ready to receive media commands
+        mediaSession.setActive(true);
+        //indicate that the MediaSession handles transport control commands
+        // through its MediaSessionCompat.Callback.
+        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+        //Set mediaSession's MetaData
+//        updateMetaData();
+
+        // Attach Callback to receive MediaSession updates
+
+        mediaSession.setCallback(new MediaSessionCompat.Callback() {
+            // Implement callbacks
+            @Override
+            public void onPlay() {
+                super.onPlay();
+                callPlay();
+            }
+
+            @Override
+            public void onPause() {
+                super.onPause();
+                callPause();
+            }
+
+            @Override
+            public void onSkipToNext() {
+                super.onSkipToNext();
+                if (!url.equalsIgnoreCase("")) {
+                    callNext();
+//                updateMetaData();
+                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                }
+            }
+
+            @Override
+            public void onSkipToPrevious() {
+                super.onSkipToPrevious();
+
+                if (!url.equalsIgnoreCase("")) {
+                    callPrevious();
+//                updateMetaData();
+                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                }
+            }
+
+            @Override
+            public void onStop() {
+                super.onStop();
+//                    removeNotification();
+//                    //Stop the service
+//                    stopSelf();
+            }
+
+            @Override
+            public void onSeekTo(long position) {
+                super.onSeekTo(position);
+            }
+        });
+
     }
 
     private void callMedia() {
