@@ -91,12 +91,14 @@ public class AudioDownloadsFragment extends Fragment {
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (audioPlayz && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-                    if (data.equalsIgnoreCase("play")) {
+                    if(isMediaStart) {
+                        if (data.equalsIgnoreCase("play")) {
 //                    BWSApplication.showToast("Play", getActivity());
-                        adapter.notifyDataSetChanged();
-                    } else {
+                            adapter.notifyDataSetChanged();
+                        } else {
 //                    BWSApplication.showToast("pause", getActivity());
-                        adapter.notifyDataSetChanged();
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 }
             }

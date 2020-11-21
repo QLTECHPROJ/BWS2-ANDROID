@@ -119,13 +119,15 @@ private BroadcastReceiver listener = new BroadcastReceiver() {
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }*/
                         if (data.equalsIgnoreCase("play")) {
-                            isPlayPlaylist = 0;
+                            isPlayPlaylist = 1;
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                         } else {
-                            isPlayPlaylist = 1;
+                            isPlayPlaylist = 2;
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
-                        adpater.notifyDataSetChanged();
+                        if(isMediaStart) {
+                            adpater.notifyDataSetChanged();
+                        }
 
                 } else {
                     isPlayPlaylist = 0;

@@ -260,6 +260,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
                 if (currentDuration == totalDuration && currentDuration != 0 && !isStop && audioFile.equalsIgnoreCase("")) {
                     mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                        if(mediaPlayer.isPlaying())
                         callComplete();
                     });
                 }
@@ -328,8 +329,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             addToQueueModelList = gson.fromJson(json1, type1);
         }
         try {
-            getApplicationContext().startService(new Intent(getApplicationContext(), MusicService.class));
-            getApplicationContext().startService(new Intent(getApplicationContext(), MyService.class));
+            ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MusicService.class));
+            ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MyService.class));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1406,10 +1407,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                    stopSelf();
             }
 
-            @Override
+/*            @Override
             public void onSeekTo(long position) {
                 super.onSeekTo(position);
-            }
+            }*/
         });
 
     }
