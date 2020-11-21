@@ -86,13 +86,18 @@ public class AudioDownloadsFragment extends Fragment {
             if(intent.hasExtra("MyData")) {
                 String data = intent.getStringExtra("MyData");
                 Log.d("play_pause_Action", data);
-
-                if(data.equalsIgnoreCase("play")){
+                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                if (audioPlayz && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                    if (data.equalsIgnoreCase("play")) {
 //                    BWSApplication.showToast("Play", getActivity());
-                    adapter.notifyDataSetChanged();
-                }else{
+                        adapter.notifyDataSetChanged();
+                    } else {
 //                    BWSApplication.showToast("pause", getActivity());
-                    adapter.notifyDataSetChanged();
+                        adapter.notifyDataSetChanged();
+                    }
                 }
             }
         }

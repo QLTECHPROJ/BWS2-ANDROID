@@ -101,6 +101,14 @@ public class AptAudioFragment extends Fragment {
             }
         }
     };
+
+    @Override
+    public void onResume() {
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(listener, new IntentFilter("play_pause_Action"));
+        super.onResume();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_apt_audio, container, false);

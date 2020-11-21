@@ -17,6 +17,7 @@ public interface AudioDetailsDao {
 
     @Insert
     void insertMedia(DownloadAudioDetails downloadAudioDetails);
+//    void insertMedia(DownloadAudioDetails downloadAudioDetails);  download
 
     @Insert
     void insertPlaylist(DownloadPlaylistDetails downloadPlaylistDetails);

@@ -369,7 +369,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
         if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
+                if(mediaPlayer.isPlaying()) {
+                    Log.e("player to go", "::>>>>>callcomplete...");
+                    callComplete();  //call....
+                }
                 Log.e("calll complete real", "real");
             });
         }
