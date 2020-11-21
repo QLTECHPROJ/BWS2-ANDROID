@@ -2034,6 +2034,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         handler12.removeCallbacks(UpdateSongTime12);
         super.onDestroy();
     }
+    @Override
+    public void onDestroyView() {
+//        getActivity().unregisterReceiver(playNewAudio);
+//        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+        handler12.removeCallbacks(UpdateSongTime12);
+        super.onDestroyView();
+    }
 
     @Override
     public void onResume() {
