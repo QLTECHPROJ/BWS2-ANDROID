@@ -442,6 +442,28 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             downloadPlaylistDetails.setDownload(model.getResponseData().getDownload());
                             downloadPlaylistDetails.setLike(model.getResponseData().getLike());
                             binding.tvName.setText(model.getResponseData().getPlaylistName());
+
+                            if (model.getResponseData().getPlaylistMastercat().equalsIgnoreCase("")) {
+                                binding.tvDesc.setVisibility(View.GONE);
+                            } else {
+                                binding.tvDesc.setVisibility(View.VISIBLE);
+                                binding.tvDesc.setText(model.getResponseData().getPlaylistMastercat());
+                            }
+
+                            if (model.getResponseData().getTotalAudio().equalsIgnoreCase("") ||
+                                    model.getResponseData().getTotalAudio().equalsIgnoreCase("0") &&
+                                            model.getResponseData().getTotalhour().equalsIgnoreCase("")
+                                            && model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                binding.tvTime.setText("0 Audio | 0h 0m");
+                            } else {
+                                if (model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
+                                    binding.tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | "
+                                            + model.getResponseData().getTotalhour() + "h 0m");
+                                } else {
+                                    binding.tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | "
+                                            + model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
+                                }
+                            }
                             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 20,
                                     1, 1, 0.54f, 20);
                             binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -501,27 +523,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 ComeFindAudio = 2;
                                 finish();
                             });
-                            if (model.getResponseData().getPlaylistMastercat().equalsIgnoreCase("")) {
-                                binding.tvDesc.setVisibility(View.GONE);
-                            } else {
-                                binding.tvDesc.setVisibility(View.VISIBLE);
-                                binding.tvDesc.setText(model.getResponseData().getPlaylistMastercat());
-                            }
-
-                            if (model.getResponseData().getTotalAudio().equalsIgnoreCase("") ||
-                                    model.getResponseData().getTotalAudio().equalsIgnoreCase("0") &&
-                                            model.getResponseData().getTotalhour().equalsIgnoreCase("")
-                                            && model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
-                                binding.tvTime.setText("0 Audio | 0h 0m");
-                            } else {
-                                if (model.getResponseData().getTotalminute().equalsIgnoreCase("")) {
-                                    binding.tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | "
-                                            + model.getResponseData().getTotalhour() + "h 0m");
-                                } else {
-                                    binding.tvTime.setText(model.getResponseData().getTotalAudio() + " Audio | "
-                                            + model.getResponseData().getTotalhour() + "h " + model.getResponseData().getTotalminute() + "m");
-                                }
-                            }
 
                             if (model.getResponseData().getPlaylistDesc().equalsIgnoreCase("")) {
                                 binding.tvTitleDec.setVisibility(View.GONE);

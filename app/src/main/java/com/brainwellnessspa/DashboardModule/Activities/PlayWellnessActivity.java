@@ -2806,24 +2806,28 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callBack() {
-        handler.removeCallbacks(UpdateSongTime);
+        try {
+            handler.removeCallbacks(UpdateSongTime);
 //        handler1.removeCallbacks(UpdateSongTime1);
-        player = 1;
-        if (binding.llPause.getVisibility() == View.VISIBLE) {
-            isPause = false;
-        }
+            player = 1;
+            if (binding.llPause.getVisibility() == View.VISIBLE) {
+                isPause = false;
+            }
 //        pauseMedia();
-        SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = shared2.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(addToQueueModelList);
-        if (queuePlay) {
-            editor.putString(CONSTANTS.PREF_KEY_queueList, json);
-        }
-        editor.putInt(CONSTANTS.PREF_KEY_position, position);
-        editor.commit();
-        finish();
+            SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared2.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(addToQueueModelList);
+            if (queuePlay) {
+                editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+            }
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.commit();
+            finish();
 //        overridePendingTransition(R.anim.enter, R.anim.exit);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void addDeclaimer() {

@@ -320,7 +320,7 @@ public class LikeAudiosFragment extends Fragment {
                             callAlert(position);
                         }
                     }*/
-                  callAlert(position);
+                    callAlert(position);
                 }
             });
 
@@ -416,10 +416,12 @@ public class LikeAudiosFragment extends Fragment {
             }
         }
     }
+
     public void GetMedia() {
         try {
             class GetMedia extends AsyncTask<Void, Void, Void> {
                 int ps = 0;
+
                 @Override
                 protected Void doInBackground(Void... voids) {
                     try {
@@ -445,7 +447,7 @@ public class LikeAudiosFragment extends Fragment {
 
                 @Override
                 protected void onPostExecute(Void aVoid) {
-                    if(ps == 1){
+                    if (ps == 1) {
 
                     }
                     GetMedia();

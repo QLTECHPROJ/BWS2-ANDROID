@@ -282,14 +282,12 @@ public class OtpActivity extends AppCompatActivity implements
             Task<Void> task = client.startSmsRetriever();
             task.addOnSuccessListener(aVoid -> {
                 // API successfully started
-                Toast.makeText(activity, "Sucess", Toast.LENGTH_SHORT).show();
             });
 
             task.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     /* Fail to start API */
-                    Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
