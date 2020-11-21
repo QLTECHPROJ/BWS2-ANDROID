@@ -124,8 +124,6 @@ public class LikeAudiosFragment extends Fragment {
         prepareData();
         binding.llError.setVisibility(View.GONE);
         binding.tvFound.setText("Your like audios will appear here");
-        LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(listener, new IntentFilter("play_pause_Action"));
         return view;
     }
 
@@ -177,6 +175,8 @@ public class LikeAudiosFragment extends Fragment {
                                binding.llError.setVisibility(View.GONE);
                                binding.rvLikesList.setVisibility(View.VISIBLE);
                                adapter = new LikeAudiosAdapter(listModel.getResponseData().getAudio(), getActivity());
+                               LocalBroadcastManager.getInstance(getActivity())
+                                       .registerReceiver(listener, new IntentFilter("play_pause_Action"));
                                binding.rvLikesList.setAdapter(adapter);
                            }
                        }
