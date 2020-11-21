@@ -1417,11 +1417,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             Gson gsonx = new Gson();
             String json = sharedx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
             String jsonw = sharedx.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonx));
-            Type type1 = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
-            }.getType();
-            Gson gson1 = new Gson();
-            ArrayList<DownloadAudioDetails> arrayList = gson1.fromJson(jsonw, type1);
-            ArrayList<MainPlayModel> arrayList2 = gson1.fromJson(json, type1);
+            ArrayList<DownloadAudioDetails> arrayList  = new ArrayList<>();
+            ArrayList<MainPlayModel> arrayList2  = new ArrayList<>();
+            if (!jsonw.equalsIgnoreCase(String.valueOf(gsonx))) {
+                Type type1 = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                }.getType();
+
+                Type type0 = new TypeToken<ArrayList<MainPlayModel>>() {
+                }.getType();
+                Gson gson1 = new Gson();
+                arrayList = gson1.fromJson(jsonw, type1);
+                arrayList2 = gson1.fromJson(json, type0);
+            }
 
             if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                 DownloadAudioDetails mainPlayModel = new DownloadAudioDetails();
