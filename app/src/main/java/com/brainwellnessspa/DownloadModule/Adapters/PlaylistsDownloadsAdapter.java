@@ -54,7 +54,6 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadIdOne;
-import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.downloadProgress;
 import static com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia.filename;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
@@ -139,8 +138,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                     getMediaByPer(listModelList.get(position).getPlaylistID(), listModelList.get(position).getTotalAudio(), holder.binding.pbProgress);
                 }
             }
-        }else{
-            holder.binding.pbProgress.setVisibility(View.GONE);
+
         }
         if (listModelList.get(position).getTotalAudio().equalsIgnoreCase("") ||
                 listModelList.get(position).getTotalAudio().equalsIgnoreCase("0") &&
@@ -218,7 +216,7 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
         holder.binding.llRemoveAudio.setOnClickListener(view -> {
             SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-           String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
             if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(listModelList.get(position).getPlaylistName())) {
                 BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", ctx);
@@ -350,12 +348,10 @@ public class PlaylistsDownloadsAdapter extends RecyclerView.Adapter<PlaylistsDow
                     pbProgress.setProgress(downloadProgress1);
 //                    getMediaByPer(playlistID,totalAudio,pbProgress);
                     handler1.postDelayed(UpdateSongTime1, 3000);
-                }else if(count == Integer.parseInt(totalAudio)){
-                    pbProgress.setVisibility(View.GONE);
-                    handler1.removeCallbacks(UpdateSongTime1);
                 } else {
                     pbProgress.setVisibility(View.GONE);
                     handler1.removeCallbacks(UpdateSongTime1);
+                    notifyDataSetChanged();
                 }
                 super.onPostExecute(aVoid);
             }

@@ -1495,8 +1495,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                     } else {
                         /*TODO */
+                        if(BWSApplication.isNetworkConnected(ctx)){
                         Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                        }else{
+                            Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                        }
                     }
                     if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("1")) {
                         binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);

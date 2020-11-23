@@ -19,6 +19,7 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,6 +116,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     Activity activity;
     Context ctx;
     long myProgress = 0, diff = 0;
+    boolean bg = false;
+    View view;
     SharedPreferences shared;
     String json;
     Gson gson;
@@ -312,9 +315,21 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_transparent_player, container, false);
-        View view = binding.getRoot();
+          view = binding.getRoot();
         activity = getActivity();
         ctx = getActivity();
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.KEYCODE_HOME || event.getAction() == KeyEvent.KEYCODE_APP_SWITCH || event.getAction() == KeyEvent.ACTION_UP) {
+                bg = true;
+                Log.e("Phone is BG","");
+                return true;
+            }else{
+                bg = false;
+            }
+            return false;
+        });
         mainPlayModelList = new ArrayList<>();
         addToQueueModelList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
@@ -1089,8 +1104,14 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                                         Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                                     } else {
-                                        Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                                                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                                        if (BWSApplication.isNetworkConnected(ctx)) {
+                                            Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                                        }else{
+                                            Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+
+                                        }
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -1199,8 +1220,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                     } else {
+                        if(BWSApplication.isNetworkConnected(ctx)){
                         Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                        }else{
+                            Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                        }
                     }
                     GetMedia(audioFile, ctx);
                     handler12.postDelayed(UpdateSongTime12, 100);
@@ -2076,6 +2102,18 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             addToQueueModelList = gson.fromJson(json1, type1);
         }
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.KEYCODE_HOME || event.getAction() == KeyEvent.KEYCODE_APP_SWITCH || event.getAction() == KeyEvent.ACTION_UP) {
+                bg = true;
+                Log.e("Phone is BG","");
+                return true;
+            }else{
+                bg = false;
+            }
+            return false;
+        });
         String json = shared.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
         Type type = new TypeToken<ArrayList<MainPlayModel>>() {
         }.getType();
@@ -2161,9 +2199,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         getActivity().unregisterReceiver(playNewAudio);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         KeyguardManager myKM = (KeyguardManager) ctx.getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
+
         if( myKM.isKeyguardLocked()) {
             Log.e("Phone is locked","");
-        } else {
+        } else  if(bg){
+            Log.e("Phone is not BG","");
+        }else {
             handler12.removeCallbacks(UpdateSongTime12);
             Log.e("Phone is not locked","");
         }

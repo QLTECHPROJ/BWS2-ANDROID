@@ -755,8 +755,10 @@ public class AddAudioActivity extends AppCompatActivity {
                 }
             };
 */
-
-            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            holder.binding.equalizerview.setVisibility(View.GONE);
+            holder.binding.llMainLayout.setBackgroundResource(R.color.white);
+            holder.binding.ivBackgroundImage.setVisibility(View.GONE);
+          /*  SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -783,7 +785,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
 //                handler3.removeCallbacks(UpdateSongTime3);
-            }
+            }*/
 
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.12f, 0);

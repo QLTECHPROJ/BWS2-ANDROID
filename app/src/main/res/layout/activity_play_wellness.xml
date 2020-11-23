@@ -122,6 +122,7 @@
                                     android:id="@+id/ivRestaurantImage"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:src="@drawable/disclaimer"
                                     android:scaleType="fitXY" />
 
                                 <ImageView
