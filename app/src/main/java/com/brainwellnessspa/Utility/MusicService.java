@@ -59,8 +59,8 @@ import static com.brainwellnessspa.BWSApplication.CHANNEL_ID;
 
 public class MusicService extends Service {
     public static MediaPlayer mediaPlayer;
-    public static boolean isPrepare = false, songComplete = false, isMediaStart = false,isrelese=false, isStop = false,isCompleteStop = false,isPreparing=false;
-    public static boolean isPause = false,isprogressbar = false;
+    public static boolean isPrepare = false, songComplete = false, isMediaStart = false, isrelese = false, isStop = false, isCompleteStop = false, isPreparing = false;
+    public static boolean isPause = false, isprogressbar = false;
     public static boolean isResume = false;
     public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
     static public Handler handler;
@@ -299,8 +299,6 @@ public class MusicService extends Service {
         return AudioManager.AUDIOFOCUS_REQUEST_GRANTED ==
                 audioManager.abandonAudioFocus(this);
     }*/
-
-
     private void skipToNext() {
 
 //        if (audioIndex == audioList.size() - 1) {
@@ -351,7 +349,7 @@ public class MusicService extends Service {
         public void onReceive(Context context, Intent intent) {
             //pause audio on ACTION_AUDIO_BECOMING_NOISY
             pauseMedia();
-            buildNotification(PlaybackStatus.PAUSED,context,mainPlayModel);
+            buildNotification(PlaybackStatus.PAUSED, context, mainPlayModel);
         }
     };
 
@@ -485,7 +483,7 @@ public class MusicService extends Service {
 //    }
 
 
-        public static void buildNotification(PlaybackStatus playbackStatus,Context context,MainPlayModel track) {
+    public static void buildNotification(PlaybackStatus playbackStatus, Context context, MainPlayModel track) {
 
         /**
          * Notification actions -> playbackAction()
@@ -495,19 +493,20 @@ public class MusicService extends Service {
          *  3 -> Previous track
          */
         try {
-            getMediaBitmep(track,context,playbackStatus);
+            getMediaBitmep(track, context, playbackStatus);
         } catch (Exception e) {
             e.printStackTrace();
         }
-       }
+    }
+
     public static void getMediaBitmep(MainPlayModel track, Context context, PlaybackStatus playbackStatus) {
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
-                    if(track.getAudioFile().equalsIgnoreCase("")){
-                        myBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.disclaimer);
-                    }else {
+                    if (track.getAudioFile().equalsIgnoreCase("")) {
+                        myBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.disclaimer);
+                    } else {
                         URL url = new URL(track.getImageFile());
                         myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     }
@@ -518,62 +517,64 @@ public class MusicService extends Service {
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {  super.onPostExecute(aVoid);
-                int notificationAction = 0;//needs to be initialized
-                PendingIntent play_pauseAction = null;
+            protected void onPostExecute(Void aVoid) {
+                try {
+                    super.onPostExecute(aVoid);
+                    int notificationAction = 0;//needs to be initialized
+                    PendingIntent play_pauseAction = null;
 
-                //Build a new notification according to the current state of the MediaPlayer
-                if (playbackStatus == PlaybackStatus.PLAYING) {
-                    notificationAction = R.drawable.ic_pause_black_24dp;
-                    //create the pause action
-                    play_pauseAction = playbackAction(1,context);
-                } else if (playbackStatus == PlaybackStatus.PAUSED) {
-                    notificationAction = R.drawable.ic_play_arrow_black_24dp;
-                    //create the play action
-                    play_pauseAction = playbackAction(0,context);
-                }
-                NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+                    //Build a new notification according to the current state of the MediaPlayer
+                    if (playbackStatus == PlaybackStatus.PLAYING) {
+                        notificationAction = R.drawable.ic_pause_black_24dp;
+                        //create the pause action
+                        play_pauseAction = playbackAction(1, context);
+                    } else if (playbackStatus == PlaybackStatus.PAUSED) {
+                        notificationAction = R.drawable.ic_play_arrow_black_24dp;
+                        //create the play action
+                        play_pauseAction = playbackAction(0, context);
+                    }
+                    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
 //        MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
-        PendingIntent pendingIntentPrevious;
-                Intent intent = new Intent(context, PlayWellnessActivity.class);
-                intent.putExtra("com.brainwellnessspa.notifyId", NOTIFICATION_ID);
-                PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        int drw_previous;
-        Intent intentPrevious = new Intent(context, NotificationActionService.class).setAction(ACTION_PREVIUOS);
-        pendingIntentPrevious = PendingIntent.getBroadcast(context, 0, intentPrevious, PendingIntent.FLAG_UPDATE_CURRENT);
-        drw_previous = R.drawable.ic_skip_previous_black_24dp;
+                    PendingIntent pendingIntentPrevious;
+                    Intent intent = new Intent(context, PlayWellnessActivity.class);
+                    intent.putExtra("com.brainwellnessspa.notifyId", NOTIFICATION_ID);
+                    PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    int drw_previous;
+                    Intent intentPrevious = new Intent(context, NotificationActionService.class).setAction(ACTION_PREVIUOS);
+                    pendingIntentPrevious = PendingIntent.getBroadcast(context, 0, intentPrevious, PendingIntent.FLAG_UPDATE_CURRENT);
+                    drw_previous = R.drawable.ic_skip_previous_black_24dp;
 
-        Intent intentPlay = new Intent(context, NotificationActionService.class).setAction(ACTION_PLAY);
-        PendingIntent pendingIntentPlay = PendingIntent.getBroadcast(context, 0, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent pendingIntentNext;
-        int drw_next;
-        Intent intentNext = new Intent(context, NotificationActionService.class).setAction(ACTION_NEXT);
-        pendingIntentNext = PendingIntent.getBroadcast(context, 0, intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
-        drw_next = R.drawable.ic_skip_next_black_24dp;
-                //create notification
-                Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_music_note)
-                        .setContentTitle(track.getName())
-                        .setContentText(track.getAudioDirection())
-                        .setLargeIcon(myBitmap)
-                        .setOnlyAlertOnce(true)//show notification for only first time
-                        .setShowWhen(false)
-                        .setOngoing(true)
-                        .setContentIntent(pIntent)
-                        .addAction(drw_previous, "Previous", playbackAction(3,context))
-                        .addAction(notificationAction, "Play", play_pauseAction)
-                        .addAction(drw_next, "Next", playbackAction(2,context))
-                        /*.addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3,context))
-                        .addAction(notificationAction, "pause", play_pauseAction)
-                        .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2,context))*/
-                        .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                                .setMediaSession(mediaSession.getSessionToken())
-                                .setShowActionsInCompactView(0, 1, 2))
-                        .setDeleteIntent(
-                                MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP))
-                        .setPriority(NotificationCompat.PRIORITY_LOW)
-                        .build();
-                      /* TODO: temp comment*/
+                    Intent intentPlay = new Intent(context, NotificationActionService.class).setAction(ACTION_PLAY);
+                    PendingIntent pendingIntentPlay = PendingIntent.getBroadcast(context, 0, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent pendingIntentNext;
+                    int drw_next;
+                    Intent intentNext = new Intent(context, NotificationActionService.class).setAction(ACTION_NEXT);
+                    pendingIntentNext = PendingIntent.getBroadcast(context, 0, intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
+                    drw_next = R.drawable.ic_skip_next_black_24dp;
+                    //create notification
+                    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+                            .setSmallIcon(R.drawable.ic_music_note)
+                            .setContentTitle(track.getName())
+                            .setContentText(track.getAudioDirection())
+                            .setLargeIcon(myBitmap)
+                            .setOnlyAlertOnce(true)//show notification for only first time
+                            .setShowWhen(false)
+                            .setOngoing(true)
+                            .setContentIntent(pIntent)
+                            .addAction(drw_previous, "Previous", playbackAction(3, context))
+                            .addAction(notificationAction, "Play", play_pauseAction)
+                            .addAction(drw_next, "Next", playbackAction(2, context))
+                            /*.addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3,context))
+                            .addAction(notificationAction, "pause", play_pauseAction)
+                            .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2,context))*/
+                            .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                                    .setMediaSession(mediaSession.getSessionToken())
+                                    .setShowActionsInCompactView(0, 1, 2))
+                            .setDeleteIntent(
+                                    MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP))
+                            .setPriority(NotificationCompat.PRIORITY_LOW)
+                            .build();
+                    /* TODO: temp comment*/
                /* ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -592,7 +593,9 @@ public class MusicService extends Service {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }*/
-
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -600,7 +603,7 @@ public class MusicService extends Service {
         st.execute();
     }
 
-    public static PendingIntent playbackAction(int actionNumber,Context context) {
+    public static PendingIntent playbackAction(int actionNumber, Context context) {
         Intent playbackAction = new Intent(context, MusicService.class);
         switch (actionNumber) {
             case 0:
@@ -626,8 +629,8 @@ public class MusicService extends Service {
     }
 
     private void removeNotification() {
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(NOTIFICATION_ID);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(NOTIFICATION_ID);
     }
 
     public static void handleIncomingActions(Intent playbackAction) {
@@ -670,7 +673,7 @@ public class MusicService extends Service {
 //            mediaPlayer.reset();
 //            initMediaPlayer();
 //            updateMetaData();
-            buildNotification(PlaybackStatus.PLAYING,context,mainPlayModel);
+            buildNotification(PlaybackStatus.PLAYING, context, mainPlayModel);
         }
     };
 
@@ -712,11 +715,13 @@ public class MusicService extends Service {
             Log.e("Playinggggg", "Playinggggg");
         }
     }
+
     public static void play(Uri AudioFile) {
         initMediaPlayer();
         stopMedia();
         playAudio(AudioFile);
     }
+
     public static void playAudio(Uri AudioFile) {
 //        if (!isPLAYING) {
 //            isPLAYING = true;
@@ -742,6 +747,7 @@ public class MusicService extends Service {
 //            stopPlaying();
 //        }
     }
+
     public static void PhoneCall() {
 /*
         PhoneStateListener phoneStateListener = new PhoneStateListener() {
@@ -880,7 +886,7 @@ public class MusicService extends Service {
     }
 
     public static void pauseMedia() {
-         if (mediaPlayer.isPlaying()) {
+        if (mediaPlayer.isPlaying()) {
             Log.e("Playinggggg", "pauseeeeeee");
             mediaPlayer.pause();
             isPause = true;

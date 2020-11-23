@@ -1140,6 +1140,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             try {
                 if (MyDownloads.equalsIgnoreCase("1")) {
                     UserCreated = false;
+                    Isclose = true;
                     binding.llDelete.setVisibility(View.VISIBLE);
                     binding.llReminder.setVisibility(View.INVISIBLE);
                     binding.llDownloads.setVisibility(View.INVISIBLE);
@@ -1159,6 +1160,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     binding.llReminder.setVisibility(View.VISIBLE);
                     if (listModel.getCreated().equalsIgnoreCase("1")) {
                         UserCreated = true;
+                        Isclose = true;
                         binding.rvPlayLists.setVisibility(View.VISIBLE);
                         binding.rvPlayLists1.setVisibility(View.VISIBLE);
                         binding.rvPlayLists2.setVisibility(View.GONE);
@@ -1171,6 +1173,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         binding.rvPlayLists1.setAdapter(adpater);
                     } else {
                         UserCreated = false;
+                        Isclose = true;
                         adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
                         binding.rvPlayLists2.setAdapter(adpater2);
                         binding.rvPlayLists.setVisibility(View.GONE);
@@ -2008,7 +2011,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 holder.binding.llHighLight.setBackgroundResource(R.color.white);
             }
 
-            UserCreated = true;
           /*  holder.binding.llMainLayout.setVisibility(View.GONE);
             holder.binding.llDownload.setVisibility(View.GONE);
             holder.binding.llRemove.setVisibility(View.GONE);*/
@@ -2464,7 +2466,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.tvSearch.setHint(R.string.playlist_or_audio_search);
             binding.tvSearch.setVisibility(View.VISIBLE);
             binding.searchView.setVisibility(View.GONE);
-            UserCreated = true;
             holder.binding.tvTitle.setText(mData.get(position).getName());
             holder.binding.tvTime.setText(mData.get(position).getAudioDuration());
 //            holder.binding.llThirdLayout.setWeightSum(0.26f);
@@ -2824,7 +2825,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.tvSearch.setVisibility(View.GONE);
             binding.searchView.setVisibility(View.VISIBLE);
             String id = mData.get(position).getID();
-            UserCreated = false;
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.13f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
