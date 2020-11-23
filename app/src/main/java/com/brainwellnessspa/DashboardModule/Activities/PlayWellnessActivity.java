@@ -1548,6 +1548,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.llPlay.setVisibility(View.GONE);
             buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
         }
+
+        mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+            if(mediaPlayer.isPlaying()) {
+                Log.e("player to go", "::>>>>>callcomplete play well...");
+                callComplete();  //call....
+            }
+            Log.e("calll complete real", "real");
+        });
     }
 
     private void initMediaplyer() {

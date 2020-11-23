@@ -225,13 +225,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         totalDuration = t.getTime();
                     }
                 }
-                if (isMediaStart && audioFile.equalsIgnoreCase("")) {
+               /* if (isMediaStart && audioFile.equalsIgnoreCase("")) {
                     mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                         if(mediaPlayer.isPlaying()) {
                             callComplete();
                         }
                     });
-                }
+                }*/
                 myProgress = currentDuration;
                 currentDuration = getStartTime();
                 diff = totalDuration - myProgress;
@@ -1252,6 +1252,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
             });
+            if(isMediaStart) {
+                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                    if (mediaPlayer.isPlaying()) {
+                        Log.e("player to go", "::>>>>>callcomplete prepare...");
+                        callComplete();  //call....
+                    }
+                    Log.e("calll complete real", "real");
+                });
+            }
                 /*BWSApplication.createChannel(getActivity());
             getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
             getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));*/
@@ -1339,6 +1348,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             localIntent.putExtra("MyData", "play");
             localBroadcastManager.sendBroadcast(localIntent);
         }
+        mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+            if(mediaPlayer.isPlaying()) {
+                Log.e("player to go", "::>>>>>callcomplete...");
+                callComplete();  //call....
+            }
+            Log.e("calll complete real", "real");
+        });
     }
 
     private void initMediaplyer() {
