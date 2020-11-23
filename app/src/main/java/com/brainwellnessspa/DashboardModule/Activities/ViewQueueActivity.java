@@ -686,10 +686,12 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         editor.commit();
         BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
 
-        if (/*currentDuration == totalDuration && currentDuration != 0 && !isStop */isMediaStart && !url.equalsIgnoreCase("")) {
+        if (isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
-                Log.e("calll complete trans", "trans");
+                if(mediaPlayer.isPlaying()) {
+                    callComplete();
+                    Log.e("calll complete trans", "trans");
+                }
             });
         }
     }
@@ -739,6 +741,14 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 binding.progressBar.setVisibility(View.GONE);
                 binding.llPlay.setVisibility(View.GONE);
                 binding.llPause.setVisibility(View.VISIBLE);
+            });
+        }
+        if (isMediaStart /*&& !audioFile.equalsIgnoreCase("")*/) {
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                if(mediaPlayer.isPlaying()) {
+                    callComplete();
+                    Log.e("calll complete real", "real");
+                }
             });
         }
     }
@@ -806,10 +816,10 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 //                    stopSelf();
             }
 
-            @Override
+         /*   @Override
             public void onSeekTo(long position) {
                 super.onSeekTo(position);
-            }
+            }*/
         });
 
     }

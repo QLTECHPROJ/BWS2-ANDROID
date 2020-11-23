@@ -225,13 +225,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         totalDuration = t.getTime();
                     }
                 }
-               /* if (isMediaStart && audioFile.equalsIgnoreCase("")) {
-                    mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                        if(mediaPlayer.isPlaying()) {
-                            callComplete();
-                        }
-                    });
-                }*/
                 myProgress = currentDuration;
                 currentDuration = getStartTime();
                 diff = totalDuration - myProgress;
@@ -375,7 +368,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     Log.e("player to go", "::>>>>>callcomplete...");
                     callComplete();  //call....
                 }
-                Log.e("calll complete real", "real");
             });
         }
 
@@ -1258,7 +1250,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         Log.e("player to go", "::>>>>>callcomplete prepare...");
                         callComplete();  //call....
                     }
-                    Log.e("calll complete real", "real");
                 });
             }
                 /*BWSApplication.createChannel(getActivity());
@@ -1353,7 +1344,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 Log.e("player to go", "::>>>>>callcomplete...");
                 callComplete();  //call....
             }
-            Log.e("calll complete real", "real");
         });
     }
 

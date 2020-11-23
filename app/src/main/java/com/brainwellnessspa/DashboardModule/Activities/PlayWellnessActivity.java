@@ -199,7 +199,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     if(mediaPlayer.isPlaying()) {
                         callComplete();
                     }
-                    Log.e("calll complete real", "real");
                 });
             }
             myProgress = currentDuration;
@@ -231,8 +230,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !url.equalsIgnoreCase("")) {
                 callComplete();
             }
-
-
             progress = getProgressPercentage(currentDuration, totalDuration);
             if (currentDuration == 0 && isCompleteStop) {
                 binding.progressBar.setVisibility(View.GONE);
@@ -344,8 +341,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         if (isMediaStart /*&& !audioFile.equalsIgnoreCase("")*/) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
-                Log.e("calll complete real", "real");
+                if(mediaPlayer.isPlaying()) {
+                    callComplete();
+                    Log.e("calll complete real", "real");
+                }
             });
         }
         binding.llBack.setOnClickListener(view -> {
@@ -1426,19 +1425,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 e.printStackTrace();
             }
         }
-/*        if (isMediaStart && url.equalsIgnoreCase("")) {
+        if(isMediaStart) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
-                Log.e("calll complete real","real");
+                if (mediaPlayer.isPlaying()) {
+                    Log.e("player to go", "::>>>>>callcomplete prepare...");
+                    callComplete();  //call....
+                }
             });
-        }*/
-     /*   if (isMediaStart && !url.equalsIgnoreCase("")) {
-            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                callComplete();
-                Log.e("calll complete trans","trans");
-            });
-        }*/
-
+        }
         IntentFilter filter = new IntentFilter(Broadcast_PLAY_NEW_AUDIO);
         registerReceiver(playNewAudio, filter);
         getMediaByPer();
@@ -1554,7 +1548,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 Log.e("player to go", "::>>>>>callcomplete play well...");
                 callComplete();  //call....
             }
-            Log.e("calll complete real", "real");
         });
     }
 
@@ -1622,10 +1615,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //                    stopSelf();
             }
 
-            @Override
-            public void onSeekTo(long position) {
-                super.onSeekTo(position);
-            }
+//            @Override
+//            public void onSeekTo(long position) {
+//                super.onSeekTo(position);
+//            }
         });
 
     }
