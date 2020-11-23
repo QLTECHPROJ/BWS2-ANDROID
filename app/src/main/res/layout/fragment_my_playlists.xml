@@ -314,6 +314,7 @@
                                 android:visibility="gone"
                                 app:queryBackground="@null"
                                 app:queryHint=""
+                                android:focusable="false"
                                 app:searchHintIcon="@null"
                                 app:searchIcon="@null" />
                         </RelativeLayout>
