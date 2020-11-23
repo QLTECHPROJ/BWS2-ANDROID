@@ -68,6 +68,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
+import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.UserCreated;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -424,6 +425,7 @@ public class PlaylistFragment extends Fragment {
                                                 BWSApplication.showToast(listModel.getResponseMessage(), getActivity());
                                             } else if (listModel.getResponseData().getIscreated().equalsIgnoreCase("1") ||
                                                     listModel.getResponseData().getIscreated().equalsIgnoreCase("")) {
+                                                UserCreated = true;
                                                 callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0");
                                                 dialog.dismiss();
                                             }

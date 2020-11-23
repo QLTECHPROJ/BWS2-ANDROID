@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -125,6 +126,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public static int disclaimerPlayed = 0;
     public static int isPlayPlaylist = 0;
     public boolean RefreshPlaylist = false;
+    public static boolean UserCreated = false;
     FragmentMyPlaylistsBinding binding;
     String UserID, New, PlaylistID, PlaylistName = "", PlaylistImage, SearchFlag, MyDownloads = "", AudioFlag, PlaylistIDs = "", MyCreated = "";
     int RefreshIcon;
@@ -152,22 +154,23 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     boolean isclose = false;
     int position = 0, startTime, listSize, myCount;
     long myProgress = 0, diff = 0;
-    boolean Isclose = false;
+    public static boolean Isclose = false;
     private Handler handler1, handler2;
     private long totalDuration, currentDuration = 0;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.hasExtra("MyData")) {
-                String data = intent.getStringExtra("MyData");
-                Log.d("play_pause_Action", data);
+                try {
+                    String data = intent.getStringExtra("MyData");
+                    Log.d("play_pause_Action", data);
 
-                SharedPreferences sharedw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                boolean audioPlay = sharedw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                AudioFlag = sharedw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                String pID = sharedw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
-                if (MyDownloads.equalsIgnoreCase("1")) {
-                    if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
+                    SharedPreferences sharedw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+                    boolean audioPlay = sharedw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                    AudioFlag = sharedw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                    String pID = sharedw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                    if (MyDownloads.equalsIgnoreCase("1")) {
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("Downloadlist") && pID.equalsIgnoreCase(PlaylistName)) {
                         /*if (data.equalsIgnoreCase("pause")) {
                             isPlayPlaylist = 1;
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
@@ -178,8 +181,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             isPlayPlaylist = 0;
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }*/
-                        if (MyDownloads.equalsIgnoreCase("1")) {
-                            if (data.equalsIgnoreCase("play")) {
+                            if (MyDownloads.equalsIgnoreCase("1")) {
+                                if (data.equalsIgnoreCase("play")) {
                                     isPlayPlaylist = 1;
                                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
                                 } else {
@@ -187,16 +190,16 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                                 }
 
-                            if (isMediaStart) {
-                                adpater2.notifyDataSetChanged();
+                                if (isMediaStart) {
+                                    adpater2.notifyDataSetChanged();
+                                }
                             }
+                        } else {
+                            isPlayPlaylist = 0;
+                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
                     } else {
-                        isPlayPlaylist = 0;
-                        binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-                    }
-                } else {
-                    if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                        if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
                         /*if (isMediaStart) {
                             isPlayPlaylist = 1;
 //                            handler3.postDelayed(UpdateSongTime3, 500);
@@ -205,24 +208,27 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             isPlayPlaylist = 0;
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }*/
-                        if(data.equalsIgnoreCase("play")){
-                            isPlayPlaylist = 1;
-                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                         }else{
-                            isPlayPlaylist = 2;
+                            if (data.equalsIgnoreCase("play")) {
+                                isPlayPlaylist = 1;
+                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                            } else {
+                                isPlayPlaylist = 2;
+                                binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
+                            }
+                            if (isMediaStart) {
+                                if (MyCreated.equalsIgnoreCase("1")) {
+                                    adpater1.notifyDataSetChanged();
+                                } else {
+                                    adpater2.notifyDataSetChanged();
+                                }
+                            }
+                        } else {
+                            isPlayPlaylist = 0;
                             binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                         }
-                        if(isMediaStart) {
-                            if (MyCreated.equalsIgnoreCase("1")) {
-                                adpater1.notifyDataSetChanged();
-                            } else {
-                                adpater2.notifyDataSetChanged();
-                            }
-                        }
-                    } else {
-                        isPlayPlaylist = 0;
-                        binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -243,6 +249,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         fileNameList = new ArrayList<>();
         playlistDownloadId = new ArrayList<>();
         addDisclaimer();
+
 //        remainAudio = new ArrayList<>();
         playlistWiseAudioDetails = new ArrayList<>();
         downloadPlaylistDetailsList = new ArrayList<>();
@@ -327,6 +334,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 return false;
             }
         });
+
 
 //        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         RecyclerView.LayoutManager playList1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -495,17 +503,57 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public void onResume() {
         super.onResume();
         addDisclaimer();
-        if (binding.searchView.hasFocus()) {
-            binding.searchView.clearFocus();
+
+        if (UserCreated) {
             Isclose = true;
-            new Handler().postDelayed(() -> {
-                Refresback(Isclose, 1);
-            }, 2 * 800);
-        } else if (!binding.searchView.hasFocus()) {
-            Isclose = true;
-            Refresback(Isclose, 0);
+            Refresback();
+        } else {
+            if (binding.searchView != null) {
+                binding.searchView.clearFocus();
+                Isclose = true;
+                new Handler().postDelayed(() -> {
+                    Refresback();
+                }, 2 * 800);
+            } else if (binding.searchView == null) {
+                Isclose = true;
+                Refresback();
+            } else {
+                Isclose = true;
+                Refresback();
+            }
         }
 
+
+       /* searchEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    binding.searchView.clearFocus();
+                    BWSApplication.showToast("Sucess", getActivity());
+                }
+                return false;
+            }
+        });*/
+
+       /* view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (binding.searchView != null) {
+                        binding.searchView.setQuery("", false);
+                        binding.searchView.clearFocus();
+                        binding.searchView.onActionViewCollapsed();
+                    }
+                    callBack();
+                    BWSApplication.showToast("Completed", getActivity());
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });*/
         if (deleteFrg == 1) {
             binding.searchView.clearFocus();
             callBack();
@@ -526,7 +574,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
     }
 
-    public void Refresback(boolean Isclose, int status) {
+    public void Refresback() {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener((v, keyCode, event) -> {
@@ -1091,6 +1139,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.llListing.setVisibility(View.VISIBLE);
             try {
                 if (MyDownloads.equalsIgnoreCase("1")) {
+                    UserCreated = false;
                     binding.llDelete.setVisibility(View.VISIBLE);
                     binding.llReminder.setVisibility(View.INVISIBLE);
                     binding.llDownloads.setVisibility(View.INVISIBLE);
@@ -1109,6 +1158,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                     binding.llDownloads.setVisibility(View.VISIBLE);
                     binding.llReminder.setVisibility(View.VISIBLE);
                     if (listModel.getCreated().equalsIgnoreCase("1")) {
+                        UserCreated = true;
                         binding.rvPlayLists.setVisibility(View.VISIBLE);
                         binding.rvPlayLists1.setVisibility(View.VISIBLE);
                         binding.rvPlayLists2.setVisibility(View.GONE);
@@ -1120,6 +1170,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                         touchHelper.attachToRecyclerView(binding.rvPlayLists1);
                         binding.rvPlayLists1.setAdapter(adpater);
                     } else {
+                        UserCreated = false;
                         adpater2 = new PlayListsAdpater2(listModel.getPlaylistSongs(), getActivity(), UserID, listModel.getCreated());
                         binding.rvPlayLists2.setAdapter(adpater2);
                         binding.rvPlayLists.setVisibility(View.GONE);
@@ -1417,8 +1468,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             Gson gsonx = new Gson();
             String json = sharedx.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
             String jsonw = sharedx.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonx));
-            ArrayList<DownloadAudioDetails> arrayList  = new ArrayList<>();
-            ArrayList<MainPlayModel> arrayList2  = new ArrayList<>();
+            ArrayList<DownloadAudioDetails> arrayList = new ArrayList<>();
+            ArrayList<MainPlayModel> arrayList2 = new ArrayList<>();
             if (!jsonw.equalsIgnoreCase(String.valueOf(gsonx))) {
                 Type type1 = new TypeToken<ArrayList<DownloadAudioDetails>>() {
                 }.getType();
@@ -1957,6 +2008,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 holder.binding.llHighLight.setBackgroundResource(R.color.white);
             }
 
+            UserCreated = true;
           /*  holder.binding.llMainLayout.setVisibility(View.GONE);
             holder.binding.llDownload.setVisibility(View.GONE);
             holder.binding.llRemove.setVisibility(View.GONE);*/
@@ -2412,6 +2464,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.tvSearch.setHint(R.string.playlist_or_audio_search);
             binding.tvSearch.setVisibility(View.VISIBLE);
             binding.searchView.setVisibility(View.GONE);
+            UserCreated = true;
             holder.binding.tvTitle.setText(mData.get(position).getName());
             holder.binding.tvTime.setText(mData.get(position).getAudioDuration());
 //            holder.binding.llThirdLayout.setWeightSum(0.26f);
@@ -2735,6 +2788,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder2 holder, int position) {
+
             /*UpdateSongTime3 = new Runnable() {
                 @Override
                 public void run() {
@@ -2770,6 +2824,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.tvSearch.setVisibility(View.GONE);
             binding.searchView.setVisibility(View.VISIBLE);
             String id = mData.get(position).getID();
+            UserCreated = false;
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                     1, 1, 0.13f, 0);
             holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
@@ -2791,7 +2846,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             if (MyDownloads.equalsIgnoreCase("1")) {
                 if (audioPlayz && AudioFlag.equalsIgnoreCase("Downloadlist") && pIDz.equalsIgnoreCase(PlaylistName)) {
                     if (myAudioId.equalsIgnoreCase(mData.get(position).getID())) {
-                        if (isPause|| !isMediaStart) {
+                        if (isPause || !isMediaStart) {
                             holder.binding.equalizerview.stopBars();
                         } else
                             holder.binding.equalizerview.animateBars();
