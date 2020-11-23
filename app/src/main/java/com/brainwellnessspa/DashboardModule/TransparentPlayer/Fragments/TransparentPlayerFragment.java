@@ -2158,15 +2158,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //        handler12.removeCallbacks(UpdateSongTime12);
 //        Log.e("Stop runnble", "stop");
 
-        handler12.removeCallbacks(UpdateSongTime12);
         getActivity().unregisterReceiver(playNewAudio);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
-        /*KeyguardManager myKM = (KeyguardManager) ctx.getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
+        KeyguardManager myKM = (KeyguardManager) ctx.getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
         if( myKM.isKeyguardLocked()) {
             Log.e("Phone is locked","");
         } else {
+            handler12.removeCallbacks(UpdateSongTime12);
             Log.e("Phone is not locked","");
-        }*/
+        }
         super.onPause();
     }
 
