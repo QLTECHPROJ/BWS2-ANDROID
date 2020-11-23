@@ -146,11 +146,13 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         public void onCallStateChanged(int state, String incomingNumber) {
             if (state == TelephonyManager.CALL_STATE_RINGING || state == TelephonyManager.CALL_STATE_OFFHOOK) {
                 if(!isPause){
-                if (isMediaStart && !audioPause) {
-                    oTime = getProgressPercentage(mediaPlayer.getCurrentPosition(),mediaPlayer.getDuration());
-                    pauseMedia();
-                    audioPause = true;
-                }
+                    if(mediaPlayer!=null) {
+                        if (isMediaStart && !audioPause) {
+                            oTime = getProgressPercentage(mediaPlayer.getCurrentPosition(), mediaPlayer.getDuration());
+                            pauseMedia();
+                            audioPause = true;
+                        }
+                    }
                 }  // Put here the code to stop your music
             } else if (state == TelephonyManager.CALL_STATE_IDLE) {
             }
@@ -201,12 +203,14 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
             case AudioManager.AUDIOFOCUS_LOSS:
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 if(!isPause) {
-                    if (isMediaStart && !audioPause) {
-                        oTime = getProgressPercentage(mediaPlayer.getCurrentPosition(),mediaPlayer.getDuration());
-                        pauseMedia();
-                        audioPause = true;
+                    if (mediaPlayer != null) {
+                        if (isMediaStart && !audioPause) {
+                            oTime = getProgressPercentage(mediaPlayer.getCurrentPosition(), mediaPlayer.getDuration());
+                            pauseMedia();
+                            audioPause = true;
 //                    binding.ivPlay.setVisibility(View.VISIBLE);
 //                    binding.ivPause.setVisibility(View.GONE);
+                        }
                     }
                 }
 //                MusicService.pauseMedia();// Pause your media player here
