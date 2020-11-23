@@ -1,6 +1,7 @@
 package com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -2066,7 +2067,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         } else if (ComeScreenAccount == 0) {
             binding.llLayout.setVisibility(View.VISIBLE);
         }
-
 //        handler12.postDelayed(UpdateSongTime12, 500);
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         Gson gson = new Gson();
@@ -2161,6 +2161,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         handler12.removeCallbacks(UpdateSongTime12);
         getActivity().unregisterReceiver(playNewAudio);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
+        /*KeyguardManager myKM = (KeyguardManager) ctx.getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
+        if( myKM.isKeyguardLocked()) {
+            Log.e("Phone is locked","");
+        } else {
+            Log.e("Phone is not locked","");
+        }*/
         super.onPause();
     }
 
