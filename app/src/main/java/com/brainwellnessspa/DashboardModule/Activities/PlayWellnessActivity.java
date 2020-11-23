@@ -20,7 +20,10 @@ import android.os.SystemClock;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,6 +59,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -65,6 +70,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import me.toptas.fancyshowcase.FancyShowCaseQueue;
+import me.toptas.fancyshowcase.FancyShowCaseView;
+import me.toptas.fancyshowcase.FocusShape;
+import me.toptas.fancyshowcase.listener.OnViewInflateListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -116,6 +125,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     boolean isPlaying = false;
     private long mLastClickTime = 0, totalDuration, currentDuration = 0;
     private Handler handler;
+//    static FancyShowCaseQueue queue1;
+//    static FancyShowCaseView fancyShowCaseView31, fancyShowCaseView21, fancyShowCaseView11;
     //    private Handler handler1;
     //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -196,7 +207,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
             if (isMediaStart) {
                 mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                    if(mediaPlayer.isPlaying()) {
+                    if (mediaPlayer.isPlaying()) {
                         callComplete();
                     }
                 });
@@ -341,7 +352,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
         if (isMediaStart /*&& !audioFile.equalsIgnoreCase("")*/) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                if(mediaPlayer.isPlaying()) {
+                if (mediaPlayer.isPlaying()) {
                     callComplete();
                     Log.e("calll complete real", "real");
                 }
@@ -453,6 +464,76 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             callPrevious();
         });
     }
+
+/*
+    private void showTooltiop1() {
+        Animation enterAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_in_top);
+        Animation exitAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_out_bottom);
+
+        fancyShowCaseView21 = new FancyShowCaseView.Builder(activity)
+                .customView(R.layout.layout_player_menu, (OnViewInflateListener) view -> {
+                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                    rlNext.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fancyShowCaseView21.hide();
+                        }
+                    });
+                }).focusShape(FocusShape.ROUNDED_RECTANGLE).enterAnimation(enterAnimation).exitAnimation(exitAnimation).fitSystemWindows(true).closeOnTouch(false).build();
+
+        fancyShowCaseView31 = new FancyShowCaseView.Builder(activity)
+                .customView(R.layout.layout_player_directions, view -> {
+                    view.findViewById(R.id.rlSearch);
+                   */
+/* RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                    rlDone.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fancyShowCaseView31.hide();
+                        }
+                    });*//*
+
+                })
+                .focusShape(FocusShape.ROUNDED_RECTANGLE).enterAnimation(enterAnimation).exitAnimation(exitAnimation).closeOnTouch(false).build();
+
+        fancyShowCaseView11 = new FancyShowCaseView.Builder(activity)
+                .customView(R.layout.layout_player_menu, view -> {
+                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                    rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+                   */
+/* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
+                    RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
+                    rlShowMeHow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fancyShowCaseView11.hide();
+                        }
+                    });
+                    rlNoThanks.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            queue1.cancel(true);
+                        }
+                    });*//*
+
+                }).closeOnTouch(false)
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation)
+                .exitAnimation(exitAnimation)
+                .fitSystemWindows(true).focusOn(binding.llMore)
+                .build();
+
+        queue1 = new FancyShowCaseQueue()
+                .add(fancyShowCaseView11)
+                .add(fancyShowCaseView21)
+                .add(fancyShowCaseView31);
+     */
+/*   queue1.show();
+        IsRegisters = "false";
+        IsRegisters1 = "false";*//*
+
+    }
+*/
 
     private void callPause() {
         handler.removeCallbacks(UpdateSongTime);
@@ -1227,7 +1308,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     callMedia();
                 }
                 initMediaplyer();
-                if(isMediaStart) {
+                if (isMediaStart) {
                     mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                         if (mediaPlayer.isPlaying()) {
                             Log.e("player to go", "::>>>>>callcomplete prepare...");
@@ -1362,7 +1443,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                 } else if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
                     binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-                }else{
+                } else {
                     binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
                 }
                 binding.tvSongTime.setText(addToQueueModelList.get(position).getAudioDuration());
@@ -1421,7 +1502,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                     } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
                         binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-                    }else{
+                    } else {
                         binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
                     }
                     binding.tvSongTime.setText(mainPlayModelList.get(position).getAudioDuration());
@@ -1546,7 +1627,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }
 
         mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-            if(mediaPlayer.isPlaying()) {
+            if (mediaPlayer.isPlaying()) {
                 Log.e("player to go", "::>>>>>callcomplete play well...");
                 callComplete();  //call....
             }
@@ -2755,7 +2836,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
             } else if (addToQueueModelList.get(position).getLike().equalsIgnoreCase("0")) {
                 binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-            }else{
+            } else {
                 binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
             }
         } else if (audioPlay) {
@@ -2766,7 +2847,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                 } else if (mainPlayModelList.get(position).getLike().equalsIgnoreCase("0")) {
                     binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
-                }else{
+                } else {
                     binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
                 }
                 url = mainPlayModelList.get(position).getAudioFile();
