@@ -225,6 +225,14 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         totalDuration = t.getTime();
                     }
                 }
+
+                if (isMediaStart) {
+                    mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                        if(mediaPlayer.isPlaying()) {
+                            callComplete();
+                        }
+                    });
+                }
                 myProgress = currentDuration;
                 currentDuration = getStartTime();
                 diff = totalDuration - myProgress;
@@ -1127,6 +1135,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                             localIntent.putExtra("MyData", "pause");
                             localBroadcastManager.sendBroadcast(localIntent);
                         }
+                        initMediaplyer();
+                        if(isMediaStart) {
+                            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                                if (mediaPlayer.isPlaying()) {
+                                    Log.e("player to go", "::>>>>>callcomplete prepare...");
+                                    callComplete();  //call....
+                                }
+                            });
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1197,6 +1214,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     }
                 }
             }
+
             startTime = getStartTime();
 
             if (!audioFile.equalsIgnoreCase("")) {
@@ -1244,14 +1262,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
             });
-            if(isMediaStart) {
-                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                    if (mediaPlayer.isPlaying()) {
-                        Log.e("player to go", "::>>>>>callcomplete prepare...");
-                        callComplete();  //call....
-                    }
-                });
-            }
                 /*BWSApplication.createChannel(getActivity());
             getActivity().registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
             getActivity().startService(new Intent(getActivity().getBaseContext(), OnClearFromRecentService.class));*/
@@ -1405,6 +1415,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
                 }
             }
+
 
             @Override
             public void onStop() {
@@ -2037,14 +2048,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     public void onDestroy() {
 //        getActivity().unregisterReceiver(playNewAudio);
 //        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
-        handler12.removeCallbacks(UpdateSongTime12);
         super.onDestroy();
     }
     @Override
     public void onDestroyView() {
 //        getActivity().unregisterReceiver(playNewAudio);
 //        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
-        handler12.removeCallbacks(UpdateSongTime12);
         super.onDestroyView();
     }
 
@@ -2057,7 +2066,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.llLayout.setVisibility(View.VISIBLE);
         }
 
-        handler12.postDelayed(UpdateSongTime12, 500);
+//        handler12.postDelayed(UpdateSongTime12, 500);
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         Gson gson = new Gson();
         String json1 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
@@ -2148,6 +2157,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //        handler12.removeCallbacks(UpdateSongTime12);
 //        Log.e("Stop runnble", "stop");
 
+        handler12.removeCallbacks(UpdateSongTime12);
         getActivity().unregisterReceiver(playNewAudio);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onPause();

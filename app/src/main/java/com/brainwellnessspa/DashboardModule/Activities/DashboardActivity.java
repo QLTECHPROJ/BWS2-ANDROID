@@ -33,8 +33,11 @@ import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeS
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.Utility.MusicService.NOTIFICATION_ID;
+import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
+import static com.brainwellnessspa.Utility.MusicService.mediaPlayer;
+import static com.brainwellnessspa.Utility.MusicService.oTime;
 import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
 import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 
@@ -144,6 +147,7 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
             if (state == TelephonyManager.CALL_STATE_RINGING || state == TelephonyManager.CALL_STATE_OFFHOOK) {
                 if(!isPause){
                 if (isMediaStart && !audioPause) {
+                    oTime = getProgressPercentage(mediaPlayer.getCurrentPosition(),mediaPlayer.getDuration());
                     pauseMedia();
                     audioPause = true;
                 }
@@ -198,6 +202,7 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 if(!isPause) {
                     if (isMediaStart && !audioPause) {
+                        oTime = getProgressPercentage(mediaPlayer.getCurrentPosition(),mediaPlayer.getDuration());
                         pauseMedia();
                         audioPause = true;
 //                    binding.ivPlay.setVisibility(View.VISIBLE);
