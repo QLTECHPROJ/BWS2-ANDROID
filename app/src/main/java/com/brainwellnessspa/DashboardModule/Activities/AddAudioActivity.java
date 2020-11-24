@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,10 +71,11 @@ public class AddAudioActivity extends AppCompatActivity {
     ActivityAddAudioBinding binding;
     Context ctx;
     String UserID, PlaylistID, AudioFlag;
-    SerachListAdpater adpater;
+    SerachListAdpater serachListAdpater;
     EditText searchEditText;
     Activity activity;
-    SuggestedAdpater adapter;
+    int listSize = 0;
+    SuggestedAdpater suggestedAdpater;
     public static boolean addToSearch = false;
     public static String MyPlaylistIds = "";
     public static String PlaylistIDMS = "";
@@ -95,11 +97,10 @@ public class AddAudioActivity extends AppCompatActivity {
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                     if (isMediaStart) {
-                        if (data.equalsIgnoreCase("play")) {
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            adapter.notifyDataSetChanged();
+                        if(listSize!=0){
+                            serachListAdpater.notifyDataSetChanged();
                         }
+                        suggestedAdpater.notifyDataSetChanged();
                     }
                 }
             }
@@ -197,8 +198,10 @@ public class AddAudioActivity extends AppCompatActivity {
                                 } else {
                                     binding.llError.setVisibility(View.GONE);
                                     binding.rvSerachList.setVisibility(View.VISIBLE);
-                                    adpater = new SerachListAdpater(listModel.getResponseData(), activity, binding.rvSerachList, UserID);
-                                    binding.rvSerachList.setAdapter(adpater);
+                                    serachListAdpater = new SerachListAdpater(listModel.getResponseData(), activity, binding.rvSerachList, UserID);
+                                    binding.rvSerachList.setAdapter(serachListAdpater);
+                                    LocalBroadcastManager.getInstance(ctx)
+                                            .registerReceiver(listener, new IntentFilter("play_pause_Action"));
                                 }
                             } else if (searchEditText.getText().toString().equalsIgnoreCase("")) {
                                 binding.rvSerachList.setAdapter(null);
@@ -251,9 +254,11 @@ public class AddAudioActivity extends AppCompatActivity {
                             SuggestedModel listModel = response.body();
                             binding.tvSuggestedAudios.setText(R.string.Recommended_Audios);
                             binding.tvSAViewAll.setVisibility(View.VISIBLE);
-                            adapter = new SuggestedAdpater(listModel.getResponseData(), ctx);
-                            binding.rvSuggestedList.setAdapter(adapter);
+                            suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), ctx);
+                            binding.rvSuggestedList.setAdapter(suggestedAdpater);
 
+                            LocalBroadcastManager.getInstance(ctx)
+                                    .registerReceiver(listener, new IntentFilter("play_pause_Action"));
                             binding.tvSAViewAll.setOnClickListener(view -> {
                                 Intent i = new Intent(ctx, ViewSuggestedActivity.class);
                                 i.putExtra("Name", "Recommended  Audios");
@@ -374,10 +379,11 @@ public class AddAudioActivity extends AppCompatActivity {
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
-                        !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
+                        !AudioFlag.equalsIgnoreCase("SubPlayList")
+                        && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                     if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
                         songId = myAudioId;
-                        if (isPause) {
+                        if (isPause || !isMediaStart) {
                             holder.binding.equalizerview.stopBars();
                         } else
                             holder.binding.equalizerview.animateBars();
@@ -592,6 +598,7 @@ public class AddAudioActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
+            listSize = modelList.size();
             return modelList.size();
         }
 

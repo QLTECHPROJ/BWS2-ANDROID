@@ -104,7 +104,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener/*, Playable, AudioManager.OnAudioFocusChangeListener*/ {
     public static int isDisclaimer = 0;
     public static String addToRecentPlayId = "", myAudioId = "";
-    public static boolean isPlaying = false;
+    public static boolean isPlaying = false,isplaywellClick = false;
     public ArrayList<MainPlayModel> mainPlayModelList;
     public FragmentTransparentPlayerBinding binding;
     String UserID, AudioFlag, IsRepeat, IsShuffle, audioFile, id, name,playFrom="";
@@ -1111,14 +1111,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                                         Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                                     } else {
-                                        if (BWSApplication.isNetworkConnected(ctx)) {
-                                            Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
-                                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                                        }else{
-                                            Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
-                                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+                                        Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                                                .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
+                                                .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
 
-                                        }
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -1227,13 +1223,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
                     } else {
-                        if(BWSApplication.isNetworkConnected(ctx)){
                         Glide.with(ctx).load(mainPlayModelList.get(position).getImageFile()).thumbnail(0.05f)
+                                .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                        }else{
-                            Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-                        }
+
                     }
                     GetMedia(audioFile, ctx);
                     handler12.postDelayed(UpdateSongTime12, 100);
@@ -1265,6 +1258,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     return;
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
+                isplaywellClick = true;
                 handler12.removeCallbacks(UpdateSongTime12);
                 if (player == 0) {
                     player = 1;
@@ -1413,19 +1407,18 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             // Implement callbacks
             @Override
             public void onPlay() {
-                super.onPlay();
                 callPlay();
+                super.onPlay();
             }
 
             @Override
             public void onPause() {
-                super.onPause();
                 callPause();
+                super.onPause();
             }
 
             @Override
             public void onSkipToNext() {
-                super.onSkipToNext();
 
                 if (!audioFile.equalsIgnoreCase("")) {
                     callNext();
@@ -1435,11 +1428,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     localIntent.putExtra("MyData", "play");
                     localBroadcastManager.sendBroadcast(localIntent);
                 }
+                super.onSkipToNext();
             }
 
             @Override
             public void onSkipToPrevious() {
-                super.onSkipToPrevious();
                 if (!audioFile.equalsIgnoreCase("")) {
                     callPrev();
 
@@ -1448,6 +1441,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                updateMetaData();
                     buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
                 }
+                super.onSkipToPrevious();
             }
 
 
@@ -2215,11 +2209,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         KeyguardManager myKM = (KeyguardManager) ctx.getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
 
         if( myKM.isKeyguardLocked()) {
+            isplaywellClick = false;
             Log.e("Phone is locked","");
-        } else  if(bg){
+        } else  if(isplaywellClick){
+            handler12.removeCallbacks(UpdateSongTime12);
             Log.e("Phone is not BG","");
         }else {
-            handler12.removeCallbacks(UpdateSongTime12);
+            isplaywellClick = false;
             Log.e("Phone is not locked","");
         }
         super.onPause();
