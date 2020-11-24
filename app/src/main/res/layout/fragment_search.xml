@@ -111,8 +111,6 @@
                             android:id="@+id/rvSerachList"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginRight="@dimen/_10sdp"
                             android:overScrollMode="never"
                             android:paddingTop="@dimen/_8sdp"
                             android:visibility="gone" />

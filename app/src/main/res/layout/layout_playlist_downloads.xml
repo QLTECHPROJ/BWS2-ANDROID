@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_130sdp"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:gravity="right">
+
+            <!--
+                        <ImageView
+                            android:id="@+id/ivLine"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingRight="@dimen/_15sdp"
+                            android:src="@drawable/showcase_dot_line"
+                            app:tint="@color/white" />
+            -->
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginLeft="@dimen/_48sdp"
+            android:layout_marginRight="@dimen/_56sdp"
+            android:layout_weight="0.9"
+            android:orientation="vertical"
+            android:paddingRight="@dimen/_5sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:text="Downloads"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_20sdp" />
+
+
+            <TextView
+                android:id="@+id/tvGotIt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="start"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:text="Let's you download your playlist to your device"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sdp" />
+
+            <RelativeLayout
+                android:id="@+id/rlNext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_10sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/round_corner"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:paddingLeft="@dimen/_25sdp"
+                    android:paddingTop="@dimen/_8sdp"
+                    android:paddingRight="@dimen/_25sdp"
+                    android:paddingBottom="@dimen/_8sdp"
+                    android:text="Next"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18sdp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:layout_weight="0.2"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center">
+
+            <RelativeLayout
+                android:id="@+id/rlNoThanks"
+                android:layout_width="164dp"
+                android:layout_height="40dp"
+                android:layout_gravity="left"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="@drawable/round_corner"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="NO THANKS"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18sdp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

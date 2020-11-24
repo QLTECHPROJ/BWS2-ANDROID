@@ -12,9 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -56,6 +59,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.toptas.fancyshowcase.FancyShowCaseQueue;
+import me.toptas.fancyshowcase.FancyShowCaseView;
+import me.toptas.fancyshowcase.FocusShape;
+import me.toptas.fancyshowcase.listener.OnViewInflateListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -78,10 +85,13 @@ public class SearchFragment extends Fragment {
     FragmentSearchBinding binding;
     String UserID, AudioFlag;
     EditText searchEditText;
-    SerachListAdpater adpater;
+    SerachListAdpater serachListAdpater;
     public static int comefrom_search = 0;
     int startTime;
-    SuggestionAudiosAdpater adapter;
+    int listSize = 0;
+    FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21;
+    FancyShowCaseQueue queue;
+    SuggestionAudiosAdpater suggestionAudiosAdpater;
     private long currentDuration = 0;
     long myProgress = 0, diff = 0;
 
@@ -97,11 +107,13 @@ public class SearchFragment extends Fragment {
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                     if (isMediaStart) {
-                        if (data.equalsIgnoreCase("play")) {
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            adapter.notifyDataSetChanged();
+                        if (isMediaStart) {
+                            if (listSize != 0) {
+                                serachListAdpater.notifyDataSetChanged();
+                            }
+                            suggestionAudiosAdpater.notifyDataSetChanged();
                         }
+
                     }
                 }
             }
@@ -130,7 +142,7 @@ public class SearchFragment extends Fragment {
             binding.llError.setVisibility(View.GONE);
             binding.searchView.setQuery("", false);
         });
-
+//        showTooltiop();
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String search) {
@@ -164,11 +176,60 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
+    private void showTooltiop() {
+        Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
+        Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
+
+        fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
+                .customView(R.layout.layout_search_audioplay, view -> {
+                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                    rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
+                    RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
+                    rlShowMeHow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fancyShowCaseView11.hide();
+                        }
+                    });
+                    rlNoThanks.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            queue.cancel(true);
+                        }
+                    });*/
+
+                }).closeOnTouch(false)
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                /*.focusOn(binding.llDownloads)*/.closeOnTouch(false)
+                .build();
+
+        fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
+                .customView(R.layout.layout_search_addplaylist, view -> {
+                    view.findViewById(R.id.rlSearch);
+                    RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                    rlDone.setOnClickListener(v -> fancyShowCaseView21.hide());
+                })
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                /*.focusOn(binding.llResource)*/.closeOnTouch(false).build();
+
+
+        queue = new FancyShowCaseQueue()
+                .add(fancyShowCaseView11)
+                .add(fancyShowCaseView21);
+        queue.show();
+       /* IsRegisters = "false";
+        IsRegisters1 = "false";*/
+    }
+
     @Override
     public void onPause() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onPause();
     }
+
     private void prepareSearchData(String search, EditText searchEditText) {
         if (BWSApplication.isNetworkConnected(getActivity())) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
@@ -188,8 +249,8 @@ public class SearchFragment extends Fragment {
                                 } else {
                                     binding.llError.setVisibility(View.GONE);
                                     binding.rvSerachList.setVisibility(View.VISIBLE);
-                                    adpater = new SerachListAdpater(listModel.getResponseData(), getActivity(), binding.rvSerachList, UserID);
-                                    binding.rvSerachList.setAdapter(adpater);
+                                    serachListAdpater = new SerachListAdpater(listModel.getResponseData(), getActivity(), binding.rvSerachList, UserID);
+                                    binding.rvSerachList.setAdapter(serachListAdpater);
                                 }
                             } else if (searchEditText.getText().toString().equalsIgnoreCase("")) {
                                 binding.rvSerachList.setAdapter(null);
@@ -320,10 +381,10 @@ public class SearchFragment extends Fragment {
                             SuggestedModel listModel = response.body();
                             binding.tvSuggestedAudios.setText(R.string.Recommended_Audios);
                             binding.tvSAViewAll.setVisibility(View.VISIBLE);
-                            adapter = new SuggestionAudiosAdpater(listModel.getResponseData(), getActivity());
+                            suggestionAudiosAdpater = new SuggestionAudiosAdpater(listModel.getResponseData(), getActivity());
                             LocalBroadcastManager.getInstance(getActivity())
                                     .registerReceiver(listener, new IntentFilter("play_pause_Action"));
-                            binding.rvDownloadsList.setAdapter(adapter);
+                            binding.rvDownloadsList.setAdapter(suggestionAudiosAdpater);
 
                             binding.tvSAViewAll.setOnClickListener(view -> {
                                 Fragment fragment = new ViewAllSearchFragment();
@@ -420,9 +481,6 @@ public class SearchFragment extends Fragment {
                     1, 1, 0.12f, 0);
             holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
             holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.ivBackgroundImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            holder.binding.ivBackgroundImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.ivBackgroundImage.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(getActivity()).load(modelList.get(position).getImageFile()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
             holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
@@ -440,15 +498,16 @@ public class SearchFragment extends Fragment {
                 holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
                 holder.binding.equalizerview.setVisibility(View.GONE);
 
-              /*  SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") &&
-                        !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
+                        !AudioFlag.equalsIgnoreCase("SubPlayList")
+                        && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                     if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
                         songId = myAudioId;
-                        if (isPause) {
+                        if (isPause || !isMediaStart) {
                             holder.binding.equalizerview.stopBars();
                         } else
                             holder.binding.equalizerview.animateBars();
@@ -461,13 +520,11 @@ public class SearchFragment extends Fragment {
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     }
-//                    handler3.postDelayed(UpdateSongTime3, 500);
                 } else {
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-//                    handler3.removeCallbacks(UpdateSongTime3);
-                }*/
+                }
 
                 holder.binding.llRemoveAudio.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
@@ -538,8 +595,10 @@ public class SearchFragment extends Fragment {
                             fragmentManager1.beginTransaction()
                                     .add(R.id.flContainer, fragment)
                                     .commit();
-                          /*  handler3.postDelayed(UpdateSongTime3, 500);
-                            notifyDataSetChanged();*/
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            params.setMargins(0, 6, 0, 260);
+                            binding.llSpace.setLayoutParams(params);
+                            notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -598,6 +657,7 @@ public class SearchFragment extends Fragment {
 
         @Override
         public int getItemCount() {
+            listSize = modelList.size();
             return modelList.size();
         }
 
@@ -718,6 +778,9 @@ public class SearchFragment extends Fragment {
                     fragmentManager1.beginTransaction()
                             .add(R.id.flContainer, fragment)
                             .commit();
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(0, 6, 0, 260);
+                    binding.llSpace.setLayoutParams(params);
                     notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();

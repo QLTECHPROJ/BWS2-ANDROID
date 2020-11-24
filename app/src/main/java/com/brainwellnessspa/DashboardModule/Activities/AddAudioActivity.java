@@ -97,7 +97,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                     if (isMediaStart) {
-                        if(listSize!=0){
+                        if (listSize != 0) {
                             serachListAdpater.notifyDataSetChanged();
                         }
                         suggestedAdpater.notifyDataSetChanged();
@@ -235,11 +235,11 @@ public class AddAudioActivity extends AppCompatActivity {
                     .add(R.id.flContainer, fragment)
                     .commit();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            params.setMargins(10, 8, 10, 210);
+            params.setMargins(0, 8, 0, 210);
             binding.llSpace.setLayoutParams(params);
         } else {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            params.setMargins(10, 8, 10, 20);
+            params.setMargins(0, 8, 0, 20);
             binding.llSpace.setLayoutParams(params);
         }
         if (BWSApplication.isNetworkConnected(ctx)) {
@@ -525,6 +525,9 @@ public class AddAudioActivity extends AppCompatActivity {
                             fragmentManager1.beginTransaction()
                                     .add(R.id.flContainer, fragment)
                                     .commit();
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            params.setMargins(0, 8, 0, 210);
+                            binding.llSpace.setLayoutParams(params);
                             notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -831,6 +834,9 @@ public class AddAudioActivity extends AppCompatActivity {
                             fragmentManager1.beginTransaction()
                                     .add(R.id.flContainer, fragment)
                                     .commit();
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            params.setMargins(0, 8, 0, 210);
+                            binding.llSpace.setLayoutParams(params);
                             notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -883,6 +889,9 @@ public class AddAudioActivity extends AppCompatActivity {
                         fragmentManager1.beginTransaction()
                                 .add(R.id.flContainer, fragment)
                                 .commit();
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                        params.setMargins(0, 8, 0, 210);
+                        binding.llSpace.setLayoutParams(params);
                         notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();
