@@ -598,7 +598,7 @@ public class MusicService extends Service {
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                                "KOD Dev", NotificationManager.IMPORTANCE_LOW);
+                                "Brain Wellness App", NotificationManager.IMPORTANCE_LOW);
 
                         NotificationManager  notificationManager = context.getSystemService(NotificationManager.class);
                         if (notificationManager != null) {

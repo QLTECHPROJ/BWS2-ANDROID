@@ -669,6 +669,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 }
             }
         }
+//                updateMetaData();
+        buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
     }
 
     private void callNext() {
@@ -745,6 +747,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 }
             }
         }
+//                updateMetaData();
+        buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
     }
 
     private void callRepeatShuffle() {
@@ -1665,8 +1669,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 super.onSkipToNext();
                 if (!url.equalsIgnoreCase("")) {
                     callNext();
-//                updateMetaData();
-                    buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
                 }
             }
 
@@ -1676,8 +1678,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
                 if (!url.equalsIgnoreCase("")) {
                     callPrevious();
-//                updateMetaData();
-                    buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
                 }
             }
 

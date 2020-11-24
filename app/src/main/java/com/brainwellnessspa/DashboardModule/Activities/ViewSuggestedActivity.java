@@ -89,13 +89,7 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                         !AudioFlag.equalsIgnoreCase("SubPlayList") &&
                         !AudioFlag.equalsIgnoreCase("TopCategories")) {
                     if (isMediaStart) {
-                        if (data.equalsIgnoreCase("play")) {
-//                    BWSApplication.showToast("Play", getActivity());
-                            adpater.notifyDataSetChanged();
-                        } else {
-//                    BWSApplication.showToast("pause", getActivity());
-                            adpater.notifyDataSetChanged();
-                        }
+                        adpater.notifyDataSetChanged();
                     }
                 }
             }
@@ -517,6 +511,15 @@ public class ViewSuggestedActivity extends AppCompatActivity {
                     }
                 }
             });
+        }
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
         }
 
         @Override

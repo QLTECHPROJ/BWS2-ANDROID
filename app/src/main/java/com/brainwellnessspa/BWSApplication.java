@@ -227,7 +227,7 @@ public class BWSApplication extends Application {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                        "KOD Dev", NotificationManager.IMPORTANCE_LOW);
+                        "Brain Wellness App", NotificationManager.IMPORTANCE_LOW);
 
                 notificationManager = ctx.getSystemService(NotificationManager.class);
                 if (notificationManager != null) {

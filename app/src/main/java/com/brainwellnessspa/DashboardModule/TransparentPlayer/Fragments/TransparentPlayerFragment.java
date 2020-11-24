@@ -250,10 +250,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     if (myCount == 5) {
                         Log.e("myCount complete", String.valueOf(myCount));
                         callComplete();
-                        Log.e("calll complete errr", "eee");
+                        Log.e("calll complete errr2222", "eee");
                         myCount = 0;
                     }
-                } else if (myProgress == currentDuration && myProgress != 0 && !isPause && diff < 500) {
+                } else if (myProgress == currentDuration && myProgress != 0 && !isPause && diff < 500 && !audioFile.equalsIgnoreCase("")) {
 //                    Log.e("myProgress",String.valueOf(myProgress));
                     myCount++;
                     Log.e("myCount", String.valueOf(myCount));
@@ -261,13 +261,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     if (myCount == 20) {
                         Log.e("myCount complete", String.valueOf(myCount));
                         callComplete();
-                        Log.e("calll complete errr", "eee");
+                        Log.e("calll complete errr1111", "eee");
                         myCount = 0;
                     }
                 }
                 if (currentDuration == totalDuration && currentDuration != 0 && !isStop && !audioFile.equalsIgnoreCase("")) {
                     callComplete();
-                    Log.e("calll complete trans", "trans");
+                    Log.e("call complete errr333", "trans");
 
                 }
                 int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
@@ -981,6 +981,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
             }
         }
+
+        localIntent.putExtra("MyData", "play");
+        localBroadcastManager.sendBroadcast(localIntent);
+//                updateMetaData();
+        buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
     }
 
     private void callNext() {
@@ -1056,6 +1061,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
             }
         }
+        localIntent.putExtra("MyData", "play");
+        localBroadcastManager.sendBroadcast(localIntent);
+        buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
     }
 
     private void addToRecentPlay() {
@@ -1423,10 +1431,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 if (!audioFile.equalsIgnoreCase("")) {
                     callNext();
 //                updateMetaData();
-                    buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
-
-                    localIntent.putExtra("MyData", "play");
-                    localBroadcastManager.sendBroadcast(localIntent);
                 }
                 super.onSkipToNext();
             }
@@ -1435,11 +1439,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             public void onSkipToPrevious() {
                 if (!audioFile.equalsIgnoreCase("")) {
                     callPrev();
-
-                    localIntent.putExtra("MyData", "play");
-                    localBroadcastManager.sendBroadcast(localIntent);
-//                updateMetaData();
-                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
                 }
                 super.onSkipToPrevious();
             }
