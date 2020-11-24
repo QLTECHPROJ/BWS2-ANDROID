@@ -173,9 +173,9 @@ public class LikeAudiosFragment extends Fragment {
                                binding.llError.setVisibility(View.GONE);
                                binding.rvLikesList.setVisibility(View.VISIBLE);
                                adapter = new LikeAudiosAdapter(listModel.getResponseData().getAudio(), getActivity());
+                               binding.rvLikesList.setAdapter(adapter);
                                LocalBroadcastManager.getInstance(getActivity())
                                        .registerReceiver(listener, new IntentFilter("play_pause_Action"));
-                               binding.rvLikesList.setAdapter(adapter);
                            }
                        }
                    }catch (Exception e){

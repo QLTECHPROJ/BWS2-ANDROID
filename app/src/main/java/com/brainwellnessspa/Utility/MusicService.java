@@ -53,6 +53,7 @@ import com.brainwellnessspa.R;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.brainwellnessspa.BWSApplication.ACTION_PREVIUOS;
 import static com.brainwellnessspa.BWSApplication.CHANNEL_ID;
@@ -179,7 +180,7 @@ public class MusicService extends Service {
 
         //unregister BroadcastReceivers
         unregisterReceiver(becomingNoisyReceiver);
-        unregisterReceiver(playNewAudio);
+//        unregisterReceiver(playNewAudio);
 
         //clear cached playlist
 //        new StorageUtil(getApplicationContext()).clearCachedAudioPlaylist();
@@ -349,7 +350,7 @@ public class MusicService extends Service {
         public void onReceive(Context context, Intent intent) {
             //pause audio on ACTION_AUDIO_BECOMING_NOISY
             pauseMedia();
-            buildNotification(PlaybackStatus.PAUSED, context, mainPlayModel);
+//            buildNotification(PlaybackStatus.PAUSED, context, mainPlayModel);
         }
     };
 
@@ -483,31 +484,49 @@ public class MusicService extends Service {
 //    }
 
 
-    public static void buildNotification(PlaybackStatus playbackStatus, Context context, MainPlayModel track) {
+    public static void buildNotification(PlaybackStatus playbackStatus, Context context, List<MainPlayModel> mainPlayTrack, List<AddToQueueModel> addqTrack, String PlayFrom,int postion) {
 
         /**
          * Notification actions -> playbackAction()
          *  0 -> Play
          *  1 -> Pause
          *  2 -> Next track
-         *  3 -> Previous track
-         */
+         *  3 -> Previous track */
+
+        String songName,songImg,songAudioDirection,songAudioFile;
+        if(PlayFrom.equalsIgnoreCase("audioPlay")){
+            songName = mainPlayTrack.get(postion).getName();
+            songImg = mainPlayTrack.get(postion).getImageFile();
+            songAudioDirection = mainPlayTrack.get(postion).getAudioDirection();
+            songAudioFile = mainPlayTrack.get(postion).getAudioFile();
+        }else if(PlayFrom.equalsIgnoreCase("queuePlay")){
+            songName = addqTrack.get(postion).getName();
+            songImg = addqTrack.get(postion).getImageFile();
+            songAudioDirection = addqTrack.get(postion).getAudioDirection();
+            songAudioFile = addqTrack.get(postion).getAudioFile();
+        }else{
+            songName = mainPlayTrack.get(postion).getName();
+            songImg = mainPlayTrack.get(postion).getImageFile();
+            songAudioDirection = mainPlayTrack.get(postion).getAudioDirection();
+            songAudioFile = mainPlayTrack.get(postion).getAudioFile();
+        }
+
         try {
-            getMediaBitmep(track, context, playbackStatus);
+            getMediaBitmep(context, playbackStatus,songName,songImg,songAudioDirection,songAudioFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void getMediaBitmep(MainPlayModel track, Context context, PlaybackStatus playbackStatus) {
+    public static void getMediaBitmep(Context context, PlaybackStatus playbackStatus, String songName, String songImg, String songAudioDirection, String songAudioFile) {
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
-                    if (track.getAudioFile().equalsIgnoreCase("")) {
+                    if (songAudioFile.equalsIgnoreCase("")) {
                         myBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.disclaimer);
                     } else {
-                        URL url = new URL(track.getImageFile());
+                        URL url = new URL(songImg);
                         myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     }
                 } catch (Exception e) {
@@ -554,8 +573,8 @@ public class MusicService extends Service {
                     //create notification
                     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                             .setSmallIcon(R.drawable.ic_music_note)
-                            .setContentTitle(track.getName())
-                            .setContentText(track.getAudioDirection())
+                            .setContentTitle(songName)
+                            .setContentText(songAudioDirection)
                             .setLargeIcon(myBitmap)
                             .setOnlyAlertOnce(true)//show notification for only first time
                             .setShowWhen(false)
@@ -654,9 +673,9 @@ public class MusicService extends Service {
     /**
      * Play new Audio
      */
-    private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
+//    private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
 
 //            //Get the new media index form SharedPreferences
 //            audioIndex = new StorageUtil(getApplicationContext()).loadAudioIndex();
@@ -673,14 +692,14 @@ public class MusicService extends Service {
 //            mediaPlayer.reset();
 //            initMediaPlayer();
 //            updateMetaData();
-            buildNotification(PlaybackStatus.PLAYING, context, mainPlayModel);
-        }
-    };
+//            buildNotification(PlaybackStatus.PLAYING, context, mainPlayModel);
+//        }
+//    };
 
     private void register_playNewAudio() {
         //Register playNewMedia receiver
-        IntentFilter filter = new IntentFilter(Broadcast_PLAY_NEW_AUDIO);
-        registerReceiver(playNewAudio, filter);
+//        IntentFilter filter = new IntentFilter(Broadcast_PLAY_NEW_AUDIO);
+//        registerReceiver(playNewAudio, filter);
     }
 
     private void createChannel() {

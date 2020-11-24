@@ -107,7 +107,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener,/* AudioManager.OnAudioFocusChangeListener,*/ StartDragListener/*, Playable */ {
     ActivityViewQueueBinding binding;
     int position, listSize, startTime = 0;
-    String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name, StrigRemoveName;
+    String IsRepeat, IsShuffle, id, AudioId = "", ComeFromQueue = "", play = "", url, name, StrigRemoveName,playFrom="";
     Context ctx;
     Activity activity;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -273,7 +273,13 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-
+        if(queuePlay){
+            playFrom = "queuePlay";
+        }else if (audioPlay){
+            playFrom = "audioPlay";
+        }else{
+            playFrom = "audioPlay";
+        }
         binding.llBack.setOnClickListener(view -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -614,6 +620,13 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     private void getPrepareShowData(int position) {
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+        if(queuePlay){
+            playFrom = "queuePlay";
+        }else if (audioPlay){
+            playFrom = "audioPlay";
+        }else{
+            playFrom = "audioPlay";
+        }
         if (audioPlay) {
             listSize = mainPlayModelList.size();
         } else if (queuePlay) {
@@ -793,7 +806,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 if (!url.equalsIgnoreCase("")) {
                     callNext();
 //                updateMetaData();
-                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
                 }
             }
 
@@ -804,7 +817,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 if (!url.equalsIgnoreCase("")) {
                     callPrevious();
 //                updateMetaData();
-                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList.get(position));
+                    buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
                 }
             }
 
@@ -1327,6 +1340,13 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+        if(queuePlay){
+            playFrom = "queuePlay";
+        }else if (audioPlay){
+            playFrom = "audioPlay";
+        }else{
+            playFrom = "audioPlay";
+        }
         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
             Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
             }.getType();

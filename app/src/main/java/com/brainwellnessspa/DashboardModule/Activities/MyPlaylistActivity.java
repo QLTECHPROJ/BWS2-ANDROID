@@ -68,7 +68,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     public static int deleteFrg = 0;
     public static int ComeFindAudio = 0;
     ActivityMyPlaylistBinding binding;
-    String UserID, PlaylistID, Download = "", Liked = "";
+    String UserID, PlaylistID, Download = "", Liked = "",PlaylistDesc="",PlaylistName="";
     Context ctx;
     Activity activity;
     public static int comeAddPlaylist = 0;
@@ -85,7 +85,8 @@ public class MyPlaylistActivity extends AppCompatActivity {
     private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
-*//*            if (fileNameList.size() != 0) {
+*/
+  /*            if (fileNameList.size() != 0) {
                 if (remainAudio.size() <= SongListSize) {
                     int total = SongListSize;
                     int remain = remainAudio.size();
@@ -163,6 +164,209 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 ComeFindAudio = 1;
 //                handler1.removeCallbacks(UpdateSongTime1);
                 finish();
+            }
+        });
+        binding.llAddPlaylist.setOnClickListener(view -> {
+            comeAddPlaylist = 1;
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(ctx, AddPlaylistActivity.class);
+            i.putExtra("AudioId", "");
+            i.putExtra("PlaylistID",PlaylistID);
+            startActivity(i);
+        });
+
+        binding.llLikes.setOnClickListener(v -> CallPlaylistLike(PlaylistID));
+        binding.llFind.setOnClickListener(view -> {
+            ComeFindAudio = 2;
+            finish();
+        });
+
+        binding.tvReadMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialog = new Dialog(ctx);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.full_desc_layout);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
+                final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
+                tvDesc.setText(PlaylistDesc);
+
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                        return true;
+                    }
+                    return false;
+                });
+
+                tvClose.setOnClickListener(v -> dialog.dismiss());
+                dialog.show();
+                dialog.setCancelable(false);
+            }
+        });
+        binding.llRename.setOnClickListener(view -> {
+            final Dialog dialog = new Dialog(ctx);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.create_palylist);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
+            final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
+            final TextView tvHeading = dialog.findViewById(R.id.tvHeading);
+            final Button btnSendCode = dialog.findViewById(R.id.btnSendCode);
+            tvHeading.setText(R.string.Rename_your_playlist);
+            btnSendCode.setText(R.string.Save);
+            edtCreate.requestFocus();
+            edtCreate.setText(PlaylistName);
+            int position1 = edtCreate.getText().length();
+            Editable editObj = edtCreate.getText();
+            Selection.setSelection(editObj, position1);
+            btnSendCode.setEnabled(true);
+            btnSendCode.setTextColor(getResources().getColor(R.color.white));
+            btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
+            dialog.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dialog.dismiss();
+                    return true;
+                }
+                return false;
+            });
+
+            TextWatcher popupTextWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    String number = edtCreate.getText().toString().trim();
+                    if (!number.isEmpty()) {
+                        btnSendCode.setEnabled(true);
+                        btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                        btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
+                    } else {
+                        btnSendCode.setEnabled(false);
+                        btnSendCode.setTextColor(getResources().getColor(R.color.white));
+                        btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            };
+
+
+            edtCreate.addTextChangedListener(popupTextWatcher);
+
+            btnSendCode.setOnClickListener(view1 -> {
+                if (BWSApplication.isNetworkConnected(ctx)) {
+                    BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                    Call<RenamePlaylistModel> listCall1 = APIClient.getClient().getRenamePlaylist(UserID, PlaylistID, edtCreate.getText().toString());
+                    listCall1.enqueue(new Callback<RenamePlaylistModel>() {
+                        @Override
+                        public void onResponse(Call<RenamePlaylistModel> call1, Response<RenamePlaylistModel> response1) {
+                            try {
+                                if (response1.isSuccessful()) {
+                                    comeRename = 1;
+                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                    RenamePlaylistModel listModel = response1.body();
+                                    BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<RenamePlaylistModel> call1, Throwable t) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        }
+                    });
+                } else {
+                    BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                }
+
+            });
+            tvCancel.setOnClickListener(v -> dialog.dismiss());
+            dialog.show();
+            dialog.setCancelable(false);
+        });
+
+        binding.llDelete.setOnClickListener(view -> {
+            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+            String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+            String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
+            if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
+                BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", ctx);
+            } else {
+                final Dialog dialog = new Dialog(ctx);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.delete_playlist);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+                final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
+                final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
+                final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
+                tvHeader.setText("Are you sure you want to delete " + PlaylistName + "  playlist?");
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        dialog.dismiss();
+                        Fragment playlistFragment = new PlaylistFragment();
+                        FragmentManager fragmentManager1 = getSupportFragmentManager();
+                        fragmentManager1.beginTransaction()
+                                .add(R.id.flContainer, playlistFragment)
+                                .commit();
+                        Bundle bundle = new Bundle();
+                        playlistFragment.setArguments(bundle);
+                        return true;
+                    }
+                    return false;
+                });
+
+                tvconfirm.setOnClickListener(v -> {
+                    if (BWSApplication.isNetworkConnected(ctx)) {
+                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                        Call<SucessModel> listCall12 = APIClient.getClient().getDeletePlaylist(UserID, PlaylistID);
+                        listCall12.enqueue(new Callback<SucessModel>() {
+                            @Override
+                            public void onResponse(Call<SucessModel> call12, Response<SucessModel> response12) {
+                                try {
+                                    if (response12.isSuccessful()) {
+                                        deleteFrg = 1;
+                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                                        SucessModel listModel = response12.body();
+                                        dialog.dismiss();
+                                        BWSApplication.showToast(listModel.getResponseMessage(), ctx);
+                                        finish();
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<SucessModel> call12, Throwable t) {
+                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            }
+                        });
+                    } else {
+                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
+                    }
+                });
+
+                tvGoBack.setOnClickListener(v -> dialog.dismiss());
+                dialog.show();
+                dialog.setCancelable(false);
             }
         });
         binding.llDownload.setOnClickListener(view -> callDownload());
@@ -443,6 +647,9 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             downloadPlaylistDetails.setLike(model.getResponseData().getLike());
                             binding.tvName.setText(model.getResponseData().getPlaylistName());
 
+                            PlaylistDesc = model.getResponseData().getPlaylistDesc();
+                            PlaylistName = model.getResponseData().getPlaylistName();
+                            PlaylistID = model.getResponseData().getPlaylistID();
                             if (model.getResponseData().getPlaylistMastercat().equalsIgnoreCase("")) {
                                 binding.tvDesc.setVisibility(View.GONE);
                             } else {
@@ -503,29 +710,12 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             Download = model.getResponseData().getDownload();
                             binding.llAddPlaylist.setVisibility(View.VISIBLE);
 //                            getDownloadData();
-                            binding.llAddPlaylist.setOnClickListener(view -> {
-                                comeAddPlaylist = 1;
-                                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                                    return;
-                                }
-                                mLastClickTime = SystemClock.elapsedRealtime();
-                                Intent i = new Intent(ctx, AddPlaylistActivity.class);
-                                i.putExtra("AudioId", "");
-                                i.putExtra("PlaylistID", model.getResponseData().getPlaylistID());
-                                startActivity(i);
-                            });
-
                             if (model.getResponseData().getLike().equalsIgnoreCase("1")) {
                                 binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                             } else if (model.getResponseData().getLike().equalsIgnoreCase("0") ||
                                     model.getResponseData().getLike().equalsIgnoreCase("")) {
                                 binding.ivLike.setImageResource(R.drawable.ic_like_white_icon);
                             }
-                            binding.llLikes.setOnClickListener(v -> CallPlaylistLike(PlaylistID));
-                            binding.llFind.setOnClickListener(view -> {
-                                ComeFindAudio = 2;
-                                finish();
-                            });
 
                             if (model.getResponseData().getPlaylistDesc().equalsIgnoreCase("")) {
                                 binding.tvTitleDec.setVisibility(View.GONE);
@@ -544,34 +734,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             } else {
                                 binding.tvReadMore.setVisibility(View.GONE);
                             }
-
-                            binding.tvReadMore.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    final Dialog dialog = new Dialog(ctx);
-                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                    dialog.setContentView(R.layout.full_desc_layout);
-                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                    final TextView tvDesc = dialog.findViewById(R.id.tvDesc);
-                                    final RelativeLayout tvClose = dialog.findViewById(R.id.tvClose);
-                                    tvDesc.setText(model.getResponseData().getPlaylistDesc());
-
-                                    dialog.setOnKeyListener((v, keyCode, event) -> {
-                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                            dialog.dismiss();
-                                            return true;
-                                        }
-                                        return false;
-                                    });
-
-                                    tvClose.setOnClickListener(v -> dialog.dismiss());
-                                    dialog.show();
-                                    dialog.setCancelable(false);
-                                }
-                            });
-
-                    /*    if (model.getResponseData().getDownload().equalsIgnoreCase("1")) {
+                            /*    if (model.getResponseData().getDownload().equalsIgnoreCase("1")) {
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                             binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                             binding.tvDownload.setTextColor(getResources().getColor(R.color.light_gray));
@@ -584,9 +747,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                             binding.tvDownload.setTextColor(getResources().getColor(R.color.white));
                             binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
                         }*/
-
-
-/*                          binding.llDownload.setOnClickListener(view -> {
+                            /*   binding.llDownload.setOnClickListener(view -> {
                                 if (BWSApplication.isNetworkConnected(ctx)) {
                                     BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     Call<DownloadPlaylistModel> listCall13 = null;
@@ -612,7 +773,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                 }
                             });
 */
-
                             String[] elements = model.getResponseData().getPlaylistSubcat().split(",");
                             List<String> direction = Arrays.asList(elements);
                             DirectionAdapter directionAdapter = new DirectionAdapter(direction, ctx);
@@ -622,166 +782,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                                     DefaultItemAnimator());
                             binding.rvDirlist.setAdapter(directionAdapter);
                             String PlaylistID = model.getResponseData().getPlaylistID();
-                            binding.llRename.setOnClickListener(view -> {
-                                final Dialog dialog = new Dialog(ctx);
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog.setContentView(R.layout.create_palylist);
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue_transparent)));
-                                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                                final EditText edtCreate = dialog.findViewById(R.id.edtCreate);
-                                final TextView tvCancel = dialog.findViewById(R.id.tvCancel);
-                                final TextView tvHeading = dialog.findViewById(R.id.tvHeading);
-                                final Button btnSendCode = dialog.findViewById(R.id.btnSendCode);
-                                tvHeading.setText(R.string.Rename_your_playlist);
-                                btnSendCode.setText(R.string.Save);
-                                edtCreate.requestFocus();
-                                edtCreate.setText(model.getResponseData().getPlaylistName());
-                                int position1 = edtCreate.getText().length();
-                                Editable editObj = edtCreate.getText();
-                                Selection.setSelection(editObj, position1);
-                                btnSendCode.setEnabled(true);
-                                btnSendCode.setTextColor(getResources().getColor(R.color.white));
-                                btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
-                                dialog.setOnKeyListener((v, keyCode, event) -> {
-                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                        dialog.dismiss();
-                                        return true;
-                                    }
-                                    return false;
-                                });
 
-                                TextWatcher popupTextWatcher = new TextWatcher() {
-                                    @Override
-                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                    }
-
-                                    @Override
-                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                        String number = edtCreate.getText().toString().trim();
-                                        if (!number.isEmpty()) {
-                                            btnSendCode.setEnabled(true);
-                                            btnSendCode.setTextColor(getResources().getColor(R.color.white));
-                                            btnSendCode.setBackgroundResource(R.drawable.extra_round_cornor);
-                                        } else {
-                                            btnSendCode.setEnabled(false);
-                                            btnSendCode.setTextColor(getResources().getColor(R.color.white));
-                                            btnSendCode.setBackgroundResource(R.drawable.gray_round_cornor);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void afterTextChanged(Editable s) {
-                                    }
-                                };
-
-
-                                edtCreate.addTextChangedListener(popupTextWatcher);
-
-                                btnSendCode.setOnClickListener(view1 -> {
-                                    if (BWSApplication.isNetworkConnected(ctx)) {
-                                        BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                        Call<RenamePlaylistModel> listCall1 = APIClient.getClient().getRenamePlaylist(UserID, PlaylistID, edtCreate.getText().toString());
-                                        listCall1.enqueue(new Callback<RenamePlaylistModel>() {
-                                            @Override
-                                            public void onResponse(Call<RenamePlaylistModel> call1, Response<RenamePlaylistModel> response1) {
-                                                try {
-                                                    if (response1.isSuccessful()) {
-                                                        comeRename = 1;
-                                                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                                        RenamePlaylistModel listModel = response1.body();
-                                                        BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                                        dialog.dismiss();
-                                                        finish();
-                                                    }
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<RenamePlaylistModel> call1, Throwable t) {
-                                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                            }
-                                        });
-                                    } else {
-                                        BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                                    }
-
-                                });
-                                tvCancel.setOnClickListener(v -> dialog.dismiss());
-                                dialog.show();
-                                dialog.setCancelable(false);
-                            });
-
-                            binding.llDelete.setOnClickListener(view -> {
-                                SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                                boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                                String pID = shared.getString(CONSTANTS.PREF_KEY_PlaylistId, "0");
-                                if (audioPlay && AudioFlag.equalsIgnoreCase("SubPlayList") && pID.equalsIgnoreCase(PlaylistID)) {
-                                    BWSApplication.showToast("Currently this playlist is in player,so you can't delete this playlist as of now", ctx);
-                                } else {
-                                    final Dialog dialog = new Dialog(ctx);
-                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                    dialog.setContentView(R.layout.delete_playlist);
-                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_blue_gray)));
-                                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-                                    final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
-                                    final TextView tvHeader = dialog.findViewById(R.id.tvHeader);
-                                    final RelativeLayout tvconfirm = dialog.findViewById(R.id.tvconfirm);
-                                    tvHeader.setText("Are you sure you want to delete " + model.getResponseData().getPlaylistName() + "  playlist?");
-                                    dialog.setOnKeyListener((v, keyCode, event) -> {
-                                        if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                            dialog.dismiss();
-                                            Fragment playlistFragment = new PlaylistFragment();
-                                            FragmentManager fragmentManager1 = getSupportFragmentManager();
-                                            fragmentManager1.beginTransaction()
-                                                    .add(R.id.flContainer, playlistFragment)
-                                                    .commit();
-                                            Bundle bundle = new Bundle();
-                                            playlistFragment.setArguments(bundle);
-                                            return true;
-                                        }
-                                        return false;
-                                    });
-
-                                    tvconfirm.setOnClickListener(v -> {
-                                        if (BWSApplication.isNetworkConnected(ctx)) {
-                                            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                            Call<SucessModel> listCall12 = APIClient.getClient().getDeletePlaylist(UserID, PlaylistID);
-                                            listCall12.enqueue(new Callback<SucessModel>() {
-                                                @Override
-                                                public void onResponse(Call<SucessModel> call12, Response<SucessModel> response12) {
-                                                    try {
-                                                        if (response12.isSuccessful()) {
-                                                            deleteFrg = 1;
-                                                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                                            SucessModel listModel = response12.body();
-                                                            dialog.dismiss();
-                                                            BWSApplication.showToast(listModel.getResponseMessage(), ctx);
-                                                            finish();
-                                                        }
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onFailure(Call<SucessModel> call12, Throwable t) {
-                                                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                                }
-                                            });
-                                        } else {
-                                            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
-                                        }
-                                    });
-
-                                    tvGoBack.setOnClickListener(v -> dialog.dismiss());
-                                    dialog.show();
-                                    dialog.setCancelable(false);
-                                }
-                            });
 
                         }
                     } catch (Exception e) {
