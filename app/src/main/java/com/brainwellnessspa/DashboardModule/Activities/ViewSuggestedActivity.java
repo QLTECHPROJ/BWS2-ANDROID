@@ -513,16 +513,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             });
         }
         @Override
-        public int getItemViewType(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
         public int getItemCount() {
             return AudiolistsModel.size();
         }
