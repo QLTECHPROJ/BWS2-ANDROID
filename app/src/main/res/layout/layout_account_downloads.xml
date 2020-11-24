@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/_10sdp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="@dimen/_220sdp"
         android:layout_marginRight="@dimen/_20sdp"
         android:orientation="horizontal"
         android:weightSum="1">
@@ -36,6 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:layout_marginRight="@dimen/_66sdp"
             android:layout_marginLeft="@dimen/_22sdp"
             android:layout_weight="0.9"
             android:orientation="vertical"
@@ -46,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:fontFamily="@font/montserrat_semi_bold"
-                android:text="Directions"
+                android:text="My Downloads"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_20sdp" />
 
@@ -59,7 +60,8 @@
                 android:layout_marginTop="@dimen/_14sdp"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
-                android:text="Lorem ipsum dolor sit amet, \nconsetetur sadipscing elitr,\nsed diam nonumy eirmod"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:text="All your downloaded audios &amp; playlists"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 

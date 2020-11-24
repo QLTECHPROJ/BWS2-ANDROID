@@ -287,6 +287,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             handler2.removeCallbacks(UpdateSongTime2);
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
             i.putExtra("PlaylistID", PlaylistID);
+            i.putExtra("PlaylistName", PlaylistName);
             i.putExtra("PlaylistIDImage", PlaylistImage);
             i.putExtra("Liked", "0");
             startActivity(i);
@@ -554,6 +555,18 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                 }
             }
         });*/
+        if (ComeFindAudio == 1) {
+            binding.searchView.clearFocus();
+            searchEditText.setText("");
+            binding.searchView.setQuery("", false);
+            ComeFindAudio = 0;
+        } else if (ComeFindAudio == 2) {
+            binding.searchView.requestFocus();
+            searchEditText.setText("");
+            binding.searchView.setQuery("", false);
+            ComeFindAudio = 0;
+        }
+
         if (deleteFrg == 1) {
             binding.searchView.clearFocus();
             callBack();

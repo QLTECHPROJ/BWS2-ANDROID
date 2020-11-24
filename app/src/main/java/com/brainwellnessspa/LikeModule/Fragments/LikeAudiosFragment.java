@@ -109,6 +109,7 @@ public class LikeAudiosFragment extends Fragment {
             }
         }
     };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_likes, container, false);
@@ -213,32 +214,6 @@ public class LikeAudiosFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            /*UpdateSongTime3 = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        startTime = getStartTime();
-                        myProgress = currentDuration;
-                        currentDuration = getStartTime();
-                        if (currentDuration == 0 && isCompleteStop) {
-                            notifyDataSetChanged();
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-                        } else if (currentDuration >= 1 && !isPause) {
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                        } else if (currentDuration >= 1 && isPause) {
-//                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-                        }
-
-                        if (currentDuration <= 555) {
-                            notifyDataSetChanged();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    handler3.postDelayed(this, 500);
-                }
-            };*/
-
             holder.binding.tvTitle.setText(modelList.get(position).getName());
             holder.binding.tvTime.setText(modelList.get(position).getAudioDuration());
             MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
@@ -258,7 +233,7 @@ public class LikeAudiosFragment extends Fragment {
             if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                 if (myAudioId.equalsIgnoreCase(modelList.get(position).getID())) {
                     songId = myAudioId;
-                    if (isPause) {
+                    if (isPause || !isMediaStart) {
                         holder.binding.equalizerview.stopBars();
                     } else
                         holder.binding.equalizerview.animateBars();
@@ -272,12 +247,10 @@ public class LikeAudiosFragment extends Fragment {
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 }
                 GetMedia();
-//                handler3.postDelayed(UpdateSongTime3, 500);
             } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-//                handler3.removeCallbacks(UpdateSongTime3);
             }
 
             holder.binding.llMenu.setOnClickListener(new View.OnClickListener() {
@@ -363,7 +336,6 @@ public class LikeAudiosFragment extends Fragment {
                     }
 
                     GetMedia();
-//                    handler3.postDelayed(UpdateSongTime3, 500);
                     notifyDataSetChanged();
                 }
             });

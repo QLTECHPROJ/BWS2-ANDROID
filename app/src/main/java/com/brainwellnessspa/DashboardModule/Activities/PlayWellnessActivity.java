@@ -125,8 +125,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     boolean isPlaying = false;
     private long mLastClickTime = 0, totalDuration, currentDuration = 0;
     private Handler handler;
-//    static FancyShowCaseQueue queue1;
-//    static FancyShowCaseView fancyShowCaseView31, fancyShowCaseView21, fancyShowCaseView11;
+    FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
+    FancyShowCaseQueue queue;
     //    private Handler handler1;
     //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -314,7 +314,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         super.onCreate(savedInstanceState);
 //        overridePendingTransition(R.anim.enter, R.anim.exit);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_play_wellness);
-
         handler = new Handler();
 //        handler1 = new Handler();
         ctx = PlayWellnessActivity.this;
@@ -349,6 +348,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             handler1.removeCallbacks(UpdateSongTime1);
         }*/
         callRepeatShuffle();
+
+//        showTooltiop();
 
         if (isMediaStart /*&& !audioFile.equalsIgnoreCase("")*/) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
@@ -465,43 +466,15 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         });
     }
 
-/*
-    private void showTooltiop1() {
-        Animation enterAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_in_top);
-        Animation exitAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_out_bottom);
-
-        fancyShowCaseView21 = new FancyShowCaseView.Builder(activity)
-                .customView(R.layout.layout_player_menu, (OnViewInflateListener) view -> {
-                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
-                    rlNext.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            fancyShowCaseView21.hide();
-                        }
-                    });
-                }).focusShape(FocusShape.ROUNDED_RECTANGLE).enterAnimation(enterAnimation).exitAnimation(exitAnimation).fitSystemWindows(true).closeOnTouch(false).build();
-
-        fancyShowCaseView31 = new FancyShowCaseView.Builder(activity)
-                .customView(R.layout.layout_player_directions, view -> {
-                    view.findViewById(R.id.rlSearch);
-                   */
-/* RelativeLayout rlDone = view.findViewById(R.id.rlDone);
-                    rlDone.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            fancyShowCaseView31.hide();
-                        }
-                    });*//*
-
-                })
-                .focusShape(FocusShape.ROUNDED_RECTANGLE).enterAnimation(enterAnimation).exitAnimation(exitAnimation).closeOnTouch(false).build();
+    private void showTooltiop() {
+        Animation enterAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
+        Animation exitAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_out_bottom);
 
         fancyShowCaseView11 = new FancyShowCaseView.Builder(activity)
                 .customView(R.layout.layout_player_menu, view -> {
                     RelativeLayout rlNext = view.findViewById(R.id.rlNext);
                     rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
-                   */
-/* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
+                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
                     RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
                     rlShowMeHow.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -512,28 +485,45 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     rlNoThanks.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            queue1.cancel(true);
+                            queue.cancel(true);
                         }
-                    });*//*
+                    });*/
 
                 }).closeOnTouch(false)
                 .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .enterAnimation(enterAnimation)
-                .exitAnimation(exitAnimation)
-                .fitSystemWindows(true).focusOn(binding.llMore)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                .focusOn(binding.llMore).closeOnTouch(false)
                 .build();
 
-        queue1 = new FancyShowCaseQueue()
+        fancyShowCaseView21 = new FancyShowCaseView.Builder(activity)
+                .customView(R.layout.layout_player_directions, (OnViewInflateListener) view -> {
+                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                    rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
+                }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation)
+                .exitAnimation(exitAnimation).focusOn(binding.llAction)
+                .closeOnTouch(false).build();
+
+        fancyShowCaseView31 = new FancyShowCaseView.Builder(activity)
+                .customView(R.layout.layout_player_options, view -> {
+                    view.findViewById(R.id.rlSearch);
+                    RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                    rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
+                })
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                .focusOn(binding.llBottom).closeOnTouch(false).build();
+
+
+        queue = new FancyShowCaseQueue()
                 .add(fancyShowCaseView11)
                 .add(fancyShowCaseView21)
                 .add(fancyShowCaseView31);
-     */
-/*   queue1.show();
-        IsRegisters = "false";
-        IsRegisters1 = "false";*//*
+        queue.show();
+       /* IsRegisters = "false";
+        IsRegisters1 = "false";*/
 
     }
-*/
 
     private void callPause() {
         handler.removeCallbacks(UpdateSongTime);

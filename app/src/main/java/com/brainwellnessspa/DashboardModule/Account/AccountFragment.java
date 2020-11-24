@@ -18,7 +18,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -57,6 +60,10 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import me.toptas.fancyshowcase.FancyShowCaseQueue;
+import me.toptas.fancyshowcase.FancyShowCaseView;
+import me.toptas.fancyshowcase.FocusShape;
+import me.toptas.fancyshowcase.listener.OnViewInflateListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -79,6 +86,8 @@ public class AccountFragment extends Fragment {
     public static boolean logout = false;
     FragmentAccountBinding binding;
     String UserID, MobileNo;
+    FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
+    FancyShowCaseQueue queue;
     private long mLastClickTime = 0;
 
     @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
@@ -102,7 +111,7 @@ public class AccountFragment extends Fragment {
         profileViewData(getActivity());
 
         binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
-
+//        showTooltiop();
         binding.llDownloads.setOnClickListener(view12 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -251,6 +260,64 @@ public class AccountFragment extends Fragment {
         ComeScreenAccount = 1;
         comefromDownload = "0";
         profileViewData(getActivity());
+    }
+
+    private void showTooltiop() {
+        Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
+        Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
+
+        fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
+                .customView(R.layout.layout_account_downloads, view -> {
+                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                    rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
+                    RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
+                    rlShowMeHow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fancyShowCaseView11.hide();
+                        }
+                    });
+                    rlNoThanks.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            queue.cancel(true);
+                        }
+                    });*/
+
+                }).closeOnTouch(false)
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                .focusOn(binding.llDownloads).closeOnTouch(false)
+                .build();
+
+        fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
+                .customView(R.layout.layout_account_billingorder, (OnViewInflateListener) view -> {
+                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                    rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
+                }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation)
+                .exitAnimation(exitAnimation).focusOn(binding.llBillingOrder)
+                .closeOnTouch(false).build();
+
+        fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
+                .customView(R.layout.layout_account_resources, view -> {
+                    view.findViewById(R.id.rlSearch);
+                    RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                    rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
+                })
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                .focusOn(binding.llResource).closeOnTouch(false).build();
+
+
+        queue = new FancyShowCaseQueue()
+                .add(fancyShowCaseView11)
+                .add(fancyShowCaseView21)
+                .add(fancyShowCaseView31);
+        queue.show();
+       /* IsRegisters = "false";
+        IsRegisters1 = "false";*/
     }
 
     void clearData(Dialog dialog) {

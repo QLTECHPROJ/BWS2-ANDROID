@@ -1,11 +1,13 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,14 +73,38 @@ public class AddAudioActivity extends AppCompatActivity {
     SerachListAdpater adpater;
     EditText searchEditText;
     Activity activity;
+    SuggestedAdpater adapter;
     public static boolean addToSearch = false;
     public static String MyPlaylistIds = "";
     public static String PlaylistIDMS = "";
-//    Handler handler3;
+    //    Handler handler3;
     int startTime;
     private long currentDuration = 0;
     long myProgress = 0, diff = 0;
 //    private Runnable UpdateSongTime3;
+
+    private BroadcastReceiver listener = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra("MyData")) {
+                String data = intent.getStringExtra("MyData");
+                Log.d("play_pause_Action", data);
+                SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
+                if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
+                    if (isMediaStart) {
+                        if (data.equalsIgnoreCase("play")) {
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +112,6 @@ public class AddAudioActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_audio);
         ctx = AddAudioActivity.this;
         activity = AddAudioActivity.this;
-//        handler3 = new Handler();
         if (getIntent().getExtras() != null) {
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
         }
@@ -139,6 +165,12 @@ public class AddAudioActivity extends AppCompatActivity {
         binding.rvPlayList.setItemAnimator(new DefaultItemAnimator());
         binding.rvPlayList.setLayoutManager(manager);
         prepareSuggestedData();
+    }
+
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(AddAudioActivity.this).unregisterReceiver(listener);
+        super.onPause();
     }
 
     private void callback() {
@@ -219,8 +251,8 @@ public class AddAudioActivity extends AppCompatActivity {
                             SuggestedModel listModel = response.body();
                             binding.tvSuggestedAudios.setText(R.string.Recommended_Audios);
                             binding.tvSAViewAll.setVisibility(View.VISIBLE);
-                            SuggestedAdpater suggestedAdpater = new SuggestedAdpater(listModel.getResponseData(), ctx);
-                            binding.rvSuggestedList.setAdapter(suggestedAdpater);
+                            adapter = new SuggestedAdpater(listModel.getResponseData(), ctx);
+                            binding.rvSuggestedList.setAdapter(adapter);
 
                             binding.tvSAViewAll.setOnClickListener(view -> {
                                 Intent i = new Intent(ctx, ViewSuggestedActivity.class);
@@ -337,32 +369,7 @@ public class AddAudioActivity extends AppCompatActivity {
                 holder.binding.llRemoveAudio.setVisibility(View.VISIBLE);
                 holder.binding.equalizerview.setVisibility(View.GONE);
 
-/*
-                UpdateSongTime3 = new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            startTime = getStartTime();
-                            myProgress = currentDuration;
-                            currentDuration = getStartTime();
-                            if (currentDuration == 0 && isCompleteStop) {
-                                notifyDataSetChanged();
-                            } else if (currentDuration >= 1 && !isPause) {
-                            } else if (currentDuration >= 1 && isPause) {
-                            }
-
-                            if (currentDuration <= 555) {
-                                notifyDataSetChanged();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        handler3.postDelayed(this, 500);
-                    }
-                };
-*/
-
-               /* SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                 boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -383,13 +390,11 @@ public class AddAudioActivity extends AppCompatActivity {
                         holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                         holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     }
-                    handler3.postDelayed(UpdateSongTime3, 500);
                 } else {
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-                    handler3.removeCallbacks(UpdateSongTime3);
-                }*/
+                }
 
                 holder.binding.llRemoveAudio.setOnClickListener(view -> {
                     if (modelList.get(position).getIsLock().equalsIgnoreCase("1")) {
@@ -514,8 +519,7 @@ public class AddAudioActivity extends AppCompatActivity {
                             fragmentManager1.beginTransaction()
                                     .add(R.id.flContainer, fragment)
                                     .commit();
-                           /* handler3.postDelayed(UpdateSongTime3, 500);
-                            notifyDataSetChanged();*/
+                            notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -730,35 +734,15 @@ public class AddAudioActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.binding.tvTitle.setText(listModel.get(position).getName());
             holder.binding.tvTime.setText(listModel.get(position).getAudioDuration());
-            holder.binding.equalizerview.setVisibility(View.GONE);
-/*
-            UpdateSongTime3 = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        startTime = getStartTime();
-                        myProgress = currentDuration;
-                        currentDuration = getStartTime();
-                        if (currentDuration == 0 && isCompleteStop) {
-                            notifyDataSetChanged();
-                        } else if (currentDuration >= 1 && !isPause) {
-                        } else if (currentDuration >= 1 && isPause) {
-                        }
-
-                        if (currentDuration <= 555) {
-                            notifyDataSetChanged();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    handler3.postDelayed(this, 500);
-                }
-            };
-*/
-            holder.binding.equalizerview.setVisibility(View.GONE);
-            holder.binding.llMainLayout.setBackgroundResource(R.color.white);
-            holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-          /*  SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                    1, 1, 0.12f, 0);
+            holder.binding.cvImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+            holder.binding.cvImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+            holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
+            Glide.with(ctx).load(listModel.get(position).getImageFile()).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
+            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+            SharedPreferences sharedzw = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             boolean audioPlayz = sharedzw.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
             AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
@@ -766,54 +750,38 @@ public class AddAudioActivity extends AppCompatActivity {
                     !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                 if (myAudioId.equalsIgnoreCase(listModel.get(position).getID())) {
                     songId = myAudioId;
-                    if (isPause) {
+                    if (isPause || !isMediaStart) {
                         holder.binding.equalizerview.stopBars();
                     } else
                         holder.binding.equalizerview.animateBars();
                     holder.binding.equalizerview.setVisibility(View.VISIBLE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.highlight_background);
                     holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
-                    holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
                 } else {
                     holder.binding.equalizerview.setVisibility(View.GONE);
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 }
-//                handler3.postDelayed(UpdateSongTime3, 500);
             } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-//                handler3.removeCallbacks(UpdateSongTime3);
-            }*/
-
-            MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
-                    1, 1, 0.12f, 0);
-            holder.binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
-            holder.binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-            holder.binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(ctx).load(listModel.get(position).getImageFile()).thumbnail(0.05f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
-            holder.binding.ivIcon.setImageResource(R.drawable.add_icon);
+            }
 
             if (listModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                 if (listModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
                 } else if (listModel.get(position).getIsPlay().equalsIgnoreCase("0")
                         || listModel.get(position).getIsPlay().equalsIgnoreCase("")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                 }
             } else if (listModel.get(position).getIsLock().equalsIgnoreCase("0")
                     || listModel.get(position).getIsLock().equalsIgnoreCase("")) {
-                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
             holder.binding.llMainLayoutForPlayer.setOnClickListener(view -> {
                 if (listModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     if (listModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
                         try {
                             player = 1;
@@ -856,19 +824,16 @@ public class AddAudioActivity extends AppCompatActivity {
                             fragmentManager1.beginTransaction()
                                     .add(R.id.flContainer, fragment)
                                     .commit();
-                          /*  handler3.postDelayed(UpdateSongTime3, 500);
-                            notifyDataSetChanged();*/
+                            notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else if (listModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModel.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
                     }
                 } else if (listModel.get(position).getIsLock().equalsIgnoreCase("0")
                         || listModel.get(position).getIsLock().equalsIgnoreCase("")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
                     try {
                         player = 1;
@@ -911,8 +876,7 @@ public class AddAudioActivity extends AppCompatActivity {
                         fragmentManager1.beginTransaction()
                                 .add(R.id.flContainer, fragment)
                                 .commit();
-                        /*handler3.postDelayed(UpdateSongTime3, 500);
-                        notifyDataSetChanged();*/
+                        notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -922,7 +886,6 @@ public class AddAudioActivity extends AppCompatActivity {
             holder.binding.llRemoveAudio.setOnClickListener(view -> {
                 if (listModel.get(position).getIsLock().equalsIgnoreCase("1")) {
                     if (listModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
                         String AudioID = listModel.get(position).getID();
                         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -940,7 +903,6 @@ public class AddAudioActivity extends AppCompatActivity {
                         }
                     } else if (listModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModel.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
                         Intent i = new Intent(ctx, MembershipChangeActivity.class);
                         i.putExtra("ComeFrom", "Plan");
@@ -948,7 +910,6 @@ public class AddAudioActivity extends AppCompatActivity {
                     }
                 } else if (listModel.get(position).getIsLock().equalsIgnoreCase("2")) {
                     if (listModel.get(position).getIsPlay().equalsIgnoreCase("1")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                         holder.binding.ivLock.setVisibility(View.GONE);
                         String AudioID = listModel.get(position).getID();
                         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -966,7 +927,6 @@ public class AddAudioActivity extends AppCompatActivity {
                         }
                     } else if (listModel.get(position).getIsPlay().equalsIgnoreCase("0")
                             || listModel.get(position).getIsPlay().equalsIgnoreCase("")) {
-                        holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                         holder.binding.ivLock.setVisibility(View.VISIBLE);
                         BWSApplication.showToast("Please re-activate your membership plan", ctx);
                     }

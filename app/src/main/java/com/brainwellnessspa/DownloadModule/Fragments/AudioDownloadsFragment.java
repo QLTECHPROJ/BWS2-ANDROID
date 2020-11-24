@@ -305,29 +305,7 @@ public class AudioDownloadsFragment extends Fragment {
                     }
                 }
             };
-       /* UpdateSongTime3 = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    startTime = getStartTime();
-                    myProgress = currentDuration;
-                    currentDuration = getStartTime();
-                    if (currentDuration == 0 && isCompleteStop) {
-                        notifyDataSetChanged();
-                    } else if (currentDuration >= 1 && !isPause) {
-                    } else if (currentDuration >= 1 && isPause) {
-                    }
 
-                    if(currentDuration <= 555){
-                        notifyDataSetChanged();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                handler3.postDelayed(this, 500);
-            }
-        };
-*/
             if (fileNameList.size() != 0) {
                 for (int i = 0; i < fileNameList.size(); i++) {
                     if (fileNameList.get(i).equalsIgnoreCase(listModelList.get(position).getName()) && playlistDownloadId.get(i).equalsIgnoreCase("")) {
@@ -366,13 +344,10 @@ public class AudioDownloadsFragment extends Fragment {
             holder.binding.ivBackgroundImage.setImageResource(R.drawable.ic_image_bg);
             comefromDownload = "1";
             if (IsLock.equalsIgnoreCase("1")) {
-                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
             } else if (IsLock.equalsIgnoreCase("2")) {
-                holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                 holder.binding.ivLock.setVisibility(View.VISIBLE);
             } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 holder.binding.ivLock.setVisibility(View.GONE);
             }
 
@@ -383,7 +358,7 @@ public class AudioDownloadsFragment extends Fragment {
             if (audioPlayz && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                 if (myAudioId.equalsIgnoreCase(listModelList.get(position).getID())) {
                     songId = myAudioId;
-                    if (isPause) {
+                    if (isPause || !isMediaStart) {
                         holder.binding.equalizerview.stopBars();
                     } else
                         holder.binding.equalizerview.animateBars();
@@ -396,28 +371,23 @@ public class AudioDownloadsFragment extends Fragment {
                     holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                     holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                 }
-//            handler3.postDelayed(UpdateSongTime3, 500);
             } else {
                 holder.binding.equalizerview.setVisibility(View.GONE);
                 holder.binding.llMainLayout.setBackgroundResource(R.color.white);
                 holder.binding.ivBackgroundImage.setVisibility(View.GONE);
-//            handler3.removeCallbacks(UpdateSongTime3);
             }
 
             holder.binding.llMainLayout.setOnClickListener(view -> {
                 if (IsLock.equalsIgnoreCase("1")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                     Intent i = new Intent(ctx, MembershipChangeActivity.class);
                     i.putExtra("ComeFrom", "Plan");
                     ctx.startActivity(i);
                 } else if (IsLock.equalsIgnoreCase("2")) {
-                    holder.binding.ivBackgroundImage.setVisibility(View.VISIBLE);
                     holder.binding.ivLock.setVisibility(View.VISIBLE);
                     BWSApplication.showToast("Please re-activate your membership plan", ctx);
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     comefromDownload = "1";
-                    holder.binding.ivBackgroundImage.setVisibility(View.GONE);
                     holder.binding.ivLock.setVisibility(View.GONE);
                     SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                     boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);

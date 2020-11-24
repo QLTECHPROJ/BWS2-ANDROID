@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/_10sdp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="@dimen/_220sdp"
         android:layout_marginRight="@dimen/_20sdp"
         android:orientation="horizontal"
         android:weightSum="1">
@@ -37,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_marginLeft="@dimen/_22sdp"
+            android:layout_marginRight="@dimen/_66sdp"
             android:layout_weight="0.9"
             android:orientation="vertical"
             android:paddingRight="@dimen/_5sdp">
@@ -46,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:fontFamily="@font/montserrat_semi_bold"
-                android:text="Directions"
+                android:text="Resources"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_20sdp" />
 
@@ -59,12 +60,13 @@
                 android:layout_marginTop="@dimen/_14sdp"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
-                android:text="Lorem ipsum dolor sit amet, \nconsetetur sadipscing elitr,\nsed diam nonumy eirmod"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:text="Our recommended resources for your development"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 
             <RelativeLayout
-                android:id="@+id/rlNext"
+                android:id="@+id/rlDone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
@@ -81,7 +83,7 @@
                     android:paddingTop="@dimen/_8sdp"
                     android:paddingRight="@dimen/_25sdp"
                     android:paddingBottom="@dimen/_8sdp"
-                    android:text="Next"
+                    android:text="Done"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_18sdp" />

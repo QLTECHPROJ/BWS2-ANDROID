@@ -187,6 +187,7 @@ public class LikePlaylistsFragment extends Fragment {
                 public void onClick(View v) {
                     Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
                     i.putExtra("PlaylistID", modelList.get(position).getPlaylistId());
+                    i.putExtra("PlaylistName", modelList.get(position).getPlaylistName());
                     i.putExtra("PlaylistIDImage", modelList.get(position).getPlaylistImage());
                     i.putExtra("Liked", "1");
                     startActivity(i);

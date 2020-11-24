@@ -45,8 +45,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
+                android:layout_marginRight="@dimen/_33sdp"
                 android:fontFamily="@font/montserrat_semi_bold"
-                android:text="Directions"
+                android:text="Like, Repeat, Shuffle, Download, Go to queue"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_20sdp" />
 
@@ -59,12 +60,14 @@
                 android:layout_marginTop="@dimen/_14sdp"
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
-                android:text="Lorem ipsum dolor sit amet, \nconsetetur sadipscing elitr,\nsed diam nonumy eirmod"
+                android:layout_marginRight="@dimen/_33sdp"
+                android:lineSpacingExtra="@dimen/_4sdp"
+                android:text="Let's you customise you audio as per your preferences and enhance your experience"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 
             <RelativeLayout
-                android:id="@+id/rlNext"
+                android:id="@+id/rlDone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
@@ -81,7 +84,7 @@
                     android:paddingTop="@dimen/_8sdp"
                     android:paddingRight="@dimen/_25sdp"
                     android:paddingBottom="@dimen/_8sdp"
-                    android:text="Next"
+                    android:text="Done"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_18sdp" />

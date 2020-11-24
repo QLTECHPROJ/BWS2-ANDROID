@@ -443,7 +443,6 @@ private BroadcastReceiver listener = new BroadcastReceiver() {
 
     @Override
     public void onBackPressed() {
-
         LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener);
         finish();
     }
@@ -590,32 +589,6 @@ private BroadcastReceiver listener = new BroadcastReceiver() {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolders holder, int position) {
-            /*UpdateSongTime3 = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        startTime = getStartTime();
-                        myProgress = currentDuration;
-                        currentDuration = getStartTime();
-                        if (currentDuration == 0 && isCompleteStop) {
-                            notifyDataSetChanged();
-                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-                        }  else if (currentDuration >= 1 && !isPause) {
-                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
-                        } else if (currentDuration >= 1 && isPause) {
-                            binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
-                        }
-
-                        if(currentDuration <= 555){
-                            notifyDataSetChanged();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    handler3.postDelayed(this, 500);
-                }
-            };*/
-
             final List<DownloadAudioDetails> mData = listFilterData;
             holder.binding.tvTitleA.setText(mData.get(position).getName());
             holder.binding.tvTimeA.setText(mData.get(position).getAudioDuration());
@@ -639,7 +612,7 @@ private BroadcastReceiver listener = new BroadcastReceiver() {
                 if (audioPlayz && AudioFlag.equalsIgnoreCase("Downloadlist") && pIDz.equalsIgnoreCase(PlaylistName)) {
                     if(myAudioId.equalsIgnoreCase(mData.get(position).getID())){
                         songId = myAudioId;
-                        if (isPause) {
+                        if (isPause || !isMediaStart) {
                             holder.binding.equalizerview.stopBars();
                         } else
                             holder.binding.equalizerview.animateBars();

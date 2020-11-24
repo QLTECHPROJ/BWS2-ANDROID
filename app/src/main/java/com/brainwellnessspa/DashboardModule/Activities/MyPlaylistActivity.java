@@ -158,6 +158,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         getPrepareData();
         downloadAudioDetailsList = GetAllMedia();
         downloadPlaylistDetailsList = GetPlaylistDetail();
+
         binding.llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,6 +167,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         binding.llAddPlaylist.setOnClickListener(view -> {
             comeAddPlaylist = 1;
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -179,6 +181,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         });
 
         binding.llLikes.setOnClickListener(v -> CallPlaylistLike(PlaylistID));
+
         binding.llFind.setOnClickListener(view -> {
             ComeFindAudio = 2;
             finish();
@@ -209,6 +212,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 dialog.setCancelable(false);
             }
         });
+
         binding.llRename.setOnClickListener(view -> {
             final Dialog dialog = new Dialog(ctx);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -369,6 +373,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
                 dialog.setCancelable(false);
             }
         });
+
         binding.llDownload.setOnClickListener(view -> callDownload());
     }
 
@@ -409,6 +414,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
           getMediaByPer st = new getMediaByPer();
           st.execute();
       }*/
+
 /*
     private void getDownloadData() {
         try {

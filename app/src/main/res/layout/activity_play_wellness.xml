@@ -25,21 +25,21 @@
                     android:id="@+id/llFirst"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:layout_marginTop="@dimen/_16sdp"
                     android:layout_weight="0.13"
+                    android:paddingTop="@dimen/_16sdp"
                     android:weightSum="1">
 
                     <LinearLayout
                         android:id="@+id/llBack"
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.16">
+                        android:layout_weight="0.16"
+                        android:paddingTop="@dimen/_10sdp"
+                        android:paddingLeft="@dimen/_16sdp">
 
                         <ImageView
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
-                            android:layout_marginTop="@dimen/_10sdp"
                             android:src="@drawable/ic_down_arrow" />
                     </LinearLayout>
 
@@ -54,9 +54,9 @@
                             android:id="@+id/tvNowPlaying"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_6sdp"
                             android:fontFamily="@font/montserrat_semi_bold"
                             android:gravity="center"
+                            android:paddingTop="@dimen/_6sdp"
                             android:text="@string/NOW_PLAYING_FROM"
                             android:textColor="@color/light_black"
                             android:textSize="@dimen/_12sdp" />
@@ -82,15 +82,16 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.18"
                         android:clickable="false"
-                        android:gravity="right">
+                        android:gravity="right"
+                        android:paddingTop="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_16sdp">
 
                         <ImageView
                             android:id="@+id/ivMore"
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
-                            android:layout_marginTop="@dimen/_10sdp"
-                            app:tint="@color/light_gray"
-                            android:src="@drawable/ic_menu_icon" />
+                            android:src="@drawable/ic_menu_icon"
+                            app:tint="@color/light_gray" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -256,6 +257,7 @@
                 </RelativeLayout>
 
                 <LinearLayout
+                    android:id="@+id/llAction"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_above="@id/llBottom"
