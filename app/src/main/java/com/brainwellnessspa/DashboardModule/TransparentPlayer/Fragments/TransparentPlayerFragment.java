@@ -50,7 +50,6 @@ import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MusicService;
-import com.brainwellnessspa.Utility.MyService;
 import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.brainwellnessspa.databinding.FragmentTransparentPlayerBinding;
 import com.bumptech.glide.Glide;
@@ -348,7 +347,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
         try {
             ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MusicService.class));
-            ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MyService.class));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1441,13 +1439,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
 
 
-            @Override
-            public void onStop() {
-                super.onStop();
+//            @Override
+//            public void onStop() {
+//                super.onStop();
 //                    removeNotification();
 //                    //Stop the service
 //                    stopSelf();
-            }
+//            }
 
 /*            @Override
             public void onSeekTo(long position) {

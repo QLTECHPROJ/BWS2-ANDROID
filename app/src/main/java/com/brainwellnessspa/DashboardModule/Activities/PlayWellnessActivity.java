@@ -51,15 +51,13 @@ import com.brainwellnessspa.Services.OnClearFromRecentService;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.Utility.Playable;
+import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.brainwellnessspa.databinding.ActivityPlayWellnessBinding;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -107,7 +105,6 @@ import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.savePrefQueue;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 import static com.brainwellnessspa.Utility.MusicService.transportControls;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, Playable, AudioManager.OnAudioFocusChangeListener, OnProgressListener*/ {
     ActivityPlayWellnessBinding binding;
@@ -347,6 +344,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
         }*/
+        try {
+            ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MusicService.class));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         callRepeatShuffle();
 
 //        showTooltiop();
@@ -1678,13 +1680,13 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 }
             }
 
-            @Override
-            public void onStop() {
-                super.onStop();
+//            @Override
+//            public void onStop() {
+//                super.onStop();
 //                    removeNotification();
 //                    //Stop the service
 //                    stopSelf();
-            }
+//            }
 
 //            @Override
 //            public void onSeekTo(long position) {
