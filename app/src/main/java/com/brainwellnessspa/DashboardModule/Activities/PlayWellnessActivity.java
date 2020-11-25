@@ -124,6 +124,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     private Handler handler;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
+    PowerManager.WakeLock wakeLock,wakeLock1,wakeLock2,wakeLock3,wakeLock4;
     //    private Handler handler1;
     //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -350,19 +351,19 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             e.printStackTrace();
         }
         PowerManager powerManager = (PowerManager) ctx.getSystemService(POWER_SERVICE);
-        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
         wakeLock.acquire();
-        PowerManager.WakeLock wakeLock1 = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,
+        wakeLock1 = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
         wakeLock1.acquire();
-        PowerManager.WakeLock wakeLock2 = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
+         wakeLock2 = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
         wakeLock2.acquire();
-        PowerManager.WakeLock wakeLock3 = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
+         wakeLock3 = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
         wakeLock3.acquire();
-        PowerManager.WakeLock wakeLock4 = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
+        wakeLock4 = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
         wakeLock4.acquire();
         callRepeatShuffle();
@@ -2784,6 +2785,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     @Override
     protected void onDestroy() {
         unregisterReceiver(playNewAudio);
+        wakeLock.release();
+        wakeLock1.release();
+        wakeLock2.release();
+        wakeLock3.release();
+        wakeLock4.release();
         super.onDestroy();
 //        releasePlayer();
     }
