@@ -31,7 +31,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
-import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.Utility.MusicService;
 import com.bumptech.glide.Glide;

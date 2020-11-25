@@ -126,8 +126,12 @@ public class AccountFragment extends Fragment {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
-            Intent i = new Intent(getActivity(), LikeActivity.class);
-            startActivity(i);
+            if (BWSApplication.isNetworkConnected(getActivity())) {
+                Intent i = new Intent(getActivity(), LikeActivity.class);
+                startActivity(i);
+            } else {
+                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
+            }
         });
 
         binding.llInvoices.setOnClickListener(view14 -> {

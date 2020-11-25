@@ -9,8 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -60,6 +63,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import me.toptas.fancyshowcase.FancyShowCaseQueue;
+import me.toptas.fancyshowcase.FancyShowCaseView;
+import me.toptas.fancyshowcase.FocusShape;
+import me.toptas.fancyshowcase.listener.OnViewInflateListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -85,6 +92,8 @@ public class AudioFragment extends Fragment {
     FragmentAudioBinding binding;
     String UserID, AudioFlag, expDate;
     List<String> fileNameList;
+    FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
+    FancyShowCaseQueue queue;
     List<String> audioFile, playlistDownloadId;
     List<DownloadAudioDetails> downloadAudioDetailsList;
 
@@ -130,7 +139,7 @@ public class AudioFragment extends Fragment {
                 }
             }
         }
-
+//        showTooltiop();
         prepareData();
         return view;
     }
@@ -399,6 +408,64 @@ public class AudioFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void showTooltiop() {
+        Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
+        Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
+
+        fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
+                .customView(R.layout.layout_audio_librarys, view -> {
+                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                    rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
+                    RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
+                    rlShowMeHow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fancyShowCaseView11.hide();
+                        }
+                    });
+                    rlNoThanks.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            queue.cancel(true);
+                        }
+                    });*/
+
+                }).closeOnTouch(false)
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                /*.focusOn(binding.llDownloads)*/.closeOnTouch(false)
+                .build();
+
+        fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
+                .customView(R.layout.layout_audio_addplaylist, (OnViewInflateListener) view -> {
+                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                    rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
+                }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation)
+                .exitAnimation(exitAnimation)/*.focusOn(binding.llBillingOrder)*/
+                .closeOnTouch(false).build();
+
+        fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
+                .customView(R.layout.layout_audio_categories, view -> {
+                    view.findViewById(R.id.rlSearch);
+                    RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                    rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
+                })
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                /*.focusOn(binding.llResource)*/.closeOnTouch(false).build();
+
+
+        queue = new FancyShowCaseQueue()
+                .add(fancyShowCaseView11)
+                .add(fancyShowCaseView21)
+                .add(fancyShowCaseView31);
+        queue.show();
+       /* IsRegisters = "false";
+        IsRegisters1 = "false";*/
     }
 
     @Override
