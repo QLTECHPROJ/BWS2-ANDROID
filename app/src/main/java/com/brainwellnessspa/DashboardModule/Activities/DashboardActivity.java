@@ -33,6 +33,7 @@ import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeS
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 import static com.brainwellnessspa.Utility.MusicService.NOTIFICATION_ID;
+import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -72,6 +73,8 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        deleteCache(DashboardActivity.this);
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
@@ -163,6 +166,7 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
     @Override
     public void onBackPressed() {
         if (invoiceToDashboard == 1) {
+            deleteCache(DashboardActivity.this);
             finishAffinity();
         }
 
@@ -185,6 +189,7 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        deleteCache(DashboardActivity.this);
         mTelephonyMgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);

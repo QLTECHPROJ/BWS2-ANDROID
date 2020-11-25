@@ -271,7 +271,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.searchView.clearFocus();
             callBack();
         });
-        showTooltiop();
+//        showTooltiop();
         if (BWSApplication.isNetworkConnected(getActivity()) && !MyDownloads.equalsIgnoreCase("1")) {
             binding.llMore.setVisibility(View.VISIBLE);
             binding.llMore.setClickable(true);
