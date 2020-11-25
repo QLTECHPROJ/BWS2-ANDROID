@@ -349,6 +349,22 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         } catch (Exception e) {
             e.printStackTrace();
         }
+        PowerManager powerManager = (PowerManager) ctx.getSystemService(POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                "com.brainwellnessspa::MyWakelockTag");
+        wakeLock.acquire();
+        PowerManager.WakeLock wakeLock1 = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,
+                "com.brainwellnessspa::MyWakelockTag");
+        wakeLock1.acquire();
+        PowerManager.WakeLock wakeLock2 = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
+                "com.brainwellnessspa::MyWakelockTag");
+        wakeLock2.acquire();
+        PowerManager.WakeLock wakeLock3 = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
+                "com.brainwellnessspa::MyWakelockTag");
+        wakeLock3.acquire();
+        PowerManager.WakeLock wakeLock4 = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
+                "com.brainwellnessspa::MyWakelockTag");
+        wakeLock4.acquire();
         callRepeatShuffle();
 
 //        showTooltiop();
