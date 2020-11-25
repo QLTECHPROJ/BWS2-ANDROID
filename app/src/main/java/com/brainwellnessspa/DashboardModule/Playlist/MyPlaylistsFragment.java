@@ -21,6 +21,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -85,6 +87,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import me.toptas.fancyshowcase.FancyShowCaseQueue;
+import me.toptas.fancyshowcase.FancyShowCaseView;
+import me.toptas.fancyshowcase.FocusShape;
+import me.toptas.fancyshowcase.listener.OnViewInflateListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -156,6 +162,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     long myProgress = 0, diff = 0;
     public static boolean Isclose = false;
     private Handler handler1, handler2;
+    FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31, fancyShowCaseView41;
+    FancyShowCaseQueue queue;
     private long totalDuration, currentDuration = 0;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
@@ -238,9 +246,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_playlists, container, false);
         view = binding.getRoot();
-//        handler1 = new Handler();
         handler2 = new Handler();
-//        handler3 = new Handler();
         SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         activity = getActivity();
@@ -249,8 +255,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         fileNameList = new ArrayList<>();
         playlistDownloadId = new ArrayList<>();
         addDisclaimer();
-
-//        remainAudio = new ArrayList<>();
         playlistWiseAudioDetails = new ArrayList<>();
         downloadPlaylistDetailsList = new ArrayList<>();
         playlistSongsList = new ArrayList<>();
@@ -267,7 +271,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.searchView.clearFocus();
             callBack();
         });
-
+        showTooltiop();
         if (BWSApplication.isNetworkConnected(getActivity()) && !MyDownloads.equalsIgnoreCase("1")) {
             binding.llMore.setVisibility(View.VISIBLE);
             binding.llMore.setClickable(true);
@@ -283,7 +287,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
 
         binding.llMore.setOnClickListener(view13 -> {
-//            handler1.removeCallbacks(UpdateSongTime1);
             handler2.removeCallbacks(UpdateSongTime2);
             Intent i = new Intent(getActivity(), MyPlaylistActivity.class);
             i.putExtra("PlaylistID", PlaylistID);
@@ -337,7 +340,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         });
 
 
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         RecyclerView.LayoutManager playList1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPlayLists1.setLayoutManager(playList1);
         binding.rvPlayLists1.setItemAnimator(new DefaultItemAnimator());
@@ -386,6 +388,74 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             prepareData(UserID, PlaylistID);
         }
         return view;
+    }
+
+    private void showTooltiop() {
+        Animation enterAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_top);
+        Animation exitAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_out_bottom);
+
+        fancyShowCaseView11 = new FancyShowCaseView.Builder(getActivity())
+                .customView(R.layout.layout_playlist_reminder, view -> {
+                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                    rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
+                    RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
+                    rlShowMeHow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fancyShowCaseView11.hide();
+                        }
+                    });
+                    rlNoThanks.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            queue.cancel(true);
+                        }
+                    });*/
+
+                }).closeOnTouch(false)
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                .focusOn(binding.llReminder).closeOnTouch(false)
+                .build();
+
+        fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
+                .customView(R.layout.layout_playlist_downloads, (OnViewInflateListener) view -> {
+                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                    rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
+                }).focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation)
+                .exitAnimation(exitAnimation).focusOn(binding.llDownloads)
+                .closeOnTouch(false).build();
+
+        fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
+                .customView(R.layout.layout_playlist_details, view -> {
+                    view.findViewById(R.id.rlSearch);
+                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                    rlNext.setOnClickListener(v -> fancyShowCaseView31.hide());
+                })
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                .focusOn(binding.llMore).closeOnTouch(false).build();
+
+        fancyShowCaseView41 = new FancyShowCaseView.Builder(getActivity())
+                .customView(R.layout.layout_playlist_searches, view -> {
+                    view.findViewById(R.id.rlSearch);
+                    RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                    rlDone.setOnClickListener(v -> fancyShowCaseView41.hide());
+                })
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                .focusOn(binding.rlSearch).closeOnTouch(false).build();
+
+
+        queue = new FancyShowCaseQueue()
+                .add(fancyShowCaseView11)
+                .add(fancyShowCaseView21)
+                .add(fancyShowCaseView31).add(fancyShowCaseView41);
+        queue.show();
+       /* IsRegisters = "false";
+        IsRegisters1 = "false";*/
     }
 
     private List<DownloadPlaylistDetails> GetPlaylistDetail(String download) {

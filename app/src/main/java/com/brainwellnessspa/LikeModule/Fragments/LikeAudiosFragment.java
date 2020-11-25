@@ -98,10 +98,8 @@ public class LikeAudiosFragment extends Fragment {
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
                     if (isMediaStart){
                         if (data.equalsIgnoreCase("play")) {
-//                    BWSApplication.showToast("Play", getActivity());
                             adapter.notifyDataSetChanged();
                         } else {
-//                    BWSApplication.showToast("pause", getActivity());
                             adapter.notifyDataSetChanged();
                         }
                     }
@@ -131,8 +129,6 @@ public class LikeAudiosFragment extends Fragment {
 
     @Override
     public void onPause() {
-//        handler3.removeCallbacks(UpdateSongTime3);
-
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         super.onPause();
     }

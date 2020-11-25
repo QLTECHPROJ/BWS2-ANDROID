@@ -24,6 +24,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="0.2"
+                android:layout_marginLeft="@dimen/_10sdp"
                 android:gravity="center"
                 android:padding="@dimen/_6sdp">
 
@@ -129,6 +130,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="0.2"
+            android:layout_marginRight="@dimen/_10sdp"
             android:gravity="center"
             android:padding="@dimen/_8sdp">
 
