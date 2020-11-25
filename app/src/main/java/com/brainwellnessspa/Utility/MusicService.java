@@ -623,8 +623,8 @@ public class MusicService extends Service {
                             .setPriority(NotificationCompat.PRIORITY_LOW)
                             .build();
                     /* TODO: temp comment*/
-                ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
-                /*try {
+               /* ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
+                try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                                 "Brain Wellness App", NotificationManager.IMPORTANCE_LOW);

@@ -408,7 +408,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 } */ else if (IsShuffle.equalsIgnoreCase("1")) {
                 // shuffle is on - play a random song
                 if (queuePlay) {
-                    adapter.callRemoveList(position, "1");
+//                    adapter.callRemoveList(position, "1");
                     listSize = addToQueueModelList.size();
                     if (listSize == 0) {
                         stopMedia();
@@ -426,7 +426,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 }
             } else {
                 if (queuePlay) {
-                    adapter.callRemoveList(position, "1");
+//                    adapter.callRemoveList(position, "1");
                     listSize = addToQueueModelList.size();
                     if (position > 0) {
                         getPrepareShowData(position - 1);
@@ -475,7 +475,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 } */ else if (IsShuffle.equalsIgnoreCase("1")) {
                 // shuffle is on - play a random song
                 if (queuePlay) {
-                    adapter.callRemoveList(position, "1");
+//                    adapter.callRemoveList(position, "1");
                     listSize = addToQueueModelList.size();
                     if (listSize == 0) {
                         stopMedia();
@@ -493,7 +493,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 }
             } else {
                 if (queuePlay) {
-                    adapter.callRemoveList(position, "1");
+//                    adapter.callRemoveList(position, "1");
                     listSize = addToQueueModelList.size();
                     if (position < listSize - 1) {
                         getPrepareShowData(position);
@@ -771,6 +771,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mediaSessionManager = (MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE);
         }
+
+        mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         // Create a new MediaSession
         mediaSession = new MediaSessionCompat(ctx.getApplicationContext(), "AudioPlayer");
         //Get MediaSessions transport controls
@@ -908,7 +910,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             } else if (IsShuffle.equalsIgnoreCase("1")) {
                 // shuffle is on - play a random song
                 if (queuePlay) {
-                    adapter.callRemoveList(position, "1");
+//                    adapter.callRemoveList(position, "1");
                     listSize = addToQueueModelList.size();
                     if (listSize == 0) {
                         stopMedia();
@@ -941,7 +943,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 }
             } else {
                 if (queuePlay) {
-                    adapter.callRemoveList(position, "1");
+//                    adapter.callRemoveList(position, "1");
                     listSize = addToQueueModelList.size();
                     if (position < listSize - 1) {
                         getPrepareShowData(position);

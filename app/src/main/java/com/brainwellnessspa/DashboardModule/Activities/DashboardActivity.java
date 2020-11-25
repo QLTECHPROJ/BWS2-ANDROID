@@ -1,5 +1,6 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -73,8 +75,6 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        deleteCache(DashboardActivity.this);
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");

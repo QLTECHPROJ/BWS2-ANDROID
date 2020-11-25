@@ -354,26 +354,6 @@ public class AudioDownlaodsAdapter extends RecyclerView.Adapter<AudioDownlaodsAd
 
     private void callTransFrag(int position, List<DownloadAudioDetails> listModelList) {
         try {
-            SharedPreferences shared1 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            boolean queuePlay = shared1.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
-            if (queuePlay) {
-                int position1 = shared1.getInt(CONSTANTS.PREF_KEY_position, 0);
-                ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
-                Gson gson = new Gson();
-                String json1 = shared1.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
-                if (!json1.equalsIgnoreCase(String.valueOf(gson))) {
-                    Type type1 = new TypeToken<ArrayList<AddToQueueModel>>() {
-                    }.getType();
-                    addToQueueModelList = gson.fromJson(json1, type1);
-                }
-                addToQueueModelList.remove(position1);
-                SharedPreferences shared2 = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared2.edit();
-                String json = gson.toJson(addToQueueModelList);
-                editor.putString(CONSTANTS.PREF_KEY_queueList, json);
-                editor.commit();
-
-            }
             player = 1;
             if (isPrepare || isMediaStart || isPause) {
                 stopMedia();

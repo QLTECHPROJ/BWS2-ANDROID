@@ -929,7 +929,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             // shuffle is on - play a random song
             if (queuePlay) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    addToQueueModelList.remove(position);
                     listSize = addToQueueModelList.size();
                     if (listSize == 0) {
                         stopMedia();
@@ -951,7 +950,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         } else {
             if (queuePlay) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    addToQueueModelList.remove(position);
                     listSize = addToQueueModelList.size();
                     if (position > 0) {
                         position = position - 1;
@@ -1011,7 +1009,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             // shuffle is on - play a random song
             if (queuePlay) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    addToQueueModelList.remove(position);
                     listSize = addToQueueModelList.size();
                     if (listSize == 0) {
                         isCompleteStop = true;
@@ -1035,7 +1032,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         } else {
             if (queuePlay) {
                 if (BWSApplication.isNetworkConnected(ctx)) {
-                    addToQueueModelList.remove(position);
                     listSize = addToQueueModelList.size();
                     if (position < listSize - 1) {
                         getPrepareShowData();
@@ -1399,6 +1395,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mediaSessionManager = (MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE);
         }
+        mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         // Create a new MediaSession
         mediaSession = new MediaSessionCompat(ctx.getApplicationContext(), "AudioPlayer");
         //Get MediaSessions transport controls
@@ -1622,10 +1619,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             } else if (IsShuffle.equalsIgnoreCase("1")) {
                 // shuffle is on - play a random song
                 if (queuePlay) {
-                    try {
-                        addToQueueModelList.remove(position);
-                    } catch (Exception e) {
-                    }
                     listSize = addToQueueModelList.size();
                     if (listSize == 0) {
                         isCompleteStop = true;
@@ -1659,22 +1652,29 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
             } else {
                 if (queuePlay) {
-                    try {
-                        addToQueueModelList.remove(position);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     listSize = addToQueueModelList.size();
-                    if (position < listSize - 1) {
+                    if (position < (listSize - 1)) {
+                        int oldPosition = position;
+                        position = position + 1;
+                        if (oldPosition == position) {
+                            position++;
+                        }
                         getPrepareShowData();
                     } else {
-                        if (listSize == 0) {
-                            savePrefQueue(0, false, true, addToQueueModelList, ctx);
+                        if (listSize == 1) {
+                            binding.ivPlay.setVisibility(View.VISIBLE);
+                            binding.ivPause.setVisibility(View.GONE);
+                            binding.pbProgressBar.setVisibility(View.GONE);
                             isCompleteStop = true;
                             stopMedia();
                         } else {
-                            position = 0;
-                            getPrepareShowData();
+                            binding.ivPlay.setVisibility(View.VISIBLE);
+                            binding.ivPause.setVisibility(View.GONE);
+                            binding.pbProgressBar.setVisibility(View.GONE);
+                            isCompleteStop = true;
+                            stopMedia();
+//                        position = 0;
+//                        getPrepareShowData(position);
                         }
                     }
                 } else {
@@ -2213,6 +2213,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         } else  if(isplaywellClick){
             handler12.removeCallbacks(UpdateSongTime12);
             Log.e("Phone is not BG","");
+            isplaywellClick = false;
         }else {
             isplaywellClick = false;
             Log.e("Phone is not locked","");
