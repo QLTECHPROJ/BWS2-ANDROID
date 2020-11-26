@@ -1,6 +1,7 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
 import android.app.ActivityManager;
+import android.app.AppOpsManager;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -117,6 +118,7 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
             ComeScreenAccount = 1;
             comefromDownload = "0";
         }
+
 //
 //        ConnectivityManager connMgr = (ConnectivityManager)
 //                getSystemService(Context.CONNECTIVITY_SERVICE);

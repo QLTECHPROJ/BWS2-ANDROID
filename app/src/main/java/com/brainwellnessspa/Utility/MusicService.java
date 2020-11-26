@@ -22,8 +22,8 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.RemoteException;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -39,13 +39,10 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.media.session.MediaButtonReceiver;
 
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
-import com.brainwellnessspa.Services.NotificationActionService;
 import com.google.gson.Gson;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
@@ -57,7 +54,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.brainwellnessspa.BWSApplication.ACTION_PREVIUOS;
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK;
 import static com.brainwellnessspa.BWSApplication.CHANNEL_ID;
 
 public class MusicService extends Service {
@@ -94,17 +91,10 @@ public class MusicService extends Service {
 
     // Binder given to clients
     private final IBinder iBinder = new MusicService.LocalBinder();
-
-    //List of available Audio files
-    private int audioIndex = -1;
-
-
-    //Handle incoming phone calls
     private boolean ongoingCall = false;
     private PhoneStateListener phoneStateListener;
     private TelephonyManager telephonyManager;
-
-
+    public static Notification notification;
     /**
      * Service lifecycle methods
      */
@@ -129,6 +119,10 @@ public class MusicService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        PowerManager powerManager = (PowerManager) getApplicationContext().getSystemService(POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                "com.brainwellnessspa::MyWakelockTag");
+        wakeLock.acquire();
        /* try {
             // You only need to create the channel on API 26+ devices
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -153,9 +147,13 @@ public class MusicService extends Service {
             buildNotification(PlaybackStatus.PLAYING);
         }*/
 
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1,notification,FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+            Log.e("Service Stars","????");
+        }*/
         //Handle Intent action from MediaSession.TransportControls
         handleIncomingActions(intent);
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Override
@@ -603,7 +601,7 @@ public class MusicService extends Service {
                                             PlaybackStateCompat.ACTION_SEEK_TO).build();
 
                     mediaSession.setPlaybackState(playbackStateCompat);*/
-                    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+                      notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                             .setSmallIcon(R.drawable.ic_music_note)
                             .setContentTitle(songName)
                             .setContentText(songAudioDirection)

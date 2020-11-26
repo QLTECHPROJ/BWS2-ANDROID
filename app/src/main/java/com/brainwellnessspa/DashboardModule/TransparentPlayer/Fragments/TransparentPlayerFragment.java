@@ -2,10 +2,13 @@ package com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
+import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -15,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -63,6 +67,7 @@ import java.lang.reflect.Type;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.Random;
 
 import retrofit2.Call;
@@ -345,31 +350,20 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             addToQueueModelList = gson.fromJson(json1, type1);
         }
-        try {
-            ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MusicService.class));
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ctx.getApplicationContext().startForegroundService(new Intent(ctx.getApplicationContext(), MusicService.class));
+        }else{
+            try {
+                ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MusicService.class));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         IntentFilter filter = new IntentFilter(Broadcast_PLAY_NEW_AUDIO);
         getActivity().registerReceiver(playNewAudio, filter);
         localIntent = new Intent("play_pause_Action");
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
-        PowerManager powerManager = (PowerManager) ctx.getSystemService(POWER_SERVICE);
-        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                "com.brainwellnessspa::MyWakelockTag");
-        wakeLock.acquire();
-        PowerManager.WakeLock wakeLock1 = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,
-                "com.brainwellnessspa::MyWakelockTag");
-        wakeLock1.acquire();
-        PowerManager.WakeLock wakeLock2 = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
-                "com.brainwellnessspa::MyWakelockTag");
-        wakeLock2.acquire();
-        PowerManager.WakeLock wakeLock3 = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
-                "com.brainwellnessspa::MyWakelockTag");
-        wakeLock3.acquire();
-        PowerManager.WakeLock wakeLock4 = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
-                "com.brainwellnessspa::MyWakelockTag");
-        wakeLock4.acquire();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, 0, 130);
         binding.llLayout.setLayoutParams(params);
@@ -1395,6 +1389,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         }
         mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         // Create a new MediaSession
+
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaSession = new MediaSessionCompat(ctx.getApplicationContext(), "AudioPlayer");
         //Get MediaSessions transport controls
         transportControls = mediaSession.getController().getTransportControls();

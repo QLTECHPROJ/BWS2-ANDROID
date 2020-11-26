@@ -124,7 +124,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     private Handler handler;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
-    PowerManager.WakeLock wakeLock,wakeLock1,wakeLock2,wakeLock3,wakeLock4;
     //    private Handler handler1;
     //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -345,27 +344,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
         }*/
-        try {
-            ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MusicService.class));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ctx.getApplicationContext().startForegroundService(new Intent(ctx.getApplicationContext(), MusicService.class));
+        }else{
+            try {
+                ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MusicService.class));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        PowerManager powerManager = (PowerManager) ctx.getSystemService(POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                "com.brainwellnessspa::MyWakelockTag");
-        wakeLock.acquire();
-        wakeLock1 = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,
-                "com.brainwellnessspa::MyWakelockTag");
-        wakeLock1.acquire();
-         wakeLock2 = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
-                "com.brainwellnessspa::MyWakelockTag");
-        wakeLock2.acquire();
-         wakeLock3 = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK,
-                "com.brainwellnessspa::MyWakelockTag");
-        wakeLock3.acquire();
-        wakeLock4 = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
-                "com.brainwellnessspa::MyWakelockTag");
-        wakeLock4.acquire();
+
         callRepeatShuffle();
 
 //        showTooltiop();
@@ -1652,6 +1640,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }
         mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         // Create a new MediaSession
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
         mediaSession = new MediaSessionCompat(ctx.getApplicationContext(), "AudioPlayer");
         //Get MediaSessions transport controls
         transportControls = mediaSession.getController().getTransportControls();
@@ -2815,11 +2805,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     @Override
     protected void onDestroy() {
         unregisterReceiver(playNewAudio);
-        wakeLock.release();
-        wakeLock1.release();
-        wakeLock2.release();
-        wakeLock3.release();
-        wakeLock4.release();
         super.onDestroy();
 //        releasePlayer();
     }

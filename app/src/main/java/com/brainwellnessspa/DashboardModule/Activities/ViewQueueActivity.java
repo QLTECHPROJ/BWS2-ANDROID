@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.session.MediaSessionManager;
 import android.os.AsyncTask;
@@ -41,6 +42,7 @@ import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.Services.OnClearFromRecentService;
+import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.Utility.Playable;
 import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.bumptech.glide.Glide;
@@ -250,7 +252,15 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ctx.getApplicationContext().startForegroundService(new Intent(ctx.getApplicationContext(), MusicService.class));
+        }else{
+            try {
+                ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MusicService.class));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         if (!json.equalsIgnoreCase(String.valueOf(gson))) {
             Type type = new TypeToken<ArrayList<AddToQueueModel>>() {
             }.getType();
@@ -774,6 +784,8 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
 
         mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         // Create a new MediaSession
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
         mediaSession = new MediaSessionCompat(ctx.getApplicationContext(), "AudioPlayer");
         //Get MediaSessions transport controls
         transportControls = mediaSession.getController().getTransportControls();
