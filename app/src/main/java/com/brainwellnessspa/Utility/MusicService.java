@@ -587,7 +587,7 @@ public class MusicService extends Service {
                     PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     int drw_previous = R.drawable.ic_skip_previous_black_24dp;
                     int drw_next = R.drawable.ic_skip_next_black_24dp;
-                    MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+                  /*  MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
                     builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, songAudioDirection);
                     builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, songName);
                     builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, songImg);
@@ -623,7 +623,7 @@ public class MusicService extends Service {
                             .setPriority(NotificationCompat.PRIORITY_LOW)
                             .build();
                     /* TODO: temp comment*/
-                    ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
+                    /*((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
@@ -640,7 +640,7 @@ public class MusicService extends Service {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
+                    }*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
