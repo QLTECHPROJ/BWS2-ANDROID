@@ -298,40 +298,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             callBack();
         });
 
-       /* broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getExtras().getString("actionname");
-                switch (action) {
-                    case BWSApplication.ACTION_PREVIUOS:
-                        onTrackPrevious();
-                        if (isPlaying) {
-                            onTrackPause();
-                        } else {
-                            onTrackPlay();
-                        }
-                        break;
-                    case BWSApplication.ACTION_PLAY:
-                        if (isPlaying) {
-                            onTrackPause();
-                        } else {
-                            onTrackPlay();
-                        }
-                        break;
-                    case BWSApplication.ACTION_NEXT:
-                        onTrackNext();
-                        if (isPlaying) {
-                            onTrackPause();
-                        } else {
-                            onTrackPlay();
-                        }
-                        break;
-                }
-            }
-        };
-        BWSApplication.createChannel(ctx);
-        registerReceiver(broadcastReceiver, new IntentFilter("TRACKS_TRACKS"));
-        startService(new Intent(getBaseContext(), OnClearFromRecentService.class));*/
         getPrepareShowData(position);
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         callAdapterMethod();

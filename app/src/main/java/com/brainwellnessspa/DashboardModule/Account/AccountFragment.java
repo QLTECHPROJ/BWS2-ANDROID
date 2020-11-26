@@ -111,7 +111,7 @@ public class AccountFragment extends Fragment {
         profileViewData(getActivity());
 
         binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
-//        showTooltiop();
+        showTooltiop();
         binding.llDownloads.setOnClickListener(view12 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;

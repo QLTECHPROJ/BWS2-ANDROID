@@ -280,85 +280,94 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/llprev"
+                        android:id="@+id/llHighlights"
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.19"
-                        android:gravity="center">
+                        android:layout_weight="0.60"
+                        android:weightSum="0.60">
 
-                        <ImageView
-                            android:id="@+id/ivprev"
-                            android:layout_width="@dimen/_31sdp"
-                            android:layout_height="@dimen/_31sdp"
-                            android:src="@drawable/ic_backword_icon" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/llPlay"
-                        android:layout_width="@dimen/_0sdp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.24"
-                        android:gravity="center_horizontal"
-                        android:padding="@dimen/_2sdp"
-                        android:visibility="gone">
-
-                        <ImageView
-                            android:id="@+id/ivplay"
-                            android:layout_width="match_parent"
+                        <LinearLayout
+                            android:id="@+id/llprev"
+                            android:layout_width="@dimen/_0sdp"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ic_blue_play_icon" />
-                    </LinearLayout>
+                            android:layout_weight="0.19"
+                            android:gravity="center">
 
-                    <LinearLayout
-                        android:id="@+id/llPause"
-                        android:layout_width="@dimen/_0sdp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.24"
-                        android:gravity="center_horizontal"
-                        android:padding="@dimen/_2sdp"
-                        android:visibility="gone">
+                            <ImageView
+                                android:id="@+id/ivprev"
+                                android:layout_width="@dimen/_31sdp"
+                                android:layout_height="@dimen/_31sdp"
+                                android:src="@drawable/ic_backword_icon" />
+                        </LinearLayout>
 
-                        <ImageView
-                            android:id="@+id/ivPause"
-                            android:layout_width="match_parent"
+                        <LinearLayout
+                            android:id="@+id/llPlay"
+                            android:layout_width="@dimen/_0sdp"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ic_pause_icon" />
-                    </LinearLayout>
+                            android:layout_weight="0.24"
+                            android:gravity="center_horizontal"
+                            android:padding="@dimen/_2sdp"
+                            android:visibility="gone">
 
-                    <LinearLayout
-                        android:id="@+id/llProgressBar"
-                        android:layout_width="@dimen/_0sdp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.24"
-                        android:gravity="center"
-                        android:padding="@dimen/_2sdp"
-                        android:visibility="visible">
+                            <ImageView
+                                android:id="@+id/ivplay"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_blue_play_icon" />
+                        </LinearLayout>
 
-                        <ProgressBar
-                            android:id="@+id/progressBar"
-                            android:layout_width="@dimen/_50sdp"
-                            android:layout_height="@dimen/_50sdp"
-                            android:layout_marginLeft="@dimen/_13sdp"
-                            android:layout_marginTop="@dimen/_8sdp"
-                            android:layout_marginBottom="@dimen/_8sdp"
-                            android:layout_weight="0.13"
-                            android:indeterminateTint="@color/blue"
-                            android:scaleType="fitXY"
-                            android:visibility="visible" />
-                    </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/llPause"
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.24"
+                            android:gravity="center_horizontal"
+                            android:padding="@dimen/_2sdp"
+                            android:visibility="gone">
 
-                    <LinearLayout
-                        android:id="@+id/llnext"
-                        android:layout_width="@dimen/_0sdp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.19"
-                        android:gravity="center">
+                            <ImageView
+                                android:id="@+id/ivPause"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_pause_icon" />
+                        </LinearLayout>
 
-                        <ImageView
-                            android:id="@+id/ivnext"
-                            android:layout_width="@dimen/_31sdp"
-                            android:layout_height="@dimen/_31sdp"
-                            android:src="@drawable/ic_forward_icon" />
+                        <LinearLayout
+                            android:id="@+id/llProgressBar"
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.24"
+                            android:gravity="center"
+                            android:padding="@dimen/_2sdp"
+                            android:visibility="visible">
+
+                            <ProgressBar
+                                android:id="@+id/progressBar"
+                                android:layout_width="@dimen/_50sdp"
+                                android:layout_height="@dimen/_50sdp"
+                                android:layout_marginLeft="@dimen/_13sdp"
+                                android:layout_marginTop="@dimen/_8sdp"
+                                android:layout_marginBottom="@dimen/_8sdp"
+                                android:layout_weight="0.13"
+                                android:indeterminateTint="@color/blue"
+                                android:scaleType="fitXY"
+                                android:visibility="visible" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llnext"
+                            android:layout_width="@dimen/_0sdp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.19"
+                            android:paddingRight="@dimen/_6sdp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/ivnext"
+                                android:layout_width="@dimen/_31sdp"
+                                android:layout_height="@dimen/_31sdp"
+                                android:src="@drawable/ic_forward_icon" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout

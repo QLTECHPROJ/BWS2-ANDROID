@@ -1,44 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom"
         android:layout_marginLeft="@dimen/_10sdp"
-        android:layout_marginTop="150dp"
         android:layout_marginRight="@dimen/_20sdp"
+        android:layout_weight="0.7"
+        android:gravity="bottom"
         android:orientation="horizontal"
         android:weightSum="1">
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.1"
-            android:gravity="right">
-
-            <!--
-                        <ImageView
-                            android:id="@+id/ivLine"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingRight="@dimen/_15sdp"
-                            android:src="@drawable/showcase_dot_line"
-                            app:tint="@color/white" />
-            -->
-
-        </RelativeLayout>
-
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginLeft="@dimen/_22sdp"
-            android:layout_weight="0.9"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
             android:orientation="vertical"
+            android:paddingLeft="@dimen/_50sdp"
             android:paddingRight="@dimen/_5sdp">
 
             <TextView
@@ -63,32 +47,50 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 
-            <RelativeLayout
-                android:id="@+id/rlNext"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:layout_marginBottom="@dimen/_10sdp">
+                android:layout_marginTop="@dimen/_20sdp">
 
-                <TextView
+                <RelativeLayout
+                    android:id="@+id/rlNext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/round_corner"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:paddingLeft="@dimen/_25sdp"
-                    android:paddingTop="@dimen/_8sdp"
-                    android:paddingRight="@dimen/_25sdp"
-                    android:paddingBottom="@dimen/_8sdp"
-                    android:text="Next"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_18sdp" />
+                    android:layout_gravity="start"
+                    android:layout_marginBottom="@dimen/_10sdp">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/round_corner"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:paddingLeft="@dimen/_25sdp"
+                        android:paddingTop="@dimen/_8sdp"
+                        android:paddingRight="@dimen/_25sdp"
+                        android:paddingBottom="@dimen/_8sdp"
+                        android:text="Next"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_18sdp" />
 
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="@dimen/_90sdp"
+                    android:layout_height="@dimen/_90sdp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/_28sdp"
+                    android:src="@drawable/right_down_arrow_highlights" />
+            </LinearLayout>
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_0sdp"
+        android:layout_weight="0.3">
 
     </LinearLayout>
 

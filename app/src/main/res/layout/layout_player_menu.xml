@@ -36,7 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_weight="0.9"
+            android:layout_weight="0.56"
             android:layout_marginLeft="@dimen/_16sdp"
             android:orientation="vertical"
             android:paddingRight="@dimen/_5sdp">
@@ -88,6 +88,21 @@
 
             </RelativeLayout>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/_0sdp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/_31sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_weight="0.34">
+
+            <ImageView
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
+                android:rotation="180"
+                android:layout_gravity="center"
+                android:src="@drawable/highlights_arrow"/>
         </LinearLayout>
 
     </LinearLayout>
