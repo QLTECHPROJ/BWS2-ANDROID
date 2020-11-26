@@ -2,6 +2,7 @@ package com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -22,6 +23,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -33,6 +35,7 @@ import android.widget.SeekBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.media.session.MediaButtonReceiver;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
@@ -51,6 +54,7 @@ import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Services.ScreenReceiver;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MusicService;
@@ -332,8 +336,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }.getType();
             addToQueueModelList = gson.fromJson(json1, type1);
         }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ctx.getApplicationContext().startForegroundService(new Intent(ctx.getApplicationContext(), MusicService.class));
         }else{
             try {
@@ -342,6 +345,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 e.printStackTrace();
             }
         }
+        try {
+            ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MusicService.class));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
         IntentFilter filter = new IntentFilter(Broadcast_PLAY_NEW_AUDIO);
         getActivity().registerReceiver(playNewAudio, filter);
         localIntent = new Intent("play_pause_Action");
@@ -1255,15 +1263,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void initMediaplyer() {
+        mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+        // Create a new MediaSession
+
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         if (mediaSessionManager != null) return; //mediaSessionManager exists
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mediaSessionManager = (MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE);
         }
-        mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-        // Create a new MediaSession
-
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaSession = new MediaSessionCompat(ctx.getApplicationContext(), "AudioPlayer");
         //Get MediaSessions transport controls
         transportControls = mediaSession.getController().getTransportControls();
@@ -1271,10 +1279,15 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         mediaSession.setActive(true);
         //indicate that the MediaSession handles transport control commands
         // through its MediaSessionCompat.Callback.
-        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
         //Set mediaSession's MetaData
 //        updateMetaData();
         // Attach Callback to receive MediaSession updates
+        Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+        mediaButtonIntent.setClass(ctx, MediaButtonReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, mediaButtonIntent, 0);
+        mediaSession.setMediaButtonReceiver(pendingIntent);
+
         mediaSession.setCallback(new MediaSessionCompat.Callback() {
             // Implement callbacks
             @Override
@@ -1295,6 +1308,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     callNext();
 //                updateMetaData();
                 }
+
                 super.onSkipToNext();
             }
 
@@ -2068,7 +2082,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     public void onPause() {
 //        handler12.removeCallbacks(UpdateSongTime12);
 //        Log.e("Stop runnble", "stop");
-
         getActivity().unregisterReceiver(playNewAudio);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         KeyguardManager myKM = (KeyguardManager) ctx.getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);

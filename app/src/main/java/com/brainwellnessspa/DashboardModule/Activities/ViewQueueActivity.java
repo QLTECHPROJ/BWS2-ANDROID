@@ -252,7 +252,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         Gson gson = new Gson();
         String json = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+  /*      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ctx.getApplicationContext().startForegroundService(new Intent(ctx.getApplicationContext(), MusicService.class));
         }else{
             try {
@@ -261,6 +261,11 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 e.printStackTrace();
             }
         }
+        try {
+            ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MusicService.class));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
         if (!json.equalsIgnoreCase(String.valueOf(gson))) {
             Type type = new TypeToken<ArrayList<AddToQueueModel>>() {
             }.getType();

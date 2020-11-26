@@ -3,9 +3,13 @@ package com.brainwellnessspa.DashboardModule.Activities;
 import android.app.ActivityManager;
 import android.app.AppOpsManager;
 import android.app.NotificationManager;
+import android.app.admin.DeviceAdminInfo;
+import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -29,6 +33,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Services.ScreenReceiver;
 import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.databinding.ActivityDashboardBinding;
 
@@ -70,16 +75,23 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);
-        try {
+        /*try {
             Intent playbackServiceIntent = new Intent(this, MusicService.class);
             startService(playbackServiceIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(playbackServiceIntent);
+            }
         }catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 "com.brainwellnessspa::MyWakelockTag");
         wakeLock.acquire();
+//        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+//        filter.addAction(Intent.ACTION_SCREEN_OFF);
+//        BroadcastReceiver mReceiver = new ScreenReceiver();
+//        registerReceiver(mReceiver, filter);
         if (getIntent().hasExtra("Goplaylist")) {
             Goplaylist = getIntent().getStringExtra("Goplaylist");
             PlaylistID = getIntent().getStringExtra("PlaylistID");

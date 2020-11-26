@@ -29,6 +29,8 @@ public class CONSTANTS {
         return bm;
     }*/
 
+    public static final String track = "track";
+    public static final String screen = "screen";
     public static final String FLAG_ZERO = "0";
     public static final String FLAG_ONE = "1";
     public static final String FLAG_TWO = "2";

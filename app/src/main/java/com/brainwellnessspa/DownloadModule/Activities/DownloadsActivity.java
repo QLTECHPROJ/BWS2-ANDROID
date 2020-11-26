@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.google.android.material.tabs.TabLayout;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
@@ -23,6 +24,7 @@ import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityDownloadsBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -55,7 +57,9 @@ public class DownloadsActivity extends AppCompatActivity {
         UserID = (shared2.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-
+        Properties p = new Properties();
+        p.putValue("userId",UserID);
+        BWSApplication.addToSegment("My Downloads Screen Viewed",p,CONSTANTS.screen);
         binding.llBack.setOnClickListener(view -> {
             ComeScreenAccount = 1;
             comefromDownload = "0";

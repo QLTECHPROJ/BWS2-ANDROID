@@ -57,6 +57,7 @@ import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.Utility.NotificationDismissedReceiver;
 import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.brainwellnessspa.Utility.Track;
+import com.segment.analytics.Properties;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -82,6 +83,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.SplashModule.SplashScreenActivity.analytics;
 import static java.sql.DriverManager.println;
 
 public class BWSApplication extends Application {
@@ -129,7 +131,13 @@ public class BWSApplication extends Application {
 //        //Log.e("displayMetrics.density...........", "" + context.getClass().getSimpleName()+","+displayMetrics.density);
         return new MeasureRatio(widthImg, height, displayMetrics.density, proportion);
     }
-
+    public static void addToSegment(String TagName, Properties properties, String methodName) {
+        if (methodName.equalsIgnoreCase("track")) {
+            analytics.track(TagName, properties);
+        } else if (methodName.equalsIgnoreCase("screen")) {
+            analytics.screen(TagName, properties);
+        }
+    }
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {

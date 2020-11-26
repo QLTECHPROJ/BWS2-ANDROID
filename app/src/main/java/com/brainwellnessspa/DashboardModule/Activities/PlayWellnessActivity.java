@@ -344,7 +344,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.pbProgress.setVisibility(View.GONE);
             handler1.removeCallbacks(UpdateSongTime1);
         }*/
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+  /*      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ctx.getApplicationContext().startForegroundService(new Intent(ctx.getApplicationContext(), MusicService.class));
         }else{
             try {
@@ -353,7 +353,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 e.printStackTrace();
             }
         }
-
+        try {
+            ctx.getApplicationContext().startService(new Intent(ctx.getApplicationContext(), MusicService.class));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
         callRepeatShuffle();
 
 //        showTooltiop();

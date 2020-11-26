@@ -39,10 +39,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.media.session.MediaButtonReceiver;
 
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
+import com.brainwellnessspa.Services.NotificationActionService;
 import com.google.gson.Gson;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
@@ -55,6 +57,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK;
+import static com.brainwellnessspa.BWSApplication.ACTION_PREVIUOS;
 import static com.brainwellnessspa.BWSApplication.CHANNEL_ID;
 
 public class MusicService extends Service {
@@ -65,11 +68,11 @@ public class MusicService extends Service {
     public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
     static public Handler handler;
     static boolean isPlaying = false;
-    public static final String ACTION_PLAY = "com.valdioveliu.valdio.audioplayer.ACTION_PLAY";
-    public static final String ACTION_PAUSE = "com.valdioveliu.valdio.audioplayer.ACTION_PAUSE";
-    public static final String ACTION_PREVIOUS = "com.valdioveliu.valdio.audioplayer.ACTION_PREVIOUS";
-    public static final String ACTION_NEXT = "com.valdioveliu.valdio.audioplayer.ACTION_NEXT";
-    public static final String ACTION_STOP = "com.valdioveliu.valdio.audioplayer.ACTION_STOP";
+    public static final String ACTION_PLAY = "ACTION_PLAY";
+    public static final String ACTION_PAUSE = "ACTION_PAUSE";
+    public static final String ACTION_PREVIOUS = "ACTION_PREVIOUS";
+    public static final String ACTION_NEXT = "ACTION_NEXT";
+    public static final String ACTION_STOP = "ACTION_STOP";
     public static final String MEDIA_CHANNEL_ID = "media_playback_channel";
     public static final String Broadcast_PLAY_NEW_AUDIO = "com.brainwellnessspa.PlayNewAudio";
     public static final String Broadcast_PLAY_PAUSE = "com.brainwellnessspa.Broadcast";
@@ -119,10 +122,11 @@ public class MusicService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        PowerManager powerManager = (PowerManager) getApplicationContext().getSystemService(POWER_SERVICE);
-        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                "com.brainwellnessspa::MyWakelockTag");
-        wakeLock.acquire();
+        handleIncomingActions(intent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(0,notification,FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+        }
        /* try {
             // You only need to create the channel on API 26+ devices
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -135,16 +139,16 @@ public class MusicService extends Service {
 
         //Request audio focus
 
-
-        if (mediaSessionManager == null) {
+*/
+        /*if (mediaSessionManager == null) {
             try {
                 initMediaSession();
-                initMediaPlayer();
+//                initMediaPlayer();
             } catch (RemoteException e) {
                 e.printStackTrace();
                 stopSelf();
             }
-            buildNotification(PlaybackStatus.PLAYING);
+//            buildNotification(PlaybackStatus.PLAYING);
         }*/
 
         /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -152,14 +156,24 @@ public class MusicService extends Service {
             Log.e("Service Stars","????");
         }*/
         //Handle Intent action from MediaSession.TransportControls
-        handleIncomingActions(intent);
-        return START_STICKY;
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        mediaSession.release();
-        removeNotification();
+        if(intent!=null) {
+            if (intent.hasExtra("screen_state")) {
+                boolean screenOn = intent.getBooleanExtra("screen_state", false);
+
+                if (!screenOn) {
+                    // YOUR CODE
+                } else {
+                    mediaSession.release();
+                    removeNotification();
+                    // YOUR CODE
+                }
+            }
+        }
         return super.onUnbind(intent);
     }
 
@@ -573,6 +587,8 @@ public class MusicService extends Service {
                     super.onPostExecute(aVoid);
                     int notificationAction = 0;
                     PendingIntent play_pauseAction = null;
+
+                    //Build a new notification according to the current state of the MediaPlayer
                     if (playbackStatus == PlaybackStatus.PLAYING) {
                         notificationAction = R.drawable.ic_pause_black_24dp;
                         //create the pause action
@@ -582,11 +598,25 @@ public class MusicService extends Service {
                         //create the play action
                         play_pauseAction = playbackAction(0, context);
                     }
+                    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+//        MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
+                    PendingIntent pendingIntentPrevious;
                     Intent intent = new Intent(context, PlayWellnessActivity.class);
                     intent.putExtra("com.brainwellnessspa.notifyId", NOTIFICATION_ID);
                     PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    int drw_previous = R.drawable.ic_skip_previous_black_24dp;
-                    int drw_next = R.drawable.ic_skip_next_black_24dp;
+                    int drw_previous;
+                    Intent intentPrevious = new Intent(context, NotificationActionService.class).setAction(ACTION_PREVIUOS);
+                    pendingIntentPrevious = PendingIntent.getBroadcast(context, 0, intentPrevious, PendingIntent.FLAG_UPDATE_CURRENT);
+                    drw_previous = R.drawable.ic_skip_previous_black_24dp;
+
+                    Intent intentPlay = new Intent(context, NotificationActionService.class).setAction(ACTION_PLAY);
+                    PendingIntent pendingIntentPlay = PendingIntent.getBroadcast(context, 0, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent pendingIntentNext;
+                    int drw_next;
+                    Intent intentNext = new Intent(context, NotificationActionService.class).setAction(ACTION_NEXT);
+                    pendingIntentNext = PendingIntent.getBroadcast(context, 0, intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
+                    drw_next = R.drawable.ic_skip_next_black_24dp;
+                    //create notification
                   /*  MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
                     builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, songAudioDirection);
                     builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, songName);
@@ -603,6 +633,7 @@ public class MusicService extends Service {
                                     PlaybackStateCompat.ACTION_SEEK_TO).build();
 
                     mediaSession.setPlaybackState(playbackStateCompat);*/
+
                       notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                             .setSmallIcon(R.drawable.ic_music_note)
                             .setContentTitle(songName)
@@ -623,7 +654,7 @@ public class MusicService extends Service {
                             .setPriority(NotificationCompat.PRIORITY_LOW)
                             .build();
                     /* TODO: temp comment*/
-                    /*((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
+                    ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
@@ -640,7 +671,7 @@ public class MusicService extends Service {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }*/
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

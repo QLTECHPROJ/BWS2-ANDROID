@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.MediaController;
@@ -26,6 +27,8 @@ import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.AppSignatureHashHelper;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivitySplashScreenBinding;
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,6 +41,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     ActivitySplashScreenBinding binding;
     public static String key = "", UserID;
     String flag, id, title, message, IsLock;
+    public static Analytics analytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +63,25 @@ public class SplashScreenActivity extends AppCompatActivity {
             key = getKey(SplashScreenActivity.this);
         }
 
-        getLatasteUpdate(SplashScreenActivity.this);
+        try {
+            analytics = new Analytics.Builder(getApplication(), getString(R.string.segment_key2))
+                    .trackApplicationLifecycleEvents()
+                    .logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation()
+                    .trackAttributionInformation()
+                    .trackDeepLinks()
+                    .collectDeviceId(true)
+                    .build();
+            /*.use(FirebaseIntegration.FACTORY) */
+            Analytics.setSingletonInstance(analytics);
+        } catch (Exception e) {
+//            incatch = true;
+            Log.e("in Catch", "True");
+//            Properties p = new Properties();
+//            p.putValue("Application Crashed", e.toString());
+//            YupITApplication.addtoSegment("Application Crashed", p,  CONSTANTS.track);
 
+        }
+        getLatasteUpdate(SplashScreenActivity.this);
         MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(binding.ivBackground);
         binding.ivBackground.setMediaController(null);

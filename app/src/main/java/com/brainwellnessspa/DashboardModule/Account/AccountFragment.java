@@ -56,6 +56,7 @@ import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.databinding.FragmentAccountBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -109,7 +110,9 @@ public class AccountFragment extends Fragment {
         binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
         binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
         profileViewData(getActivity());
-
+        Properties p = new Properties();
+        p.putValue("userId",UserID);
+        BWSApplication.addToSegment("Account Screen Viewed",p,CONSTANTS.screen);
         binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
         showTooltiop();
         binding.llDownloads.setOnClickListener(view12 -> {
