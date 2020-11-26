@@ -22,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,6 +41,10 @@ import com.brainwellnessspa.databinding.RemiderDetailsLayoutBinding;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.toptas.fancyshowcase.FancyShowCaseQueue;
+import me.toptas.fancyshowcase.FancyShowCaseView;
+import me.toptas.fancyshowcase.FocusShape;
+import me.toptas.fancyshowcase.listener.OnViewInflateListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,6 +56,8 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     Activity activity;
     ArrayList<String> remiderIds = new ArrayList<>();
     RemiderDetailsAdapter adapter;
+    FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21;
+    FancyShowCaseQueue queue;
     public static String comeBack = "";
     RemiderDetailsModel listReminderModel;
 
@@ -74,6 +82,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         });
 
         prepareData();
+//        showTooltiop();
 
         binding.btnAddReminder.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(ctx)) {
@@ -95,6 +104,54 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         prepareData();
+    }
+
+    private void showTooltiop() {
+        Animation enterAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_in_top);
+        Animation exitAnimation = AnimationUtils.loadAnimation(ctx, R.anim.slide_out_bottom);
+
+        fancyShowCaseView11 = new FancyShowCaseView.Builder(activity)
+                .customView(R.layout.layout_reminder_status, view -> {
+                    RelativeLayout rlNext = view.findViewById(R.id.rlNext);
+                    rlNext.setOnClickListener(v -> fancyShowCaseView11.hide());
+                   /* RelativeLayout rlShowMeHow = view.findViewById(R.id.rlShowMeHow);
+                    RelativeLayout rlNoThanks = view.findViewById(R.id.rlNoThanks);
+                    rlShowMeHow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fancyShowCaseView11.hide();
+                        }
+                    });
+                    rlNoThanks.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            queue.cancel(true);
+                        }
+                    });*/
+
+                }).closeOnTouch(false)
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                /*.focusOn(binding.llDownloads)*/.closeOnTouch(false)
+                .build();
+
+        fancyShowCaseView21 = new FancyShowCaseView.Builder(activity)
+                .customView(R.layout.layout_reminder_remove, view -> {
+                    view.findViewById(R.id.rlSearch);
+                    RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                    rlDone.setOnClickListener(v -> fancyShowCaseView21.hide());
+                })
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
+                /*.focusOn(binding.llResource)*/.closeOnTouch(false).build();
+
+
+        queue = new FancyShowCaseQueue()
+                .add(fancyShowCaseView11)
+                .add(fancyShowCaseView21);
+        queue.show();
+       /* IsRegisters = "false";
+        IsRegisters1 = "false";*/
     }
 
     @Override

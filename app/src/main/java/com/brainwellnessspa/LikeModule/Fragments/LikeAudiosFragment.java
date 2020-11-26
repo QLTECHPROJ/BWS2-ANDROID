@@ -87,8 +87,8 @@ public class LikeAudiosFragment extends Fragment {
     LikeAudiosAdapter adapter;
     private BroadcastReceiver listener = new BroadcastReceiver() {
         @Override
-        public void onReceive( Context context, Intent intent ) {
-            if(intent.hasExtra("MyData")) {
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra("MyData")) {
                 String data = intent.getStringExtra("MyData");
                 Log.d("play_pause_Action", data);
                 SharedPreferences sharedzw = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
@@ -96,7 +96,7 @@ public class LikeAudiosFragment extends Fragment {
                 AudioFlag = sharedzw.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
                 String pIDz = sharedzw.getString(CONSTANTS.PREF_KEY_PlaylistId, "");
                 if (!AudioFlag.equalsIgnoreCase("Downloadlist") && !AudioFlag.equalsIgnoreCase("SubPlayList") && !AudioFlag.equalsIgnoreCase("TopCategories")) {
-                    if (isMediaStart){
+                    if (isMediaStart) {
                         if (data.equalsIgnoreCase("play")) {
                             adapter.notifyDataSetChanged();
                         } else {
@@ -157,27 +157,27 @@ public class LikeAudiosFragment extends Fragment {
             listCall.enqueue(new Callback<LikesHistoryModel>() {
                 @Override
                 public void onResponse(Call<LikesHistoryModel> call, Response<LikesHistoryModel> response) {
-                   try {
-                       if (response.isSuccessful()) {
-                           BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                           LikesHistoryModel listModel = response.body();
-                           List<LikesHistoryModel.ResponseData.Audio> listDataModel = listModel.getResponseData().getAudio();
-                           if (listDataModel.size() == 0) {
-                               binding.tvFound.setVisibility(View.VISIBLE);
-                               binding.llError.setVisibility(View.VISIBLE);
-                               binding.rvLikesList.setVisibility(View.GONE);
-                           } else {
-                               binding.llError.setVisibility(View.GONE);
-                               binding.rvLikesList.setVisibility(View.VISIBLE);
-                               adapter = new LikeAudiosAdapter(listModel.getResponseData().getAudio(), getActivity());
-                               binding.rvLikesList.setAdapter(adapter);
-                               LocalBroadcastManager.getInstance(getActivity())
-                                       .registerReceiver(listener, new IntentFilter("play_pause_Action"));
-                           }
-                       }
-                   }catch (Exception e){
-                       e.printStackTrace();
-                   }
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            LikesHistoryModel listModel = response.body();
+                            List<LikesHistoryModel.ResponseData.Audio> listDataModel = listModel.getResponseData().getAudio();
+                            if (listDataModel.size() == 0) {
+                                binding.tvFound.setVisibility(View.VISIBLE);
+                                binding.llError.setVisibility(View.VISIBLE);
+                                binding.rvLikesList.setVisibility(View.GONE);
+                            } else {
+                                binding.llError.setVisibility(View.GONE);
+                                binding.rvLikesList.setVisibility(View.VISIBLE);
+                                adapter = new LikeAudiosAdapter(listModel.getResponseData().getAudio(), getActivity());
+                                binding.rvLikesList.setAdapter(adapter);
+                                LocalBroadcastManager.getInstance(getActivity())
+                                        .registerReceiver(listener, new IntentFilter("play_pause_Action"));
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -485,18 +485,18 @@ public class LikeAudiosFragment extends Fragment {
     }
 
     private void callRemoveLike(String id, int position, List<LikesHistoryModel.ResponseData.Audio> listModelList2) {
-        try {
-            if (BWSApplication.isNetworkConnected(getActivity())) {
-                BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(id, UserID);
-                listCall.enqueue(new Callback<AudioLikeModel>() {
-                    @Override
-                    public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
-                        try {
-                            if (response.isSuccessful()) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                                AudioLikeModel model = response.body();
-                                BWSApplication.showToast(model.getResponseMessage(), getActivity());
+        if (BWSApplication.isNetworkConnected(getActivity())) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+            Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(id, UserID);
+            listCall.enqueue(new Callback<AudioLikeModel>() {
+                @Override
+                public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                            AudioLikeModel model = response.body();
+                            BWSApplication.showToast(model.getResponseMessage(), getActivity());
+                            prepareData();
                                 /*listModelList2.remove(position);
                                 SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -618,133 +618,129 @@ public class LikeAudiosFragment extends Fragment {
                                 editor.commit();
                             }
                         }*/
-                                SharedPreferences sharedq = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                                AudioFlag = sharedq.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
-                                boolean audioPlay = sharedq.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-                                boolean queuePlay = sharedq.getBoolean(CONSTANTS.PREF_KEY_queuePlay, true);
-                                Gson gsonq = new Gson();
-                                String jsonq = sharedq.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonq));
-                                SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
-                                SharedPreferences.Editor editor = shared.edit();
-                                Gson gson = new Gson();
-                                ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
-                                ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
-                                String json23 = sharedq.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
-                                if (!json23.equalsIgnoreCase(String.valueOf(gson))) {
-                                    Type type2 = new TypeToken<ArrayList<AddToQueueModel>>() {
-                                    }.getType();
-                                    addToQueueModelList = gson.fromJson(json23, type2);
-                                }
-                                String json33 = sharedq.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
-                                if (!json33.equalsIgnoreCase(String.valueOf(gson))) {
-                                    Type type23 = new TypeToken<ArrayList<MainPlayModel>>() {
-                                    }.getType();
-                                    mainPlayModelList = gson.fromJson(json33, type23);
-                                }
-                                if (audioPlay) {
-                                    if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
-                                        Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
-                                        }.getType();
-                                        ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
-                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                        String json2 = gson.toJson(arrayList);
-                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                    } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
-                                        Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
-                                        }.getType();
-                                        ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
-                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                        String json2 = gson.toJson(arrayList);
-                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                    } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
-                                        Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
-                                        }.getType();
-                                        ArrayList<SearchBothModel.ResponseData> arrayList = gsonq.fromJson(jsonq, type);
-                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                        String json2 = gson.toJson(arrayList);
-                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                    } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
-                                        Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
-                                        }.getType();
-                                        ArrayList<SuggestedModel.ResponseData> arrayList = gsonq.fromJson(jsonq, type);
-                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                        String json2 = gson.toJson(arrayList);
-                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                    } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
-                                        Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
-                                        }.getType();
-                                        ArrayList<AppointmentDetailModel.Audio> arrayList = gsonq.fromJson(jsonq, type);
-                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                        String json2 = gson.toJson(arrayList);
-                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                    } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
-                                        Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
-                                        }.getType();
-                                        ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gsonq.fromJson(jsonq, type);
-                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                        String json2 = gson.toJson(arrayList);
-                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                    } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
-                                        Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
-                                        }.getType();
-                                        ArrayList<DownloadAudioDetails> arrayList = gsonq.fromJson(jsonq, type);
-                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                        String json2 = gson.toJson(arrayList);
-                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                    } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
-                                        Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
-                                        }.getType();
-                                        ArrayList<DownloadAudioDetails> arrayList = gsonq.fromJson(jsonq, type);
-                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                        String json2 = gson.toJson(arrayList);
-                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                    } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
-                                        Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
-                                        }.getType();
-                                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gsonq.fromJson(jsonq, type);
-                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                        String json2 = gson.toJson(arrayList);
-                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                    } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
-                                        Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
-                                        }.getType();
-                                        ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gsonq.fromJson(jsonq, type);
-                                        arrayList.get(position).setLike(model.getResponseData().getFlag());
-                                        String json2 = gson.toJson(arrayList);
-                                        editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
-                                    }
-                                }
-                                if (queuePlay) {
-                                    addToQueueModelList.get(position).setLike(model.getResponseData().getFlag());
-                                } else
-                                    mainPlayModelList.get(position).setLike(model.getResponseData().getFlag());
-
-                                String json = gson.toJson(mainPlayModelList);
-                                editor.putString(CONSTANTS.PREF_KEY_audioList, json);
-                                if (queuePlay) {
-                                    String json1 = gson.toJson(addToQueueModelList);
-                                    editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
-                                }
-                                editor.putInt(CONSTANTS.PREF_KEY_position, position);
-                                editor.commit();
-                                prepareData();
+                            SharedPreferences sharedq = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            AudioFlag = sharedq.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                            boolean audioPlay = sharedq.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                            boolean queuePlay = sharedq.getBoolean(CONSTANTS.PREF_KEY_queuePlay, true);
+                            Gson gsonq = new Gson();
+                            String jsonq = sharedq.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonq));
+                            SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            Gson gson = new Gson();
+                            ArrayList<MainPlayModel> mainPlayModelList = new ArrayList<>();
+                            ArrayList<AddToQueueModel> addToQueueModelList = new ArrayList<>();
+                            String json23 = sharedq.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
+                            if (!json23.equalsIgnoreCase(String.valueOf(gson))) {
+                                Type type2 = new TypeToken<ArrayList<AddToQueueModel>>() {
+                                }.getType();
+                                addToQueueModelList = gson.fromJson(json23, type2);
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            String json33 = sharedq.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gson));
+                            if (!json33.equalsIgnoreCase(String.valueOf(gson))) {
+                                Type type23 = new TypeToken<ArrayList<MainPlayModel>>() {
+                                }.getType();
+                                mainPlayModelList = gson.fromJson(json33, type23);
+                            }
+                            if (audioPlay) {
+                                if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
+                                    Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
+                                    }.getType();
+                                    ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
+                                    Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
+                                    }.getType();
+                                    ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
+                                    Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
+                                    }.getType();
+                                    ArrayList<SearchBothModel.ResponseData> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
+                                    Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
+                                    }.getType();
+                                    ArrayList<SuggestedModel.ResponseData> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                                    Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
+                                    }.getType();
+                                    ArrayList<AppointmentDetailModel.Audio> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                                    Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
+                                    }.getType();
+                                    ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                                    Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                                    }.getType();
+                                    ArrayList<DownloadAudioDetails> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
+                                    Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                                    }.getType();
+                                    ArrayList<DownloadAudioDetails> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
+                                    Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+                                    }.getType();
+                                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                                    Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+                                    }.getType();
+                                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                }
+                            }
+                            if (queuePlay) {
+                                addToQueueModelList.get(position).setLike(model.getResponseData().getFlag());
+                            } else
+                                mainPlayModelList.get(position).setLike(model.getResponseData().getFlag());
+
+                            String json = gson.toJson(mainPlayModelList);
+                            editor.putString(CONSTANTS.PREF_KEY_audioList, json);
+                            if (queuePlay) {
+                                String json1 = gson.toJson(addToQueueModelList);
+                                editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
+                            }
+                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.commit();
                         }
-
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
-                    @Override
-                    public void onFailure(Call<AudioLikeModel> call, Throwable t) {
-                        BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
-                    }
-                });
-            } else {
-                BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+                }
+
+                @Override
+                public void onFailure(Call<AudioLikeModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, getActivity());
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
         }
     }
 }

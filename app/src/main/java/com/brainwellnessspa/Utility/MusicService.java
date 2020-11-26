@@ -201,7 +201,9 @@ public class MusicService extends Service {
         try {
             File dir = context.getCacheDir();
             deleteDir(dir);
-        } catch (Exception e) { e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static boolean deleteDir(File dir) {
@@ -214,7 +216,7 @@ public class MusicService extends Service {
                 }
             }
             return dir.delete();
-        } else if(dir!= null && dir.isFile()) {
+        } else if (dir != null && dir.isFile()) {
             return dir.delete();
         } else {
             return false;
@@ -507,7 +509,7 @@ public class MusicService extends Service {
 //    }
 
 
-    public static void buildNotification(PlaybackStatus playbackStatus, Context context, List<MainPlayModel> mainPlayTrack, List<AddToQueueModel> addqTrack, String PlayFrom,int postion) {
+    public static void buildNotification(PlaybackStatus playbackStatus, Context context, List<MainPlayModel> mainPlayTrack, List<AddToQueueModel> addqTrack, String PlayFrom, int postion) {
 
         /**
          * Notification actions -> playbackAction()
@@ -516,22 +518,22 @@ public class MusicService extends Service {
          *  2 -> Next track
          *  3 -> Previous track */
 
-        String songName,songImg,songAudioDirection,songAudioFile,songId,songDuration;
-        if(PlayFrom.equalsIgnoreCase("audioPlay")){
+        String songName, songImg, songAudioDirection, songAudioFile, songId, songDuration;
+        if (PlayFrom.equalsIgnoreCase("audioPlay")) {
             songName = mainPlayTrack.get(postion).getName();
             songImg = mainPlayTrack.get(postion).getImageFile();
             songAudioDirection = mainPlayTrack.get(postion).getAudioDirection();
             songAudioFile = mainPlayTrack.get(postion).getAudioFile();
             songId = mainPlayTrack.get(postion).getID();
             songDuration = mainPlayTrack.get(postion).getAudioDuration();
-        }else if(PlayFrom.equalsIgnoreCase("queuePlay")){
+        } else if (PlayFrom.equalsIgnoreCase("queuePlay")) {
             songName = addqTrack.get(postion).getName();
             songImg = addqTrack.get(postion).getImageFile();
             songAudioDirection = addqTrack.get(postion).getAudioDirection();
             songAudioFile = addqTrack.get(postion).getAudioFile();
             songId = addqTrack.get(postion).getID();
             songDuration = addqTrack.get(postion).getAudioDuration();
-        }else{
+        } else {
             songName = mainPlayTrack.get(postion).getName();
             songImg = mainPlayTrack.get(postion).getImageFile();
             songAudioDirection = mainPlayTrack.get(postion).getAudioDirection();
@@ -541,14 +543,14 @@ public class MusicService extends Service {
         }
 
         try {
-            getMediaBitmep(context, playbackStatus,songName,songImg,songAudioDirection,songAudioFile,songId,songDuration);
+            getMediaBitmep(context, playbackStatus, songName, songImg, songAudioDirection, songAudioFile, songId, songDuration);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void getMediaBitmep(Context context, PlaybackStatus playbackStatus, String songName, String songImg,
-                                      String songAudioDirection, String songAudioFile,String songId,String songDuration) {
+                                      String songAudioDirection, String songAudioFile, String songId, String songDuration) {
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -585,20 +587,20 @@ public class MusicService extends Service {
                     PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     int drw_previous = R.drawable.ic_skip_previous_black_24dp;
                     int drw_next = R.drawable.ic_skip_next_black_24dp;
-                   /* MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-                    builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST,songAudioDirection);
+                    MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
+                    builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, songAudioDirection);
                     builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, songName);
                     builder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, songImg);
-                    builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID,songId
+                    builder.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, songId
                     );
                     builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration());
                     mediaSession.setMetadata(builder.build());
 
                     PlaybackStateCompat playbackStateCompat = new PlaybackStateCompat.Builder()
                             .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE |
-                                            PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID | PlaybackStateCompat.ACTION_PAUSE |
-                                            PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
-                                            PlaybackStateCompat.ACTION_SEEK_TO).build();
+                                    PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID | PlaybackStateCompat.ACTION_PAUSE |
+                                    PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+                                    PlaybackStateCompat.ACTION_SEEK_TO).build();
 
                     mediaSession.setPlaybackState(playbackStateCompat);*/
                       notification = new NotificationCompat.Builder(context, CHANNEL_ID)
@@ -614,31 +616,31 @@ public class MusicService extends Service {
                             .addAction(notificationAction, "Play", play_pauseAction)
                             .addAction(drw_next, "Next", playbackAction(2, context))
                             .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                                    .setMediaSession(mediaSession.getSessionToken())
+                                    /*.setMediaSession(mediaSession.getSessionToken())*/
                                     .setShowActionsInCompactView(0, 1, 2))
                             .setDeleteIntent(
                                     MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP))
                             .setPriority(NotificationCompat.PRIORITY_LOW)
                             .build();
                     /* TODO: temp comment*/
-               /* ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
-                try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                                "Brain Wellness App", NotificationManager.IMPORTANCE_LOW);
+                    ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                                    "Brain Wellness App", NotificationManager.IMPORTANCE_LOW);
 
-                        NotificationManager  notificationManager = context.getSystemService(NotificationManager.class);
-                        if (notificationManager != null) {
-                            notificationManager.createNotificationChannel(channel);
+                            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+                            if (notificationManager != null) {
+                                notificationManager.createNotificationChannel(channel);
+                            }
+                        } else {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+                            }
                         }
-                    } else {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            NotificationManager  notificationManager = context.getSystemService(NotificationManager.class);
-                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -700,6 +702,7 @@ public class MusicService extends Service {
     /**
      * Play new Audio
      */
+
 //    private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
 //        @Override
 //        public void onReceive(Context context, Intent intent) {
@@ -713,8 +716,8 @@ public class MusicService extends Service {
 //                stopSelf();
 //            }
 
-            //A PLAY_NEW_AUDIO action received
-            //reset mediaPlayer to play the new Audio
+    //A PLAY_NEW_AUDIO action received
+    //reset mediaPlayer to play the new Audio
 //            stopMedia();
 //            mediaPlayer.reset();
 //            initMediaPlayer();

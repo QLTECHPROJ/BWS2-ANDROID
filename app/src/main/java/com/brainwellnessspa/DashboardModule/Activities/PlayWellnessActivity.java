@@ -431,20 +431,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         });
 
         binding.llPlay.setOnClickListener(v -> {
-          /*  if (isPlaying) {
-                onTrackPause();
-            } else {
-                onTrackPlay();
-            }*/
             callPlay();
         });
 
         binding.llPause.setOnClickListener(view -> {
-           /* if (isPlaying) {
-                onTrackPause();
-            } else {
-                onTrackPlay();
-            }*/
             callPause();
         });
 
@@ -514,7 +504,14 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         fancyShowCaseView31 = new FancyShowCaseView.Builder(activity)
                 .customView(R.layout.layout_player_options, view -> {
                     view.findViewById(R.id.rlSearch);
+                    ImageView ivOptions = view.findViewById(R.id.ivOptions);
                     RelativeLayout rlDone = view.findViewById(R.id.rlDone);
+                    Glide.with(ctx)
+                            .load(R.drawable.highlight_icons)
+                            .asGif()
+                            .placeholder(R.drawable.highlight_icons)
+                            .crossFade()
+                            .into(ivOptions);
                     rlDone.setOnClickListener(v -> fancyShowCaseView31.hide());
                 })
                 .focusShape(FocusShape.ROUNDED_RECTANGLE)
@@ -575,30 +572,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         handler.postDelayed(UpdateSongTime, 100);
         buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
     }
-
-/*
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getExtras().getString("actionname");
-            switch (action) {
-                case BWSApplication.ACTION_PREVIUOS:
-                    onTrackPrevious();
-                    break;
-                case BWSApplication.ACTION_PLAY:
-                    if (isPlaying) {
-                        onTrackPause();
-                    } else {
-                        onTrackPlay();
-                    }
-                    break;
-                case BWSApplication.ACTION_NEXT:
-                    onTrackNext();
-                    break;
-            }
-        }
-    };
-*/
 
     private void callPrevious() {
         if (isPrepare || isMediaStart || isPause) {
@@ -1055,7 +1028,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void callRepeat() {
-
         if (IsRepeat.equalsIgnoreCase("")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -1536,11 +1508,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));*/
     }
 
-    /* todo: foram notification comment*/
     private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
             if (isPause || !isMediaStart) {
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
@@ -3056,83 +3026,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
     }
 
-  /*  @Override
-    public void onTrackPrevious() {
-        if (!url.equalsIgnoreCase("")) {
-            if (isPlaying) {
-                onTrackPause();
-            } else {
-                onTrackPlay();
-            }
-            isPlaying = false;
-            callPrevious();
-        }
-    }
-
-    @Override
-    public void onTrackPlay() {
-        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
-                R.drawable.ic_pause_black_24dp, position, mainPlayModelList.size() - 1);
-        if (!isMediaStart) {
-            isCompleteStop = false;
-            isprogressbar = true;
-//            handler.postDelayed(UpdateSongTime, 500);
-            binding.llPlay.setVisibility(View.GONE);
-            binding.llPause.setVisibility(View.GONE);
-            binding.llProgressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            callMedia();
-        } else if (isCompleteStop) {
-            isCompleteStop = false;
-            isprogressbar = true;
-//            handler.postDelayed(UpdateSongTime, 500);
-            binding.llPlay.setVisibility(View.GONE);
-            binding.llPause.setVisibility(View.GONE);
-            binding.llProgressBar.setVisibility(View.VISIBLE);
-            binding.progressBar.setVisibility(View.VISIBLE);
-            callMedia();
-        } else {
-            binding.llPlay.setVisibility(View.GONE);
-            binding.llPause.setVisibility(View.VISIBLE);
-            binding.llProgressBar.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.GONE);
-            resumeMedia();
-            isPause = false;
-        }
-//        handler.postDelayed(UpdateSongTime, 100);
-        binding.tvTitle.setText(mainPlayModelList.get(position).getAudiomastercat());
-        binding.tvName.setText(mainPlayModelList.get(position).getName());
-        isPlaying = true;
-    }
-
-    @Override
-    public void onTrackPause() {
-        BWSApplication.createNotification(ctx, mainPlayModelList.get(position),
-                R.drawable.ic_play_arrow_black_24dp, position, mainPlayModelList.size() - 1);
-        isPlaying = false;
-//        handler.removeCallbacks(UpdateSongTime);
-        binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
-        pauseMedia();
-        binding.llProgressBar.setVisibility(View.GONE);
-        binding.progressBar.setVisibility(View.GONE);
-        binding.llPlay.setVisibility(View.VISIBLE);
-        binding.llPause.setVisibility(View.GONE);
-        oTime = binding.simpleSeekbar.getProgress();
-    }
-
-    @Override
-    public void onTrackNext() {
-        if (!url.equalsIgnoreCase("")) {
-            if (isPlaying) {
-                onTrackPause();
-            } else {
-                onTrackPlay();
-            }
-            isPlaying = false;
-            callNext();
-        }
-    }
-*/
  /*   @Override
     public void onAudioFocusChange(int i) {
         switch (i) {
