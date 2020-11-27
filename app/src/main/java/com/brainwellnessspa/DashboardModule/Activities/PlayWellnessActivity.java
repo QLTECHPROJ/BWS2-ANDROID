@@ -29,6 +29,7 @@ import android.widget.SeekBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
@@ -86,6 +87,7 @@ import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.ToBackward;
 import static com.brainwellnessspa.Utility.MusicService.ToForward;
 import static com.brainwellnessspa.Utility.MusicService.buildNotification;
+import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
 import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
@@ -124,6 +126,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     private Handler handler;
     FancyShowCaseView fancyShowCaseView11, fancyShowCaseView21, fancyShowCaseView31;
     FancyShowCaseQueue queue;
+    LocalBroadcastManager localBroadcastManager;
+    Intent localIntent;
     //    private Handler handler1;
     //        private AudioManager mAudioManager;
     private Runnable UpdateSongTime = new Runnable() {
@@ -283,6 +287,12 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             handler.postDelayed(this, 100);
         }
     };
+    private BroadcastReceiver listener = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
+    };
 /*    private Runnable UpdateSongTime1 = new Runnable() {
         @Override
         public void run() {
@@ -320,12 +330,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         downloadAudioDetailsList1 = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         MakeArray();
+        deleteCache(ctx);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
-
+        IntentFilter filter = new IntentFilter(Broadcast_PLAY_NEW_AUDIO);
+        registerReceiver(playNewAudio, filter);
+        localIntent = new Intent("play_pause_Action");
+        localBroadcastManager = LocalBroadcastManager.getInstance(ctx);
         binding.simpleSeekbar.setOnSeekBarChangeListener(this);
         MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.92f, 0);
@@ -1612,9 +1626,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mediaSessionManager = (MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE);
         }
-        mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-        // Create a new MediaSession
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//        mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+//        // Create a new MediaSession
+//        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         mediaSession = new MediaSessionCompat(ctx.getApplicationContext(), "AudioPlayer");
         //Get MediaSessions transport controls
@@ -2779,6 +2793,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     @Override
     protected void onDestroy() {
         unregisterReceiver(playNewAudio);
+        LocalBroadcastManager.getInstance(ctx).unregisterReceiver(listener);
+
         super.onDestroy();
 //        releasePlayer();
     }

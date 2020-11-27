@@ -84,6 +84,7 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.T
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.buildNotification;
+import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
 import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
@@ -128,6 +129,20 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     //    boolean isPlaying = false;
 //    BroadcastReceiver broadcastReceiver;
     //    private AudioManager mAudioManager;
+    private BroadcastReceiver playNewAudio = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (isPause || !isMediaStart) {
+                binding.llPlay.setVisibility(View.VISIBLE);
+                binding.llPause.setVisibility(View.GONE);
+                buildNotification(PlaybackStatus.PAUSED, context,mainPlayModelList,addToQueueModelList,playFrom,position);
+            } else {
+                binding.llPause.setVisibility(View.VISIBLE);
+                binding.llPlay.setVisibility(View.GONE);
+                buildNotification(PlaybackStatus.PLAYING, context,mainPlayModelList,addToQueueModelList,playFrom,position);
+            }
+        }
+    };
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -232,6 +247,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         ctx = ViewQueueActivity.this;
         activity = ViewQueueActivity.this;
 
+        deleteCache(ctx);
         downloadAudioDetailsList = new ArrayList<>();
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);
@@ -366,6 +382,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         binding.llProgressBar.setVisibility(View.GONE);
         binding.progressBar.setVisibility(View.GONE);
         oTime = binding.simpleSeekbar.getProgress();
+        buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
     }
 
     private void callPrevious() {
@@ -431,6 +448,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     }
                 }
             }
+            buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
@@ -497,6 +515,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                     }
                 }
             }
+            buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
@@ -530,6 +549,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             resumeMedia();
             isPause = false;
             handler.postDelayed(UpdateSongTime, 500);
+            buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
         }
     }
 
@@ -737,6 +757,15 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 binding.llPause.setVisibility(View.VISIBLE);
             });
         }
+        if (isPause) {
+            binding.llPlay.setVisibility(View.VISIBLE);
+            binding.llPause.setVisibility(View.GONE);
+            buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
+        } else {
+            binding.llPause.setVisibility(View.VISIBLE);
+            binding.llPlay.setVisibility(View.GONE);
+            buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
+        }
         if (isMediaStart /*&& !audioFile.equalsIgnoreCase("")*/) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 if(mediaPlayer.isPlaying()) {
@@ -753,9 +782,9 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             mediaSessionManager = (MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE);
         }
 
-        mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+//        mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         // Create a new MediaSession
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         mediaSession = new MediaSessionCompat(ctx.getApplicationContext(), "AudioPlayer");
         //Get MediaSessions transport controls
@@ -791,7 +820,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 if (!url.equalsIgnoreCase("")) {
                     callNext();
 //                updateMetaData();
-                    buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
                 }
             }
 
@@ -802,7 +830,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 if (!url.equalsIgnoreCase("")) {
                     callPrevious();
 //                updateMetaData();
-                    buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
                 }
             }
 

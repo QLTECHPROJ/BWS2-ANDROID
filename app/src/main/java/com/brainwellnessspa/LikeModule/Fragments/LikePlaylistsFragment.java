@@ -27,14 +27,9 @@ import android.widget.TextView;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity;
-import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
-import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.PlaylistLikeModel;
-import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
 import com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment;
-import com.brainwellnessspa.InvoiceModule.Models.InvoiceListModel;
-import com.brainwellnessspa.LikeModule.Activities.PlaylistLikeActivity;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.APIClient;
@@ -46,7 +41,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;

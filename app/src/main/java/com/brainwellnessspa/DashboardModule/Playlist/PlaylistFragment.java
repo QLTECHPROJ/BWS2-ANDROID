@@ -70,6 +70,7 @@ import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.UserCreated;
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.Isclose;
+import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -96,6 +97,7 @@ public class PlaylistFragment extends Fragment {
         if (getArguments() != null) {
             Check = getArguments().getString("Check");
         }
+        deleteCache(getActivity());
         downloadPlaylistDetailsList = new ArrayList<>();
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);

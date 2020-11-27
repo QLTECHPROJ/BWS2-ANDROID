@@ -17,6 +17,8 @@ import com.brainwellnessspa.databinding.ActivityAudioFaqBinding;
 
 import java.util.ArrayList;
 
+import static com.brainwellnessspa.Utility.MusicService.deleteCache;
+
 public class AudioFaqActivity extends AppCompatActivity {
     ActivityAudioFaqBinding binding;
     Context ctx;
@@ -30,6 +32,7 @@ public class AudioFaqActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_audio_faq);
         ctx = AudioFaqActivity.this;
 
+        deleteCache(ctx);
         faqListModel = new ArrayList<>();
         if (getIntent() != null) {
             faqListModel = getIntent().getParcelableArrayListExtra("faqListModel");

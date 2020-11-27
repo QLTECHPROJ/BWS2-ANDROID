@@ -73,6 +73,7 @@ import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.isPlayPlaylist;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
+import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
@@ -104,6 +105,7 @@ public class PlaylistLikeActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             PlaylistID = getIntent().getStringExtra("PlaylistID");
         }
+        deleteCache(ctx);
         addDisclaimer();
         binding.llBack.setOnClickListener(view -> finish());
         PrepareData();

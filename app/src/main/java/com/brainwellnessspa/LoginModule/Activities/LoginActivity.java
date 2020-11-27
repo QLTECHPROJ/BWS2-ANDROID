@@ -39,6 +39,7 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.BWSApplication.getKey;
 import static com.brainwellnessspa.LoginModule.Activities.OtpActivity.comeLogin;
+import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isStop;
 import static com.brainwellnessspa.Utility.MusicService.isrelese;
@@ -80,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
             MobileNo = getIntent().getStringExtra(CONSTANTS.MobileNo);
         }
 
+        deleteCache(ctx);
         if (isMediaStart) {
             stopMedia();
             releasePlayer();

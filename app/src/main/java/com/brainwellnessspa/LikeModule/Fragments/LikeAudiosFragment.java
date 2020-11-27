@@ -260,6 +260,10 @@ public class LikeAudiosFragment extends Fragment {
                     i.putExtra("ID", modelList.get(position).getID());
                     i.putExtra("position", position);
                     i.putExtra("PlaylistAudioId", "");
+                    Gson gson = new Gson();
+                    String json = gson.toJson(modelList);
+                    i.putExtra("data", json);
+                    i.putExtra("comeFrom", "myLikeAudioList");
                     startActivity(i);
                 }
             });

@@ -57,6 +57,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
+import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
@@ -74,6 +75,7 @@ public class AddQueueActivity extends AppCompatActivity {
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> mData;
     ArrayList<DownloadAudioDetails> mDataDownload;
+    ArrayList<LikesHistoryModel.ResponseData.Audio> mDataLike;
     MainPlayModel mainPlayMode;
     AddToQueueModel addToQueueModel;
     int position, listSize;
@@ -128,6 +130,7 @@ public class AddQueueActivity extends AppCompatActivity {
             }.getType();
 //            fileNameList = gson1.fromJson(json11, type);
         }*/
+        deleteCache(ctx);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -180,6 +183,11 @@ public class AddQueueActivity extends AppCompatActivity {
                 Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
                 }.getType();
                 mDataDownload = gson.fromJson(js1, type);
+            }else if(comeFrom.equalsIgnoreCase("myLikeAudioList")){
+                String js1 = getIntent().getStringExtra("data");
+                Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                }.getType();
+                mDataLike = gson.fromJson(js1, type);
             } else {
                 mData = getIntent().getParcelableArrayListExtra("data");
             }
@@ -426,6 +434,24 @@ public class AddQueueActivity extends AppCompatActivity {
                 addToQueueModel.setLike(mDataDownload.get(i).getLike());
                 addToQueueModel.setDownload(mDataDownload.get(i).getDownload());
                 addToQueueModel.setAudioDuration(mDataDownload.get(i).getAudioDuration());
+            } else if (comeFrom.equalsIgnoreCase("myLikeAudioList")) {
+                AudioFile = mDataLike.get(i).getAudioFile();
+                if (AudioFile.equalsIgnoreCase("")) {
+                    i = i + 1;
+                    AudioFile = mDataLike.get(i).getAudioFile();
+                }
+                PlaylistId = "";
+                addToQueueModel.setID(mDataLike.get(i).getID());
+                addToQueueModel.setName(mDataLike.get(i).getName());
+                addToQueueModel.setAudioFile(mDataLike.get(i).getAudioFile());
+                addToQueueModel.setPlaylistID("");
+                addToQueueModel.setAudioDirection(mDataLike.get(i).getAudioDirection());
+                addToQueueModel.setAudiomastercat(mDataLike.get(i).getAudiomastercat());
+                addToQueueModel.setAudioSubCategory(mDataLike.get(i).getAudioSubCategory());
+                addToQueueModel.setImageFile(mDataLike.get(i).getImageFile());
+                addToQueueModel.setLike(mDataLike.get(i).getLike());
+                addToQueueModel.setDownload(mDataLike.get(i).getDownload());
+                addToQueueModel.setAudioDuration(mDataLike.get(i).getAudioDuration());
             } else {
                 AudioFile = mData.get(i).getAudioFile();
                 if (AudioFile.equalsIgnoreCase("")) {
@@ -708,6 +734,14 @@ public class AddQueueActivity extends AppCompatActivity {
                     Name = mDataDownload.get(i).getName();
                     audioFile = mDataDownload.get(i).getAudioFile();
                 }
+            } else if (comeFrom.equalsIgnoreCase("myLikeAudioList")) {
+                Name = mDataLike.get(i).getName();
+                audioFile = mDataLike.get(i).getAudioFile();
+                if (audioFile.equalsIgnoreCase("")) {
+                    i = i + 1;
+                    Name = mDataLike.get(i).getName();
+                    audioFile = mDataLike.get(i).getAudioFile();
+                }
             } else {
                 Name = mData.get(i).getName();
                 audioFile = mData.get(i).getAudioFile();
@@ -935,6 +969,28 @@ public class AddQueueActivity extends AppCompatActivity {
                                             mainPlayModel1.setLike("1");
                                             mainPlayModel1.setDownload(mDataDownload.get(position).getDownload());
                                             mainPlayModel1.setAudioDuration(mDataDownload.get(position).getAudioDuration());
+                                        } else if (comeFrom.equalsIgnoreCase("myLikeAudioList")) {
+                                            mainPlayModel.setID(mDataLike.get(position).getID());
+                                            mainPlayModel.setName(mDataLike.get(position).getName());
+                                            mainPlayModel.setAudioFile(mDataLike.get(position).getAudioFile());
+                                            mainPlayModel.setAudioDirection(mDataLike.get(position).getAudioDirection());
+                                            mainPlayModel.setAudiomastercat(mDataLike.get(position).getAudiomastercat());
+                                            mainPlayModel.setAudioSubCategory(mDataLike.get(position).getAudioSubCategory());
+                                            mainPlayModel.setImageFile(mDataLike.get(position).getImageFile());
+                                            mainPlayModel.setLike("1");
+                                            mainPlayModel.setDownload(mDataLike.get(position).getDownload());
+                                            mainPlayModel.setAudioDuration(mDataLike.get(position).getAudioDuration());
+
+                                            mainPlayModel1.setID(mDataLike.get(position).getID());
+                                            mainPlayModel1.setName(mDataLike.get(position).getName());
+                                            mainPlayModel1.setAudioFile(mDataLike.get(position).getAudioFile());
+                                            mainPlayModel1.setAudioDirection(mDataLike.get(position).getAudioDirection());
+                                            mainPlayModel1.setAudiomastercat(mDataLike.get(position).getAudiomastercat());
+                                            mainPlayModel1.setAudioSubCategory(mDataLike.get(position).getAudioSubCategory());
+                                            mainPlayModel1.setImageFile(mDataLike.get(position).getImageFile());
+                                            mainPlayModel1.setLike("1");
+                                            mainPlayModel1.setDownload(mDataLike.get(position).getDownload());
+                                            mainPlayModel1.setAudioDuration(mDataLike.get(position).getAudioDuration());
                                         } else {
                                             mainPlayModel.setID(mData.get(position).getID());
                                             mainPlayModel.setName(mData.get(position).getName());
@@ -1075,7 +1131,6 @@ public class AddQueueActivity extends AppCompatActivity {
                             binding.llOptions.setVisibility(View.VISIBLE);
                             binding.llRemovePlaylist.setVisibility(View.GONE);
                         }
-
                         DirectionModel directionModel = response.body();
                         int ix = position;
                         if (!comeFrom.equalsIgnoreCase("")) {
@@ -1084,15 +1139,21 @@ public class AddQueueActivity extends AppCompatActivity {
                                 AudioFile = mDataDownload.get(ix).getAudioFile();
                                 PlaylistId = "";
                                 audioFileName = mDataDownload.get(ix).getName();
+                            } else if (comeFrom.equalsIgnoreCase("myLikeAudioList")) {
+                                AudioFile = mDataLike.get(ix).getAudioFile();
+                                PlaylistId = "";
+                                audioFileName = mDataLike.get(ix).getName();
                             } else {
                                 AudioFile = mData.get(ix).getAudioFile();
                                 PlaylistId = mData.get(ix).getPlaylistID();
                                 audioFileName = mData.get(ix).getName();
                             }
                         } else {
-                            AudioFile = mainPlayModelList.get(ix).getAudioFile();
-                            PlaylistId = mainPlayModelList.get(ix).getPlaylistID();
-                            audioFileName = mainPlayModelList.get(ix).getName();
+                            if (mainPlayModelList.size() != 0) {
+                                AudioFile = mainPlayModelList.get(ix).getAudioFile();
+                                PlaylistId = mainPlayModelList.get(ix).getPlaylistID();
+                                audioFileName = mainPlayModelList.get(ix).getName();
+                            }
                         }
                         /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
                             handler1.postDelayed(UpdateSongTime1, 500);

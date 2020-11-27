@@ -32,6 +32,7 @@ import java.util.List;
 
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
+import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
@@ -65,6 +66,7 @@ public class DownloadsActivity extends AppCompatActivity {
             comefromDownload = "0";
             finish();
         });
+        deleteCache(ctx);
         prepareData();
     }
 

@@ -47,6 +47,7 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.brainwellnessspa.DashboardModule.Appointment.AppointmentDetails.AptAudioFragment.comeRefreshData;
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
+import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.releasePlayer;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
@@ -75,6 +76,7 @@ public class AppointmentDetailsFragment extends Fragment {
             appointmentName = getArguments().getString("appointmentName");
             appointmentImage = getArguments().getString("appointmentImage");
         }
+        deleteCache(activity);
 
         binding.llBack.setOnClickListener(view1 -> callBack());
         getAppointmentData();

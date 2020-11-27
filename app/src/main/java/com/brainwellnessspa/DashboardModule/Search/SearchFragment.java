@@ -72,6 +72,7 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
+import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
@@ -132,6 +133,7 @@ public class SearchFragment extends Fragment {
         searchEditText.setTextColor(getResources().getColor(R.color.gray));
         searchEditText.setHintTextColor(getResources().getColor(R.color.gray));
         ImageView closeButton = binding.searchView.findViewById(R.id.search_close_btn);
+        deleteCache(getActivity());
         binding.searchView.clearFocus();
         closeButton.setOnClickListener(v -> {
             binding.searchView.clearFocus();
