@@ -308,18 +308,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         view = binding.getRoot();
         activity = getActivity();
         ctx = getActivity();
-      /*  view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener((v, keyCode, event) -> {
-            if (event.getAction() == KeyEvent.KEYCODE_HOME || event.getAction() == KeyEvent.KEYCODE_APP_SWITCH || event.getAction() == KeyEvent.ACTION_UP) {
-                bg = true;
-                Log.e("Phone is BG","");
-                return true;
-            }else{
-                bg = false;
-            }
-            return false;
-        });*/
         mainPlayModelList = new ArrayList<>();
         addToQueueModelList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
@@ -418,11 +406,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void callPlay() {
-       /* if (isPlaying) {
-            onTrackPause();
-        } else {
-            onTrackPlay();
-        }*/
+        buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         try {
             if (!isMediaStart) {
                 isCompleteStop = false;
@@ -451,8 +435,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 isPause = false;
             }
             player = 1;
-            buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
-
             localIntent.putExtra("MyData", "play");
             localBroadcastManager.sendBroadcast(localIntent);
             handler12.postDelayed(UpdateSongTime12, 100);
@@ -467,6 +449,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void callPause() {
+        buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         handler12.removeCallbacks(UpdateSongTime12);
         binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
       /*  if (isPlaying) {
@@ -483,7 +466,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.VISIBLE);
         }
         oTime = binding.simpleSeekbar.getProgress();
-        buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
 
         localIntent.putExtra("MyData", "pause");
         localBroadcastManager.sendBroadcast(localIntent);

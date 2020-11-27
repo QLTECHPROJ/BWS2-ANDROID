@@ -598,24 +598,11 @@ public class MusicService extends Service {
                         //create the play action
                         play_pauseAction = playbackAction(0, context);
                     }
-                    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-//        MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
-                    PendingIntent pendingIntentPrevious;
                     Intent intent = new Intent(context, PlayWellnessActivity.class);
                     intent.putExtra("com.brainwellnessspa.notifyId", NOTIFICATION_ID);
                     PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    int drw_previous;
-                    Intent intentPrevious = new Intent(context, NotificationActionService.class).setAction(ACTION_PREVIUOS);
-                    pendingIntentPrevious = PendingIntent.getBroadcast(context, 0, intentPrevious, PendingIntent.FLAG_UPDATE_CURRENT);
-                    drw_previous = R.drawable.ic_skip_previous_black_24dp;
-
-                    Intent intentPlay = new Intent(context, NotificationActionService.class).setAction(ACTION_PLAY);
-                    PendingIntent pendingIntentPlay = PendingIntent.getBroadcast(context, 0, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
-                    PendingIntent pendingIntentNext;
-                    int drw_next;
-                    Intent intentNext = new Intent(context, NotificationActionService.class).setAction(ACTION_NEXT);
-                    pendingIntentNext = PendingIntent.getBroadcast(context, 0, intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
-                    drw_next = R.drawable.ic_skip_next_black_24dp;
+                    int drw_previous = R.drawable.ic_skip_previous_black_24dp;
+                    int drw_next = R.drawable.ic_skip_next_black_24dp;
                     //create notification
                   /*  MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
                     builder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, songAudioDirection);
@@ -651,14 +638,14 @@ public class MusicService extends Service {
                                     .setShowActionsInCompactView(0, 1, 2))
                             .setDeleteIntent(
                                     MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_STOP))
-                            .setPriority(NotificationCompat.PRIORITY_LOW)
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
                             .build();
                     /* TODO: temp comment*/
                     ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                                    "Brain Wellness App", NotificationManager.IMPORTANCE_LOW);
+                                    "Brain Wellness App", NotificationManager.IMPORTANCE_HIGH);
 
                             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
                             if (notificationManager != null) {

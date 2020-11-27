@@ -1254,6 +1254,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                initMediaplyer();
                 if (isPause) {
                     binding.llProgressBar.setVisibility(View.GONE);
                     binding.progressBar.setVisibility(View.GONE);
@@ -1281,7 +1282,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     binding.llPlay.setVisibility(View.GONE);
                     callMedia();
                 }
-                initMediaplyer();
                 if (isMediaStart) {
                     mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                         if (mediaPlayer.isPlaying()) {
