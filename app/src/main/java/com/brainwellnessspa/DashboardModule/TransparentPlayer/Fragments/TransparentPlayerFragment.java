@@ -2068,16 +2068,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(listener);
         KeyguardManager myKM = (KeyguardManager) ctx.getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
 
-        if( myKM.isKeyguardLocked()) {
+        if (myKM.isKeyguardLocked()) {
             isplaywellClick = false;
-            Log.e("Phone is locked","");
-        } else  if(isplaywellClick){
+            Log.e("Phone is locked", "");
+        } else if (isplaywellClick) {
             handler12.removeCallbacks(UpdateSongTime12);
-            Log.e("Phone is not BG","");
+            Log.e("Phone is not BG", "");
             isplaywellClick = false;
-        }else {
+        } else {
             isplaywellClick = false;
-            Log.e("Phone is not locked","");
+            Log.e("Phone is not locked", "");
         }
         super.onPause();
     }

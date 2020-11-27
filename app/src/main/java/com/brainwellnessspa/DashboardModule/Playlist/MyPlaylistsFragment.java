@@ -197,7 +197,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     isPlayPlaylist = 2;
                                     binding.ivPlaylistStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_blue_play_icon));
                                 }
-
                                 if (isMediaStart) {
                                     adpater2.notifyDataSetChanged();
                                 }

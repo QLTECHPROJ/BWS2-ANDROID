@@ -98,6 +98,7 @@ public class MusicService extends Service {
     private PhoneStateListener phoneStateListener;
     private TelephonyManager telephonyManager;
     public static Notification notification;
+
     /**
      * Service lifecycle methods
      */
@@ -125,7 +126,7 @@ public class MusicService extends Service {
         handleIncomingActions(intent);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(0,notification,FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+            startForeground(0, notification, FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
         }
        /* try {
             // You only need to create the channel on API 26+ devices
@@ -161,7 +162,7 @@ public class MusicService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        if(intent!=null) {
+        if (intent != null) {
             if (intent.hasExtra("screen_state")) {
                 boolean screenOn = intent.getBooleanExtra("screen_state", false);
 
@@ -621,7 +622,7 @@ public class MusicService extends Service {
 
                     mediaSession.setPlaybackState(playbackStateCompat);*/
 
-                      notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                             .setSmallIcon(R.drawable.ic_music_note)
                             .setContentTitle(songName)
                             .setContentText(songAudioDirection)
@@ -743,7 +744,6 @@ public class MusicService extends Service {
 //            buildNotification(PlaybackStatus.PLAYING, context, mainPlayModel);
 //        }
 //    };
-
     private void register_playNewAudio() {
         //Register playNewMedia receiver
 //        IntentFilter filter = new IntentFilter(Broadcast_PLAY_NEW_AUDIO);

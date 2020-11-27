@@ -62,6 +62,9 @@ public class OtpModel {
         @SerializedName("LastName")
         @Expose
         private String lastName;
+        @SerializedName("FirstLogin")
+        @Expose
+        private String firstLogin;
         @SerializedName("Email")
         @Expose
         private String email;
@@ -87,6 +90,14 @@ public class OtpModel {
 
         public void setUserID(String userID) {
             this.userID = userID;
+        }
+
+        public String getFirstLogin() {
+            return firstLogin;
+        }
+
+        public void setFirstLogin(String firstLogin) {
+            this.firstLogin = firstLogin;
         }
 
         public String getIsLock() {
