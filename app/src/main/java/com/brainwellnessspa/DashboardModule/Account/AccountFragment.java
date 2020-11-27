@@ -111,10 +111,10 @@ public class AccountFragment extends Fragment {
         binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
         profileViewData(getActivity());
         Properties p = new Properties();
-        p.putValue("userId",UserID);
-        BWSApplication.addToSegment("Account Screen Viewed",p,CONSTANTS.screen);
+        p.putValue("userId", UserID);
+        BWSApplication.addToSegment("Account Screen Viewed", p, CONSTANTS.screen);
         binding.tvVersion.setText("Version " + BuildConfig.VERSION_NAME);
-        showTooltiop();
+//        showTooltiop();
         binding.llDownloads.setOnClickListener(view12 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -292,10 +292,10 @@ public class AccountFragment extends Fragment {
                         }
                     });*/
 
-                }).closeOnTouch(false)
+                })
                 .focusShape(FocusShape.ROUNDED_RECTANGLE)
                 .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                .focusOn(binding.llDownloads).closeOnTouch(false)
+                .focusOn(binding.llDownloads).closeOnTouch(true)
                 .build();
 
         fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
@@ -305,7 +305,7 @@ public class AccountFragment extends Fragment {
                 }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                 .enterAnimation(enterAnimation)
                 .exitAnimation(exitAnimation).focusOn(binding.llBillingOrder)
-                .closeOnTouch(false).build();
+                .closeOnTouch(true).build();
 
         fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
                 .customView(R.layout.layout_account_resources, view -> {
@@ -315,7 +315,7 @@ public class AccountFragment extends Fragment {
                 })
                 .focusShape(FocusShape.ROUNDED_RECTANGLE)
                 .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                .focusOn(binding.llResource).closeOnTouch(false).build();
+                .focusOn(binding.llResource).closeOnTouch(true).build();
 
 
         queue = new FancyShowCaseQueue()

@@ -293,13 +293,15 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".Services.ScreenReceiver"
-                android:exported="true">
+        <receiver
+            android:name=".Services.ScreenReceiver"
+            android:exported="true">
             <intent-filter>
-            <action android:name="android.intent.action.SCREEN_ON" />
-        </intent-filter>
+                <action android:name="android.intent.action.SCREEN_ON" />
+            </intent-filter>
         </receiver>
         <receiver android:name=".Services.NotificationActionService" />
+
         <service android:name=".Services.OnClearFromRecentService" />
     </application>
 
