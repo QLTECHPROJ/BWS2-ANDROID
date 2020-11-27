@@ -80,6 +80,7 @@ public class ViewAllPlaylistFragment extends Fragment {
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+
         if (getArguments() != null) {
             GetLibraryID = getArguments().getString("GetLibraryID");
             Name = getArguments().getString("Name");
@@ -127,7 +128,6 @@ public class ViewAllPlaylistFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 binding.tvTitle.setText("My Downloads");
-
                 ArrayList<ViewAllPlayListModel.ResponseData.Detail> listModelList = new ArrayList<>();
                 for (int i = 0; i < playlistList.size(); i++) {
                     ViewAllPlayListModel.ResponseData.Detail detail = new ViewAllPlayListModel.ResponseData.Detail();

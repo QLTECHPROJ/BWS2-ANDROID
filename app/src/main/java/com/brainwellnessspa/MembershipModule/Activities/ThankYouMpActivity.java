@@ -15,6 +15,7 @@ import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityThankYouMembershipBinding;
 
+import static com.brainwellnessspa.InvoiceModule.Activities.InvoiceActivity.invoiceToDashboard;
 public class ThankYouMpActivity extends AppCompatActivity {
     ActivityThankYouMembershipBinding binding;
     private long mLastClickTime = 0;
@@ -35,6 +36,7 @@ public class ThankYouMpActivity extends AppCompatActivity {
                 return;
             }
             mLastClickTime = SystemClock.elapsedRealtime();
+            invoiceToDashboard = 1;
             Intent i = new Intent(ThankYouMpActivity.this, DashboardActivity.class);
             startActivity(i);
             finish();

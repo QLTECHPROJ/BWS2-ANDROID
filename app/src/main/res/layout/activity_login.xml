@@ -203,11 +203,12 @@
 
                 <TextView
                     android:id="@+id/tvRegister"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_6sdp"
+                    android:paddingVertical="@dimen/_6sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="top|center"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:paddingTop="@dimen/_12sdp"
                     android:text="@string/register_text"
                     android:textColor="@color/white"

@@ -1,33 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_80sdp"
-        android:layout_marginRight="@dimen/_20sdp"
-        android:orientation="horizontal"
-        android:weightSum="1">
+        android:layout_marginRight="@dimen/_108sdp">
 
         <LinearLayout
-            android:layout_width="@dimen/_0sdp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.25"/>
-
-
-        <LinearLayout
-            android:layout_width="@dimen/_0sdp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_weight="0.75"
-            android:orientation="vertical"
-            android:paddingRight="@dimen/_5sdp">
+            android:layout_alignParentRight="true"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
@@ -44,8 +34,8 @@
                     android:layout_width="@dimen/_90sdp"
                     android:layout_height="@dimen/_90sdp"
                     android:layout_gravity="center"
-                    android:rotation="180"
                     android:layout_marginLeft="@dimen/_20sdp"
+                    android:rotation="180"
                     android:src="@drawable/highlights_arrow" />
 
             </LinearLayout>
@@ -60,7 +50,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="start"
                 android:lineSpacingExtra="@dimen/_4sdp"
-                android:text="Notifies you of the time you have chosen to play your playlist"
+                android:text="Notifies you of the time you \nhave chosen to play your \nplaylist"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 
@@ -90,8 +80,8 @@
             </RelativeLayout>
 
         </LinearLayout>
+    </RelativeLayout>
 
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -132,4 +122,4 @@
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

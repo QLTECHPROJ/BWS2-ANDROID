@@ -126,7 +126,6 @@ public class AudioDownloadsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         RefreshData();
-
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(listener, new IntentFilter("play_pause_Action"));
         audioList = GetAllMedia(getActivity());

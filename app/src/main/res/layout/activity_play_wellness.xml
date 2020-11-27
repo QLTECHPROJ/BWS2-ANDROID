@@ -34,8 +34,8 @@
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.16"
-                        android:paddingTop="@dimen/_10sdp"
-                        android:paddingLeft="@dimen/_16sdp">
+                        android:paddingLeft="@dimen/_16sdp"
+                        android:paddingTop="@dimen/_10sdp">
 
                         <ImageView
                             android:layout_width="@dimen/_20sdp"
@@ -80,11 +80,11 @@
                         android:id="@+id/llMore"
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/_16sdp"
                         android:layout_weight="0.18"
                         android:clickable="false"
                         android:gravity="right"
-                        android:paddingTop="@dimen/_10sdp"
-                        android:layout_marginRight="@dimen/_16sdp">
+                        android:paddingTop="@dimen/_10sdp">
 
                         <ImageView
                             android:id="@+id/ivMore"
@@ -123,8 +123,8 @@
                                     android:id="@+id/ivRestaurantImage"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/disclaimer"
-                                    android:scaleType="fitXY" />
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/disclaimer" />
 
                                 <ImageView
                                     android:id="@+id/ivBg"
@@ -359,8 +359,8 @@
                             android:layout_width="@dimen/_0sdp"
                             android:layout_height="match_parent"
                             android:layout_weight="0.19"
-                            android:paddingRight="@dimen/_6sdp"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:paddingRight="@dimen/_6sdp">
 
                             <ImageView
                                 android:id="@+id/ivnext"

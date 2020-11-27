@@ -11,7 +11,7 @@
         android:layout_gravity="bottom"
         android:layout_marginLeft="@dimen/_10sdp"
         android:layout_marginRight="@dimen/_20sdp"
-        android:layout_weight="0.8"
+        android:layout_weight="0.85"
         android:gravity="bottom"
         android:orientation="horizontal"
         android:weightSum="1">
@@ -90,7 +90,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_0sdp"
-        android:layout_weight="0.2">
+        android:layout_weight="0.15">
 
     </LinearLayout>
 

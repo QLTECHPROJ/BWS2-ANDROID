@@ -367,9 +367,11 @@ public class ViewAllAudioFragment extends Fragment {
 
             holder.binding.rlMainLayout.setOnClickListener(view -> {
                 if (IsLock.equalsIgnoreCase("1")) {
-
                     if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params.setMargins(4, 6, 4, 280);
+                        binding.llSpace.setLayoutParams(params);
                         if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                             callnewTrans(position, listModelList);
                         } else {
@@ -385,6 +387,9 @@ public class ViewAllAudioFragment extends Fragment {
                 } else if (IsLock.equalsIgnoreCase("2")) {
                     if (listModelList.get(position).getIsPlay().equalsIgnoreCase("1")) {
                         holder.binding.ivLock.setVisibility(View.GONE);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params.setMargins(4, 6, 4, 280);
+                        binding.llSpace.setLayoutParams(params);
                         if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                             callnewTrans(position, listModelList);
                         } else {
@@ -397,6 +402,9 @@ public class ViewAllAudioFragment extends Fragment {
                     }
                 } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
                     holder.binding.ivLock.setVisibility(View.GONE);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(4, 6, 4, 280);
+                    binding.llSpace.setLayoutParams(params);
                     if (!Name.equalsIgnoreCase(getString(R.string.top_categories))) {
                         callnewTrans(position, listModelList);
                     } else {
@@ -404,7 +412,6 @@ public class ViewAllAudioFragment extends Fragment {
                     }
                 }
             });
-
         }
 
 
@@ -424,7 +431,6 @@ public class ViewAllAudioFragment extends Fragment {
     }
 
     private void callnewTrans(int position, ArrayList<ViewAllAudioListModel.ResponseData.Detail> listModelList) {
-
         SharedPreferences shared = context.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -455,7 +461,6 @@ public class ViewAllAudioFragment extends Fragment {
                 listModelList2.add(position, mainPlayModel);
                 callTransFrag(position, listModelList2);
             }
-
         }else {
             if (audioPlay && (AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(Name)) {
                 if (isDisclaimer == 1) {

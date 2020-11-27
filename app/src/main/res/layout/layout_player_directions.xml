@@ -11,7 +11,7 @@
         android:layout_gravity="bottom"
         android:layout_marginLeft="@dimen/_10sdp"
         android:layout_marginRight="@dimen/_20sdp"
-        android:layout_weight="0.7"
+        android:layout_weight="0.75"
         android:gravity="bottom"
         android:orientation="horizontal"
         android:weightSum="1">
@@ -90,47 +90,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_0sdp"
-        android:layout_weight="0.3">
+        android:layout_weight="0.25">
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/_20sdp"
-        android:layout_weight="0.2"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:weightSum="1">
-
-        <LinearLayout
-            android:layout_width="@dimen/_0sdp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="center">
-
-            <RelativeLayout
-                android:id="@+id/rlNoThanks"
-                android:layout_width="164dp"
-                android:layout_height="40dp"
-                android:layout_gravity="left"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:background="@drawable/round_corner"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:fontFamily="@font/montserrat_medium"
-                    android:text="NO THANKS"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_18sdp" />
-
-            </RelativeLayout>
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

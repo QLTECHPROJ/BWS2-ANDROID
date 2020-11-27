@@ -110,7 +110,7 @@ import static com.brainwellnessspa.Utility.MusicService.transportControls;
 
 public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, Playable, AudioManager.OnAudioFocusChangeListener, OnProgressListener*/ {
     ActivityPlayWellnessBinding binding;
-    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url,playFrom="";
+    String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url, playFrom = "";
     int startTime = 0, endTime = 0, position, listSize, myCount, progress, downloadPercentage;
     Context ctx;
     Activity activity;
@@ -516,7 +516,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     rlNext.setOnClickListener(v -> fancyShowCaseView21.hide());
                 }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                 .enterAnimation(enterAnimation)
-                .exitAnimation(exitAnimation).focusOn(binding.llAction)
+                .exitAnimation(exitAnimation).focusOn(binding.llHighlights)
                 .closeOnTouch(false).build();
 
         fancyShowCaseView31 = new FancyShowCaseView.Builder(activity)
@@ -557,7 +557,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         binding.llPause.setVisibility(View.GONE);
         oTime = binding.simpleSeekbar.getProgress();
 
-        buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
+        buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
     }
 
     private void callPlay() {
@@ -588,7 +588,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             isPause = false;
         }
         handler.postDelayed(UpdateSongTime, 100);
-        buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
+        buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
     }
 
     private void callPrevious() {
@@ -666,7 +666,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
         }
 //                updateMetaData();
-        buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
+        buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
     }
 
     private void callNext() {
@@ -742,7 +742,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             }
         }
 //                updateMetaData();
-        buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
+        buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
     }
 
     private void callRepeatShuffle() {
@@ -1532,11 +1532,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             if (isPause || !isMediaStart) {
                 binding.llPlay.setVisibility(View.VISIBLE);
                 binding.llPause.setVisibility(View.GONE);
-                buildNotification(PlaybackStatus.PAUSED, context,mainPlayModelList,addToQueueModelList,playFrom,position);
+                buildNotification(PlaybackStatus.PAUSED, context, mainPlayModelList, addToQueueModelList, playFrom, position);
             } else {
                 binding.llPause.setVisibility(View.VISIBLE);
                 binding.llPlay.setVisibility(View.GONE);
-                buildNotification(PlaybackStatus.PLAYING, context,mainPlayModelList,addToQueueModelList,playFrom,position);
+                buildNotification(PlaybackStatus.PLAYING, context, mainPlayModelList, addToQueueModelList, playFrom, position);
             }
         }
     };
@@ -1605,11 +1605,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         if (isPause) {
             binding.llPlay.setVisibility(View.VISIBLE);
             binding.llPause.setVisibility(View.GONE);
-            buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList,addToQueueModelList,playFrom,position);
+            buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         } else {
             binding.llPause.setVisibility(View.VISIBLE);
             binding.llPlay.setVisibility(View.GONE);
-            buildNotification(PlaybackStatus.PLAYING, ctx,mainPlayModelList,addToQueueModelList,playFrom,position);
+            buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         }
 
         mediaPlayer.setOnCompletionListener(mediaPlayer -> {
@@ -1621,59 +1621,60 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void initMediaplyer() {
-        if (mediaSessionManager != null) return; //mediaSessionManager exists
+        try {
+            if (mediaSessionManager != null) return; //mediaSessionManager exists
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mediaSessionManager = (MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE);
-        }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mediaSessionManager = (MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE);
+            }
 //        mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
 //        // Create a new MediaSession
 //        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        mediaSession = new MediaSessionCompat(ctx.getApplicationContext(), "AudioPlayer");
-        //Get MediaSessions transport controls
-        transportControls = mediaSession.getController().getTransportControls();
-        //set MediaSession -> ready to receive media commands
-        mediaSession.setActive(true);
-        //indicate that the MediaSession handles transport control commands
-        // through its MediaSessionCompat.Callback.
-        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+            mediaSession = new MediaSessionCompat(ctx.getApplicationContext(), "AudioPlayer");
+            //Get MediaSessions transport controls
+            transportControls = mediaSession.getController().getTransportControls();
+            //set MediaSession -> ready to receive media commands
+            mediaSession.setActive(true);
+            //indicate that the MediaSession handles transport control commands
+            // through its MediaSessionCompat.Callback.
+            mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
-        //Set mediaSession's MetaData
+            //Set mediaSession's MetaData
 //        updateMetaData();
 
-        // Attach Callback to receive MediaSession updates
+            // Attach Callback to receive MediaSession updates
 
-        mediaSession.setCallback(new MediaSessionCompat.Callback() {
-            // Implement callbacks
-            @Override
-            public void onPlay() {
-                super.onPlay();
-                callPlay();
-            }
-
-            @Override
-            public void onPause() {
-                super.onPause();
-                callPause();
-            }
-
-            @Override
-            public void onSkipToNext() {
-                super.onSkipToNext();
-                if (!url.equalsIgnoreCase("")) {
-                    callNext();
+            mediaSession.setCallback(new MediaSessionCompat.Callback() {
+                // Implement callbacks
+                @Override
+                public void onPlay() {
+                    super.onPlay();
+                    callPlay();
                 }
-            }
 
-            @Override
-            public void onSkipToPrevious() {
-                super.onSkipToPrevious();
-
-                if (!url.equalsIgnoreCase("")) {
-                    callPrevious();
+                @Override
+                public void onPause() {
+                    super.onPause();
+                    callPause();
                 }
-            }
+
+                @Override
+                public void onSkipToNext() {
+                    super.onSkipToNext();
+                    if (!url.equalsIgnoreCase("")) {
+                        callNext();
+                    }
+                }
+
+                @Override
+                public void onSkipToPrevious() {
+                    super.onSkipToPrevious();
+
+                    if (!url.equalsIgnoreCase("")) {
+                        callPrevious();
+                    }
+                }
 
 //            @Override
 //            public void onStop() {
@@ -1687,8 +1688,10 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //            public void onSeekTo(long position) {
 //                super.onSeekTo(position);
 //            }
-        });
-
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void callMedia() {
@@ -2265,11 +2268,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-        if(queuePlay){
+        if (queuePlay) {
             playFrom = "queuePlay";
-        }else if (audioPlay){
+        } else if (audioPlay) {
             playFrom = "audioPlay";
-        }else{
+        } else {
             playFrom = "audioPlay";
         }
         if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
@@ -2824,11 +2827,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         GetMedia2();
         queuePlay = shared.getBoolean(CONSTANTS.PREF_KEY_queuePlay, false);
         audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
-        if(queuePlay){
+        if (queuePlay) {
             playFrom = "queuePlay";
-        }else if (audioPlay){
+        } else if (audioPlay) {
             playFrom = "audioPlay";
-        }else{
+        } else {
             playFrom = "audioPlay";
         }
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

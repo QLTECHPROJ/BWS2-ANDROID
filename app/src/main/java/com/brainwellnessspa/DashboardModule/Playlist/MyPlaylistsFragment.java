@@ -270,7 +270,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.searchView.clearFocus();
             callBack();
         });
-//        showTooltiop();
         if (BWSApplication.isNetworkConnected(getActivity()) && !MyDownloads.equalsIgnoreCase("1")) {
             binding.llMore.setVisibility(View.VISIBLE);
             binding.llMore.setClickable(true);
@@ -338,6 +337,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             }
         });
 
+//        showTooltiop();
 
         RecyclerView.LayoutManager playList1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPlayLists1.setLayoutManager(playList1);
@@ -348,16 +348,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         RecyclerView.LayoutManager playList3 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvPlayLists2.setLayoutManager(playList3);
         binding.rvPlayLists2.setItemAnimator(new DefaultItemAnimator());
-      /*  binding.rvPlayLists1.addOnScrollListener(new RecyclerView.OnScrollListener(){
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                binding.rvPlayLists.setScrollX(dx);
-                binding.rvPlayLists.setScrollY(dy);
-//                int pos = linearLayoutManager1.findFirstCompletelyVisibleItemPosition();
-//                linearLayoutManager.scrollToPositionWithOffset(pos, 20);
-            }
-        });*/
+
         binding.llDownloads.setOnClickListener(view1 -> {
             callDownload("", "", "", playlistSongsList, 0, binding.llDownloads, binding.ivDownloads);
         });
@@ -669,6 +660,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callBack() {
+        queue.cancel(true);
         if (MyPlaylistIds.equalsIgnoreCase("")) {
             if (comefrom_search == 2) {
                 Bundle bundle = new Bundle();

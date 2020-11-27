@@ -17,13 +17,13 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:overScrollMode="never"
-                android:paddingBottom="@dimen/_85sdp">
+                android:overScrollMode="never">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginBottom="@dimen/_85sdp">
 
                     <LinearLayout
                         android:layout_width="match_parent"

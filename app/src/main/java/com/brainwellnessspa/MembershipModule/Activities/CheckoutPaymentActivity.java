@@ -271,7 +271,7 @@ public class CheckoutPaymentActivity extends AppCompatActivity {
 
         binding1.set.setOnClickListener(v -> {
             if (binding1.MonthPicker.getValue() < month && binding1.YearPicker.getValue() == year) {
-                binding.txtError.setText("Please select valid month and year");
+                binding.txtError.setText("Please enter a valid expiry date");
                 d.dismiss();
             } else {
                 binding.textMonth.setText(" " + binding1.MonthPicker.getValue() + " / " + binding1.YearPicker.getValue());

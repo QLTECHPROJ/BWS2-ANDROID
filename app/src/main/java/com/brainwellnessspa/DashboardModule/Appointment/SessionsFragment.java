@@ -77,7 +77,6 @@ public class SessionsFragment extends Fragment {
         binding.llBack.setOnClickListener(view1 -> callBack());
         Glide.with(getActivity()).load(appointmentImage).thumbnail(0.05f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
-
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvSessionList.setLayoutManager(recentlyPlayed);
         binding.rvSessionList.setItemAnimator(new DefaultItemAnimator());
@@ -88,7 +87,7 @@ public class SessionsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(view == null){
+        if (view == null) {
             return;
         }
         view.setFocusableInTouchMode(true);
@@ -108,7 +107,7 @@ public class SessionsFragment extends Fragment {
     }
 
     private void callBack() {
-        if (ComesessionScreen == 1){
+        if (ComesessionScreen == 1) {
             Bundle bundle = new Bundle();
             Fragment appointmentFragment = new AppointmentFragment();
             bundle.putString("appointmentMainName", appointmentMainName);
@@ -133,7 +132,8 @@ public class SessionsFragment extends Fragment {
     }
 
     private void prepareSessionList() {
-        try { SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+        try {
+            SharedPreferences shared1 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
             AudioFlag = shared1.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
             SharedPreferences shared2 = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
             String UnlockAudioLists = shared2.getString(CONSTANTS.PREF_KEY_UnLockAudiList, "");
@@ -170,12 +170,11 @@ public class SessionsFragment extends Fragment {
                     editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                     editorr.clear();
                     editorr.commit();
-                    if(isMediaStart){
+                    if (isMediaStart) {
                         stopMedia();
                         releasePlayer();
                     }
                 }
-
             } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
@@ -189,7 +188,7 @@ public class SessionsFragment extends Fragment {
                 editorr.remove(CONSTANTS.PREF_KEY_myPlaylist);
                 editorr.clear();
                 editorr.commit();
-                if(isMediaStart){
+                if (isMediaStart) {
                     stopMedia();
                     releasePlayer();
                 }
@@ -283,9 +282,9 @@ public class SessionsFragment extends Fragment {
             SessionListModel.ResponseData listModel = listModelList.get(position);
             holder.binding.tvTitle.setText(listModel.getName());
 
-            if (listModel.getDesc().equalsIgnoreCase("")){
+            if (listModel.getDesc().equalsIgnoreCase("")) {
                 holder.binding.tvSubTitle.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.binding.tvSubTitle.setVisibility(View.VISIBLE);
                 holder.binding.tvSubTitle.setText(listModel.getDesc());
             }

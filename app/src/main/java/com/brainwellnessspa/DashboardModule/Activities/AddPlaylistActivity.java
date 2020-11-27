@@ -250,7 +250,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
                             BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                             AddToPlaylist listModels = response.body();
                             if (listModels.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                BWSApplication.showToast(listModels.getResponseMessage(), ctx);
+//                                BWSApplication.showToast(listModels.getResponseMessage(), ctx);
                                 SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                                 boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
                                 String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");

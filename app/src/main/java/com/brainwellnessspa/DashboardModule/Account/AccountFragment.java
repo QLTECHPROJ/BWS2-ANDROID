@@ -297,7 +297,7 @@ public class AccountFragment extends Fragment {
                 })
                 .focusShape(FocusShape.ROUNDED_RECTANGLE)
                 .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                .focusOn(binding.llDownloads).closeOnTouch(true)
+                .focusOn(binding.llDownloads).closeOnTouch(false)
                 .build();
 
         fancyShowCaseView21 = new FancyShowCaseView.Builder(getActivity())
@@ -307,7 +307,7 @@ public class AccountFragment extends Fragment {
                 }).focusShape(FocusShape.ROUNDED_RECTANGLE)
                 .enterAnimation(enterAnimation)
                 .exitAnimation(exitAnimation).focusOn(binding.llBillingOrder)
-                .closeOnTouch(true).build();
+                .closeOnTouch(false).build();
 
         fancyShowCaseView31 = new FancyShowCaseView.Builder(getActivity())
                 .customView(R.layout.layout_account_resources, view -> {
@@ -317,7 +317,7 @@ public class AccountFragment extends Fragment {
                 })
                 .focusShape(FocusShape.ROUNDED_RECTANGLE)
                 .enterAnimation(enterAnimation).exitAnimation(exitAnimation)
-                .focusOn(binding.llResource).closeOnTouch(true).build();
+                .focusOn(binding.llResource).closeOnTouch(false).build();
 
 
         queue = new FancyShowCaseQueue()

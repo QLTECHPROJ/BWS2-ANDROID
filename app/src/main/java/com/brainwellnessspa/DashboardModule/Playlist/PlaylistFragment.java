@@ -102,7 +102,6 @@ public class PlaylistFragment extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvMainPlayList.setLayoutManager(manager);
         binding.rvMainPlayList.setItemAnimator(new DefaultItemAnimator());
-
         prepareData();
         return view;
     }
@@ -179,7 +178,6 @@ public class PlaylistFragment extends Fragment {
                         releasePlayer();
                     }
                 }
-
             } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();
@@ -206,7 +204,6 @@ public class PlaylistFragment extends Fragment {
                 fragmentManager1.beginTransaction()
                         .add(R.id.flContainer, fragment)
                         .commit();
-
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 6, 0, 200);
                 binding.llSpace.setLayoutParams(params);
@@ -303,7 +300,6 @@ public class PlaylistFragment extends Fragment {
                 super.onPostExecute(aVoid);
             }
         }
-
         GetTask st = new GetTask();
         st.execute();
         return downloadPlaylistDetailsList;
@@ -351,6 +347,7 @@ public class PlaylistFragment extends Fragment {
                 bundle.putString("Name", listModelList.get(position).getView());
                 viewAllPlaylistFragment.setArguments(bundle);
             });
+
             if (listModelList.get(position).getIsLock().equalsIgnoreCase("1")) {
                 binding.ivLock.setVisibility(View.VISIBLE);
             } else if (listModelList.get(position).getIsLock().equalsIgnoreCase("2")) {
@@ -405,7 +402,6 @@ public class PlaylistFragment extends Fragment {
                         }
                     };
 
-
                     edtCreate.addTextChangedListener(popupTextWatcher);
                     dialog.setOnKeyListener((v, keyCode, event) -> {
                         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -433,7 +429,6 @@ public class PlaylistFragment extends Fragment {
                                                 callMyPlaylistsFragment("1", listModel.getResponseData().getId(), listModel.getResponseData().getName(), "", "0");
                                                 dialog.dismiss();
                                             }
-
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -449,7 +444,6 @@ public class PlaylistFragment extends Fragment {
                             BWSApplication.showToast(getString(R.string.no_server_found), getActivity());
                         }
                     });
-
                     tvCancel.setOnClickListener(v -> dialog.dismiss());
                     dialog.show();
                     dialog.setCancelable(false);
@@ -473,7 +467,6 @@ public class PlaylistFragment extends Fragment {
                     PlaylistAdapter adapter2 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
                             listModelList.get(position).getIsLock(), "1");
                     holder.binding.rvMainAudio.setAdapter(adapter2);
-
                 } else if (listModelList.get(position).getView().equalsIgnoreCase(getString(R.string.Recommended_Playlist))) {
                     PlaylistAdapter adapter3 = new PlaylistAdapter(listModelList.get(position).getDetails(), getActivity(),
                             listModelList.get(position).getIsLock(), "0");

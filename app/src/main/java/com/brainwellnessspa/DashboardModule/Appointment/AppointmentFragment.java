@@ -121,7 +121,6 @@ public class AppointmentFragment extends Fragment {
                     arrayList.remove(0);
                 }
                 audioID = arrayList.get(0).getID();
-
                 if (UnlockAudioList.contains(audioID)) {
                 } else {
                     SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

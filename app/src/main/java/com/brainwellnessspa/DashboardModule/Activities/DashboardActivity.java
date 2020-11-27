@@ -180,8 +180,8 @@ public class DashboardActivity extends AppCompatActivity implements AudioManager
     @Override
     public void onBackPressed() {
         if (invoiceToDashboard == 1) {
-            deleteCache(DashboardActivity.this);
             finishAffinity();
+            deleteCache(DashboardActivity.this);
         }
 
         if (binding.navView.getSelectedItemId() == R.id.navigation_audio) {

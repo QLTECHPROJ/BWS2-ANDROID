@@ -18,14 +18,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/btnComplete"
-                android:layout_marginBottom="@dimen/_20sdp"
-
                 android:overScrollMode="never">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginBottom="@dimen/_20sdp">
 
                     <TextView
                         android:id="@+id/tvTilte"
@@ -180,7 +179,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginHorizontal="@dimen/_55sdp"
-                android:layout_marginBottom="@dimen/_18sdp"
+                android:layout_marginBottom="@dimen/_20sdp"
                 android:background="@drawable/extra_round_cornor"
                 android:fontFamily="@font/montserrat_medium"
                 android:paddingVertical="@dimen/_2sdp"
