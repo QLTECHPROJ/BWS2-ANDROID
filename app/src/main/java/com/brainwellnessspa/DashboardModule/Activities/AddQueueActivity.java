@@ -185,7 +185,7 @@ public class AddQueueActivity extends AppCompatActivity {
                 mDataDownload = gson.fromJson(js1, type);
             }else if(comeFrom.equalsIgnoreCase("myLikeAudioList")){
                 String js1 = getIntent().getStringExtra("data");
-                Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
                 }.getType();
                 mDataLike = gson.fromJson(js1, type);
             } else {
