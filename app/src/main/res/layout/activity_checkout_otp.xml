@@ -205,11 +205,12 @@
 
                     <LinearLayout
                         android:id="@+id/llResendSms"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/llText"
                         android:layout_marginTop="@dimen/_26sdp"
                         android:gravity="center"
+                        android:layout_centerHorizontal="true"
                         android:orientation="horizontal"
                         app:layout_constraintBottom_toTopOf="@id/llEditNumber">
 
@@ -234,11 +235,12 @@
 
                     <LinearLayout
                         android:id="@+id/llEditNumber"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/llResendSms"
                         android:layout_marginTop="@dimen/_22sdp"
                         android:gravity="center"
+                        android:layout_centerHorizontal="true"
                         android:orientation="horizontal">
 
                         <ImageView

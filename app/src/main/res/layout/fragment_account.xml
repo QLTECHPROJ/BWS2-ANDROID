@@ -26,8 +26,8 @@
                     android:id="@+id/llUserProfile"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    android:layout_weight="0.24"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_weight="0.23"
                     android:weightSum="1">
 
                     <LinearLayout
@@ -116,7 +116,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1.76"
+                    android:layout_weight="1.77"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -126,9 +126,9 @@
                         android:gravity="center_vertical">
 
                         <ImageView
-                            android:layout_width="@dimen/_62sdp"
-                            android:layout_height="@dimen/_58sdp"
-                            android:padding="@dimen/_18sdp"
+                            android:layout_width="@dimen/_60sdp"
+                            android:layout_height="@dimen/_56sdp"
+                            android:padding="@dimen/_16sdp"
                             android:src="@drawable/ic_download_icon" />
 
                         <TextView
@@ -151,9 +151,9 @@
 
 
                         <ImageView
-                            android:layout_width="@dimen/_62sdp"
-                            android:layout_height="@dimen/_58sdp"
-                            android:padding="@dimen/_18sdp"
+                            android:layout_width="@dimen/_60sdp"
+                            android:layout_height="@dimen/_56sdp"
+                            android:padding="@dimen/_16sdp"
                             android:src="@drawable/ic_like_white_icon"
                             app:tint="@color/black" />
 
@@ -176,9 +176,9 @@
                         android:gravity="center_vertical">
 
                         <ImageView
-                            android:layout_width="@dimen/_62sdp"
-                            android:layout_height="@dimen/_58sdp"
-                            android:padding="@dimen/_18sdp"
+                            android:layout_width="@dimen/_60sdp"
+                            android:layout_height="@dimen/_56sdp"
+                            android:padding="@dimen/_16sdp"
                             android:src="@drawable/ic_invoice_icon" />
 
                         <TextView
@@ -201,9 +201,9 @@
 
 
                         <ImageView
-                            android:layout_width="@dimen/_62sdp"
-                            android:layout_height="@dimen/_58sdp"
-                            android:padding="@dimen/_19sdp"
+                            android:layout_width="@dimen/_60sdp"
+                            android:layout_height="@dimen/_56sdp"
+                            android:padding="@dimen/_17sdp"
                             android:src="@drawable/ic_payment_icon" />
 
                         <LinearLayout
@@ -243,9 +243,9 @@
                         android:gravity="center_vertical">
 
                         <ImageView
-                            android:layout_width="@dimen/_62sdp"
-                            android:layout_height="@dimen/_58sdp"
-                            android:padding="@dimen/_2sdp"
+                            android:layout_width="@dimen/_60sdp"
+                            android:layout_height="@dimen/_56sdp"
+                            android:padding="@dimen/_1sdp"
                             android:src="@drawable/ic_clock_icon" />
 
                         <TextView
@@ -267,9 +267,9 @@
                         android:gravity="center_vertical">
 
                         <ImageView
-                            android:layout_width="@dimen/_62sdp"
-                            android:layout_height="@dimen/_58sdp"
-                            android:padding="@dimen/_2sdp"
+                            android:layout_width="@dimen/_60sdp"
+                            android:layout_height="@dimen/_56sdp"
+                            android:padding="@dimen/_1sdp"
                             android:src="@drawable/ic_resource_icon" />
 
                         <TextView
@@ -291,9 +291,9 @@
                         android:gravity="center_vertical">
 
                         <ImageView
-                            android:layout_width="@dimen/_62sdp"
-                            android:layout_height="@dimen/_58sdp"
-                            android:padding="@dimen/_18sdp"
+                            android:layout_width="@dimen/_60sdp"
+                            android:layout_height="@dimen/_56sdp"
+                            android:padding="@dimen/_16sdp"
                             android:src="@drawable/ic_faq_icon" />
 
                         <TextView
@@ -314,11 +314,10 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical">
 
-
                         <ImageView
-                            android:layout_width="@dimen/_62sdp"
-                            android:layout_height="@dimen/_58sdp"
-                            android:padding="@dimen/_20sdp"
+                            android:layout_width="@dimen/_60sdp"
+                            android:layout_height="@dimen/_56sdp"
+                            android:padding="@dimen/_18sdp"
                             android:src="@drawable/ic_logout_icon" />
 
                         <TextView
