@@ -55,7 +55,6 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
@@ -111,8 +110,6 @@ public class ViewSuggestedActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         });
-
-        deleteCache(ctx);
         if (getIntent() != null) {
             Name = getIntent().getStringExtra("Name");
         }

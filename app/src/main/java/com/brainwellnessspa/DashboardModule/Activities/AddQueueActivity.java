@@ -57,7 +57,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.ComeFindAudio;
-import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 import static com.brainwellnessspa.Utility.MusicService.isPrepare;
@@ -130,7 +129,6 @@ public class AddQueueActivity extends AppCompatActivity {
             }.getType();
 //            fileNameList = gson1.fromJson(json11, type);
         }*/
-        deleteCache(ctx);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);

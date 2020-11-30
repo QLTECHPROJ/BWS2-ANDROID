@@ -54,7 +54,6 @@ import retrofit2.Response;
 import static com.brainwellnessspa.DashboardModule.Activities.MyPlaylistActivity.comeAddPlaylist;
 import static com.brainwellnessspa.DashboardModule.Search.SearchFragment.comefrom_search;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 
 public class AddPlaylistActivity extends AppCompatActivity {
     public static boolean addToPlayList = false;
@@ -73,7 +72,6 @@ public class AddPlaylistActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        deleteCache(ctx);
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra("AudioId");
             FromPlaylistID = getIntent().getStringExtra("PlaylistID");

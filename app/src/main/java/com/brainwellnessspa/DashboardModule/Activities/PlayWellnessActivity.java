@@ -1620,7 +1620,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void initMediaplyer() {
-        deleteCache(ctx.getApplicationContext());
         try {
             if (mediaSessionManager != null) return; //mediaSessionManager exists
 

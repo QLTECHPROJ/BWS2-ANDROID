@@ -63,7 +63,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Playlist.MyPlaylistsFragment.RefreshIconData;
-import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 
 public class MyPlaylistActivity extends AppCompatActivity {
     public static int deleteFrg = 0;
@@ -145,7 +144,6 @@ public class MyPlaylistActivity extends AppCompatActivity {
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
-        deleteCache(ctx);
         playlistSongsList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
         playlistWiseAudioDetails = new ArrayList<>();

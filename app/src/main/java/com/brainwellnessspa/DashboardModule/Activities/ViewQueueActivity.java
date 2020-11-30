@@ -776,7 +776,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
     }
     private void initMediaplyer() {
-        deleteCache(ctx.getApplicationContext());
         if (mediaSessionManager != null) return; //mediaSessionManager exists
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -61,7 +61,6 @@ import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.myAudioId;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
-import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
 import static com.brainwellnessspa.Utility.MusicService.isCompleteStop;
 import static com.brainwellnessspa.Utility.MusicService.isMediaStart;
@@ -117,7 +116,6 @@ public class AddAudioActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             PlaylistID = getIntent().getStringExtra(CONSTANTS.PlaylistID);
         }
-        deleteCache(ctx);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         binding.searchView.onActionViewExpanded();

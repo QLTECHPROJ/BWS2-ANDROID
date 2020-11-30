@@ -1246,7 +1246,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void initMediaplyer() {
-        deleteCache(ctx.getApplicationContext());
         mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         // Create a new MediaSession
 
