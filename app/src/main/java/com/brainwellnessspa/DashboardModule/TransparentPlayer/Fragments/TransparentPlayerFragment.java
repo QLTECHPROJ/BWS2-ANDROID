@@ -1569,6 +1569,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
             }
         }
+        deleteCache(ctx.getApplicationContext());
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
