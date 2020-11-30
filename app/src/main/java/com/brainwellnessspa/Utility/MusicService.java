@@ -42,6 +42,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.media.session.MediaButtonReceiver;
 
+import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.Services.NotificationActionService;
@@ -599,7 +600,7 @@ public class MusicService extends Service {
                         //create the play action
                         play_pauseAction = playbackAction(0, context);
                     }
-                    Intent intent = new Intent(context, PlayWellnessActivity.class);
+                    Intent intent = new Intent(context, DashboardActivity.class);
                     intent.putExtra("com.brainwellnessspa.notifyId", NOTIFICATION_ID);
                     PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     int drw_previous = R.drawable.ic_skip_previous_black_24dp;
@@ -615,7 +616,7 @@ public class MusicService extends Service {
                     mediaSession.setMetadata(builder.build());
 
                     PlaybackStateCompat playbackStateCompat = new PlaybackStateCompat.Builder()
-                            .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                             .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE |
                                     PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID | PlaybackStateCompat.ACTION_PAUSE |
                                     PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
                                     PlaybackStateCompat.ACTION_SEEK_TO).build();

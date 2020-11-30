@@ -87,7 +87,6 @@ import static com.brainwellnessspa.Utility.MusicService.Broadcast_PLAY_NEW_AUDIO
 import static com.brainwellnessspa.Utility.MusicService.Broadcast_PLAY_PAUSE;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.buildNotification;
-import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
 import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
@@ -142,14 +141,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             if (isPause || !isMediaStart) {
                 binding.ivPlay.setVisibility(View.VISIBLE);
                 binding.ivPause.setVisibility(View.GONE);
-
                 localIntent.putExtra("MyData", "pause");
                 localBroadcastManager.sendBroadcast(localIntent);
                 buildNotification(PlaybackStatus.PAUSED, context, mainPlayModelList, addToQueueModelList, playFrom, position);
             } else {
                 binding.ivPause.setVisibility(View.VISIBLE);
                 binding.ivPlay.setVisibility(View.GONE);
-
                 localIntent.putExtra("MyData", "pause");
                 localBroadcastManager.sendBroadcast(localIntent);
                 buildNotification(PlaybackStatus.PLAYING, context, mainPlayModelList, addToQueueModelList, playFrom, position);
@@ -395,13 +392,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 
 
 //        }
-        binding.ivPause.setOnClickListener(view1 -> {
-            callPause();
-        });
+        binding.ivPause.setOnClickListener(view1 -> callPause());
 
-        binding.ivPlay.setOnClickListener(view12 -> {
-            callPlay();
-        });
+        binding.ivPlay.setOnClickListener(view12 -> callPlay());
 
         return view;
     }
@@ -1020,7 +1013,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                             localIntent.putExtra("MyData", "pause");
                             localBroadcastManager.sendBroadcast(localIntent);
                         }
-                        initMediaplyer();
                         if (isMediaStart) {
                             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                                 if (mediaPlayer.isPlaying()) {
@@ -1568,7 +1560,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
             }
         }
-        deleteCache(ctx.getApplicationContext());
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);

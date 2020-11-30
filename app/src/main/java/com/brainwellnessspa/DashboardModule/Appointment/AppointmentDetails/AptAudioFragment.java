@@ -523,7 +523,7 @@ public class AptAudioFragment extends Fragment {
                     Gson gsonx = new Gson();
                     String json11 = sharedx1.getString(CONSTANTS.PREF_KEY_audioList, String.valueOf(gsonx));
                     String jsonw = sharedx1.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonx));
-                    Type type1 = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
+                    Type type1 = new TypeToken<ArrayList<DownloadAudioDetails>>() {
                     }.getType();
                     Gson gson1 = new Gson();
                     ArrayList<DownloadAudioDetails> arrayList = gson1.fromJson(jsonw, type1);

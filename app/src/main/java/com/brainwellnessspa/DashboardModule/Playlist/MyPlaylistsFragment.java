@@ -143,7 +143,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     EditText searchEditText;
     ArrayList<String> changedAudio;
     Activity activity;
-    List<DownloadAudioDetails> downloadAudioDetailsList, downloadedSingleAudio;
+    List<DownloadAudioDetails> downloadAudioDetailsList;
     ArrayList<SubPlayListModel.ResponseData.PlaylistSong> playlistSongsList, playListSongListForDownload;
     List<DownloadAudioDetails> oneAudioDetailsList, playlistWiseAudioDetails;
     List<DownloadPlaylistDetails> downloadPlaylistDetailsList;
@@ -729,7 +729,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             binding.llSpace.setLayoutParams(params);
         }
 
-        downloadedSingleAudio = getMyMedia();
         binding.tvPlaylist.setText("Playlist");
         searchClear(searchEditText);
         SharedPreferences shared = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
@@ -838,7 +837,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                             downloadAudioDetailsList = GetAllMedia();
                             SongListSize = listModel.getResponseData().getPlaylistSongs().size();
                             playlistWiseAudioDetails = GetMedia();
-                            downloadedSingleAudio = getMyMedia();
                             getMediaByPer(PlaylistId, SongListSize);
                             binding.rlSearch.setVisibility(View.VISIBLE);
                             binding.llMore.setVisibility(View.VISIBLE);
@@ -1006,47 +1004,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
         }
     }
 
-    private List<DownloadAudioDetails> getMyMedia() {
-        downloadedSingleAudio = new ArrayList<>();
-        class GetMedia extends AsyncTask<Void, Void, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                downloadedSingleAudio = DatabaseClient
-                        .getInstance(getActivity())
-                        .getaudioDatabase()
-                        .taskDao()
-                        .getAllAudioByPlaylist("");
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                /*playListSongListForDownload = new ArrayList<>();
-                if (downloadedSingleAudio.size() != 0) {
-                    for(int i =0;i<downloadedSingleAudio.size();i++) {
-                        songListDownload = new SubPlayListModel.ResponseData.PlaylistSong();
-                        songListDownload.setID(downloadedSingleAudio.get(i).getID());
-                        songListDownload.setName(downloadedSingleAudio.get(i).getName());
-                        songListDownload.setAudioFile(downloadedSingleAudio.get(i).getAudioFile());
-                        songListDownload.setAudioDirection(downloadedSingleAudio.get(i).getAudioDirection());
-                        songListDownload.setAudiomastercat(downloadedSingleAudio.get(i).getAudiomastercat());
-                        songListDownload.setAudioSubCategory(downloadedSingleAudio.get(i).getAudioSubCategory());
-                        songListDownload.setImageFile(downloadedSingleAudio.get(i).getImageFile());
-                        songListDownload.setLike(downloadedSingleAudio.get(i).getLike());
-                        songListDownload.setDownload("");
-                        songListDownload.setAudioDuration(downloadedSingleAudio.get(i).getAudioDuration());
-                        songListDownload.setPlaylistID(PlaylistID);
-                        playListSongListForDownload.add(songListDownload);
-                    }
-                }*/
-                super.onPostExecute(aVoid);
-            }
-        }
-
-        GetMedia st = new GetMedia();
-        st.execute();
-        return downloadedSingleAudio;
-    }
 
     private void callAddTransFrag() {
         Fragment fragment = new TransparentPlayerFragment();
@@ -1694,7 +1651,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
             protected void onPostExecute(Void aVoid) {
                 downloadAudioDetailsList = GetAllMedia();
                 playlistWiseAudioDetails = GetMedia();
-                downloadedSingleAudio = getMyMedia();
                 disableDownload(llDownload, ivDownloads);
                 super.onPostExecute(aVoid);
             }

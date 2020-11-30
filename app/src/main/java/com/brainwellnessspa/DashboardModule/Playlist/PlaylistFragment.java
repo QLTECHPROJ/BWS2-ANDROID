@@ -494,7 +494,7 @@ public class PlaylistFragment extends Fragment {
         }
     }
 
-    private void getMedia(String playlistID) {
+   /* private void getMedia(String playlistID) {
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -558,7 +558,7 @@ public class PlaylistFragment extends Fragment {
         }
         GetMedia st = new GetMedia();
         st.execute();
-    }
+    }*/
 
     public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
         Context ctx;

@@ -211,7 +211,6 @@ public class AudioDownloadsFragment extends Fragment {
         List<String> fileNameList = new ArrayList<>(), playlistDownloadId = new ArrayList<>(), audiofilelist = new ArrayList<>();
         private List<DownloadAudioDetails> listModelList;
         private Handler handler1;
-        List<DownloadAudioDetails> downloadedSingleAudio;
         //    Handler handler3;
         int startTime;
         private long currentDuration = 0;
@@ -231,8 +230,6 @@ public class AudioDownloadsFragment extends Fragment {
             this.tvFound = tvFound;
             handler1 = new Handler();
             downloadAudioDetailsList = new ArrayList<>();
-            downloadedSingleAudio = new ArrayList<>();
-            downloadedSingleAudio = getMyMedia();
         /*SharedPreferences sharedx = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedx.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
@@ -542,29 +539,6 @@ public class AudioDownloadsFragment extends Fragment {
             tvGoBack.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
             dialog.setCancelable(false);
-        }
-
-        private List<DownloadAudioDetails> getMyMedia() {
-            downloadedSingleAudio = new ArrayList<>();
-            class GetMedia extends AsyncTask<Void, Void, Void> {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    downloadedSingleAudio = DatabaseClient
-                            .getInstance(ctx)
-                            .getaudioDatabase()
-                            .taskDao()
-                            .getAllAudioByPlaylist("");
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    super.onPostExecute(aVoid);
-                }
-            }
-            GetMedia st = new GetMedia();
-            st.execute();
-            return downloadedSingleAudio;
         }
 
         private void getDownloadData() {

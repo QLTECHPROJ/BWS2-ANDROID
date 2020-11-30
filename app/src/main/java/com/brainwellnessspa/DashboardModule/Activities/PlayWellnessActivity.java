@@ -87,7 +87,6 @@ import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.ToBackward;
 import static com.brainwellnessspa.Utility.MusicService.ToForward;
 import static com.brainwellnessspa.Utility.MusicService.buildNotification;
-import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
 import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
@@ -330,7 +329,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         downloadAudioDetailsList1 = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         MakeArray();
-        deleteCache(ctx);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
@@ -1925,7 +1923,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             binding.ivnext.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             binding.ivprev.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }
-        deleteCache(ctx.getApplicationContext());
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);

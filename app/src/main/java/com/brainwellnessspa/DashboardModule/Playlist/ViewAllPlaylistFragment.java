@@ -407,7 +407,7 @@ public class ViewAllPlaylistFragment extends Fragment {
             }
         }
     }
-
+/*
     private void getMedia(String playlistID) {
         class GetMedia extends AsyncTask<Void, Void, Void> {
             @Override
@@ -459,5 +459,5 @@ public class ViewAllPlaylistFragment extends Fragment {
         }
         GetMedia st = new GetMedia();
         st.execute();
-    }
+    }*/
 }

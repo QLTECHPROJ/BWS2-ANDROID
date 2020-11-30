@@ -84,7 +84,6 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.T
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.buildNotification;
-import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
 import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
@@ -246,8 +245,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         binding = DataBindingUtil.setContentView(this, R.layout.activity_view_queue);
         ctx = ViewQueueActivity.this;
         activity = ViewQueueActivity.this;
-
-        deleteCache(ctx);
         downloadAudioDetailsList = new ArrayList<>();
         if (getIntent().getExtras() != null) {
             AudioId = getIntent().getStringExtra(CONSTANTS.ID);
@@ -1017,7 +1014,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt(CONSTANTS.PREF_KEY_position, position);
         editor.commit();
-        deleteCache(ctx.getApplicationContext());
     }
 
     private void removeArray() {

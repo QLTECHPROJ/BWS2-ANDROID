@@ -37,7 +37,7 @@ public interface AudioDetailsDao {
     @Query("SELECT * FROM audio_table WHERE AudioFile =:AudioFile and PlaylistId =:PlaylistId")
     List<DownloadAudioDetails> getaudioByPlaylist(String AudioFile,String PlaylistId);
 
-    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId ORDER BY uid DESC")
+    @Query("SELECT * FROM audio_table WHERE PlaylistId =:PlaylistId")
     List<DownloadAudioDetails> getAllAudioByPlaylist(String PlaylistId);
 
     @Query("SELECT * FROM playlist_table WHERE PlaylistId =:PlaylistId ORDER BY uid DESC")
