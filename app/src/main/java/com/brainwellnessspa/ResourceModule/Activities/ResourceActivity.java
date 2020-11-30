@@ -46,6 +46,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
+
 public class ResourceActivity extends AppCompatActivity {
     ActivityResourceBinding binding;
     String UserID, Category = "";
@@ -58,7 +61,11 @@ public class ResourceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_resource);
         activity = ResourceActivity.this;
-        binding.llBack.setOnClickListener(view -> finish());
+        binding.llBack.setOnClickListener(view -> {
+            ComeScreenAccount = 1;
+            comefromDownload = "0";
+            finish();
+        });
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
@@ -134,6 +141,8 @@ public class ResourceActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        ComeScreenAccount = 1;
+        comefromDownload = "0";
         finish();
     }
 

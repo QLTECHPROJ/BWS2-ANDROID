@@ -17,6 +17,9 @@ import com.brainwellnessspa.BillingOrderModule.Fragments.PaymentFragment;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.databinding.ActivityBillingOrderBinding;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
+
 public class BillingOrderActivity extends AppCompatActivity {
     ActivityBillingOrderBinding binding;
     int payment = 0;
@@ -26,7 +29,11 @@ public class BillingOrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_billing_order);
 
-        binding.llBack.setOnClickListener(view -> finish());
+        binding.llBack.setOnClickListener(view -> {
+            ComeScreenAccount = 1;
+            comefromDownload = "0";
+            finish();
+        });
         binding.viewPager.setOffscreenPageLimit(3);
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Current Plan"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Payment"));
@@ -69,6 +76,8 @@ public class BillingOrderActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        ComeScreenAccount = 1;
+        comefromDownload = "0";
         finish();
     }
 

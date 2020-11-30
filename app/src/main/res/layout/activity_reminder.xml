@@ -45,7 +45,7 @@
             android:layout_height="match_parent"
             android:layout_below="@id/rlLayout"
             android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_31sdp"
+            android:layout_marginTop="@dimen/_29sdp"
             android:layout_marginBottom="@dimen/_25sdp"
             android:orientation="vertical"
             android:weightSum="1">
@@ -65,7 +65,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_28sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
                     android:text="Get a notification reminding you to listen to your selected playlists."
@@ -75,7 +75,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_35sdp"
+                    android:layout_marginTop="@dimen/_33sdp"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
                     android:text="What time do you want to set the reminder?"
@@ -113,7 +113,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_28sdp"
+                    android:layout_marginTop="@dimen/_22sdp"
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="start"
                     android:text="@string/Repeat"
@@ -123,7 +123,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_18sdp"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:weightSum="3.5">
@@ -286,7 +286,7 @@
                     android:id="@+id/llSelectPlaylist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_26sdp"
                     android:orientation="vertical">
 
                     <RelativeLayout

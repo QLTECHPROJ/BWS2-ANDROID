@@ -52,6 +52,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenReminder;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.IsLock;
 
@@ -95,6 +97,8 @@ public class ReminderActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             } else {
+                ComeScreenAccount = 1;
+                comefromDownload = "0";
                 finish();
             }
         });
@@ -466,6 +470,8 @@ public class ReminderActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         } else {
+            ComeScreenAccount = 1;
+            comefromDownload = "0";
             finish();
         }
     }

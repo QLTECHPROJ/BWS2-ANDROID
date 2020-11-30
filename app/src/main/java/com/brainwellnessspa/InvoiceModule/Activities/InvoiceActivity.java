@@ -30,6 +30,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
+import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
+
 public class InvoiceActivity extends AppCompatActivity {
     ActivityInvoiceBinding binding;
     ArrayList<InvoiceListModel.Appointment> appointmentList;
@@ -61,6 +64,8 @@ public class InvoiceActivity extends AppCompatActivity {
                     startActivity(i);
                     finish();
                 } else {
+                    ComeScreenAccount = 1;
+                    comefromDownload = "0";
                     finish();
                 }
             }
@@ -131,6 +136,8 @@ public class InvoiceActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         } else {
+            ComeScreenAccount = 1;
+            comefromDownload = "0";
             finish();
         }
     }
