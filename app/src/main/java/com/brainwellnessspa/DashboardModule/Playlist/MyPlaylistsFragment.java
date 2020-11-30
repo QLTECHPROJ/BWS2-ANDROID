@@ -847,8 +847,8 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                 if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("0") ||
                                         listModel.getResponseData().getIsReminder().equalsIgnoreCase("")) {
                                     binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
-                                    Intent i = new Intent(getActivity(), ReminderActivity.class);
                                     ComeScreenReminder = 0;
+                                    Intent i = new Intent(getActivity(), ReminderActivity.class);
                                     i.putExtra("ComeFrom", "1");
                                     i.putExtra("PlaylistID", PlaylistID);
                                     i.putExtra("PlaylistName", listModel.getResponseData().getPlaylistName());
@@ -857,7 +857,30 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     startActivity(i);
                                 } else if (listModel.getResponseData().getIsReminder().equalsIgnoreCase("1")) {
                                     binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-                                    dialog = new Dialog(activity);
+                                    Call<ReminderStatusPlaylistModel> listCall1 = APIClient.getClient().getReminderStatusPlaylist(UserID, PlaylistID, "0");/*set 1 or not 0 */
+                                    listCall1.enqueue(new Callback<ReminderStatusPlaylistModel>() {
+                                        @Override
+                                        public void onResponse(Call<ReminderStatusPlaylistModel> call1, Response<ReminderStatusPlaylistModel> response1) {
+                                            if (response1.isSuccessful()) {
+                                                try {
+                                                    ReminderStatusPlaylistModel listModel1 = response1.body();
+//                                                                prepareData(UserID, PlaylistID);
+                                                    listModel.getResponseData().setIsReminder(listModel1.getResponseData().getIsCheck());
+                                                    binding.ivReminder.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white), PorterDuff.Mode.SRC_IN);
+                                                    dialog.dismiss();
+                                                    BWSApplication.showToast(listModel1.getResponseMessage(), activity);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ReminderStatusPlaylistModel> call1, Throwable t) {
+                                        }
+                                    });
+
+                                   /* dialog = new Dialog(activity);
                                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     dialog.setContentView(R.layout.delete_payment_card);
                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(activity.getResources().getColor(R.color.dark_blue_gray)));
@@ -886,7 +909,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                                     break;
                                                 }
                                                 case MotionEvent.ACTION_UP:
-                                                    Call<ReminderStatusPlaylistModel> listCall1 = APIClient.getClient().getReminderStatusPlaylist(UserID, PlaylistID, "0");/*set 1 or not 0 */
+                                                    Call<ReminderStatusPlaylistModel> listCall1 = APIClient.getClient().getReminderStatusPlaylist(UserID, PlaylistID, "0");*//*set 1 or not 0 *//*
                                                     listCall1.enqueue(new Callback<ReminderStatusPlaylistModel>() {
                                                         @Override
                                                         public void onResponse(Call<ReminderStatusPlaylistModel> call1, Response<ReminderStatusPlaylistModel> response1) {
@@ -928,10 +951,11 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                         dialog.dismiss();
                                     });
                                     dialog.show();
-                                    dialog.setCancelable(false);
+                                    dialog.setCancelable(false);*/
 
                                 }
                             });
+
                             playlistSongsList = new ArrayList<>();
                             playlistSongsList.addAll(listModel.getResponseData().getPlaylistSongs());
                             downloadPlaylistDetails = new DownloadPlaylistDetails();

@@ -599,13 +599,18 @@ public class PlaylistFragment extends Fragment {
             Glide.with(ctx).load(listModelList.get(position).getPlaylistImage()).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(holder.binding.ivRestaurantImage);
 
-            if (IsLock.equalsIgnoreCase("1")) {
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (IsLock.equalsIgnoreCase("2")) {
-                holder.binding.ivLock.setVisibility(View.VISIBLE);
-            } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
-                holder.binding.ivLock.setVisibility(View.GONE);
-            }
+//            if(!MyDownloads.equalsIgnoreCase("1")){
+                if (IsLock.equalsIgnoreCase("1")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                } else if (IsLock.equalsIgnoreCase("2")) {
+                    holder.binding.ivLock.setVisibility(View.VISIBLE);
+                } else if (IsLock.equalsIgnoreCase("0") || IsLock.equalsIgnoreCase("")) {
+                    holder.binding.ivLock.setVisibility(View.GONE);
+                }
+//            }else {
+//                holder.binding.ivLock.setVisibility(View.GONE);
+//            }
+
 
             if (index == position) {
                 holder.binding.tvAddToPlaylist.setVisibility(View.VISIBLE);
