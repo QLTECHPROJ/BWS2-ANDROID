@@ -28,7 +28,7 @@
                         android:id="@+id/tvExplore"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_16sdp"
+                        android:layout_marginLeft="@dimen/_13sdp"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginRight="@dimen/_16sdp"
                         android:layout_marginBottom="@dimen/_6sdp"
@@ -55,7 +55,7 @@
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/_16sdp"
+                                android:layout_marginLeft="@dimen/_13sdp"
                                 android:layout_marginRight="@dimen/_9sdp">
 
                                 <ImageView
@@ -85,7 +85,7 @@
                                 android:layout_alignParentBottom="true"
                                 android:fontFamily="@font/montserrat_semi_bold"
                                 android:gravity="start"
-                                android:layout_marginLeft="@dimen/_16sdp"
+                                android:layout_marginLeft="@dimen/_13sdp"
                                 android:layout_marginRight="@dimen/_9sdp"
                                 android:maxLines="2"
                                 android:paddingLeft="@dimen/_13sdp"

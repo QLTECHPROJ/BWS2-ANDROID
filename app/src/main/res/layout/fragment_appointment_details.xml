@@ -271,7 +271,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginHorizontal="@dimen/_55sdp"
-                    android:layout_marginBottom="@dimen/_18sdp"
+                    android:layout_marginBottom="@dimen/_31sdp"
                     android:background="@drawable/extra_round_cornor"
                     android:fontFamily="@font/montserrat_medium"
                     android:paddingVertical="@dimen/_2sdp"

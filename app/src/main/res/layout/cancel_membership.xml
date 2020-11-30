@@ -69,7 +69,7 @@
                     android:fontFamily="@font/montserrat_medium"
                     android:text="Confirm"
                     android:gravity="center"
-                    android:textAllCaps="false"
+                    android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_14sdp" />
 
@@ -81,7 +81,7 @@
                     android:fontFamily="@font/montserrat_medium"
                     android:gravity="center"
                     android:text="Go back"
-                    android:textAllCaps="false"
+                    android:textAllCaps="true"
                     android:textColor="@color/dark_blue_gray"
                     android:textSize="@dimen/_14sdp" />
 

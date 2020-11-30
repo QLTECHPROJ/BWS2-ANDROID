@@ -63,6 +63,7 @@
                 android:paddingHorizontal="@dimen/_55sdp"
                 android:paddingVertical="@dimen/_4sdp"
                 android:enabled="false"
+                android:textAllCaps="true"
                 android:text="Create"
                 android:textColor="@color/white" />
 
@@ -74,6 +75,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:gravity="center"
                 android:text="@string/Cancel"
+                android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp" />
 

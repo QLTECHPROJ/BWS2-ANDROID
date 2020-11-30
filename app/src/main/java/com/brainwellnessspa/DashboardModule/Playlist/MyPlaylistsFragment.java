@@ -660,7 +660,6 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
     }
 
     private void callBack() {
-        queue.cancel(true);
         if (MyPlaylistIds.equalsIgnoreCase("")) {
             if (comefrom_search == 2) {
                 Bundle bundle = new Bundle();
@@ -871,6 +870,7 @@ public class MyPlaylistsFragment extends Fragment implements StartDragListener {
                                     final Button Btn = dialog.findViewById(R.id.Btn);
                                     tvTitle.setText("Reminder off");
                                     tvSubTitle.setText("Are you sure you want to reminder off ?");
+                                    Btn.setText("OK");
                                     dialog.setOnKeyListener((v, keyCode, event) -> {
                                         if (keyCode == KeyEvent.KEYCODE_BACK) {
                                             dialog.dismiss();

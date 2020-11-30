@@ -293,6 +293,7 @@ public class PaymentActivity extends AppCompatActivity {
                 dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
                 final Button Btn = dialog.findViewById(R.id.Btn);
+                Btn.setText("DELETE");
                 dialog.setOnKeyListener((v, keyCode, event) -> {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         dialog.dismiss();

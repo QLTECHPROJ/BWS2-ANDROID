@@ -137,6 +137,8 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
 
             final TextView tvGoBack = dialog.findViewById(R.id.tvGoBack);
             final Button Btn = dialog.findViewById(R.id.Btn);
+
+            Btn.setText("DELETE");
             dialog.setOnKeyListener((v, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     dialog.dismiss();
