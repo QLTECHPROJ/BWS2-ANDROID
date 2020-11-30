@@ -1268,7 +1268,6 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                initMediaplyer();
                 if (isPause) {
                     binding.llProgressBar.setVisibility(View.GONE);
                     binding.progressBar.setVisibility(View.GONE);
@@ -1621,6 +1620,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
     }
 
     private void initMediaplyer() {
+        deleteCache(ctx.getApplicationContext());
         try {
             if (mediaSessionManager != null) return; //mediaSessionManager exists
 
@@ -1638,7 +1638,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             mediaSession.setActive(true);
             //indicate that the MediaSession handles transport control commands
             // through its MediaSessionCompat.Callback.
-            mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+            mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
             //Set mediaSession's MetaData
 //        updateMetaData();
@@ -1690,6 +1690,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //            }
             });
         } catch (Exception e) {
+            Log.e("playwell init media err",e.getMessage());
             e.printStackTrace();
         }
     }

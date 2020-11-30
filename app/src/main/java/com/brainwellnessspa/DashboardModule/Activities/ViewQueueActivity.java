@@ -776,6 +776,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         }
     }
     private void initMediaplyer() {
+        deleteCache(ctx.getApplicationContext());
         if (mediaSessionManager != null) return; //mediaSessionManager exists
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -793,7 +794,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
         mediaSession.setActive(true);
         //indicate that the MediaSession handles transport control commands
         // through its MediaSessionCompat.Callback.
-        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
         //Set mediaSession's MetaData
 //        updateMetaData();

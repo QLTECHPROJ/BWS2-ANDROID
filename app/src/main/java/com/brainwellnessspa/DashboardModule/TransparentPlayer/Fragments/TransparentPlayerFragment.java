@@ -87,6 +87,7 @@ import static com.brainwellnessspa.Utility.MusicService.Broadcast_PLAY_NEW_AUDIO
 import static com.brainwellnessspa.Utility.MusicService.Broadcast_PLAY_PAUSE;
 import static com.brainwellnessspa.Utility.MusicService.SeekTo;
 import static com.brainwellnessspa.Utility.MusicService.buildNotification;
+import static com.brainwellnessspa.Utility.MusicService.deleteCache;
 import static com.brainwellnessspa.Utility.MusicService.getEndTime;
 import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
 import static com.brainwellnessspa.Utility.MusicService.getStartTime;
@@ -1245,6 +1246,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
     }
 
     private void initMediaplyer() {
+        deleteCache(ctx.getApplicationContext());
         mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         // Create a new MediaSession
 
