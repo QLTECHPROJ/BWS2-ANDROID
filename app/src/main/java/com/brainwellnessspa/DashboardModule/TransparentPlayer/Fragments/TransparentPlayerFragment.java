@@ -42,6 +42,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.media.session.MediaButtonReceiver;
 
 import com.brainwellnessspa.BWSApplication;
+import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
@@ -1165,7 +1166,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                 editor.commit();
                 handler12.removeCallbacks(UpdateSongTime12);
-                Intent i = new Intent(ctx, PlayWellnessActivity.class);
                 Intent i = new Intent(ctx, AudioPlayerActivity.class);
                 i.putExtra("URL",mainPlayModel.getAudioFile());
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
