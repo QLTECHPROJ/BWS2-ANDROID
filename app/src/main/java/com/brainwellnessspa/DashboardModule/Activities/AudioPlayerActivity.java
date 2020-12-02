@@ -136,8 +136,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
             layoutParams.width = 0;
             layoutParams.height = 0;
-            layoutParams.columnSpec = GridLayout.spec(i % 1, 1f);
-            layoutParams.rowSpec = GridLayout.spec(i / 1, 1f);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                layoutParams.columnSpec = GridLayout.spec(i % 1, 1f);
+                layoutParams.rowSpec = GridLayout.spec(i / 1, 1f);
+        }
             layoutParams.bottomMargin = 10;
             layoutParams.leftMargin = 10;
             layoutParams.topMargin = 10;
@@ -172,7 +174,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
         super.onDestroy();
         if (isOwner && isFinishing()) {
             if (surfaceControl != null) {
-                surfaceControl.release();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    surfaceControl.release();
+                }
                 surfaceControl = null;
             }
             if (videoSurface != null) {
@@ -232,12 +236,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
         player.setPlayWhenReady(true);
         player.setRepeatMode(Player.REPEAT_MODE_ALL);
 
-        surfaceControl =
-                new SurfaceControl.Builder()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        surfaceControl = new SurfaceControl.Builder()
                         .setName(SURFACE_CONTROL_NAME)
                         .setBufferSize(/* width= */ 0, /* height= */ 0)
                         .build();
-        videoSurface = new Surface(surfaceControl);
+            videoSurface = new Surface(surfaceControl);
+        }
         player.setVideoSurface(videoSurface);
         AudioPlayerActivity.player = player;
     }
@@ -275,18 +280,22 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private static void reparent(@Nullable SurfaceView surfaceView) {
         SurfaceControl surfaceControl = Assertions.checkNotNull(AudioPlayerActivity.surfaceControl);
         if (surfaceView == null) {
-            new SurfaceControl.Transaction()
-                    .reparent(surfaceControl, /* newParent= */ null)
-                    .setBufferSize(surfaceControl, /* w= */ 0, /* h= */ 0)
-                    .setVisibility(surfaceControl, /* visible= */ false)
-                    .apply();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                new SurfaceControl.Transaction()
+                        .reparent(surfaceControl, /* newParent= */ null)
+                        .setBufferSize(surfaceControl, /* w= */ 0, /* h= */ 0)
+                        .setVisibility(surfaceControl, /* visible= */ false)
+                        .apply();
+            }
         } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             SurfaceControl newParentSurfaceControl = surfaceView.getSurfaceControl();
-            new SurfaceControl.Transaction()
-                    .reparent(surfaceControl, newParentSurfaceControl)
-                    .setBufferSize(surfaceControl, surfaceView.getWidth(), surfaceView.getHeight())
-                    .setVisibility(surfaceControl, /* visible= */ true)
-                    .apply();
+                new SurfaceControl.Transaction()
+                        .reparent(surfaceControl, newParentSurfaceControl)
+                        .setBufferSize(surfaceControl, surfaceView.getWidth(), surfaceView.getHeight())
+                        .setVisibility(surfaceControl, /* visible= */ true)
+                        .apply();
+            }
         }
     }
 }
