@@ -1166,6 +1166,8 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 editor.commit();
                 handler12.removeCallbacks(UpdateSongTime12);
                 Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                i.putExtra("URL",mainPlayModel.getAudioFile());
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
             });

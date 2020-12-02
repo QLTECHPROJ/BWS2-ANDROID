@@ -7,8 +7,9 @@ android {
 
     defaultConfig {
         applicationId "com.brainwellnessspa"
-        minSdkVersion 16
+        minSdkVersion 20
         targetSdkVersion 30
+        versionCode 6
         versionCode 7
         versionName "1.1"
         multiDexEnabled true
@@ -18,6 +19,7 @@ android {
     lintOptions {
         checkReleaseBuilds false
     }
+
     buildTypes {
         debug {
             debuggable true
@@ -33,6 +35,8 @@ android {
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildFeatures {
@@ -66,22 +70,21 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
-    /* TODO Firebase Dependency */
-    implementation 'com.segment.analytics.android:analytics:4.7.1'
+    / TODO Firebase Dependency /
     implementation 'com.google.firebase:firebase-auth:20.0.1'
     implementation 'com.google.firebase:firebase-core:18.0.0'
     implementation 'com.google.firebase:firebase-analytics:18.0.0'
     implementation 'com.google.firebase:firebase-messaging:21.0.0'
-    /* TODO Room Database Dependency */
+    / TODO Room Database Dependency /
     implementation "android.arch.persistence.room:runtime:$room_version"
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
     testImplementation "android.arch.persistence.room:testing:$room_version"
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
     debugImplementation 'com.amitshekhar.android:debug-db-encrypt:1.0.6'
 
-    /* TODO Material Design Dependency */
+    / TODO Material Design Dependency /
     implementation 'com.google.android.material:material:1.2.1'
-    /* TODO Bottom Menu and Fragment*/
+/* TODO Bottom Menu and Fragment*/
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.navigation:navigation-fragment:2.3.1'
     implementation 'androidx.navigation:navigation-ui:2.3.1'
@@ -89,17 +92,17 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    /* TODO Stripe Payment Gateway */
+    / TODO Stripe Payment Gateway /
     implementation 'com.stripe:stripe-android:2.0.2'
-    /* TODO Use Youtube Video Player */
+    / TODO Use Youtube Video Player /
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
-    /* TODO Cardview Design Dependency */
+    / TODO Cardview Design Dependency /
     implementation 'androidx.cardview:cardview:1.0.0'
-    /* TODO Recyclerview Design & Development Dependency */
+    / TODO Recyclerview Design & Development Dependency /
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     / TODO Circle Imageview Design Dependency */
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-    /* TODO Retrofit Development Dependency */
+    / TODO Retrofit Development Dependency /
     implementation 'com.squareup.retrofit:retrofit:1.9.0'
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
@@ -109,14 +112,20 @@ dependencies {
     implementation 'com.squareup.okhttp:okhttp-urlconnection:2.7.5'
     implementation 'com.squareup.okhttp3:okhttp:4.7.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
-    /* TODO Glide Dependency*/
+/* TODO Glide Dependency*/
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     implementation 'com.mindorks.android:prdownloader:0.4.0'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
     implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
     implementation 'com.github.claucookie.miniequalizer:library:1.0.0'
+
     implementation 'me.toptas.fancyshowcase:fancyshowcaseview:1.3.3'
+    implementation 'com.google.android.exoplayer:exoplayer:2.11.1'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.12.0'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.12.0'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.12.0'
+    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.12.0'
 }
 repositories {
     mavenCentral()
