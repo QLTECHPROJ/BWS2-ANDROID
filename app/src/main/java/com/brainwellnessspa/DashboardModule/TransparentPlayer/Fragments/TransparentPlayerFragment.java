@@ -15,13 +15,17 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.session.MediaSessionManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.RemoteException;
 import android.os.SystemClock;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -64,13 +68,16 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.segment.analytics.Properties;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
@@ -80,6 +87,8 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.POWER_SERVICE;
+import static android.media.session.PlaybackState.STATE_PAUSED;
+import static android.media.session.PlaybackState.STATE_PLAYING;
 import static com.brainwellnessspa.DashboardModule.Account.AccountFragment.ComeScreenAccount;
 import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DownloadModule.Fragments.AudioDownloadsFragment.comefromDownload;
@@ -105,8 +114,11 @@ import static com.brainwellnessspa.Utility.MusicService.pauseMedia;
 import static com.brainwellnessspa.Utility.MusicService.progressToTimer;
 import static com.brainwellnessspa.Utility.MusicService.resumeMedia;
 import static com.brainwellnessspa.Utility.MusicService.savePrefQueue;
+import static com.brainwellnessspa.Utility.MusicService.setMediaPlaybackState;
 import static com.brainwellnessspa.Utility.MusicService.stopMedia;
 import static com.brainwellnessspa.Utility.MusicService.transportControls;
+import static com.brainwellnessspa.Utility.MusicService.mMediaControllerCompatCallback;
+import static com.brainwellnessspa.Utility.MusicService.mCurrentState;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener/*, Playable, AudioManager.OnAudioFocusChangeListener*/ {
@@ -171,17 +183,17 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 if (queuePlay) {
                     if (listSize != 0) {
                         if (!BWSApplication.isNetworkConnected(ctx)) {
-                            if (mediaPlayer != null) {
-                                totalDuration = mediaPlayer.getDuration();
-                            } else {
+//                            if (mediaPlayer != null) {
+//                                totalDuration = mediaPlayer.getDuration();
+//                            } else {
                                 t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
-                            }
+//                            }
                         } else {
-                            if (mediaPlayer != null) {
-                                totalDuration = mediaPlayer.getDuration();
-                            } else {
+//                            if (mediaPlayer != null) {
+//                                totalDuration = mediaPlayer.getDuration();
+//                            } else {
                                 t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
-                            }
+//                            }
                         }
                     } else {
                         binding.progressBar.setVisibility(View.GONE);
@@ -191,31 +203,31 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     }
                 } else if (audioPlay) {
                     if (!BWSApplication.isNetworkConnected(ctx)) {
-                        if (mediaPlayer != null) {
-                            totalDuration = mediaPlayer.getDuration();
-                        } else {
+//                        if (mediaPlayer != null) {
+//                            totalDuration = mediaPlayer.getDuration();
+//                        } else {
                             t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
-                        }
+//                        }
                     } else {
-                        if (mediaPlayer != null) {
-                            totalDuration = mediaPlayer.getDuration();
-                        } else {
+//                        if (mediaPlayer != null) {
+//                            totalDuration = mediaPlayer.getDuration();
+//                        } else {
                             t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
-                        }
+//                        }
                     }
                 }
 
                 if (!BWSApplication.isNetworkConnected(ctx)) {
-                    if (mediaPlayer != null) {
-                        totalDuration = mediaPlayer.getDuration();
-                    } else
+//                    if (mediaPlayer != null) {
+//                        totalDuration = mediaPlayer.getDuration();
+//                    } else
                         totalDuration = t.getTime();
                 } else {
-                    if (mediaPlayer != null) {
-                        totalDuration = mediaPlayer.getDuration();
-                    } else {
+//                    if (mediaPlayer != null) {
+//                        totalDuration = mediaPlayer.getDuration();
+//                    } else {
                         totalDuration = t.getTime();
-                    }
+//                    }
                 }
 
                 if (isMediaStart) {
@@ -228,7 +240,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 myProgress = currentDuration;
                 currentDuration = getStartTime();
                 diff = totalDuration - myProgress;
-
 //                Log.e("myProgress old!!!",String.valueOf(myProgress));
                 if (myProgress == currentDuration && myProgress != 0 && !isPause && audioFile.equalsIgnoreCase("")) {
 //                    Log.e("myProgress",String.valueOf(myProgress));
@@ -428,10 +439,19 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 binding.ivPause.setVisibility(View.VISIBLE);
                 isPause = false;
             }
+
+            setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
             player = 1;
             localIntent.putExtra("MyData", "play");
             localBroadcastManager.sendBroadcast(localIntent);
             handler12.postDelayed(UpdateSongTime12, 100);
+            Properties p = new Properties();
+            p.putValue("userId", UserID);
+            p.putValue("audioName",name);
+            p.putValue("audioFile", audioFile);
+            p.putValue("duration",mainPlayModelList.get(position).getAudioDuration());
+            BWSApplication.addToSegment("Audio play", p, CONSTANTS.track);
+            buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         /*Intent intent = new Intent();
         intent.setAction("com.brainwellnessspa.Broadcast");
         intent.putExtra("MyData", "play");
@@ -460,9 +480,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             binding.ivPlay.setVisibility(View.VISIBLE);
         }
         oTime = binding.simpleSeekbar.getProgress();
-
+        Properties p = new Properties();
+        p.putValue("userId", UserID);
+        p.putValue("audioName",name);
+        p.putValue("audioFile", audioFile);
+        p.putValue("duration",mainPlayModelList.get(position).getAudioDuration());
+        BWSApplication.addToSegment("Audio pause", p, CONSTANTS.track);
+        buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         localIntent.putExtra("MyData", "pause");
         localBroadcastManager.sendBroadcast(localIntent);
+        setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
        /* Intent intent = new Intent();
         intent.setAction("com.brainwellnessspa.Broadcast");
         intent.putExtra("MyData", "pause");
@@ -1185,6 +1212,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 initMediaplyer();
                 if (download.equalsIgnoreCase("1")) {
                     mediaPlayer.setDataSource(fileDescriptor);
+//                    mediaPlayer.setOnDrmConfigHelper(mediaPlayer1 -> );
                 } else {
                     mediaPlayer.setDataSource(audioFile);
                     Log.e("Playinggggxxxxx", "Startinggg1xxxxx");
@@ -1194,6 +1222,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                             new AudioAttributes
                                     .Builder()
                                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                    .setUsage(AudioAttributes.USAGE_MEDIA)
                                     .build());
                     Log.e("Playinggggg11111111", "Startinggg111111111");
                 }
@@ -1211,8 +1240,27 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     isMediaStart = true;
                     localIntent.putExtra("MyData", "play");
                     localBroadcastManager.sendBroadcast(localIntent);
+                    setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
                 });
+
             }
+            mediaPlayer.setOnErrorListener((mediaPlayer, i, i1) -> {
+                switch (i) {
+                    case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
+                        Log.d("MediaPlayer Error", "MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK " + i1);
+                        break;
+                    case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
+                        Log.d("MediaPlayer Error", "MEDIA ERROR SERVER DIED " + i1);
+                        break;
+                    case MediaPlayer.MEDIA_ERROR_UNKNOWN:
+                        Log.d("MediaPlayer Error", "MEDIA ERROR UNKNOWN " + i1);
+                        break;
+                }
+                Log.e("errrr... State","tr");
+                return false;
+            });
+            mediaPlayer.setOnBufferingUpdateListener((mediaPlayer, i) -> {
+            });
         }
 
         if (isPause) {
@@ -1258,6 +1306,27 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         //Set mediaSession's MetaData
 //        updateMetaData();
         // Attach Callback to receive MediaSession updates
+        mMediaControllerCompatCallback = new MediaControllerCompat.Callback() {
+
+            @Override
+            public void onPlaybackStateChanged(PlaybackStateCompat state) {
+                super.onPlaybackStateChanged(state);
+                if( state == null ) {
+                    return;
+                }
+
+                switch( state.getState() ) {
+                    case PlaybackStateCompat.STATE_PLAYING: {
+                        mCurrentState = STATE_PLAYING;
+                        break;
+                    }
+                    case PlaybackStateCompat.STATE_PAUSED: {
+                        mCurrentState = STATE_PAUSED;
+                        break;
+                    }
+                }
+            }
+         };
         Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
         mediaButtonIntent.setClass(ctx, MediaButtonReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, mediaButtonIntent, 0);
@@ -1270,7 +1339,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 callPlay();
                 super.onPlay();
             }
-
             @Override
             public void onPause() {
                 callPause();
@@ -1296,13 +1364,16 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             }
 
 
-//            @Override
-//            public void onStop() {
-//                super.onStop();
-//                    removeNotification();
-//                    //Stop the service
-//                    stopSelf();
-//            }
+            @Override
+            public void onStop() {
+                super.onStop();
+                Properties p = new Properties();
+                p.putValue("userId", UserID);
+                p.putValue("audioName",name);
+                p.putValue("audioFile", audioFile);
+                p.putValue("duration",mainPlayModelList.get(position).getAudioDuration());
+                BWSApplication.addToSegment("Audio stop", p, CONSTANTS.track);
+            }
 
 /*            @Override
             public void onSeekTo(long position) {

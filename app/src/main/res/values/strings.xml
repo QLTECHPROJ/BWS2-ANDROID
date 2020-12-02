@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Brain Wellness App</string>
 
-    <string name="segment_key">VmAtgcQAvQs8w5ddXo9PgjyBMP62zTVu</string>
+    <string name="segment_key">X3sYYbQtro7xHI31AJppjMQ20AZlPdlS</string>
     <string name="segment_key2">2ClHzzCF1JFEDocqe0Az8KSV4ybDcUdm</string>//sunny sir id
     <string name="ResponseCodesuccess">200</string>
     <string name="ResponseCodefail">401</string>

@@ -64,7 +64,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
 
         try {
-            analytics = new Analytics.Builder(getApplication(), getString(R.string.segment_key2))
+            analytics = new Analytics.Builder(getApplication(), getString(R.string.segment_key))
                     .trackApplicationLifecycleEvents()
                     .logLevel(Analytics.LogLevel.VERBOSE).trackAttributionInformation()
                     .trackAttributionInformation()

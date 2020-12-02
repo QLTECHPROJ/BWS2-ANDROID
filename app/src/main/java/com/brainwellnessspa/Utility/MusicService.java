@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.RemoteException;
+import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -58,6 +59,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK;
+import static android.media.session.PlaybackState.STATE_PAUSED;
+import static android.media.session.PlaybackState.STATE_PLAYING;
 import static com.brainwellnessspa.BWSApplication.ACTION_PREVIUOS;
 import static com.brainwellnessspa.BWSApplication.CHANNEL_ID;
 
@@ -66,7 +69,7 @@ public class MusicService extends Service {
     public static boolean isPrepare = false, songComplete = false, isMediaStart = false, isrelese = false, isStop = false, isCompleteStop = false, isPreparing = false;
     public static boolean isPause = false, isprogressbar = false;
     public static boolean isResume = false;
-    public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000;
+    public static int oTime = 0, startTime = 0, endTime = 0, forwardTime = 30000, backwardTime = 30000,mCurrentState = 0,audioBufferCapacityMs;
     static public Handler handler;
     static boolean isPlaying = false;
     public static final String ACTION_PLAY = "ACTION_PLAY";
@@ -99,6 +102,7 @@ public class MusicService extends Service {
     private PhoneStateListener phoneStateListener;
     private TelephonyManager telephonyManager;
     public static Notification notification;
+    public static MediaControllerCompat.Callback mMediaControllerCompatCallback;
 
     /**
      * Service lifecycle methods
@@ -119,7 +123,16 @@ public class MusicService extends Service {
         //Listen for new Audio to play -- BroadcastReceiver
         register_playNewAudio();
     }
-
+    public static void setMediaPlaybackState(int state) {
+        PlaybackStateCompat.Builder playbackstateBuilder = new PlaybackStateCompat.Builder();
+        if( state == PlaybackStateCompat.STATE_PLAYING ) {
+            playbackstateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE);
+        } else {
+            playbackstateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PLAY);
+        }
+        playbackstateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
+        mediaSession.setPlaybackState(playbackstateBuilder.build());
+    }
     //The system calls this method when an activity, requests the service be started
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -129,6 +142,8 @@ public class MusicService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(0, notification, FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
         }
+
+        MediaButtonReceiver.handleIntent(mediaSession, intent);
        /* try {
             // You only need to create the channel on API 26+ devices
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -630,6 +645,7 @@ public class MusicService extends Service {
                             .setLargeIcon(myBitmap)
                             .setOnlyAlertOnce(true)//show notification for only first time
                             .setShowWhen(false)
+                            .setSound(null)
                             .setOngoing(true)
                             .setContentIntent(pIntent)
                             .addAction(drw_previous, "Previous", playbackAction(3, context))
