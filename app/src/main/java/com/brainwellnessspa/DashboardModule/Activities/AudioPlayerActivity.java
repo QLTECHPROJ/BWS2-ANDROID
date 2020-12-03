@@ -1,5 +1,6 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -32,12 +33,15 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.Utility.IntentUtil;
 import com.brainwellnessspa.databinding.ActivityAudioPlayerBinding;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.drm.DefaultDrmSessionManager;
 import com.google.android.exoplayer2.drm.DrmSessionManager;
@@ -46,11 +50,16 @@ import com.google.android.exoplayer2.drm.ExoMediaDrm;
 import com.google.android.exoplayer2.drm.FrameworkMediaDrm;
 import com.google.android.exoplayer2.drm.HttpMediaDrmCallback;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.MediaSourceFactory;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -242,8 +251,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
         SimpleExoPlayer player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         player.prepare(mediaSource);
-        player.addMediaItems(mediaItemList);
-        player.setMediaItems(mediaItemList);
+//        player.addMediaItems(mediaItemList);
+//        player.setMediaItems(mediaItemList);
         player.setPlayWhenReady(true);
 //        player.setRepeatMode(Player.REPEAT_MODE_ALL);
 
@@ -264,7 +273,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             reparent(surfaceView);
         }
     }
-
     private void attachSurfaceListener(SurfaceView surfaceView) {
         surfaceView
                 .getHolder()
@@ -703,7 +711,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        if (isOwner && player == null) {
             initializePlayer();
 //        }
-
         setCurrentOutputView(nonFullScreenView);
 
         PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);

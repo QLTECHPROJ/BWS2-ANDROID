@@ -23,6 +23,10 @@
             <com.google.android.exoplayer2.ui.PlayerControlView
                 android:id="@+id/player_control_view"
                 android:layout_width="match_parent"
+                app:show_next_button="true"
+                app:show_previous_button="true"
+                app:show_fastforward_button="true"
+                app:show_rewind_button="true"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 app:show_timeout="0"/>
