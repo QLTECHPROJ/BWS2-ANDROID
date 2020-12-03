@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceControl;
 import android.view.SurfaceHolder;
@@ -38,11 +39,14 @@ import com.brainwellnessspa.databinding.ActivityAudioPlayerBinding;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.drm.DefaultDrmSessionManager;
 import com.google.android.exoplayer2.drm.DrmSessionManager;
 import com.google.android.exoplayer2.drm.ExoMediaCrypto;
@@ -52,11 +56,13 @@ import com.google.android.exoplayer2.drm.HttpMediaDrmCallback;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MediaSourceFactory;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
@@ -184,7 +190,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        Assertions.checkNotNull(binding.playerControlView).setPlayer(null);
+//        Assertions.checkNotNull(binding.playerControlView).setPlayer(null);
     }
 
     @Override
@@ -208,7 +214,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }*/
     }
     private void initializePlayer() {
-        DrmSessionManager drmSessionManager;
+       /* DrmSessionManager drmSessionManager;
         Intent intent = getIntent();
         String action = intent.getAction();
         Uri uri = ACTION_VIEW.equals(action)
@@ -247,11 +253,58 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             .createMediaSource(uri);
         } else {
             throw new IllegalStateException();
-        }
+        }*/
         SimpleExoPlayer player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
-        player.prepare(mediaSource);
-//        player.addMediaItems(mediaItemList);
-//        player.setMediaItems(mediaItemList);
+        player.prepare();
+        player.addListener(new ExoPlayer.EventListener() {
+
+            @Override
+            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+                Log.v("TAG", "Listener-onTracksChanged... ");
+                for (int i = 0; i < 1; i++) {
+                    View view;
+                    if (i == 0) {
+                        Button button = new Button(ctx);
+                        view = button;
+                        int ps = player.getCurrentWindowIndex();
+                        button.setText(mainPlayModelList.get(ps).getName());
+                        button.setOnClickListener(v -> reparent(null));
+                    } else {
+                        SurfaceView surfaceView = new SurfaceView(ctx);
+                        view = surfaceView;
+                        attachSurfaceListener(surfaceView);
+                        surfaceView.setOnClickListener(
+                                v -> {
+                                    setCurrentOutputView(surfaceView);
+                                    nonFullScreenView = surfaceView;
+                                });
+                        if (nonFullScreenView == null) {
+                            nonFullScreenView = surfaceView;
+                        }
+                    }
+                    binding.gridLayout.addView(view);
+                    GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+                    layoutParams.width = 0;
+                    layoutParams.height = 0;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        layoutParams.columnSpec = GridLayout.spec(i % 1, 1f);
+                        layoutParams.rowSpec = GridLayout.spec(i / 1, 1f);
+                    }
+                    layoutParams.bottomMargin = 10;
+                    layoutParams.leftMargin = 10;
+                    layoutParams.topMargin = 10;
+                    layoutParams.rightMargin = 10;
+                    view.setLayoutParams(layoutParams);
+                }
+            }
+
+        });
+        MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(position).getAudioFile());
+        player.setMediaItem(mediaItem1);
+         for(int i = 0;i<mediaItemList.size();i++){
+            MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
+            player.addMediaItem(mediaItem);
+        }
         player.setPlayWhenReady(true);
 //        player.setRepeatMode(Player.REPEAT_MODE_ALL);
 
@@ -323,6 +376,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         MainPlayModel mainPlayModel;
+        mediaItemList = new ArrayList<>();
+        addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
         String json2 = shared.getString(CONSTANTS.PREF_KEY_queueList, String.valueOf(gson));
