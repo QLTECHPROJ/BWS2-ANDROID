@@ -207,7 +207,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         }*/
     }
-
     private void initializePlayer() {
         DrmSessionManager drmSessionManager;
         Intent intent = getIntent();
