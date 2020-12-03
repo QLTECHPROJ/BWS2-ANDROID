@@ -578,7 +578,7 @@ public class ViewAllAudioFragment extends Fragment {
                 isMediaStart = false;
                 isPrepare = false;
                 isCompleteStop = false;
-                Intent i = new Intent(ctx, AudioPlayerActivity.class);
+                Intent i = new Intent(getActivity(), AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 getActivity().startActivity(i);
             }
