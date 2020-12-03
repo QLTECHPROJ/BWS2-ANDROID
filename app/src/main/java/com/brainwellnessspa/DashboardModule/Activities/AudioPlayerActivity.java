@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.GridLayout;
 
 import com.brainwellnessspa.R;
+import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.databinding.ActivityAudioPlayerBinding;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -75,16 +77,17 @@ public class AudioPlayerActivity extends AppCompatActivity {
     @Nullable
     private static Surface videoSurface;
 
-    String URL;
+    String URL, UserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_audio_player);
+        SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
+        UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
 
         if (getIntent() != null) {
             URL = getIntent().getStringExtra("URL");
-
         }
 
         binding.fullScreenView.setOnClickListener(
@@ -92,33 +95,17 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     setCurrentOutputView(nonFullScreenView);
                     Assertions.checkNotNull(binding.fullScreenView).setVisibility(View.GONE);
                 });
+
         attachSurfaceListener(binding.fullScreenView);
-        isOwner = getIntent().getBooleanExtra(OWNER_EXTRA,true);
+        isOwner = getIntent().getBooleanExtra(OWNER_EXTRA, true);
+
         for (int i = 0; i < 1; i++) {
             View view;
             if (i == 0) {
                 Button button = new Button(this);
                 view = button;
-                button.setText("No output");
+                button.setText(Name);
                 button.setOnClickListener(v -> reparent(null));
-            } else if (i == 1) {
-                Button button = new Button(this);
-                view = button;
-                button.setText("Full Screen");
-                button.setOnClickListener(
-                        v -> {
-                            setCurrentOutputView(binding.fullScreenView);
-                            Assertions.checkNotNull(binding.fullScreenView).setVisibility(View.VISIBLE);
-                        });
-            } else if (i == 2) {
-                Button button = new Button(this);
-                view = button;
-                button.setText("New activity");
-                /*button.setOnClickListener(
-                        v ->
-                                startActivity(
-                                        new Intent(AudioPlayerActivity.this, MainActivity.class)
-                                                .putExtra(OWNER_EXTRA, // value= // false)));*/
             } else {
                 SurfaceView surfaceView = new SurfaceView(this);
                 view = surfaceView;
@@ -139,7 +126,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 layoutParams.columnSpec = GridLayout.spec(i % 1, 1f);
                 layoutParams.rowSpec = GridLayout.spec(i / 1, 1f);
-        }
+            }
             layoutParams.bottomMargin = 10;
             layoutParams.leftMargin = 10;
             layoutParams.topMargin = 10;
@@ -157,7 +144,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
 
         setCurrentOutputView(nonFullScreenView);
-
         PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
         playerControlView.setPlayer(player);
         playerControlView.show();
@@ -172,7 +158,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (isOwner && isFinishing()) {
+      /*  if (isOwner && isFinishing()) {
             if (surfaceControl != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     surfaceControl.release();
@@ -187,7 +173,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 player.release();
                 player = null;
             }
-        }
+        }*/
     }
 
     private void initializePlayer() {
@@ -237,10 +223,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
         player.setRepeatMode(Player.REPEAT_MODE_ALL);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        surfaceControl = new SurfaceControl.Builder()
-                        .setName(SURFACE_CONTROL_NAME)
-                        .setBufferSize(/* width= */ 0, /* height= */ 0)
-                        .build();
+            surfaceControl = new SurfaceControl.Builder()
+                    .setName(SURFACE_CONTROL_NAME)
+                    .setBufferSize(/* width= */ 0, /* height= */ 0)
+                    .build();
             videoSurface = new Surface(surfaceControl);
         }
         player.setVideoSurface(videoSurface);
@@ -289,7 +275,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            SurfaceControl newParentSurfaceControl = surfaceView.getSurfaceControl();
+                SurfaceControl newParentSurfaceControl = surfaceView.getSurfaceControl();
                 new SurfaceControl.Transaction()
                         .reparent(surfaceControl, newParentSurfaceControl)
                         .setBufferSize(surfaceControl, surfaceView.getWidth(), surfaceView.getHeight())

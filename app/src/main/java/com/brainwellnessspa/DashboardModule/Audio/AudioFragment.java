@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.BillingOrderModule.Activities.MembershipChangeActivity;
 import com.brainwellnessspa.DashboardModule.Activities.AddPlaylistActivity;
+import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.DownloadAdapter;
 import com.brainwellnessspa.DashboardModule.Audio.Adapters.LibraryAdapter;
@@ -790,7 +791,7 @@ public class AudioFragment extends Fragment {
                 editor.putString(CONSTANTS.PREF_KEY_myPlaylist, HomeView);
                 editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "MainAudioList");
                 editor.commit();
-                Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                Intent i = new Intent(ctx, AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
             } catch (Exception e) {

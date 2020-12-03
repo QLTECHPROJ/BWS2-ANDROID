@@ -332,7 +332,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 editor.putString(CONSTANTS.PREF_KEY_queueList, json22);
                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                 editor.commit();
-                Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                Intent i = new Intent(ctx, AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
                 finish();
@@ -344,7 +344,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
                 editor.putString(CONSTANTS.PREF_KEY_queueList, json22);
                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                 editor.commit();
-                Intent i = new Intent(ctx, PlayWellnessActivity.class);
+                Intent i = new Intent(ctx, AudioPlayerActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
                 finish();
@@ -1723,7 +1723,7 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
             editor.putString(CONSTANTS.PREF_KEY_queueList, json);
             editor.putInt(CONSTANTS.PREF_KEY_position, position);
             editor.commit();
-            Intent i = new Intent(ctx, PlayWellnessActivity.class);
+            Intent i = new Intent(ctx, AudioPlayerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
             finish();

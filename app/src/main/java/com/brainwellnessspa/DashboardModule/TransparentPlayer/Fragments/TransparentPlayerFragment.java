@@ -187,13 +187,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                            if (mediaPlayer != null) {
 //                                totalDuration = mediaPlayer.getDuration();
 //                            } else {
-                                t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                            t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
 //                            }
                         } else {
 //                            if (mediaPlayer != null) {
 //                                totalDuration = mediaPlayer.getDuration();
 //                            } else {
-                                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                            t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
 //                            }
                         }
                     } else {
@@ -207,13 +207,13 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                        if (mediaPlayer != null) {
 //                            totalDuration = mediaPlayer.getDuration();
 //                        } else {
-                            t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
+                        t = Time.valueOf("00:" + downloadAudioDetailsList.get(0).getAudioDuration());
 //                        }
                     } else {
 //                        if (mediaPlayer != null) {
 //                            totalDuration = mediaPlayer.getDuration();
 //                        } else {
-                            t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                        t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
 //                        }
                     }
                 }
@@ -222,12 +222,12 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
 //                    if (mediaPlayer != null) {
 //                        totalDuration = mediaPlayer.getDuration();
 //                    } else
-                        totalDuration = t.getTime();
+                    totalDuration = t.getTime();
                 } else {
 //                    if (mediaPlayer != null) {
 //                        totalDuration = mediaPlayer.getDuration();
 //                    } else {
-                        totalDuration = t.getTime();
+                    totalDuration = t.getTime();
 //                    }
                 }
 
@@ -448,9 +448,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             handler12.postDelayed(UpdateSongTime12, 100);
             Properties p = new Properties();
             p.putValue("userId", UserID);
-            p.putValue("audioName",name);
+            p.putValue("audioName", name);
             p.putValue("audioFile", audioFile);
-            p.putValue("duration",mainPlayModelList.get(position).getAudioDuration());
+            p.putValue("duration", mainPlayModelList.get(position).getAudioDuration());
             BWSApplication.addToSegment("Audio play", p, CONSTANTS.track);
             buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         /*Intent intent = new Intent();
@@ -483,9 +483,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
         oTime = binding.simpleSeekbar.getProgress();
         Properties p = new Properties();
         p.putValue("userId", UserID);
-        p.putValue("audioName",name);
+        p.putValue("audioName", name);
         p.putValue("audioFile", audioFile);
-        p.putValue("duration",mainPlayModelList.get(position).getAudioDuration());
+        p.putValue("duration", mainPlayModelList.get(position).getAudioDuration());
         BWSApplication.addToSegment("Audio pause", p, CONSTANTS.track);
         buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
         localIntent.putExtra("MyData", "pause");
@@ -1167,7 +1167,6 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 editor.commit();
                 handler12.removeCallbacks(UpdateSongTime12);
                 Intent i = new Intent(ctx, AudioPlayerActivity.class);
-                i.putExtra("URL",mainPlayModel.getAudioFile());
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 ctx.startActivity(i);
             });
@@ -1258,7 +1257,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                         Log.d("MediaPlayer Error", "MEDIA ERROR UNKNOWN " + i1);
                         break;
                 }
-                Log.e("errrr... State","tr");
+                Log.e("errrr... State", "tr");
                 return false;
             });
             mediaPlayer.setOnBufferingUpdateListener((mediaPlayer, i) -> {
@@ -1313,11 +1312,11 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
             @Override
             public void onPlaybackStateChanged(PlaybackStateCompat state) {
                 super.onPlaybackStateChanged(state);
-                if( state == null ) {
+                if (state == null) {
                     return;
                 }
 
-                switch( state.getState() ) {
+                switch (state.getState()) {
                     case PlaybackStateCompat.STATE_PLAYING: {
                         mCurrentState = STATE_PLAYING;
                         break;
@@ -1328,7 +1327,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                     }
                 }
             }
-         };
+        };
         Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
         mediaButtonIntent.setClass(ctx, MediaButtonReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, mediaButtonIntent, 0);
@@ -1341,6 +1340,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 callPlay();
                 super.onPlay();
             }
+
             @Override
             public void onPause() {
                 callPause();
@@ -1371,9 +1371,9 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 super.onStop();
                 Properties p = new Properties();
                 p.putValue("userId", UserID);
-                p.putValue("audioName",name);
+                p.putValue("audioName", name);
                 p.putValue("audioFile", audioFile);
-                p.putValue("duration",mainPlayModelList.get(position).getAudioDuration());
+                p.putValue("duration", mainPlayModelList.get(position).getAudioDuration());
                 BWSApplication.addToSegment("Audio stop", p, CONSTANTS.track);
             }
 

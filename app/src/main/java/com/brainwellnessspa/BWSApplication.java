@@ -44,6 +44,7 @@ import androidx.media.session.MediaButtonReceiver;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.brainwellnessspa.DashboardModule.Activities.AudioPlayerActivity;
 import com.brainwellnessspa.DashboardModule.Activities.DashboardActivity;
 import com.brainwellnessspa.DashboardModule.Activities.PlayWellnessActivity;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
@@ -192,7 +193,7 @@ public class BWSApplication extends Application {
                 NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
                 MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");
                 PendingIntent pendingIntentPrevious;
-                Intent intent = new Intent(context, PlayWellnessActivity.class);
+                Intent intent = new Intent(context, AudioPlayerActivity.class);
                 intent.putExtra("com.brainwellnessspa.notifyId", NOTIFICATION_ID);
                 PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 int drw_previous;
