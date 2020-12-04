@@ -10,12 +10,12 @@ import android.graphics.PorterDuff;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaTimestamp;
 import android.media.session.MediaSessionManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -50,11 +51,9 @@ import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
-import com.brainwellnessspa.Services.OnClearFromRecentService;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
-import com.brainwellnessspa.Utility.MusicService;
 import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.brainwellnessspa.databinding.ActivityPlayWellnessBinding;
 import com.bumptech.glide.Glide;
@@ -66,9 +65,6 @@ import com.segment.analytics.Properties;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
@@ -1565,7 +1561,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         if (download.equalsIgnoreCase("2")) {
             mediaPlayer = MediaPlayer.create(ctx, R.raw.brain_wellness_spa_declaimer);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            initMediaplyer();
+
+            initMediaPlyer();
 //            Uri uri = Uri.parse("android.resource://com.brainwellnessspa/" + R.raw.brain_wellness_spa_declaimer);
 //            mediaPlayer.setDataSource(String.valueOf(uri));
             mediaPlayer.start();
@@ -1579,7 +1576,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
             try {
                 if (mediaPlayer == null)
                     mediaPlayer = new MediaPlayer();
-                initMediaplyer();
+                initMediaPlyer();
                 if (mediaPlayer.isPlaying()) {
                     Log.e("Playinggggg", "stoppppp");
                     mediaPlayer.stop();
@@ -1588,7 +1585,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     isPause = false;
                 }
                 mediaPlayer = new MediaPlayer();
-                initMediaplyer();
+                initMediaPlyer();
                 if (download.equalsIgnoreCase("1")) {
                     mediaPlayer.setDataSource(fileDescriptor);
                 } else {
@@ -1611,6 +1608,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 isPrepare = true;
             } catch (IllegalStateException | IOException /*| URISyntaxException */e) {
                 FileDescriptor fileDescriptor1 = null;
+                Log.e(":Play from Catch","async");
+                Log.e("async from Catch",e.getMessage());
                 setMediaPlayer("0", fileDescriptor1);
                 e.printStackTrace();
             }
@@ -1673,13 +1672,21 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         BWSApplication.addToSegment("Audio Allocate", p, CONSTANTS.track);
     }
 
-    private void initMediaplyer() {
+    private void initMediaPlyer() {
         try {
 
             if (mediaSessionManager != null) return; //mediaSessionManager exists
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mediaSessionManager = (MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                mediaPlayer.setOnMediaTimeDiscontinuityListener(new MediaPlayer.OnMediaTimeDiscontinuityListener() {
+                    @Override
+                    public void onMediaTimeDiscontinuity(@NonNull MediaPlayer mediaPlayer, @NonNull MediaTimestamp mediaTimestamp) {
+                        Log.e("media player ",String.valueOf(mLastClickTime));
+                    }
+                });
             }
 //        mediaPlayer.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
 //        // Create a new MediaSession

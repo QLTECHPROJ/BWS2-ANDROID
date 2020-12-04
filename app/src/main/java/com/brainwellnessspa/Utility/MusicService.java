@@ -124,14 +124,14 @@ public class MusicService extends Service {
         register_playNewAudio();
     }
     public static void setMediaPlaybackState(int state) {
-        PlaybackStateCompat.Builder playbackstateBuilder = new PlaybackStateCompat.Builder();
+        PlaybackStateCompat.Builder playBackStateBuilder = new PlaybackStateCompat.Builder();
         if( state == PlaybackStateCompat.STATE_PLAYING ) {
-            playbackstateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE);
+            playBackStateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE);
         } else {
-            playbackstateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PLAY);
+            playBackStateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PLAY);
         }
-        playbackstateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
-        mediaSession.setPlaybackState(playbackstateBuilder.build());
+        playBackStateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
+        mediaSession.setPlaybackState(playBackStateBuilder.build());
     }
     //The system calls this method when an activity, requests the service be started
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

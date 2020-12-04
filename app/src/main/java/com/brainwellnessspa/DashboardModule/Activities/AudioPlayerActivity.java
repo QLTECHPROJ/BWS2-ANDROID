@@ -1,17 +1,12 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceControl;
@@ -19,10 +14,15 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.GridLayout;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
+import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
 import com.brainwellnessspa.DashboardModule.Models.AppointmentDetailModel;
+import com.brainwellnessspa.DashboardModule.Models.AudioLikeModel;
 import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.DashboardModule.Models.SearchBothModel;
 import com.brainwellnessspa.DashboardModule.Models.SubPlayListModel;
@@ -31,94 +31,89 @@ import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
-import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
+import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
-import com.brainwellnessspa.Utility.IntentUtil;
 import com.brainwellnessspa.databinding.ActivityAudioPlayerBinding;
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
-import com.google.android.exoplayer2.ExoPlaybackException;
+import com.brainwellnessspa.databinding.AudioPlayerCustomLayoutBinding;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.drm.DefaultDrmSessionManager;
-import com.google.android.exoplayer2.drm.DrmSessionManager;
-import com.google.android.exoplayer2.drm.ExoMediaCrypto;
-import com.google.android.exoplayer2.drm.ExoMediaDrm;
-import com.google.android.exoplayer2.drm.FrameworkMediaDrm;
-import com.google.android.exoplayer2.drm.HttpMediaDrmCallback;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.LoopingMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.MediaSourceFactory;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.source.dash.DashMediaSource;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerControlView;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.MimeTypes;
-import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
+import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
+import static com.brainwellnessspa.Utility.MusicService.isPause;
 
 public class AudioPlayerActivity extends AppCompatActivity {
-    ActivityAudioPlayerBinding binding;
-    private static final String DEFAULT_MEDIA_URI =
-            "https://brainwellnessspa.com.au//Bws-consumer-panel//html//audio_file//Brain_Wellness_Spa_Anger.mp3";
     private static final String SURFACE_CONTROL_NAME = "surfacedemo";
     private static final String ACTION_VIEW = "com.google.android.exoplayer.surfacedemo.action.VIEW";
     private static final String EXTENSION_EXTRA = "extension";
     private static final String DRM_SCHEME_EXTRA = "drm_scheme";
     private static final String DRM_LICENSE_URL_EXTRA = "drm_license_url";
     private static final String OWNER_EXTRA = "owner";
-
-    List<MediaItem> mediaItemList;
-    private boolean isOwner;
-    // @Nullable
-// private PlayerControlView playerControlView;
-// @Nullable
-// private SurfaceView fullScreenView;
-    @Nullable
-    private SurfaceView nonFullScreenView;
-    @Nullable
-    private SurfaceView currentOutputView;
-
+    AudioPlayerCustomLayoutBinding customLayoutBinding;
+    private long mLastClickTime = 0;
     @Nullable
     private static SimpleExoPlayer player;
     @Nullable
     private static SurfaceControl surfaceControl;
     @Nullable
     private static Surface videoSurface;
+    ActivityAudioPlayerBinding binding;
+    List<MediaItem> mediaItemList;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     String URL;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url, playFrom = "";
-    int startTime = 0, endTime = 0, position, listSize, myCount, progress, downloadPercentage,audioBufferCapacityMs;
+    int startTime = 0, endTime = 0, position, listSize, myCount, progress, downloadPercentage, audioBufferCapacityMs;
     Context ctx;
     Activity activity;
     Boolean queuePlay, audioPlay;
+    private boolean isOwner; 
+    @Nullable
+    private SurfaceView nonFullScreenView;
+    @Nullable
+    private SurfaceView currentOutputView;
+
+    private static void reparent(@Nullable SurfaceView surfaceView) {
+        SurfaceControl surfaceControl = Assertions.checkNotNull(AudioPlayerActivity.surfaceControl);
+        if (surfaceView == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                new SurfaceControl.Transaction()
+                        .reparent(surfaceControl, /* newParent= */ null)
+                        .setBufferSize(surfaceControl, /* w= */ 0, /* h= */ 0)
+                        .setVisibility(surfaceControl, /* visible= */ false)
+                        .apply();
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                SurfaceControl newParentSurfaceControl = surfaceView.getSurfaceControl();
+                new SurfaceControl.Transaction()
+                        .reparent(surfaceControl, newParentSurfaceControl)
+                        .setBufferSize(surfaceControl, surfaceView.getWidth(), surfaceView.getHeight())
+                        .setVisibility(surfaceControl, /* visible= */ true)
+                        .apply();
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,39 +141,200 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 });
         attachSurfaceListener(binding.fullScreenView);
 
-        for (int i = 0; i < 1; i++) {
-            View view;
-            if (i == 0) {
-                Button button = new Button(this);
-                view = button;
-                button.setText(mainPlayModelList.get(position).getName());
-                button.setOnClickListener(v -> reparent(null));
-            } else {
-                SurfaceView surfaceView = new SurfaceView(this);
-                view = surfaceView;
-                attachSurfaceListener(surfaceView);
-                surfaceView.setOnClickListener(
-                        v -> {
-                            setCurrentOutputView(surfaceView);
-                            nonFullScreenView = surfaceView;
-                        });
-                if (nonFullScreenView == null) {
-                    nonFullScreenView = surfaceView;
+        binding.llMore.setOnClickListener(view -> {
+//            handler1.removeCallbacks(UpdateSongTime1);
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            Intent i = new Intent(ctx, AddQueueActivity.class);
+            if (AudioFlag.equalsIgnoreCase("TopCategories")) {
+                i.putExtra("play", "TopCategories");
+            } else
+                i.putExtra("play", "play");
+            i.putExtra("ID", id);
+            i.putExtra("position", position);
+            i.putExtra("PlaylistAudioId", "");
+            startActivity(i);
+//            finish();
+        });
+
+        binding.llViewQueue.setOnClickListener(view -> {
+//            handler1.removeCallbacks(UpdateSongTime1);
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+//            if (binding.llPause.getVisibility() == View.VISIBLE) {
+//                isPause = false;
+//            }
+            SharedPreferences ViewQueue = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = ViewQueue.edit();
+            Gson gsonx = new Gson();
+            String jsonx = gsonx.toJson(addToQueueModelList);
+            if (queuePlay) {
+                editor.putString(CONSTANTS.PREF_KEY_queueList, jsonx);
+            }
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.commit();
+            Intent i = new Intent(ctx, ViewQueueActivity.class);
+            i.putExtra("ComeFromQueue", "0");
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+            finish();
+        });
+    }
+    private void callBack() {
+        try {
+//        handler1.removeCallbacks(UpdateSongTime1);
+//            player = 1;
+//            if (binding.llPause.getVisibility() == View.VISIBLE) {
+//                isPause = false;
+//            }
+//        pauseMedia();
+            SharedPreferences shared2 = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = shared2.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(addToQueueModelList);
+            if (queuePlay) {
+                editor.putString(CONSTANTS.PREF_KEY_queueList, json);
+            }
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.commit();
+            finish();
+//        overridePendingTransition(R.anim.enter, R.anim.exit);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void callLike() {
+        if (BWSApplication.isNetworkConnected(ctx)) {
+            BWSApplication.showProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
+            Call<AudioLikeModel> listCall = APIClient.getClient().getAudioLike(id, UserID);
+            listCall.enqueue(new Callback<AudioLikeModel>() {
+                @Override
+                public void onResponse(Call<AudioLikeModel> call, Response<AudioLikeModel> response) {
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
+                            AudioLikeModel model = response.body();
+                            if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
+                                binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                            } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
+                                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                            }
+                            SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            boolean audioPlay = sharedxx.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
+                            int pos = sharedxx.getInt(CONSTANTS.PREF_KEY_position, 0);
+                            AudioFlag = sharedxx.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                            SharedPreferences sharedq = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            AudioFlag = sharedq.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
+                            Gson gsonq = new Gson();
+                            String jsonq = sharedq.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gsonq));
+                            SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = shared.edit();
+                            Gson gson = new Gson();
+                            if (audioPlay) {
+                                if (AudioFlag.equalsIgnoreCase("MainAudioList")) {
+                                    Type type = new TypeToken<ArrayList<MainAudioModel.ResponseData.Detail>>() {
+                                    }.getType();
+                                    ArrayList<MainAudioModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("ViewAllAudioList")) {
+                                    Type type = new TypeToken<ArrayList<ViewAllAudioListModel.ResponseData.Detail>>() {
+                                    }.getType();
+                                    ArrayList<ViewAllAudioListModel.ResponseData.Detail> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("SearchModelAudio")) {
+                                    Type type = new TypeToken<ArrayList<SearchBothModel.ResponseData>>() {
+                                    }.getType();
+                                    ArrayList<SearchBothModel.ResponseData> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("SearchAudio")) {
+                                    Type type = new TypeToken<ArrayList<SuggestedModel.ResponseData>>() {
+                                    }.getType();
+                                    ArrayList<SuggestedModel.ResponseData> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
+                                    Type type = new TypeToken<ArrayList<AppointmentDetailModel.Audio>>() {
+                                    }.getType();
+                                    ArrayList<AppointmentDetailModel.Audio> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("LikeAudioList")) {
+                                    Type type = new TypeToken<ArrayList<LikesHistoryModel.ResponseData.Audio>>() {
+                                    }.getType();
+                                    ArrayList<LikesHistoryModel.ResponseData.Audio> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
+                                    Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                                    }.getType();
+                                    ArrayList<DownloadAudioDetails> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("Downloadlist")) {
+                                    Type type = new TypeToken<ArrayList<DownloadAudioDetails>>() {
+                                    }.getType();
+                                    ArrayList<DownloadAudioDetails> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("TopCategories")) {
+                                    Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+                                    }.getType();
+                                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                } else if (AudioFlag.equalsIgnoreCase("SubPlayList")) {
+                                    Type type = new TypeToken<ArrayList<SubPlayListModel.ResponseData.PlaylistSong>>() {
+                                    }.getType();
+                                    ArrayList<SubPlayListModel.ResponseData.PlaylistSong> arrayList = gsonq.fromJson(jsonq, type);
+                                    arrayList.get(position).setLike(model.getResponseData().getFlag());
+                                    String json2 = gson.toJson(arrayList);
+                                    editor.putString(CONSTANTS.PREF_KEY_modelList, json2);
+                                }
+                            }
+                            if (queuePlay) {
+                                addToQueueModelList.get(position).setLike(model.getResponseData().getFlag());
+                            } else
+                                mainPlayModelList.get(position).setLike(model.getResponseData().getFlag());
+
+                            String json = gson.toJson(mainPlayModelList);
+                            editor.putString(CONSTANTS.PREF_KEY_audioList, json);
+                            if (queuePlay) {
+                                String json1 = gson.toJson(addToQueueModelList);
+                                editor.putString(CONSTANTS.PREF_KEY_queueList, json1);
+                            }
+                            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+                            editor.commit();
+                            BWSApplication.showToast(model.getResponseMessage(), ctx);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-            binding.gridLayout.addView(view);
-            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-            layoutParams.width = 0;
-            layoutParams.height = 0;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                layoutParams.columnSpec = GridLayout.spec(i % 1, 1f);
-                layoutParams.rowSpec = GridLayout.spec(i / 1, 1f);
-            }
-            layoutParams.bottomMargin = 10;
-            layoutParams.leftMargin = 10;
-            layoutParams.topMargin = 10;
-            layoutParams.rightMargin = 10;
-            view.setLayoutParams(layoutParams);
+
+                @Override
+                public void onFailure(Call<AudioLikeModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), ctx);
         }
     }
 
@@ -213,6 +369,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
         }*/
     }
+
     private void initializePlayer() {
        /* DrmSessionManager drmSessionManager;
         Intent intent = getIntent();
@@ -261,50 +418,21 @@ public class AudioPlayerActivity extends AppCompatActivity {
             @Override
             public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                 Log.v("TAG", "Listener-onTracksChanged... ");
-                for (int i = 0; i < 1; i++) {
-                    View view;
-                    if (i == 0) {
-                        Button button = new Button(ctx);
-                        view = button;
-                        int ps = player.getCurrentWindowIndex();
-                        button.setText(mainPlayModelList.get(ps).getName());
-                        button.setOnClickListener(v -> reparent(null));
-                    } else {
-                        SurfaceView surfaceView = new SurfaceView(ctx);
-                        view = surfaceView;
-                        attachSurfaceListener(surfaceView);
-                        surfaceView.setOnClickListener(
-                                v -> {
-                                    setCurrentOutputView(surfaceView);
-                                    nonFullScreenView = surfaceView;
-                                });
-                        if (nonFullScreenView == null) {
-                            nonFullScreenView = surfaceView;
-                        }
-                    }
-                    binding.gridLayout.addView(view);
-                    GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-                    layoutParams.width = 0;
-                    layoutParams.height = 0;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        layoutParams.columnSpec = GridLayout.spec(i % 1, 1f);
-                        layoutParams.rowSpec = GridLayout.spec(i / 1, 1f);
-                    }
-                    layoutParams.bottomMargin = 10;
-                    layoutParams.leftMargin = 10;
-                    layoutParams.topMargin = 10;
-                    layoutParams.rightMargin = 10;
-                    view.setLayoutParams(layoutParams);
-                }
+                callButtonText(player.getCurrentWindowIndex());
             }
 
+            @Override
+            public void onPlaybackStateChanged(int state) {
+                callButtonText(player.getCurrentWindowIndex());
+            }
         });
-        MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(position).getAudioFile());
+        MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
         player.setMediaItem(mediaItem1);
-         for(int i = 0;i<mediaItemList.size();i++){
+         for(int i = 1;i<mediaItemList.size();i++){
             MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
             player.addMediaItem(mediaItem);
         }
+//        player.setMediaItems(mediaItemList, position, 0);
         player.setPlayWhenReady(true);
 //        player.setRepeatMode(Player.REPEAT_MODE_ALL);
 
@@ -317,6 +445,61 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
         player.setVideoSurface(videoSurface);
         AudioPlayerActivity.player = player;
+//        callButtonText();
+    }
+
+    private void callButtonText(int ps) {
+
+        url = mainPlayModelList.get(ps).getAudioFile();
+        id = mainPlayModelList.get(ps).getID();
+        if (url.equalsIgnoreCase("") || url.isEmpty()) {
+            isDisclaimer = 1;
+            binding.tvNowPlaying.setText("");
+        } else {
+            binding.tvNowPlaying.setText(R.string.NOW_PLAYING_FROM);
+            isDisclaimer = 0;
+        }
+        if (mainPlayModelList.get(ps).getPlaylistID() == null) {
+            mainPlayModelList.get(ps).setPlaylistID("");
+        }
+        binding.tvName.setText(mainPlayModelList.get(ps).getName());
+        if (mainPlayModelList.get(ps).getAudioDirection().equalsIgnoreCase("")) {
+            binding.llDirection.setVisibility(View.GONE);
+        } else {
+            binding.llDirection.setVisibility(View.VISIBLE);
+            binding.tvDireDesc.setText(mainPlayModelList.get(ps).getAudioDirection());
+        }
+        binding.tvTitle.setText(mainPlayModelList.get(ps).getAudiomastercat());
+        binding.tvDesc.setText(mainPlayModelList.get(ps).getAudioSubCategory());
+        if (url.equalsIgnoreCase("")) {
+            Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+        } else {
+            Glide.with(ctx).load(mainPlayModelList.get(ps).getImageFile()).thumbnail(0.05f)
+                    .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
+        }
+        if (mainPlayModelList.get(ps).getLike().equalsIgnoreCase("1")) {
+            binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+        } else if (mainPlayModelList.get(ps).getLike().equalsIgnoreCase("0")) {
+            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+        } else {
+            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+        }
+
+//            binding.gridLayout.addView(view);
+//            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+//            layoutParams.width = 0;
+//            layoutParams.height = 0;
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                layoutParams.columnSpec = GridLayout.spec(i % 1, 1f);
+//                layoutParams.rowSpec = GridLayout.spec(i / 1, 1f);
+//            }
+//            layoutParams.bottomMargin = 10;
+//            layoutParams.leftMargin = 10;
+//            layoutParams.topMargin = 10;
+//            layoutParams.rightMargin = 10;
+//            view.setLayoutParams(layoutParams);
     }
 
     private void setCurrentOutputView(@Nullable SurfaceView surfaceView) {
@@ -325,6 +508,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             reparent(surfaceView);
         }
     }
+
     private void attachSurfaceListener(SurfaceView surfaceView) {
         surfaceView
                 .getHolder()
@@ -346,28 +530,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
                             }
                         });
-    }
-
-    private static void reparent(@Nullable SurfaceView surfaceView) {
-        SurfaceControl surfaceControl = Assertions.checkNotNull(AudioPlayerActivity.surfaceControl);
-        if (surfaceView == null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                new SurfaceControl.Transaction()
-                        .reparent(surfaceControl, /* newParent= */ null)
-                        .setBufferSize(surfaceControl, /* w= */ 0, /* h= */ 0)
-                        .setVisibility(surfaceControl, /* visible= */ false)
-                        .apply();
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                SurfaceControl newParentSurfaceControl = surfaceView.getSurfaceControl();
-                new SurfaceControl.Transaction()
-                        .reparent(surfaceControl, newParentSurfaceControl)
-                        .setBufferSize(surfaceControl, surfaceView.getWidth(), surfaceView.getHeight())
-                        .setVisibility(surfaceControl, /* visible= */ true)
-                        .apply();
-            }
-        }
     }
 
     private void MakeArray() {
@@ -450,7 +612,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                 MediaItem.Builder builder = new MediaItem.Builder();
+                MediaItem.Builder builder = new MediaItem.Builder();
                 MediaItem mediaItem =
                         builder
                                 .setUri(arrayList.get(i).getAudioFile())
@@ -486,7 +648,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                 MediaItem.Builder builder = new MediaItem.Builder();
+                MediaItem.Builder builder = new MediaItem.Builder();
                 MediaItem mediaItem =
                         builder
                                 .setUri(arrayList.get(i).getAudioFile())
@@ -522,7 +684,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                 MediaItem.Builder builder = new MediaItem.Builder();
+                MediaItem.Builder builder = new MediaItem.Builder();
                 MediaItem mediaItem =
                         builder
                                 .setUri(arrayList.get(i).getAudioFile())
@@ -558,7 +720,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                 MediaItem.Builder builder = new MediaItem.Builder();
+                MediaItem.Builder builder = new MediaItem.Builder();
                 MediaItem mediaItem =
                         builder
                                 .setUri(arrayList.get(i).getAudioFile())
@@ -594,7 +756,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                 MediaItem.Builder builder = new MediaItem.Builder();
+                MediaItem.Builder builder = new MediaItem.Builder();
                 MediaItem mediaItem =
                         builder
                                 .setUri(arrayList.get(i).getAudioFile())
@@ -630,7 +792,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                 MediaItem.Builder builder = new MediaItem.Builder();
+                MediaItem.Builder builder = new MediaItem.Builder();
                 MediaItem mediaItem =
                         builder
                                 .setUri(arrayList.get(i).getAudioFile())
@@ -666,7 +828,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                 MediaItem.Builder builder = new MediaItem.Builder();
+                MediaItem.Builder builder = new MediaItem.Builder();
                 MediaItem mediaItem =
                         builder
                                 .setUri(arrayList.get(i).getAudioFile())
@@ -702,7 +864,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                 MediaItem.Builder builder = new MediaItem.Builder();
+                MediaItem.Builder builder = new MediaItem.Builder();
                 MediaItem mediaItem =
                         builder
                                 .setUri(arrayList.get(i).getAudioFile())
@@ -740,7 +902,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                 MediaItem.Builder builder = new MediaItem.Builder();
+                MediaItem.Builder builder = new MediaItem.Builder();
                 MediaItem mediaItem =
                         builder
                                 .setUri(arrayList.get(i).getAudioFile())
@@ -763,7 +925,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void getPrepareShowData() {
 //        if (isOwner && player == null) {
-            initializePlayer();
+        initializePlayer();
 //        }
         setCurrentOutputView(nonFullScreenView);
 
