@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/_18sdp"
+        android:gravity="bottom"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rlSeekbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_0sdp"
+            android:layout_weight="0.34"
+            android:gravity="bottom">
+
+            <SeekBar
+                android:id="@+id/simpleSeekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_4sdp"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:progressDrawable="@drawable/seek_bars"
+                android:thumb="@drawable/ic_dot_icon" />
+
+            <TextView
+                android:id="@+id/tvStartTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/simpleSeekbar"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="@dimen/_22sdp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:gravity="center"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_12sdp" />
+
+            <TextView
+                android:id="@+id/tvSongTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/simpleSeekbar"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/_22sdp"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:gravity="center"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/_12sdp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/llAction"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_above="@id/llBottom"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_26sdp"
+            android:layout_weight="0.42"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:id="@+id/llBackWordSec"
+                android:layout_width="@dimen/_0sdp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.19"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:src="@drawable/ic_fast_backword_sec_icon" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llHighlights"
+                android:layout_width="@dimen/_0sdp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.60"
+                android:weightSum="0.60">
+
+                <LinearLayout
+                    android:id="@+id/llprev"
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.19"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/ivprev"
+                        android:layout_width="@dimen/_31sdp"
+                        android:layout_height="@dimen/_31sdp"
+                        android:src="@drawable/ic_backword_icon" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llPlay"
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.24"
+                    android:gravity="center_horizontal"
+                    android:padding="@dimen/_2sdp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/ivplay"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_blue_play_icon" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llPause"
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.24"
+                    android:gravity="center_horizontal"
+                    android:padding="@dimen/_2sdp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/ivPause"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_pause_icon" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llProgressBar"
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.24"
+                    android:gravity="center"
+                    android:padding="@dimen/_2sdp"
+                    android:visibility="visible">
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="@dimen/_50sdp"
+                        android:layout_height="@dimen/_50sdp"
+                        android:layout_marginLeft="@dimen/_13sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
+                        android:layout_weight="0.13"
+                        android:indeterminateTint="@color/blue"
+                        android:scaleType="fitXY"
+                        android:visibility="visible" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llnext"
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.19"
+                    android:gravity="center"
+                    android:paddingRight="@dimen/_6sdp">
+
+                    <ImageView
+                        android:id="@+id/ivnext"
+                        android:layout_width="@dimen/_31sdp"
+                        android:layout_height="@dimen/_31sdp"
+                        android:src="@drawable/ic_forward_icon" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llForwardSec"
+                android:layout_width="@dimen/_0sdp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.19"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:src="@drawable/ic_fast_forward_sec_icon" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llBottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_weight="0.24"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:id="@+id/llLike"
+                android:layout_width="@dimen/_0sdp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/ivLike"
+                    android:layout_width="@dimen/_17sdp"
+                    android:layout_height="@dimen/_17sdp"
+                    android:src="@drawable/ic_unlike_icon" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llShuffle"
+                android:layout_width="@dimen/_0sdp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/ivShuffle"
+                    android:layout_width="@dimen/_17sdp"
+                    android:layout_height="@dimen/_17sdp"
+                    android:src="@drawable/ic_shuffle_icon"
+                    app:tint="@color/black" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/llRepeat"
+                android:layout_width="@dimen/_0sdp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/ivRepeat"
+                    android:layout_width="@dimen/_17sdp"
+                    android:layout_height="@dimen/_17sdp"
+                    android:src="@drawable/ic_repeat_music_icon" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/llDownload"
+                android:layout_width="@dimen/_0sdp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:gravity="center">
+
+                <ProgressBar
+                    android:id="@+id/pbProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/circular_shapesm"
+                    android:indeterminate="false"
+                    android:indeterminateTint="@color/dark_yellow"
+                    android:max="100"
+                    android:progressDrawable="@drawable/circular_progress_barsm"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/ivDownloads"
+                    android:layout_width="@dimen/_17sdp"
+                    android:layout_height="@dimen/_17sdp"
+                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_download_play_icon"
+                    app:tint="@color/black" />
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:id="@+id/llViewQueue"
+                android:layout_width="@dimen/_0sdp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:clickable="false"
+                android:gravity="center">
+
+
+                <ImageView
+                    android:id="@+id/ivViewQueue"
+                    android:layout_width="@dimen/_17sdp"
+                    android:layout_height="@dimen/_17sdp"
+                    android:src="@drawable/ic_music_list_icon"
+                    app:tint="@color/light_gray" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="@dimen/_60sdp">
+
+        <ProgressBar
+            android:id="@+id/pbProgressBar"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:indeterminateTint="@color/blue"
+            android:scaleType="centerInside"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/progressBarHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.4"
+        android:animateLayoutChanges="true"
+        android:background="#C0000000"
+        android:visibility="gone" />
+</RelativeLayout>
