@@ -134,13 +134,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
-        binding.fullScreenView.setOnClickListener(
-                v -> {
-                    setCurrentOutputView(nonFullScreenView);
-                    Assertions.checkNotNull(binding.fullScreenView).setVisibility(View.GONE);
-                });
-        attachSurfaceListener(binding.fullScreenView);
-
         binding.llMore.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
