@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:paddingBottom="@dimen/_18sdp"
             android:gravity="bottom"
             android:background="@color/white"
@@ -16,8 +17,7 @@
             <RelativeLayout
                 android:id="@+id/rlSeekbar"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_0sdp"
-                android:layout_weight="0.34"
+                android:layout_height="wrap_content"
                 android:gravity="bottom">
 
                 <SeekBar
@@ -58,11 +58,10 @@
             <LinearLayout
                 android:id="@+id/llAction"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_above="@id/llBottom"
                 android:layout_marginHorizontal="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_26sdp"
-                android:layout_weight="0.42"
                 android:weightSum="1">
 
                 <LinearLayout
@@ -184,7 +183,111 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/llBottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_30sdp"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:id="@+id/llLike"
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/ivLike"
+                        android:layout_width="@dimen/_17sdp"
+                        android:layout_height="@dimen/_17sdp"
+                        android:src="@drawable/ic_unlike_icon" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llShuffle"
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/ivShuffle"
+                        android:layout_width="@dimen/_17sdp"
+                        android:layout_height="@dimen/_17sdp"
+                        android:src="@drawable/ic_shuffle_icon"
+                        app:tint="@color/black" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/llRepeat"
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/ivRepeat"
+                        android:layout_width="@dimen/_17sdp"
+                        android:layout_height="@dimen/_17sdp"
+                        android:src="@drawable/ic_repeat_music_icon" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/llDownload"
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:gravity="center">
+
+                    <ProgressBar
+                        android:id="@+id/pbProgress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/circular_shapesm"
+                        android:indeterminate="false"
+                        android:indeterminateTint="@color/dark_yellow"
+                        android:max="100"
+                        android:progressDrawable="@drawable/circular_progress_barsm"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/ivDownloads"
+                        android:layout_width="@dimen/_17sdp"
+                        android:layout_height="@dimen/_17sdp"
+                        android:layout_centerInParent="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_download_play_icon"
+                        app:tint="@color/black" />
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/llViewQueue"
+                    android:layout_width="@dimen/_0sdp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:clickable="false"
+                    android:gravity="center">
+
+
+                    <ImageView
+                        android:id="@+id/ivViewQueue"
+                        android:layout_width="@dimen/_17sdp"
+                        android:layout_height="@dimen/_17sdp"
+                        android:src="@drawable/ic_music_list_icon"
+                        app:tint="@color/light_gray" />
+                </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 </layout>

@@ -170,7 +170,7 @@
                     android:layout_marginTop="@dimen/_16sdp"
                     android:fontFamily="@font/montserrat_light"
                     android:gravity="center"
-                    android:textColor="@color/light_gray"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/_13sdp" />
 
             </LinearLayout>

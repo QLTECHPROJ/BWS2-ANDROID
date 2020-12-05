@@ -87,8 +87,6 @@ public class PaymentFragment extends Fragment {
                                             binding.progressBarHolder, binding.rvCardList);
                                     binding.rvCardList.setAdapter(adapter);
                                 }
-
-
                             } else {
                                 BWSApplication.showToast(cardListModel.getResponseMessage(), context);
                             }

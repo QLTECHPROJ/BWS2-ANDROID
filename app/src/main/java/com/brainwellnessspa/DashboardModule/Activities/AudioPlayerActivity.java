@@ -8,12 +8,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceControl;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +39,7 @@ import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
+import com.brainwellnessspa.Utility.MeasureRatio;
 import com.brainwellnessspa.databinding.ActivityAudioPlayerBinding;
 import com.brainwellnessspa.databinding.AudioPlayerCustomLayoutBinding;
 import com.bumptech.glide.Glide;
@@ -45,6 +51,7 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerControlView;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.MimeTypes;
@@ -64,11 +71,7 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.T
 import static com.brainwellnessspa.Utility.MusicService.isPause;
 
 public class AudioPlayerActivity extends AppCompatActivity {
-    private static final String SURFACE_CONTROL_NAME = "surfacedemo";
-    private static final String ACTION_VIEW = "com.google.android.exoplayer.surfacedemo.action.VIEW";
-    private static final String EXTENSION_EXTRA = "extension";
-    private static final String DRM_SCHEME_EXTRA = "drm_scheme";
-    private static final String DRM_LICENSE_URL_EXTRA = "drm_license_url";
+    private static final String SURFACE_CONTROL_NAME = "BrainWellnessApp";
     private static final String OWNER_EXTRA = "owner";
     AudioPlayerCustomLayoutBinding customLayoutBinding;
     private long mLastClickTime = 0;
@@ -88,11 +91,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
     Context ctx;
     Activity activity;
     Boolean queuePlay, audioPlay;
-    private boolean isOwner; 
+    private boolean isOwner;
     @Nullable
     private SurfaceView nonFullScreenView;
     @Nullable
     private SurfaceView currentOutputView;
+    LinearLayout llBackWordSec, llLike, llViewQueue;
+    ImageView ivLike;
+    private LayoutInflater inflater;
 
     private static void reparent(@Nullable SurfaceView surfaceView) {
         SurfaceControl surfaceControl = Assertions.checkNotNull(AudioPlayerActivity.surfaceControl);
@@ -138,6 +144,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
 
         binding.llBack.setOnClickListener(view -> callBack());
+//        inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        customLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(ctx)
+//                , R.layout.audio_player_custom_layout, ctx, false);
 
         binding.llMore.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);
@@ -156,7 +165,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             startActivity(i);
 //            finish();
         });
-        binding.llLike.setOnClickListener(view -> {
+        llLike.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -165,7 +174,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             callLike();
         });
 
-        binding.llViewQueue.setOnClickListener(view -> {
+        llViewQueue.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -190,6 +199,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             finish();
         });
     }
+
     private void callBack() {
         try {
 //        handler1.removeCallbacks(UpdateSongTime1);
@@ -226,9 +236,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
                             AudioLikeModel model = response.body();
                             if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
-                                binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                                ivLike.setImageResource(R.drawable.ic_unlike_icon);
                             } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                                ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                             }
                             SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                             boolean audioPlay = sharedxx.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -377,46 +387,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void initializePlayer() {
-       /* DrmSessionManager drmSessionManager;
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        Uri uri = ACTION_VIEW.equals(action)
-                ? Assertions.checkNotNull(intent.getData())
-                : Uri.parse(mainPlayModelList.get(position).getAudioFile());
-        String userAgent = Util.getUserAgent(this, "Brain Wellness App");
-        if (intent.hasExtra(DRM_SCHEME_EXTRA)) {
-            String drmScheme = Assertions.checkNotNull(intent.getStringExtra(DRM_SCHEME_EXTRA));
-            String drmLicenseUrl = Assertions.checkNotNull(intent.getStringExtra(DRM_LICENSE_URL_EXTRA));
-            UUID drmSchemeUuid = Assertions.checkNotNull(Util.getDrmUuid(drmScheme));
-            HttpDataSource.Factory licenseDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent);
-            HttpMediaDrmCallback drmCallback =
-                    new HttpMediaDrmCallback(drmLicenseUrl, licenseDataSourceFactory);
-            drmSessionManager =
-                    new DefaultDrmSessionManager.Builder()
-                            .setUuidAndExoMediaDrmProvider(drmSchemeUuid, FrameworkMediaDrm.DEFAULT_PROVIDER)
-                            .build(drmCallback);
-        } else {
-            drmSessionManager = DrmSessionManager.getDummyDrmSessionManager();
-        }
-
-        DataSource.Factory dataSourceFactory =
-                new DefaultDataSourceFactory(
-                        this, Util.getUserAgent(this, "Brain Wellness App"));
-        MediaSource mediaSource;
-        @C.ContentType int type = Util.inferContentType(uri, intent.getStringExtra(EXTENSION_EXTRA));
-        if (type == C.TYPE_DASH) {
-            mediaSource =
-                    new DashMediaSource.Factory(dataSourceFactory)
-                            .setDrmSessionManager(drmSessionManager)
-                            .createMediaSource(uri);
-        } else if (type == C.TYPE_OTHER) {
-            mediaSource =
-                    new ProgressiveMediaSource.Factory(dataSourceFactory)
-                            .setDrmSessionManager(drmSessionManager)
-                            .createMediaSource(uri);
-        } else {
-            throw new IllegalStateException();
-        }*/
         SimpleExoPlayer player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         player.prepare();
         player.addListener(new ExoPlayer.EventListener() {
@@ -434,9 +404,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
         });
         MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
         player.setMediaItem(mediaItem1);
-         for(int i = 1;i<mediaItemList.size();i++){
-             MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-             player.addMediaItem(mediaItem);
+        for (int i = 1; i < mediaItemList.size(); i++) {
+            MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
+            player.addMediaItem(mediaItem);
         }
         player.seekTo(position, C.TIME_UNSET);
 //        player.setMediaItems(mediaItemList, position, 0);
@@ -444,23 +414,24 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        player.setRepeatMode(Player.REPEAT_MODE_ALL);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        surfaceControl = new SurfaceControl.Builder()
-                        .setName(SURFACE_CONTROL_NAME)
-                        .setBufferSize(/* width= */ 0, /* height= */ 0)
-                        .build();
+            surfaceControl = new SurfaceControl.Builder()
+                    .setName(SURFACE_CONTROL_NAME)
+                    .setBufferSize(/* width= */ 0, /* height= */ 0)
+                    .build();
             videoSurface = new Surface(surfaceControl);
         }
         player.setVideoSurface(videoSurface);
         AudioPlayerActivity.player = player;
 //        callButtonText();
     }
+
     private void initializePlayerDisclaimer() {
         SimpleExoPlayer player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         player.prepare();
         player.addListener(new ExoPlayer.EventListener() {
             @Override
             public void onPlaybackStateChanged(int state) {
-                if (state == ExoPlayer.STATE_ENDED){
+                if (state == ExoPlayer.STATE_ENDED) {
                     //player back ended
                     removeArray();
                 }
@@ -473,10 +444,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
 //        player.setRepeatMode(Player.REPEAT_MODE_ALL);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        surfaceControl = new SurfaceControl.Builder()
-                        .setName(SURFACE_CONTROL_NAME)
-                        .setBufferSize(/* width= */ 0, /* height= */ 0)
-                        .build();
+            surfaceControl = new SurfaceControl.Builder()
+                    .setName(SURFACE_CONTROL_NAME)
+                    .setBufferSize(/* width= */ 0, /* height= */ 0)
+                    .build();
             videoSurface = new Surface(surfaceControl);
         }
         player.setVideoSurface(videoSurface);
@@ -507,6 +478,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
         binding.tvTitle.setText(mainPlayModelList.get(ps).getAudiomastercat());
         binding.tvDesc.setText(mainPlayModelList.get(ps).getAudioSubCategory());
+
+        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+                1, 1, 0.92f, 0);
+        binding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
+        binding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        binding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+
         if (url.equalsIgnoreCase("")) {
             Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
@@ -516,11 +494,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
         }
         if (mainPlayModelList.get(ps).getLike().equalsIgnoreCase("1")) {
-            binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+            ivLike.setImageResource(R.drawable.ic_fill_like_icon);
         } else if (mainPlayModelList.get(ps).getLike().equalsIgnoreCase("0")) {
-            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+            ivLike.setImageResource(R.drawable.ic_unlike_icon);
         } else {
-            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+            ivLike.setImageResource(R.drawable.ic_unlike_icon);
         }
 
 //            binding.gridLayout.addView(view);
@@ -569,6 +547,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void MakeArray() {
+        View viewed = LayoutInflater.from(ctx).inflate(R.layout.audio_player_custom_layout, null, false);
+        LinearLayout customPlayerViewed = (LinearLayout) viewed.getRootView();
+        llBackWordSec = viewed.findViewById(R.id.llBackWordSec);
+        llLike = viewed.findViewById(R.id.llLike);
+        llViewQueue = viewed.findViewById(R.id.llViewQueue);
+        ivLike = viewed.findViewById(R.id.ivLike);
+        binding.playerControlView.addView(customPlayerViewed);
+
         Gson gson = new Gson();
         SharedPreferences shared = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
@@ -958,6 +944,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             getPrepareShowData();
         }
     }
+
     private void removeArray() {
         SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
@@ -1274,12 +1261,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
         MakeArray();
     }
+
     private void getPrepareShowData() {
 //        if (isOwner && player == null) {
-        if(mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")){
+        if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {
             initializePlayerDisclaimer();
 
-        }else{
+        } else {
             initializePlayer();
         }
         setCurrentOutputView(nonFullScreenView);
