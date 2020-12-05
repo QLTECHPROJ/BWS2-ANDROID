@@ -1593,7 +1593,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                  /*   URL url1 = new URL(url);
                     URI uri2 = new URI(url1.getProtocol(), url1.getUserInfo(), url1.getHost(), url1.getPort(), url1.getPath(), url1.getQuery(), url1.getRef());
                     String encodedUrl = uri2.toASCIIString();*/
-                    mediaPlayer.setDataSource(url);
+                    mediaPlayer.setDataSource("http://vprbbc.streamguys.net/vprbbc24.mp3");
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     mediaPlayer.setAudioAttributes(
