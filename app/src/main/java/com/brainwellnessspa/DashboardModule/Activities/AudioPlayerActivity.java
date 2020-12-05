@@ -156,6 +156,14 @@ public class AudioPlayerActivity extends AppCompatActivity {
             startActivity(i);
 //            finish();
         });
+        binding.llLike.setOnClickListener(view -> {
+//            handler1.removeCallbacks(UpdateSongTime1);
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            callLike();
+        });
 
         binding.llViewQueue.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);
