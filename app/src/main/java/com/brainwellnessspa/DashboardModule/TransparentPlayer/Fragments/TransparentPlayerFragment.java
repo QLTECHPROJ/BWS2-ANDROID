@@ -1165,8 +1165,10 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                 editor.commit();
-                mediaPlayer.stop();
-                mediaPlayer.release();
+                if(mediaPlayer!=null) {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                }
                 handler12.removeCallbacks(UpdateSongTime12);
 //                Intent i = new Intent(ctx, PlayWellnessActivity.class);
                 /* TODO : MY COM*/

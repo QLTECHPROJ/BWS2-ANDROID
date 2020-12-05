@@ -225,7 +225,7 @@
                     app:show_next_button="true"
                     app:show_previous_button="true"
                     app:show_rewind_button="true"
-                    app:show_timeout="10000"
+                    app:show_timeout="1000000000"
                     app:use_controller="true" />
 
                 <LinearLayout
@@ -334,11 +334,6 @@
          </LinearLayout>
         </LinearLayout>
 
-        <SurfaceView
-            android:id="@+id/full_screen_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
