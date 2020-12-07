@@ -286,8 +286,8 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
 //                stopSelf();
             }
         });
-        playerNotificationManager.setFastForwardIncrementMs(0);
-        playerNotificationManager.setRewindIncrementMs(0);
+        playerNotificationManager.setFastForwardIncrementMs(30000);
+        playerNotificationManager.setRewindIncrementMs(30000);
         playerNotificationManager.setPlayer(player);
 
         mediaSession = new MediaSessionCompat(this, "MEDIA_SESSION_TAG");
