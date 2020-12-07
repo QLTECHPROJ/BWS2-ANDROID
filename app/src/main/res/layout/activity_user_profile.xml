@@ -130,8 +130,7 @@
                             android:layout_height="@dimen/_16sdp"
                             android:layout_gravity="center"
                             android:layout_marginLeft="@dimen/_10sdp"
-                            android:src="@drawable/ic_user_icon"
-                            app:tint="@color/black" />
+                            android:src="@drawable/ic_user_icon" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -189,8 +188,7 @@
                             android:layout_height="@dimen/_16sdp"
                             android:layout_gravity="center"
                             android:layout_marginLeft="@dimen/_10sdp"
-                            android:src="@drawable/ic_calendar_icon"
-                            app:tint="@color/black" />
+                            android:src="@drawable/ic_calendar_icon" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -249,8 +247,7 @@
                             android:layout_height="@dimen/_16sdp"
                             android:layout_gravity="center"
                             android:layout_marginLeft="@dimen/_10sdp"
-                            android:src="@drawable/ic_mobile_icon"
-                            app:tint="@color/black" />
+                            android:src="@drawable/ic_mobile_icon" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -309,8 +306,7 @@
                             android:layout_height="@dimen/_16sdp"
                             android:layout_gravity="center"
                             android:layout_marginLeft="@dimen/_10sdp"
-                            android:src="@drawable/ic_email_icon"
-                            app:tint="@color/black" />
+                            android:src="@drawable/ic_email_icon"/>
                     </LinearLayout>
 
                     <LinearLayout

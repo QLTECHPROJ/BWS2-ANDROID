@@ -69,7 +69,7 @@ public class AllCardAdapter extends RecyclerView.Adapter<AllCardAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         CardListModel.ResponseData listModel = listModelList.get(position);
-        holder.binding.tvCardNo.setText(activity.getString(R.string.first_card_chars) + listModel.getLast4());
+        holder.binding.tvCardNo.setText(activity.getString(R.string.first_card_chars) + " " + listModel.getLast4());
         holder.binding.tvExpiryTime.setText("Valid: " + listModel.getExpMonth() + "/" +
                 listModel.getExpYear());
         Glide.with(activity).load(listModel.getImage())

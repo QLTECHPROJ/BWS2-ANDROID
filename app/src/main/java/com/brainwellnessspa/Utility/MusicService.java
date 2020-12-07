@@ -659,7 +659,7 @@ public class MusicService extends Service {
                             .setPriority(NotificationCompat.PRIORITY_HIGH)
                             .build();
                     /* TODO: temp comment*/
-                    ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
+                   /* ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
@@ -676,7 +676,7 @@ public class MusicService extends Service {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
+                    }*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

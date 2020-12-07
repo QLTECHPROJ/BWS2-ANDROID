@@ -229,7 +229,7 @@ public class PaymentActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             CardListModel.ResponseData listModel = listModelList.get(position);
-            holder.binding.tvCardNo.setText(getString(R.string.first_card_chars) + listModel.getLast4());
+            holder.binding.tvCardNo.setText(getString(R.string.first_card_chars) + " " + listModel.getLast4());
             holder.binding.tvExpiryTime.setText("Valid: " + listModel.getExpMonth() + "/" +
                     listModel.getExpYear());
             Glide.with(context).load(listModel.getImage()).thumbnail(0.05f).crossFade()
