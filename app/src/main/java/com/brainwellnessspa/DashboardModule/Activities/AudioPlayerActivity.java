@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.session.MediaSession;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -82,6 +83,7 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -119,7 +121,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
     List<MediaItem> mediaItemList;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
-    String URL;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url, playFrom = "";
     int startTime = 0, endTime = 0, position, listSize, myCount, progress, downloadPercentage, audioBufferCapacityMs;
     Context ctx;
@@ -139,6 +140,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
     PlayerNotificationManager playerNotificationManager;
     MediaSessionCompat mediaSession;
     MediaSessionConnector mediaSessionConnector;
+    Bitmap myBitmap = null;
 
     private static void reparent(@Nullable SurfaceView surfaceView) {
         SurfaceControl surfaceControl = Assertions.checkNotNull(AudioPlayerActivity.surfaceControl);
@@ -170,9 +172,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
         bytesDownloaded = new ArrayList<>();
         ctx = AudioPlayerActivity.this;
         activity = AudioPlayerActivity.this;
-//        if (getIntent() != null) {
-//            URL = getIntent().getStringExtra("URL");
-//        }
         mediaItemList = new ArrayList<>();
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
@@ -270,7 +269,18 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
-                        return getBitmap(getBaseContext(), mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                        Bitmap myBitmap = null;
+                        try {
+                            if (mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile().equalsIgnoreCase("")) {
+                                myBitmap = BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.disclaimer);
+                            } else {
+                                java.net.URL url = new URL(mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
+                                myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return myBitmap;
                     }
                 }
         );
@@ -278,12 +288,12 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
         playerNotificationManager.setNotificationListener(new PlayerNotificationManager.NotificationListener() {
             @Override
             public void onNotificationStarted(int notificationId, Notification notification) {
-                startForeground(notificationId, notification);
+// startForeground(notificationId, notification);
             }
 
             @Override
             public void onNotificationCancelled(int notificationId) {
-//                stopSelf();
+// stopSelf();
             }
         });
         playerNotificationManager.setFastForwardIncrementMs(30000);
@@ -299,7 +309,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
             @Override
             public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
                 Bundle extras = new Bundle();
-                Bitmap bitmap = getBitmap(getBaseContext(), mainPlayModelList.get(position).getImageFile());
+                Bitmap bitmap = myBitmap;
                 extras.putParcelable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
                 extras.putParcelable(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, bitmap);
                 return new MediaDescriptionCompat.Builder()
@@ -313,7 +323,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
             }
         });
         mediaSessionConnector.setPlayer(player);
-        //mediaSessionConnector.setPlayer(player, null, customAction1.class);
+//mediaSessionConnector.setPlayer(player, null, customAction1.class);
     }
 
     private void callBack() {
