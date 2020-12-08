@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.List;
 
 /** Dialog to select tracks. */
-public final class TrackSelectionDialog extends DialogFragment {
+public final class TrackSelectionDialog extends DialogFragment {/*
 
     private final SparseArray<TrackSelectionViewFragment> tabFragments;
     private final ArrayList<Integer> tabTrackTypes;
@@ -41,19 +41,19 @@ public final class TrackSelectionDialog extends DialogFragment {
     private DialogInterface.OnClickListener onClickListener;
     private DialogInterface.OnDismissListener onDismissListener;
 
-    /**
+    *//**
      * Returns whether a track selection dialog will have content to display if initialized with the
      * specified {@link DefaultTrackSelector} in its current state.
-     */
+     *//*
     public static boolean willHaveContent(DefaultTrackSelector trackSelector) {
         MappedTrackInfo mappedTrackInfo = trackSelector.getCurrentMappedTrackInfo();
         return mappedTrackInfo != null && willHaveContent(mappedTrackInfo);
     }
 
-    /**
+    *//**
      * Returns whether a track selection dialog will have content to display if initialized with the
      * specified {@link MappedTrackInfo}.
-     */
+     *//*
     public static boolean willHaveContent(MappedTrackInfo mappedTrackInfo) {
         for (int i = 0; i < mappedTrackInfo.getRendererCount(); i++) {
             if (showTabForRenderer(mappedTrackInfo, i)) {
@@ -63,14 +63,14 @@ public final class TrackSelectionDialog extends DialogFragment {
         return false;
     }
 
-    /**
+    *//**
      * Creates a dialog for a given {@link DefaultTrackSelector}, whose parameters will be
      * automatically updated when tracks are selected.
      *
      * @param trackSelector The {@link DefaultTrackSelector}.
      * @param onDismissListener A {@link DialogInterface.OnDismissListener} to call when the dialog is
      *     dismissed.
-     */
+     *//*
     public static TrackSelectionDialog createForTrackSelector(
             DefaultTrackSelector trackSelector, DialogInterface.OnDismissListener onDismissListener) {
         MappedTrackInfo mappedTrackInfo =
@@ -78,25 +78,25 @@ public final class TrackSelectionDialog extends DialogFragment {
         TrackSelectionDialog trackSelectionDialog = new TrackSelectionDialog();
         DefaultTrackSelector.Parameters parameters = trackSelector.getParameters();
         trackSelectionDialog.init(
-                /* titleId= */ R.string.track_selection_title,
+                *//* titleId= *//* R.string.track_selection_title,
                 mappedTrackInfo,
-                /* initialParameters = */ parameters,
-                /* allowAdaptiveSelections =*/ true,
-                /* allowMultipleOverrides= */ false,
-                /* onClickListener= */ (dialog, which) -> {
+                *//* initialParameters = *//* parameters,
+                *//* allowAdaptiveSelections =*//* true,
+                *//* allowMultipleOverrides= *//* false,
+                *//* onClickListener= *//* (dialog, which) -> {
                     DefaultTrackSelector.ParametersBuilder builder = parameters.buildUpon();
                     for (int i = 0; i < mappedTrackInfo.getRendererCount(); i++) {
                         builder
-                                .clearSelectionOverrides(/* rendererIndex= */ i)
+                                .clearSelectionOverrides(*//* rendererIndex= *//* i)
                                 .setRendererDisabled(
-                                        /* rendererIndex= */ i,
-                                        trackSelectionDialog.getIsDisabled(/* rendererIndex= */ i));
+                                        *//* rendererIndex= *//* i,
+                                        trackSelectionDialog.getIsDisabled(*//* rendererIndex= *//* i));
                         List<SelectionOverride> overrides =
-                                trackSelectionDialog.getOverrides(/* rendererIndex= */ i);
+                                trackSelectionDialog.getOverrides(*//* rendererIndex= *//* i);
                         if (!overrides.isEmpty()) {
                             builder.setSelectionOverride(
-                                    /* rendererIndex= */ i,
-                                    mappedTrackInfo.getTrackGroups(/* rendererIndex= */ i),
+                                    *//* rendererIndex= *//* i,
+                                    mappedTrackInfo.getTrackGroups(*//* rendererIndex= *//* i),
                                     overrides.get(0));
                         }
                     }
@@ -106,7 +106,7 @@ public final class TrackSelectionDialog extends DialogFragment {
         return trackSelectionDialog;
     }
 
-    /**
+    *//**
      * Creates a dialog for given {@link MappedTrackInfo} and {@link DefaultTrackSelector.Parameters}.
      *
      * @param titleId The resource id of the dialog title.
@@ -119,7 +119,7 @@ public final class TrackSelectionDialog extends DialogFragment {
      * @param onClickListener {@link DialogInterface.OnClickListener} called when tracks are selected.
      * @param onDismissListener {@link DialogInterface.OnDismissListener} called when the dialog is
      *     dismissed.
-     */
+     *//*
     public static TrackSelectionDialog createForMappedTrackInfoAndParameters(
             int titleId,
             MappedTrackInfo mappedTrackInfo,
@@ -160,14 +160,14 @@ public final class TrackSelectionDialog extends DialogFragment {
         this.onDismissListener = onDismissListener;
         for (int i = 0; i < mappedTrackInfo.getRendererCount(); i++) {
             if (showTabForRenderer(mappedTrackInfo, i)) {
-                int trackType = mappedTrackInfo.getRendererType(/* rendererIndex= */ i);
+                int trackType = mappedTrackInfo.getRendererType(*//* rendererIndex= *//* i);
                 TrackGroupArray trackGroupArray = mappedTrackInfo.getTrackGroups(i);
                 TrackSelectionViewFragment tabFragment = new TrackSelectionViewFragment();
                 tabFragment.init(
                         mappedTrackInfo,
-                        /* rendererIndex= */ i,
-                        initialParameters.getRendererDisabled(/* rendererIndex= */ i),
-                        initialParameters.getSelectionOverride(/* rendererIndex= */ i, trackGroupArray),
+                        *//* rendererIndex= *//* i,
+                        initialParameters.getRendererDisabled(*//* rendererIndex= *//* i),
+                        initialParameters.getSelectionOverride(*//* rendererIndex= *//* i, trackGroupArray),
                         allowAdaptiveSelections,
                         allowMultipleOverrides);
                 tabFragments.put(i, tabFragment);
@@ -176,24 +176,24 @@ public final class TrackSelectionDialog extends DialogFragment {
         }
     }
 
-    /**
+    *//**
      * Returns whether a renderer is disabled.
      *
      * @param rendererIndex Renderer index.
      * @return Whether the renderer is disabled.
-     */
+     *//*
     public boolean getIsDisabled(int rendererIndex) {
         TrackSelectionViewFragment rendererView = tabFragments.get(rendererIndex);
         return rendererView != null && rendererView.isDisabled;
     }
 
-    /**
+    *//**
      * Returns the list of selected track selection overrides for the specified renderer. There will
      * be at most one override for each track group.
      *
      * @param rendererIndex Renderer index.
      * @return The list of track selection overrides for this renderer.
-     */
+     *//*
     public List<SelectionOverride> getOverrides(int rendererIndex) {
         TrackSelectionViewFragment rendererView = tabFragments.get(rendererIndex);
         return rendererView == null ? Collections.emptyList() : rendererView.overrides;
@@ -293,7 +293,7 @@ public final class TrackSelectionDialog extends DialogFragment {
         }
     }
 
-    /** Fragment to show a track selection in tab of the track selection dialog. */
+    *//** Fragment to show a track selection in tab of the track selection dialog. *//*
     public static final class TrackSelectionViewFragment extends Fragment
             implements TrackSelectionView.TrackSelectionListener {
 
@@ -302,8 +302,8 @@ public final class TrackSelectionDialog extends DialogFragment {
         private boolean allowAdaptiveSelections;
         private boolean allowMultipleOverrides;
 
-        /* package */ boolean isDisabled;
-        /* package */ List<SelectionOverride> overrides;
+        *//* package *//* boolean isDisabled;
+        *//* package *//* List<SelectionOverride> overrides;
 
         public TrackSelectionViewFragment() {
             // Retain instance across activity re-creation to prevent losing access to init data.
@@ -335,7 +335,7 @@ public final class TrackSelectionDialog extends DialogFragment {
                 @Nullable Bundle savedInstanceState) {
             View rootView =
                     inflater.inflate(
-                            R.layout.exo_track_selection_dialog, container, /* attachToRoot= */ false);
+                            R.layout.exo_track_selection_dialog, container, *//* attachToRoot= *//* false);
             TrackSelectionView trackSelectionView = rootView.findViewById(R.id.exo_track_selection_view);
             trackSelectionView.setShowDisableOption(true);
             trackSelectionView.setAllowMultipleOverrides(allowMultipleOverrides);
@@ -345,8 +345,7 @@ public final class TrackSelectionDialog extends DialogFragment {
                     rendererIndex,
                     isDisabled,
                     overrides,
-                    /* trackFormatComparator= */ null,
-                    /* listener= */ this);
+                    *//* trackFormatComparator= *//* null);
             return rootView;
         }
 
@@ -356,5 +355,5 @@ public final class TrackSelectionDialog extends DialogFragment {
             this.isDisabled = isDisabled;
             this.overrides = overrides;
         }
-    }
+    }*/
 }

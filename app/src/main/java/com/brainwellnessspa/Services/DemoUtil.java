@@ -8,6 +8,8 @@ import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.database.DatabaseProvider;
 import com.google.android.exoplayer2.database.ExoDatabaseProvider;
+//import com.google.android.exoplayer2.ext.cronet.CronetDataSourceFactory;
+//import com.google.android.exoplayer2.ext.cronet.CronetEngineWrapper;
 import com.google.android.exoplayer2.offline.ActionFileUpgradeUtil;
 import com.google.android.exoplayer2.offline.DefaultDownloadIndex;
 import com.google.android.exoplayer2.offline.DownloadManager;
@@ -23,11 +25,10 @@ import com.google.android.exoplayer2.util.Log;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Executors;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /** Utility methods for the demo app. */
 public final class DemoUtil {
-
+/*
     public static final String DOWNLOAD_NOTIFICATION_CHANNEL_ID = "download_channel";
 
     private static final String TAG = "DemoUtil";
@@ -44,7 +45,7 @@ public final class DemoUtil {
     private static DownloadTracker downloadTracker;
     private static DownloadNotificationHelper downloadNotificationHelper;
 
-    /** Returns whether extension renderers should be used. */
+    *//** Returns whether extension renderers should be used. *//*
     public static boolean useExtensionRenderers() {
         return true;
     }
@@ -67,12 +68,12 @@ public final class DemoUtil {
             context = context.getApplicationContext();
             CronetEngineWrapper cronetEngineWrapper = new CronetEngineWrapper(context);
             httpDataSourceFactory =
-                    new CronetDataSourceFactory(cronetEngineWrapper, Executors.newSingleThreadExecutor());
+                    new CronetDataSourceFactory(cronetEngineWrapper, Executors.newSingleThreadExecutor(),httpDataSourceFactory);
         }
         return httpDataSourceFactory;
     }
 
-    /** Returns a {@link DataSource.Factory}. */
+    *//** Returns a {@link DataSource.Factory}. *//*
     public static synchronized DataSource.Factory getDataSourceFactory(Context context) {
         if (dataSourceFactory == null) {
             context = context.getApplicationContext();
@@ -117,19 +118,19 @@ public final class DemoUtil {
         if (downloadManager == null) {
             DefaultDownloadIndex downloadIndex = new DefaultDownloadIndex(getDatabaseProvider(context));
             upgradeActionFile(
-                    context, DOWNLOAD_ACTION_FILE, downloadIndex, /* addNewDownloadsAsCompleted= */ false);
+                    context, DOWNLOAD_ACTION_FILE, downloadIndex, *//* addNewDownloadsAsCompleted= *//* false);
             upgradeActionFile(
                     context,
                     DOWNLOAD_TRACKER_ACTION_FILE,
                     downloadIndex,
-                    /* addNewDownloadsAsCompleted= */ true);
+                    *//* addNewDownloadsAsCompleted= *//* true);
             downloadManager =
                     new DownloadManager(
                             context,
                             getDatabaseProvider(context),
                             getDownloadCache(context),
                             getHttpDataSourceFactory(context),
-                            Executors.newFixedThreadPool(/* nThreads= */ 6));
+                            Executors.newFixedThreadPool(*//* nThreads= *//* 6));
             downloadTracker =
                     new DownloadTracker(context, getHttpDataSourceFactory(context), downloadManager);
         }
@@ -143,9 +144,9 @@ public final class DemoUtil {
         try {
             ActionFileUpgradeUtil.upgradeAndDelete(
                     new File(getDownloadDirectory(context), fileName),
-                    /* downloadIdProvider= */ null,
+                    *//* downloadIdProvider= *//* null,
                     downloadIndex,
-                    /* deleteOnFailure= */ true,
+                    *//* deleteOnFailure= *//* true,
                     addNewDownloadsAsCompleted);
         } catch (IOException e) {
             Log.e(TAG, "Failed to upgrade action file: " + fileName, e);
@@ -161,7 +162,7 @@ public final class DemoUtil {
 
     private static synchronized File getDownloadDirectory(Context context) {
         if (downloadDirectory == null) {
-            downloadDirectory = context.getExternalFilesDir(/* type= */ null);
+            downloadDirectory = context.getExternalFilesDir(*//* type= *//* null);
             if (downloadDirectory == null) {
                 downloadDirectory = context.getFilesDir();
             }
@@ -178,5 +179,5 @@ public final class DemoUtil {
                 .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
     }
 
-    private DemoUtil() {}
+    private DemoUtil() {}*/
 }

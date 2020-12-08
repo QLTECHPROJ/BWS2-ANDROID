@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -28,6 +29,7 @@ import com.brainwellnessspa.DashboardModule.Models.MainAudioModel;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.exoplayer2.offline.DownloadRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.brainwellnessspa.BWSApplication;
@@ -797,6 +799,11 @@ public class AddQueueActivity extends AppCompatActivity {
         callDisableDownload();
         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
         downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
+//        MyDownloadService myDownloadService = new MyDownloadService(0);
+//        DownloadRequest downloadRequest =
+//                new DownloadRequest.Builder("1", Uri.parse(audioFile)).build();
+//        myDownloadService.getDownloadManager().addDownload(downloadRequest);
+
         /*if (!filename.equalsIgnoreCase("") && filename.equalsIgnoreCase(audioFileName)) {
             handler1.postDelayed(UpdateSongTime1, 500);
         } else {

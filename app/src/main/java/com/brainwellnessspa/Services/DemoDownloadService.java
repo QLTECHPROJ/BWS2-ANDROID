@@ -1,6 +1,6 @@
 package com.brainwellnessspa.Services;
 
-import static com.brainwellnessspa.Services.DemoUtil.DOWNLOAD_NOTIFICATION_CHANNEL_ID;
+//import static com.brainwellnessspa.Services.DemoUtil.DOWNLOAD_NOTIFICATION_CHANNEL_ID;
 
 import android.app.Notification;
 import android.content.Context;
@@ -18,7 +18,7 @@ import com.google.android.exoplayer2.util.Util;
 import java.util.List;
 
 /** A service for downloading media. */
-public class DemoDownloadService extends DownloadService {
+public class DemoDownloadService /*extends DownloadService */{/*
 
     private static final int JOB_ID = 1;
     private static final int FOREGROUND_NOTIFICATION_ID = 1;
@@ -29,7 +29,7 @@ public class DemoDownloadService extends DownloadService {
                 DEFAULT_FOREGROUND_NOTIFICATION_UPDATE_INTERVAL,
                 DOWNLOAD_NOTIFICATION_CHANNEL_ID,
                 R.string.exo_download_notification_channel_name,
-                /* channelDescriptionResourceId= */ 0);
+                *//* channelDescriptionResourceId= *//* 0);
     }
 
     @Override
@@ -37,9 +37,9 @@ public class DemoDownloadService extends DownloadService {
     protected DownloadManager getDownloadManager() {
         // This will only happen once, because getDownloadManager is guaranteed to be called only once
         // in the life cycle of the process.
-        DownloadManager downloadManager = DemoUtil.getDownloadManager(/* context= */ this);
+        DownloadManager downloadManager = DemoUtil.getDownloadManager(*//* context= *//* this);
         DownloadNotificationHelper downloadNotificationHelper =
-                DemoUtil.getDownloadNotificationHelper(/* context= */ this);
+                DemoUtil.getDownloadNotificationHelper(*//* context= *//* this);
         downloadManager.addListener(
                 new TerminalStateNotificationHelper(
                         this, downloadNotificationHelper, FOREGROUND_NOTIFICATION_ID + 1));
@@ -54,21 +54,21 @@ public class DemoDownloadService extends DownloadService {
     @Override
     @NonNull
     protected Notification getForegroundNotification(@NonNull List<Download> downloads) {
-        return DemoUtil.getDownloadNotificationHelper(/* context= */ this)
+        return DemoUtil.getDownloadNotificationHelper(*//* context= *//* this)
                 .buildProgressNotification(
-                        /* context= */ this,
+                        *//* context= *//* this,
                         R.drawable.ic_download_icon,
-                        /* contentIntent= */ null,
-                        /* message= */ null,
+                        *//* contentIntent= *//* null,
+                        *//* message= *//* null,
                         downloads);
     }
 
-    /**
+    *//**
      * Creates and displays notifications for downloads when they complete or fail.
      *
      * <p>This helper will outlive the lifespan of a single instance of {@link DemoDownloadService}.
      * It is static to avoid leaking the first {@link DemoDownloadService} instance.
-     */
+     *//*
     private static final class TerminalStateNotificationHelper implements DownloadManager.Listener {
 
         private final Context context;
@@ -92,19 +92,19 @@ public class DemoDownloadService extends DownloadService {
                         notificationHelper.buildDownloadCompletedNotification(
                                 context,
                                 R.drawable.ic_down_black_icon,
-                                /* contentIntent= */ null,
+                                *//* contentIntent= *//* null,
                                 Util.fromUtf8Bytes(download.request.data));
             } else if (download.state == Download.STATE_FAILED) {
                 notification =
                         notificationHelper.buildDownloadFailedNotification(
                                 context,
                                 R.drawable.ic_down_black_icon,
-                                /* contentIntent= */ null,
+                                *//* contentIntent= *//* null,
                                 Util.fromUtf8Bytes(download.request.data));
             } else {
                 return;
             }
             NotificationUtil.setNotification(context, nextNotificationId++, notification);
         }
-    }
+    }*/
 }

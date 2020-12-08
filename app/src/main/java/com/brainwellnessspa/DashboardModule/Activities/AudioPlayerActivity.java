@@ -1,21 +1,17 @@
 package com.brainwellnessspa.DashboardModule.Activities;
 
 import android.app.Activity;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.session.MediaSession;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.v4.media.MediaDescriptionCompat;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,12 +20,9 @@ import android.view.SurfaceControl;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -48,7 +41,6 @@ import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
-import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -62,26 +54,39 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
-import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.ui.DefaultTimeBar;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
-import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.ui.TimeBar;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
+import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.MimeTypes;
+import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.FileDescriptor;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
@@ -92,33 +97,25 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.brainwellnessspa.DashboardModule.Activities.DashboardActivity.player;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.Utility.MusicService.SeekTo;
-import static com.brainwellnessspa.Utility.MusicService.getEndTime;
-import static com.brainwellnessspa.Utility.MusicService.getMediaBitmep;
-import static com.brainwellnessspa.Utility.MusicService.getProgressPercentage;
-import static com.brainwellnessspa.Utility.MusicService.isPause;
-import static com.brainwellnessspa.Utility.MusicService.isprogressbar;
 import static com.brainwellnessspa.Utility.MusicService.oTime;
 import static com.brainwellnessspa.Utility.MusicService.progressToTimer;
 
-public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.OnSeekBarChangeListener*/ {
+public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
     private static final String SURFACE_CONTROL_NAME = "BrainWellnessApp";
     private static final String OWNER_EXTRA = "owner";
-    List<DownloadAudioDetails> downloadAudioDetailsList;
-    byte[] descriptor;
-    List<byte[]> bytesDownloaded;
-    AudioPlayerCustomLayoutBinding customLayoutBinding;
-    private long mLastClickTime = 0;
     @Nullable
     private static SimpleExoPlayer player;
     @Nullable
     private static SurfaceControl surfaceControl;
     @Nullable
     private static Surface videoSurface;
+    List<DownloadAudioDetails> downloadAudioDetailsList;
+    byte[] descriptor;
+    Bitmap myBitmap = null;
+    List<byte[]> bytesDownloaded;
+    AudioPlayerCustomLayoutBinding customLayoutBinding;
     ActivityAudioPlayerBinding binding;
-    List<MediaItem> mediaItemList;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url, playFrom = "";
@@ -126,21 +123,23 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
     Context ctx;
     Activity activity;
     Boolean queuePlay, audioPlay;
+    LinearLayout llBackWordSec, llLike, llViewQueue, llPlay, llPause, llNext, llPrev, llProgressBar, llForwardSec;
+    ProgressBar progressBar;
+    TextView tvStartTime, tvSongTime;
+    SeekBar simpleSeekbar;
+    DefaultTimeBar defaultTimeBar;
+    //    SeekBar simpleSeekbar;
+    ImageView ivLike;
+    PlayerNotificationManager playerNotificationManager;
+    MediaSessionCompat mediaSession;
+    MediaSessionConnector mediaSessionConnector;
+    private long mLastClickTime = 0;
     private boolean isOwner;
     @Nullable
     private SurfaceView nonFullScreenView;
     @Nullable
     private SurfaceView currentOutputView;
-    LinearLayout llBackWordSec, llLike, llViewQueue, llPlay, llPause, llNext, llPrev, llProgressBar, llForwardSec;
-    ProgressBar progressBar;
-    TextView tvStartTime, tvSongTime;
-    //    SeekBar simpleSeekbar;
-    ImageView ivLike;
     private LayoutInflater inflater;
-    PlayerNotificationManager playerNotificationManager;
-    MediaSessionCompat mediaSession;
-    MediaSessionConnector mediaSessionConnector;
-    Bitmap myBitmap = null;
     int notificationId = 1234;
 
     private static void reparent(@Nullable SurfaceView surfaceView) {
@@ -173,13 +172,11 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
         bytesDownloaded = new ArrayList<>();
         ctx = AudioPlayerActivity.this;
         activity = AudioPlayerActivity.this;
-        mediaItemList = new ArrayList<>();
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
-        MakeArray();
-        InitNotificationAudioPLayer();
-//        GetAllMedia();
+//        InitNotificationAudioPLayer();
+        GetAllMedia();
         isOwner = getIntent().getBooleanExtra(OWNER_EXTRA, true);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
@@ -208,39 +205,6 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
             startActivity(i);
 //            finish();
         });
-        llLike.setOnClickListener(view -> {
-//            handler1.removeCallbacks(UpdateSongTime1);
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return;
-            }
-            mLastClickTime = SystemClock.elapsedRealtime();
-            callLike();
-        });
-/*
-        llViewQueue.setOnClickListener(view -> {
-//            handler1.removeCallbacks(UpdateSongTime1);
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                return;
-            }
-            mLastClickTime = SystemClock.elapsedRealtime();
-//            if (binding.llPause.getVisibility() == View.VISIBLE) {
-//                isPause = false;
-//            }
-            SharedPreferences ViewQueue = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = ViewQueue.edit();
-            Gson gsonx = new Gson();
-            String jsonx = gsonx.toJson(addToQueueModelList);
-            if (queuePlay) {
-                editor.putString(CONSTANTS.PREF_KEY_queueList, jsonx);
-            }
-            editor.putInt(CONSTANTS.PREF_KEY_position, position);
-            editor.commit();
-            Intent i = new Intent(ctx, ViewQueueActivity.class);
-            i.putExtra("ComeFromQueue", "0");
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(i);
-            finish();
-        });*/
     }
 
     public void InitNotificationAudioPLayer() {
@@ -519,18 +483,183 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
 
     private void initializePlayer() {
         player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
-        player.prepare();
+//        player.prepare();
 //        simpleSeekbar.setOnSeekBarChangeListener(this);
         llPlay.setVisibility(View.GONE);
         llPause.setVisibility(View.GONE);
         llProgressBar.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
+
+
+       /* if (downloadAudioDetailsList.size() != 0) {
+            for(int f = 0;f<downloadAudioDetailsList.size();f++) {
+                if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mediaItemList.get(0).mediaId)){
+//                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+//                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
+
+                    String s = null;
+                    s = new String(bytesDownloaded.get(f));
+                    MediaItem mediaItem = MediaItem.fromUri(Uri.parse(s));
+                    player.setMediaItem(mediaItem);
+                    break;
+                }
+            }
+        }else{
+        MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
+        player.setMediaItem(mediaItem1);
+        }
+
+        for (int i = 1; i < mediaItemList.size(); i++) {
+             if (downloadAudioDetailsList.size() != 0) {
+                for(int f = 0;f<downloadAudioDetailsList.size();f++) {
+                    if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mediaItemList.get(i).mediaId)){
+//                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+//                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
+
+                        String s = null;
+                        s = new String(bytesDownloaded.get(f));
+                        Uri uri = Uri.parse(s);
+                        MediaItem mediaItem = MediaItem.fromUri(uri);
+                        player.addMediaItem(mediaItem);
+                        break;
+                    }
+                }
+            }else {
+            MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
+            player.addMediaItem(mediaItem);
+             }
+        }*/
+        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        final ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+        TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory();
+        DataSource.Factory dateSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, getPackageName()), (TransferListener) bandwidthMeter);
+        MediaSource[] mediaSources = new MediaSource[mainPlayModelList.size()];
+        for (int i = 0; i < mediaSources.length; i++) {
+
+            String songUri = mainPlayModelList.get(i).getAudioFile();
+//                if (downloadAudioDetailsList.size() != 0) {
+//                    for(int f = 0;f<downloadAudioDetailsList.size();f++) {
+//                        if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(i).getAudioFile())){
+////                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+////                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
+//                            String s = new String(bytesDownloaded.get(f));
+//                            mediaSources[i] = new ExtractorMediaSource(Uri.parse(s), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
+//                            break;
+//                        }
+//                    }
+//                }else {
+                    mediaSources[i] = new ExtractorMediaSource(Uri.parse(songUri), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
+//                }
+        }
+        MediaSource mediaSource = mediaSources.length == 1 ? mediaSources[0]
+                : new ConcatenatingMediaSource(mediaSources);
+        player = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector(trackSelectionFactory));
+        player.prepare(mediaSource);
+        player.seekTo(position, C.CONTENT_TYPE_MUSIC);
+//        player.setMediaItems(mediaItemList, position, 0);
+        player.setPlayWhenReady(true);
+//        player.setRepeatMode(Player.REPEAT_MODE_ALL);
+
+//        defaultTimeBar.addListener(this);
+        defaultTimeBar.addListener(new TimeBar.OnScrubListener() {
+            @Override
+            public void onScrubStart(TimeBar timeBar, long position) {
+                defaultTimeBar.setPosition(position);
+            }
+
+            @Override
+            public void onScrubMove(TimeBar timeBar, long position) {
+
+            }
+
+            @Override
+            public void onScrubStop(TimeBar timeBar, long position, boolean canceled) {
+//                int totalDuration = getEndTime();
+//                int currentPosition = progressToTimer(position, totalDuration);
+
+//                oTime = defaultTimeBar.getProgress();
+                // forward or backward to certain seconds
+                player.seekTo(position);
+            }
+        });
+        defaultTimeBar.setBufferedPosition(player.getBufferedPosition());
+        defaultTimeBar.setPosition(player.getCurrentPosition());
+        defaultTimeBar.setDuration(player.getDuration());
+        int startTime = progressToTimer(oTime, (int) (player.getCurrentPosition()));
+        tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
+                TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
+        llPause.setOnClickListener(view -> {
+            player.pause();
+            llPlay.setVisibility(View.VISIBLE);
+            llPause.setVisibility(View.GONE);
+        });
+        llPlay.setOnClickListener(view -> {
+            player.play();
+            llPlay.setVisibility(View.GONE);
+            llPause.setVisibility(View.VISIBLE);
+        });
+        llForwardSec.setOnClickListener(view -> {
+            Log.e("currunt Pos ", String.valueOf(player.getContentPosition()));
+            player.seekTo(player.getCurrentPosition() + 30000);
+        });
+        llBackWordSec.setOnClickListener(view -> {
+            Log.e("currunt Pos ", String.valueOf(player.getContentPosition()));
+            player.seekTo(player.getCurrentPosition() - 30000);
+        });
+        llLike.setOnClickListener(view -> {
+//            handler1.removeCallbacks(UpdateSongTime1);
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+            callLike();
+        });
+        llViewQueue.setOnClickListener(view -> {
+//            handler1.removeCallbacks(UpdateSongTime1);
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+//            if (binding.llPause.getVisibility() == View.VISIBLE) {
+//                isPause = false;
+//            }
+            SharedPreferences ViewQueue = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = ViewQueue.edit();
+            Gson gsonx = new Gson();
+            String jsonx = gsonx.toJson(addToQueueModelList);
+            if (queuePlay) {
+                editor.putString(CONSTANTS.PREF_KEY_queueList, jsonx);
+            }
+            editor.putInt(CONSTANTS.PREF_KEY_position, position);
+            editor.commit();
+            Intent i = new Intent(ctx, ViewQueueActivity.class);
+            i.putExtra("ComeFromQueue", "0");
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
+            finish();
+        });
+        llNext.setOnClickListener(view -> player.next());
+        llPrev.setOnClickListener(view -> player.previous());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            surfaceControl = new SurfaceControl.Builder()
+                    .setName(SURFACE_CONTROL_NAME)
+                    .setBufferSize(/* width= */ 0, /* height= */ 0)
+                    .build();
+            videoSurface = new Surface(surfaceControl);
+        }
         player.addListener(new ExoPlayer.EventListener() {
 
             @Override
             public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                 Log.v("TAG", "Listener-onTracksChanged... ");
                 callButtonText(player.getCurrentWindowIndex());
+            }
+
+            @Override
+            public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
+                defaultTimeBar.setBufferedPosition(player.getBufferedPosition());
+                defaultTimeBar.setPosition(player.getCurrentPosition());
+                defaultTimeBar.setDuration(player.getDuration());
             }
 
             @Override
@@ -550,90 +679,7 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
 
             }
         });
-//        if (downloadAudioDetailsList.size() != 0) {
-//            for(int f = 0;f<downloadAudioDetailsList.size();f++) {
-//                if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mediaItemList.get(0).mediaId)){
-////                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-////                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
-//
-//                    String s = null;
-//                    s = new String(bytesDownloaded.get(f));
-//                    MediaItem mediaItem = MediaItem.fromUri(Uri.parse(s));
-//                    player.setMediaItem(mediaItem);
-//                    break;
-//                }
-//            }
-//        }else{
-        MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
-        player.setMediaItem(mediaItem1);
-//        }
-
-        for (int i = 1; i < mediaItemList.size(); i++) {
-//             if (downloadAudioDetailsList.size() != 0) {
-//                for(int f = 0;f<downloadAudioDetailsList.size();f++) {
-//                    if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mediaItemList.get(i).mediaId)){
-////                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-////                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
-//
-//                        String s = null;
-//                        s = new String(bytesDownloaded.get(f));
-//                        Uri uri = Uri.parse(s);
-//                        MediaItem mediaItem = MediaItem.fromUri(uri);
-//                        player.addMediaItem(mediaItem);
-//                        break;
-//                    }
-//                }
-//            }else {
-            MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-            player.addMediaItem(mediaItem);
-//             }
-        }
-        player.seekTo(position, C.CONTENT_TYPE_MUSIC);
-//        player.setMediaItems(mediaItemList, position, 0);
-        player.setPlayWhenReady(true);
-//        player.setRepeatMode(Player.REPEAT_MODE_ALL);
-
-        int startTime = progressToTimer(oTime, (int) (player.getCurrentPosition()));
-        tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
-                TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
-        progress = getProgressPercentage(player.getCurrentPosition(), player.getDuration());
-//        simpleSeekbar.setProgress(progress);
-
-        llPause.setOnClickListener(view -> {
-            player.pause();
-            llPlay.setVisibility(View.VISIBLE);
-            llPause.setVisibility(View.GONE);
-        });
-        llPlay.setOnClickListener(view -> {
-            player.play();
-            llPlay.setVisibility(View.GONE);
-            llPause.setVisibility(View.VISIBLE);
-        });
-        llForwardSec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e("currunt Pos ", String.valueOf(player.getContentPosition()));
-                player.seekTo(player.getCurrentPosition() + 30000);
-            }
-        });
-        llBackWordSec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e("currunt Pos ", String.valueOf(player.getContentPosition()));
-                player.seekTo(player.getCurrentPosition() - 30000);
-            }
-        });
-        llNext.setOnClickListener(view -> player.next());
-        llPrev.setOnClickListener(view -> player.previous());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            surfaceControl = new SurfaceControl.Builder()
-                    .setName(SURFACE_CONTROL_NAME)
-                    .setBufferSize(/* width= */ 0, /* height= */ 0)
-                    .build();
-            videoSurface = new Surface(surfaceControl);
-        }
         player.setVideoSurface(videoSurface);
-        AudioPlayerActivity.player = player;
 //        callButtonText();
     }
 
@@ -655,7 +701,6 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
 //        player.setMediaItems(mediaItemList, position, 0);
         player.setPlayWhenReady(true);
 //        player.setRepeatMode(Player.REPEAT_MODE_ALL);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             surfaceControl = new SurfaceControl.Builder()
                     .setName(SURFACE_CONTROL_NAME)
@@ -691,6 +736,7 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
             protected void onPostExecute(Void aVoid) {
                 bytesDownloaded.add(descriptor);
                 descriptor = null;
+                MakeArray();
                 super.onPostExecute(aVoid);
             }
 
@@ -701,6 +747,7 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
     }
 
     private void callButtonText(int ps) {
+
 //        simpleSeekbar.setMax(100);
         url = mainPlayModelList.get(ps).getAudioFile();
         id = mainPlayModelList.get(ps).getID();
@@ -822,6 +869,7 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
     private void MakeArray() {
         View viewed = LayoutInflater.from(ctx).inflate(R.layout.audio_player_custom_layout, null, false);
         LinearLayout customPlayerViewed = (LinearLayout) viewed.getRootView();
+        defaultTimeBar = viewed.findViewById(R.id.exo_progress);
         llBackWordSec = viewed.findViewById(R.id.llBackWordSec);
         llForwardSec = viewed.findViewById(R.id.llForwardSec);
         llLike = viewed.findViewById(R.id.llLike);
@@ -843,7 +891,6 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
         String json = shared.getString(CONSTANTS.PREF_KEY_modelList, String.valueOf(gson));
         AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         MainPlayModel mainPlayModel;
-        mediaItemList = new ArrayList<>();
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         position = shared.getInt(CONSTANTS.PREF_KEY_position, 0);
@@ -881,14 +928,6 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                MediaItem.Builder builder = new MediaItem.Builder();
-                MediaItem mediaItem =
-                        builder
-                                .setUri(arrayList.get(i).getAudioFile())
-                                .setMimeType(MimeTypes.APPLICATION_MPD)
-                                .setTag(arrayList.get(i).getID())
-                                .build();
-                mediaItemList.add(mediaItem);
             }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
@@ -917,14 +956,6 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                MediaItem.Builder builder = new MediaItem.Builder();
-                MediaItem mediaItem =
-                        builder
-                                .setUri(arrayList.get(i).getAudioFile())
-                                .setMimeType(MimeTypes.APPLICATION_MPD)
-                                .setTag(arrayList.get(i).getID())
-                                .build();
-                mediaItemList.add(mediaItem);
             }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
@@ -953,14 +984,6 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                MediaItem.Builder builder = new MediaItem.Builder();
-                MediaItem mediaItem =
-                        builder
-                                .setUri(arrayList.get(i).getAudioFile())
-                                .setMimeType(MimeTypes.APPLICATION_MPD)
-                                .setTag(arrayList.get(i).getID())
-                                .build();
-                mediaItemList.add(mediaItem);
             }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
@@ -989,14 +1012,6 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                MediaItem.Builder builder = new MediaItem.Builder();
-                MediaItem mediaItem =
-                        builder
-                                .setUri(arrayList.get(i).getAudioFile())
-                                .setMimeType(MimeTypes.APPLICATION_MPD)
-                                .setTag(arrayList.get(i).getID())
-                                .build();
-                mediaItemList.add(mediaItem);
             }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
@@ -1025,14 +1040,6 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                MediaItem.Builder builder = new MediaItem.Builder();
-                MediaItem mediaItem =
-                        builder
-                                .setUri(arrayList.get(i).getAudioFile())
-                                .setMimeType(MimeTypes.APPLICATION_MPD)
-                                .setTag(arrayList.get(i).getID())
-                                .build();
-                mediaItemList.add(mediaItem);
             }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
@@ -1061,14 +1068,6 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                MediaItem.Builder builder = new MediaItem.Builder();
-                MediaItem mediaItem =
-                        builder
-                                .setUri(arrayList.get(i).getAudioFile())
-                                .setMimeType(MimeTypes.APPLICATION_MPD)
-                                .setTag(arrayList.get(i).getID())
-                                .build();
-                mediaItemList.add(mediaItem);
             }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
@@ -1097,14 +1096,6 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                MediaItem.Builder builder = new MediaItem.Builder();
-                MediaItem mediaItem =
-                        builder
-                                .setUri(arrayList.get(i).getAudioFile())
-                                .setMimeType(MimeTypes.APPLICATION_MPD)
-                                .setTag(arrayList.get(i).getID())
-                                .build();
-                mediaItemList.add(mediaItem);
             }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
@@ -1133,14 +1124,6 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                MediaItem.Builder builder = new MediaItem.Builder();
-                MediaItem mediaItem =
-                        builder
-                                .setUri(arrayList.get(i).getAudioFile())
-                                .setMimeType(MimeTypes.APPLICATION_MPD)
-                                .setTag(arrayList.get(i).getID())
-                                .build();
-                mediaItemList.add(mediaItem);
             }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
@@ -1169,14 +1152,6 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                MediaItem.Builder builder = new MediaItem.Builder();
-                MediaItem mediaItem =
-                        builder
-                                .setUri(arrayList.get(i).getAudioFile())
-                                .setMimeType(MimeTypes.APPLICATION_MPD)
-                                .setTag(arrayList.get(i).getID())
-                                .build();
-                mediaItemList.add(mediaItem);
             }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
@@ -1207,14 +1182,6 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
                 mainPlayModel.setDownload(arrayList.get(i).getDownload());
                 mainPlayModel.setAudioDuration(arrayList.get(i).getAudioDuration());
                 mainPlayModelList.add(mainPlayModel);
-                MediaItem.Builder builder = new MediaItem.Builder();
-                MediaItem mediaItem =
-                        builder
-                                .setUri(arrayList.get(i).getAudioFile())
-                                .setMimeType(MimeTypes.APPLICATION_MPD)
-                                .setTag(arrayList.get(i).getID())
-                                .build();
-                mediaItemList.add(mediaItem);
             }
             SharedPreferences sharedz = ctx.getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedz.edit();
@@ -1561,24 +1528,73 @@ public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.
         playerControlView.show();
 
     }
-/*
+
     @Override
-    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+    public void addListener(OnScrubListener listener) {
 
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
+    public void removeListener(OnScrubListener listener) {
 
     }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        int totalDuration = (int) player.getDuration();
-        int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
+    public void setEnabled(boolean enabled) {
 
-        oTime = simpleSeekbar.getProgress();
-        // forward or backward to certain seconds
-        player.seekTo(player.getCurrentWindowIndex(), currentPosition);
-    }*/
+    }
+
+    @Override
+    public void setKeyTimeIncrement(long time) {
+
+    }
+
+    @Override
+    public void setKeyCountIncrement(int count) {
+
+    }
+
+    @Override
+    public void setPosition(long position) {
+
+    }
+
+    @Override
+    public void setBufferedPosition(long bufferedPosition) {
+
+    }
+
+    @Override
+    public void setDuration(long duration) {
+
+    }
+
+    @Override
+    public long getPreferredUpdateDelay() {
+        return 0;
+    }
+
+    @Override
+    public void setAdGroupTimesMs(@Nullable long[] adGroupTimesMs, @Nullable boolean[] playedAdGroups, int adGroupCount) {
+
+    }
+//    @Override
+//    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+//
+//    }
+//
+//    @Override
+//    public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//    }
+//
+//    @Override
+//    public void onStopTrackingTouch(SeekBar seekBar) {
+//        int totalDuration = (int) player.getDuration();
+//        int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
+//
+//        oTime = simpleSeekbar.getProgress();
+//        // forward or backward to certain seconds
+//        player.seekTo(player.getCurrentWindowIndex(),currentPosition);
+//    }
 }

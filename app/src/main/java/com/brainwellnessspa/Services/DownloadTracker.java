@@ -44,12 +44,12 @@ import java.util.HashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /** Tracks media that has been downloaded. */
-public class DownloadTracker {
+public class DownloadTracker {/*
 
-    /** Listens for changes in the tracked downloads. */
+    *//** Listens for changes in the tracked downloads. *//*
     public interface Listener {
 
-        /** Called when the tracked downloads changed. */
+        *//** Called when the tracked downloads changed. *//*
         void onDownloadsChanged();
     }
 
@@ -103,7 +103,7 @@ public class DownloadTracker {
         @Nullable Download download = downloads.get(checkNotNull(mediaItem.playbackProperties).uri);
         if (download != null && download.state != Download.STATE_FAILED) {
             DownloadService.sendRemoveDownload(
-                    context, DemoDownloadService.class, download.request.id, /* foreground= */ false);
+                    context, DemoDownloadService.class, download.request.id, *//* foreground= *//* false);
         } else {
             if (startDownloadDialogHelper != null) {
                 startDownloadDialogHelper.release();
@@ -215,7 +215,7 @@ public class DownloadTracker {
                             format,
                             mediaItem.playbackProperties.drmConfiguration,
                             httpDataSourceFactory,
-                            /* dialogHelper= */ this,
+                            *//* dialogHelper= *//* this,
                             helper);
             widevineOfflineLicenseFetchTask.execute();
         }
@@ -238,12 +238,12 @@ public class DownloadTracker {
             for (int periodIndex = 0; periodIndex < downloadHelper.getPeriodCount(); periodIndex++) {
                 downloadHelper.clearTrackSelections(periodIndex);
                 for (int i = 0; i < mappedTrackInfo.getRendererCount(); i++) {
-                    if (!trackSelectionDialog.getIsDisabled(/* rendererIndex= */ i)) {
+                    if (!trackSelectionDialog.getIsDisabled(*//* rendererIndex= *//* i)) {
                         downloadHelper.addTrackSelectionForSingleRenderer(
                                 periodIndex,
-                                /* rendererIndex= */ i,
+                                *//* rendererIndex= *//* i,
                                 trackSelectorParameters,
-                                trackSelectionDialog.getOverrides(/* rendererIndex= */ i));
+                                trackSelectionDialog.getOverrides(*//* rendererIndex= *//* i));
                     }
                 }
             }
@@ -265,10 +265,10 @@ public class DownloadTracker {
 
         // Internal methods.
 
-        /**
+        *//**
          * Returns the first {@link Format} with a non-null {@link Format#drmInitData} found in the
          * content's tracks, or null if none is found.
-         */
+         *//*
         @Nullable
         private Format getFirstFormatWithDrmInitData(DownloadHelper helper) {
             for (int periodIndex = 0; periodIndex < helper.getPeriodCount(); periodIndex++) {
@@ -310,7 +310,7 @@ public class DownloadTracker {
                 return;
             }
 
-            mappedTrackInfo = downloadHelper.getMappedTrackInfo(/* periodIndex= */ 0);
+            mappedTrackInfo = downloadHelper.getMappedTrackInfo(*//* periodIndex= *//* 0);
             if (!TrackSelectionDialog.willHaveContent(mappedTrackInfo)) {
                 Log.d(TAG, "No dialog content. Downloading entire stream.");
                 startDownload();
@@ -319,20 +319,20 @@ public class DownloadTracker {
             }
             trackSelectionDialog =
                     TrackSelectionDialog.createForMappedTrackInfoAndParameters(
-                            /* titleId= */ R.string.exo_download_description,
+                            *//* titleId= *//* R.string.exo_download_description,
                             mappedTrackInfo,
                             trackSelectorParameters,
-                            /* allowAdaptiveSelections =*/ false,
-                            /* allowMultipleOverrides= */ true,
-                            /* onClickListener= */ this,
-                            /* onDismissListener= */ this);
-            trackSelectionDialog.show(fragmentManager, /* tag= */ null);
+                            *//* allowAdaptiveSelections =*//* false,
+                            *//* allowMultipleOverrides= *//* true,
+                            *//* onClickListener= *//* this,
+                            *//* onDismissListener= *//* this);
+            trackSelectionDialog.show(fragmentManager, *//* tag= *//* null);
         }
 
-        /**
+        *//**
          * Returns whether any the {@link DrmInitData.SchemeData} contained in {@code drmInitData} has
          * non-null {@link DrmInitData.SchemeData#data}.
-         */
+         *//*
         private boolean hasSchemaData(DrmInitData drmInitData) {
             for (int i = 0; i < drmInitData.schemeDataCount; i++) {
                 if (drmInitData.get(i).hasData()) {
@@ -348,7 +348,7 @@ public class DownloadTracker {
 
         private void startDownload(DownloadRequest downloadRequest) {
             DownloadService.sendAddDownload(
-                    context, DemoDownloadService.class, downloadRequest, /* foreground= */ false);
+                    context, DemoDownloadService.class, downloadRequest, *//* foreground= *//* false);
         }
 
         private DownloadRequest buildDownloadRequest() {
@@ -358,7 +358,7 @@ public class DownloadTracker {
         }
     }
 
-    /** Downloads a Widevine offline license in a background thread. */
+    *//** Downloads a Widevine offline license in a background thread. *//*
     @RequiresApi(18)
     private static final class WidevineOfflineLicenseFetchTask extends AsyncTask<Void, Void, Void> {
 
@@ -411,5 +411,5 @@ public class DownloadTracker {
                 dialogHelper.onOfflineLicenseFetched(downloadHelper, checkStateNotNull(keySetId));
             }
         }
-    }
+    }*/
 }
