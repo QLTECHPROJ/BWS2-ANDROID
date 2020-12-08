@@ -103,7 +103,7 @@ import static com.brainwellnessspa.Utility.MusicService.isprogressbar;
 import static com.brainwellnessspa.Utility.MusicService.oTime;
 import static com.brainwellnessspa.Utility.MusicService.progressToTimer;
 
-public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
+public class AudioPlayerActivity extends AppCompatActivity /*implements SeekBar.OnSeekBarChangeListener*/ {
     private static final String SURFACE_CONTROL_NAME = "BrainWellnessApp";
     private static final String OWNER_EXTRA = "owner";
     List<DownloadAudioDetails> downloadAudioDetailsList;
@@ -134,13 +134,14 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
     LinearLayout llBackWordSec, llLike, llViewQueue, llPlay, llPause, llNext, llPrev, llProgressBar, llForwardSec;
     ProgressBar progressBar;
     TextView tvStartTime, tvSongTime;
-    SeekBar simpleSeekbar;
+    //    SeekBar simpleSeekbar;
     ImageView ivLike;
     private LayoutInflater inflater;
     PlayerNotificationManager playerNotificationManager;
     MediaSessionCompat mediaSession;
     MediaSessionConnector mediaSessionConnector;
     Bitmap myBitmap = null;
+    int notificationId = 1234;
 
     private static void reparent(@Nullable SurfaceView surfaceView) {
         SurfaceControl surfaceControl = Assertions.checkNotNull(AudioPlayerActivity.surfaceControl);
@@ -247,7 +248,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
                 this,
                 "10001",
                 R.string.playback_channel_name,
-                01,
+                notificationId,
                 new PlayerNotificationManager.MediaDescriptionAdapter() {
                     @Override
                     public String getCurrentContentTitle(Player player) {
@@ -284,8 +285,14 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
                     }
                 }
         );
+        playerNotificationManager.setFastForwardIncrementMs(30000);
+        playerNotificationManager.setRewindIncrementMs(30000);
+        playerNotificationManager.setUseNavigationActions(true);
+        playerNotificationManager.setUseNavigationActionsInCompactView(true);
+        playerNotificationManager.setVisibility(View.VISIBLE);
+        playerNotificationManager.setPlayer(player);
 
-        playerNotificationManager.setNotificationListener(new PlayerNotificationManager.NotificationListener() {
+    /*    playerNotificationManager.setNotificationListener(new PlayerNotificationManager.NotificationListener() {
             @Override
             public void onNotificationStarted(int notificationId, Notification notification) {
 // startForeground(notificationId, notification);
@@ -296,8 +303,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
 // stopSelf();
             }
         });
-        playerNotificationManager.setFastForwardIncrementMs(30000);
-        playerNotificationManager.setRewindIncrementMs(30000);
         playerNotificationManager.setPlayer(player);
 
         mediaSession = new MediaSessionCompat(this, "MEDIA_SESSION_TAG");
@@ -322,7 +327,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
                         .build();
             }
         });
-        mediaSessionConnector.setPlayer(player);
+        mediaSessionConnector.setPlayer(player);*/
 //mediaSessionConnector.setPlayer(player, null, customAction1.class);
     }
 
@@ -515,7 +520,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
     private void initializePlayer() {
         player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
         player.prepare();
-        simpleSeekbar.setOnSeekBarChangeListener(this);
+//        simpleSeekbar.setOnSeekBarChangeListener(this);
         llPlay.setVisibility(View.GONE);
         llPause.setVisibility(View.GONE);
         llProgressBar.setVisibility(View.VISIBLE);
@@ -592,7 +597,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
         tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
                 TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
         progress = getProgressPercentage(player.getCurrentPosition(), player.getDuration());
-        simpleSeekbar.setProgress(progress);
+//        simpleSeekbar.setProgress(progress);
 
         llPause.setOnClickListener(view -> {
             player.pause();
@@ -696,8 +701,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
     }
 
     private void callButtonText(int ps) {
-
-        simpleSeekbar.setMax(100);
+//        simpleSeekbar.setMax(100);
         url = mainPlayModelList.get(ps).getAudioFile();
         id = mainPlayModelList.get(ps).getID();
         if (url.equalsIgnoreCase("") || url.isEmpty()) {
@@ -827,7 +831,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
         llPrev = viewed.findViewById(R.id.llprev);
         llProgressBar = viewed.findViewById(R.id.llProgressBar);
         progressBar = viewed.findViewById(R.id.progressBar);
-        simpleSeekbar = viewed.findViewById(R.id.simpleSeekbar);
+//        simpleSeekbar = viewed.findViewById(R.id.simpleSeekbar);
         tvStartTime = viewed.findViewById(R.id.tvStartTime);
         tvSongTime = viewed.findViewById(R.id.tvSongTime);
         llViewQueue = viewed.findViewById(R.id.llViewQueue);
@@ -1557,7 +1561,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
         playerControlView.show();
 
     }
-
+/*
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 
@@ -1576,5 +1580,5 @@ public class AudioPlayerActivity extends AppCompatActivity implements SeekBar.On
         oTime = simpleSeekbar.getProgress();
         // forward or backward to certain seconds
         player.seekTo(player.getCurrentWindowIndex(), currentPosition);
-    }
+    }*/
 }
