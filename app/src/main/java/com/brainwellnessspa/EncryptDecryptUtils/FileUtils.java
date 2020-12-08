@@ -71,6 +71,11 @@ public class FileUtils {
         FileInputStream fis = new FileInputStream(tempFile);
         return fis.getFD();
     }
+    public static File getTempFileDescriptor1(Context context, byte[] decrypted) throws IOException {
+        File tempFile = FileUtils.createTempFile(context, decrypted);
+        FileInputStream fis = new FileInputStream(tempFile);
+        return tempFile;
+    }
 
     public static final String getDirPath(Context context) {
         return context.getDir("Audio", Context.MODE_PRIVATE).getAbsolutePath();

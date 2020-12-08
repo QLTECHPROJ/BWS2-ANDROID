@@ -41,6 +41,7 @@ import com.brainwellnessspa.DashboardModule.Models.SuggestedModel;
 import com.brainwellnessspa.DashboardModule.Models.ViewAllAudioListModel;
 import com.brainwellnessspa.DashboardModule.TransparentPlayer.Models.MainPlayModel;
 import com.brainwellnessspa.EncryptDecryptUtils.DownloadMedia;
+import com.brainwellnessspa.EncryptDecryptUtils.FileUtils;
 import com.brainwellnessspa.LikeModule.Models.LikesHistoryModel;
 import com.brainwellnessspa.R;
 import com.brainwellnessspa.RoomDataBase.DatabaseClient;
@@ -76,17 +77,22 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.ui.TimeBar;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.FileDataSource;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.android.exoplayer2.upstream.TransferListener;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.io.FileDescriptor;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
@@ -113,7 +119,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
     List<DownloadAudioDetails> downloadAudioDetailsList;
     byte[] descriptor;
     Bitmap myBitmap = null;
-    List<byte[]> bytesDownloaded;
+    List<File> bytesDownloaded;
     AudioPlayerCustomLayoutBinding customLayoutBinding;
     ActivityAudioPlayerBinding binding;
     ArrayList<MainPlayModel> mainPlayModelList;
@@ -489,15 +495,22 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         progressBar.setVisibility(View.VISIBLE);
 
 
-       /* if (downloadAudioDetailsList.size() != 0) {
+        if (downloadAudioDetailsList.size() != 0) {
             for(int f = 0;f<downloadAudioDetailsList.size();f++) {
-                if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mediaItemList.get(0).mediaId)){
+                if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(0).getAudioFile())){
 //                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
 //                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
 
-                    String s = null;
-                    s = new String(bytesDownloaded.get(f));
-                    MediaItem mediaItem = MediaItem.fromUri(Uri.parse(s));
+                    Uri uri = Uri.fromFile(bytesDownloaded.get(f));
+                    DataSpec dataSpec = new DataSpec(uri);
+                    final FileDataSource fileDataSource = new FileDataSource();
+                    try {
+                        fileDataSource.open(dataSpec);
+                    } catch (FileDataSource.FileDataSourceException e) {
+                        e.printStackTrace();
+                    }
+
+                    MediaItem mediaItem = MediaItem.fromUri(uri);
                     player.setMediaItem(mediaItem);
                     break;
                 }
@@ -507,16 +520,21 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         player.setMediaItem(mediaItem1);
         }
 
-        for (int i = 1; i < mediaItemList.size(); i++) {
+        for (int i = 1; i < mainPlayModelList.size(); i++) {
              if (downloadAudioDetailsList.size() != 0) {
                 for(int f = 0;f<downloadAudioDetailsList.size();f++) {
-                    if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mediaItemList.get(i).mediaId)){
+                    if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(i).getAudioFile())){
 //                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
 //                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
+                            Uri uri = Uri.fromFile(bytesDownloaded.get(f));
+                            DataSpec dataSpec = new DataSpec(uri);
+                            final FileDataSource fileDataSource = new FileDataSource();
+                            try {
+                                fileDataSource.open(dataSpec);
+                            } catch (FileDataSource.FileDataSourceException e) {
+                                e.printStackTrace();
+                            }
 
-                        String s = null;
-                        s = new String(bytesDownloaded.get(f));
-                        Uri uri = Uri.parse(s);
                         MediaItem mediaItem = MediaItem.fromUri(uri);
                         player.addMediaItem(mediaItem);
                         break;
@@ -526,8 +544,8 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
             MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
             player.addMediaItem(mediaItem);
              }
-        }*/
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        }
+       /* BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         final ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
         TrackSelection.Factory trackSelectionFactory = new AdaptiveTrackSelection.Factory();
         DataSource.Factory dateSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, getPackageName()), (TransferListener) bandwidthMeter);
@@ -535,30 +553,33 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         for (int i = 0; i < mediaSources.length; i++) {
 
             String songUri = mainPlayModelList.get(i).getAudioFile();
-//                if (downloadAudioDetailsList.size() != 0) {
-//                    for(int f = 0;f<downloadAudioDetailsList.size();f++) {
-//                        if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(i).getAudioFile())){
-////                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-////                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
-//                            String s = new String(bytesDownloaded.get(f));
-//                            mediaSources[i] = new ExtractorMediaSource(Uri.parse(s), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
-//                            break;
-//                        }
-//                    }
-//                }else {
-            mediaSources[i] = new ExtractorMediaSource(Uri.parse(songUri), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
-//                }
+                if (downloadAudioDetailsList.size() != 0) {
+                    for(int f = 0;f<downloadAudioDetailsList.size();f++) {
+                        if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(i).getAudioFile())){
+//                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+//                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
+
+                            Uri uri = Uri.fromFile(bytesDownloaded.get(f));
+                            DataSpec dataSpec = new DataSpec(uri);
+                            final FileDataSource fileDataSource = new FileDataSource();
+                            try {
+                                fileDataSource.open(dataSpec);
+                            } catch (FileDataSource.FileDataSourceException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        }
+                    }
+                }else {
+                        mediaSources[i] = new ExtractorMediaSource(Uri.parse(songUri), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
+                }
         }
         MediaSource mediaSource = mediaSources.length == 1 ? mediaSources[0]
-                : new ConcatenatingMediaSource(mediaSources);
-        player = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector(trackSelectionFactory));
-        player.prepare(mediaSource);
+                : new ConcatenatingMediaSource(mediaSources);*/
+//        player = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector(trackSelectionFactory));
+        player.prepare();
         player.seekTo(position, C.CONTENT_TYPE_MUSIC);
-//        player.setMediaItems(mediaItemList, position, 0);
         player.setPlayWhenReady(true);
-//        player.setRepeatMode(Player.REPEAT_MODE_ALL);
-
-//        defaultTimeBar.addListener(this);
         defaultTimeBar.addListener(new TimeBar.OnScrubListener() {
             @Override
             public void onScrubStart(TimeBar timeBar, long position) {
@@ -713,27 +734,29 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
     private void getDownloadMedia(DownloadMedia downloadMedia, String name) {
 
         class getDownloadMedia extends AsyncTask<Void, Void, Void> {
-            FileDescriptor fileDescriptor = null;
+            File fileDescriptor = null;
 
             @Override
             protected Void doInBackground(Void... voids) {
 //                try {
 
                 descriptor = downloadMedia.decrypt(name);
-//                    if (decrypt != null) {
-//                        fileDescriptor = FileUtils.getTempFileDescriptor(getApplicationContext(), decrypt);
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+                try{
+                    if (descriptor != null) {
+                        fileDescriptor = FileUtils.getTempFileDescriptor1(getApplicationContext(), descriptor);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                bytesDownloaded.add(descriptor);
+                bytesDownloaded.add(fileDescriptor);
                 descriptor = null;
+                fileDescriptor = null;
                 MakeArray();
                 super.onPostExecute(aVoid);
             }
