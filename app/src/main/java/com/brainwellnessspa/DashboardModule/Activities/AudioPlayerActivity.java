@@ -731,7 +731,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         AudioPlayerActivity.player = player;
     }
 
-    private void getDownloadMedia(DownloadMedia downloadMedia, String name) {
+    private void getDownloadMedia(DownloadMedia downloadMedia, String name,int i) {
 
         class getDownloadMedia extends AsyncTask<Void, Void, Void> {
             File fileDescriptor = null;
@@ -755,9 +755,13 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
             @Override
             protected void onPostExecute(Void aVoid) {
                 bytesDownloaded.add(fileDescriptor);
+                Log.e("MakeArry not Call",String.valueOf(i));
                 descriptor = null;
                 fileDescriptor = null;
-                MakeArray();
+                if(i == downloadAudioDetailsList.size()) {
+                    Log.e("MakeArry Call",String.valueOf(i));
+                    MakeArray();
+                }
                 super.onPostExecute(aVoid);
             }
 
@@ -876,8 +880,10 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                 if (downloadAudioDetailsList.size() != 0) {
                     for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-                        getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(i).getName());
+                        getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(i).getName(),i);
                     }
+                }else{
+                    MakeArray();
                 }
                 super.onPostExecute(aVoid);
             }
