@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -28,7 +29,9 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.media.session.MediaButtonReceiver;
 
 import com.brainwellnessspa.BWSApplication;
 import com.brainwellnessspa.DashboardModule.Models.AddToQueueModel;
@@ -49,6 +52,7 @@ import com.brainwellnessspa.RoomDataBase.DownloadAudioDetails;
 import com.brainwellnessspa.Utility.APIClient;
 import com.brainwellnessspa.Utility.CONSTANTS;
 import com.brainwellnessspa.Utility.MeasureRatio;
+import com.brainwellnessspa.Utility.PlaybackStatus;
 import com.brainwellnessspa.databinding.ActivityAudioPlayerBinding;
 import com.brainwellnessspa.databinding.AudioPlayerCustomLayoutBinding;
 import com.bumptech.glide.Glide;
@@ -103,6 +107,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.brainwellnessspa.BWSApplication.CHANNEL_ID;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
 import static com.brainwellnessspa.Utility.MusicService.oTime;
 import static com.brainwellnessspa.Utility.MusicService.progressToTimer;
@@ -120,32 +125,26 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
     byte[] descriptor;
     Bitmap myBitmap = null;
     List<File> bytesDownloaded;
-    AudioPlayerCustomLayoutBinding customLayoutBinding;
     ActivityAudioPlayerBinding binding;
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url, playFrom = "";
-    int startTime = 0, endTime = 0, position, listSize, myCount, progress, downloadPercentage, audioBufferCapacityMs;
+    int position, listSize;
     Context ctx;
     Activity activity;
     Boolean queuePlay, audioPlay;
     LinearLayout llBackWordSec, llLike, llViewQueue, llPlay, llPause, llNext, llPrev, llProgressBar, llForwardSec;
     ProgressBar progressBar;
     TextView tvStartTime, tvSongTime;
-    SeekBar simpleSeekbar;
     DefaultTimeBar defaultTimeBar;
-    //    SeekBar simpleSeekbar;
     ImageView ivLike;
     PlayerNotificationManager playerNotificationManager;
-    MediaSessionCompat mediaSession;
-    MediaSessionConnector mediaSessionConnector;
     private long mLastClickTime = 0;
     private boolean isOwner;
     @Nullable
     private SurfaceView nonFullScreenView;
     @Nullable
     private SurfaceView currentOutputView;
-    private LayoutInflater inflater;
     int notificationId = 1234;
 
     private static void reparent(@Nullable SurfaceView surfaceView) {
@@ -182,7 +181,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         mainPlayModelList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
         GetAllMedia();
-        isOwner = getIntent().getBooleanExtra(OWNER_EXTRA, true);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
         SharedPreferences Status = getSharedPreferences(CONSTANTS.PREF_KEY_Status, Context.MODE_PRIVATE);
@@ -238,17 +236,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
-                        Bitmap myBitmap = null;
-                        try {
-                            if (mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile().equalsIgnoreCase("")) {
-                                myBitmap = BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.disclaimer);
-                            } else {
-                                java.net.URL url = new URL(mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
-                                myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                         return myBitmap;
                     }
                 }
@@ -256,10 +243,11 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         playerNotificationManager.setFastForwardIncrementMs(30000);
         playerNotificationManager.setRewindIncrementMs(30000);
         playerNotificationManager.setUseNavigationActions(true);
+        playerNotificationManager.setSmallIcon(R.drawable.logo_design);
+        playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
         playerNotificationManager.setUseNavigationActionsInCompactView(true);
         playerNotificationManager.setVisibility(View.VISIBLE);
         playerNotificationManager.setPlayer(player);
-
     /*    playerNotificationManager.setNotificationListener(new PlayerNotificationManager.NotificationListener() {
             @Override
             public void onNotificationStarted(int notificationId, Notification notification) {
@@ -299,6 +287,32 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
 //mediaSessionConnector.setPlayer(player, null, customAction1.class);
     }
 
+    public Bitmap getMediaBitmap(String songImg) {
+        class GetMedia extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    if (songImg.equalsIgnoreCase("")) {
+                        myBitmap = BitmapFactory.decodeResource(getBaseContext().getResources(), R.drawable.disclaimer);
+                    } else {
+                        URL url = new URL(songImg);
+                        myBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+            }
+        }
+
+        GetMedia st = new GetMedia();
+        st.execute();
+        return myBitmap;
+    }
     private void callBack() {
         try {
 //        handler1.removeCallbacks(UpdateSongTime1);
@@ -695,7 +709,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                     llProgressBar.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.VISIBLE);
                 }
-
             }
         });
         player.setVideoSurface(videoSurface);
@@ -755,13 +768,13 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
             @Override
             protected void onPostExecute(Void aVoid) {
                 bytesDownloaded.add(fileDescriptor);
-                Log.e("MakeArry not Call",String.valueOf(i));
+//                Log.e("MakeArry not Call",String.valueOf(i));
                 descriptor = null;
                 fileDescriptor = null;
-                if(i == downloadAudioDetailsList.size()) {
-                    Log.e("MakeArry Call",String.valueOf(i));
+//                if(i == downloadAudioDetailsList.size()) {
+//                    Log.e("MakeArry Call",String.valueOf(i));
                     MakeArray();
-                }
+//                }
                 super.onPostExecute(aVoid);
             }
 
@@ -786,6 +799,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         if (mainPlayModelList.get(ps).getPlaylistID() == null) {
             mainPlayModelList.get(ps).setPlaylistID("");
         }
+        myBitmap = getMediaBitmap(mainPlayModelList.get(ps).getImageFile());
         binding.tvName.setText(mainPlayModelList.get(ps).getName());
         if (mainPlayModelList.get(ps).getAudioDirection().equalsIgnoreCase("")) {
             binding.llDirection.setVisibility(View.GONE);
