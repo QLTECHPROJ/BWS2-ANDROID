@@ -186,8 +186,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
 //        inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //        customLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(ctx)
 //                , R.layout.audio_player_custom_layout, ctx, false);
-
-        InitNotificationAudioPLayer();
         binding.llMore.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -1526,6 +1524,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
         playerControlView.setPlayer(player);
         playerControlView.show();
+        InitNotificationAudioPLayer();
 
     }
 
