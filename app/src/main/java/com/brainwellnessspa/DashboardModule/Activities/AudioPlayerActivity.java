@@ -175,7 +175,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         addToQueueModelList = new ArrayList<>();
         mainPlayModelList = new ArrayList<>();
         downloadAudioDetailsList = new ArrayList<>();
-//        InitNotificationAudioPLayer();
         GetAllMedia();
         isOwner = getIntent().getBooleanExtra(OWNER_EXTRA, true);
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
@@ -188,6 +187,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
 //        customLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(ctx)
 //                , R.layout.audio_player_custom_layout, ctx, false);
 
+        InitNotificationAudioPLayer();
         binding.llMore.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -548,7 +548,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
 //                        }
 //                    }
 //                }else {
-                    mediaSources[i] = new ExtractorMediaSource(Uri.parse(songUri), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
+            mediaSources[i] = new ExtractorMediaSource(Uri.parse(songUri), dateSourceFactory, extractorsFactory, null, Throwable::printStackTrace);
 //                }
         }
         MediaSource mediaSource = mediaSources.length == 1 ? mediaSources[0]
