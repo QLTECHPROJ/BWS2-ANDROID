@@ -230,7 +230,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                     @Nullable
                     @Override
                     public String getCurrentContentText(Player player) {
-                        return mainPlayModelList.get(player.getCurrentPeriodIndex()).getName();
+                        return mainPlayModelList.get(player.getCurrentPeriodIndex()).getAudioSubCategory();
                     }
 
                     @Nullable
@@ -246,7 +246,10 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         playerNotificationManager.setSmallIcon(R.drawable.logo_design);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
         playerNotificationManager.setUseNavigationActionsInCompactView(true);
-        playerNotificationManager.setVisibility(View.VISIBLE);
+        playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        playerNotificationManager.setUseChronometer(true);
+        playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
+        playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
     /*    playerNotificationManager.setNotificationListener(new PlayerNotificationManager.NotificationListener() {
             @Override
@@ -551,12 +554,14 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
 
                         MediaItem mediaItem = MediaItem.fromUri(uri);
                         player.addMediaItem(mediaItem);
-                        break;
+                    }else{
+                        MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
+                        player.addMediaItem(mediaItem);
                     }
                 }
             }else {
-            MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
-            player.addMediaItem(mediaItem);
+                MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
+                player.addMediaItem(mediaItem);
              }
         }
        /* BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
@@ -621,24 +626,10 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         int startTime = progressToTimer(oTime, (int) (player.getCurrentPosition()));
         tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
                 TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
-        llPause.setOnClickListener(view -> {
-            player.pause();
-            llPlay.setVisibility(View.VISIBLE);
-            llPause.setVisibility(View.GONE);
-        });
-        llPlay.setOnClickListener(view -> {
-            player.play();
-            llPlay.setVisibility(View.GONE);
-            llPause.setVisibility(View.VISIBLE);
-        });
-        llForwardSec.setOnClickListener(view -> {
-            Log.e("currunt Pos ", String.valueOf(player.getContentPosition()));
-            player.seekTo(player.getCurrentPosition() + 30000);
-        });
-        llBackWordSec.setOnClickListener(view -> {
-            Log.e("currunt Pos ", String.valueOf(player.getContentPosition()));
-            player.seekTo(player.getCurrentPosition() - 30000);
-        });
+        llPause.setOnClickListener(view -> player.setPlayWhenReady(false));
+        llPlay.setOnClickListener(view -> player.setPlayWhenReady(true));
+        llForwardSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() + 30000));
+        llBackWordSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() - 30000));
         llLike.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -696,8 +687,25 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
             }
 
             @Override
+            public void onIsPlayingChanged(boolean isPlaying) {
+                if(isPlaying){
+                    llPlay.setVisibility(View.GONE);
+                    llPause.setVisibility(View.VISIBLE);
+                    llProgressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                    defaultTimeBar.setBufferedPosition(player.getBufferedPosition());
+                    defaultTimeBar.setPosition(player.getCurrentPosition());
+                    defaultTimeBar.setDuration(player.getDuration());
+                }else if(!isPlaying){
+                    llPlay.setVisibility(View.VISIBLE);
+                    llPause.setVisibility(View.GONE);
+                    llProgressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
             public void onPlaybackStateChanged(int state) {
-                callButtonText(player.getCurrentWindowIndex());
                 if (state == ExoPlayer.STATE_READY) {
                     llPlay.setVisibility(View.GONE);
                     llPause.setVisibility(View.VISIBLE);
@@ -717,7 +725,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
 
     private void initializePlayerDisclaimer() {
         player = new SimpleExoPlayer.Builder(getApplicationContext()).build();
-        player.prepare();
         player.addListener(new ExoPlayer.EventListener() {
             @Override
             public void onPlaybackStateChanged(int state) {
@@ -725,13 +732,42 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                     //player back ended
                     removeArray();
                 }
+                if (state == ExoPlayer.STATE_READY) {
+                    llPlay.setVisibility(View.GONE);
+                    llPause.setVisibility(View.VISIBLE);
+                    llProgressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                } else if (state == ExoPlayer.STATE_BUFFERING) {
+                    llPlay.setVisibility(View.GONE);
+                    llPause.setVisibility(View.GONE);
+                    llProgressBar.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
+                }
 
+            }
+            @Override
+            public void onIsPlayingChanged(boolean isPlaying) {
+                if(isPlaying){
+                    llPlay.setVisibility(View.GONE);
+                    llPause.setVisibility(View.VISIBLE);
+                    llProgressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                    defaultTimeBar.setBufferedPosition(player.getBufferedPosition());
+                    defaultTimeBar.setPosition(player.getCurrentPosition());
+                    defaultTimeBar.setDuration(player.getDuration());
+                }else{
+                    llPlay.setVisibility(View.VISIBLE);
+                    llPause.setVisibility(View.GONE);
+                    llProgressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                }
             }
         });
         MediaItem mediaItem1 = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.brain_wellness_spa_declaimer));
         player.setMediaItem(mediaItem1);
 //        player.setMediaItems(mediaItemList, position, 0);
         player.setPlayWhenReady(true);
+        player.prepare();
 //        player.setRepeatMode(Player.REPEAT_MODE_ALL);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             surfaceControl = new SurfaceControl.Builder()
