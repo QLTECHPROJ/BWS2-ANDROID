@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="@dimen/_18sdp"
-            android:gravity="bottom"
+            android:layout_height="wrap_content"
             android:background="@color/white"
-            android:orientation="vertical">
+            android:gravity="bottom"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/_18sdp">
 
             <RelativeLayout
                 android:id="@+id/rlSeekbar"
@@ -30,13 +31,14 @@
                     android:id="@id/exo_progress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_4sdp"
                     app:buffered_color="@color/extra_light_blue"
                     app:played_color="@color/gray"
-                    app:unplayed_color="@color/seek_bar_background"
                     app:scrubber_color="@color/seek_bar_background"
                     app:scrubber_drawable="@drawable/ic_dot_icon"
-                    android:layout_marginHorizontal="@dimen/_20sdp"
-                    android:layout_marginBottom="@dimen/_4sdp"/>
+                    app:unplayed_color="@color/seek_bar_background" />
+
                 <TextView
                     android:id="@+id/tvStartTime"
                     android:layout_width="wrap_content"
@@ -73,7 +75,7 @@
                 android:weightSum="1">
 
                 <LinearLayout
-                        android:id="@+id/llBackWordSec"
+                    android:id="@+id/llBackWordSec"
                     android:layout_width="@dimen/_0sdp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.19"

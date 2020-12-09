@@ -251,43 +251,12 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
-    /*    playerNotificationManager.setNotificationListener(new PlayerNotificationManager.NotificationListener() {
-            @Override
-            public void onNotificationStarted(int notificationId, Notification notification) {
-// startForeground(notificationId, notification);
-            }
-
-            @Override
-            public void onNotificationCancelled(int notificationId) {
-// stopSelf();
-            }
-        });
-        playerNotificationManager.setPlayer(player);
-
-        mediaSession = new MediaSessionCompat(this, "MEDIA_SESSION_TAG");
-        mediaSession.setActive(true);
-        playerNotificationManager.setMediaSessionToken(mediaSession.getSessionToken());
-
-        mediaSessionConnector = new MediaSessionConnector(mediaSession);
-        mediaSessionConnector.setQueueNavigator(new TimelineQueueNavigator(mediaSession) {
-            @Override
-            public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
-                Bundle extras = new Bundle();
-                Bitmap bitmap = myBitmap;
-                extras.putParcelable(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
-                extras.putParcelable(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, bitmap);
-                return new MediaDescriptionCompat.Builder()
-                        .setMediaId(mainPlayModelList.get(position).getID())
-                        .setIconBitmap(bitmap)
-                        .setTitle(mainPlayModelList.get(position).getName())
-                        .setDescription(mainPlayModelList.get(position).getAudioDirection())
-                        .setSubtitle(mainPlayModelList.get(position).getAudioDuration())
-                        .setExtras(extras)
-                        .build();
-            }
-        });
-        mediaSessionConnector.setPlayer(player);*/
-//mediaSessionConnector.setPlayer(player, null, customAction1.class);
+        /* playerNotificationManager.setUseNavigationActions(true);
+        playerNotificationManager.setSmallIcon(R.drawable.logo_design);
+        playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
+        playerNotificationManager.setUseNavigationActionsInCompactView(true);
+        playerNotificationManager.setVisibility(View.VISIBLE);
+        playerNotificationManager.setPlayer(player);*/
     }
 
     public Bitmap getMediaBitmap(String songImg) {
@@ -316,6 +285,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         st.execute();
         return myBitmap;
     }
+
     private void callBack() {
         try {
 //        handler1.removeCallbacks(UpdateSongTime1);
@@ -513,8 +483,8 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
 
 
         if (downloadAudioDetailsList.size() != 0) {
-            for(int f = 0;f<downloadAudioDetailsList.size();f++) {
-                if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(0).getAudioFile())){
+            for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
+                if (downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(0).getAudioFile())) {
 //                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
 //                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
 
@@ -532,37 +502,37 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                     break;
                 }
             }
-        }else{
-        MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
-        player.setMediaItem(mediaItem1);
+        } else {
+            MediaItem mediaItem1 = MediaItem.fromUri(mainPlayModelList.get(0).getAudioFile());
+            player.setMediaItem(mediaItem1);
         }
 
         for (int i = 1; i < mainPlayModelList.size(); i++) {
-             if (downloadAudioDetailsList.size() != 0) {
-                for(int f = 0;f<downloadAudioDetailsList.size();f++) {
-                    if(downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(i).getAudioFile())){
+            if (downloadAudioDetailsList.size() != 0) {
+                for (int f = 0; f < downloadAudioDetailsList.size(); f++) {
+                    if (downloadAudioDetailsList.get(f).getAudioFile().equalsIgnoreCase(mainPlayModelList.get(i).getAudioFile())) {
 //                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
 //                    getDownloadMedia(downloadMedia,downloadAudioDetailsList.get(f).getName());
-                            Uri uri = Uri.fromFile(bytesDownloaded.get(f));
-                            DataSpec dataSpec = new DataSpec(uri);
-                            final FileDataSource fileDataSource = new FileDataSource();
-                            try {
-                                fileDataSource.open(dataSpec);
-                            } catch (FileDataSource.FileDataSourceException e) {
-                                e.printStackTrace();
-                            }
+                        Uri uri = Uri.fromFile(bytesDownloaded.get(f));
+                        DataSpec dataSpec = new DataSpec(uri);
+                        final FileDataSource fileDataSource = new FileDataSource();
+                        try {
+                            fileDataSource.open(dataSpec);
+                        } catch (FileDataSource.FileDataSourceException e) {
+                            e.printStackTrace();
+                        }
 
                         MediaItem mediaItem = MediaItem.fromUri(uri);
                         player.addMediaItem(mediaItem);
-                    }else{
+                    } else {
                         MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                         player.addMediaItem(mediaItem);
                     }
                 }
-            }else {
+            } else {
                 MediaItem mediaItem = MediaItem.fromUri(mainPlayModelList.get(i).getAudioFile());
                 player.addMediaItem(mediaItem);
-             }
+            }
         }
        /* BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         final ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
@@ -688,7 +658,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
 
             @Override
             public void onIsPlayingChanged(boolean isPlaying) {
-                if(isPlaying){
+                if (isPlaying) {
                     llPlay.setVisibility(View.GONE);
                     llPause.setVisibility(View.VISIBLE);
                     llProgressBar.setVisibility(View.GONE);
@@ -696,7 +666,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                     defaultTimeBar.setBufferedPosition(player.getBufferedPosition());
                     defaultTimeBar.setPosition(player.getCurrentPosition());
                     defaultTimeBar.setDuration(player.getDuration());
-                }else if(!isPlaying){
+                } else if (!isPlaying) {
                     llPlay.setVisibility(View.VISIBLE);
                     llPause.setVisibility(View.GONE);
                     llProgressBar.setVisibility(View.GONE);
@@ -745,9 +715,10 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                 }
 
             }
+
             @Override
             public void onIsPlayingChanged(boolean isPlaying) {
-                if(isPlaying){
+                if (isPlaying) {
                     llPlay.setVisibility(View.GONE);
                     llPause.setVisibility(View.VISIBLE);
                     llProgressBar.setVisibility(View.GONE);
@@ -755,7 +726,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                     defaultTimeBar.setBufferedPosition(player.getBufferedPosition());
                     defaultTimeBar.setPosition(player.getCurrentPosition());
                     defaultTimeBar.setDuration(player.getDuration());
-                }else{
+                } else {
                     llPlay.setVisibility(View.VISIBLE);
                     llPause.setVisibility(View.GONE);
                     llProgressBar.setVisibility(View.GONE);
@@ -780,7 +751,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         AudioPlayerActivity.player = player;
     }
 
-    private void getDownloadMedia(DownloadMedia downloadMedia, String name,int i) {
+    private void getDownloadMedia(DownloadMedia downloadMedia, String name, int i) {
 
         class getDownloadMedia extends AsyncTask<Void, Void, Void> {
             File fileDescriptor = null;
@@ -790,7 +761,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
 //                try {
 
                 descriptor = downloadMedia.decrypt(name);
-                try{
+                try {
                     if (descriptor != null) {
                         fileDescriptor = FileUtils.getTempFileDescriptor1(getApplicationContext(), descriptor);
                     }
@@ -809,11 +780,10 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                 fileDescriptor = null;
 //                if(i == downloadAudioDetailsList.size()) {
 //                    Log.e("MakeArry Call",String.valueOf(i));
-                    MakeArray();
+                MakeArray();
 //                }
                 super.onPostExecute(aVoid);
             }
-
         }
 
         getDownloadMedia st = new getDownloadMedia();
@@ -930,9 +900,9 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                 if (downloadAudioDetailsList.size() != 0) {
                     for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
                         DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-                        getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(i).getName(),i);
+                        getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(i).getName(), i);
                     }
-                }else{
+                } else {
                     MakeArray();
                 }
                 super.onPostExecute(aVoid);
