@@ -157,9 +157,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         IsRepeat = Status.getString(CONSTANTS.PREF_KEY_IsRepeat, "");
         IsShuffle = Status.getString(CONSTANTS.PREF_KEY_IsShuffle, "");
         binding.llBack.setOnClickListener(view -> callBack());
-//        inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        customLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(ctx)
-//                , R.layout.audio_player_custom_layout, ctx, false);
+
         binding.llMore.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
@@ -200,7 +198,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                     @Nullable
                     @Override
                     public String getCurrentContentText(Player player) {
-                        return mainPlayModelList.get(player.getCurrentPeriodIndex()).getAudioSubCategory();
+                        return mainPlayModelList.get(player.getCurrentPeriodIndex()).getAudioDirection();
                     }
 
                     @Nullable
@@ -221,12 +219,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
         playerNotificationManager.setUsePlayPauseActions(true);
         playerNotificationManager.setPlayer(player);
-        /* playerNotificationManager.setUseNavigationActions(true);
-        playerNotificationManager.setSmallIcon(R.drawable.logo_design);
-        playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
-        playerNotificationManager.setUseNavigationActionsInCompactView(true);
-        playerNotificationManager.setVisibility(View.VISIBLE);
-        playerNotificationManager.setPlayer(player);*/
     }
 
     public Bitmap getMediaBitmap(String songImg) {
