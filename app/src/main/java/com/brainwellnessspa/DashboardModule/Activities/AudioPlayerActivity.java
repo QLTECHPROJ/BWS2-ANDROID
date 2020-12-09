@@ -85,7 +85,7 @@ import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.T
 import static com.brainwellnessspa.Utility.MusicService.oTime;
 import static com.brainwellnessspa.Utility.MusicService.progressToTimer;
 
-public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
+public class AudioPlayerActivity extends AppCompatActivity {
     private static final String SURFACE_CONTROL_NAME = "BrainWellnessApp";
     private static final String OWNER_EXTRA = "owner";
     @Nullable
@@ -528,13 +528,10 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         player.setPlayWhenReady(true);
         player.setVideoSurface(videoSurface);
         callRepeatShuffle();
-        exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
-        exoBinding.exoProgress.setPosition(player.getCurrentPosition());
-        exoBinding.exoProgress.setDuration(player.getDuration());
-      /*  customLayoutBinding.exoProgress.addListener(new TimeBar.OnScrubListener() {
+        exoBinding.exoProgress.addListener(new TimeBar.OnScrubListener() {
             @Override
             public void onScrubStart(TimeBar timeBar, long position) {
-                customLayoutBinding.exoProgress.setPosition(position);
+                exoBinding.exoProgress.setPosition(position);
             }
 
             @Override
@@ -544,17 +541,12 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
 
             @Override
             public void onScrubStop(TimeBar timeBar, long position, boolean canceled) {
-//                int totalDuration = getEndTime();
-//                int currentPosition = progressToTimer(position, totalDuration);
-
-//                oTime = customLayoutBinding.exoProgress.getProgress();
-                // forward or backward to certain seconds
                 player.seekTo(position);
+                exoBinding.exoProgress.setPosition(position);
+                exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(position),
+                        TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))));
             }
-        });*/
-        int startTime = progressToTimer(oTime, (int) (player.getCurrentPosition()));
-        exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(startTime),
-                TimeUnit.MILLISECONDS.toSeconds(startTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(startTime))));
+        });
         epAllClicks();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -579,15 +571,17 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.llProgressBar.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
-                    exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
-                    exoBinding.exoProgress.setPosition(player.getCurrentPosition());
-                    exoBinding.exoProgress.setDuration(player.getDuration());
                 } else if (!isPlaying) {
-//                    exoBinding.llPlay.setVisibility(View.VISIBLE);
-//                    exoBinding.llPause.setVisibility(View.GONE);
-//                    exoBinding.llProgressBar.setVisibility(View.GONE);
-//                    exoBinding.progressBar.setVisibility(View.GONE);
+                    exoBinding.llPlay.setVisibility(View.VISIBLE);
+                    exoBinding.llPause.setVisibility(View.GONE);
+                    exoBinding.llProgressBar.setVisibility(View.GONE);
+                    exoBinding.progressBar.setVisibility(View.GONE);
                 }
+                exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
+                exoBinding.exoProgress.setPosition(player.getCurrentPosition());
+                exoBinding.exoProgress.setDuration(player.getDuration());
+                exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()),
+                        TimeUnit.MILLISECONDS.toSeconds(player.getCurrentPosition()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()))));
             }
 
             @Override
@@ -687,15 +681,17 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
                     exoBinding.llPause.setVisibility(View.VISIBLE);
                     exoBinding.llProgressBar.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
-                    exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
-                    exoBinding.exoProgress.setPosition(player.getCurrentPosition());
-                    exoBinding.exoProgress.setDuration(player.getDuration());
                 } else {
                     exoBinding.llPlay.setVisibility(View.VISIBLE);
                     exoBinding.llPause.setVisibility(View.GONE);
                     exoBinding.llProgressBar.setVisibility(View.GONE);
                     exoBinding.progressBar.setVisibility(View.GONE);
                 }
+                exoBinding.exoProgress.setBufferedPosition(player.getBufferedPosition());
+                exoBinding.exoProgress.setPosition(player.getCurrentPosition());
+                exoBinding.exoProgress.setDuration(player.getDuration());
+                exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()),
+                        TimeUnit.MILLISECONDS.toSeconds(player.getCurrentPosition()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(player.getCurrentPosition()))));
             }
         });
         exoBinding.llPause.setOnClickListener(view -> player.setPlayWhenReady(false));
@@ -1275,7 +1271,7 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         } else {
             exoBinding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
         }
-
+        GetMedia2();
 //            binding.gridLayout.addView(view);
 //            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
 //            layoutParams.width = 0;
@@ -1355,26 +1351,6 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         View viewed = LayoutInflater.from(ctx).inflate(R.layout.audio_player_custom_layout, null, false);
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(this)
                 , R.layout.audio_player_custom_layout, binding.playerControlView,false);
-//         exoProgress = viewed.findViewById(R.id.exoProgress);
-//        llBackWordSec = viewed.findViewById(R.id.llBackWordSec);
-//        llForwardSec = viewed.findViewById(R.id.llForwardSec);
-//        llLike = viewed.findViewById(R.id.llLike);
-//        llPlay = viewed.findViewById(R.id.llPlay);
-//        llPause = viewed.findViewById(R.id.llPause);
-//        llNext = viewed.findViewById(R.id.llnext);
-//        llPrev = viewed.findViewById(R.id.llprev);
-//        llProgressBar = viewed.findViewById(R.id.llProgressBar);
-//        progressBar = viewed.findViewById(R.id.progressBar);
-////        simpleSeekbar = viewed.findViewById(R.id.simpleSeekbar);
-//        tvStartTime = viewed.findViewById(R.id.tvStartTime);
-//        tvSongTime = viewed.findViewById(R.id.tvSongTime);
-//        llViewQueue = viewed.findViewById(R.id.llViewQueue);
-//        ivLike = viewed.findViewById(R.id.ivLike);
-//        ivShuffle = viewed.findViewById(R.id.ivShuffle);
-//        ivRepeat = viewed.findViewById(R.id.ivRepeat);
-//        ivLike = viewed.findViewById(R.id.ivLike);
-//        ivLike = viewed.findViewById(R.id.ivLike);
-//        ivLike = viewed.findViewById(R.id.ivLike);
         binding.playerControlView.addView(exoBinding.getRoot());
 
         Gson gson = new Gson();
@@ -2016,77 +1992,16 @@ public class AudioPlayerActivity extends AppCompatActivity implements TimeBar {
         setCurrentOutputView(nonFullScreenView);
         PlayerControlView playerControlView = Assertions.checkNotNull(this.binding.playerControlView);
         playerControlView.setPlayer(player);
+        playerControlView.setProgressUpdateListener((position, bufferedPosition) -> {
+            exoBinding.exoProgress.setPosition(position);
+            exoBinding.exoProgress.setBufferedPosition(bufferedPosition);
+
+            exoBinding.tvStartTime.setText(String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(position),
+                    TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))));
+        });
+//        playerControlView.set
         playerControlView.show();
         InitNotificationAudioPLayer();
-
     }
 
-    @Override
-    public void addListener(OnScrubListener listener) {
-
-    }
-
-    @Override
-    public void removeListener(OnScrubListener listener) {
-
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-
-    }
-
-    @Override
-    public void setKeyTimeIncrement(long time) {
-
-    }
-
-    @Override
-    public void setKeyCountIncrement(int count) {
-
-    }
-
-    @Override
-    public void setPosition(long position) {
-
-    }
-
-    @Override
-    public void setBufferedPosition(long bufferedPosition) {
-
-    }
-
-    @Override
-    public void setDuration(long duration) {
-
-    }
-
-    @Override
-    public long getPreferredUpdateDelay() {
-        return 0;
-    }
-
-    @Override
-    public void setAdGroupTimesMs(@Nullable long[] adGroupTimesMs, @Nullable boolean[] playedAdGroups, int adGroupCount) {
-
-    }
-//    @Override
-//    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-//
-//    }
-//
-//    @Override
-//    public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//    }
-//
-//    @Override
-//    public void onStopTrackingTouch(SeekBar seekBar) {
-//        int totalDuration = (int) player.getDuration();
-//        int currentPosition = progressToTimer(seekBar.getProgress(), totalDuration);
-//
-//        oTime = simpleSeekbar.getProgress();
-//        // forward or backward to certain seconds
-//        player.seekTo(player.getCurrentWindowIndex(),currentPosition);
-//    }
 }

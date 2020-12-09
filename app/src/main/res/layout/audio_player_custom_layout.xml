@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_20sdp"
                     android:layout_marginBottom="@dimen/_4sdp"
-                    app:buffered_color="@color/extra_light_blue"
+                    app:buffered_color="@color/dark_yellow"
                     app:played_color="@color/gray"
                     app:scrubber_color="@color/seek_bar_background"
                     app:scrubber_drawable="@drawable/ic_dot_icon"
