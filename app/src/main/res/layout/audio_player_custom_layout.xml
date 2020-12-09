@@ -28,7 +28,7 @@
                 android:thumb="@drawable/ic_dot_icon"
                     android:layout_height="wrap_content" />-->
                 <com.google.android.exoplayer2.ui.DefaultTimeBar
-                    android:id="@id/exo_progress"
+                    android:id="@+id/exoProgress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_20sdp"
@@ -43,7 +43,7 @@
                     android:id="@+id/tvStartTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/exo_progress"
+                    android:layout_below="@id/exoProgress"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="@dimen/_22sdp"
                     android:fontFamily="@font/montserrat_semi_bold"
@@ -55,7 +55,7 @@
                     android:id="@+id/tvSongTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/exo_progress"
+                    android:layout_below="@id/exoProgress"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/_22sdp"
                     android:fontFamily="@font/montserrat_semi_bold"
@@ -95,7 +95,7 @@
                     android:weightSum="0.60">
 
                     <LinearLayout
-                        android:id="@+id/llprev"
+                        android:id="@+id/llPrev"
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.19"
@@ -163,7 +163,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/llnext"
+                        android:id="@+id/llNext"
                         android:layout_width="@dimen/_0sdp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.19"
@@ -293,7 +293,7 @@
                         android:layout_width="@dimen/_17sdp"
                         android:layout_height="@dimen/_17sdp"
                         android:src="@drawable/ic_music_list_icon"
-                        app:tint="@color/light_gray" />
+                        app:tint="@color/black" />
                 </LinearLayout>
             </LinearLayout>
 
