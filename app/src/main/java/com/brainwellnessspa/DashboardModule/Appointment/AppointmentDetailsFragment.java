@@ -76,17 +76,15 @@ public class AppointmentDetailsFragment extends Fragment {
             appointmentName = getArguments().getString("appointmentName");
             appointmentImage = getArguments().getString("appointmentImage");
         }
-        deleteCache(activity);
 
         binding.llBack.setOnClickListener(view1 -> callBack());
-        getAppointmentData();
-        RefreshData();
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        getAppointmentData();
         RefreshData();
         if(view == null){
             return;
@@ -105,16 +103,6 @@ public class AppointmentDetailsFragment extends Fragment {
     private void callBack() {
         ComeFromAppointmentDetail = 1;
         ComesessionScreen = 1;
-        /*Bundle bundle = new Bundle();
-        Fragment appointmentFragment = new SessionsFragment();
-        bundle.putString("appointmentMainName", appointmentMainName);
-        bundle.putString("appointmentName", appointmentName);
-        bundle.putString("appointmentImage", appointmentImage);
-        appointmentFragment.setArguments(bundle);
-        FragmentManager fragmentManager1 = getActivity().getSupportFragmentManager();
-        fragmentManager1.beginTransaction()
-                .replace(R.id.flContainer, appointmentFragment)
-                .commit();*/
         FragmentManager fm = getActivity()
                 .getSupportFragmentManager();
         fm.popBackStack("AppointmentDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -164,7 +152,6 @@ public class AppointmentDetailsFragment extends Fragment {
                         releasePlayer();
                     }
                 }
-
             } else if (!IsLock.equalsIgnoreCase("0") && !AudioFlag.equalsIgnoreCase("AppointmentDetailList")) {
                 SharedPreferences sharedm = getActivity().getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editorr = sharedm.edit();

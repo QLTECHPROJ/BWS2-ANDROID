@@ -98,6 +98,11 @@ public class MembershipActivity extends AppCompatActivity {
         } else {
             BWSApplication.showToast(getString(R.string.no_server_found), this);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         prepareMembershipData();
     }
 

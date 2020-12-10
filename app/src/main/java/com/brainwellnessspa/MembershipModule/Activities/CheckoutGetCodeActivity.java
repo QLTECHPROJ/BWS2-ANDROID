@@ -59,6 +59,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
 //            position = getIntent().getIntExtra("position", 0);
         }
         binding.edtNumber.addTextChangedListener(signupTextWatcher);
+
         if (Code.equalsIgnoreCase("") || Name.equalsIgnoreCase("")) {
             binding.tvCountryCode.setText(R.string.code);
             binding.tvCountry.setText(R.string.Australia);
@@ -66,12 +67,12 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             binding.tvCountryCode.setText(Code);
             binding.tvCountry.setText(Name);
         }
+
         if (MobileNo.equalsIgnoreCase("")) {
             binding.edtNumber.setText("");
         } else {
             binding.edtNumber.setText(MobileNo);
         }
-
 
         binding.llBack.setOnClickListener(view -> {
 //                Intent i = new Intent(ctx, OrderSummaryActivity.class);
@@ -98,6 +99,7 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         });
+
         if (comeRegister == 1) {
             binding.edtNumber.requestFocus();
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -190,5 +192,4 @@ public class CheckoutGetCodeActivity extends AppCompatActivity {
         public void afterTextChanged(Editable s) {
         }
     };
-
 }

@@ -80,13 +80,14 @@ public class SessionsFragment extends Fragment {
         RecyclerView.LayoutManager recentlyPlayed = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvSessionList.setLayoutManager(recentlyPlayed);
         binding.rvSessionList.setItemAnimator(new DefaultItemAnimator());
-        prepareSessionList();
+
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        prepareSessionList();
         if (view == null) {
             return;
         }

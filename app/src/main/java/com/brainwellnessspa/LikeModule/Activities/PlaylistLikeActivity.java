@@ -106,7 +106,6 @@ public class PlaylistLikeActivity extends AppCompatActivity {
         }
         addDisclaimer();
         binding.llBack.setOnClickListener(view -> finish());
-        PrepareData();
     }
 
     @Override

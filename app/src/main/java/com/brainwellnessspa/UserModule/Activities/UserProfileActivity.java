@@ -78,7 +78,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         SharedPreferences shared1 = getSharedPreferences(CONSTANTS.PREF_KEY_LOGIN, Context.MODE_PRIVATE);
         UserID = (shared1.getString(CONSTANTS.PREF_KEY_UserID, ""));
-        profileViewData(ctx);
+
         binding.llBack.setOnClickListener(view -> finish());
 
         binding.rlImageUpload.setOnClickListener(view -> selectImage());
@@ -93,7 +93,7 @@ public class UserProfileActivity extends AppCompatActivity {
         binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
     }
 
-    void profileUpdate() {
+    public void profileUpdate() {
         binding.flUser.setError("");
         binding.tlMobileNumber.setError("");
         binding.tlCalendar.setError("");

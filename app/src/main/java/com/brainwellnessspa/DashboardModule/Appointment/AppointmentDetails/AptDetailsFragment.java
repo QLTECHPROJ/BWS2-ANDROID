@@ -34,6 +34,12 @@ public class AptDetailsFragment extends Fragment {
                 1, 1, 0.24f, 0);
         binding.civProfile.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         binding.civProfile.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
+        binding.tvTilte.setText(appointmentDetail.getName());
+        binding.tvFacilitator.setText(appointmentDetail.getFacilitator());
+        binding.tvUserName.setText(appointmentDetail.getUserName());
+        binding.tvSubTitle.setText(appointmentDetail.getDesc());
+        binding.tvDate.setText(appointmentDetail.getDate());
+        binding.tvTime.setText(appointmentDetail.getTime());
 
         if (appointmentDetail.getDate().equalsIgnoreCase("")
                 && appointmentDetail.getUserName().equalsIgnoreCase("")
@@ -42,13 +48,8 @@ public class AptDetailsFragment extends Fragment {
         } else {
             binding.llDetails.setVisibility(View.VISIBLE);
         }
-        binding.tvTilte.setText(appointmentDetail.getName());
 
-        binding.tvFacilitator.setText(appointmentDetail.getFacilitator());
-        binding.tvUserName.setText(appointmentDetail.getUserName());
-        binding.tvSubTitle.setText(appointmentDetail.getDesc());
-        binding.tvDate.setText(appointmentDetail.getDate());
-        binding.tvTime.setText(appointmentDetail.getTime());
+
         Glide.with(getActivity()).load(appointmentDetail.getImage()).thumbnail(0.05f).diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.civProfile);
 
         if (appointmentDetail.getBookUrl().equalsIgnoreCase("")) {

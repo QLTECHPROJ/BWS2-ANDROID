@@ -56,9 +56,13 @@ public class AudioBooksFragment extends Fragment {
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvAudioBooksList.setLayoutManager(manager);
         binding.rvAudioBooksList.setItemAnimator(new DefaultItemAnimator());
-
-        prepareData();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareData();
     }
 
     void prepareData() {

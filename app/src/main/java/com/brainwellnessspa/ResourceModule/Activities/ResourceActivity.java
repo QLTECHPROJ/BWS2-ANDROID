@@ -136,6 +136,11 @@ public class ResourceActivity extends AppCompatActivity {
             });
             dialogBox.show();
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         prepareData(activity, rvFilterList, dialogBox, tvAll, ivFilter);
     }
 

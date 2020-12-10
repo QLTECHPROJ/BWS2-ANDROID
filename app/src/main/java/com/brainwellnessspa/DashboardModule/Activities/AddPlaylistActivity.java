@@ -90,7 +90,7 @@ public class AddPlaylistActivity extends AppCompatActivity {
         binding.rvPlayLists.setItemAnimator(new DefaultItemAnimator());
         binding.llError.setVisibility(View.GONE);
         binding.tvFound.setText("No result found");
-        prepareData(ctx);
+
 
         binding.btnAddPlatLists.setOnClickListener(view -> {
             final Dialog dialog = new Dialog(ctx);

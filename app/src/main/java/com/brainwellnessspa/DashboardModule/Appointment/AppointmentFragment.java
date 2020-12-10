@@ -85,7 +85,6 @@ public class AppointmentFragment extends Fragment {
                 startActivity(i);
             }
         });
-//        preparePreviousAppointmentsData();
         return view;
     }
 

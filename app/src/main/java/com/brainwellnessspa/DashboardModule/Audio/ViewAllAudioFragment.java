@@ -101,12 +101,12 @@ public class ViewAllAudioFragment extends Fragment {
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
         binding.rvMainAudio.setLayoutManager(manager);
-        if (Name.equalsIgnoreCase("My Downloads")) {
+       /* if (Name.equalsIgnoreCase("My Downloads")) {
             audioList = new ArrayList<>();
             GetAllMedia(getActivity());
         } else {
             prepareData();
-        }
+        }*/
         return view;
     }
 
@@ -436,7 +436,7 @@ public class ViewAllAudioFragment extends Fragment {
         boolean audioPlay = shared.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
         String AudioFlag = shared.getString(CONSTANTS.PREF_KEY_AudioFlag, "0");
         String MyPlaylist = shared.getString(CONSTANTS.PREF_KEY_myPlaylist, "");
-        if(Name.equalsIgnoreCase("My Downloads")){
+        if (Name.equalsIgnoreCase("My Downloads")) {
             if (audioPlay && AudioFlag.equalsIgnoreCase("DownloadListAudio")) {
                 if (isDisclaimer == 1) {
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
@@ -462,7 +462,7 @@ public class ViewAllAudioFragment extends Fragment {
                 listModelList2.add(position, mainPlayModel);
                 callTransFrag(position, listModelList2);
             }
-        }else {
+        } else {
             if (audioPlay && (AudioFlag.equalsIgnoreCase("MainAudioList") || AudioFlag.equalsIgnoreCase("ViewAllAudioList")) && MyPlaylist.equalsIgnoreCase(Name)) {
                 if (isDisclaimer == 1) {
                     BWSApplication.showToast("The audio shall start playing after the disclaimer", context);
@@ -557,9 +557,9 @@ public class ViewAllAudioFragment extends Fragment {
                 }
             } else {
                 json = gson.toJson(listModelList);
-                if(Name.equalsIgnoreCase("My Downloads")){
+                if (Name.equalsIgnoreCase("My Downloads")) {
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "DownloadListAudio");
-                }else {
+                } else {
                     editor.putString(CONSTANTS.PREF_KEY_AudioFlag, "ViewAllAudioList");
                 }
                 editor.putString(CONSTANTS.PREF_KEY_modelList, json);

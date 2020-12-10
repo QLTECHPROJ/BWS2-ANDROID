@@ -295,6 +295,12 @@ public class AddQueueActivity extends AppCompatActivity {
             startActivity(i);*/
             callBack();
         });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         prepareData();
     }
 

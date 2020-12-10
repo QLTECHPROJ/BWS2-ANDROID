@@ -142,7 +142,7 @@ public class AudioFragment extends Fragment {
                 }
             }
         }
-        prepareData();
+//        prepareData();
 //        showTooltiop();
         return view;
     }

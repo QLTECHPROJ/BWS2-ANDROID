@@ -370,7 +370,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     }
 
     private void callPause() {
-
         handler.removeCallbacks(UpdateSongTime);
         binding.simpleSeekbar.setProgress(binding.simpleSeekbar.getProgress());
         pauseMedia();
@@ -383,7 +382,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     }
 
     private void callPrevious() {
-
         if (BWSApplication.isNetworkConnected(ctx)) {
             stopMedia();
             isMediaStart = false;
@@ -452,7 +450,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     }
 
     private void callNext() {
-
         if (BWSApplication.isNetworkConnected(ctx)) {
             stopMedia();
             isMediaStart = false;
@@ -519,7 +516,6 @@ public class ViewQueueActivity extends AppCompatActivity implements SeekBar.OnSe
     }
 
     private void callPlay() {
-
         if (!isMediaStart) {
             isCompleteStop = false;
             isprogressbar = true;

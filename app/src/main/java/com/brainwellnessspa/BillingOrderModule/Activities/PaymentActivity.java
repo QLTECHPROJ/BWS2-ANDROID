@@ -112,7 +112,7 @@ public class PaymentActivity extends AppCompatActivity {
                 BWSApplication.showToast(getString(R.string.no_server_found), context);
             }
         });
-        prepareCardList();
+//        prepareCardList();
     }
 
     @Override

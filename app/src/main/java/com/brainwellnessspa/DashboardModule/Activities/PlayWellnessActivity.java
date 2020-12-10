@@ -117,7 +117,7 @@ import static com.brainwellnessspa.Utility.MusicService.mMediaControllerCompatCa
 public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener/*, Playable, AudioManager.OnAudioFocusChangeListener, OnProgressListener*/ {
     ActivityPlayWellnessBinding binding;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url, playFrom = "";
-    int startTime = 0, endTime = 0, position, listSize, myCount, progress, downloadPercentage,audioBufferCapacityMs;
+    int startTime = 0, endTime = 0, position, listSize, myCount, progress, downloadPercentage, audioBufferCapacityMs;
     Context ctx;
     Activity activity;
     Boolean queuePlay, audioPlay;
@@ -154,7 +154,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //                            if (mediaPlayer != null) {
 //                                totalDuration = mediaPlayer.getDuration();
 //                            } else {
-                                t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                            t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
 //                            }
                         }
                     } else {
@@ -162,7 +162,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //                        if (mediaPlayer != null) {
 //                            totalDuration = mediaPlayer.getDuration();
 //                        } else {
-                            t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
+                        t = Time.valueOf("00:" + addToQueueModelList.get(position).getAudioDuration());
 //                        }
                     }
                 } else {
@@ -185,7 +185,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //                            if (mediaPlayer != null) {
 //                                totalDuration = mediaPlayer.getDuration();
 //                            } else {
-                                t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                            t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
 //                            }
                         }
                     } else {
@@ -193,7 +193,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //                        if (mediaPlayer != null) {
 //                            totalDuration = mediaPlayer.getDuration();
 //                        } else {
-                            t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
+                        t = Time.valueOf("00:" + mainPlayModelList.get(position).getAudioDuration());
 //                        }
                     }
                 }
@@ -207,7 +207,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //                if (mediaPlayer != null) {
 //                    totalDuration = mediaPlayer.getDuration();
 //                } else
-                    totalDuration = t.getTime();
+                totalDuration = t.getTime();
             }
 
             /*if (isMediaStart) {
@@ -380,7 +380,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 
 //        showTooltiop();
 
-       /* if (isMediaStart *//*&& !audioFile.equalsIgnoreCase("")*//*) {
+        /* if (isMediaStart *//*&& !audioFile.equalsIgnoreCase("")*//*) {
             mediaPlayer.setOnCompletionListener(mediaPlayer -> {
                 if (mediaPlayer.isPlaying()) {
                     callComplete();
@@ -563,9 +563,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
         Properties p = new Properties();
         p.putValue("userId", UserID);
-        p.putValue("audioName",name);
+        p.putValue("audioName", name);
         p.putValue("audioFile", url);
-        p.putValue("duration",mainPlayModelList.get(position).getAudioDuration());
+        p.putValue("duration", mainPlayModelList.get(position).getAudioDuration());
         BWSApplication.addToSegment("Audio pause", p, CONSTANTS.track);
         buildNotification(PlaybackStatus.PAUSED, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
     }
@@ -601,9 +601,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
         Properties p = new Properties();
         p.putValue("userId", UserID);
-        p.putValue("audioName",name);
+        p.putValue("audioName", name);
         p.putValue("audioFile", url);
-        p.putValue("duration",mainPlayModelList.get(position).getAudioDuration());
+        p.putValue("duration", mainPlayModelList.get(position).getAudioDuration());
         BWSApplication.addToSegment("Audio play", p, CONSTANTS.track);
         buildNotification(PlaybackStatus.PLAYING, ctx, mainPlayModelList, addToQueueModelList, playFrom, position);
     }
@@ -1608,8 +1608,8 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 isPrepare = true;
             } catch (IllegalStateException | IOException /*| URISyntaxException */e) {
                 FileDescriptor fileDescriptor1 = null;
-                Log.e(":Play from Catch","async");
-                Log.e("async from Catch",e.getMessage());
+                Log.e(":Play from Catch", "async");
+                Log.e("async from Catch", e.getMessage());
                 setMediaPlayer("0", fileDescriptor1);
                 e.printStackTrace();
             }
@@ -1629,7 +1629,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                         Log.e("MediaPlayer 2nd Seek", String.valueOf(i));
                     });
                     mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                        if(mediaPlayer.isPlaying()){
+                        if (mediaPlayer.isPlaying()) {
                             callComplete();
                         }
                     });
@@ -1666,9 +1666,9 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
         }
         Properties p = new Properties();
         p.putValue("userId", UserID);
-        p.putValue("audioName",name);
+        p.putValue("audioName", name);
         p.putValue("audioFile", url);
-        p.putValue("duration",mainPlayModelList.get(position).getAudioDuration());
+        p.putValue("duration", mainPlayModelList.get(position).getAudioDuration());
         BWSApplication.addToSegment("Audio Allocate", p, CONSTANTS.track);
     }
 
@@ -1684,7 +1684,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 mediaPlayer.setOnMediaTimeDiscontinuityListener(new MediaPlayer.OnMediaTimeDiscontinuityListener() {
                     @Override
                     public void onMediaTimeDiscontinuity(@NonNull MediaPlayer mediaPlayer, @NonNull MediaTimestamp mediaTimestamp) {
-                        Log.e("media player ",String.valueOf(mLastClickTime));
+                        Log.e("media player ", String.valueOf(mLastClickTime));
                     }
                 });
             }
@@ -1710,11 +1710,11 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                 @Override
                 public void onPlaybackStateChanged(PlaybackStateCompat state) {
                     super.onPlaybackStateChanged(state);
-                    if( state == null ) {
+                    if (state == null) {
                         return;
                     }
 
-                    switch( state.getState() ) {
+                    switch (state.getState()) {
                         case PlaybackStateCompat.STATE_PLAYING: {
                             mCurrentState = STATE_PLAYING;
                             break;
@@ -1757,16 +1757,16 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
                     }
                 }
 
-            @Override
-            public void onStop() {
-                super.onStop();
-                Properties p = new Properties();
-                p.putValue("userId", UserID);
-                p.putValue("audioName",name);
-                p.putValue("audioFile", url);
-                p.putValue("duration",mainPlayModelList.get(position).getAudioDuration());
-                BWSApplication.addToSegment("Audio stop", p, CONSTANTS.track);
-            }
+                @Override
+                public void onStop() {
+                    super.onStop();
+                    Properties p = new Properties();
+                    p.putValue("userId", UserID);
+                    p.putValue("audioName", name);
+                    p.putValue("audioFile", url);
+                    p.putValue("duration", mainPlayModelList.get(position).getAudioDuration());
+                    BWSApplication.addToSegment("Audio stop", p, CONSTANTS.track);
+                }
 
 //            @Override
 //            public void onSeekTo(long position) {
@@ -1774,7 +1774,7 @@ public class PlayWellnessActivity extends AppCompatActivity implements SeekBar.O
 //            }
             });
         } catch (Exception e) {
-            Log.e("playwell init media err",e.getMessage());
+            Log.e("playwell init media err", e.getMessage());
             e.printStackTrace();
         }
     }

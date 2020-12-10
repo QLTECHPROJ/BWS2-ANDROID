@@ -53,8 +53,13 @@ public class WebsiteFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvWebsiteList.setLayoutManager(mLayoutManager);
         binding.rvWebsiteList.setItemAnimator(new DefaultItemAnimator());
-        prepareData();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareData();
     }
 
     void prepareData() {

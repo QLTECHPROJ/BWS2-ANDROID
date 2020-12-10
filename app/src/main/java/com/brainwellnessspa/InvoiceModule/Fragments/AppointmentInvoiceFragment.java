@@ -65,6 +65,13 @@ public class AppointmentInvoiceFragment extends Fragment {
         binding.rvAIList.setLayoutManager(mLayoutManager);
         binding.rvAIList.setItemAnimator(new DefaultItemAnimator());
         binding.tvFound.setText("Your appointment invoices will appear here");
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if (appointmentList.size() != 0) {
             getDataList(appointmentList);
             binding.llError.setVisibility(View.GONE);
@@ -73,7 +80,6 @@ public class AppointmentInvoiceFragment extends Fragment {
             binding.llError.setVisibility(View.VISIBLE);
             binding.rvAIList.setVisibility(View.GONE);
         }
-        return view;
     }
 
     private void getDataList(ArrayList<InvoiceListModel.Appointment> historyList) {

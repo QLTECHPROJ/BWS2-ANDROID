@@ -64,7 +64,7 @@ public class CurrentPlanFragment extends Fragment {
         RecyclerView.LayoutManager serachList = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         binding.rvFeatured.setLayoutManager(serachList);
         binding.rvFeatured.setItemAnimator(new DefaultItemAnimator());
-        PrepareData();
+//        PrepareData();
         binding.btnCancelSubscrible.setOnClickListener(view13 -> {
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;

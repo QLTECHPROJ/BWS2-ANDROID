@@ -165,6 +165,12 @@ public class AddAudioActivity extends AppCompatActivity {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvPlayList.setItemAnimator(new DefaultItemAnimator());
         binding.rvPlayList.setLayoutManager(manager);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         prepareSuggestedData();
     }
 

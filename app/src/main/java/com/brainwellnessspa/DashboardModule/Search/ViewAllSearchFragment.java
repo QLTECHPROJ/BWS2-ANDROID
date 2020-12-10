@@ -130,8 +130,13 @@ public class ViewAllSearchFragment extends Fragment {
         binding.llBack.setOnClickListener(view1 -> {
             callBack();
         });
-        PrepareData();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        PrepareData();
     }
 
     @Override

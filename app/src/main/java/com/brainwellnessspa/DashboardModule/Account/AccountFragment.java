@@ -113,7 +113,7 @@ public class AccountFragment extends Fragment {
                 1, 1, 0.2f, 10);
         binding.civLetter.getLayoutParams().height = (int) (measureRatios.getHeight() * measureRatios.getRatio());
         binding.civLetter.getLayoutParams().width = (int) (measureRatios.getWidthImg() * measureRatios.getRatio());
-        profileViewData(getActivity());
+//        profileViewData(getActivity());
         /*Properties p = new Properties();
         p.putValue("userId", UserID);
         BWSApplication.addToSegment("Account Screen Viewed", p, CONSTANTS.screen);*/

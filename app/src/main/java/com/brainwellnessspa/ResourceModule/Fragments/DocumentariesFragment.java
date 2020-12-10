@@ -55,8 +55,13 @@ public class DocumentariesFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvDocumentariesList.setLayoutManager(mLayoutManager);
         binding.rvDocumentariesList.setItemAnimator(new DefaultItemAnimator());
-        prepareData();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareData();
     }
 
     void prepareData() {

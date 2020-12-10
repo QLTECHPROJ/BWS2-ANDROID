@@ -174,19 +174,18 @@ public class AddPaymentActivity extends AppCompatActivity {
                                     public void onResponse(Call<AddCardModel> call, Response<AddCardModel> response) {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                         try {
-                                            if (response.isSuccessful()) {
-                                                AddCardModel cardModel = response.body();
-                                                if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                                    InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                                    keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                                    finish();
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                                } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                                } else {
-                                                    BWSApplication.showToast(cardModel.getResponseMessage(), context);
-                                                }
+                                            AddCardModel cardModel = response.body();
+                                            if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                                InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                                keyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                                finish();
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                            } else if (cardModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
+                                            } else {
+                                                BWSApplication.showToast(cardModel.getResponseMessage(), context);
                                             }
+
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
@@ -196,7 +195,6 @@ public class AddPaymentActivity extends AppCompatActivity {
                                     public void onFailure(Call<AddCardModel> call, Throwable t) {
                                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
                                     }
-
                                 });
                             } else {
                                 BWSApplication.showToast(getString(R.string.no_server_found), context);
@@ -294,7 +292,6 @@ public class AddPaymentActivity extends AppCompatActivity {
 
         public static void formatCardNumber(@NonNull Editable ccNumber, int paddingPx, int maxLength) {
             int textLength = ccNumber.length();
-            // first remove any previous span
             PaddingRightSpan[] spans = ccNumber.getSpans(0, ccNumber.length(), PaddingRightSpan.class);
             for (int i = 0; i < spans.length; i++) {
                 ccNumber.removeSpan(spans[i]);
@@ -341,7 +338,6 @@ public class AddPaymentActivity extends AppCompatActivity {
         }
 
         public static class PaddingRightSpan extends ReplacementSpan {
-
             private int mPadding;
 
             public PaddingRightSpan(int padding) {

@@ -62,9 +62,14 @@ public class MembershipChangeActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         binding.rvPlanList.setLayoutManager(mLayoutManager1);
         binding.rvPlanList.setItemAnimator(new DefaultItemAnimator());
-        prepareMembershipData();
+
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        prepareMembershipData();
+    }
 
     @Override
     public void onBackPressed() {

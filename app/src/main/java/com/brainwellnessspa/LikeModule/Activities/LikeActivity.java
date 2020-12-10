@@ -62,7 +62,6 @@ public class LikeActivity extends AppCompatActivity {
             ComeScreenAccount = 1;
             finish();
         });
-        prepareData();
     }
 
     @Override
@@ -70,6 +69,7 @@ public class LikeActivity extends AppCompatActivity {
         super.onResume();
         ComeScreenAccount = 0;
         comefromDownload = "1";
+        prepareData();
         RefreshData();
     }
 

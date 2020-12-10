@@ -31,8 +31,7 @@ public class InvoiceReceiptFragment extends DialogFragment {
     String UserID, InvoiceID, Flag;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_invoice_receipt, container, false);
         View view = binding.getRoot();
 
@@ -45,7 +44,6 @@ public class InvoiceReceiptFragment extends DialogFragment {
             getDialog().getWindow().setBackgroundDrawableResource(R.drawable.receipt_dialog_background_inset);
         }
 
-        prepareData();
         view.setOnKeyListener((v, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 dismiss();
@@ -54,6 +52,12 @@ public class InvoiceReceiptFragment extends DialogFragment {
             return false;
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareData();
     }
 
     public void setValues(String InvoiceId, String flag) {

@@ -55,7 +55,7 @@ public class PaymentFragment extends Fragment {
             }
         });
 
-        prepareCardList();
+//        prepareCardList();
         return view;
     }
 

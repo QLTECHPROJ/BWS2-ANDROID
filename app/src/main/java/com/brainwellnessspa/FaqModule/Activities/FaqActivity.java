@@ -31,32 +31,7 @@ public class FaqActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_faq);
         activity = FaqActivity.this;
         modelList = new ArrayList<>();
-        if (BWSApplication.isNetworkConnected(this)) {
-            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-            Call<FaqListModel> listCall = APIClient.getClient().getFaqLists();
-            listCall.enqueue(new Callback<FaqListModel>() {
-                @Override
-                public void onResponse(Call<FaqListModel> call, Response<FaqListModel> response) {
-                    try {
-                        if (response.isSuccessful()) {
-                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                            FaqListModel listModel = response.body();
-                            faqListModel = listModel;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<FaqListModel> call, Throwable t) {
-                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                }
-            });
-        } else {
-            BWSApplication.showToast(getString(R.string.no_server_found), this);
-        }
-
+        PrepareData();
         binding.llBack.setOnClickListener(view -> finish());
 
         binding.llAudio.setOnClickListener(view -> {
@@ -112,6 +87,34 @@ public class FaqActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
+    }
+
+    public void PrepareData() {
+        if (BWSApplication.isNetworkConnected(this)) {
+            BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+            Call<FaqListModel> listCall = APIClient.getClient().getFaqLists();
+            listCall.enqueue(new Callback<FaqListModel>() {
+                @Override
+                public void onResponse(Call<FaqListModel> call, Response<FaqListModel> response) {
+                    try {
+                        if (response.isSuccessful()) {
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            FaqListModel listModel = response.body();
+                            faqListModel = listModel;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<FaqListModel> call, Throwable t) {
+                    BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                }
+            });
+        } else {
+            BWSApplication.showToast(getString(R.string.no_server_found), this);
+        }
     }
 
     @Override

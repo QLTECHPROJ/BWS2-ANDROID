@@ -54,8 +54,13 @@ public class PodcastsFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         binding.rvPodcastsList.setLayoutManager(mLayoutManager);
         binding.rvPodcastsList.setItemAnimator(new DefaultItemAnimator());
-        prepareData();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareData();
     }
 
     void prepareData() {

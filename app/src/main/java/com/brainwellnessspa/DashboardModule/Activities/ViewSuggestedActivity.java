@@ -122,6 +122,12 @@ public class ViewSuggestedActivity extends AppCompatActivity {
         if (getIntent() != null) {
             PlaylistModel = getIntent().getParcelableArrayListExtra("PlaylistModel");
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         PrepareData();
     }
 

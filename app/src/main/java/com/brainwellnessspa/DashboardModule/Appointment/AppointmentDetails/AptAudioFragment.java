@@ -106,7 +106,6 @@ public class AptAudioFragment extends Fragment {
 
     @Override
     public void onResume() {
-
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(listener, new IntentFilter("play_pause_Action"));
         super.onResume();
     }

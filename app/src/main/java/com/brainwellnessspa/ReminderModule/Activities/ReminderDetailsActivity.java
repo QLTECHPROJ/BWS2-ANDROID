@@ -81,9 +81,6 @@ public class ReminderDetailsActivity extends AppCompatActivity {
             finish();
         });
 
-        prepareData();
-//        showTooltiop();
-
         binding.btnAddReminder.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 Intent i = new Intent(ctx, ReminderActivity.class);
@@ -104,6 +101,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         prepareData();
+//        showTooltiop();
     }
 
     private void showTooltiop() {
@@ -149,7 +147,7 @@ public class ReminderDetailsActivity extends AppCompatActivity {
         queue = new FancyShowCaseQueue()
                 .add(fancyShowCaseView11)
                 .add(fancyShowCaseView21);
-        queue.show();
+
        /* IsRegisters = "false";
         IsRegisters1 = "false";*/
     }
@@ -180,6 +178,8 @@ public class ReminderDetailsActivity extends AppCompatActivity {
                             } else {
                                 binding.llError.setVisibility(View.GONE);
                                 binding.rvReminderDetails.setVisibility(View.VISIBLE);
+
+                                queue.show();
                             }
 
                             if (remiderIds.size() == 0) {

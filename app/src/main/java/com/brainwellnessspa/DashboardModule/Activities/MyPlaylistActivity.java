@@ -68,7 +68,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
     public static int deleteFrg = 0;
     public static int ComeFindAudio = 0;
     ActivityMyPlaylistBinding binding;
-    String UserID, PlaylistID, Download = "", Liked = "",PlaylistDesc="",PlaylistName="";
+    String UserID, PlaylistID, Download = "", Liked = "", PlaylistDesc = "", PlaylistName = "";
     Context ctx;
     Activity activity;
     public static int comeAddPlaylist = 0;
@@ -155,7 +155,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             Liked = getIntent().getStringExtra("Liked");
         }
-        getPrepareData();
+
         downloadAudioDetailsList = GetAllMedia();
         downloadPlaylistDetailsList = GetPlaylistDetail();
 
@@ -176,7 +176,7 @@ public class MyPlaylistActivity extends AppCompatActivity {
             mLastClickTime = SystemClock.elapsedRealtime();
             Intent i = new Intent(ctx, AddPlaylistActivity.class);
             i.putExtra("AudioId", "");
-            i.putExtra("PlaylistID",PlaylistID);
+            i.putExtra("PlaylistID", PlaylistID);
             startActivity(i);
         });
 
@@ -377,6 +377,12 @@ public class MyPlaylistActivity extends AppCompatActivity {
         binding.llDownload.setOnClickListener(view -> callDownload());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getPrepareData();
+    }
+
     /*  private void getMediaByPer(String playlistID, int totalAudio) {
           class getMediaByPer extends AsyncTask<Void, Void, Void> {
 
@@ -415,48 +421,48 @@ public class MyPlaylistActivity extends AppCompatActivity {
           st.execute();
       }*/
 
-/*
-    private void getDownloadData() {
-        try {
-            SharedPreferences sharedy = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
-            Gson gson = new Gson();
-            String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
-            String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
-            String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
-            if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
-                Type type = new TypeToken<List<String>>() {
-                }.getType();
-                fileNameList = gson.fromJson(jsony, type);
-                playlistDownloadId = gson.fromJson(jsonq, type);
-                remainAudio = new ArrayList<>();
-                if (playlistDownloadId.size() != 0) {
-                    playlistDownloadId.contains(PlaylistID);
-                    for (int i = 0; i < fileNameList.size(); i++) {
-                        if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
-                            remainAudio.add(playlistDownloadId.get(i));
+    /*
+        private void getDownloadData() {
+            try {
+                SharedPreferences sharedy = getSharedPreferences(CONSTANTS.PREF_KEY_DownloadPlaylist, MODE_PRIVATE);
+                Gson gson = new Gson();
+                String jsony = sharedy.getString(CONSTANTS.PREF_KEY_DownloadName, String.valueOf(gson));
+                String json1 = sharedy.getString(CONSTANTS.PREF_KEY_DownloadUrl, String.valueOf(gson));
+                String jsonq = sharedy.getString(CONSTANTS.PREF_KEY_DownloadPlaylistId, String.valueOf(gson));
+                if (!jsony.equalsIgnoreCase(String.valueOf(gson))) {
+                    Type type = new TypeToken<List<String>>() {
+                    }.getType();
+                    fileNameList = gson.fromJson(jsony, type);
+                    playlistDownloadId = gson.fromJson(jsonq, type);
+                    remainAudio = new ArrayList<>();
+                    if (playlistDownloadId.size() != 0) {
+                        playlistDownloadId.contains(PlaylistID);
+                        for (int i = 0; i < fileNameList.size(); i++) {
+                            if (playlistDownloadId.get(i).equalsIgnoreCase(PlaylistID)) {
+                                remainAudio.add(playlistDownloadId.get(i));
+                            }
                         }
-                    }
-                    if (downloadPlaylistDetailsList.size() != 0) {
-                        if (remainAudio.size() < SongListSize) {
-                            handler1.postDelayed(UpdateSongTime1, 500);
+                        if (downloadPlaylistDetailsList.size() != 0) {
+                            if (remainAudio.size() < SongListSize) {
+                                handler1.postDelayed(UpdateSongTime1, 500);
+                            }
                         }
+                        //
+                    }else {
+                        fileNameList = new ArrayList<>();
+                        playlistDownloadId = new ArrayList<>();
+                        remainAudio = new ArrayList<>();
                     }
-                    //
-                }else {
+                } else {
                     fileNameList = new ArrayList<>();
                     playlistDownloadId = new ArrayList<>();
                     remainAudio = new ArrayList<>();
                 }
-            } else {
-                fileNameList = new ArrayList<>();
-                playlistDownloadId = new ArrayList<>();
-                remainAudio = new ArrayList<>();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-    }
-*/
+    */
     public List<DownloadAudioDetails> GetAllMedia() {
         class GetTask extends AsyncTask<Void, Void, Void> {
             @Override

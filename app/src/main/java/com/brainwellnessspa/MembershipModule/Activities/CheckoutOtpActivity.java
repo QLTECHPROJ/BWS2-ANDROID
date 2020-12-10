@@ -223,23 +223,21 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
                     @Override
                     public void onResponse(Call<OtpModel> call, Response<OtpModel> response) {
                         try {
-                            if (response.isSuccessful()) {
-                                BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-                                OtpModel otpModel = response.body();
-                                if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
-                                    binding.txtError.setVisibility(View.GONE);
-                                    Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
-                                    i.putExtra("MobileNo", MobileNo);
-                                    i.putExtra("Code", Code);
-                                    startActivity(i);
-                                    finish();
-                                } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
-                                    binding.txtError.setText(otpModel.getResponseMessage());
-                                    binding.txtError.setVisibility(View.VISIBLE);
-                                } else {
-                                    binding.txtError.setText(otpModel.getResponseMessage());
-                                    binding.txtError.setVisibility(View.VISIBLE);
-                                }
+                            BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
+                            OtpModel otpModel = response.body();
+                            if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodesuccess))) {
+                                binding.txtError.setVisibility(View.GONE);
+                                Intent i = new Intent(CheckoutOtpActivity.this, CheckoutPaymentActivity.class);
+                                i.putExtra("MobileNo", MobileNo);
+                                i.putExtra("Code", Code);
+                                startActivity(i);
+                                finish();
+                            } else if (otpModel.getResponseCode().equalsIgnoreCase(getString(R.string.ResponseCodefail))) {
+                                binding.txtError.setText(otpModel.getResponseMessage());
+                                binding.txtError.setVisibility(View.VISIBLE);
+                            } else {
+                                binding.txtError.setText(otpModel.getResponseMessage());
+                                binding.txtError.setVisibility(View.VISIBLE);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -249,15 +247,12 @@ public class CheckoutOtpActivity extends AppCompatActivity implements
                     @Override
                     public void onFailure(Call<OtpModel> call, Throwable t) {
                         BWSApplication.hideProgressBar(binding.progressBar, binding.progressBarHolder, activity);
-
                     }
                 });
             } else {
                 BWSApplication.showToast(getString(R.string.no_server_found), getApplicationContext());
             }
         });
-
-
     }
 
     private void startSMSListener() {

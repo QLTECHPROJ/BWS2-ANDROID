@@ -54,8 +54,13 @@ public class AppsFragment extends Fragment {
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvAppsList.setLayoutManager(manager);
         binding.rvAppsList.setItemAnimator(new DefaultItemAnimator());
-        prepareData();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareData();
     }
 
     void prepareData() {

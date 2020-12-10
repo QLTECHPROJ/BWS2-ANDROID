@@ -104,12 +104,7 @@ public class ViewAllPlaylistFragment extends Fragment {
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         binding.rvMainAudio.setItemAnimator(new DefaultItemAnimator());
         binding.rvMainAudio.setLayoutManager(manager);
-        if (MyDownloads.equalsIgnoreCase("1")) {
-            playlistList = new ArrayList<>();
-            GetAllMedia();
-        } else {
-            prepareData();
-        }
+
         return view;
     }
 
@@ -165,7 +160,12 @@ public class ViewAllPlaylistFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        prepareData();
+        if (MyDownloads.equalsIgnoreCase("1")) {
+            playlistList = new ArrayList<>();
+            GetAllMedia();
+        } else {
+            prepareData();
+        }
     }
 
     private void prepareData() {

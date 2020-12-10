@@ -117,6 +117,16 @@ public class CountrySelectActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         binding.rvCountryList.setLayoutManager(mLayoutManager);
         binding.rvCountryList.setItemAnimator(new DefaultItemAnimator());
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PrepareData();
+    }
+
+    public void PrepareData() {
         if (BWSApplication.isNetworkConnected(this)) {
             BWSApplication.showProgressBar(binding.progressBar, binding.progressBarHolder, activity);
             Call<CountryListModel> listCall = APIClient.getClient().getCountryLists();
