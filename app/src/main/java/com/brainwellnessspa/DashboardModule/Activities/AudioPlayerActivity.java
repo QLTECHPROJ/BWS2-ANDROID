@@ -82,8 +82,6 @@ import retrofit2.Response;
 
 import static com.brainwellnessspa.DashboardModule.Audio.AudioFragment.IsLock;
 import static com.brainwellnessspa.DashboardModule.TransparentPlayer.Fragments.TransparentPlayerFragment.isDisclaimer;
-import static com.brainwellnessspa.Utility.MusicService.oTime;
-import static com.brainwellnessspa.Utility.MusicService.progressToTimer;
 
 public class AudioPlayerActivity extends AppCompatActivity {
     private static final String SURFACE_CONTROL_NAME = "BrainWellnessApp";
@@ -103,19 +101,19 @@ public class AudioPlayerActivity extends AppCompatActivity {
     ArrayList<MainPlayModel> mainPlayModelList;
     ArrayList<AddToQueueModel> addToQueueModelList;
     String IsRepeat = "", IsShuffle = "", UserID, PlaylistId = "", AudioFlag, id, name, url, playFrom = "";
-    int position, listSize,downloadPercentage = 0;
+    int position, listSize, downloadPercentage = 0;
     Context ctx;
     Activity activity;
     Boolean queuePlay, audioPlay;
     PlayerNotificationManager playerNotificationManager;
     int notificationId = 1234;
+    List<DownloadAudioDetails> downloadAudioDetailsList1;
     private long mLastClickTime = 0;
     private boolean isOwner;
     @Nullable
     private SurfaceView nonFullScreenView;
     @Nullable
     private SurfaceView currentOutputView;
-    List<DownloadAudioDetails> downloadAudioDetailsList1;
 
     private static void reparent(@Nullable SurfaceView surfaceView) {
         SurfaceControl surfaceControl = Assertions.checkNotNull(AudioPlayerActivity.surfaceControl);
@@ -204,16 +202,24 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
+                        getMediaBitmap(mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                         return myBitmap;
                     }
                 }
         );
-        playerNotificationManager.setFastForwardIncrementMs(30000);
-        playerNotificationManager.setRewindIncrementMs(30000);
-        playerNotificationManager.setUseNavigationActions(true);
+        if (!mainPlayModelList.get(player.getCurrentPeriodIndex()).getAudioFile().equalsIgnoreCase("")) {
+            playerNotificationManager.setFastForwardIncrementMs(30000);
+            playerNotificationManager.setRewindIncrementMs(30000);
+            playerNotificationManager.setUseNavigationActions(true);
+            playerNotificationManager.setUseNavigationActionsInCompactView(true);
+        } else {
+            playerNotificationManager.setFastForwardIncrementMs(0);
+            playerNotificationManager.setRewindIncrementMs(0);
+            playerNotificationManager.setUseNavigationActions(false);
+            playerNotificationManager.setUseNavigationActionsInCompactView(false);
+        }
         playerNotificationManager.setSmallIcon(R.drawable.logo_design);
         playerNotificationManager.setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE);
-        playerNotificationManager.setUseNavigationActionsInCompactView(true);
         playerNotificationManager.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         playerNotificationManager.setUseChronometer(true);
         playerNotificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -284,9 +290,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
                             BWSApplication.hideProgressBar(binding.pbProgressBar, binding.progressBarHolder, activity);
                             AudioLikeModel model = response.body();
                             if (model.getResponseData().getFlag().equalsIgnoreCase("0")) {
-                                exoBinding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+                                binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
                             } else if (model.getResponseData().getFlag().equalsIgnoreCase("1")) {
-                                exoBinding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+                                binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
                             }
                             SharedPreferences sharedxx = getSharedPreferences(CONSTANTS.PREF_KEY_AUDIO, MODE_PRIVATE);
                             boolean audioPlay = sharedxx.getBoolean(CONSTANTS.PREF_KEY_audioPlay, true);
@@ -561,6 +567,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             @Override
             public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
                 Log.v("TAG", "Listener-onTracksChanged... ");
+                myBitmap = getMediaBitmap(mainPlayModelList.get(player.getCurrentWindowIndex()).getImageFile());
                 callButtonText(player.getCurrentWindowIndex());
             }
 
@@ -602,7 +609,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void epAllClicks() {
-        exoBinding.llDownload.setOnClickListener(view -> {
+        binding.llDownload.setOnClickListener(view -> {
             if (BWSApplication.isNetworkConnected(ctx)) {
                 callDownload();
             } else {
@@ -613,7 +620,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
         exoBinding.llPlay.setOnClickListener(view -> player.setPlayWhenReady(true));
         exoBinding.llForwardSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() + 30000));
         exoBinding.llBackWordSec.setOnClickListener(view -> player.seekTo(player.getCurrentPosition() - 30000));
-        exoBinding.llLike.setOnClickListener(view -> {
+        binding.llLike.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -621,9 +628,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
             mLastClickTime = SystemClock.elapsedRealtime();
             callLike();
         });
-        exoBinding.llRepeat.setOnClickListener(view -> callRepeat());
-        exoBinding.llShuffle.setOnClickListener(view -> callShuffle());
-        exoBinding.llViewQueue.setOnClickListener(view -> {
+        binding.llRepeat.setOnClickListener(view -> callRepeat());
+        binding.llShuffle.setOnClickListener(view -> callShuffle());
+        binding.llViewQueue.setOnClickListener(view -> {
 //            handler1.removeCallbacks(UpdateSongTime1);
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return;
@@ -717,79 +724,79 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     private void callRepeatShuffle() {
         if (url.equalsIgnoreCase("")) {
-            exoBinding.llShuffle.setClickable(false);
-            exoBinding.llShuffle.setEnabled(false);
-            exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-            exoBinding.llRepeat.setEnabled(false);
-            exoBinding.llRepeat.setClickable(false);
-            exoBinding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-            exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.llShuffle.setClickable(false);
+            binding.llShuffle.setEnabled(false);
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.llRepeat.setEnabled(false);
+            binding.llRepeat.setClickable(false);
+            binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
             if (IsShuffle.equalsIgnoreCase("")) {
                 if (listSize == 1) {
-                    exoBinding.llShuffle.setClickable(false);
-                    exoBinding.llShuffle.setEnabled(false);
-                    exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.llShuffle.setClickable(false);
+                    binding.llShuffle.setEnabled(false);
+                    binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
                 } else {
-                    exoBinding.llShuffle.setClickable(true);
-                    exoBinding.llShuffle.setEnabled(true);
-                    exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.llShuffle.setClickable(true);
+                    binding.llShuffle.setEnabled(true);
+                    binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                 }
                 player.setShuffleModeEnabled(false);
             } else if (IsShuffle.equalsIgnoreCase("1")) {
                 if (listSize == 1) {
-                    exoBinding.llShuffle.setClickable(false);
-                    exoBinding.llShuffle.setEnabled(false);
-                    exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.llShuffle.setClickable(false);
+                    binding.llShuffle.setEnabled(false);
+                    binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
                 } else {
-                    exoBinding.llShuffle.setClickable(true);
-                    exoBinding.llShuffle.setEnabled(true);
-                    exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.llShuffle.setClickable(true);
+                    binding.llShuffle.setEnabled(true);
+                    binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
                 }
                 player.setShuffleModeEnabled(true);
             }
             if (IsRepeat.equalsIgnoreCase("")) {
                 if (queuePlay) {
-                    exoBinding.llRepeat.setEnabled(false);
-                    exoBinding.llRepeat.setClickable(false);
-                    exoBinding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-                    exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.llRepeat.setEnabled(false);
+                    binding.llRepeat.setClickable(false);
+                    binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
                 } else {
-                    exoBinding.llRepeat.setClickable(true);
-                    exoBinding.llRepeat.setEnabled(true);
-                    exoBinding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-                    exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.llRepeat.setClickable(true);
+                    binding.llRepeat.setEnabled(true);
+                    binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                 }
                 player.setRepeatMode(Player.REPEAT_MODE_OFF);
             } else if (IsRepeat.equalsIgnoreCase("0")) {
                 if (queuePlay) {
-                    exoBinding.llRepeat.setEnabled(false);
-                    exoBinding.llRepeat.setClickable(false);
-                    exoBinding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
-                    exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.llRepeat.setEnabled(false);
+                    binding.llRepeat.setClickable(false);
+                    binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
+                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
                 } else {
                     IsRepeat = "0";
-                    exoBinding.llRepeat.setClickable(true);
-                    exoBinding.llRepeat.setEnabled(true);
-                    exoBinding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
-                    exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.llRepeat.setClickable(true);
+                    binding.llRepeat.setEnabled(true);
+                    binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
+                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
                 }
                 player.setRepeatMode(Player.REPEAT_MODE_ONE);
             } else if (IsRepeat.equalsIgnoreCase("1")) {
                 if (queuePlay) {
-                    exoBinding.llRepeat.setEnabled(false);
-                    exoBinding.llRepeat.setClickable(false);
-                    exoBinding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-                    exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                    binding.llRepeat.setEnabled(false);
+                    binding.llRepeat.setClickable(false);
+                    binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
                 } else {
                     if (listSize == 1) {
-                        exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                        binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                     } else {
-                        exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                        binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
                     }
-                    exoBinding.llRepeat.setClickable(true);
-                    exoBinding.llRepeat.setEnabled(true);
-                    exoBinding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+                    binding.llRepeat.setClickable(true);
+                    binding.llRepeat.setEnabled(true);
+                    binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
                 }
                 player.setRepeatMode(Player.REPEAT_MODE_ALL);
             }
@@ -799,9 +806,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void callShuffle() {
         if (IsShuffle.equalsIgnoreCase("")) {
             if (listSize == 1) {
-                exoBinding.llShuffle.setClickable(false);
-                exoBinding.llShuffle.setEnabled(false);
-                exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.llShuffle.setClickable(false);
+                binding.llShuffle.setEnabled(false);
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {
                 IsShuffle = "1";
                 player.setShuffleModeEnabled(true);
@@ -812,11 +819,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 editor.commit();
 //                IsRepeat = "";
 //                if (queuePlay) {
-//                    exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+//                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
 //                } else
-//                    exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-                exoBinding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
-                exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+//                    binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else if (IsShuffle.equalsIgnoreCase("1")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
@@ -825,7 +832,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             editor.commit();
             IsShuffle = "";
             player.setShuffleModeEnabled(false);
-            exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
 
@@ -840,13 +847,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
             editor.commit();
 //            IsShuffle = "";
 //            if (listSize == 1) {
-//                exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+//                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
 //            } else
-//                exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+//                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             IsRepeat = "0";
             player.setRepeatMode(Player.REPEAT_MODE_ONE);
-            exoBinding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
-            exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_one));
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
         } else if (IsRepeat.equalsIgnoreCase("0")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -857,15 +864,15 @@ public class AudioPlayerActivity extends AppCompatActivity {
             if (listSize == 1) {
                 editor.putString(CONSTANTS.PREF_KEY_IsRepeat, "");
                 IsRepeat = "";
-                exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-//                exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+//                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {
-                exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
-//                exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.dark_yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+//                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             }
             editor.commit();
             player.setRepeatMode(Player.REPEAT_MODE_ALL);
-            exoBinding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+            binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
         } else if (IsRepeat.equalsIgnoreCase("1")) {
             SharedPreferences shared = getSharedPreferences(CONSTANTS.PREF_KEY_Status, MODE_PRIVATE);
             SharedPreferences.Editor editor = shared.edit();
@@ -874,13 +881,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
             IsRepeat = "";
 //            IsShuffle = "";
             if (listSize == 1) {
-//                exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+//                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else
-//                exoBinding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-            editor.commit();
+//                binding.ivShuffle.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                editor.commit();
             player.setRepeatMode(Player.REPEAT_MODE_OFF);
-            exoBinding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-            exoBinding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
+            binding.ivRepeat.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.ivRepeat.setImageDrawable(getResources().getDrawable(R.drawable.ic_repeat_music_icon));
         }
     }
 
@@ -894,18 +901,18 @@ public class AudioPlayerActivity extends AppCompatActivity {
             exoBinding.llBackWordSec.setClickable(true);
             exoBinding.llBackWordSec.setEnabled(true);
             exoBinding.llBackWordSec.setAlpha(1f);
-            exoBinding.llDownload.setClickable(true);
-            exoBinding.llDownload.setEnabled(true);
-            exoBinding.llDownload.setAlpha(1f);
-            exoBinding.llRepeat.setClickable(true);
-            exoBinding.llRepeat.setEnabled(true);
-            exoBinding.llRepeat.setAlpha(1f);
-            exoBinding.llShuffle.setClickable(true);
-            exoBinding.llShuffle.setEnabled(true);
-            exoBinding.llShuffle.setAlpha(1f);
-            exoBinding.llLike.setClickable(true);
-            exoBinding.llLike.setEnabled(true);
-            exoBinding.llLike.setAlpha(1f);
+            binding.llDownload.setClickable(true);
+            binding.llDownload.setEnabled(true);
+            binding.llDownload.setAlpha(1f);
+            binding.llRepeat.setClickable(true);
+            binding.llRepeat.setEnabled(true);
+            binding.llRepeat.setAlpha(1f);
+            binding.llShuffle.setClickable(true);
+            binding.llShuffle.setEnabled(true);
+            binding.llShuffle.setAlpha(1f);
+            binding.llLike.setClickable(true);
+            binding.llLike.setEnabled(true);
+            binding.llLike.setAlpha(1f);
             exoBinding.rlSeekbar.setClickable(true);
             exoBinding.rlSeekbar.setEnabled(true);
             exoBinding.exoProgress.setClickable(true);
@@ -924,21 +931,21 @@ public class AudioPlayerActivity extends AppCompatActivity {
             binding.llMore.setClickable(false);
             binding.llMore.setEnabled(false);
             binding.llMore.setAlpha(0.6f);
-            exoBinding.llViewQueue.setClickable(false);
-            exoBinding.llViewQueue.setEnabled(false);
-            exoBinding.llViewQueue.setAlpha(0.6f);
-            exoBinding.llDownload.setClickable(false);
-            exoBinding.llDownload.setEnabled(false);
-            exoBinding.llDownload.setAlpha(0.6f);
-            exoBinding.llRepeat.setClickable(false);
-            exoBinding.llRepeat.setEnabled(false);
-            exoBinding.llRepeat.setAlpha(0.6f);
-            exoBinding.llShuffle.setClickable(false);
-            exoBinding.llShuffle.setEnabled(false);
-            exoBinding.llShuffle.setAlpha(0.6f);
-            exoBinding.llLike.setClickable(false);
-            exoBinding.llLike.setEnabled(false);
-            exoBinding.llLike.setAlpha(0.6f);
+            binding.llViewQueue.setClickable(false);
+            binding.llViewQueue.setEnabled(false);
+            binding.llViewQueue.setAlpha(0.6f);
+            binding.llDownload.setClickable(false);
+            binding.llDownload.setEnabled(false);
+            binding.llDownload.setAlpha(0.6f);
+            binding.llRepeat.setClickable(false);
+            binding.llRepeat.setEnabled(false);
+            binding.llRepeat.setAlpha(0.6f);
+            binding.llShuffle.setClickable(false);
+            binding.llShuffle.setEnabled(false);
+            binding.llShuffle.setAlpha(0.6f);
+            binding.llLike.setClickable(false);
+            binding.llLike.setEnabled(false);
+            binding.llLike.setAlpha(0.6f);
             exoBinding.rlSeekbar.setClickable(false);
             exoBinding.rlSeekbar.setEnabled(false);
             exoBinding.exoProgress.setClickable(false);
@@ -968,22 +975,22 @@ public class AudioPlayerActivity extends AppCompatActivity {
         }
         if (BWSApplication.isNetworkConnected(ctx)) {
             if (IsLock.equalsIgnoreCase("1")) {
-                exoBinding.llViewQueue.setClickable(false);
-                exoBinding.llViewQueue.setEnabled(false);
-                exoBinding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.llViewQueue.setClickable(false);
+                binding.llViewQueue.setEnabled(false);
+                binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else if (IsLock.equalsIgnoreCase("2")) {
-                exoBinding.llViewQueue.setClickable(false);
-                exoBinding.llViewQueue.setEnabled(false);
-                exoBinding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.llViewQueue.setClickable(false);
+                binding.llViewQueue.setEnabled(false);
+                binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
             } else {
-                exoBinding.llViewQueue.setClickable(true);
-                exoBinding.llViewQueue.setEnabled(true);
-                exoBinding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                binding.llViewQueue.setClickable(true);
+                binding.llViewQueue.setEnabled(true);
+                binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else {
-            exoBinding.llViewQueue.setClickable(false);
-            exoBinding.llViewQueue.setEnabled(false);
-            exoBinding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            binding.llViewQueue.setClickable(false);
+            binding.llViewQueue.setEnabled(false);
+            binding.ivViewQueue.setColorFilter(ContextCompat.getColor(ctx, R.color.light_gray), android.graphics.PorterDuff.Mode.SRC_IN);
         }
     }
 
@@ -1029,17 +1036,17 @@ public class AudioPlayerActivity extends AppCompatActivity {
             DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
             downloadMedia.encrypt1(url1, name1, downloadPlaylistId);
 
-            exoBinding.pbProgress.setVisibility(View.VISIBLE);
-            exoBinding.ivDownloads.setVisibility(View.GONE);
+            binding.pbProgress.setVisibility(View.VISIBLE);
+            binding.ivDownloads.setVisibility(View.GONE);
             SaveMedia(EncodeBytes, FileUtils.getFilePath(getApplicationContext(), name));
         }
     }
 
     private void disableDownload() {
-        exoBinding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
-        exoBinding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
-        exoBinding.llDownload.setClickable(false);
-        exoBinding.llDownload.setEnabled(false);
+        binding.ivDownloads.setImageResource(R.drawable.ic_download_white_icon);
+        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+        binding.llDownload.setClickable(false);
+        binding.llDownload.setEnabled(false);
     }
 
     private void SaveMedia(byte[] EncodeBytes, String dirPath) {
@@ -1115,21 +1122,21 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 if (!url.equalsIgnoreCase("")) {
                     if (downloadAudioDetailsList1.size() != 0) {
                         if (downloadAudioDetailsList1.get(0).getDownload().equalsIgnoreCase("1")) {
-                            exoBinding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
-                            exoBinding.llDownload.setClickable(false);
-                            exoBinding.llDownload.setEnabled(false);
-                            exoBinding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                            binding.llDownload.setClickable(false);
+                            binding.llDownload.setEnabled(false);
+                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.dark_yellow), PorterDuff.Mode.SRC_IN);
                         } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
-                            exoBinding.llDownload.setClickable(true);
-                            exoBinding.llDownload.setEnabled(true);
-                            exoBinding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-                            exoBinding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                            binding.llDownload.setClickable(true);
+                            binding.llDownload.setEnabled(true);
+                            binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+                            binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                         }
                     } else/* if (!mainPlayModelList.get(position).getDownload().equalsIgnoreCase("")) */ {
-                        exoBinding.llDownload.setClickable(true);
-                        exoBinding.llDownload.setEnabled(true);
-                        exoBinding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-                        exoBinding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
+                        binding.llDownload.setClickable(true);
+                        binding.llDownload.setEnabled(true);
+                        binding.ivDownloads.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+                        binding.ivDownloads.setImageResource(R.drawable.ic_download_play_icon);
                     }
                 }
                 getMediaByPer();
@@ -1159,25 +1166,25 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 if (downloadAudioDetailsList1.size() != 0) {
                     if (downloadPercentage <= 100) {
                         if (downloadPercentage == 100) {
-                            exoBinding.pbProgress.setVisibility(View.GONE);
-                            exoBinding.ivDownloads.setVisibility(View.VISIBLE);
+                            binding.pbProgress.setVisibility(View.GONE);
+                            binding.ivDownloads.setVisibility(View.VISIBLE);
 //                            handler1.removeCallbacks(UpdateSongTime1);
                         } else {
-                            exoBinding.pbProgress.setVisibility(View.VISIBLE);
-                            exoBinding.ivDownloads.setVisibility(View.GONE);
-                            exoBinding.pbProgress.setIndeterminate(false);
-                            exoBinding.pbProgress.setProgress(downloadPercentage);
+                            binding.pbProgress.setVisibility(View.VISIBLE);
+                            binding.ivDownloads.setVisibility(View.GONE);
+                            binding.pbProgress.setIndeterminate(false);
+                            binding.pbProgress.setProgress(downloadPercentage);
                             getMediaByPer();
 //                             handler1.postDelayed(UpdateSongTime1, 500);
                         }
                     } else {
-                        exoBinding.pbProgress.setVisibility(View.GONE);
-                        exoBinding.ivDownloads.setVisibility(View.VISIBLE);
+                        binding.pbProgress.setVisibility(View.GONE);
+                        binding.ivDownloads.setVisibility(View.VISIBLE);
 //                        handler1.removeCallbacks(UpdateSongTime1);
                     }
                 } else {
-                    exoBinding.pbProgress.setVisibility(View.GONE);
-                    exoBinding.ivDownloads.setVisibility(View.VISIBLE);
+                    binding.pbProgress.setVisibility(View.GONE);
+                    binding.ivDownloads.setVisibility(View.VISIBLE);
                 }
                 super.onPostExecute(aVoid);
             }
@@ -1215,7 +1222,13 @@ public class AudioPlayerActivity extends AppCompatActivity {
                 fileDescriptor = null;
 //                if(i == downloadAudioDetailsList.size()) {
 //                    Log.e("MakeArry Call",String.valueOf(i));
-                MakeArray();
+                if (i < downloadAudioDetailsList.size() - 1) {
+                    getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(i + 1).getName(), i + 1);
+                    Log.e("DownloadMedia Call", String.valueOf(i + 1));
+                } else {
+                    MakeArray();
+                    Log.e("MakeArry Call", String.valueOf(i));
+                }
 //                }
                 super.onPostExecute(aVoid);
             }
@@ -1265,11 +1278,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false).into(binding.ivRestaurantImage);
         }
         if (mainPlayModelList.get(ps).getLike().equalsIgnoreCase("1")) {
-            exoBinding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
+            binding.ivLike.setImageResource(R.drawable.ic_fill_like_icon);
         } else if (mainPlayModelList.get(ps).getLike().equalsIgnoreCase("0")) {
-            exoBinding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
         } else {
-            exoBinding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
+            binding.ivLike.setImageResource(R.drawable.ic_unlike_icon);
         }
         GetMedia2();
 //            binding.gridLayout.addView(view);
@@ -1332,10 +1345,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 if (downloadAudioDetailsList.size() != 0) {
-                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
-                        DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
-                        getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(i).getName(), i);
-                    }
+//                    for (int i = 0; i < downloadAudioDetailsList.size(); i++) {
+                    DownloadMedia downloadMedia = new DownloadMedia(getApplicationContext());
+                    getDownloadMedia(downloadMedia, downloadAudioDetailsList.get(0).getName(), 0);
+//                    }
                 } else {
                     MakeArray();
                 }
@@ -1350,7 +1363,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void MakeArray() {
         View viewed = LayoutInflater.from(ctx).inflate(R.layout.audio_player_custom_layout, null, false);
         exoBinding = DataBindingUtil.inflate(LayoutInflater.from(this)
-                , R.layout.audio_player_custom_layout, binding.playerControlView,false);
+                , R.layout.audio_player_custom_layout, binding.playerControlView, false);
         binding.playerControlView.addView(exoBinding.getRoot());
 
         Gson gson = new Gson();
@@ -1980,7 +1993,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     private void getPrepareShowData() {
-
+        myBitmap = getMediaBitmap(mainPlayModelList.get(position).getImageFile());
         callButtonText(position);
 //        if (isOwner && player == null) {
         if (mainPlayModelList.get(position).getAudioFile().equalsIgnoreCase("")) {

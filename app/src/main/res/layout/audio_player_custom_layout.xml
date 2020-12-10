@@ -193,7 +193,7 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:id="@+id/llBottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -295,7 +295,7 @@
                         android:src="@drawable/ic_music_list_icon"
                         app:tint="@color/black" />
                 </LinearLayout>
-            </LinearLayout>
+            </LinearLayout>-->
 
         </LinearLayout>
 

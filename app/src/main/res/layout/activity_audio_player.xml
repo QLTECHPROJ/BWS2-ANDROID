@@ -218,8 +218,8 @@
                     android:id="@+id/player_control_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_weight="0.76"
                     android:layout_gravity="bottom"
-                    android:layout_weight="1"
                     app:controller_layout_id="@layout/audio_player_custom_layout"
                     app:fastforward_increment="30000"
                     app:rewind_increment="30000"
@@ -230,7 +230,7 @@
                     app:show_timeout="1000000000"
                     app:use_controller="true" />
 
-                <!--   <LinearLayout
+                   <LinearLayout
                        android:id="@+id/llBottom"
                        android:layout_width="match_parent"
                        android:layout_height="0dp"
@@ -332,7 +332,7 @@
                                android:src="@drawable/ic_music_list_icon"
                                app:tint="@color/light_gray" />
                        </LinearLayout>
-                   </LinearLayout>-->
+                   </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
