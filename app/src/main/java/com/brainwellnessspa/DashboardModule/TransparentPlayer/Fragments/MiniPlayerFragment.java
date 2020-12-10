@@ -627,11 +627,11 @@ public class MiniPlayerFragment extends Fragment {
         }
         myBitmap = getMediaBitmap(mainPlayModelList.get(ps).getImageFile());
 
-        MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
+       /* MeasureRatio measureRatio = BWSApplication.measureRatio(ctx, 0,
                 1, 1, 0.92f, 0);
         exoBinding.ivRestaurantImage.getLayoutParams().height = (int) (measureRatio.getHeight() * measureRatio.getRatio());
         exoBinding.ivRestaurantImage.getLayoutParams().width = (int) (measureRatio.getWidthImg() * measureRatio.getRatio());
-        exoBinding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        exoBinding.ivRestaurantImage.setScaleType(ImageView.ScaleType.FIT_XY);*/
         if (url.equalsIgnoreCase("")) {
             Glide.with(ctx).load(R.drawable.disclaimer).thumbnail(0.05f)
                     .placeholder(R.drawable.disclaimer).error(R.drawable.disclaimer)
