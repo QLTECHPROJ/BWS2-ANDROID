@@ -1151,7 +1151,7 @@ public class TransparentPlayerFragment extends Fragment implements SeekBar.OnSee
                 }
                 editor.putInt(CONSTANTS.PREF_KEY_position, position);
                 editor.commit();
-                if(mediaPlayer!=null) {
+                if (mediaPlayer != null) {
                     mediaPlayer.stop();
                     mediaPlayer.release();
                 }
