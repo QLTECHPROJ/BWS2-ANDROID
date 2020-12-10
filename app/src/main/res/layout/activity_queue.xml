@@ -42,97 +42,104 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:id="@+id/llOptions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_16sdp"
-                    android:layout_marginHorizontal="@dimen/_12sdp"
-                    android:gravity="center_horizontal">
+                    android:visibility="gone">
 
                     <LinearLayout
-                        android:id="@+id/llShuffle"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/llOptions"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                        android:layout_marginTop="@dimen/_16sdp"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:gravity="center_horizontal">
 
-                        <ImageView
-                            android:id="@+id/ivShuffle"
-                            android:layout_width="@dimen/_56sdp"
-                            android:layout_height="@dimen/_50sdp"
-                            android:padding="@dimen/_16sdp"
-                            android:src="@drawable/ic_shuffle_small_icon" />
-
-                        <TextView
+                        <LinearLayout
+                            android:id="@+id/llShuffle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="-4dp"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:gravity="start"
-                            android:text="@string/Shuffle"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
-                    </LinearLayout>
+                            <ImageView
+                                android:id="@+id/ivShuffle"
+                                android:layout_width="@dimen/_56sdp"
+                                android:layout_height="@dimen/_50sdp"
+                                android:padding="@dimen/_16sdp"
+                                android:src="@drawable/ic_shuffle_small_icon" />
 
-                    <LinearLayout
-                        android:id="@+id/llRepeat"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_16sdp"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-4dp"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="start"
+                                android:text="@string/Shuffle"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp" />
 
-                        <ImageView
-                            android:id="@+id/ivRepeat"
-                            android:layout_width="@dimen/_56sdp"
-                            android:layout_height="@dimen/_50sdp"
-                            android:padding="@dimen/_13sdp"
-                            android:src="@drawable/ic_repeat_white_icon" />
+                        </LinearLayout>
 
-                        <TextView
+                        <LinearLayout
+                            android:id="@+id/llRepeat"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="-4dp"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:gravity="start"
-                            android:text="@string/Repeat"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
+                            android:layout_marginLeft="@dimen/_16sdp"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
-                    </LinearLayout>
+                            <ImageView
+                                android:id="@+id/ivRepeat"
+                                android:layout_width="@dimen/_56sdp"
+                                android:layout_height="@dimen/_50sdp"
+                                android:padding="@dimen/_13sdp"
+                                android:src="@drawable/ic_repeat_white_icon" />
 
-                    <LinearLayout
-                        android:id="@+id/llViewQueue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_16sdp"
-                        android:layout_marginRight="@dimen/_16sdp"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-4dp"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="start"
+                                android:text="@string/Repeat"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp" />
 
-                        <ImageView
-                            android:id="@+id/ivViewQueue"
-                            android:layout_width="@dimen/_56sdp"
-                            android:layout_height="@dimen/_50sdp"
-                            android:padding="@dimen/_16sdp"
-                            android:src="@drawable/ic_queue_white_icon" />
+                        </LinearLayout>
 
-                        <TextView
+                        <LinearLayout
+                            android:id="@+id/llViewQueue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="-4dp"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:gravity="start"
-                            android:text="@string/Go_to_queue"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
+                            android:layout_marginLeft="@dimen/_16sdp"
+                            android:layout_marginRight="@dimen/_16sdp"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
+                            <ImageView
+                                android:id="@+id/ivViewQueue"
+                                android:layout_width="@dimen/_56sdp"
+                                android:layout_height="@dimen/_50sdp"
+                                android:padding="@dimen/_16sdp"
+                                android:src="@drawable/ic_queue_white_icon" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-4dp"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:gravity="start"
+                                android:text="@string/Go_to_queue"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp" />
+
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
+
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cvImage"

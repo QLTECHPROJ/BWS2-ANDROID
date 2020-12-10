@@ -1181,7 +1181,7 @@ public class AddQueueActivity extends AppCompatActivity {
                         binding.cvImage.setVisibility(View.VISIBLE);
                         binding.llLike.setVisibility(View.VISIBLE);
                         binding.llAddPlaylist.setVisibility(View.VISIBLE);
-                        binding.llAddQueue.setVisibility(View.VISIBLE);
+                        binding.llAddQueue.setVisibility(View.GONE);
                         binding.llDownload.setVisibility(View.VISIBLE);
                         binding.llShuffle.setVisibility(View.VISIBLE);
                         binding.llRepeat.setVisibility(View.VISIBLE);
